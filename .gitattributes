@@ -1,0 +1,4 @@
+# Preserve the imported archive bytes, including when core.autocrlf is enabled.
+docs/handoff/** -text
+# Original Markdown uses two trailing spaces for hard line breaks. Keep them.
+docs/handoff/*.md whitespace=-blank-at-eol

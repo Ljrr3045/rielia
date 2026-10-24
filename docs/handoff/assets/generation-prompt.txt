@@ -1,0 +1,9 @@
+Asset: AS03 / common/hero-editorial.png
+Method: Built-in ImageGen tool, new image, opaque background.
+Date: 2026-10-24
+Status: Proposed editorial illustration; not an application screenshot.
+Other assets: Native SVG graphics, custom path-based wordmark, technical raster exports. No competitor screenshots redistributed.
+
+Exact generation prompt:
+
+Use case: ads-marketing. Asset type: original supporting editorial illustration for the Rielia task and sprint management product landing page. Create a refined, deliberate editorial illustration in a wide landscape composition, with no text anywhere. The visual metaphor is two parallel teal rails representing a person and a development agent, converging into one orderly path of work. Show exactly three small groups of crisp ivory paper task slips moving from an unorganized beginning at the left, through aligned planning in the center, to one neatly completed stack at the right. Calm overhead/very shallow isometric view, physical cut-paper precision, solid warm off-white background (#F8FAFC), deep slate details (#0F172A), restrained teal (#0F766E), and pale mint accent. Plenty of breathing room; strong simple geometry; subtle realistic paper shadows; editorial product-design quality. The illustration must remain clear at mobile size. No people, robots, mascots, hands, floating glass dashboards, fake app screenshots, gradient blobs, glossy 3D shapes, sparkles, competitor logos, letters, numbers, watermarks, badges, or slogans. This is an original conceptual marketing illustration, not a screenshot or a claim of an already built app.
