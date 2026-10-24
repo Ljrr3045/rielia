@@ -1,0 +1,16 @@
+packages:
+  - apps/*
+  - packages/*
+
+saveExact: true
+strictPeerDependencies: true
+autoInstallPeers: false
+
+# Nest 12.2.0 pins Multer 2.4.0; upgrade within the same major for
+# GHSA-q7qp-rjg7-q26m. Remove once the adapter carries a patched version.
+overrides:
+  '@nestjs/platform-express>multer': 2.5.0
+
+# No dependency lifecycle scripts are needed; prebuilt framework binaries are
+# optional dependencies. pnpm fails if a newly added dependency needs approval.
+allowBuilds: {}
