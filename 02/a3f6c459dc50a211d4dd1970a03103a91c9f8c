@@ -1,0 +1,81 @@
+.env.example
+  s_1dfee99ee7672b::t_6d6493309b6724 1,4-8
+  s_1dfee99ee7672b::t_a9e10c6ab057ac 2-3
+apps/api/package.json
+  s_1dfee99ee7672b::t_6d6493309b6724 1-8,10-20
+  s_1dfee99ee7672b::t_fc8c18ada9bb31 9
+pnpm-workspace.yaml
+  s_1dfee99ee7672b::t_cad8f3e86270ed 9-13
+  s_1dfee99ee7672b::t_fc8c18ada9bb31 14-16
+  s_1dfee99ee7672b::t_6d6493309b6724 1-8
+apps/web/next-env.d.ts
+  s_1dfee99ee7672b::t_6d6493309b6724 1-5
+  s_1dfee99ee7672b::t_eb2fc4d72ad8a5 6-7
+apps/web/src/app/layout.tsx
+  s_1dfee99ee7672b::t_6d6493309b6724 1-13
+apps/web/src/app/globals.css
+  s_1dfee99ee7672b::t_6d6493309b6724 1-40,43,45-47
+  s_1dfee99ee7672b::t_3f1e7f3ce81dcd 41-42,44
+packages/contracts/tsconfig.json
+  s_1dfee99ee7672b::t_6d6493309b6724 1-13
+apps/api/tsconfig.json
+  s_1dfee99ee7672b::t_6d6493309b6724 1-15
+tsconfig.base.json
+  s_1dfee99ee7672b::t_6d6493309b6724 1-16
+apps/web/tsconfig.json
+  s_1dfee99ee7672b::t_3f1e7f3ce81dcd 4
+  s_1dfee99ee7672b::t_6d6493309b6724 1-3,5-17
+apps/web/next.config.ts
+  s_1dfee99ee7672b::t_6d6493309b6724 1-4
+scripts/smoke.mjs
+  s_1dfee99ee7672b::t_f80615f07ac337 1-122
+packages/contracts/package.json
+  s_1dfee99ee7672b::t_6d6493309b6724 1-8
+apps/api/src/health.controller.ts
+  s_1dfee99ee7672b::t_6d6493309b6724 1-11
+apps/api/src/app.module.ts
+  s_1dfee99ee7672b::t_6d6493309b6724 1-5
+.github/workflows/ci.yml
+  s_1dfee99ee7672b::t_6d6493309b6724 1-32
+apps/web/src/app/page.tsx
+  s_1dfee99ee7672b::t_3f1e7f3ce81dcd 48-50
+  s_1dfee99ee7672b::t_a9e10c6ab057ac 25
+  s_1dfee99ee7672b::t_6d6493309b6724 1-24,26-47,51-55
+docs/development/technical-fixture.md
+  s_1dfee99ee7672b::t_a9e10c6ab057ac 122-144
+  s_1dfee99ee7672b::t_148a3dca467c83 1-121,145-152
+.gitignore
+  s_1dfee99ee7672b::t_6d6493309b6724 1-11
+apps/web/package.json
+  s_1dfee99ee7672b::t_6d6493309b6724 1-19
+apps/api/src/main.ts
+  s_1dfee99ee7672b::t_6d6493309b6724 1-19
+package.json
+  s_1dfee99ee7672b::t_fc8c18ada9bb31 21-22,25
+  s_1dfee99ee7672b::t_6d6493309b6724 1-20,23-24,26-29
+eslint.config.mjs
+  s_1dfee99ee7672b::t_6d6493309b6724 1,3-8,15-35
+  s_1dfee99ee7672b::t_fc8c18ada9bb31 2,9-14
+.node-version
+  s_1dfee99ee7672b::t_6d6493309b6724 1
+packages/contracts/src/index.ts
+  s_1dfee99ee7672b::t_6d6493309b6724 1-11
+pnpm-lock.yaml
+  s_1dfee99ee7672b::t_aa70915e92491e 1-3079
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "02a3f6c459dc50a211d4dd1970a03103a91c9f8c",
+  "prompts": {},
+  "sessions": {
+    "s_1dfee99ee7672b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1701a-59ab-7cd2-a329-11faf6a09876",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
