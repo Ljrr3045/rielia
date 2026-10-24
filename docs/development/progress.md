@@ -13,10 +13,10 @@ software release. The coordinator owns integration and status across workers.
 | Base | `origin/dev` at `188a760c36f8ec6d09f10f5027d162facce13875` |
 | Branch | `Ljrr3045/rielia-t00-onboarding` |
 | Worktree | Isolated Orca checkout named `rielia-t00-onboarding` |
-| PR | Pending creation; target `dev`, non-draft; coordinator merge only |
-| T00 | In progress: import/docs and local validation complete; PR/review pending |
+| PR | [#1](https://github.com/Ljrr3045/rielia/pull/1), target `dev`, non-draft; coordinator merge only |
+| T00 | In review: import/docs and local validation complete; coordinator acceptance/merge pending |
 | T01–T35 | None complete; T02.0 fixture in progress separately (coordinator report); remaining full tickets not started |
-| Automated review | Pending PR/latest-head OpenCode run; no clean-review claim |
+| Automated review | Latest-head run/status and dispositions tracked in [PR review evidence](https://github.com/Ljrr3045/rielia/pull/1); recheck after each push |
 
 T00 acceptance: complete byte-identical import with links/assets/hashes/proposal
 status; practical repository instructions and docs; truthful dependency/state
@@ -66,7 +66,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 
 | Ticket | Internal batch/track | Planned outcome | Dependencies | State |
 | --- | --- | --- | --- | --- |
-| T00 | Pre-B0 governance | Import, instructions, contribution/review process, accurate ledger | None | In progress; PR/review pending |
+| T00 | Pre-B0 governance | Import, instructions, contribution/review process, accurate ledger | None | In review, PR #1; coordinator acceptance/merge pending |
 | T01 | B0 | Navigation and task prototype validation | None | Not started |
 | T02 | B0 | Identity/proxy integration spike | None; stack/OAuth decisions pending | In progress: T02.0 fixture elsewhere; full spike unverified |
 | T03 | B0 | MCP SDK/wrapper/minimal remote profile spike | T02 for remote auth; stack decision pending | Not started |
@@ -120,7 +120,7 @@ actual use/demand; no launch date or public capacity has been established.
 | Principal/authorship | Fixed invariant: delegated user is author; autonomous Agent has own identity; creator/assignee separate | T35 then relevant API/web/MCP/isolation evidence |
 | Private-project admin visibility | Plan proposes owner/admin can read/administer all projects; requires B0 decision | User/maintainer ratification; communicate before implementation |
 | Operations/public service | VPS capacity, budget/date, registration policy, public obligations not established | Maintainer records decisions and measured readiness in later tickets |
-| Automated review | Pending latest-head run; failure is a delivery blocker, never clean review | Worker inspects checks and all three review surfaces; coordinator handles infrastructure blockers |
+| Automated review | Latest-head evidence in PR #1; failure is a delivery blocker, never clean review | Worker inspects checks and all three review surfaces; coordinator handles infrastructure blockers |
 
 Pending product decisions do not block the bounded T00 import/governance work.
 Record coordinator answers here without changing the historical source proposals.
@@ -142,8 +142,11 @@ No credentials should be pasted into this ledger, PR comments, or validation log
   found no matches; this is a bounded scan, not a comprehensive security audit.
 - Coordinator independently reported the same direct-source/hash/asset/link
   results and no blocking documentation findings at the pre-PR checkpoint.
-- PR/head, latest OpenCode run, issue comments, reviews, inline comments, and
-  technical dispositions: pending PR creation and automated review.
+- [Non-draft PR #1 to dev](https://github.com/Ljrr3045/rielia/pull/1) is the single
+  T00 PR. Its review evidence section records the final head/run and inspection of
+  issue comments, submitted reviews, inline comments, and technical dispositions
+  before worker handoff. Check current PR evidence; this file does not assert
+  successful review merely because a PR exists.
 - Application, OAuth, runtime, UI, database, recovery, load, accessibility, and
   deployment tests: not run; no application exists in T00. No remote URL/heading
   fragment validation or fresh stack/brand research claimed.
