@@ -1,0 +1,35 @@
+AGENTS.md
+  s_0292dee8fcac2f::t_acf354781a3bbe 31-34,39-41
+docs/development/progress.md
+  s_0292dee8fcac2f::t_acf354781a3bbe 12,24-26,71,126,143-145,149-154,162-164
+  s_0292dee8fcac2f::t_074172b1bc7e46 155-157,159-161
+  s_0292dee8fcac2f::t_82b90725e451df 158
+CHANGELOG.md
+  s_0292dee8fcac2f::t_acf354781a3bbe 14-20
+.github/pull_request_template.md
+  s_0292dee8fcac2f::t_acf354781a3bbe 19
+README.md
+  s_0292dee8fcac2f::t_acf354781a3bbe 11-12
+CONTRIBUTING.md
+  s_0292dee8fcac2f::t_acf354781a3bbe 40-43
+.github/workflows/opencode-review.yml
+  s_0292dee8fcac2f::t_acf354781a3bbe 24-25
+docs/development/handoff-import.md
+  s_0292dee8fcac2f::t_acf354781a3bbe 54-58
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8e433db27d59d00aa4c3d4572339d6872b35f612",
+  "prompts": {},
+  "sessions": {
+    "s_0292dee8fcac2f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a17019-6c4e-7b50-8946-63a2262b3e2d",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
