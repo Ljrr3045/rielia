@@ -37,7 +37,10 @@ Inside Orca, use its worktree workflow. If RTK guidance is active, prefix every
 shell command with `rtk` (`rtk proxy` for unsupported commands). Commands in this
 document use ordinary tools so contributors do not need Orca or RTK.
 
-Preserve `.github/workflows/opencode-review.yml`. Treat `docs/handoff/` as an
+Preserve `.github/workflows/opencode-review.yml` outside explicitly authorized
+changes. T00 includes a coordinator-approved repair of model environment scope
+to restore review, retaining triggers, permissions, provider restriction, secret
+handling, and review-only behavior. Treat `docs/handoff/` as an
 immutable import, including its asset manifest and file inventory. Record later
 ratifications/corrections separately under `docs/development/` and link the
 affected source section. Never modify a baseline just to make a hash check pass.

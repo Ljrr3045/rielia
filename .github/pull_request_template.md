@@ -16,7 +16,7 @@
 - [ ] `git diff --check` and staged/PR diff whitespace check pass.
 - [ ] `python3 scripts/verify-handoff.py` passes; immutable handoff remains unchanged.
 - [ ] Appropriate behavior/invariant checks pass, or are explicitly inapplicable.
-- [ ] No secrets or unrelated files included; review workflow preserved.
+- [ ] No secrets or unrelated files included; any review-workflow change explicitly authorized and validated.
 - [ ] Progress and unreleased changelog reflect actual status and PR URL.
 
 ## Review evidence (complete after automated review)

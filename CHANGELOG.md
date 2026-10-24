@@ -11,6 +11,13 @@ This records repository changes. No application version has been released.
 - Repository agent instructions, English onboarding/contribution documents,
   PR template, and [delivery progress/decision record](docs/development/progress.md).
 
+### Fixed
+
+- OpenCode model resolution moved to job environment scope so step configuration
+  receives its selected model instead of a null whitelist entry. Coordinator
+  authorized this narrow T00 exception; triggers, permissions, provider restriction,
+  credential handling, and review-only behavior are retained.
+
 ### Pending
 
 - T00 coordinator review/merge; T01–T35 implementation has not started.

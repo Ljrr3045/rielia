@@ -8,7 +8,8 @@ no runnable application, installation procedure, or public service in this repo.
 Start with [START HERE / Lectura para agentes](docs/handoff/00-START-HERE.md).
 It links the six plans in English and Spanish and explains their authority and
 proposal status. Product scope is P01–P38 / US01–US25; the technical backlog is
-T01–T35. T00 establishes this repository before implementation begins.
+T01–T35. T00 establishes this repository before implementation begins and repairs
+the existing automated review's model environment scope so PR review can run.
 
 ## Read and contribute
 

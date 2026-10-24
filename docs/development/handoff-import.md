@@ -51,8 +51,11 @@ active for new repository docs. Do not normalize the archive to satisfy a linter
 ## Evidence and later decisions
 
 Current validation and PR evidence are recorded in [progress](progress.md).
-The review workflow is preserved from `origin/dev` commit
-`188a760c36f8ec6d09f10f5027d162facce13875`.
+The base review workflow came from `origin/dev` commit
+`188a760c36f8ec6d09f10f5027d162facce13875`. The coordinator authorized a narrow
+T00 repair after the reviewer failed: move model resolution from step to job
+environment scope. That exception does not change the imported archive, triggers,
+permissions, provider restriction, credentials handling, or review-only behavior.
 
 Do not refresh the inventory after an accidental edit. Restore the imported file
 and rerun the check. Later corrections or ratifications belong in separate

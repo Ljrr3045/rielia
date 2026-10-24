@@ -9,7 +9,7 @@ software release. The coordinator owns integration and status across workers.
 
 | Field | Evidence/state |
 | --- | --- |
-| Scope | T00 repository onboarding and delivery governance only |
+| Scope | T00 onboarding/governance plus coordinator-authorized OpenCode model-scope repair |
 | Base | `origin/dev` at `188a760c36f8ec6d09f10f5027d162facce13875` |
 | Branch | `Ljrr3045/rielia-t00-onboarding` |
 | Worktree | Isolated Orca checkout named `rielia-t00-onboarding` |
@@ -21,7 +21,9 @@ software release. The coordinator owns integration and status across workers.
 T00 acceptance: complete byte-identical import with links/assets/hashes/proposal
 status; practical repository instructions and docs; truthful dependency/state
 tracking; passing whitespace/integrity checks; one non-draft PR to `dev`; latest
-head review handled with successful checks. Merge remains the coordinator's step.
+head review handled with successful checks. The coordinator authorized a narrow
+workflow exception to restore that review; no app/scaffold scope was added.
+Merge remains the coordinator's step.
 
 ## Coordinated work outside T00
 
@@ -66,7 +68,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 
 | Ticket | Internal batch/track | Planned outcome | Dependencies | State |
 | --- | --- | --- | --- | --- |
-| T00 | Pre-B0 governance | Import, instructions, contribution/review process, accurate ledger | None | In review, PR #1; coordinator acceptance/merge pending |
+| T00 | Pre-B0 governance | Import, instructions, contribution/review process, ledger, authorized review repair | None | In review, PR #1; coordinator acceptance/merge pending |
 | T01 | B0 | Navigation and task prototype validation | None | Not started |
 | T02 | B0 | Identity/proxy integration spike | None; stack/OAuth decisions pending | In progress: T02.0 fixture elsewhere; full spike unverified |
 | T03 | B0 | MCP SDK/wrapper/minimal remote profile spike | T02 for remote auth; stack decision pending | Not started |
@@ -121,6 +123,7 @@ actual use/demand; no launch date or public capacity has been established.
 | Private-project admin visibility | Plan proposes owner/admin can read/administer all projects; requires B0 decision | User/maintainer ratification; communicate before implementation |
 | Operations/public service | VPS capacity, budget/date, registration policy, public obligations not established | Maintainer records decisions and measured readiness in later tickets |
 | Automated review | Latest-head evidence in PR #1; failure is a delivery blocker, never clean review | Worker inspects checks and all three review surfaces; coordinator handles infrastructure blockers |
+| Review workflow exception | Coordinator explicitly authorized model env-scope repair in PR #1 after run 40140474241 failed before review | Retain fallback/override, triggers, permissions, provider restriction, credentials handling, and review-only prompt; require a real new-head review |
 
 Pending product decisions do not block the bounded T00 import/governance work.
 Record coordinator answers here without changing the historical source proposals.
@@ -137,11 +140,28 @@ No credentials should be pasted into this ledger, PR comments, or validation log
 - Verifier portability/rejection checks in a disposable copy: passed from an
   unrelated working directory; altered asset, extra imported file, and broken
   local link correctly rejected. The original source was untouched.
-- `git diff --check` and `git diff --cached --check`: passed. Review workflow diff
-  against the recorded base is empty. High-confidence credential-pattern scan
+- `git diff --check` and `git diff --cached --check`: passed at the import checkpoint.
+  Review workflow was initially unchanged; the later coordinator-approved model
+  env-scope repair is documented below. High-confidence credential-pattern scan
   found no matches; this is a bounded scan, not a comprehensive security audit.
 - Coordinator independently reported the same direct-source/hash/asset/link
   results and no blocking documentation findings at the pre-PR checkpoint.
+- Initial head `0fc9b80fb10444e05d8d98749a702de18f008f75` failed [OpenCode run
+  40140474241](https://github.com/Ljrr3045/rielia/actions/runs/40140474241) before
+  review: step-sibling env lookup produced `opencode-go/` and whitelist `[null]`.
+  All three comment/review surfaces were empty at that checkpoint. This was a
+  blocker, not a clean review. Coordinator authorized moving model resolution to
+  job env scope in the same PR, with the existing review restrictions retained.
+- Workflow repair validation: Ruby/Psych YAML parse and semantic comparison
+  passed; moving model resolution from step to job env is the sole workflow
+  behavior change. Synthetic unset/empty-secret fallback and model override
+  checks produced matching config/action model strings and string whitelists.
+  Triggers, concurrency, job guards, timeout, permissions, secret handling,
+  provider restriction, and review-only prompt are identical to the base.
+  `actionlint` is not installed; actual new-head review remains required. GitHub's
+  [env syntax documentation](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#env)
+  explains why sibling env definitions cannot reference each other. No secret
+  values were read or printed; fallback/override reasoning uses synthetic inputs.
 - [Non-draft PR #1 to dev](https://github.com/Ljrr3045/rielia/pull/1) is the single
   T00 PR. Its review evidence section records the final head/run and inspection of
   issue comments, submitted reviews, inline comments, and technical dispositions
