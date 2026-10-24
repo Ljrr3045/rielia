@@ -14,9 +14,11 @@ This records repository changes. No application version has been released.
 ### Fixed
 
 - OpenCode model resolution moved to job environment scope so step configuration
-  receives its selected model instead of a null whitelist entry. Coordinator
-  authorized this narrow T00 exception; triggers, permissions, provider restriction,
-  credential handling, and review-only behavior are retained.
+  receives its selected model instead of a null whitelist entry. Scoped PR write
+  permission is granted after reviewer PR reaction/comment requests returned 403.
+  Coordinator authorized both T00 exceptions; contents access stays read-only,
+  and triggers, other permissions, provider restriction, credential handling, and
+  review-only/no-merge behavior are retained.
 
 ### Pending
 

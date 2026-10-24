@@ -38,9 +38,11 @@ shell command with `rtk` (`rtk proxy` for unsupported commands). Commands in thi
 document use ordinary tools so contributors do not need Orca or RTK.
 
 Preserve `.github/workflows/opencode-review.yml` outside explicitly authorized
-changes. T00 includes a coordinator-approved repair of model environment scope
-to restore review, retaining triggers, permissions, provider restriction, secret
-handling, and review-only behavior. Treat `docs/handoff/` as an
+changes. T00 includes coordinator-approved repairs of model environment scope
+and PR comment access (`pull-requests: write` after PR reaction/comment 403s).
+Keep `contents: read`, other permissions, triggers, provider restriction, secret
+handling, and review-only/no-merge behavior. Use no personal credentials or review
+bypass. Treat `docs/handoff/` as an
 immutable import, including its asset manifest and file inventory. Record later
 ratifications/corrections separately under `docs/development/` and link the
 affected source section. Never modify a baseline just to make a hash check pass.

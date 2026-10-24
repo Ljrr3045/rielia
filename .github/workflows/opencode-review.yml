@@ -19,7 +19,7 @@ jobs:
     timeout-minutes: 20
     permissions:
       contents: read
-      pull-requests: read
+      pull-requests: write
       issues: write
     env:
       OPENCODE_MODEL: ${{ secrets.OPENCODE_MODEL || 'deepseek-v4.1-flash' }}

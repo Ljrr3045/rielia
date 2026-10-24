@@ -28,8 +28,9 @@ or an Orca installation.
 
 ## Current scope and protected material
 
-- T00 is repository onboarding and delivery governance, plus a coordinator-approved
-  narrow repair of OpenCode model environment scope after its first run failed.
+- T00 is repository onboarding and delivery governance, plus coordinator-approved
+  repairs of OpenCode model environment scope and PR comment permission after
+  reviewer setup failed.
   No application scaffold, landing implementation, deployment, or T01–T35
   completion is included.
 - `docs/handoff/` is an unchanged import of the original handoff. Preserve every
@@ -37,8 +38,10 @@ or an Orca installation.
   evidence in `docs/development/`; never silently rewrite the source proposals or
   regenerate the import checksum baseline to conceal a change.
 - Preserve `.github/workflows/opencode-review.yml` outside explicitly authorized
-  changes. T00's exception moves model resolution to job scope; retain triggers,
-  permissions, provider restrictions, credentials handling, and review-only prompt.
+  changes. T00's exceptions move model resolution to job scope and grant scoped
+  `pull-requests: write` after PR reaction/comment 403s. Retain `contents: read`,
+  other permissions, triggers, provider restrictions, credential handling, and
+  review-only/no-merge prompt; do not introduce personal credentials or a bypass.
 - License selection, stack confirmation, and OAuth credentials remain pending
   until the user/coordinator records an answer. Do not adopt Apache-2.0 merely
   because the plan proposes it. Do not add secrets to any tracked file or PR.

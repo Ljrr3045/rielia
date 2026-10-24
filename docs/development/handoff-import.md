@@ -54,8 +54,10 @@ Current validation and PR evidence are recorded in [progress](progress.md).
 The base review workflow came from `origin/dev` commit
 `188a760c36f8ec6d09f10f5027d162facce13875`. The coordinator authorized a narrow
 T00 repair after the reviewer failed: move model resolution from step to job
-environment scope. That exception does not change the imported archive, triggers,
-permissions, provider restriction, credentials handling, or review-only behavior.
+environment scope, then grant PR write permission after PR reaction/comment 403s.
+Those exceptions do not change the imported archive, triggers, contents read-only
+access, other permissions, provider restriction, credential handling, or
+review-only/no-merge behavior.
 
 Do not refresh the inventory after an accidental edit. Restore the imported file
 and rerun the check. Later corrections or ratifications belong in separate

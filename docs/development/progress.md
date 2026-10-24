@@ -9,7 +9,7 @@ software release. The coordinator owns integration and status across workers.
 
 | Field | Evidence/state |
 | --- | --- |
-| Scope | T00 onboarding/governance plus coordinator-authorized OpenCode model-scope repair |
+| Scope | T00 onboarding/governance plus coordinator-authorized OpenCode model-scope and PR-comment permission repairs |
 | Base | `origin/dev` at `188a760c36f8ec6d09f10f5027d162facce13875` |
 | Branch | `Ljrr3045/rielia-t00-onboarding` |
 | Worktree | Isolated Orca checkout named `rielia-t00-onboarding` |
@@ -21,8 +21,8 @@ software release. The coordinator owns integration and status across workers.
 T00 acceptance: complete byte-identical import with links/assets/hashes/proposal
 status; practical repository instructions and docs; truthful dependency/state
 tracking; passing whitespace/integrity checks; one non-draft PR to `dev`; latest
-head review handled with successful checks. The coordinator authorized a narrow
-workflow exception to restore that review; no app/scaffold scope was added.
+head review handled with successful checks. The coordinator authorized narrow
+workflow exceptions to restore that review; no app/scaffold scope was added.
 Merge remains the coordinator's step.
 
 ## Coordinated work outside T00
@@ -123,7 +123,7 @@ actual use/demand; no launch date or public capacity has been established.
 | Private-project admin visibility | Plan proposes owner/admin can read/administer all projects; requires B0 decision | User/maintainer ratification; communicate before implementation |
 | Operations/public service | VPS capacity, budget/date, registration policy, public obligations not established | Maintainer records decisions and measured readiness in later tickets |
 | Automated review | Latest-head evidence in PR #1; failure is a delivery blocker, never clean review | Worker inspects checks and all three review surfaces; coordinator handles infrastructure blockers |
-| Review workflow exception | Coordinator explicitly authorized model env-scope repair in PR #1 after run 40140474241 failed before review | Retain fallback/override, triggers, permissions, provider restriction, credentials handling, and review-only prompt; require a real new-head review |
+| Review workflow exceptions | Coordinator authorized model env-scope repair after run 40140474241, then scoped PR write access after run 40140743384 attempt 2 reaction/comment 403s | Retain fallback/override, triggers, contents read-only access, other permissions, provider restriction, credential handling, and review-only/no-merge prompt; require a real new-head review |
 
 Pending product decisions do not block the bounded T00 import/governance work.
 Record coordinator answers here without changing the historical source proposals.
@@ -142,7 +142,7 @@ No credentials should be pasted into this ledger, PR comments, or validation log
   local link correctly rejected. The original source was untouched.
 - `git diff --check` and `git diff --cached --check`: passed at the import checkpoint.
   Review workflow was initially unchanged; the later coordinator-approved model
-  env-scope repair is documented below. High-confidence credential-pattern scan
+  env-scope and PR permission repairs are documented below. High-confidence credential-pattern scan
   found no matches; this is a bounded scan, not a comprehensive security audit.
 - Coordinator independently reported the same direct-source/hash/asset/link
   results and no blocking documentation findings at the pre-PR checkpoint.
@@ -154,14 +154,29 @@ No credentials should be pasted into this ledger, PR comments, or validation log
   job env scope in the same PR, with the existing review restrictions retained.
 - Workflow repair validation: Ruby/Psych YAML parse and semantic comparison
   passed; moving model resolution from step to job env is the sole workflow
-  behavior change. Synthetic unset/empty-secret fallback and model override
+  behavior change at that checkpoint. Synthetic unset/empty-secret fallback and model override
   checks produced matching config/action model strings and string whitelists.
   Triggers, concurrency, job guards, timeout, permissions, secret handling,
-  provider restriction, and review-only prompt are identical to the base.
+  provider restriction, and review-only prompt were identical to the base before
+  the separately authorized permission change below.
   `actionlint` is not installed; actual new-head review remains required. GitHub's
   [env syntax documentation](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#env)
   explains why sibling env definitions cannot reference each other. No secret
   values were read or printed; fallback/override reasoning uses synthetic inputs.
+- Head `8e433db27d59d00aa4c3d4572339d6872b35f612`, [run 40140743384
+  attempt 2](https://github.com/Ljrr3045/rielia/actions/runs/40140743384/attempts/2),
+  confirmed the model configuration fix and installed OpenCode, then failed before
+  review with HTTP 403 on PR reaction/comment writes. Token summary showed Issues
+  write / PullRequests read. The coordinator authorized changing only PR access to
+  write, retaining contents read and other restrictions. PR-specific permission
+  need is an inference until the new-head run proves it; no personal token is used.
+  The first attempt had failed in upstream release-version lookup; its rerun passed
+  that setup step, exposing the distinct permission failure.
+- Combined workflow repair validation: Ruby/Psych YAML parse, synthetic fallback/
+  override checks, and semantic comparison passed. Only the env-scope move and
+  scoped PR write permission differ from base; contents remains read-only and all
+  other workflow behavior is retained. Integrity/source/asset/link and whitespace
+  checks pass again. Actual new-head review remains required before handoff.
 - [Non-draft PR #1 to dev](https://github.com/Ljrr3045/rielia/pull/1) is the single
   T00 PR. Its review evidence section records the final head/run and inspection of
   issue comments, submitted reviews, inline comments, and technical dispositions
