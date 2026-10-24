@@ -1,0 +1,31 @@
+.github/workflows/opencode-review.yml
+  s_0292dee8fcac2f::t_07eadd90b9d7e2 22
+AGENTS.md
+  s_0292dee8fcac2f::t_73f347a5b5903f 31-33,41-44
+CHANGELOG.md
+  s_0292dee8fcac2f::t_bb16eeab81e5c0 17-21
+CONTRIBUTING.md
+  s_0292dee8fcac2f::t_da34717d90ccff 41-45
+README.md
+  s_0292dee8fcac2f::t_9669ecf71dd180 11-12
+docs/development/handoff-import.md
+  s_0292dee8fcac2f::t_7c2172f5c4af55 57-60
+docs/development/progress.md
+  s_0292dee8fcac2f::t_bbc13d492aecff 12,24-25,126,145,157,160-161,166-179
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "fbc969eea29db86292340b4f09fb098932fb409e",
+  "prompts": {},
+  "sessions": {
+    "s_0292dee8fcac2f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a17019-6c4e-7b50-8946-63a2262b3e2d",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
