@@ -1,0 +1,97 @@
+docs/development/handoff-import.md
+  s_0292dee8fcac2f::t_c6be04ddd59d2b 1-60
+CHANGELOG.md
+  s_0292dee8fcac2f::t_5d81fae8994e24 1-18
+docs/development/handoff-files.sha256
+  s_0292dee8fcac2f::t_42ea9e7d1bd907 1-47
+CONTRIBUTING.md
+  s_0292dee8fcac2f::t_5d81fae8994e24 1-122
+.gitattributes
+  s_0292dee8fcac2f::t_5d81fae8994e24 1-4
+.github/pull_request_template.md
+  s_0292dee8fcac2f::t_5d81fae8994e24 1-38
+AGENTS.md
+  s_0292dee8fcac2f::t_5d81fae8994e24 1-102
+README.md
+  s_0292dee8fcac2f::t_5d81fae8994e24 1-68
+scripts/verify-handoff.py
+  s_0292dee8fcac2f::t_c6be04ddd59d2b 1-122
+docs/development/progress.md
+  s_0292dee8fcac2f::t_87bce164705eca 17,134-144
+  s_0292dee8fcac2f::t_c6be04ddd59d2b 1-4,7-16,19-25,27,35,41-60,64-70,72,74-133,145-153
+  s_0292dee8fcac2f::t_e83c9f77057af6 5-6,18,26,28-34,36-40,61-63,71,73
+docs/handoff/00-START-HERE.md
+  s_0292dee8fcac2f::t_1d373a80103107 1-62
+docs/handoff/01-product.en.md
+  s_0292dee8fcac2f::t_cd711112568b74 1-475
+docs/handoff/01-producto.es.md
+  s_0292dee8fcac2f::t_5fc74f2b026fad 1-482
+docs/handoff/02-architecture-technical-plan.en.md
+  s_0292dee8fcac2f::t_78ab483c89b472 1-878
+docs/handoff/02-arquitectura-plan-tecnico.es.md
+  s_0292dee8fcac2f::t_af1f9499b992f7 1-884
+docs/handoff/03-branding.en.md
+  s_0292dee8fcac2f::t_a36a47accd2451 1-204
+docs/handoff/03-branding.es.md
+  s_0292dee8fcac2f::t_8f28847cd1e592 1-204
+docs/handoff/04-ui-ux-development-guide.en.md
+  s_0292dee8fcac2f::t_279dd067a1c0c1 1-203
+docs/handoff/04-ui-ux-development-guide.es.md
+  s_0292dee8fcac2f::t_02ae131bb06915 1-203
+docs/handoff/05-landing-page-plan.en.md
+  s_0292dee8fcac2f::t_f330f3cfaa1d96 1-255
+docs/handoff/05-landing-page-plan.es.md
+  s_0292dee8fcac2f::t_2063089c84e380 1-255
+docs/handoff/06-brand-assets-guide.en.md
+  s_0292dee8fcac2f::t_6af4bb49f3dfb3 1-107
+docs/handoff/06-brand-assets-guide.es.md
+  s_0292dee8fcac2f::t_6233a72e1be2d1 1-107
+docs/handoff/assets/common/empty-project.svg
+  s_0292dee8fcac2f::t_82f8924df77297 1
+docs/handoff/assets/common/favicon.svg
+  s_0292dee8fcac2f::t_0c6ef354d51631 1
+docs/handoff/assets/common/logo-horizontal-inverse.svg
+  s_0292dee8fcac2f::t_c40cff0a7e47db 1
+docs/handoff/assets/common/logo-horizontal.svg
+  s_0292dee8fcac2f::t_3399f267beb88b 1
+docs/handoff/assets/common/logo-mark.svg
+  s_0292dee8fcac2f::t_9d4ff4d80c5edc 1
+docs/handoff/assets/common/logo-monochrome.svg
+  s_0292dee8fcac2f::t_798f77f2a08e98 1
+docs/handoff/assets/en/banner-landing.svg
+  s_0292dee8fcac2f::t_3ef6deefd7402a 1
+docs/handoff/assets/en/repository-banner.svg
+  s_0292dee8fcac2f::t_6c0db4bdc4b8c9 1
+docs/handoff/assets/en/social-card.svg
+  s_0292dee8fcac2f::t_7311108ce2fa4e 1
+docs/handoff/assets/es/banner-landing.svg
+  s_0292dee8fcac2f::t_eda8ffbc5d014c 1
+docs/handoff/assets/es/repository-banner.svg
+  s_0292dee8fcac2f::t_a0b45cbc1308db 1
+docs/handoff/assets/es/social-card.svg
+  s_0292dee8fcac2f::t_ca871ae1c3fc82 1
+docs/handoff/assets/generation-prompt.txt
+  s_0292dee8fcac2f::t_5837ae564b96f4 1-9
+docs/handoff/assets/index.en.html
+  s_0292dee8fcac2f::t_ec9d972ec4ef73 1
+docs/handoff/assets/index.es.html
+  s_0292dee8fcac2f::t_44ffee943e1419 1
+docs/handoff/assets/manifest.json
+  s_0292dee8fcac2f::t_f79bb0cde6d1c1 1-338
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9cd962b31ea99c2c38f94f061b4d387d594499e6",
+  "prompts": {},
+  "sessions": {
+    "s_0292dee8fcac2f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a17019-6c4e-7b50-8946-63a2262b3e2d",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
