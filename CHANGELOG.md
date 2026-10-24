@@ -11,17 +11,21 @@ This records repository changes. No application version has been released.
 - Repository agent instructions, English onboarding/contribution documents,
   PR template, and [delivery progress/decision record](docs/development/progress.md).
 
-### Fixed
+### Changed
 
-- OpenCode model resolution moved to job environment scope so step configuration
-  receives its selected model instead of a null whitelist entry. Scoped PR write
-  permission is granted after reviewer PR reaction/comment requests returned 403.
-  Coordinator authorized both T00 exceptions; contents access stays read-only,
-  and triggers, other permissions, provider restriction, credential handling, and
-  review-only/no-merge behavior are retained.
+- Adopt Kody AI review: the coordinator posts the exact root `@kody start-review`
+  request for every ready PR/head; all three review surfaces and valid findings
+  must be handled before coordinator merge to `dev`.
+
+### Removed
+
+- Retired OpenCode review workflow, including the original inherited from `dev`,
+  at the user's direction. This also removes the executable action/token exposure
+  flagged by Kody on the previous PR head; the imported handoff remains unchanged.
 
 ### Pending
 
-- T00 coordinator review/merge; T01–T35 implementation has not started.
+- T00 final-head Kody review and coordinator merge; no full T01–T35 ticket is
+  complete, with a separate T02.0 supporting fixture reported in progress.
 - User decisions on license, stack, and installation OAuth configuration; final
   identity and landing design remain proposals. No scaffold or deployment added.

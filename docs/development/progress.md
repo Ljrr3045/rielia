@@ -9,21 +9,22 @@ software release. The coordinator owns integration and status across workers.
 
 | Field | Evidence/state |
 | --- | --- |
-| Scope | T00 onboarding/governance plus coordinator-authorized OpenCode model-scope and PR-comment permission repairs |
+| Scope | T00 onboarding/governance, user-directed OpenCode workflow removal, and coordinator-requested Kody AI review |
 | Base | `origin/dev` at `188a760c36f8ec6d09f10f5027d162facce13875` |
 | Branch | `Ljrr3045/rielia-t00-onboarding` |
 | Worktree | Isolated Orca checkout named `rielia-t00-onboarding` |
 | PR | [#1](https://github.com/Ljrr3045/rielia/pull/1), target `dev`, non-draft; coordinator merge only |
-| T00 | In review: import/docs and local validation complete; coordinator acceptance/merge pending |
+| T00 | In review: import/docs and local checks pass; final-head Kody round and coordinator acceptance/merge pending |
 | T01–T35 | None complete; T02.0 fixture in progress separately (coordinator report); remaining full tickets not started |
-| Automated review | Latest-head run/status and dispositions tracked in [PR review evidence](https://github.com/Ljrr3045/rielia/pull/1); recheck after each push |
+| Automated review | Kody AI: coordinator posts exact root `@kody start-review` for each ready head; latest-head evidence/dispositions tracked in [PR #1](https://github.com/Ljrr3045/rielia/pull/1) |
 
 T00 acceptance: complete byte-identical import with links/assets/hashes/proposal
 status; practical repository instructions and docs; truthful dependency/state
 tracking; passing whitespace/integrity checks; one non-draft PR to `dev`; latest
-head review handled with successful checks. The coordinator authorized narrow
-workflow exceptions to restore that review; no app/scaffold scope was added.
-Merge remains the coordinator's step.
+head Kody review handled with passing applicable checks. The user retired OpenCode
+and requested deletion of its entire workflow, including the inherited version.
+The coordinator alone posts each ready head's Kody trigger and merges after
+validation and feedback handling. No app/scaffold scope was added.
 
 ## Coordinated work outside T00
 
@@ -68,7 +69,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 
 | Ticket | Internal batch/track | Planned outcome | Dependencies | State |
 | --- | --- | --- | --- | --- |
-| T00 | Pre-B0 governance | Import, instructions, contribution/review process, ledger, authorized review repair | None | In review, PR #1; coordinator acceptance/merge pending |
+| T00 | Pre-B0 governance | Import, instructions, contribution/review process, ledger, Kody adoption/OpenCode removal | None | In review, PR #1; local checks pass, final-head Kody and coordinator acceptance pending |
 | T01 | B0 | Navigation and task prototype validation | None | Not started |
 | T02 | B0 | Identity/proxy integration spike | None; stack/OAuth decisions pending | In progress: T02.0 fixture elsewhere; full spike unverified |
 | T03 | B0 | MCP SDK/wrapper/minimal remote profile spike | T02 for remote auth; stack decision pending | Not started |
@@ -122,8 +123,8 @@ actual use/demand; no launch date or public capacity has been established.
 | Principal/authorship | Fixed invariant: delegated user is author; autonomous Agent has own identity; creator/assignee separate | T35 then relevant API/web/MCP/isolation evidence |
 | Private-project admin visibility | Plan proposes owner/admin can read/administer all projects; requires B0 decision | User/maintainer ratification; communicate before implementation |
 | Operations/public service | VPS capacity, budget/date, registration policy, public obligations not established | Maintainer records decisions and measured readiness in later tickets |
-| Automated review | Latest-head evidence in PR #1; failure is a delivery blocker, never clean review | Worker inspects checks and all three review surfaces; coordinator handles infrastructure blockers |
-| Review workflow exceptions | Coordinator authorized model env-scope repair after run 40140474241, then scoped PR write access after run 40140743384 attempt 2 reaction/comment 403s | Retain fallback/override, triggers, contents read-only access, other permissions, provider restriction, credential handling, and review-only/no-merge prompt; require a real new-head review |
+| Automated review | Kody AI replaces OpenCode; every ready PR/head needs an explicit root `@kody start-review` request | Coordinator alone posts trigger; worker verifies reviewed head, issue comments, formal reviews, inline comments, and applicable checks |
+| Retired reviewer | User explicitly requested full OpenCode workflow deletion, including the inherited version; no further repairs/runs or secret changes | Keep archive unchanged; final-head Kody feedback and validation are the current gate |
 
 Pending product decisions do not block the bounded T00 import/governance work.
 Record coordinator answers here without changing the historical source proposals.
@@ -141,44 +142,35 @@ No credentials should be pasted into this ledger, PR comments, or validation log
   unrelated working directory; altered asset, extra imported file, and broken
   local link correctly rejected. The original source was untouched.
 - `git diff --check` and `git diff --cached --check`: passed at the import checkpoint.
-  Review workflow was initially unchanged; the later coordinator-approved model
-  env-scope and PR permission repairs are documented below. High-confidence credential-pattern scan
+  High-confidence credential-pattern scan
   found no matches; this is a bounded scan, not a comprehensive security audit.
 - Coordinator independently reported the same direct-source/hash/asset/link
   results and no blocking documentation findings at the pre-PR checkpoint.
-- Initial head `0fc9b80fb10444e05d8d98749a702de18f008f75` failed [OpenCode run
-  40140474241](https://github.com/Ljrr3045/rielia/actions/runs/40140474241) before
-  review: step-sibling env lookup produced `opencode-go/` and whitelist `[null]`.
-  All three comment/review surfaces were empty at that checkpoint. This was a
-  blocker, not a clean review. Coordinator authorized moving model resolution to
-  job env scope in the same PR, with the existing review restrictions retained.
-- Workflow repair validation: Ruby/Psych YAML parse and semantic comparison
-  passed; moving model resolution from step to job env is the sole workflow
-  behavior change at that checkpoint. Synthetic unset/empty-secret fallback and model override
-  checks produced matching config/action model strings and string whitelists.
-  Triggers, concurrency, job guards, timeout, permissions, secret handling,
-  provider restriction, and review-only prompt were identical to the base before
-  the separately authorized permission change below.
-  `actionlint` is not installed; actual new-head review remains required. GitHub's
-  [env syntax documentation](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#env)
-  explains why sibling env definitions cannot reference each other. No secret
-  values were read or printed; fallback/override reasoning uses synthetic inputs.
-- Head `8e433db27d59d00aa4c3d4572339d6872b35f612`, [run 40140743384
-  attempt 2](https://github.com/Ljrr3045/rielia/actions/runs/40140743384/attempts/2),
-  confirmed the model configuration fix and installed OpenCode, then failed before
-  review with HTTP 403 on PR reaction/comment writes. Token summary showed Issues
-  write / PullRequests read. The coordinator authorized changing only PR access to
-  write, retaining contents read and other restrictions. PR-specific permission
-  need is an inference until the new-head run proves it; no personal token is used.
-  The first attempt had failed in upstream release-version lookup; its rerun passed
-  that setup step, exposing the distinct permission failure.
-- Combined workflow repair validation: Ruby/Psych YAML parse, synthetic fallback/
-  override checks, and semantic comparison passed. Only the env-scope move and
-  scoped PR write permission differ from base; contents remains read-only and all
-  other workflow behavior is retained. Integrity/source/asset/link and whitespace
-  checks pass again. Actual new-head review remains required before handoff.
+- Historical OpenCode runs failed before a completed review: [40140474241](https://github.com/Ljrr3045/rielia/actions/runs/40140474241)
+  had invalid model configuration; [40140743384 attempt 2](https://github.com/Ljrr3045/rielia/actions/runs/40140743384/attempts/2)
+  reached GitHub reaction/comment 403s after an earlier version-fetch failure.
+  Coordinator-authorized configuration/permission repairs were locally validated,
+  but are superseded by the user's retirement/removal decision.
+- On head `fbc969eea29db86292340b4f09fb098932fb409e`, [run 40140951885](https://github.com/Ljrr3045/rielia/actions/runs/40140951885)
+  posted a bot reaction, then waited on an unattended external-directory permission
+  prompt. The coordinator cancelled it when the user paused work to replace the
+  reviewer; it produced no completed review. That cancellation is historical
+  evidence, not a clean review or a current OpenCode gate.
+- Kody's [prior-head review 5640595445](https://github.com/Ljrr3045/rielia/pull/1#pullrequestreview-5640595445)
+  covered `fbc969eea29db86292340b4f09fb098932fb409e`. Its [inline finding](https://github.com/Ljrr3045/rielia/pull/1#discussion_r4368936447)
+  correctly identified mutable third-party action execution with a write-scoped
+  token. The user-directed full workflow deletion removes that executable path;
+  pinning a retired action is unnecessary. A substantive thread reply follows the
+  pushed deletion. This prior-head review does not approve the replacement head.
+- After reviewer replacement, direct-source/inventory comparison (47 files),
+  manifest checks (30 assets), and local file links (272 across 34 documents) pass
+  again. Worktree and staged whitespace checks pass; the retired workflow is
+  absent and appears as a deletion relative to `origin/dev`. The final Kody round
+  remains pending. The worker reports PR URL/head to the coordinator, who alone posts
+  the exact root `@kody start-review` comment. Any pushed fix needs another explicit
+  request for that new head and inspection/handling of all three review surfaces.
 - [Non-draft PR #1 to dev](https://github.com/Ljrr3045/rielia/pull/1) is the single
-  T00 PR. Its review evidence section records the final head/run and inspection of
+  T00 PR. Its review evidence section records the final head/Kody round and inspection of
   issue comments, submitted reviews, inline comments, and technical dispositions
   before worker handoff. Check current PR evidence; this file does not assert
   successful review merely because a PR exists.
@@ -188,4 +180,5 @@ No credentials should be pasted into this ledger, PR comments, or validation log
 
 The PR's checks/comments supply current-head evidence without a self-referential
 commit hash in this file. After a pushed fix, this record's prior review evidence
-does not imply review approval of the new head; wait for the synchronize run.
+does not imply approval of the new head; wait for the coordinator-requested Kody
+round for that head. Workers do not post duplicate trigger comments.

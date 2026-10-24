@@ -28,20 +28,17 @@ or an Orca installation.
 
 ## Current scope and protected material
 
-- T00 is repository onboarding and delivery governance, plus coordinator-approved
-  repairs of OpenCode model environment scope and PR comment permission after
-  reviewer setup failed.
+- T00 is repository onboarding and delivery governance, including the user-directed
+  retirement/removal of OpenCode and adoption of coordinator-requested Kody AI review.
   No application scaffold, landing implementation, deployment, or T01–T35
   completion is included.
 - `docs/handoff/` is an unchanged import of the original handoff. Preserve every
   filename, relative link, asset, and hash. Put decisions, corrections, and delivery
   evidence in `docs/development/`; never silently rewrite the source proposals or
   regenerate the import checksum baseline to conceal a change.
-- Preserve `.github/workflows/opencode-review.yml` outside explicitly authorized
-  changes. T00's exceptions move model resolution to job scope and grant scoped
-  `pull-requests: write` after PR reaction/comment 403s. Retain `contents: read`,
-  other permissions, triggers, provider restrictions, credential handling, and
-  review-only/no-merge prompt; do not introduce personal credentials or a bypass.
+- OpenCode review is retired. Its workflow is deleted, including the version
+  inherited from `dev`; do not restore, repair, or run it. Kody AI review follows
+  the explicit process below. Do not modify secrets or substitute personal tokens.
 - License selection, stack confirmation, and OAuth credentials remain pending
   until the user/coordinator records an answer. Do not adopt Apache-2.0 merely
   because the plan proposes it. Do not add secrets to any tracked file or PR.
@@ -98,11 +95,15 @@ These rules constrain future code; the directories below are proposed, not prese
 5. Run `git diff --check` and the applicable checks in CONTRIBUTING. Open one
    non-draft PR targeting `dev`, in English, with scope/requirements, validation,
    limitations, and remaining decisions. Use a body file for multiline CLI text.
-6. Inspect OpenCode workflow status **for the latest PR head**, issue comments,
-   submitted reviews, and inline review comments. Analyze every finding; fix real
-   issues with evidence and post concise technical dispositions when substantive.
-   A failed reviewer is a blocker, not a clean review. After pushing fixes, wait
-   through the new synchronize run and repeat the review/checks.
+6. Every ready PR/head requires an explicit Kody AI request. After checks pass,
+   report the PR URL and head SHA to the coordinator, who alone posts a root PR
+   comment exactly `@kody start-review`. Workers must not duplicate this trigger.
+   Inspect issue comments, submitted reviews, inline comments, and applicable
+   checks. Confirm the reviewed head; analyze every finding, fix valid issues with
+   evidence, and document concise technical dispositions. After any push, report
+   the new head ready for a fresh coordinator trigger and wait for that round.
+   A prior-head review never approves changed code. A failed, missing, or incomplete
+   review is a blocker, not a clean review.
 7. Only the coordinator merges. Do not deploy or merge. A dispatched worker reports
    through its active Orca preamble with branch/worktree, PR/head, checks, review
    evidence, and blockers; send `worker_done` once and then stop task activity.

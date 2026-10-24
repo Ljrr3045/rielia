@@ -16,17 +16,19 @@
 - [ ] `git diff --check` and staged/PR diff whitespace check pass.
 - [ ] `python3 scripts/verify-handoff.py` passes; immutable handoff remains unchanged.
 - [ ] Appropriate behavior/invariant checks pass, or are explicitly inapplicable.
-- [ ] No secrets or unrelated files included; any review-workflow change explicitly authorized and validated.
+- [ ] No secrets or unrelated files included; retired OpenCode workflow is not restored.
 - [ ] Progress and unreleased changelog reflect actual status and PR URL.
 
 ## Review evidence (complete after automated review)
 
 - Latest PR head SHA:
-- OpenCode run URL and result for that head:
+- Coordinator's root `@kody start-review` comment URL and requested head:
+- Kody AI review/comment URLs and result for that head:
 - Issue comments, submitted reviews, and inline comments inspected:
-- Findings, technical dispositions/fix evidence, and follow-up synchronize run:
+- Findings, technical dispositions/fix evidence, and any fresh head review:
 
-<!-- Failed/cancelled/missing reviewer is a blocker, not a clean review. Recheck after every push. -->
+<!-- Coordinator alone posts the exact root trigger for every ready head; workers do not duplicate it. -->
+<!-- Failed/cancelled/missing/incomplete review is a blocker. Prior-head review never approves changed code. -->
 
 ## Limitations and remaining decisions
 

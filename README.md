@@ -8,8 +8,8 @@ no runnable application, installation procedure, or public service in this repo.
 Start with [START HERE / Lectura para agentes](docs/handoff/00-START-HERE.md).
 It links the six plans in English and Spanish and explains their authority and
 proposal status. Product scope is P01–P38 / US01–US25; the technical backlog is
-T01–T35. T00 establishes this repository before implementation begins and adjusts
-the existing automated review's model environment scope and PR comment permission.
+T01–T35. T00 establishes this repository before implementation begins, removes
+the retired OpenCode workflow, and adopts coordinator-requested Kody AI review.
 
 ## Read and contribute
 
@@ -39,7 +39,9 @@ callbacks must be configured per installation; none are included.
   agent acts as its own Agent principal. Author, connection, and assignee are distinct.
 - The landing and v0.1 assets remain planning/proposals. Rielia is a working name;
   no final logo, availability, performance, or usability claims are established.
-- Only the coordinator merges PRs to `dev`. See CONTRIBUTING before selecting work.
+- The coordinator requests Kody AI review for every ready head with a root PR
+  comment exactly `@kody start-review` and alone merges PRs to `dev` after validation
+  and feedback handling. See CONTRIBUTING before selecting work.
 
 ## Verify the imported handoff
 

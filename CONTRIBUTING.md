@@ -37,12 +37,10 @@ Inside Orca, use its worktree workflow. If RTK guidance is active, prefix every
 shell command with `rtk` (`rtk proxy` for unsupported commands). Commands in this
 document use ordinary tools so contributors do not need Orca or RTK.
 
-Preserve `.github/workflows/opencode-review.yml` outside explicitly authorized
-changes. T00 includes coordinator-approved repairs of model environment scope
-and PR comment access (`pull-requests: write` after PR reaction/comment 403s).
-Keep `contents: read`, other permissions, triggers, provider restriction, secret
-handling, and review-only/no-merge behavior. Use no personal credentials or review
-bypass. Treat `docs/handoff/` as an
+The user retired OpenCode review and requested deletion of its entire workflow,
+including the version inherited from `dev`. Do not restore, repair, or invoke it;
+Kody AI is the current reviewer. Do not modify secrets or introduce personal
+tokens or a review bypass. Treat `docs/handoff/` as an
 immutable import, including its asset manifest and file inventory. Record later
 ratifications/corrections separately under `docs/development/` and link the
 affected source section. Never modify a baseline just to make a hash check pass.
@@ -92,10 +90,16 @@ gh pr create --base dev --title "docs: describe the change" --body-file /tmp/rie
 ```
 
 Add the real PR URL to progress after creation and push that update to the same
-branch. Do not open a second PR for review fixes. A push triggers a new OpenCode
-review; only the latest PR head's completed run is relevant to acceptance.
+branch. Do not open a second PR for review fixes. Every ready PR/head requires
+an explicit Kody AI request; a push alone does not satisfy that requirement.
 
-Inspect workflow checks plus all three review surfaces: issue comments, submitted
+After local checks pass, send the coordinator the PR URL and exact head SHA.
+The **coordinator alone** posts a root PR comment exactly `@kody start-review`.
+Workers must not duplicate the trigger. Record its comment URL, the requested
+head, and the resulting Kody review/comment URLs. Confirm the review applies to
+the current head rather than relying on an earlier completion message.
+
+Inspect applicable checks plus all three review surfaces: issue comments, submitted
 reviews, and inline review comments. For example, replace `123` with your PR:
 
 ```sh
@@ -107,10 +111,12 @@ gh api --paginate repos/Ljrr3045/rielia/pulls/123/comments
 
 Evaluate every finding against the code/requirements. Fix real defects and attach
 relevant validation; give a concise technical disposition for substantive findings
-that are fixed, deferred, or rejected. A failed/cancelled/missing reviewer is a
-blocker, not evidence of no findings. After any push, wait for its synchronize
-review, reread all surfaces, and verify successful checks for the latest head.
-Do not change the review workflow to bypass a failure.
+that are fixed, deferred, or rejected. A failed, cancelled, missing, or incomplete
+review is a blocker, not evidence of no findings. After any push, rerun affected
+checks and report the new head ready for the coordinator's fresh Kody trigger.
+Wait for that round, reread all three surfaces, and handle feedback before
+handoff. A prior-head review never approves changed code. Retired OpenCode checks
+are historical evidence and are not the current review gate.
 
 Only the coordinator merges. Do not deploy or merge from a worker task. A dispatched
 worker reports branch/worktree, PR/head SHA, validation/review evidence, and blockers
