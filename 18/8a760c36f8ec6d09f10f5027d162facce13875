@@ -1,0 +1,14 @@
+.github/workflows/opencode-review.yml
+  h_96a125dd239871 1-58
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "188a760c36f8ec6d09f10f5027d162facce13875",
+  "prompts": {},
+  "humans": {
+    "h_96a125dd239871": {
+      "author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
