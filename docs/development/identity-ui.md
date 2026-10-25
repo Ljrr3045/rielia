@@ -50,7 +50,8 @@ for nonideal states. Passing these checks in the fixture does not complete them.
   When the action settles, focus moves to the section heading only if that control
   is now disconnected and focus is on `body` or null. A still-connected control is
   never focused programmatically, and focus on any other element is never moved.
-  Recovery is keyed to the settled `pending` transition and disarms immediately, so
+  Recovery observes settled `pending` and status transitions (including retry)
+  and disarms immediately, so
   background renders do not move focus. Browser-owned focus after pointer clicks is
   left as the browser sets it.
 - Visible focus uses the existing `--focus` outline, including the programmatic
@@ -60,6 +61,16 @@ for nonideal states. Passing these checks in the fixture does not complete them.
   creates no workspaces, tasks, or MCP access.
 
 ## Evidence
+
+The bounded presentation is merged in
+[PR #4](https://github.com/Ljrr3045/rielia/pull/4) as
+`ae67fcc321a0cbb152a0137141d8d6a05abae631` on 2026-10-25T02:57:42Z.
+The reviewed head `f9c4cc70e51cadf7722dcac775b402f926fbf9a8` has
+[Kody approval 5641248403](https://github.com/Ljrr3045/rielia/pull/4#pullrequestreview-5641248403)
+and successful [CI 40156199016](https://github.com/Ljrr3045/rielia/actions/runs/40156199016).
+Live PR state/review/check data was reread during T01 documentation reconciliation.
+The prior delivery report preserves coordinator QA and worktree-removal evidence;
+this update does not claim new browser verification or real OAuth/HTTPS acceptance.
 
 Integrated checks on the rebased branch (on `origin/dev` at `096a1a3`):
 
