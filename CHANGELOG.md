@@ -25,6 +25,9 @@ This records repository changes. No application version has been released.
   must be handled before coordinator merge to `dev`.
 - T00 is complete and merged via [PR #1](https://github.com/Ljrr3045/rielia/pull/1),
   merge `8dd7c31f454c1989d017dbf7b40e6646112d2d2a`, after final-head Kody success/approval.
+- Pin fixture CI actions to verified full upstream commit SHAs and defensively
+  handle smoke child processes that never acquired a PID. A focused Node regression
+  checks same-tick failed-spawn cleanup and termination of the live sibling.
 
 ### Removed
 

@@ -65,7 +65,8 @@ comparison. Review the actual diff for unintended changes and credentials. Link
 new files with portable relative paths; keep English/Spanish filenames intact.
 The verifier checks local file targets, not remote sites or heading fragments.
 
-`pnpm check` runs lint, strict typechecks, production builds, and HTTP smoke.
+`pnpm check` runs lint, the focused smoke-process cleanup regression, strict
+typechecks, production builds, and HTTP smoke.
 The smoke starts task-local servers on temporary ports and stops them afterwards;
 it verifies the API contract, bilingual HTML, and API-down fallback. No external
 credentials are needed. CI also enforces the immutable handoff/link checks.

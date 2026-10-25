@@ -1,10 +1,10 @@
 import assert from 'node:assert/strict';
-import { spawn } from 'node:child_process';
 import { once } from 'node:events';
 import { createRequire } from 'node:module';
 import { createServer } from 'node:net';
 import { fileURLToPath } from 'node:url';
 import { isHealthResponse } from '@rielia/contracts';
+import { startProcess, stopProcess as stop } from './smoke-process.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const webDirectory = fileURLToPath(new URL('../apps/web/', import.meta.url));
@@ -24,43 +24,9 @@ async function freePort() {
 }
 
 function start(name, args, cwd, env) {
-  const child = spawn(process.execPath, args, {
-    cwd,
-    env: { ...process.env, NEXT_TELEMETRY_DISABLED: '1', ...env },
-    detached: process.platform !== 'win32',
-    stdio: ['ignore', 'pipe', 'pipe'],
-  });
-  const entry = { name, child, log: '', stopped: false, error: undefined };
-  for (const stream of [child.stdout, child.stderr]) {
-    stream.on('data', (chunk) => { entry.log = (entry.log + chunk.toString()).slice(-16000); });
-  }
-  child.on('error', (error) => { entry.error = error; });
+  const entry = startProcess(name, args, cwd, env);
   children.push(entry);
   return entry;
-}
-
-function signal(entry, name) {
-  try {
-    if (process.platform === 'win32') entry.child.kill(name);
-    else process.kill(-entry.child.pid, name);
-  } catch (error) {
-    if (error.code !== 'ESRCH') throw error;
-  }
-}
-
-async function stop(entry) {
-  if (entry.stopped) return;
-  entry.stopped = true;
-  if (entry.child.exitCode !== null || entry.child.signalCode !== null) return;
-  const exited = once(entry.child, 'exit');
-  signal(entry, 'SIGTERM');
-  let timer;
-  const timedOut = new Promise((resolve) => { timer = setTimeout(() => resolve(true), 5000); });
-  if (await Promise.race([exited.then(() => false), timedOut])) {
-    signal(entry, 'SIGKILL');
-    await exited;
-  }
-  clearTimeout(timer);
 }
 
 async function ready(entry, url) {

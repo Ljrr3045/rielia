@@ -223,6 +223,14 @@ No credentials should be pasted into this ledger, PR comments, or validation log
 - Real OAuth/provider/proxy/session flows, MCP clients/discovery, DB/migration,
   worker/queue persistence/restart, Docker/deployment, load, and full accessibility
   acceptance: not run/not implemented. Full T02/T03/T04 remain unverified.
+- Kody's [CI action pin finding](https://github.com/Ljrr3045/rielia/pull/2#discussion_r4369146492)
+  and [failed-spawn cleanup finding](https://github.com/Ljrr3045/rielia/pull/2#discussion_r4369146777)
+  were accepted. Actions now use full verified upstream commit SHAs. Smoke lifecycle
+  helpers guard missing PID before signal/wait setup; a focused built-in Node
+  regression failed on same-tick shutdown before the asynchronous spawn error and
+  passes after the guard, preserving `ENOENT` and stopping the live sibling.
+  This is defensive cleanup hardening, not a claimed production startup failure.
+  A changed head requires fresh CI and the coordinator's new Kody request.
 
 The PR's checks/comments supply current-head evidence without a self-referential
 commit hash in this file. After a pushed fix, this record's prior review evidence

@@ -69,10 +69,11 @@ From the repository root:
 pnpm install --frozen-lockfile
 python3 scripts/verify-handoff.py
 pnpm lint
+pnpm test:smoke
 pnpm typecheck
 pnpm build
 pnpm smoke
-# The same four checks, in order:
+# The same checks, in order:
 pnpm check
 pnpm audit --audit-level=high
 ```
@@ -122,6 +123,24 @@ with the pinned toolchain, runs `pnpm check`, and fails on high/critical registr
 advisories. Kody review follows the active repository governance; the retired
 OpenCode workflow is absent. This fixture does not implement
 the full architecture CI/release/security program.
+
+CI action pins were resolved from each official repository's `v6`/`v4` refs
+(including dereferencing pnpm's annotated tag), following
+[GitHub's immutable SHA guidance](https://docs.github.com/en/actions/reference/security/secure-use#using-third-party-actions):
+[checkout](https://github.com/actions/checkout/commit/d23441a48e516b6c34aea4fa41551a30e30af803),
+[setup-node](https://github.com/actions/setup-node/commit/249970729cb0ef3589644e2896645e5dc5ba9c38),
+and [pnpm action-setup](https://github.com/pnpm/action-setup/commit/b906affcce14559ad1aafd4ab0e942779e9f58b1).
+The version comments remain readable; runtime/dependency pins and CI permissions
+are unchanged.
+
+`pnpm test:smoke` uses Node's built-in test runner and the actual process helper.
+It starts a live sibling, attempts a spawn into a nonexistent working directory,
+and invokes cleanup before the asynchronous spawn-error event. The check failed
+before PID/wait guards and passes after them, preserving the original `ENOENT`
+and confirming the live sibling exits. This is defensive lifecycle hardening;
+it does not claim the normal production HTTP smoke reproduced a startup defect.
+Guarding only `signal` would still risk waiting for an `exit` from a process
+that never spawned, so `stopProcess` also returns before installing that wait.
 
 Local evidence on 2026-10-24: `pnpm check` passed with Node 24.22.1 and pnpm
 12.15.0 (lint, all strict typechecks, contracts/API/web production builds, and

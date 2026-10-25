@@ -13,7 +13,8 @@
     "typecheck": "pnpm --filter @rielia/contracts build && pnpm -r run typecheck",
     "lint": "eslint . --max-warnings=0",
     "smoke": "node scripts/smoke.mjs",
-    "check": "pnpm lint && pnpm typecheck && pnpm build && pnpm smoke",
+    "test:smoke": "node --test scripts/smoke-process.test.mjs",
+    "check": "pnpm lint && pnpm test:smoke && pnpm typecheck && pnpm build && pnpm smoke",
     "dev:web": "pnpm --filter @rielia/contracts build && pnpm --filter @rielia/web dev",
     "dev:api": "pnpm --filter @rielia/contracts build && pnpm --filter @rielia/api dev"
   },
