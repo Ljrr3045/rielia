@@ -370,8 +370,11 @@ claimed recovery behind the modal, and root's 390 check confirmed background ine
 close/back exposing the labelled RIE-12 retry, and own-task retry reachable inside
 detail. The final head adds shared `backgroundInert` mount suppression as optional
 structural cleanup (DOM mounting only), preserving the documented close/back
-contract. Root's 1920/390 evidence applies to the 69dd interaction; the final head
-adds only this render suppression, and root's focused final check remains pending.
+contract. Root's earlier 1920/390 evidence applies to the 69dd interaction; final
+code-tree QA on 411ab8c separately confirmed desktop labelled global recovery,
+narrow main inert with zero global retry DOM and no overflow, close/back restoring
+the RIE-12 retry successfully, and own-detail status failure/retry remaining
+reachable and succeeding. The final head CI/review trigger remains.
 
 Local validation on the integrated branch: full `pnpm check` passes, including 19
 prototype tests, strict types, production builds and HTTP smoke; `/prototype` is

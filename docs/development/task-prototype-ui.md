@@ -282,6 +282,15 @@ own-task retry inside detail remained reachable. The final head adds a shared
 mounting only, adds no recovery capability, and preserves the documented narrow
 modal close/back contract and wide-desktop behaviour.
 
+Final code-tree QA on `411ab8c` (distinct from the earlier `69dd` QA): root refreshed
+the production preview and verified desktop RIE-15 detail open + failed RIE-12 row
+status still shows the labelled global recovery; at 390 the main region was
+`inert=true`, global retry DOM count was zero, and there was no overflow; closing
+detail restored the RIE-12 retry and it succeeded. At 390, arming another failure,
+opening RIE-12, and changing status through detail Properties kept the own labelled
+error/retry reachable inside detail; retry changed it to done. App error logs were
+empty; viewport reset.
+
 Post-fix Brave and UI-owner regressions cover the reported A/B, stale-success,
 unrelated-close, own-close/reopen, matching-detail non-duplication, wide
 detail-open foreign recovery, and 390 px retry cases. The final presentation head
