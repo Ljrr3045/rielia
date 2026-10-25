@@ -91,6 +91,11 @@ Keep these boundaries in both current and future code.
    UXR/UX or LPR/S/LP IDs; state exclusions and acceptance before implementation.
 2. Use an isolated worktree from `origin/dev`. Confine edits to the assigned
    checkout; do not share it with another worker or alter the original handoff.
+   In the supervised development workflow, coordinator-launched development
+   workers use **Codex `gpt-6.1-sol` with effort `xhigh`**, each in its own
+   worktree, per the user's explicit rule. This does not prescribe tools/models
+   for ordinary human contributors. Kody AI is the external PR reviewer invoked
+   by the coordinator's root comment, not a development worker.
 3. Deliver a bounded change with relevant evidence. For UI, verify mobile/desktop,
    touch/keyboard, nonideal states, accessibility, persistence, and failure recovery.
    A screenshot alone never completes a flow. Record unavailable checks honestly.
