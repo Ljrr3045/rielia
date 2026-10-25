@@ -75,7 +75,15 @@ export interface PrototypeError {
   readonly message: string;
   readonly field: string | null;
 }
-export type SaveKind = 'task' | 'status' | 'sprint' | 'start-sprint' | 'close-sprint';
+/** Feedback/retry belongs to this operation, independently of navigation or selection. */
+export type SaveContext =
+  | { readonly kind: 'task'; readonly taskId: string }
+  | { readonly kind: 'status'; readonly taskId: string; readonly status: TaskStatus }
+  | { readonly kind: 'sprint'; readonly sprintId: string }
+  | { readonly kind: 'start-sprint'; readonly sprintId: string }
+  /** Null destination represents a rejected close without a destination; never a captured retry. */
+  | { readonly kind: 'close-sprint'; readonly sprintId: string; readonly destination: ClosureDestination | null };
+export type SaveKind = SaveContext['kind'];
 export interface PrototypeState {
   readonly workspace: { readonly id: string; readonly name: string };
   readonly project: { readonly id: string; readonly key: string; readonly name: string; readonly description: string; readonly timeZone: string };
@@ -93,9 +101,12 @@ export interface PrototypeState {
   readonly selectedTask: DemoTask | null;
   readonly taskDraft: TaskDraft | null;
   readonly sprintDraft: SprintDraft | null;
-  readonly save: { readonly status: 'idle' | 'pending' | 'saved' | 'error'; readonly kind: SaveKind | null; readonly error: PrototypeError | null };
+  /** Latest feedback only. Unbound action errors have null context, never the selected record. */
+  readonly save: { readonly status: 'idle' | 'pending' | 'saved' | 'error'; readonly kind: SaveKind | null; readonly context: SaveContext | null; readonly error: PrototypeError | null };
   /** Captured previous failed save remains retryable even when a rejected patch shows a field error. */
   readonly canRetry: boolean;
+  /** Captured operation iff canRetry; independent of the latest save feedback. */
+  readonly retryContext: SaveContext | null;
   readonly nextSaveWillFail: boolean;
   readonly scenario: PrototypeScenario;
 }

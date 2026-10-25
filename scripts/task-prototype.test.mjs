@@ -205,6 +205,152 @@ test('rejected and no-op draft actions preserve a failed task/sprint save for on
   assert.equal(await a.saveTask(), true); assert.equal(task(adapter, taskId).title, 'A corrected fresh edit');
 });
 
+test('failed task A feedback and retry keep their target when detail selects B, including pending and saved states', async () => {
+  const gate = deferred(); const adapter = create({ settle: () => gate.promise }); const a = adapter.actions;
+  const context = { kind: 'task', taskId: 'demo-task-1' };
+  a.beginEditTask(context.taskId); a.updateTaskDraft({ title: 'Only A changes' }); a.simulateNextSaveFailure();
+  const saving = a.saveTask();
+  a.selectTask('demo-task-2'); a.setView('board'); a.setFilters({ search: 'RIE-2' });
+  assert.equal(adapter.getSnapshot().save.status, 'pending');
+  assert.deepEqual(adapter.getSnapshot().save.context, context);
+  assert.equal(adapter.getSnapshot().retryContext, null);
+  gate.resolve(); assert.equal(await saving, false);
+  const failed = adapter.getSnapshot();
+  assert.equal(failed.selectedTask.id, 'demo-task-2');
+  assert.deepEqual(failed.save.context, context); assert.deepEqual(failed.retryContext, context);
+  assert.equal(failed.taskDraft.title, 'Only A changes');
+  assert.equal(await a.retrySave(), true);
+  a.selectTask('demo-task-2');
+  const saved = adapter.getSnapshot();
+  assert.equal(saved.save.status, 'saved'); assert.deepEqual(saved.save.context, context);
+  assert.equal(saved.selectedTask.id, 'demo-task-2'); assert.equal(saved.retryContext, null);
+  assert.equal(task(adapter, context.taskId).title, 'Only A changes');
+  assert.equal(task(adapter, 'demo-task-2').title, 'Review task row metadata');
+  assert.deepEqual(failed.retryContext, context); // Previous snapshots remain intact.
+  assert.strictEqual(adapter.getSnapshot(), saved);
+  assert.throws(() => { saved.save.context.taskId = 'demo-task-2'; }, TypeError);
+});
+
+test('status feedback targets the changed task after selection and a newer rejected action has independent retry context', async () => {
+  const adapter = create(); const a = adapter.actions;
+  const context = { kind: 'status', taskId: 'demo-task-12', status: 'in_progress' };
+  assert.equal(await a.moveTask(context.taskId, context.status), true);
+  a.selectTask('demo-task-15');
+  assert.deepEqual(adapter.getSnapshot().save.context, context);
+  a.simulateNextSaveFailure(); assert.equal(await a.moveTask(context.taskId, 'done'), false);
+  const retryContext = { ...context, status: 'done' };
+  a.selectTask('demo-task-15');
+  assert.deepEqual(adapter.getSnapshot().save.context, retryContext);
+  a.beginEditTask('missing');
+  assert.deepEqual(adapter.getSnapshot().save.context, { kind: 'task', taskId: 'missing' });
+  assert.deepEqual(adapter.getSnapshot().retryContext, retryContext);
+  assert.equal(adapter.getSnapshot().save.error.code, 'invalid-action');
+  assert.equal(adapter.getSnapshot().canRetry, true);
+  assert.equal(await a.retrySave(), true);
+  assert.equal(task(adapter, context.taskId).status, 'done');
+  assert.equal(task(adapter, 'demo-task-15').status, 'todo');
+  assert.equal(adapter.getSnapshot().selectedTask.id, 'demo-task-15');
+  assert.deepEqual(adapter.getSnapshot().save.context, retryContext);
+});
+
+test('unbound validation and rejected patches cannot relabel a captured task retry; accepted edits clear it', async () => {
+  const adapter = create(); const a = adapter.actions;
+  a.beginCreateTask(); a.updateTaskDraft({ title: 'Keep captured draft' });
+  const context = { kind: 'task', taskId: adapter.getSnapshot().taskDraft.taskId };
+  a.simulateNextSaveFailure(); assert.equal(await a.saveTask(), false);
+  a.selectTask('demo-task-2'); a.beginCreateSprint();
+  assert.equal(adapter.getSnapshot().save.kind, 'sprint');
+  assert.equal(adapter.getSnapshot().save.context, null);
+  assert.deepEqual(adapter.getSnapshot().retryContext, context);
+  a.updateTaskDraft({ labelIds: null });
+  assert.deepEqual(adapter.getSnapshot().save.context, context);
+  assert.deepEqual(adapter.getSnapshot().retryContext, context);
+  a.discardSprintDraft();
+  assert.deepEqual(adapter.getSnapshot().retryContext, context);
+  assert.equal(adapter.getSnapshot().tasks.length, 18);
+  a.updateTaskDraft({ title: 'Accepted correction' });
+  assert.equal(adapter.getSnapshot().save.context, null);
+  assert.equal(adapter.getSnapshot().retryContext, null); assert.equal(adapter.getSnapshot().canRetry, false);
+  assert.equal(await a.retrySave(), false);
+  assert.equal(await a.saveTask(), true); assert.equal(adapter.getSnapshot().tasks.length, 19);
+});
+
+test('sprint contexts identify draft, start, and captured close destination independently of unrelated task feedback', async () => {
+  const gate = deferred(); let pause = false;
+  const adapter = create({ settle: () => pause ? gate.promise : Promise.resolve() }); const a = adapter.actions;
+  a.beginEditSprint('demo-sprint-1'); a.updateSprintDraft({ goal: 'Context regression' });
+  a.simulateNextSaveFailure(); assert.equal(await a.saveSprint(), false);
+  assert.deepEqual(adapter.getSnapshot().retryContext, { kind: 'sprint', sprintId: 'demo-sprint-1' });
+  a.updateSprintDraft({ taskIds: null });
+  assert.deepEqual(adapter.getSnapshot().save.context, adapter.getSnapshot().retryContext);
+  assert.equal(await a.retrySave(), true);
+  assert.deepEqual(adapter.getSnapshot().save.context, { kind: 'sprint', sprintId: 'demo-sprint-1' });
+  assert.equal(await a.startSprint('demo-sprint-1'), true);
+  assert.deepEqual(adapter.getSnapshot().save.context, { kind: 'start-sprint', sprintId: 'demo-sprint-1' });
+  assert.equal(await a.closeSprint('demo-sprint-1', undefined), false);
+  assert.deepEqual(adapter.getSnapshot().save.context, { kind: 'close-sprint', sprintId: 'demo-sprint-1', destination: null });
+  const destination = { kind: 'sprint', sprintId: 'demo-sprint-2' };
+  const context = { kind: 'close-sprint', sprintId: 'demo-sprint-1', destination: { ...destination } };
+  pause = true; a.simulateNextSaveFailure(); const closing = a.closeSprint('demo-sprint-1', destination);
+  destination.sprintId = 'missing';
+  assert.deepEqual(adapter.getSnapshot().save.context, context);
+  gate.resolve(); assert.equal(await closing, false);
+  const captured = adapter.getSnapshot().retryContext;
+  assert.deepEqual(captured, context);
+  assert.throws(() => { captured.destination.sprintId = 'missing'; }, TypeError);
+  a.beginEditTask('missing');
+  assert.deepEqual(adapter.getSnapshot().save.context, { kind: 'task', taskId: 'missing' });
+  assert.deepEqual(adapter.getSnapshot().retryContext, context);
+  assert.equal(await a.retrySave(), true);
+  assert.deepEqual(adapter.getSnapshot().save.context, context);
+  assert.deepEqual(adapter.getSnapshot().sprints[0].closure.destination, context.destination);
+  assert.equal(task(adapter, 'demo-task-1').sprintId, context.destination.sprintId);
+});
+
+test('valid new operations replace unrelated retry context and reset blocks stale success or failure context', async () => {
+  for (const fail of [false, true]) {
+    const gate = deferred(); let pause = false;
+    const adapter = create({ settle: () => pause ? gate.promise : Promise.resolve() }); const a = adapter.actions;
+    a.simulateNextSaveFailure(); assert.equal(await a.moveTask('demo-task-12', 'done'), false);
+    assert.deepEqual(adapter.getSnapshot().retryContext, { kind: 'status', taskId: 'demo-task-12', status: 'done' });
+    assert.equal(await a.startSprint('demo-sprint-1'), true);
+    assert.equal(adapter.getSnapshot().retryContext, null);
+    pause = true; if (fail) a.simulateNextSaveFailure();
+    const closing = a.closeSprint('demo-sprint-1', { kind: 'backlog' });
+    assert.deepEqual(adapter.getSnapshot().save.context, { kind: 'close-sprint', sprintId: 'demo-sprint-1', destination: { kind: 'backlog' } });
+    a.reset(); const reset = adapter.getSnapshot();
+    assert.equal(reset.save.context, null); assert.equal(reset.retryContext, null);
+    gate.resolve(); assert.equal(await closing, false);
+    assert.strictEqual(adapter.getSnapshot(), reset);
+    assert.equal(await a.retrySave(), false);
+    assert.equal(adapter.getSnapshot().tasks.length, 18);
+    assert.equal(adapter.getSnapshot().sprints[0].state, 'planned');
+  }
+});
+
+test('malformed runtime targets stay outside typed feedback context and cannot mutate or erase a valid retry', async () => {
+  const adapter = create(); const a = adapter.actions;
+  await a.startSprint('demo-sprint-1');
+  a.simulateNextSaveFailure(); assert.equal(await a.moveTask('demo-task-12', 'done'), false);
+  const retry = adapter.getSnapshot().retryContext;
+  const malformed = { id: 'untrusted' };
+  for (const act of [() => a.moveTask('demo-task-12', malformed), () => a.moveTask(malformed, 'done'),
+    () => a.startSprint(malformed), () => a.closeSprint(malformed, { kind: 'backlog' }),
+    () => a.beginEditTask(malformed), () => a.beginEditSprint(malformed)]) {
+    await act();
+    assert.equal(adapter.getSnapshot().save.context, null);
+    assert.strictEqual(adapter.getSnapshot().retryContext, retry);
+    assert.equal(Object.isFrozen(malformed), false);
+  }
+  for (const destination of [null, { kind: 'sprint', sprintId: malformed }, { kind: 'sprint', sprintId: null }, { kind: 'unknown' }]) {
+    assert.equal(await a.closeSprint('demo-sprint-1', destination), false);
+    assert.deepEqual(adapter.getSnapshot().save.context, { kind: 'close-sprint', sprintId: 'demo-sprint-1', destination: null });
+    assert.strictEqual(adapter.getSnapshot().retryContext, retry);
+    assert.equal(Object.isFrozen(malformed), false);
+  }
+  assert.equal(await a.retrySave(), true); assert.equal(task(adapter, 'demo-task-12').status, 'done');
+});
+
 test('planned sprint goal/dates/scope validate atomically and maintain at most one current sprint per task', async () => {
   const adapter = create(); const a = adapter.actions;
   a.beginCreateSprint(); a.updateSprintDraft({ name: 'Third demo sprint', goal: 'A bounded goal', startsOn: '2026-12-01', endsOn: '2026-12-01', taskIds: ['demo-task-9'] });

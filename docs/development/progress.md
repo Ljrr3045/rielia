@@ -11,12 +11,13 @@ software release. The coordinator owns integration and status across workers.
 
 | Field | Evidence/state |
 | --- | --- |
-| Scope | T01/B0 fictional task-navigation prototype presentation on the merged logic adapter; P04/P05/P07/P08/P09/P11/P33/P38, US04/05/06/08/11/12 and UX01–05/07/09/11 subsets. No backend/auth/identity or durable data; full T01/B0 remains open |
-| Base | Merged [PR #5](https://github.com/Ljrr3045/rielia/pull/5), `origin/dev` at `5099b39aef53d5b7e2f0205f3168727cb1dc9471` |
+| Scope | T01/B0 fictional task-navigation prototype presentation consuming merged logic and typed save/retry target context; P04/P05/P07/P08/P09/P11/P33/P38, US04/05/06/08/11/12 and UX01–05/07/09/11 subsets. No backend/auth/identity or durable data; full T01/B0 remains open |
+| Base | Merged [PR #5](https://github.com/Ljrr3045/rielia/pull/5), `origin/dev` at `5099b39aef53d5b7e2f0205f3168727cb1dc9471`; typed-context PR #7 is the presentation prerequisite |
 | Branch | `Ljrr3045/rielia-t01-prototype-ui` |
 | Worktree | Isolated Orca checkout `rielia-t01-prototype-ui`; DeepSeek V4.1 Flash 1017 `max` authorization recorded in [frontend-agent](frontend-agent.md); no subagents |
 | Current PR | [#6](https://github.com/Ljrr3045/rielia/pull/6), non-draft to `dev`; current head, exact-head CI and coordinator-triggered Kody evidence are recorded in the PR and reconciled here before merge |
 | T01 logic PR | [#5](https://github.com/Ljrr3045/rielia/pull/5) merged 2026-10-25T06:01:32Z as `5099b39aef53d5b7e2f0205f3168727cb1dc9471`; reviewed head `55481ffb3613ccaadcb37f3e6dd3ad3118afb8c3`, [Kody approval 5641785181](https://github.com/Ljrr3045/rielia/pull/5#pullrequestreview-5641785181), [CI 40166748588](https://github.com/Ljrr3045/rielia/actions/runs/40166748588); logic worktree removed |
+| T01 context PR | [#7](https://github.com/Ljrr3045/rielia/pull/7) at published head `c90b437ca5948301b790b655256c8a460b3bef21`, non-draft to `dev`, prerequisite for UI PR #6; local checks and CI green, coordinator Kody review requested; merge pending |
 | T02.2 PR | [#4](https://github.com/Ljrr3045/rielia/pull/4) merged 2026-10-25T02:57:42Z as `ae67fcc321a0cbb152a0137141d8d6a05abae631` after reviewed head `f9c4cc70e51cadf7722dcac775b402f926fbf9a8`, [Kody approval 5641248403](https://github.com/Ljrr3045/rielia/pull/4#pullrequestreview-5641248403), and [CI 40156199016](https://github.com/Ljrr3045/rielia/actions/runs/40156199016); live PR evidence reread during this reconciliation |
 | T02.1 PR | [#3](https://github.com/Ljrr3045/rielia/pull/3) merged 2026-10-25T02:33:47Z as `096a1a31bd45a536017bffb4a424cd4c50062101` after reviewed head `b0dc76a062f301433b25fcf583f28aa125602eb3`, Kody approval [5641185728](https://github.com/Ljrr3045/rielia/pull/3#pullrequestreview-5641185728), and CI run [40154146443](https://github.com/Ljrr3045/rielia/actions/runs/40154146443) |
 | Fixture PR | [#2](https://github.com/Ljrr3045/rielia/pull/2) merged 2026-10-25T01:10:25Z as `629932ad282c27c0b71c6b8d5daf15e3cc199965`; [Kody approval](https://github.com/Ljrr3045/rielia/pull/2#pullrequestreview-5640882613), [CI](https://github.com/Ljrr3045/rielia/actions/runs/40148711191) |
@@ -349,19 +350,53 @@ closed-sprint retained/current versus frozen summary wording, and seeded/empty
 reset. The UI imports the merged adapter/hook and `getSprintSummary`; it adds no
 business rules, controller, API, identity, persistence or functional tests.
 
-Local validation on the merged-dev branch: full `pnpm check` passes, including 13
+The current presentation also consumes the PR #7 `save.context`/`retryContext`
+contract: current feedback and captured retry are rendered independently by target,
+close destination is restored only for a matching captured close retry, and global
+current/retry outcomes are labelled with the task key or sprint name. This is the
+presentation fix for PR #6's two Kody findings; post-fix browser regressions must
+pass before a fresh head is pushed.
+
+Local validation on the integrated branch: full `pnpm check` passes, including 19
 prototype tests, strict types, production builds and HTTP smoke; `/prototype` is
 statically generated. Handoff integrity, advisory audit and whitespace checks pass.
 Independent coordinator Brave QA exercised all five demo journeys at 1440, 390,
-320 and 768 px, including failure/retry, filtered-detail focus return, keyboard
-sidebar isolation, search recovery and reset; its report is preserved outside the
-repository and summarized without claiming real-person validation. The UI owner
-added light-theme 1440, 32 px-default-font (200% text) 1440/390, English, desktop
-drag, closed-sprint retention and search-label checks. Orca viewport captures that
-tiled were excluded. Safari, screen readers, real touch hardware, real 200% browser
-zoom traversal and long-session persistence remain unverified, as do all product
-flows outside the fictional adapter.
+320 and 768 px before the context follow-up, including failure/retry,
+filtered-detail focus return, keyboard sidebar isolation, search recovery and
+reset; its report is preserved outside the repository and summarized without
+claiming real-person validation. The UI owner added light-theme 1440,
+32 px-default-font (200% text) 1440/390, English, desktop drag, closed-sprint
+retention and search-label checks. Orca viewport captures that tiled were
+excluded. Safari, screen readers, real touch hardware, real 200% browser zoom
+traversal and long-session persistence remain unverified, as do all product flows
+outside the fictional adapter.
 
 The presentation PR is the single non-draft English PR to `dev`; its current head,
 CI, coordinator Kody trigger and review dispositions are recorded in the PR and
 reconciled here before merge. Full T01/B0 remains open.
+
+## T01/B0 save/retry context follow-up
+
+PR #6 review found that failed task A feedback/retry could appear in task B's
+detail, and an unrelated task retry could lock sprint closure destination. The
+coordinator accepted an additive `SaveContext` contract: latest `save.context`
+and independently captured `retryContext`, with task/sprint ID, status-operation
+value and copied close destination as applicable. Navigation preserves the
+original target; unbound validation has no target. Rejected/no-op actions preserve
+captured recovery, accepted edits/new valid saves clear/replace it, and reset
+invalidates pending context. See the [integration contract](task-prototype.md#feedback-and-retry-targets).
+
+Six new actual-action tests bring the prototype suite to 19 passing tests. The
+first five failed against the pre-fix adapter (13 old passed, five missing-context
+failures); the sixth checks malformed runtime target/status/destination values.
+No JSX/CSS, identity/backend, dependencies, production policy or source-handoff
+changes are included. This is a prerequisite for the separately owned UI PR #6;
+browser validation and full T01/B0 acceptance remain open.
+
+Local checks pass on Node 24.22.1/pnpm 12.15.0: frozen install, 19 prototype
+tests, full `pnpm check`, 20 existing PostgreSQL/real-library identity tests,
+advisory audit (no known vulnerabilities), handoff integrity (47 files, 30 assets,
+313 local links), and whitespace. The initial sandboxed identity loopback tests
+were blocked by `EPERM`; the authorized full-check rerun passed. Identity removed
+its disposable database and smoke servers exited. Exact-head CI and coordinator
+Kody review remain the integration gate, with all three surfaces to inspect.
