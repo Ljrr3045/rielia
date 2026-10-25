@@ -1,0 +1,35 @@
+docs/development/task-prototype-ui.md
+  s_01879676f2f728::t_82d7eafc4fec8a 232-243
+  s_01879676f2f728::t_c1ec9ea576a791 3-6,13-14,23-26,49-55,76-77,85-87,115-121
+CHANGELOG.md
+  s_01879676f2f728::t_97a9440a2c57ad 60-61
+  s_b8020eceba4182::t_a09589253a6d90 12-15
+docs/development/progress.md
+  s_01879676f2f728::t_edcac374f20350 396-401,409-410
+  s_01879676f2f728::t_0285a994b23113 15,20
+  s_b8020eceba4182::t_18a074c46edfc5 350-352,358-361
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8b37a782e066d65424635d4b62ff1e71e1eba286",
+  "prompts": {},
+  "sessions": {
+    "s_01879676f2f728": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e8e91ff18ffeK2ckeyaYj5Zblh",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    },
+    "s_b8020eceba4182": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a17016-ab9e-7501-b8a7-f63987eb61f7",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
