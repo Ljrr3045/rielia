@@ -55,9 +55,10 @@ not acceptance of those requirements as a whole.
   presented as belonging to the record on screen.
 - On wide desktop, an unmatched current outcome or captured retry keeps a global
   labelled home while another task's detail stays open; matching feedback remains
-  in the detail to avoid duplication. On narrow/mobile detail the panel is modal
-  and the workspace is inert, so an unrelated pre-existing recovery is reached by
-  closing/backing out; focus never moves behind the detail.
+  in the detail to avoid duplication. On narrow/mobile detail the panel is modal,
+  the workspace is inert, and the global strip is not rendered into that inert
+  subtree; an unrelated pre-existing recovery is reached by closing/backing out,
+  with no dead control and no focus behind the detail.
 - Capture uses title plus fixed project context, with optional details collapsed.
   Edit uses the same controlled draft. Sprint planning edits goal, dates, and full
   scope; start/close are confirmed by the adapter, and closure distinguishes done,
@@ -103,7 +104,8 @@ also dismisses the closure dialog and restores focus through the saved action re
   control is gone). Escape closes desktop detail and disclosure panels.
 - While narrow detail is open, the workspace is inert and the detail is a modal
   region; unmatched pre-existing recovery is deliberately reached after close/back,
-  not by moving focus behind the overlay.
+  and the global strip is not rendered into the inert workspace, so there is no
+  dead/unfocusable control.
 - The closed off-canvas sidebar is `inert` and `aria-hidden` at the actual ≤1023 px
   breakpoint; its buttons are not in the accessibility tree or tab order. Open
   drawers and modal surfaces isolate the background; body scrolling is locked while
@@ -269,7 +271,12 @@ feedback is not duplicated. For the first, the global surface now separates
 handled-local current feedback from unmatched current/retry, so the recovery-only
 panel can render when current is handled elsewhere; when current and retry differ
 globally, both are explicitly labelled with their own target rather than gated
-away. Narrow detail stays modal/inert; unrelated recovery requires close/back.
+away. A third-round
+[4370097785](https://github.com/Ljrr3045/rielia/pull/6#discussion_r4370097785)
+finding noted that the global strip must not be rendered into the inert narrow
+workspace; the strip is now gated by the same `backgroundInert` condition, so
+mobile recovery remains a deliberate close/back path with no dead control.
+Narrow detail stays modal/inert.
 
 Post-fix Brave and UI-owner regressions cover the reported A/B, stale-success,
 unrelated-close, own-close/reopen, matching-detail non-duplication, wide

@@ -82,8 +82,9 @@ export function PrototypeApp() {
     && (context.kind === 'sprint' || context.kind === 'start-sprint' || context.kind === 'close-sprint');
   const currentHandledLocally = isDetailTaskContext(state.save.context) || isSprintLocalContext(state.save.context);
   const retryHandledLocally = isDetailTaskContext(state.retryContext) || isSprintLocalContext(state.retryContext);
-  const globalSave = !modalOpen && state.save.status !== 'idle' && !currentHandledLocally ? state.save : null;
-  const globalCanRetry = !modalOpen && state.retryContext !== null && !retryHandledLocally;
+  const backgroundInert = (sidebarDrawer && sidebarOpen) || (isNarrow && detailOpen && !modalOpen);
+  const globalSave = !modalOpen && !backgroundInert && state.save.status !== 'idle' && !currentHandledLocally ? state.save : null;
+  const globalCanRetry = !modalOpen && !backgroundInert && state.retryContext !== null && !retryHandledLocally;
   const showGlobalFeedback = globalSave !== null || globalCanRetry;
 
   const closeSidebar = useCallback(() => setSidebarOpen(false), []);
@@ -336,7 +337,7 @@ export function PrototypeApp() {
           </nav>
         </aside>
 
-        <div className={styles.workspaceColumn} inert={(sidebarDrawer && sidebarOpen) || (isNarrow && detailOpen && !modalOpen)}>
+        <div className={styles.workspaceColumn} inert={backgroundInert}>
           <header className={styles.topbar}>
             <button
               aria-controls="prototype-sidebar"
