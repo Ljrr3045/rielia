@@ -9,8 +9,11 @@ the [fixture guide](docs/development/technical-fixture.md); do not invent tests 
 claim that health checks verify OAuth, data, or product functionality.
 T02.1 adds an opt-in backend identity experiment; use the
 [identity guide](docs/development/identity-spike.md) for configuration and its
-bounded real-library/database evidence. Browser protocol/state logic is included;
-UI/UX presentation is separate T02.2 work.
+bounded real-library/database evidence. Browser protocol/state logic and T02.2
+presentation are merged in PRs #3/#4; real OAuth/HTTPS acceptance is still open.
+The [T01 prototype contract](docs/development/task-prototype.md) describes the
+fictional memory-only adapter for separately owned presentation. It is not a
+production domain implementation or full T01/B0 acceptance.
 
 ## Select a bounded change
 
@@ -43,11 +46,13 @@ Inside Orca, use its worktree workflow. If RTK guidance is active, prefix every
 shell command with `rtk` (`rtk proxy` for unsupported commands). Commands in this
 document use ordinary tools so contributors do not need Orca or RTK.
 
-For supervised agent development, the user's current rule is OpenCode with
-Claude Haiku 5.5 `high` for UI/UX presentation only; all logic uses
+For supervised agent development, the user's current rule is OpenCode Go with
+DeepSeek V4.1 Flash 1017 (`opencode-go/deepseek-v4.1-flash`, variant `max`)
+for UI/UX presentation only; all logic uses
 Codex `gpt-6.1-sol` `xhigh`, including frontend auth/session/data hooks, proxies,
 and functional tests. Verify the effective configuration and isolate each
-worker's checkout. This is separate from Kody's external review role.
+worker's checkout. See the [model decision and verification limits](docs/development/frontend-agent.md).
+This is separate from Kody's external review role.
 
 The user retired OpenCode review and requested deletion of its entire workflow,
 including the version inherited from `dev`. Do not restore, repair, or invoke it;
@@ -65,6 +70,7 @@ Use Python 3.9+, Node 24.22.1, and pnpm 12.15.0. From the repository root:
 python3 scripts/verify-handoff.py
 pnpm install --frozen-lockfile
 pnpm check
+pnpm test:prototype
 pnpm test:identity
 pnpm audit --audit-level=high
 git diff --check
@@ -76,8 +82,10 @@ comparison. Review the actual diff for unintended changes and credentials. Link
 new files with portable relative paths; keep English/Spanish filenames intact.
 The verifier checks local file targets, not remote sites or heading fragments.
 
-`pnpm check` runs lint, the focused smoke-process cleanup regression, strict
-typechecks, production builds, and HTTP smoke.
+`pnpm check` runs lint, the focused smoke-process cleanup regression, identity
+logic/client and task-prototype tests, strict typechecks, production builds, and
+HTTP smoke. `pnpm test:prototype` can also run the focused demo action/invariant
+tests alone; it requires no backend, database, credentials, or browser.
 The smoke starts task-local servers on temporary ports and stops them afterwards;
 it verifies the API contract, bilingual HTML, and API-down fallback. No external
 credentials are needed. CI also enforces the immutable handoff/link checks.

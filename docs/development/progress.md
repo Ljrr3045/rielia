@@ -2,24 +2,26 @@
 
 Updated: 2026-10-25 UTC. This is repository delivery tracking, separate from the
 unchanged [handoff](../handoff/00-START-HERE.md). Plans describe intended outcomes,
-not completed implementation. This checkout now has the T02.0 development fixture;
-it has no task product, deployment, or software release. The coordinator owns
+not completed implementation. This checkout has the T02.0 fixture, merged T02.1/
+T02.2 identity experiment and a fictional T01 prototype logic adapter; it has no
+production task product, deployment, or software release. The coordinator owns
 integration and status across workers.
 
 ## Current delivery
 
 | Field | Evidence/state |
 | --- | --- |
-| Scope | T02.2 experimental identity presentation on the merged T02.1 hook; P01/US01 presentation, UXR03/UX07/UX09; full T02 remains open |
-| Base | Merged PR #3, `origin/dev` at `096a1a31bd45a536017bffb4a424cd4c50062101` |
-| Branch | `Ljrr3045/rielia-t02-identity-web` |
-| Worktree | Isolated Orca checkout named `rielia-t02-identity-web` |
-| Current PR | [#4](https://github.com/Ljrr3045/rielia/pull/4), non-draft to `dev`; current-head CI, Kody trigger, and review dispositions are recorded in its PR evidence before coordinator merge |
+| Scope | T01/B0 frontend-only fictional task-navigation prototype logic; P04/P05/P07/P08/P09/P38, US04/05/06/08 and UX01–05/09/11 subsets. No presentation/backend/auth changes; full T01/B0 remains open |
+| Base | Merged PR #4, `origin/dev` at `ae67fcc321a0cbb152a0137141d8d6a05abae631` |
+| Branch | `Ljrr3045/rielia-t01-prototype-logic` |
+| Worktree | Isolated Orca checkout named `rielia-t01-prototype-logic`; launch display verified GPT-6.1-Sol xhigh |
+| Current PR | [#5](https://github.com/Ljrr3045/rielia/pull/5), non-draft to `dev`; local checks pass. Exact-head CI, coordinator Kody trigger, all three review surfaces and dispositions must be verified in the PR before coordinator merge |
+| T02.2 PR | [#4](https://github.com/Ljrr3045/rielia/pull/4) merged 2026-10-25T02:57:42Z as `ae67fcc321a0cbb152a0137141d8d6a05abae631` after reviewed head `f9c4cc70e51cadf7722dcac775b402f926fbf9a8`, [Kody approval 5641248403](https://github.com/Ljrr3045/rielia/pull/4#pullrequestreview-5641248403), and [CI 40156199016](https://github.com/Ljrr3045/rielia/actions/runs/40156199016); live PR evidence reread during this reconciliation |
 | T02.1 PR | [#3](https://github.com/Ljrr3045/rielia/pull/3) merged 2026-10-25T02:33:47Z as `096a1a31bd45a536017bffb4a424cd4c50062101` after reviewed head `b0dc76a062f301433b25fcf583f28aa125602eb3`, Kody approval [5641185728](https://github.com/Ljrr3045/rielia/pull/3#pullrequestreview-5641185728), and CI run [40154146443](https://github.com/Ljrr3045/rielia/actions/runs/40154146443) |
 | Fixture PR | [#2](https://github.com/Ljrr3045/rielia/pull/2) merged 2026-10-25T01:10:25Z as `629932ad282c27c0b71c6b8d5daf15e3cc199965`; [Kody approval](https://github.com/Ljrr3045/rielia/pull/2#pullrequestreview-5640882613), [CI](https://github.com/Ljrr3045/rielia/actions/runs/40148711191) |
 | T00 | Complete: [PR #1](https://github.com/Ljrr3045/rielia/pull/1) merged 2026-10-24T23:56:43Z as `8dd7c31f454c1989d017dbf7b40e6646112d2d2a` after final-head Kody SUCCESS/APPROVED |
 | T01–T35 | No full ticket complete; T02.0 is supporting scope only |
-| Prior resource cleanup | Coordinator verified the T00, T02.0, and T02.1 (PR #3) worktrees removed after their merged delivery; the T02.1 delivery report is preserved outside the repository. Current worker never deletes its active checkout |
+| Prior resource cleanup | Coordinator verified T00, T02.0, T02.1 and T02.2 worktrees removed after merged delivery; identity and presentation delivery reports are preserved outside the repository. Current worker never deletes its active checkout |
 | Automated review | Kody AI: coordinator alone posts exact root `@kody start-review` for each ready head; prior-head evidence never approves changed code |
 
 T00 acceptance: complete byte-identical import with links/assets/hashes/proposal
@@ -57,12 +59,16 @@ were unreliable in the background Orca browser and remain unverified, not passed
 
 ## Dependency-based first wave
 
-T00, T02.0, and T02.1 are accepted/merged; T02.2 presentation is under review in PR #4. The coordinator can
+T00, T02.0, T02.1 and T02.2 are accepted/merged. The user resumed development on
+2026-10-25 with the bounded T01/B0 fictional prototype, keeping logic/presentation
+ownership separate. The coordinator can
 assign/continue these bounded starts without bypassing their source acceptance:
 
 1. **T01 / B0, UX prototype:** no ticket prerequisite. Select a real project/backlog
-   and review the five mobile/desktop journeys and friction. Use P/US and UXR/UX
-   criteria; this is prototype validation, not a complete app or landing design.
+   and review the five mobile/desktop journeys and friction. The current authorized
+   slice uses fictional Rielia data and tests logic only; presentation and reviewed
+   journeys remain pending. Use P/US and UXR/UX criteria; this is prototype
+   validation, not a complete app or landing design.
 2. **T02 / B0, identity/proxy spike:** no ticket prerequisite, but stack confirmation
    and provider credentials/callbacks are pending. Record pinned versions and real
    Google/GitHub, private-email, session, expiry/logout, and HTTPS/proxy evidence.
@@ -91,9 +97,9 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T00 | Pre-B0 governance | Import, instructions, contribution/review process, ledger, Kody adoption/OpenCode removal | None | Complete, merged PR #1; final-head Kody success/approval |
 | T02.0 | B0 supporting scope | Runnable Next/Nest fixture and partial T04 tooling | T00 merge gate | Complete bounded scope; merged PR #2 with Kody approval and passing CI |
 | T02.1 | B0 experiment | Backend identity, minimal auth persistence, web protocol/state logic | Coordinator experimental gate; does not ratify full stack | Merged in PR #3; see [identity evidence](identity-spike.md) |
-| T02.2 | B0 presentation | Experimental identity page consuming T02.1 hook | T02.1 merge; UI/UX ownership | Presentation implemented in PR #4; see [identity presentation](identity-ui.md); PR review pending |
-| T01 | B0 | Navigation and task prototype validation | None | Not started |
-| T02 | B0 | Identity/proxy integration spike | None; stack/OAuth decisions pending | T02.1 is partial experimental evidence; real provider/staging and presentation acceptance remain open |
+| T02.2 | B0 presentation | Experimental identity page consuming T02.1 hook | T02.1 merge; UI/UX ownership | Merged PR #4 with exact-head Kody approval and passing CI; see [identity presentation](identity-ui.md); real-provider/HTTPS and documented browser limits remain |
+| T01 | B0 | Navigation and task prototype validation | None | Bounded fictional frontend logic implemented/tested; [contract/limits](task-prototype.md). Presentation and five reviewed mobile/desktop demo journeys pending; full ticket incomplete |
+| T02 | B0 | Identity/proxy integration spike | None; stack/OAuth decisions pending | T02.1/T02.2 are merged partial experimental evidence; real provider/staging acceptance remains open |
 | T03 | B0 | MCP SDK/wrapper/minimal remote profile spike | T02 for remote auth; stack decision pending | Not started |
 | T04 | B1 foundations | Monorepo, images, worker/queue, initial migration | T02–T03 | Not started as full ticket; T02.0 supports partial tooling |
 | T05 | B1a | Auth, workspaces, principal memberships | T04, T35 | Not started |
@@ -146,7 +152,7 @@ actual use/demand; no launch date or public capacity has been established.
 | Private-project admin visibility | Plan proposes owner/admin can read/administer all projects; requires B0 decision | User/maintainer ratification; communicate before implementation |
 | Operations/public service | VPS capacity, budget/date, registration policy, public obligations not established | Maintainer records decisions and measured readiness in later tickets |
 | Automated review | Kody AI replaces OpenCode; every ready PR/head needs an explicit root `@kody start-review` request | Coordinator alone posts trigger; worker verifies reviewed head, issue comments, formal reviews, inline comments, and applicable checks |
-| Development models | User's final rule: UI/UX presentation uses OpenCode Claude Haiku 5.5 `high`; all logic uses Codex `gpt-6.1-sol` `xhigh`, including browser auth/data/hooks/proxy/tests | Coordinator verifies effective sessions and isolated worktrees; OpenCode development does not restore its retired review workflow |
+| Development models | User's 2026-10-25 rule: UI/UX presentation uses OpenCode Go DeepSeek V4.1 Flash 1017 (`opencode-go/deepseek-v4.1-flash`, `max`); all logic uses Codex `gpt-6.1-sol` `xhigh`, including browser auth/data/hooks/proxy/tests | [Model evidence and limits](frontend-agent.md); verify effective sessions and isolated worktrees. User resumed bounded T01/B0 development after the model-only pause checkpoint; OpenCode development does not restore its retired review workflow |
 | Completed worktree cleanup | User explicitly requested removal after PR merge and finished delivery, without recurring confirmation | Coordinator verifies merged PR, clean tree, and preserved evidence, safely stops/settles task resources, then removes via Orca; workers never delete active/coordinator checkouts |
 | Retired reviewer | User explicitly requested full OpenCode workflow deletion, including the inherited version; no further repairs/runs or secret changes | Deletion merged in PR #1; keep it absent and preserve the historical handoff |
 
@@ -291,4 +297,46 @@ messages. Keyboard focus moves to the section heading only after a user action
 removes its control. Evidence, limits, and unverified checks are in
 [identity presentation](identity-ui.md). Full T02/US01 acceptance remains open
 pending real Google/GitHub consent, private-email flows, HTTPS/staging, and
-coordinator browser QA.
+the remaining documented browser/assistive checks. The bounded presentation was
+merged as recorded above; this does not close real T02/US01 acceptance.
+
+## T01/B0 prototype logic
+
+The [typed prototype contract](task-prototype.md) records the fictional hierarchy,
+18 seeded tasks, independent assignee/creator/provenance, shared selectors,
+draft/create/edit/status/filter actions, planned sprint scope, one-active-sprint
+guard, explicit unfinished-work destination and frozen done/canceled summary.
+The adapter is isolated from identity, backend and public contracts, and keeps no
+durable data. Reset invalidates in-flight saves and can restore seeded/empty data.
+Deterministic pre-commit failure preserves drafts and the captured retry without
+duplicate creation. A local stale task draft receives a version conflict.
+
+`pnpm install --frozen-lockfile` passed on this previously dependency-free checkout.
+Thirteen action/invariant tests pass through `pnpm test:prototype` and `pnpm check`;
+the full check also passes lint, process cleanup, seven identity logic/client
+checks, strict types, production builds and real production HTTP smoke.
+The existing `pnpm test:identity` suite also passes 20 real-library/PostgreSQL
+tests with simulated provider HTTP; its disposable database is removed afterwards.
+Audit reports no known vulnerabilities. Handoff verification confirms all 47
+imported files, 30 asset hashes/sizes and 311 local links; whitespace checks pass.
+No route, JSX, CSS, identity/backend logic, credentials, DB or MCP change is
+included. Mobile/desktop, keyboard/touch, screen-reader behavior, real-person
+journeys and friction remain unverified here. No full T01/B0 or later ticket is
+completed by these tests. Current-head CI and Kody evidence must be checked in
+the single [logic PR #5](https://github.com/Ljrr3045/rielia/pull/5) before coordinator
+integration. Workers never trigger Kody or merge this PR.
+
+Kody's [collection-copy finding](https://github.com/Ljrr3045/rielia/pull/5#discussion_r4369776732)
+was accepted: malformed draft arrays could throw before validation. An actual
+action regression failed before boundary guards and passes afterwards; rejected
+patches retain the usable draft with field feedback. Sprint text validation also
+guards string operations. This pushed fix requires its own exact-head CI and
+fresh coordinator-triggered Kody round; earlier review evidence cannot approve it.
+
+The requested round then found a valid [captured-retry loss](https://github.com/Ljrr3045/rielia/pull/5#discussion_r4369810021)
+after rejecting a malformed patch. A real failed task/sprint save followed by a
+rejected patch and retry failed pre-fix. Rejected/no-op actions now retain the
+unchanged draft and captured retry; current field feedback is independent of
+`canRetry`. The contract tells presentation to label this "Retry previous save".
+The regression verifies eventual single creation/scope update and that a valid
+new edit clears the old retry. This fix also needs a new exact-head review round.

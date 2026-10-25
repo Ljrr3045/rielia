@@ -6,6 +6,12 @@ This records repository changes. No application version has been released.
 
 ### Added
 
+- T01/B0 prototype logic: fictional memory-only task adapter/hook with 18 samples,
+  assignee-based My tasks, shared list/board/detail selectors, controlled create/
+  edit/status/filter actions, sprint goal/date/scope/start/closure, and deterministic
+  save failure/retry/reset. Meaningful invariant tests run in `pnpm check`.
+  [Typed integration contract and limits](docs/development/task-prototype.md).
+  No prototype route/presentation, backend, identity integration or durable data.
 - T02.1: opt-in experimental Better Auth/Nest integration, minimal identity-only
   Prisma/PostgreSQL migration, configurable Google/GitHub providers, supported
   revocable sessions, strict origin/cookie/proxy handling, and an exported Google
@@ -35,6 +41,11 @@ This records repository changes. No application version has been released.
 
 ### Changed
 
+- Select OpenCode Go DeepSeek V4.1 Flash 1017 (`opencode-go/deepseek-v4.1-flash`,
+  variant `max`) for future UI/UX presentation workers, replacing Haiku 5.5 `high`.
+  All logic remains Codex `gpt-6.1-sol` `xhigh`. This coordination update does
+  not itself resume development; the user subsequently resumed the bounded T01/B0
+  prototype. [Verification evidence and limits](docs/development/frontend-agent.md).
 - Adopt Kody AI review: the coordinator posts the exact root `@kody start-review`
   request for every ready PR/head; all three review surfaces and valid findings
   must be handled before coordinator merge to `dev`.
@@ -45,8 +56,21 @@ This records repository changes. No application version has been released.
   [Kody approval](https://github.com/Ljrr3045/rielia/pull/2#pullrequestreview-5640882613)
   and [passing CI](https://github.com/Ljrr3045/rielia/actions/runs/40148711191).
   Coordinator verified both prior completed worktrees removed.
-- Supervised development: UI/UX presentation uses OpenCode Claude Haiku 5.5
-  `high`; all logic uses Codex `gpt-6.1-sol` `xhigh`. Kody remains PR reviewer.
+- Historical T02.2 presentation was implemented with OpenCode Claude Haiku 5.5
+  `high`; the current future-UI rule is the DeepSeek selection above. All logic
+  uses Codex `gpt-6.1-sol` `xhigh`; Kody remains PR reviewer.
+- Reconcile T02.2 as merged [PR #4](https://github.com/Ljrr3045/rielia/pull/4),
+  `ae67fcc321a0cbb152a0137141d8d6a05abae631`, with exact-head
+  [Kody approval 5641248403](https://github.com/Ljrr3045/rielia/pull/4#pullrequestreview-5641248403)
+  and [CI 40156199016](https://github.com/Ljrr3045/rielia/actions/runs/40156199016)
+  on `f9c4cc70e51cadf7722dcac775b402f926fbf9a8`. Prior worktrees were removed
+  after preserved delivery evidence; real OAuth/HTTPS remains unverified.
+- Reject malformed prototype draft collections with field feedback while retaining
+  the usable draft, and guard sprint text validation. An actual-action regression
+  reproduces the pre-fix throw and verifies correction/save after the fix.
+- Preserve a prior captured demo save retry across rejected/no-op actions; field
+  feedback no longer destroys recovery. A task/sprint regression reproduces the
+  loss and verifies one successful creation/scope update after retry.
 - Normalize identity paths before exact callback origin exemptions. Raw HTTP
   regressions reject disguised mutations/malformed paths and preserve valid
   callback/state behavior; nested form parsing verifies the existing Nest API call.
@@ -62,8 +86,9 @@ This records repository changes. No application version has been released.
 
 ### Pending
 
-- T02.2 exact-head Kody review in [PR #4](https://github.com/Ljrr3045/rielia/pull/4);
-  real-provider consent, private-email, HTTPS, and staging evidence for T02 remain open.
+- T01 prototype presentation and five reviewed mobile/desktop demo journeys;
+  fictional logic tests do not complete T01 or B0. Real-provider consent,
+  private-email, HTTPS, and staging evidence for T02 remain open.
   No full T01–T35 ticket is complete. Real provider/staging T02 acceptance,
   T03 and full T04 remain unverified.
 - User decisions on license, stack, and installation OAuth configuration; final
