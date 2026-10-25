@@ -14,10 +14,10 @@ integration and status across workers.
 | Base | Merged T00, `origin/dev` at `8dd7c31f454c1989d017dbf7b40e6646112d2d2a` |
 | Branch | `Ljrr3045/rielia-b0-fixture` |
 | Worktree | Isolated Orca checkout named `rielia-b0-fixture` |
-| Fixture PR | Not opened yet; next step after post-integration checks, target `dev`, non-draft |
+| Fixture PR | [#2](https://github.com/Ljrr3045/rielia/pull/2), target `dev`, non-draft; current-head review/check evidence and coordinator acceptance tracked in the PR |
 | T00 | Complete: [PR #1](https://github.com/Ljrr3045/rielia/pull/1) merged 2026-10-24T23:56:43Z as `8dd7c31f454c1989d017dbf7b40e6646112d2d2a` after final-head Kody SUCCESS/APPROVED |
 | T01–T35 | No full ticket complete; T02.0 is supporting scope only |
-| Automated review | Kody AI: coordinator alone posts exact root `@kody start-review` for each ready head; fixture latest-head review pending |
+| Automated review | Kody AI: coordinator alone posts exact root `@kody start-review` for each ready head; PR #2 records the requested head, check/review URLs, and dispositions |
 
 T00 acceptance: complete byte-identical import with links/assets/hashes/proposal
 status; practical repository instructions and docs; truthful dependency/state
@@ -86,7 +86,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | Ticket | Internal batch/track | Planned outcome | Dependencies | State |
 | --- | --- | --- | --- | --- |
 | T00 | Pre-B0 governance | Import, instructions, contribution/review process, ledger, Kody adoption/OpenCode removal | None | Complete, merged PR #1; final-head Kody success/approval |
-| T02.0 | B0 supporting scope | Runnable Next/Nest fixture and partial T04 tooling | T00 merge gate | Implemented/locally validated; fixture PR and final-head Kody pending |
+| T02.0 | B0 supporting scope | Runnable Next/Nest fixture and partial T04 tooling | T00 merge gate | Implemented/locally validated in PR #2; current-head review/checks and coordinator acceptance tracked in PR evidence |
 | T01 | B0 | Navigation and task prototype validation | None | Not started |
 | T02 | B0 | Identity/proxy integration spike | None; stack/OAuth decisions pending | Supporting T02.0 fixture present; full spike unverified |
 | T03 | B0 | MCP SDK/wrapper/minimal remote profile spike | T02 for remote auth; stack decision pending | Not started |
@@ -218,7 +218,8 @@ No credentials should be pasted into this ledger, PR comments, or validation log
   `pnpm audit --audit-level=high`, `python3 scripts/verify-handoff.py`, and
   `git diff --check` passed. The verifier reports 47 unchanged imported files,
   30 matching assets, and 278 local file links across 35 documents. The fixture
-  PR/Kody round is pending at this checkpoint.
+  [non-draft PR #2](https://github.com/Ljrr3045/rielia/pull/2) records current-head
+  CI/Kody request, outcome, and any findings/dispositions before coordinator acceptance.
 - Real OAuth/provider/proxy/session flows, MCP clients/discovery, DB/migration,
   worker/queue persistence/restart, Docker/deployment, load, and full accessibility
   acceptance: not run/not implemented. Full T02/T03/T04 remain unverified.

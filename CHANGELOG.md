@@ -34,8 +34,9 @@ This records repository changes. No application version has been released.
 
 ### Pending
 
-- T02.0 PR/latest-head Kody review and coordinator acceptance; no full T01–T35
-  ticket is complete. T02/T03 spikes and full T04 acceptance remain unverified.
+- T02.0 coordinator acceptance/merge in [PR #2](https://github.com/Ljrr3045/rielia/pull/2),
+  with latest-head checks/Kody evidence tracked there; no full T01–T35 ticket is
+  complete. T02/T03 spikes and full T04 acceptance remain unverified.
 - User decisions on license, stack, and installation OAuth configuration; final
   identity and landing design remain proposals. No OAuth, DB, worker, MCP, product
   workflow, or deployment is claimed; UI capture/keyboard limits are documented.
