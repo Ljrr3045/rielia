@@ -11,11 +11,12 @@ integration and status across workers.
 
 | Field | Evidence/state |
 | --- | --- |
-| Scope | T01/B0 frontend-only fictional task-navigation prototype logic; P04/P05/P07/P08/P09/P38, US04/05/06/08 and UX01–05/09/11 subsets. No presentation/backend/auth changes; full T01/B0 remains open |
-| Base | Merged PR #4, `origin/dev` at `ae67fcc321a0cbb152a0137141d8d6a05abae631` |
-| Branch | `Ljrr3045/rielia-t01-prototype-logic` |
-| Worktree | Isolated Orca checkout named `rielia-t01-prototype-logic`; launch display verified GPT-6.1-Sol xhigh |
-| Current PR | [#5](https://github.com/Ljrr3045/rielia/pull/5), non-draft to `dev`; local checks pass. Exact-head CI, coordinator Kody trigger, all three review surfaces and dispositions must be verified in the PR before coordinator merge |
+| Scope | T01/B0 frontend-only save/retry target-context follow-up; P05/P07/P09, US04/05/06 and UX01/04/05/09 subsets. No presentation/backend/auth changes; full T01/B0 remains open |
+| Base | Merged PR #5, `origin/dev` at `5099b39aef53d5b7e2f0205f3168727cb1dc9471` |
+| Branch | `Ljrr3045/rielia-t01-feedback-context` |
+| Worktree | Isolated Orca checkout named `rielia-t01-feedback-context`; terminal display verified GPT-6.1-Sol xhigh |
+| Current PR | Save/retry context prerequisite for separately owned [UI PR #6](https://github.com/Ljrr3045/rielia/pull/6); focused PR and exact-head CI/Kody evidence pending |
+| T01 initial logic PR | [#5](https://github.com/Ljrr3045/rielia/pull/5) merged 2026-10-25T06:01:32Z as `5099b39aef53d5b7e2f0205f3168727cb1dc9471` from head `55481ffb3613ccaadcb37f3e6dd3ad3118afb8c3`; historical validation below does not approve the new follow-up |
 | T02.2 PR | [#4](https://github.com/Ljrr3045/rielia/pull/4) merged 2026-10-25T02:57:42Z as `ae67fcc321a0cbb152a0137141d8d6a05abae631` after reviewed head `f9c4cc70e51cadf7722dcac775b402f926fbf9a8`, [Kody approval 5641248403](https://github.com/Ljrr3045/rielia/pull/4#pullrequestreview-5641248403), and [CI 40156199016](https://github.com/Ljrr3045/rielia/actions/runs/40156199016); live PR evidence reread during this reconciliation |
 | T02.1 PR | [#3](https://github.com/Ljrr3045/rielia/pull/3) merged 2026-10-25T02:33:47Z as `096a1a31bd45a536017bffb4a424cd4c50062101` after reviewed head `b0dc76a062f301433b25fcf583f28aa125602eb3`, Kody approval [5641185728](https://github.com/Ljrr3045/rielia/pull/3#pullrequestreview-5641185728), and CI run [40154146443](https://github.com/Ljrr3045/rielia/actions/runs/40154146443) |
 | Fixture PR | [#2](https://github.com/Ljrr3045/rielia/pull/2) merged 2026-10-25T01:10:25Z as `629932ad282c27c0b71c6b8d5daf15e3cc199965`; [Kody approval](https://github.com/Ljrr3045/rielia/pull/2#pullrequestreview-5640882613), [CI](https://github.com/Ljrr3045/rielia/actions/runs/40148711191) |
@@ -340,3 +341,29 @@ unchanged draft and captured retry; current field feedback is independent of
 `canRetry`. The contract tells presentation to label this "Retry previous save".
 The regression verifies eventual single creation/scope update and that a valid
 new edit clears the old retry. This fix also needs a new exact-head review round.
+
+## T01/B0 save/retry context follow-up
+
+PR #6 review found that failed task A feedback/retry could appear in task B's
+detail, and an unrelated task retry could lock sprint closure destination. The
+coordinator accepted an additive `SaveContext` contract: latest `save.context`
+and independently captured `retryContext`, with task/sprint ID, status-operation
+value and copied close destination as applicable. Navigation preserves the
+original target; unbound validation has no target. Rejected/no-op actions preserve
+captured recovery, accepted edits/new valid saves clear/replace it, and reset
+invalidates pending context. See the [integration contract](task-prototype.md#feedback-and-retry-targets).
+
+Six new actual-action tests bring the prototype suite to 19 passing tests. The
+first five failed against the pre-fix adapter (13 old passed, five missing-context
+failures); the sixth checks malformed runtime target/status/destination values.
+No JSX/CSS, identity/backend, dependencies, production policy or source-handoff
+changes are included. This is a prerequisite for the separately owned UI PR #6;
+browser validation and full T01/B0 acceptance remain open.
+
+Local checks pass on Node 24.22.1/pnpm 12.15.0: frozen install, 19 prototype
+tests, full `pnpm check`, 20 existing PostgreSQL/real-library identity tests,
+advisory audit (no known vulnerabilities), handoff integrity (47 files, 30 assets,
+313 local links), and whitespace. The initial sandboxed identity loopback tests
+were blocked by `EPERM`; the authorized full-check rerun passed. Identity removed
+its disposable database and smoke servers exited. Exact-head CI and coordinator
+Kody review remain the integration gate, with all three surfaces to inspect.
