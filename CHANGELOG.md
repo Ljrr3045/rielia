@@ -10,7 +10,7 @@ This records repository changes. No application version has been released.
   My tasks, project List/Board/Sprints, full task detail, minimal capture/edit,
   sprint planning/start/close, visible simulated failure with draft-preserving
   retry, typed current/captured-retry targets, labelled unmatched global recovery,
-  non-inert narrow-detail gating, and seeded/empty reset. Includes
+  optional inert-workspace mount suppression, and seeded/empty reset. Includes
   light/dark tokens, mobile drawer/bottom navigation, focus recovery, and ES/EN
   chrome. No backend, identity, durable data, or production workflow.
   [Presentation evidence](docs/development/task-prototype-ui.md).

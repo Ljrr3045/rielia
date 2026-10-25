@@ -55,10 +55,11 @@ not acceptance of those requirements as a whole.
   presented as belonging to the record on screen.
 - On wide desktop, an unmatched current outcome or captured retry keeps a global
   labelled home while another task's detail stays open; matching feedback remains
-  in the detail to avoid duplication. On narrow/mobile detail the panel is modal,
-  the workspace is inert, and the global strip is not rendered into that inert
-  subtree; an unrelated pre-existing recovery is reached by closing/backing out,
-  with no dead control and no focus behind the detail.
+  in the detail to avoid duplication. On narrow/mobile detail the panel is modal
+  and the workspace is inert; unrelated pre-existing recovery is intentionally
+  reached by closing/backing out. The final head also suppresses mounting the global
+  strip inside that inert workspace as optional structural cleanup; this does not
+  change the recovery path, focus behavior, or narrow modal contract.
 - Capture uses title plus fixed project context, with optional details collapsed.
   Edit uses the same controlled draft. Sprint planning edits goal, dates, and full
   scope; start/close are confirmed by the adapter, and closure distinguishes done,
@@ -103,9 +104,9 @@ also dismisses the closure dialog and restores focus through the saved action re
   panels, and returns to the launching control (or the main heading when that
   control is gone). Escape closes desktop detail and disclosure panels.
 - While narrow detail is open, the workspace is inert and the detail is a modal
-  region; unmatched pre-existing recovery is deliberately reached after close/back,
-  and the global strip is not rendered into the inert workspace, so there is no
-  dead/unfocusable control.
+  region; unmatched pre-existing recovery is deliberately reached after close/back.
+  Suppressing the global strip's mount in that inert workspace is optional
+  structural cleanup, not a new recovery capability.
 - The closed off-canvas sidebar is `inert` and `aria-hidden` at the actual ≤1023 px
   breakpoint; its buttons are not in the accessibility tree or tab order. Open
   drawers and modal surfaces isolate the background; body scrolling is locked while
@@ -273,10 +274,13 @@ panel can render when current is handled elsewhere; when current and retry diffe
 globally, both are explicitly labelled with their own target rather than gated
 away. A third-round
 [4370097785](https://github.com/Ljrr3045/rielia/pull/6#discussion_r4370097785)
-finding noted that the global strip must not be rendered into the inert narrow
-workspace; the strip is now gated by the same `backgroundInert` condition, so
-mobile recovery remains a deliberate close/back path with no dead control.
-Narrow detail stays modal/inert.
+described the global strip as inert on narrow detail. The 69dd interaction was not
+claimed or shown to be reachable behind the modal: root's 390 check confirmed the
+background was inert, close/back exposed the correct RIE-12 recovery, and an
+own-task retry inside detail remained reachable. The final head adds a shared
+`backgroundInert` mount suppression as optional structural cleanup: it changes DOM
+mounting only, adds no recovery capability, and preserves the documented narrow
+modal close/back contract and wide-desktop behaviour.
 
 Post-fix Brave and UI-owner regressions cover the reported A/B, stale-success,
 unrelated-close, own-close/reopen, matching-detail non-duplication, wide

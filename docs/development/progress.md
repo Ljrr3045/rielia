@@ -364,13 +364,14 @@ A later same-head round found that wide-desktop foreign feedback was hidden whil
 detail remained open. The global strip now renders unmatched current/retry outcomes
 with their target, while matching detail feedback stays only in the detail; the
 recovery-only panel can appear when the current outcome is handled locally but the
-captured retry is not. A third-round finding required the global strip to be gated
-by the same `backgroundInert` condition, so narrow detail does not render a dead
-control in its inert workspace; recovery is reached after close/back. Root verified
-the rebuilt production preview at 1920 and 390: labelled global recovery while
-detail stayed open; retry changed only the failed task; matching detail had one
-retry and no duplicate alert; narrow background inert, recovery reachable after
-close/back and after navigating to Sprints. The final head push/CI/review remains.
+captured retry is not. A third-round comment described the global strip as inert on
+narrow. Analysis found no functional defect: the 69dd narrow modal contract never
+claimed recovery behind the modal, and root's 390 check confirmed background inert,
+close/back exposing the labelled RIE-12 retry, and own-task retry reachable inside
+detail. The final head adds shared `backgroundInert` mount suppression as optional
+structural cleanup (DOM mounting only), preserving the documented close/back
+contract. Root's 1920/390 evidence applies to the 69dd interaction; the final head
+adds only this render suppression, and root's focused final check remains pending.
 
 Local validation on the integrated branch: full `pnpm check` passes, including 19
 prototype tests, strict types, production builds and HTTP smoke; `/prototype` is
