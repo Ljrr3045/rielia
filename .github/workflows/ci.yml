@@ -31,4 +31,6 @@ jobs:
           run_install: false
       - run: pnpm install --frozen-lockfile
       - run: pnpm check
+      - name: Real PostgreSQL identity integration (simulated provider HTTP)
+        run: pnpm test:identity
       - run: pnpm audit --audit-level=high

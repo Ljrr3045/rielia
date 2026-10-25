@@ -7,6 +7,10 @@ technical fixture for the T02/T03 spikes and partial T04 tooling. Full T01–T35
 acceptance and deployment remain future work. Use the real commands and limits in
 the [fixture guide](docs/development/technical-fixture.md); do not invent tests or
 claim that health checks verify OAuth, data, or product functionality.
+T02.1 adds an opt-in backend identity experiment; use the
+[identity guide](docs/development/identity-spike.md) for configuration and its
+bounded real-library/database evidence. Browser protocol/state logic is included;
+UI/UX presentation is separate T02.2 work.
 
 ## Select a bounded change
 
@@ -39,6 +43,12 @@ Inside Orca, use its worktree workflow. If RTK guidance is active, prefix every
 shell command with `rtk` (`rtk proxy` for unsupported commands). Commands in this
 document use ordinary tools so contributors do not need Orca or RTK.
 
+For supervised agent development, the user's current rule is OpenCode with
+Claude Haiku 5.5 `high` for UI/UX presentation only; all logic uses
+Codex `gpt-6.1-sol` `xhigh`, including frontend auth/session/data hooks, proxies,
+and functional tests. Verify the effective configuration and isolate each
+worker's checkout. This is separate from Kody's external review role.
+
 The user retired OpenCode review and requested deletion of its entire workflow,
 including the version inherited from `dev`. Do not restore, repair, or invoke it;
 Kody AI is the current reviewer. Do not modify secrets or introduce personal
@@ -55,6 +65,7 @@ Use Python 3.9+, Node 24.22.1, and pnpm 12.15.0. From the repository root:
 python3 scripts/verify-handoff.py
 pnpm install --frozen-lockfile
 pnpm check
+pnpm test:identity
 pnpm audit --audit-level=high
 git diff --check
 git diff --cached --check
@@ -72,6 +83,14 @@ it verifies the API contract, bilingual HTML, and API-down fallback. No external
 credentials are needed. CI also enforces the immutable handoff/link checks.
 See the fixture guide for individual commands, optional environment values, and
 the documented screenshot/keyboard validation limitations.
+
+`pnpm test:identity` additionally requires an existing working Docker engine and
+registry access for the pinned PostgreSQL image. It builds the backend, starts a
+dedicated temporary database on a random loopback port, deploys the identity
+migration twice, runs real-library/session/security tests with simulated provider
+HTTP, and removes only its own container. It uses generated private test values;
+no Google/GitHub credentials or system PostgreSQL installation is needed. CI runs
+this separately from `pnpm check`; Docker is a test prerequisite, not a deployment.
 
 For subsequently assigned implementation, add/run checks appropriate to the
 real change: domain and contract checks; actual PostgreSQL isolation, constraints,

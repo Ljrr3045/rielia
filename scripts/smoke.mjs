@@ -50,7 +50,7 @@ try {
   while (webPort === apiPort) webPort = await freePort();
   const apiUrl = `http://127.0.0.1:${apiPort}`;
   const webUrl = `http://127.0.0.1:${webPort}`;
-  const api = start('API', ['apps/api/dist/main.js'], root, { HOST: '127.0.0.1', PORT: String(apiPort) });
+  const api = start('API', ['apps/api/dist/main.js'], root, { HOST: '127.0.0.1', PORT: String(apiPort), IDENTITY_ENABLED: 'false' });
   await ready(api, `${apiUrl}/api/v1/health`);
   const health = await fetch(`${apiUrl}/api/v1/health`, { signal: AbortSignal.timeout(3000) });
   assert.equal(health.status, 200);
@@ -74,11 +74,22 @@ try {
   assert.match(html, /data-api-status="available"/);
   assert.match(html, /name="robots" content="noindex, nofollow"/);
 
+  const config = await fetch(`${webUrl}/api/v1/identity/config`);
+  assert.equal(config.status, 200);
+  assert.equal(config.headers.get('cache-control'), 'no-store');
+  assert.deepEqual(await config.json(), { enabled: false, providers: [] });
+  assert.equal((await fetch(`${webUrl}/api/v1/identity/session`)).status, 503);
+  assert.equal((await fetch(`${webUrl}/api/v1/identity/unknown`)).status, 404);
+  assert.equal((await fetch(`${webUrl}/api/auth/ok`)).status, 404);
+
   await stop(api);
   const offline = await fetch(webUrl, { signal: AbortSignal.timeout(5000) });
   assert.equal(offline.status, 200, 'The development page must survive API downtime');
   assert.match(await offline.text(), /data-api-status="unavailable"/);
-  console.log('Smoke passed: API contract/404, web ES/EN HTTP, live API status, API-down fallback.');
+  const unavailableIdentity = await fetch(`${webUrl}/api/v1/identity/session`);
+  assert.equal(unavailableIdentity.status, 503);
+  assert.equal(unavailableIdentity.headers.get('cache-control'), 'no-store');
+  console.log('Smoke passed: API contract/404, web ES/EN HTTP, identity proxy/disabled state, API-down fallback.');
 } catch (error) {
   console.error(error);
   for (const entry of children) console.error(`${entry.name}:\n${entry.log}`);

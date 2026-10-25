@@ -3,8 +3,8 @@
 Rielia is a planned project, task, and sprint workspace for people and agents,
 intended for self-hosting and third-party use. This repository contains the
 bilingual planning handoff and a **local development fixture**, with a Next.js
-start page and NestJS liveness endpoint. Accounts, database, tasks, sprints, MCP,
-deployment, and a public service are not implemented.
+start page and NestJS liveness endpoint, plus an opt-in identity experiment.
+Tasks, sprints, MCP, deployment, and a public service are not implemented.
 
 Start with [START HERE / Lectura para agentes](docs/handoff/00-START-HERE.md).
 It links the six plans in English and Spanish and explains their authority and
@@ -24,14 +24,16 @@ the T02/T03 spikes and partial T04 tooling without completing those tickets.
 | [Asset inventory](docs/handoff/06-brand-assets-guide.en.md) | Candidate assets and provenance; no final identity approval |
 | [Progress and decisions](docs/development/progress.md) | T00/T01–T35 state, first wave, blockers, and PR evidence |
 | [Technical fixture](docs/development/technical-fixture.md) | Exact toolchain, local commands, primary research, checks, and limitations |
+| [Identity spike](docs/development/identity-spike.md) | Experimental auth/database, operator setup, same-origin logic, and bounded test evidence |
 | [Contributing](CONTRIBUTING.md) / [Agent instructions](AGENTS.md) | Delivery, verification, review, and ownership rules |
 | [Changelog](CHANGELOG.md) | Recorded repository changes; no application release yet |
 
 The plans recommend a TypeScript monorepo with Next.js, NestJS, PostgreSQL,
 Prisma, Better Auth, a durable worker, and local/remote MCP adapters. **Stack
 confirmation and complete compatibility spikes are pending.** The fixture pins
-and validates the Next/Nest/React/pnpm subset provisionally; it adds no persistence
-or identity dependencies. Google/GitHub OAuth credentials and
+and validates the Next/Nest/React/pnpm subset provisionally. T02.1 experimentally
+integrates Better Auth with an identity-only Prisma/PostgreSQL schema and web
+logic; its presentation is separately owned T02.2 work. Google/GitHub OAuth credentials and
 callbacks must be configured per installation; none are included.
 
 ## Run the local fixture
@@ -42,6 +44,7 @@ verifier. The first install needs network access; runtime smoke needs loopback p
 ```sh
 pnpm install --frozen-lockfile
 pnpm check
+pnpm test:identity
 python3 scripts/verify-handoff.py
 pnpm audit --audit-level=high
 ```
@@ -52,6 +55,9 @@ credentials are required. The web displays Spanish/English development status
 and reports API unavailability honestly. API development builds once; restart
 after source changes. See the [fixture guide](docs/development/technical-fixture.md)
 for optional configuration, production startup, security override, and remaining checks.
+The separate identity integration command needs Docker and uses an isolated,
+disposable PostgreSQL container plus simulated provider HTTP. Real Google/GitHub
+and staging HTTPS acceptance remain pending; see the identity guide.
 
 ## Working agreements
 

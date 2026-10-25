@@ -33,6 +33,11 @@ or an Orca installation.
   T02/T03 and partial T04 tooling. It completes none of the full T01–T35 tickets.
   See [fixture commands, version research, and limits](docs/development/technical-fixture.md).
   No landing implementation, product workflow, or deployment is included.
+  T02.1 adds an opt-in backend identity experiment with Better Auth and a minimal
+  Prisma/PostgreSQL identity schema. See [scope, operator setup, and evidence](docs/development/identity-spike.md).
+  Same-origin protocol/state logic is included; presentation is separate T02.2
+  work. Full T02 and complete stack
+  ratification remain pending real provider/staging evidence and user decisions.
 - `docs/handoff/` is an unchanged import of the original handoff. Preserve every
   filename, relative link, asset, and hash. Put decisions, corrections, and delivery
   evidence in `docs/development/`; never silently rewrite the source proposals or
@@ -45,15 +50,17 @@ or an Orca installation.
   because the plan proposes it. Do not add secrets to any tracked file or PR.
 - Name/logo, v0.1 assets, complete stack, ADRs, performance targets, and usability
   assumptions retain their proposal/validation status. The runnable fixture
-  exposes a development page and API liveness only; no working task product is claimed.
+  exposes a development page, API liveness, and optional experimental identity;
+  no working task product is claimed.
 - There is one public launch followed by continuous updates. B0–B3 are internal
   work batches. Do not publish assets, promise a waitlist/access calendar, or bring
   later capabilities forward because a reference image contains them.
 
 ## Runtime and domain boundaries
 
-`apps/web`, `apps/api`, and `packages/contracts` exist in the fixture. Database,
-identity, worker, API client, and MCP packages/capabilities remain future work.
+`apps/web`, `apps/api`, and `packages/contracts` exist in the fixture. T02.1's
+identity runtime and identity-only Prisma schema live inside `apps/api`.
+The shared database package, domain schema, worker, API client, and MCP remain future work.
 Keep these boundaries in both current and future code.
 
 - Web owns presentation, client state, and accessible interactions. It calls the
@@ -92,8 +99,12 @@ Keep these boundaries in both current and future code.
 2. Use an isolated worktree from `origin/dev`. Confine edits to the assigned
    checkout; do not share it with another worker or alter the original handoff.
    In the supervised development workflow, coordinator-launched development
-   workers use **Codex `gpt-6.1-sol` with effort `xhigh`**, each in its own
-   worktree, per the user's explicit rule. This does not prescribe tools/models
+   workers handling UI/UX presentation use **OpenCode with Claude Haiku 5.5,
+   variant `high`**; **all logic** uses **Codex `gpt-6.1-sol`, effort `xhigh`**,
+   including frontend auth/session/data hooks, proxies, and functional tests.
+   Each works in its own worktree, per the user's explicit rule. Verify effective
+   model/effort rather than silently substituting an unavailable configuration.
+   This does not prescribe tools/models
    for ordinary human contributors. Kody AI is the external PR reviewer invoked
    by the coordinator's root comment, not a development worker.
 3. Deliver a bounded change with relevant evidence. For UI, verify mobile/desktop,

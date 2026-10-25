@@ -1,5 +1,9 @@
 # B0 technical fixture (T02.0)
 
+T02.0 was merged in PR #2. This guide records its original bounded fixture;
+subsequent [T02.1 identity work](identity-spike.md) adds opt-in identity storage,
+protocol/state logic, and its own checks without completing full T02/T03/T04.
+
 Status: a reversible development scaffold using the proposed Next.js + NestJS
 stack. It supports the T02/T03 spikes and supplies **partial tooling for T04**.
 It does not complete T02, T03, or T04 and does not ratify the complete stack.
@@ -81,7 +85,8 @@ pnpm audit --audit-level=high
 Typecheck builds contracts first and generates Next route types before `tsc`;
 it works from a fresh checkout. Build follows workspace dependency order and
 uses the documented Next Webpack build option. `pnpm smoke` needs built output.
-Dependency lifecycle scripts are not required/approved by this scaffold; pnpm
+Dependency lifecycle scripts were not required/approved by the original scaffold;
+T02.1 explicitly allows only its pinned Prisma tooling scripts (see the identity guide). pnpm
 will fail if a future dependency requires a build-script decision.
 
 For local work, use two terminals:
