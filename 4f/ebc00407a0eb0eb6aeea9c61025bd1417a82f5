@@ -1,0 +1,38 @@
+AGENTS.md
+  s_1dfee99ee7672b::t_78c72f22eaaa96 114-119
+  s_1dfee99ee7672b::t_7742f1d9ce617b 31-35,46-48,53,55-57
+CHANGELOG.md
+  s_1dfee99ee7672b::t_7742f1d9ce617b 13-19,26-27,37-38,40-41
+docs/development/technical-fixture.md
+  s_1dfee99ee7672b::t_7742f1d9ce617b 7-8,70,120-123,130-131,148
+.github/pull_request_template.md
+  s_1dfee99ee7672b::t_7742f1d9ce617b 3
+README.md
+  s_1dfee99ee7672b::t_7742f1d9ce617b 4-7,12-13,26,32-34,37-55,70
+.github/workflows/ci.yml
+  s_1dfee99ee7672b::t_7742f1d9ce617b 23-24
+docs/development/progress.md
+  s_1dfee99ee7672b::t_78c72f22eaaa96 144
+  s_1dfee99ee7672b::t_b15126f3abfd9a 5-7,13-20,28-53,57-58,75,81,88-89,91,135,145,147,151,186-189,195-196,199-216,222-224
+  s_1dfee99ee7672b::t_0c7088971d1016 217-221
+  s_1dfee99ee7672b::t_d6160164b314bc 225
+CONTRIBUTING.md
+  s_1dfee99ee7672b::t_7742f1d9ce617b 5-9,20-21,52,56-58,68-75,79-81
+  s_1dfee99ee7672b::t_78c72f22eaaa96 138-144
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4febc00407a0eb0eb6aeea9c61025bd1417a82f5",
+  "prompts": {},
+  "sessions": {
+    "s_1dfee99ee7672b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1701a-59ab-7cd2-a329-11faf6a09876",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
