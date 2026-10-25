@@ -31,13 +31,16 @@ export default async function Home() {
         <section aria-labelledby="es-heading" lang="es">
           <h2 id="es-heading">Una base técnica para empezar</h2>
           <p>Esta página verifica el arranque de la web y la conexión con la API. Todavía no es una aplicación de gestión de trabajo.</p>
-          <p>Hay una prueba de acceso experimental y opcional. No hay tareas, sprints ni MCP. El nombre y la identidad visual siguen siendo propuestas.</p>
+          <p>Hay una prueba de acceso experimental y opcional. El producto real aún no existe; hay un prototipo visual de tareas y sprints con datos ficticios. No hay MCP. El nombre y la identidad visual siguen siendo propuestas.</p>
           <p><Link href="/identity">Prueba de identidad / <span lang="en">Identity spike</span></Link></p>
+          <p><Link href="/prototype">Prototipo de tareas / <span lang="en">Task prototype</span></Link></p>
         </section>
         <section aria-labelledby="en-heading" lang="en">
           <h2 id="en-heading">A technical starting point</h2>
           <p>This page checks web startup and the API connection. It is an early development fixture for a future work-management application.</p>
-          <p>An optional, experimental sign-in check is available. Tasks, sprints, and MCP are not implemented. The name and visual identity remain proposals.</p>
+          <p>An optional, experimental sign-in check is available. The real product does not exist yet; a visual task and sprint prototype with fictional data is available. MCP is not implemented. The name and visual identity remain proposals.</p>
+          <p><Link href="/identity">Prueba de identidad / <span lang="en">Identity spike</span></Link></p>
+          <p><Link href="/prototype">Prototipo de tareas / <span lang="en">Task prototype</span></Link></p>
         </section>
         <section className="status" aria-labelledby="status-heading">
           <h2 id="status-heading">Estado / <span lang="en">Status</span></h2>
