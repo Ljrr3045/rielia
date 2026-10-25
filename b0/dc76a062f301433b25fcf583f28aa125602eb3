@@ -1,0 +1,38 @@
+apps/api/src/application.ts
+  s_37950e3a25b53c::t_77987ace1acf50 25,28-37,42
+docs/development/progress.md
+  s_37950e3a25b53c::t_82bf50456222c3 265,271-279
+CHANGELOG.md
+  s_37950e3a25b53c::t_82bf50456222c3 45-47
+apps/api/test/identity.test.mjs
+  s_37950e3a25b53c::t_d3e1ee646e3076 6,127-140,174-175,200-213,215-216,220-227
+  s_37950e3a25b53c::t_77987ace1acf50 214,217-219
+  s_b8020eceba4182::t_8d753831a3c019 228
+docs/development/identity-spike.md
+  s_37950e3a25b53c::t_82bf50456222c3 148-171,315
+  s_37950e3a25b53c::t_97f6bd1ad9e6bb 334-335
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b0dc76a062f301433b25fcf583f28aa125602eb3",
+  "prompts": {},
+  "sessions": {
+    "s_37950e3a25b53c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a170a7-b55b-7081-80d5-f059e231f03c",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    },
+    "s_b8020eceba4182": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a17016-ab9e-7501-b8a7-f63987eb61f7",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
