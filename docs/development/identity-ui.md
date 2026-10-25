@@ -47,11 +47,12 @@ for nonideal states. Passing these checks in the fixture does not complete them.
 - The status region is always mounted (`role="status"`, polite) so changes are
   announced; failure messages use `role="alert"`.
 - Focus recovery: each action records its initiating button from the click event.
-  When the action settles and focus is on `body` (Safari and touch do not focus a
-  clicked button), focus returns to that button if it is still connected, or moves
-  to the section heading if it was removed. Focus on any other element is never
-  moved. Recovery is keyed to the settled `pending` transition and disarms
-  immediately, so background renders do not move focus.
+  When the action settles, focus moves to the section heading only if that control
+  is now disconnected and focus is on `body` or null. A still-connected control is
+  never focused programmatically, and focus on any other element is never moved.
+  Recovery is keyed to the settled `pending` transition and disarms immediately, so
+  background renders do not move focus. Browser-owned focus after pointer clicks is
+  left as the browser sets it.
 - Visible focus uses the existing `--focus` outline, including the programmatic
   heading target.
 - Copy is bilingual (Spanish first, English in `lang="en"` spans) following the
