@@ -54,7 +54,8 @@ This records repository changes. No application version has been released.
 
 ### Pending
 
-- T02.1 PR/checks/exact-head Kody delivery; T02.2 presentation and accessibility.
+- T02.1 checks/exact-head Kody delivery in [PR #3](https://github.com/Ljrr3045/rielia/pull/3);
+  T02.2 presentation and accessibility.
   No full T01–T35 ticket is complete. Real provider/staging T02 acceptance,
   T03 and full T04 remain unverified.
 - User decisions on license, stack, and installation OAuth configuration; final
