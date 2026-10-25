@@ -90,7 +90,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T00 | Pre-B0 governance | Import, instructions, contribution/review process, ledger, Kody adoption/OpenCode removal | None | Complete, merged PR #1; final-head Kody success/approval |
 | T02.0 | B0 supporting scope | Runnable Next/Nest fixture and partial T04 tooling | T00 merge gate | Complete bounded scope; merged PR #2 with Kody approval and passing CI |
 | T02.1 | B0 experiment | Backend identity, minimal auth persistence, web protocol/state logic | Coordinator experimental gate; does not ratify full stack | Implemented; validation/review under delivery; see [identity evidence](identity-spike.md) |
-| T02.2 | B0 presentation | Experimental identity page consuming T02.1 hook | T02.1 merge; UI/UX ownership | Separately assigned; no presentation implementation claimed by T02.1 |
+| T02.2 | B0 presentation | Experimental identity page consuming T02.1 hook | T02.1 merge; UI/UX ownership | Implemented as presentation on the merged hook; see [identity presentation](identity-ui.md); live browser QA and PR review pending |
 | T01 | B0 | Navigation and task prototype validation | None | Not started |
 | T02 | B0 | Identity/proxy integration spike | None; stack/OAuth decisions pending | T02.1 is partial experimental evidence; real provider/staging and presentation acceptance remain open |
 | T03 | B0 | MCP SDK/wrapper/minimal remote profile spike | T02 for remote auth; stack decision pending | Not started |
@@ -277,3 +277,17 @@ suggestion was a false positive against the public Nest 12.2.0 application API;
 core inserts the adapter's raw-body argument, and nested URL-encoded parsing passes.
 See [technical dispositions](identity-spike.md#pr-3-findings-and-dispositions) and
 the PR threads. The changed code head needs a fresh coordinator-triggered round.
+
+## T02.2 presentation
+
+The UI-only slice adds the experimental `/identity` page and its presentation
+component on the merged T02.1 `useIdentity` contract. The component renders only
+server-agreed state and calls hook actions; it adds no HTTP, session, or
+validation logic and no dependency. Unconfigured providers are hidden, and
+bilingual states cover loading, unavailable API, disabled identity, no providers,
+signed-out, signed-in, pending sign-in/sign-out, and the typed sign-in/sign-out
+messages. Keyboard focus moves to the section heading only after a user action
+removes its control. Evidence, limits, and unverified checks are in
+[identity presentation](identity-ui.md). Full T02/US01 acceptance remains open
+pending real Google/GitHub consent, private-email flows, HTTPS/staging, and
+coordinator browser QA.

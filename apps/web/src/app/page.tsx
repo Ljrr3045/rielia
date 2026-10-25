@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { isHealthResponse } from '@rielia/contracts';
 
 export const dynamic = 'force-dynamic';
@@ -30,12 +31,13 @@ export default async function Home() {
         <section aria-labelledby="es-heading" lang="es">
           <h2 id="es-heading">Una base técnica para empezar</h2>
           <p>Esta página verifica el arranque de la web y la conexión con la API. Todavía no es una aplicación de gestión de trabajo.</p>
-          <p>No hay cuentas, base de datos, tareas, sprints ni MCP. El nombre y la identidad visual siguen siendo propuestas.</p>
+          <p>Hay una prueba de acceso experimental y opcional. No hay tareas, sprints ni MCP. El nombre y la identidad visual siguen siendo propuestas.</p>
+          <p><Link href="/identity">Prueba de identidad / <span lang="en">Identity spike</span></Link></p>
         </section>
         <section aria-labelledby="en-heading" lang="en">
           <h2 id="en-heading">A technical starting point</h2>
           <p>This page checks web startup and the API connection. It is an early development fixture for a future work-management application.</p>
-          <p>Accounts, database, tasks, sprints, and MCP are not implemented. The name and visual identity remain proposals.</p>
+          <p>An optional, experimental sign-in check is available. Tasks, sprints, and MCP are not implemented. The name and visual identity remain proposals.</p>
         </section>
         <section className="status" aria-labelledby="status-heading">
           <h2 id="status-heading">Estado / <span lang="en">Status</span></h2>

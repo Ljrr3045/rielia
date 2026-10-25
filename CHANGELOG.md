@@ -12,6 +12,11 @@ This records repository changes. No application version has been released.
   ID-token verification hook. [Operator guide/evidence](docs/development/identity-spike.md).
 - Same-origin Next protocol routes and typed identity state/hook logic for a
   separately owned presentation change; no new identity page/CSS in T02.1.
+- T02.2: experimental bilingual `/identity` presentation for the merged identity
+  hook, with states for loading, unavailable API, disabled identity, unconfigured
+  providers, signed-out/in, pending actions, and recoverable sign-in/sign-out
+  messages. Keyboard focus recovery and an index link were added; no new dependency.
+  [Presentation evidence](docs/development/identity-ui.md).
 - Disposable pinned PostgreSQL integration tests with simulated provider HTTP,
   state/proxy/client timeout/recovery tests, and a declaration-only compatibility
   patch retaining strict TypeScript dependency checks.
