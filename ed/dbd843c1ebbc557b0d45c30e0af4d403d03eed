@@ -1,0 +1,31 @@
+CHANGELOG.md
+  s_01879676f2f728::t_958c183e9cf13e 54-59
+docs/development/progress.md
+  s_01879676f2f728::t_86fe658c9c8f02 14-15,20
+  s_01879676f2f728::t_0b04a057d89420 353-360,364-372
+  s_01879676f2f728::t_958c183e9cf13e 377-402
+apps/web/src/lib/task-prototype/types.ts
+  s_01879676f2f728::t_958c183e9cf13e 78-86,104-105,108-109
+docs/development/task-prototype.md
+  s_01879676f2f728::t_958c183e9cf13e 102-103,115-165,215-251
+scripts/task-prototype.test.mjs
+  s_01879676f2f728::t_958c183e9cf13e 208-353
+apps/web/src/lib/task-prototype/controller.ts
+  s_01879676f2f728::t_958c183e9cf13e 2,5,38,84,99,101,106,115-116,118,122,127,132,136,139,174,183,196,215-216,231,241,254,265,273-274
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "eddbd843c1ebbc557b0d45c30e0af4d403d03eed",
+  "prompts": {},
+  "sessions": {
+    "s_01879676f2f728": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e8e91ff18ffeK2ckeyaYj5Zblh",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
