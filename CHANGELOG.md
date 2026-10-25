@@ -68,6 +68,9 @@ This records repository changes. No application version has been released.
 - Reject malformed prototype draft collections with field feedback while retaining
   the usable draft, and guard sprint text validation. An actual-action regression
   reproduces the pre-fix throw and verifies correction/save after the fix.
+- Preserve a prior captured demo save retry across rejected/no-op actions; field
+  feedback no longer destroys recovery. A task/sprint regression reproduces the
+  loss and verifies one successful creation/scope update after retry.
 - Normalize identity paths before exact callback origin exemptions. Raw HTTP
   regressions reject disguised mutations/malformed paths and preserve valid
   callback/state behavior; nested form parsing verifies the existing Nest API call.

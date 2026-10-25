@@ -94,6 +94,7 @@ export interface PrototypeState {
   readonly taskDraft: TaskDraft | null;
   readonly sprintDraft: SprintDraft | null;
   readonly save: { readonly status: 'idle' | 'pending' | 'saved' | 'error'; readonly kind: SaveKind | null; readonly error: PrototypeError | null };
+  /** Captured previous failed save remains retryable even when a rejected patch shows a field error. */
   readonly canRetry: boolean;
   readonly nextSaveWillFail: boolean;
   readonly scenario: PrototypeScenario;

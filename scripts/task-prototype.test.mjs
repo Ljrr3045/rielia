@@ -165,6 +165,46 @@ test('malformed collection changes report field errors and retain usable typed d
   a.updateSprintDraft({ goal: 'A demo goal' }); assert.equal(await a.saveSprint(), true);
 });
 
+test('rejected and no-op draft actions preserve a failed task/sprint save for one successful retry', async () => {
+  const adapter = create(); const a = adapter.actions;
+  a.beginCreateTask(); a.updateTaskDraft({ title: 'Retry this exact task' });
+  const taskId = adapter.getSnapshot().taskDraft.taskId;
+  a.simulateNextSaveFailure(); assert.equal(await a.saveTask(), false);
+  for (const rejected of [() => a.updateTaskDraft({ labelIds: null }), () => a.beginCreateTask(), () => a.discardSprintDraft()]) {
+    rejected(); assert.equal(adapter.getSnapshot().canRetry, true);
+    assert.equal(adapter.getSnapshot().taskDraft.taskId, taskId);
+    assert.equal(adapter.getSnapshot().taskDraft.title, 'Retry this exact task');
+    assert.equal(adapter.getSnapshot().tasks.length, 18);
+  }
+  assert.equal(await a.retrySave(), true); assert.equal(adapter.getSnapshot().tasks.length, 19);
+  assert.equal(task(adapter, taskId).title, 'Retry this exact task');
+  assert.equal(await a.retrySave(), false);
+
+  a.simulateNextSaveFailure(); assert.equal(await a.moveTask(taskId, 'done'), false);
+  a.beginEditTask('missing'); assert.equal(adapter.getSnapshot().canRetry, true);
+  assert.equal(await a.retrySave(), true); assert.equal(task(adapter, taskId).status, 'done');
+
+  a.beginCreateSprint(); a.updateSprintDraft({ name: 'Retry this exact sprint', goal: 'Keep retry intent', startsOn: '2026-12-01', endsOn: '2026-12-15', taskIds: ['demo-task-9'] });
+  const sprintId = adapter.getSnapshot().sprintDraft.sprintId;
+  a.simulateNextSaveFailure(); assert.equal(await a.saveSprint(), false);
+  for (const rejected of [() => a.updateSprintDraft({ taskIds: null }), () => a.beginCreateTask(), () => a.discardTaskDraft()]) {
+    rejected(); assert.equal(adapter.getSnapshot().canRetry, true);
+    assert.equal(adapter.getSnapshot().sprintDraft.sprintId, sprintId);
+    assert.deepEqual(adapter.getSnapshot().sprintDraft.taskIds, ['demo-task-9']);
+    assert.equal(adapter.getSnapshot().sprints.length, 2);
+    assert.equal(task(adapter, 'demo-task-9').sprintId, null);
+  }
+  assert.equal(await a.retrySave(), true); assert.equal(adapter.getSnapshot().sprints.length, 3);
+  assert.equal(task(adapter, 'demo-task-9').sprintId, sprintId);
+  assert.equal(await a.retrySave(), false);
+
+  a.beginEditTask(taskId); a.updateTaskDraft({ title: 'A fresh edit' });
+  a.simulateNextSaveFailure(); assert.equal(await a.saveTask(), false);
+  a.updateTaskDraft({ title: 'A corrected fresh edit' });
+  assert.equal(adapter.getSnapshot().canRetry, false); assert.equal(await a.retrySave(), false);
+  assert.equal(await a.saveTask(), true); assert.equal(task(adapter, taskId).title, 'A corrected fresh edit');
+});
+
 test('planned sprint goal/dates/scope validate atomically and maintain at most one current sprint per task', async () => {
   const adapter = create(); const a = adapter.actions;
   a.beginCreateSprint(); a.updateSprintDraft({ name: 'Third demo sprint', goal: 'A bounded goal', startsOn: '2026-12-01', endsOn: '2026-12-01', taskIds: ['demo-task-9'] });

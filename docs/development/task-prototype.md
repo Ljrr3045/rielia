@@ -99,8 +99,8 @@ components, add fetch calls, connect to identity, or add storage.
 | `startSprint(id)` | Only planned → active, with no other active sprint. Dates/goals were validated at planning; demo does not enforce today's date. |
 | `getSprintSummary(state,id)` | Import from the non-React barrel. Returns separate done/canceled/unfinished task ID arrays; count with `.length`. Canceled never counts as delivered. Closed summaries retain the closing outcome after a task is reopened. |
 | `closeSprint(id,destination)` | Show the summary and require a destination: `{kind:'backlog'}` or `{kind:'sprint',sprintId}` targeting another planned sprint. Moves only unfinished tasks, preserving status; done/canceled keep their closed sprint. Closure is confirmed only on save success. |
-| `save` | Render `idle`, `pending`, `error`, `saved`; `kind` identifies the operation. Error includes `code`, plain English `message`, and nullable `field`. UI may localize code/field; do not infer successful persistence from a click. |
-| `canRetry`, `retrySave()` | Only a simulated async failure is retryable. Retry resubmits the captured operation and draft ID. Editing/discarding a draft clears that retry and requires normal save again. Validation/version errors need user correction/review. |
+| `save` | Render `idle`, `pending`, `error`, `saved`; `kind` identifies the feedback operation. Error includes `code`, plain English `message`, and nullable `field`. A rejected patch may display field feedback while a previous failed save remains captured. UI may localize code/field; do not infer successful persistence from a click. |
+| `canRetry`, `retrySave()` | This flag refers to the captured **previous simulated save failure**, independently of the latest field/action error. Label the control "Retry previous save"; retry resubmits that captured operation and draft ID, not a rejected patch. Rejected/no-op actions retain it. A valid draft edit/discard or accepted new draft clears it; a valid new mutation replaces it. Validation/version errors themselves are not retryable and need correction/review. |
 | `simulateNextSaveFailure`, `nextSaveWillFail` | Explicit demo control, one-shot after the next valid save begins. Invalid fields do not consume it. Default save delay is 350 ms, permitting pending UI. No random failures. |
 | `reset('seeded' or 'empty')` | Discard all demo mutations/drafts/feedback/filters/selection; default seeded. Also invalidates pending completions. Empty keeps planned sprint templates but has zero tasks. |
 
@@ -136,7 +136,7 @@ inline findings and dispositions belong in the PR review evidence and the
 coordinator delivery report. A prior-head result never approves a changed head.
 The source handoff and its checksum baseline remain unchanged.
 
-Local validation on 2026-10-25: frozen install, 12 prototype tests, full
+Local validation on 2026-10-25: frozen install, 13 prototype tests, full
 `pnpm check`, 20 existing identity integration tests (real libraries/PostgreSQL,
 simulated provider HTTP), advisory audit (no known vulnerabilities), handoff
 integrity (47 files, 30 assets, 311 local links), and whitespace checks pass.
@@ -152,3 +152,12 @@ guards its string operations. The regression covers null, undefined, scalar,
 object, string and invalid-element collections and successful correction/save.
 Public signatures and prototype scope are unchanged. A new head requires fresh CI
 and the coordinator's new Kody trigger.
+
+The next requested round's [retry-retention finding](https://github.com/Ljrr3045/rielia/pull/5#discussion_r4369810021)
+was also valid: rejecting a malformed patch retained the draft but erased the
+captured retry. A real task/sprint failure → rejected patch → retry regression
+failed with `canRetry === false` before the fix. Rejected/no-op actions now
+preserve the captured operation; feedback and retry availability are independent.
+Only accepted draft changes or new mutations intentionally clear/replace it.
+The test verifies no duplicate task/sprint, correct scope and eventual save,
+including invalid draft-open/no-op discard and a valid edit that clears retry.

@@ -312,7 +312,7 @@ Deterministic pre-commit failure preserves drafts and the captured retry without
 duplicate creation. A local stale task draft receives a version conflict.
 
 `pnpm install --frozen-lockfile` passed on this previously dependency-free checkout.
-Twelve action/invariant tests pass through `pnpm test:prototype` and `pnpm check`;
+Thirteen action/invariant tests pass through `pnpm test:prototype` and `pnpm check`;
 the full check also passes lint, process cleanup, seven identity logic/client
 checks, strict types, production builds and real production HTTP smoke.
 The existing `pnpm test:identity` suite also passes 20 real-library/PostgreSQL
@@ -332,3 +332,11 @@ action regression failed before boundary guards and passes afterwards; rejected
 patches retain the usable draft with field feedback. Sprint text validation also
 guards string operations. This pushed fix requires its own exact-head CI and
 fresh coordinator-triggered Kody round; earlier review evidence cannot approve it.
+
+The requested round then found a valid [captured-retry loss](https://github.com/Ljrr3045/rielia/pull/5#discussion_r4369810021)
+after rejecting a malformed patch. A real failed task/sprint save followed by a
+rejected patch and retry failed pre-fix. Rejected/no-op actions now retain the
+unchanged draft and captured retry; current field feedback is independent of
+`canRetry`. The contract tells presentation to label this "Retry previous save".
+The regression verifies eventual single creation/scope update and that a valid
+new edit clears the old retry. This fix also needs a new exact-head review round.
