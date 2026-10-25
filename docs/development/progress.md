@@ -18,7 +18,7 @@ integration and status across workers.
 | Fixture PR | [#2](https://github.com/Ljrr3045/rielia/pull/2) merged 2026-10-25T01:10:25Z as `629932ad282c27c0b71c6b8d5daf15e3cc199965`; [Kody approval](https://github.com/Ljrr3045/rielia/pull/2#pullrequestreview-5640882613), [CI](https://github.com/Ljrr3045/rielia/actions/runs/40148711191) |
 | T00 | Complete: [PR #1](https://github.com/Ljrr3045/rielia/pull/1) merged 2026-10-24T23:56:43Z as `8dd7c31f454c1989d017dbf7b40e6646112d2d2a` after final-head Kody SUCCESS/APPROVED |
 | T01–T35 | No full ticket complete; T02.0 is supporting scope only |
-| Prior resource cleanup | Coordinator verified both T00 and T02.0 worktrees removed after their merged delivery; current worker never deletes its active checkout |
+| Prior resource cleanup | Coordinator verified the T00, T02.0, and T02.1 (PR #3) worktrees removed after their merged delivery; the T02.1 delivery report is preserved outside the repository. Current worker never deletes its active checkout |
 | Automated review | Kody AI: coordinator alone posts exact root `@kody start-review` for each ready head; prior-head evidence never approves changed code |
 
 T00 acceptance: complete byte-identical import with links/assets/hashes/proposal
