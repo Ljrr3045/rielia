@@ -1,6 +1,6 @@
 ## Problem and resulting behavior
 
-<!-- Explain the concrete change and why it is needed. Do not claim an app exists at T00. -->
+<!-- Explain the concrete change and why it is needed. Distinguish the development fixture from product functionality. -->
 
 ## Scope and requirements
 

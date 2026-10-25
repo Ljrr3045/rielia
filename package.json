@@ -1,0 +1,30 @@
+{
+  "name": "rielia",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.15.0",
+  "engines": { "node": ">=24.22.1 <25", "pnpm": "12.15.0" },
+  "devEngines": {
+    "runtime": { "name": "node", "version": "24.22.1", "onFail": "download" }
+  },
+  "scripts": {
+    "build": "pnpm -r --workspace-concurrency=1 run build",
+    "typecheck": "pnpm --filter @rielia/contracts build && pnpm -r run typecheck",
+    "lint": "eslint . --max-warnings=0",
+    "smoke": "node scripts/smoke.mjs",
+    "test:smoke": "node --test scripts/smoke-process.test.mjs",
+    "check": "pnpm lint && pnpm test:smoke && pnpm typecheck && pnpm build && pnpm smoke",
+    "dev:web": "pnpm --filter @rielia/contracts build && pnpm --filter @rielia/web dev",
+    "dev:api": "pnpm --filter @rielia/contracts build && pnpm --filter @rielia/api dev"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@next/eslint-plugin-next": "16.4.3",
+    "@rielia/contracts": "workspace:*",
+    "@types/node": "24.19.2",
+    "eslint": "10.13.0",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.72.0"
+  }
+}
