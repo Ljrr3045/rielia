@@ -1,0 +1,26 @@
+CHANGELOG.md
+  s_bcfaacd7eb1206::t_5b6a78d7a09500 65-66
+docs/development/progress.md
+  s_bcfaacd7eb1206::t_101a5474d14f94 268-271
+  s_bcfaacd7eb1206::t_c3a1c3b5883ba6 93-94
+  s_bcfaacd7eb1206::t_58cb58d5d5ea5c 60
+  s_bcfaacd7eb1206::t_1224fd3803cd1d 13-18
+docs/development/identity-ui.md
+  s_bcfaacd7eb1206::t_da47bf7bf5be40 68-75
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "451ad338a6b0ae15ddac9f00e2a387d7e6930a11",
+  "prompts": {},
+  "sessions": {
+    "s_bcfaacd7eb1206": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e8f46865affefyU7bVRrWNcudY",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
