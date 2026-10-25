@@ -215,6 +215,9 @@ including invalid draft-open/no-op discard and a valid edit that clears retry.
 
 ### Save-target follow-up
 
+Tracked in [PR #7](https://github.com/Ljrr3045/rielia/pull/7), a non-draft
+prerequisite to `dev` for separately owned UI PR #6.
+
 The coordinator requested this bounded prerequisite from merged
 [PR #5](https://github.com/Ljrr3045/rielia/pull/5),
 `5099b39aef53d5b7e2f0205f3168727cb1dc9471`, after PR #6's
