@@ -15,7 +15,7 @@ integration and status across workers.
 | Base | Merged PR #4, `origin/dev` at `ae67fcc321a0cbb152a0137141d8d6a05abae631` |
 | Branch | `Ljrr3045/rielia-t01-prototype-logic` |
 | Worktree | Isolated Orca checkout named `rielia-t01-prototype-logic`; launch display verified GPT-6.1-Sol xhigh |
-| Current PR | Prepared bounded logic slice; non-draft PR to `dev` and current-head CI/Kody evidence required before coordinator merge |
+| Current PR | [#5](https://github.com/Ljrr3045/rielia/pull/5), non-draft to `dev`; local checks pass. Exact-head CI, coordinator Kody trigger, all three review surfaces and dispositions must be verified in the PR before coordinator merge |
 | T02.2 PR | [#4](https://github.com/Ljrr3045/rielia/pull/4) merged 2026-10-25T02:57:42Z as `ae67fcc321a0cbb152a0137141d8d6a05abae631` after reviewed head `f9c4cc70e51cadf7722dcac775b402f926fbf9a8`, [Kody approval 5641248403](https://github.com/Ljrr3045/rielia/pull/4#pullrequestreview-5641248403), and [CI 40156199016](https://github.com/Ljrr3045/rielia/actions/runs/40156199016); live PR evidence reread during this reconciliation |
 | T02.1 PR | [#3](https://github.com/Ljrr3045/rielia/pull/3) merged 2026-10-25T02:33:47Z as `096a1a31bd45a536017bffb4a424cd4c50062101` after reviewed head `b0dc76a062f301433b25fcf583f28aa125602eb3`, Kody approval [5641185728](https://github.com/Ljrr3045/rielia/pull/3#pullrequestreview-5641185728), and CI run [40154146443](https://github.com/Ljrr3045/rielia/actions/runs/40154146443) |
 | Fixture PR | [#2](https://github.com/Ljrr3045/rielia/pull/2) merged 2026-10-25T01:10:25Z as `629932ad282c27c0b71c6b8d5daf15e3cc199965`; [Kody approval](https://github.com/Ljrr3045/rielia/pull/2#pullrequestreview-5640882613), [CI](https://github.com/Ljrr3045/rielia/actions/runs/40148711191) |
@@ -323,4 +323,5 @@ No route, JSX, CSS, identity/backend logic, credentials, DB or MCP change is
 included. Mobile/desktop, keyboard/touch, screen-reader behavior, real-person
 journeys and friction remain unverified here. No full T01/B0 or later ticket is
 completed by these tests. Current-head CI and Kody evidence must be checked in
-the single logic PR before coordinator integration.
+the single [logic PR #5](https://github.com/Ljrr3045/rielia/pull/5) before coordinator
+integration. Workers never trigger Kody or merge this PR.
