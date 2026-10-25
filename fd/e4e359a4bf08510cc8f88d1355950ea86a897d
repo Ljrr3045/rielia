@@ -1,0 +1,19 @@
+apps/web/src/app/prototype/sprint-view.tsx
+  s_01879676f2f728::t_0f73217bd77fc3 520,524-525,573-585
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "fde4e359a4bf08510cc8f88d1355950ea86a897d",
+  "prompts": {},
+  "sessions": {
+    "s_01879676f2f728": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e8e91ff18ffeK2ckeyaYj5Zblh",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
