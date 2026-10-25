@@ -360,6 +360,17 @@ passed on local head `eddbd84` (RIE-12→RIE-15 foreign feedback/retry removed,
 unrelated retry leaves close destination enabled, own close retry restores/uses
 the captured destination and moves the expected unfinished tasks).
 
+A later same-head round found that wide-desktop foreign feedback was hidden while a
+detail remained open. The global strip now renders unmatched current/retry outcomes
+with their target, while matching detail feedback stays only in the detail; the
+recovery-only panel can appear when the current outcome is handled locally but the
+captured retry is not. Narrow detail remains modal/inert and requires close/back for
+an unrelated pre-existing recovery. Root verified the rebuilt production preview at
+1920 and 390: labelled global recovery while detail stayed open; retry changed only
+the failed task; matching detail had one retry and no duplicate alert; narrow
+background inert, recovery reachable after close/back and after navigating to
+Sprints. The final head push/CI/review remains.
+
 Local validation on the integrated branch: full `pnpm check` passes, including 19
 prototype tests, strict types, production builds and HTTP smoke; `/prototype` is
 statically generated. Handoff integrity, advisory audit and whitespace checks pass.

@@ -9,7 +9,8 @@ This records repository changes. No application version has been released.
 - T01/B0 prototype presentation: responsive fictional `/prototype` with default
   My tasks, project List/Board/Sprints, full task detail, minimal capture/edit,
   sprint planning/start/close, visible simulated failure with draft-preserving
-  retry, typed current/captured-retry targets, and seeded/empty reset. Includes
+  retry, typed current/captured-retry targets, labelled unmatched global recovery,
+  and seeded/empty reset. Includes
   light/dark tokens, mobile drawer/bottom navigation, focus recovery, and ES/EN
   chrome. No backend, identity, durable data, or production workflow.
   [Presentation evidence](docs/development/task-prototype-ui.md).

@@ -53,6 +53,11 @@ not acceptance of those requirements as a whole.
   captured destination on dialog reopen. Global recovery and current sprint
   outcomes include the task key or sprint name, so an unrelated success/error is not
   presented as belonging to the record on screen.
+- On wide desktop, an unmatched current outcome or captured retry keeps a global
+  labelled home while another task's detail stays open; matching feedback remains
+  in the detail to avoid duplication. On narrow/mobile detail the panel is modal
+  and the workspace is inert, so an unrelated pre-existing recovery is reached by
+  closing/backing out; focus never moves behind the detail.
 - Capture uses title plus fixed project context, with optional details collapsed.
   Edit uses the same controlled draft. Sprint planning edits goal, dates, and full
   scope; start/close are confirmed by the adapter, and closure distinguishes done,
@@ -75,6 +80,7 @@ not acceptance of those requirements as a whole.
 | Saved | Visible confirmation near the action/detail; never inferred from a click |
 | Simulated save failure | Alert with draft retained; retry target is the captured operation, not the latest kind/error |
 | Independent recovery | A captured retry remains reachable only by matching target even when latest feedback concerns another record; current outcome is hidden elsewhere |
+| Unmatched while detail is open | Wide desktop: current/retry stays in a labelled global strip while detail remains scoped. Narrow: detail is modal/inert; close/back reveals pre-existing unrelated recovery |
 | Field validation | Inline field error and field association; draft retained |
 | Version conflict | Guidance to keep the draft and reopen current data |
 | Sprint closure | Summary, done/canceled/unfinished distinction, required destination |
@@ -95,6 +101,9 @@ also dismisses the closure dialog and restores focus through the saved action re
 - Focus moves to the opened task heading, traps within full-screen detail/dialog
   panels, and returns to the launching control (or the main heading when that
   control is gone). Escape closes desktop detail and disclosure panels.
+- While narrow detail is open, the workspace is inert and the detail is a modal
+  region; unmatched pre-existing recovery is deliberately reached after close/back,
+  not by moving focus behind the overlay.
 - The closed off-canvas sidebar is `inert` and `aria-hidden` at the actual ≤1023 px
   breakpoint; its buttons are not in the accessibility tree or tab order. Open
   drawers and modal surfaces isolate the background; body scrolling is locked while
@@ -160,6 +169,18 @@ UI-owner Orca checks):
   two done + one canceled in the frozen closure. No horizontal overflow or app errors
   were observed. Malformed state injection was not browser-tested; it is covered by
   the adapter tests.
+- Wide desktop detail-open recovery: with RIE-15's detail open at 1285 px, an armed
+  RIE-12 status failure appeared in the labelled global strip while RIE-15 remained
+  free of foreign error/retry; retry named RIE-12 and updated only RIE-12. A matching
+  RIE-15 failure showed only in its detail with no duplicate global panel. The
+  coordinator independently reproduced the pre-fix 1920 px defect and verified the
+  rebuilt production head at 1920: labelled global pending/error/retry while RIE-15
+  stayed open; retry changed only RIE-12; RIE-15 stayed todo with no foreign/stale
+  local feedback. Opening RIE-12's own detail showed exactly one retry and zero main
+  alerts. At 390, background remained inert, no overflow, closing detail exposed the
+  correct RIE-12 recovery and it succeeded; a task recovery also remained reachable
+  after navigating to Sprints. Narrow detail remains modal/inert; unrelated recovery
+  is reached after close/back. App error logs were empty.
 
 Additional UI-owner checks:
 
@@ -236,8 +257,23 @@ Kody's PR #6 review found two high-severity issues:
 (task detail B could display/retry task A's captured save because the save kind
 was shared). Both were valid. The Sol-owned PR #7 now exposes `save.context` and
 independent `retryContext`; this presentation consumes them without UI-owned
-correlation logic. Post-fix Brave and UI-owner regressions above cover the reported
-A/B, stale-success, unrelated-close, own-close/reopen and 390 px retry cases. PR #7
-merged at `bfaf24d`; the final presentation head on `dev` still requires exact-head
-CI and a fresh coordinator Kody trigger, with all three review surfaces inspected
-before merge. The earlier PR #6 review does not approve the changed head.
+correlation logic.
+
+A second round on `8b37a78` raised
+[4370055482](https://github.com/Ljrr3045/rielia/pull/6#discussion_r4370055482)
+(global recovery branch unreachable/current-vs-retry target ambiguity) and
+[4370055583](https://github.com/Ljrr3045/rielia/pull/6#discussion_r4370055583)
+(foreign task feedback invisible while wide-desktop detail stays open). The second
+is valid and fixed by the labelled unmatched global strip; matching detail
+feedback is not duplicated. For the first, the global surface now separates
+handled-local current feedback from unmatched current/retry, so the recovery-only
+panel can render when current is handled elsewhere; when current and retry differ
+globally, both are explicitly labelled with their own target rather than gated
+away. Narrow detail stays modal/inert; unrelated recovery requires close/back.
+
+Post-fix Brave and UI-owner regressions cover the reported A/B, stale-success,
+unrelated-close, own-close/reopen, matching-detail non-duplication, wide
+detail-open foreign recovery, and 390 px retry cases. The final presentation head
+on `dev` still requires exact-head CI and a fresh coordinator Kody trigger, with all
+three review surfaces inspected before merge. Earlier reviews do not approve the
+changed head.

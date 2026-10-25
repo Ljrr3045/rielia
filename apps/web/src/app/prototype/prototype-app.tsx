@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { PrototypeScenario, PrototypeView, TaskStatus } from '../../lib/task-prototype/types';
+import type { PrototypeScenario, PrototypeView, SaveContext, TaskStatus } from '../../lib/task-prototype/types';
 import { useTaskPrototype } from '../../lib/task-prototype/use-task-prototype';
 import { BoardView } from './board-view';
 import { Filters, activeFilterCount } from './filters';
@@ -72,6 +72,19 @@ export function PrototypeApp() {
   const draftOpen = taskFormOpen || sprintFormOpen;
   const pending = state.save.status === 'pending';
   const filtersActive = activeFilterCount(state.filters);
+  const selectedDetailTaskId = detailOpen ? state.selectedTaskId : null;
+  const isDetailTaskContext = (context: SaveContext | null) => context !== null
+    && (context.kind === 'task' || context.kind === 'status')
+    && selectedDetailTaskId !== null
+    && context.taskId === selectedDetailTaskId;
+  const isSprintLocalContext = (context: SaveContext | null) => context !== null
+    && state.view === 'sprints'
+    && (context.kind === 'sprint' || context.kind === 'start-sprint' || context.kind === 'close-sprint');
+  const currentHandledLocally = isDetailTaskContext(state.save.context) || isSprintLocalContext(state.save.context);
+  const retryHandledLocally = isDetailTaskContext(state.retryContext) || isSprintLocalContext(state.retryContext);
+  const globalSave = !modalOpen && state.save.status !== 'idle' && !currentHandledLocally ? state.save : null;
+  const globalCanRetry = !modalOpen && state.retryContext !== null && !retryHandledLocally;
+  const showGlobalFeedback = globalSave !== null || globalCanRetry;
 
   const closeSidebar = useCallback(() => setSidebarOpen(false), []);
   useFocusTrap(sidebarRef, sidebarDrawer && sidebarOpen, closeSidebar);
@@ -408,16 +421,16 @@ export function PrototypeApp() {
             </div>
 
             <div className={styles.feedbackSlot}>
-              {!modalOpen && !detailOpen && state.view !== 'sprints' && (
+              {showGlobalFeedback && (
                 <SaveFeedback
-                  canRetry={state.retryContext !== null}
-                  currentTarget={contextTargetLabel(state.save.context, state.tasks, state.sprints)}
+                  canRetry={globalCanRetry}
+                  currentTarget={contextTargetLabel(globalSave?.context ?? null, state.tasks, state.sprints)}
                   lang={lang}
                   onRetry={() => {
                     void actions.retrySave();
                   }}
-                  retryTarget={contextTargetLabel(state.retryContext, state.tasks, state.sprints)}
-                  save={state.save.status === 'idle' ? null : state.save}
+                  retryTarget={globalCanRetry ? contextTargetLabel(state.retryContext, state.tasks, state.sprints) : null}
+                  save={globalSave}
                   showError
                 />
               )}
