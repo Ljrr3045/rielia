@@ -3,7 +3,7 @@ import nextPlugin from '@next/eslint-plugin-next';
 import tseslint from 'typescript-eslint';
 
 export default [
-  { ignores: ['**/dist/**', '**/.next/**', '**/node_modules/**', '**/next-env.d.ts', 'docs/handoff/**'] },
+  { ignores: ['**/dist/**', '**/.next/**', '**/node_modules/**', '**/next-env.d.ts', 'apps/api/src/generated/**', 'docs/handoff/**'] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
@@ -30,6 +30,6 @@ export default [
   },
   {
     files: ['**/*.mjs'],
-    languageOptions: { globals: { console: 'readonly', process: 'readonly', setTimeout: 'readonly', clearTimeout: 'readonly', URL: 'readonly', AbortSignal: 'readonly', fetch: 'readonly' } },
+    languageOptions: { globals: { console: 'readonly', process: 'readonly', setTimeout: 'readonly', clearTimeout: 'readonly', URL: 'readonly', URLSearchParams: 'readonly', Request: 'readonly', Response: 'readonly', AbortSignal: 'readonly', AbortController: 'readonly', fetch: 'readonly' } },
   },
 ];

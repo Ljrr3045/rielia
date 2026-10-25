@@ -1,6 +1,6 @@
 # Delivery progress and decisions
 
-Updated: 2026-10-24. This is repository delivery tracking, separate from the
+Updated: 2026-10-25 UTC. This is repository delivery tracking, separate from the
 unchanged [handoff](../handoff/00-START-HERE.md). Plans describe intended outcomes,
 not completed implementation. This checkout now has the T02.0 development fixture;
 it has no task product, deployment, or software release. The coordinator owns
@@ -10,14 +10,16 @@ integration and status across workers.
 
 | Field | Evidence/state |
 | --- | --- |
-| Scope | T02.0 supporting technical fixture for T02/T03 spikes and partial T04 tooling |
-| Base | Merged T00, `origin/dev` at `8dd7c31f454c1989d017dbf7b40e6646112d2d2a` |
-| Branch | `Ljrr3045/rielia-b0-fixture` |
-| Worktree | Isolated Orca checkout named `rielia-b0-fixture` |
-| Fixture PR | [#2](https://github.com/Ljrr3045/rielia/pull/2), target `dev`, non-draft; current-head review/check evidence and coordinator acceptance tracked in the PR |
+| Scope | T02.1 experimental identity runtime, minimal persistence, same-origin protocol/state logic; P01/US01, architecture §2.2–2.4/T02 |
+| Base | Merged PR #2, `origin/dev` at `629932ad282c27c0b71c6b8d5daf15e3cc199965` |
+| Branch | `Ljrr3045/rielia-t02-identity` |
+| Worktree | Isolated Orca checkout named `rielia-t02-identity` |
+| Current PR | [#3](https://github.com/Ljrr3045/rielia/pull/3), non-draft to `dev`; current-head CI/Kody trigger/result/dispositions recorded in its review evidence before coordinator merge |
+| Fixture PR | [#2](https://github.com/Ljrr3045/rielia/pull/2) merged 2026-10-25T01:10:25Z as `629932ad282c27c0b71c6b8d5daf15e3cc199965`; [Kody approval](https://github.com/Ljrr3045/rielia/pull/2#pullrequestreview-5640882613), [CI](https://github.com/Ljrr3045/rielia/actions/runs/40148711191) |
 | T00 | Complete: [PR #1](https://github.com/Ljrr3045/rielia/pull/1) merged 2026-10-24T23:56:43Z as `8dd7c31f454c1989d017dbf7b40e6646112d2d2a` after final-head Kody SUCCESS/APPROVED |
 | T01–T35 | No full ticket complete; T02.0 is supporting scope only |
-| Automated review | Kody AI: coordinator alone posts exact root `@kody start-review` for each ready head; PR #2 records the requested head, check/review URLs, and dispositions |
+| Prior resource cleanup | Coordinator verified both T00 and T02.0 worktrees removed after their merged delivery; current worker never deletes its active checkout |
+| Automated review | Kody AI: coordinator alone posts exact root `@kody start-review` for each ready head; prior-head evidence never approves changed code |
 
 T00 acceptance: complete byte-identical import with links/assets/hashes/proposal
 status; practical repository instructions and docs; truthful dependency/state
@@ -46,7 +48,7 @@ override addresses the Nest adapter's affected 2.4.0 pin
 Audit subsequently reported no known vulnerabilities. Source handoff and inventory
 baselines are preserved; the retired OpenCode workflow is not restored.
 
-This is not full T02/T03/T04 completion or complete stack ratification. No
+This was not full T02/T03/T04 completion or complete stack ratification. At T02.0 no
 DB/schema, identity, OAuth, worker/queue, MCP, sprint, deployment, or product
 functionality is implemented. License, complete stack, and OAuth user answers
 remain pending. UI DOM checks are bounded: screenshots and native Tab traversal
@@ -54,7 +56,7 @@ were unreliable in the background Orca browser and remain unverified, not passed
 
 ## Dependency-based first wave
 
-T00 is accepted/merged and T02.0 is under delivery. The coordinator can
+T00 and T02.0 are accepted/merged. T02.1 is under delivery; the coordinator can
 assign/continue these bounded starts without bypassing their source acceptance:
 
 1. **T01 / B0, UX prototype:** no ticket prerequisite. Select a real project/backlog
@@ -86,9 +88,11 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | Ticket | Internal batch/track | Planned outcome | Dependencies | State |
 | --- | --- | --- | --- | --- |
 | T00 | Pre-B0 governance | Import, instructions, contribution/review process, ledger, Kody adoption/OpenCode removal | None | Complete, merged PR #1; final-head Kody success/approval |
-| T02.0 | B0 supporting scope | Runnable Next/Nest fixture and partial T04 tooling | T00 merge gate | Implemented/locally validated in PR #2; current-head review/checks and coordinator acceptance tracked in PR evidence |
+| T02.0 | B0 supporting scope | Runnable Next/Nest fixture and partial T04 tooling | T00 merge gate | Complete bounded scope; merged PR #2 with Kody approval and passing CI |
+| T02.1 | B0 experiment | Backend identity, minimal auth persistence, web protocol/state logic | Coordinator experimental gate; does not ratify full stack | Implemented; validation/review under delivery; see [identity evidence](identity-spike.md) |
+| T02.2 | B0 presentation | Experimental identity page consuming T02.1 hook | T02.1 merge; UI/UX ownership | Separately assigned; no presentation implementation claimed by T02.1 |
 | T01 | B0 | Navigation and task prototype validation | None | Not started |
-| T02 | B0 | Identity/proxy integration spike | None; stack/OAuth decisions pending | Supporting T02.0 fixture present; full spike unverified |
+| T02 | B0 | Identity/proxy integration spike | None; stack/OAuth decisions pending | T02.1 is partial experimental evidence; real provider/staging and presentation acceptance remain open |
 | T03 | B0 | MCP SDK/wrapper/minimal remote profile spike | T02 for remote auth; stack decision pending | Not started |
 | T04 | B1 foundations | Monorepo, images, worker/queue, initial migration | T02–T03 | Not started as full ticket; T02.0 supports partial tooling |
 | T05 | B1a | Auth, workspaces, principal memberships | T04, T35 | Not started |
@@ -132,7 +136,7 @@ actual use/demand; no launch date or public capacity has been established.
 | Item | Current status | Owner / next evidence |
 | --- | --- | --- |
 | License | Pending user answer; Apache-2.0 remains a proposal; no LICENSE adopted | User/maintainer records selection and notice/dependency review |
-| Stack | Pending user confirmation; Next/Nest subset validated only as T02.0 fixture; PostgreSQL/Prisma/Better Auth and complete integration remain proposed/unverified | User decision, then T02/T03 pinned-version compatibility evidence |
+| Stack | Pending user confirmation; coordinator authorized reversible T02.1 evaluation of Better Auth/Prisma/PostgreSQL, without full stack ratification | User decision plus remaining real T02/T03 evidence; see [identity spike](identity-spike.md) |
 | OAuth credentials/callbacks | Pending user/operator configuration; no secrets in repository | Installation operator provides through secret configuration; real provider smoke in T02 |
 | Name/logo and identity | Rielia working name and v0.1 kit remain proposals, not final approval | User/brand review; availability not recertified by import |
 | Landing | Current request is design planning for later development; no final design approved | Separate authorized design/implementation scope; use document 05 |
@@ -141,6 +145,7 @@ actual use/demand; no launch date or public capacity has been established.
 | Private-project admin visibility | Plan proposes owner/admin can read/administer all projects; requires B0 decision | User/maintainer ratification; communicate before implementation |
 | Operations/public service | VPS capacity, budget/date, registration policy, public obligations not established | Maintainer records decisions and measured readiness in later tickets |
 | Automated review | Kody AI replaces OpenCode; every ready PR/head needs an explicit root `@kody start-review` request | Coordinator alone posts trigger; worker verifies reviewed head, issue comments, formal reviews, inline comments, and applicable checks |
+| Development models | User's final rule: UI/UX presentation uses OpenCode Claude Haiku 5.5 `high`; all logic uses Codex `gpt-6.1-sol` `xhigh`, including browser auth/data/hooks/proxy/tests | Coordinator verifies effective sessions and isolated worktrees; OpenCode development does not restore its retired review workflow |
 | Completed worktree cleanup | User explicitly requested removal after PR merge and finished delivery, without recurring confirmation | Coordinator verifies merged PR, clean tree, and preserved evidence, safely stops/settles task resources, then removes via Orca; workers never delete active/coordinator checkouts |
 | Retired reviewer | User explicitly requested full OpenCode workflow deletion, including the inherited version; no further repairs/runs or secret changes | Deletion merged in PR #1; keep it absent and preserve the historical handoff |
 
@@ -236,3 +241,39 @@ The PR's checks/comments supply current-head evidence without a self-referential
 commit hash in this file. After a pushed fix, this record's prior review evidence
 does not imply approval of the new head; wait for the coordinator-requested Kody
 round for that head. Workers do not post duplicate trigger comments.
+
+## T02.1 scope and validation
+
+The coordinator approved a reversible experiment while user stack/OAuth answers
+remain pending. [Identity research/operator/evidence](identity-spike.md) records
+the exact pins, supported Nest/Express mounting, identity-only migration, DB-backed
+session/cookie/origin/proxy behavior, Google verifier hook, browser state logic,
+and declaration-only compatibility patch. No domain principal, role, workspace,
+task, MCP catalog, deployment, license, or full T04 acceptance is included.
+
+Local real-library/PostgreSQL tests pass, including repeated migration deployment,
+simulated Google and GitHub responses, private-email handling, no implicit linking,
+session persistence/restart/refresh/logout/revocation/expiry, failed DB lookup,
+malicious return URLs/origins, forwarded-header spoofing, and disabled identity.
+Browser logic/proxy tests pass, including stalled-request timeout and retry recovery.
+Provider HTTP/JWKS responses are test fixtures; no production test login bypass exists.
+Real Google/GitHub consent/private-email flows and deployed HTTPS/Traefik behavior
+remain **unverified**, so full T02 is partial. T02.2 owns presentation and its
+keyboard/touch/mobile/accessibility checks. A fresh copy without dependencies,
+build output or generated code passed frozen install and complete `pnpm check`,
+including the declaration patch, strict checks and actual Next proxy smoke.
+The source checkout passed 20 real-library/DB tests and seven browser logic/client
+tests. Final audit reported no known vulnerabilities; handoff and whitespace
+checks passed. CI and exact-head Kody evidence are recorded in
+[PR #3](https://github.com/Ljrr3045/rielia/pull/3) during delivery. Its review evidence
+identifies the requested/reviewed head and all three inspected surfaces;
+a previous-head result does not approve a changed head.
+
+PR #3's first Kody round exposed a valid raw-path normalization bypass in the
+callback origin exemption. A raw Node HTTP regression failed with 200 instead of
+403 before the fix; normalized exact callback matching and malformed-path rejection
+now pass, with state-validated callback behavior preserved. The parser argument
+suggestion was a false positive against the public Nest 12.2.0 application API;
+core inserts the adapter's raw-body argument, and nested URL-encoded parsing passes.
+See [technical dispositions](identity-spike.md#pr-3-findings-and-dispositions) and
+the PR threads. The changed code head needs a fresh coordinator-triggered round.

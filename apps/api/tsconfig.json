@@ -3,8 +3,8 @@
   "compilerOptions": {
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "lib": ["ES2023"],
-    "types": ["node"],
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": ["node", "bun-types/sqlite"],
     "rootDir": "src",
     "outDir": "dist",
     "experimentalDecorators": true,

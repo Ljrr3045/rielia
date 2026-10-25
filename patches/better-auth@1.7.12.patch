@@ -1,0 +1,13 @@
+diff --git a/dist/client/config.d.mts b/dist/client/config.d.mts
+index 35b36b3e20f524d9bc7324759f9a924032bea7ed..8cbdaae430c4f8b17deb8909bf55878c5c3c7ca6 100644
+--- a/dist/client/config.d.mts
++++ b/dist/client/config.d.mts
+@@ -13,7 +13,7 @@ declare const getClientConfig: (options?: BetterAuthClientOptions | undefined, l
+   atomListeners: ClientAtomListener[];
+   hydrateSession: (sessionData: SessionData | null) => void;
+   $sessionSignal: _$nanostores.PreinitializedWritableAtom<boolean> & object;
+-  $fetch: _$_better_fetch_fetch0.BetterFetch<{
++  $fetch: _$_better_fetch_fetch0.BetterFetch<Omit<_$_better_fetch_fetch0.CreateFetchOption, "schema"> & {
+     plugins: (_$_better_fetch_fetch0.BetterFetchPlugin<Record<string, any>> | {
+       id: string;
+       name: string;

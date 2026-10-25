@@ -10,7 +10,7 @@
     "isolatedModules": true,
     "incremental": true,
     "plugins": [{ "name": "next" }],
-    "types": ["node", "react", "react-dom"]
+    "types": ["node", "react", "react-dom", "bun-types/sqlite"]
   },
   "include": ["next-env.d.ts", ".next/types/**/*.ts", ".next/dev/types/**/*.ts", "src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["node_modules"]

@@ -11,6 +11,10 @@ autoInstallPeers: false
 overrides:
   '@nestjs/platform-express>multer': 2.5.0
 
-# No dependency lifecycle scripts are needed; prebuilt framework binaries are
-# optional dependencies. pnpm fails if a newly added dependency needs approval.
-allowBuilds: {}
+# Prisma's pinned engine downloader and runtime compatibility check are needed
+# for schema tooling. All other new dependency lifecycle scripts remain denied.
+allowBuilds:
+  '@prisma/engines@7.10.1': true
+  'prisma@7.10.1': true
+patchedDependencies:
+  better-auth@1.7.12: patches/better-auth@1.7.12.patch
