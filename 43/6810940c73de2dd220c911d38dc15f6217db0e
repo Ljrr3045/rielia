@@ -1,0 +1,46 @@
+scripts/smoke-process.test.mjs
+  s_1dfee99ee7672b::t_5df1e9017eecf2 15,17,19-20
+  s_1dfee99ee7672b::t_df3f1a132ea2be 1-14,16,18,21-27
+scripts/smoke-process.mjs
+  s_1dfee99ee7672b::t_df3f1a132ea2be 1-19,22-23,25-32,35-44
+  s_1dfee99ee7672b::t_c330b4b07fbc47 20-21,24,33-34
+package.json
+  s_1dfee99ee7672b::t_df3f1a132ea2be 16-17
+docs/development/technical-fixture.md
+  s_1dfee99ee7672b::t_d3a0448b4a24b8 72,76,127-143
+  s_b8020eceba4182::t_98b0915edc6177 144
+docs/development/progress.md
+  s_1dfee99ee7672b::t_d3a0448b4a24b8 226-233
+.github/workflows/ci.yml
+  s_1dfee99ee7672b::t_df3f1a132ea2be 22,25,28
+CONTRIBUTING.md
+  s_1dfee99ee7672b::t_d3a0448b4a24b8 68-69
+scripts/smoke.mjs
+  s_1dfee99ee7672b::t_df3f1a132ea2be 7,27
+CHANGELOG.md
+  s_1dfee99ee7672b::t_d3a0448b4a24b8 28-30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "436810940c73de2dd220c911d38dc15f6217db0e",
+  "prompts": {},
+  "sessions": {
+    "s_1dfee99ee7672b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1701a-59ab-7cd2-a329-11faf6a09876",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    },
+    "s_b8020eceba4182": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a17016-ab9e-7501-b8a7-f63987eb61f7",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
