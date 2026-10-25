@@ -24,6 +24,7 @@ import {
   useBodyScrollLock,
   useFocusTrap,
   useIsNarrow,
+  useIsSidebarDrawer,
 } from './ui';
 import styles from './prototype.module.css';
 
@@ -51,6 +52,7 @@ export function PrototypeApp() {
   const c = copy[lang];
   const labels = VIEW_LABELS[lang];
   const isNarrow = useIsNarrow();
+  const sidebarDrawer = useIsSidebarDrawer();
 
   const sidebarRef = useRef<HTMLElement>(null);
   const mainHeadingRef = useRef<HTMLHeadingElement>(null);
@@ -72,12 +74,12 @@ export function PrototypeApp() {
   const filtersActive = activeFilterCount(state.filters);
 
   const closeSidebar = useCallback(() => setSidebarOpen(false), []);
-  useFocusTrap(sidebarRef, isNarrow && sidebarOpen, closeSidebar);
-  useBodyScrollLock(modalOpen || (isNarrow && (detailOpen || sidebarOpen)));
+  useFocusTrap(sidebarRef, sidebarDrawer && sidebarOpen, closeSidebar);
+  useBodyScrollLock(modalOpen || (isNarrow && detailOpen) || (sidebarDrawer && sidebarOpen));
 
   useEffect(() => {
-    if (!isNarrow) setSidebarOpen(false);
-  }, [isNarrow]);
+    if (!sidebarDrawer) setSidebarOpen(false);
+  }, [sidebarDrawer]);
 
   const closeDetail = useCallback(() => {
     actions.selectTask(null);
@@ -201,7 +203,7 @@ export function PrototypeApp() {
         {c.skipLink}
       </a>
 
-      <div className={styles.demoBar} inert={modalOpen || (isNarrow && (detailOpen || sidebarOpen))}>
+      <div className={styles.demoBar} inert={modalOpen || (isNarrow && detailOpen) || (sidebarDrawer && sidebarOpen)}>
         <span className={styles.demoBadge}>{c.prototypeLabel}</span>
         <span className={styles.demoText}>{c.fictionalData}</span>
         <span className={styles.demoText}>{c.memoryOnly}</span>
@@ -257,9 +259,11 @@ export function PrototypeApp() {
           onClick={closeSidebar}
         />
         <aside
+          aria-hidden={sidebarDrawer && !sidebarOpen}
           aria-label={c.mainNavigation}
           className={cx(styles.sidebar, sidebarOpen && styles.sidebarOpen)}
           id="prototype-sidebar"
+          inert={sidebarDrawer && !sidebarOpen}
           ref={sidebarRef}
         >
           <div className={styles.brandRow}>
@@ -319,7 +323,7 @@ export function PrototypeApp() {
           </nav>
         </aside>
 
-        <div className={styles.workspaceColumn} inert={isNarrow && (sidebarOpen || (detailOpen && !modalOpen))}>
+        <div className={styles.workspaceColumn} inert={(sidebarDrawer && sidebarOpen) || (isNarrow && detailOpen && !modalOpen)}>
           <header className={styles.topbar}>
             <button
               aria-controls="prototype-sidebar"
@@ -356,7 +360,7 @@ export function PrototypeApp() {
             <div className={styles.viewHeader}>
               <div className={styles.viewHeading}>
                 <p className={styles.eyebrow}>
-                  {state.project.name} <span className={styles.projectKey}>{state.project.key}</span>
+                  {c.projectLabel} <span className={styles.projectKey}>{state.project.key}</span>
                 </p>
                 <h1 className={styles.viewTitle} ref={mainHeadingRef} tabIndex={-1}>
                   {viewTitle}

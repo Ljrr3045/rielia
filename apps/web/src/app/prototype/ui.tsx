@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useSyncExternalStore } from 'react';
+import { useCallback, useEffect, useRef, useSyncExternalStore } from 'react';
 import type { ReactNode, RefObject } from 'react';
 import type { DemoPrincipal, PrototypeState, TaskPriority, TaskStatus } from '../../lib/task-prototype/types';
 import {
@@ -19,19 +19,27 @@ export function cx(...values: Array<string | false | null | undefined>): string 
 }
 
 const NARROW_QUERY = '(max-width: 1199px)';
+const SIDEBAR_DRAWER_QUERY = '(max-width: 1023px)';
 
-function subscribeNarrow(onChange: () => void) {
-  const query = window.matchMedia(NARROW_QUERY);
-  query.addEventListener('change', onChange);
-  return () => query.removeEventListener('change', onChange);
-}
-
-function getNarrowSnapshot() {
-  return window.matchMedia(NARROW_QUERY).matches;
+export function useMediaQuery(query: string): boolean {
+  const subscribe = useCallback(
+    (onChange: () => void) => {
+      const media = window.matchMedia(query);
+      media.addEventListener('change', onChange);
+      return () => media.removeEventListener('change', onChange);
+    },
+    [query],
+  );
+  const getSnapshot = useCallback(() => window.matchMedia(query).matches, [query]);
+  return useSyncExternalStore(subscribe, getSnapshot, () => false);
 }
 
 export function useIsNarrow(): boolean {
-  return useSyncExternalStore(subscribeNarrow, getNarrowSnapshot, () => false);
+  return useMediaQuery(NARROW_QUERY);
+}
+
+export function useIsSidebarDrawer(): boolean {
+  return useMediaQuery(SIDEBAR_DRAWER_QUERY);
 }
 
 let bodyLocks = 0;
@@ -411,7 +419,7 @@ export function SaveFeedback({ save, lang, canRetry, showError, onRetry }: SaveF
       </span>
       {canRetry && (
         <button className={styles.secondaryButton} onClick={onRetry} type="button">
-          {c.retry}
+          {c.retryPreviousSave}
         </button>
       )}
     </div>

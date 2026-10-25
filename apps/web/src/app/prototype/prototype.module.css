@@ -35,15 +35,15 @@
   box-sizing: border-box;
 }
 
-.app :is(header, section, nav, aside, main, form, fieldset, figure) {
+.app :where(header, section, nav, aside, main, form, fieldset, figure) {
   margin: 0;
 }
 
-.app :is(h1, h2, h3, p, ul, ol, dl, dd, dt) {
+.app :where(h1, h2, h3, p, ul, ol, dl, dd, dt) {
   margin: 0;
 }
 
-.app :is(button, input, select, textarea) {
+.app :where(button, input, select, textarea) {
   font: inherit;
 }
 
@@ -1400,6 +1400,17 @@
   line-height: 1.55;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
+}
+
+.detailNotice {
+  margin-top: 0.65rem;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--divider);
+  border-radius: 0.4rem;
+  background: var(--p-surface-2);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  line-height: 1.45;
 }
 
 .detailSection {

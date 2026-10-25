@@ -66,7 +66,7 @@ export function TaskDetail({ state, actions, lang, trapFocus, onClose, onEdit }:
           <header className={styles.detailHeader}>
             <button aria-label={c.closeDetail} className={styles.backButton} onClick={onClose} type="button">
               <IconArrowLeft size={18} />
-              <span>{c.close}</span>
+              <span>{c.back}</span>
             </button>
             <button aria-label={c.closeDetail} className={styles.iconButton} onClick={onClose} type="button">
               <IconClose size={18} />
@@ -105,7 +105,7 @@ export function TaskDetail({ state, actions, lang, trapFocus, onClose, onEdit }:
         <header className={styles.detailHeader}>
           <button aria-label={c.closeDetail} className={styles.backButton} onClick={onClose} type="button">
             <IconArrowLeft size={18} />
-            <span className={styles.detailBackLabel}>{c.close}</span>
+            <span className={styles.detailBackLabel}>{c.back}</span>
           </button>
           <span className={styles.detailHeaderKey}>{task.key}</span>
           <button className={styles.secondaryButton} disabled={pending} onClick={() => onEdit(task.id)} type="button">
@@ -136,6 +136,8 @@ export function TaskDetail({ state, actions, lang, trapFocus, onClose, onEdit }:
           </div>
 
           <p className={styles.detailDescription}>{task.description.length > 0 ? task.description : c.noDescription}</p>
+
+          {task.assigneeId === null && <p className={styles.detailNotice}>{c.unassignedHint}</p>}
 
           <section aria-labelledby="prototype-properties-heading" className={styles.detailSection}>
             <h3 className={styles.detailSectionTitle} id="prototype-properties-heading">

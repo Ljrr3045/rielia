@@ -61,7 +61,9 @@ export function SprintView({
   const activeSprint = state.sprints.find(sprint => sprint.state === 'active') ?? null;
   const pending = state.save.status === 'pending';
   const draftOpen = state.taskDraft !== null || state.sprintDraft !== null;
-  const showLocalFeedback = state.save.kind === 'sprint' || state.save.kind === 'start-sprint';
+  const showLocalFeedback = state.save.kind === 'sprint'
+    || state.save.kind === 'start-sprint'
+    || state.save.kind === 'close-sprint';
 
   if (state.sprints.length === 0) {
     return (
@@ -501,6 +503,12 @@ export function CloseSprintDialog({ state, actions, lang, sprintId, onClose }: C
   const dialogRef = useRef<HTMLDivElement>(null);
   const pending = state.save.status === 'pending';
   const errorField = state.save.status === 'error' ? state.save.error?.field ?? null : null;
+  const [retryIsClose, setRetryIsClose] = useState(state.canRetry && state.save.kind === 'close-sprint');
+
+  useEffect(() => {
+    if (!state.canRetry) setRetryIsClose(false);
+    else if (state.save.kind === 'close-sprint') setRetryIsClose(true);
+  }, [state.canRetry, state.save.kind]);
 
   const closeIfAllowed = () => {
     if (!pending) onClose();
@@ -549,10 +557,12 @@ export function CloseSprintDialog({ state, actions, lang, sprintId, onClose }: C
 
         <div className={styles.formScroll}>
           <SaveFeedback
-            canRetry={state.canRetry}
+            canRetry={state.canRetry && retryIsClose}
             lang={lang}
             onRetry={() => {
-              void actions.retrySave();
+              void actions.retrySave().then(saved => {
+                if (saved) onClose();
+              });
             }}
             save={state.save}
             showError

@@ -39,6 +39,7 @@ export interface Copy {
   status: string;
   priority: string;
   assignee: string;
+  unassignedHint: string;
   label: string;
   sprint: string;
   all: string;
@@ -49,6 +50,7 @@ export interface Copy {
   boardList: string;
   detailRegion: string;
   edit: string;
+  back: string;
   close: string;
   createdBy: string;
   assignedTo: string;
@@ -121,6 +123,7 @@ export interface Copy {
   closedSprint: string;
   saveError: string;
   retry: string;
+  retryPreviousSave: string;
   draftKept: string;
   planned: string;
   active: string;
@@ -211,6 +214,7 @@ const es: Copy = {
   status: 'Estado',
   priority: 'Prioridad',
   assignee: 'Responsable',
+  unassignedHint: 'Sin asignar no aparecerá en Mis tareas.',
   label: 'Etiqueta',
   sprint: 'Sprint',
   all: 'Todos',
@@ -221,6 +225,7 @@ const es: Copy = {
   boardList: 'Tablero por estados',
   detailRegion: 'Detalle de la tarea',
   edit: 'Editar',
+  back: 'Volver',
   close: 'Cerrar',
   createdBy: 'Creada por',
   assignedTo: 'Asignada a',
@@ -293,6 +298,7 @@ const es: Copy = {
   closedSprint: 'Sprint cerrado.',
   saveError: 'No se pudo guardar',
   retry: 'Reintentar',
+  retryPreviousSave: 'Reintentar guardado anterior',
   draftKept: 'Tu borrador sigue aquí.',
   planned: 'Planificado',
   active: 'Activo',
@@ -383,6 +389,7 @@ const en: Copy = {
   status: 'Status',
   priority: 'Priority',
   assignee: 'Assignee',
+  unassignedHint: 'Unassigned tasks do not appear in My tasks.',
   label: 'Label',
   sprint: 'Sprint',
   all: 'All',
@@ -393,6 +400,7 @@ const en: Copy = {
   boardList: 'Status board',
   detailRegion: 'Task detail',
   edit: 'Edit',
+  back: 'Back',
   close: 'Close',
   createdBy: 'Created by',
   assignedTo: 'Assigned to',
@@ -465,6 +473,7 @@ const en: Copy = {
   closedSprint: 'Sprint closed.',
   saveError: 'Could not save',
   retry: 'Retry',
+  retryPreviousSave: 'Retry previous save',
   draftKept: 'Your draft is still here.',
   planned: 'Planned',
   active: 'Active',
@@ -597,6 +606,8 @@ const ES_ERRORS = new Map<string, string>([
   ['Choose a demo priority.', 'Elige una prioridad de la demo.'],
   ['Choose a demo human or agent, or leave unassigned.', 'Elige una persona o agente de la demo, o deja la tarea sin asignar.'],
   ['Choose demo labels.', 'Elige etiquetas de la demo.'],
+  ['Labels must be a list of demo label IDs.', 'Las etiquetas deben ser una lista de identificadores de la demo.'],
+  ['Task scope must be a list of demo task IDs.', 'El alcance debe ser una lista de identificadores de tareas de la demo.'],
   ['Use a valid date (YYYY-MM-DD).', 'Usa una fecha válida (AAAA-MM-DD).'],
   ['Use whole points from 0 to 100, or leave unestimated.', 'Usa puntos enteros de 0 a 100, o deja la tarea sin estimar.'],
   ['Save or discard the current draft first.', 'Guarda o descarta el borrador actual primero.'],

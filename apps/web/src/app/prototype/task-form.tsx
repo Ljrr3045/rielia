@@ -233,6 +233,7 @@ export function TaskForm({ state, actions, lang }: TaskFormProps) {
                       ))}
                     </select>
                     {fieldError('assigneeId') !== null && <p className={styles.fieldError}>{fieldError('assigneeId')}</p>}
+                    {draft.assigneeId === null && <p className={styles.fieldHint}>{c.unassignedHint}</p>}
                   </div>
 
                   <div className={styles.formField}>
