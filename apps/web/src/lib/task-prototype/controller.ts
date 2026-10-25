@@ -1,8 +1,8 @@
 import { createSeed, currentPrincipalId, labels, principals, project, statuses, workspace } from './seed.ts';
-import type { ClosureDestination, DemoSprint, DemoTask, PrototypeError, PrototypeScenario, PrototypeState, SaveKind, SprintDraft, SprintSummary, TaskFields, TaskFilters, TaskPrototypeAdapter } from './types.ts';
+import type { ClosureDestination, DemoSprint, DemoTask, PrototypeError, PrototypeScenario, PrototypeState, SaveContext, SaveKind, SprintDraft, SprintSummary, TaskFields, TaskFilters, TaskPrototypeAdapter } from './types.ts';
 
 const defaultFilters: TaskFilters = { search: '', status: 'all', priority: 'all', assigneeId: 'all', labelId: 'all', sprintId: 'all' };
-const idle: PrototypeState['save'] = { status: 'idle', kind: null, error: null };
+const idle: PrototypeState['save'] = { status: 'idle', kind: null, context: null, error: null };
 const priorities = ['low', 'medium', 'high', 'urgent'];
 
 function freeze<T>(value: T): T {
@@ -35,7 +35,7 @@ function initial(scenario: PrototypeScenario): PrototypeState {
   return derive({ workspace, project, currentPrincipalId, principals, statuses, labels,
     tasks: scenario === 'empty' ? [] : seed.tasks, sprints: seed.sprints,
     view: 'my-tasks', filters: defaultFilters, visibleTasks: [], columns: [], selectedTaskId: null, selectedTask: null,
-    taskDraft: null, sprintDraft: null, save: idle, canRetry: false, nextSaveWillFail: false, scenario });
+    taskDraft: null, sprintDraft: null, save: idle, canRetry: false, retryContext: null, nextSaveWillFail: false, scenario });
 }
 
 function error(code: PrototypeError['code'], message: string, field: string | null = null): PrototypeError {
@@ -81,7 +81,7 @@ export function getSprintSummary(state: Pick<PrototypeState, 'tasks' | 'sprints'
     unfinishedTaskIds: scope.filter(task => task.status !== 'done' && task.status !== 'canceled').map(task => task.id) });
 }
 
-interface Attempt { kind: SaveKind; validate(): PrototypeError | null; commit(): void }
+interface Attempt { kind: SaveKind; context: SaveContext | null; validate(): PrototypeError | null; commit(): void }
 
 /** No network, auth, storage or domain services. Create one adapter per demo session. */
 export function createTaskPrototype(options: { scenario?: PrototypeScenario; settle?: () => Promise<void> } = {}): TaskPrototypeAdapter {
@@ -96,14 +96,14 @@ export function createTaskPrototype(options: { scenario?: PrototypeScenario; set
     state = derive({ ...state, ...patch });
     listeners.forEach(listener => listener());
   }
-  function reject(kind: SaveKind, problem: PrototypeError): false {
+  function reject(kind: SaveKind, problem: PrototypeError, context: SaveContext | null = null): false {
     // Reporting a rejected action changes no draft/data and cannot erase a prior retry.
-    publish({ save: { status: 'error', kind, error: problem } });
+    publish({ save: { status: 'error', kind, context, error: problem } });
     return false;
   }
   function clearFeedback() {
     lastAttempt = null;
-    publish({ save: idle, canRetry: false });
+    publish({ save: idle, canRetry: false, retryContext: null });
   }
   function canOpenDraft(kind: 'task' | 'sprint'): boolean {
     if (state.save.status === 'pending') return false;
@@ -112,29 +112,31 @@ export function createTaskPrototype(options: { scenario?: PrototypeScenario; set
   }
   async function run(attempt: Attempt): Promise<boolean> {
     if (state.save.status === 'pending') return false;
+    const context = attempt.context;
+    const kind = attempt.kind;
     const problem = attempt.validate();
-    if (problem) return reject(attempt.kind, problem);
+    if (problem) return reject(kind, problem, context);
     const token = generation;
     const fail = state.nextSaveWillFail;
     lastAttempt = attempt;
-    publish({ save: { status: 'pending', kind: attempt.kind, error: null }, canRetry: false, nextSaveWillFail: false });
+    publish({ save: { status: 'pending', kind, context, error: null }, canRetry: false, retryContext: null, nextSaveWillFail: false });
     try {
       await settle();
     } catch {
       if (token !== generation) return false;
-      publish({ save: { status: 'error', kind: attempt.kind, error: error('simulated-save', 'Demo save failed. Your draft is retained; retry when ready.') }, canRetry: true });
+      publish({ save: { status: 'error', kind, context, error: error('simulated-save', 'Demo save failed. Your draft is retained; retry when ready.') }, canRetry: true, retryContext: context });
       return false;
     }
     if (token !== generation) return false;
     if (fail) {
-      publish({ save: { status: 'error', kind: attempt.kind, error: error('simulated-save', 'Simulated save failure. Nothing was saved; your draft is retained.') }, canRetry: true });
+      publish({ save: { status: 'error', kind, context, error: error('simulated-save', 'Simulated save failure. Nothing was saved; your draft is retained.') }, canRetry: true, retryContext: context });
       return false;
     }
     const changed = attempt.validate();
-    if (changed) return reject(attempt.kind, changed);
+    if (changed) return reject(kind, changed, context);
     attempt.commit();
     lastAttempt = null;
-    publish({ save: { status: 'saved', kind: attempt.kind, error: null }, canRetry: false });
+    publish({ save: { status: 'saved', kind, context, error: null }, canRetry: false, retryContext: null });
     return true;
   }
   const findTask = (id: string) => state.tasks.find(task => task.id === id);
@@ -169,7 +171,7 @@ export function createTaskPrototype(options: { scenario?: PrototypeScenario; set
     beginEditTask(taskId) {
       if (!canOpenDraft('task')) return;
       const task = findTask(taskId);
-      if (!task) { reject('task', error('invalid-action', 'Demo task was not found.')); return; }
+      if (!task) { reject('task', error('invalid-action', 'Demo task was not found.'), typeof taskId === 'string' ? { kind: 'task', taskId } : null); return; }
       clearFeedback();
       publish({ taskDraft: { ...taskFields(task), taskId, expectedVersion: task.version } });
     },
@@ -178,7 +180,7 @@ export function createTaskPrototype(options: { scenario?: PrototypeScenario; set
       const draft = state.taskDraft;
       const candidate = { ...draft, ...fields };
       if (!stringArray(candidate.labelIds)) {
-        reject('task', error('validation', 'Labels must be a list of demo label IDs.', 'labelIds'));
+        reject('task', error('validation', 'Labels must be a list of demo label IDs.', 'labelIds'), { kind: 'task', taskId: draft.taskId });
         return;
       }
       clearFeedback();
@@ -191,7 +193,7 @@ export function createTaskPrototype(options: { scenario?: PrototypeScenario; set
     async saveTask() {
       const draft = state.taskDraft;
       if (!draft) return false;
-      return run({ kind: 'task', validate() {
+      return run({ kind: 'task', context: { kind: 'task', taskId: draft.taskId }, validate() {
         const invalid = validateTask(draft);
         if (invalid) return invalid;
         const task = findTask(draft.taskId);
@@ -210,7 +212,8 @@ export function createTaskPrototype(options: { scenario?: PrototypeScenario; set
     },
     async moveTask(taskId, status) {
       const version = findTask(taskId)?.version;
-      return run({ kind: 'status', validate() {
+      const context: SaveContext | null = typeof taskId === 'string' && statuses.some(item => item.id === status) ? { kind: 'status', taskId, status } : null;
+      return run({ kind: 'status', context, validate() {
         if (!statuses.some(item => item.id === status)) return error('validation', 'Choose a demo status.', 'status');
         const task = findTask(taskId);
         if (!task) return error('invalid-action', 'Demo task was not found.');
@@ -225,7 +228,7 @@ export function createTaskPrototype(options: { scenario?: PrototypeScenario; set
     beginEditSprint(sprintId) {
       if (!canOpenDraft('sprint')) return;
       const sprint = findSprint(sprintId);
-      if (!sprint || sprint.state !== 'planned') { reject('sprint', error('invalid-action', 'Choose a planned demo sprint.')); return; }
+      if (!sprint || sprint.state !== 'planned') { reject('sprint', error('invalid-action', 'Choose a planned demo sprint.'), typeof sprintId === 'string' ? { kind: 'sprint', sprintId } : null); return; }
       clearFeedback();
       publish({ sprintDraft: { sprintId, name: sprint.name, goal: sprint.goal, startsOn: sprint.startsOn, endsOn: sprint.endsOn,
         taskIds: state.tasks.filter(task => task.sprintId === sprintId).map(task => task.id) } });
@@ -235,7 +238,7 @@ export function createTaskPrototype(options: { scenario?: PrototypeScenario; set
       const draft = { ...state.sprintDraft, ...fields };
       const sprintId = state.sprintDraft.sprintId;
       if (!stringArray(draft.taskIds)) {
-        reject('sprint', error('validation', 'Task scope must be a list of demo task IDs.', 'taskIds'));
+        reject('sprint', error('validation', 'Task scope must be a list of demo task IDs.', 'taskIds'), { kind: 'sprint', sprintId });
         return;
       }
       clearFeedback();
@@ -248,7 +251,7 @@ export function createTaskPrototype(options: { scenario?: PrototypeScenario; set
     async saveSprint() {
       const draft = state.sprintDraft;
       if (!draft) return false;
-      return run({ kind: 'sprint', validate: () => checkSprintDraft(draft), commit() {
+      return run({ kind: 'sprint', context: { kind: 'sprint', sprintId: draft.sprintId }, validate: () => checkSprintDraft(draft), commit() {
         const sprint: DemoSprint = { id: draft.sprintId, name: draft.name.trim(), goal: draft.goal.trim(), startsOn: draft.startsOn, endsOn: draft.endsOn, state: 'planned', closure: null };
         const selected = new Set(draft.taskIds);
         publish({ sprints: findSprint(sprint.id) ? state.sprints.map(item => item.id === sprint.id ? sprint : item) : [...state.sprints, sprint],
@@ -259,7 +262,7 @@ export function createTaskPrototype(options: { scenario?: PrototypeScenario; set
       } });
     },
     async startSprint(sprintId) {
-      return run({ kind: 'start-sprint', validate() {
+      return run({ kind: 'start-sprint', context: typeof sprintId === 'string' ? { kind: 'start-sprint', sprintId } : null, validate() {
         if (findSprint(sprintId)?.state !== 'planned') return error('invalid-action', 'Only a planned sprint can start.');
         if (state.sprints.some(sprint => sprint.state === 'active')) return error('invalid-action', 'Close the active sprint before starting another.');
         return null;
@@ -267,8 +270,8 @@ export function createTaskPrototype(options: { scenario?: PrototypeScenario; set
     },
     async closeSprint(sprintId, destination: ClosureDestination) {
       // Snapshot caller input, so changing a selection during pending cannot redirect carryover.
-      const target = destination?.kind === 'sprint' ? { kind: 'sprint' as const, sprintId: destination.sprintId } : destination?.kind === 'backlog' ? { kind: 'backlog' as const } : null;
-      return run({ kind: 'close-sprint', validate() {
+      const target = destination?.kind === 'sprint' && typeof destination.sprintId === 'string' ? { kind: 'sprint' as const, sprintId: destination.sprintId } : destination?.kind === 'backlog' ? { kind: 'backlog' as const } : null;
+      return run({ kind: 'close-sprint', context: typeof sprintId === 'string' ? { kind: 'close-sprint', sprintId, destination: target } : null, validate() {
         if (findSprint(sprintId)?.state !== 'active') return error('invalid-action', 'Only an active sprint can close.');
         if (!target) return error('validation', 'Choose an explicit destination for unfinished tasks.', 'destination');
         if (target.kind === 'sprint' && (target.sprintId === sprintId || findSprint(target.sprintId)?.state !== 'planned'))

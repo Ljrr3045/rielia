@@ -41,6 +41,12 @@ This records repository changes. No application version has been released.
 
 ### Changed
 
+- Expose immutable task/sprint operation context for current prototype save
+  feedback and its independently captured retry, including sprint-close destination.
+  Navigation preserves recovery without retargeting it to another detail. Actual
+  action regressions cover pending/saved/error, unrelated validation, malformed
+  inputs and reset; presentation consumes the [typed contract](docs/development/task-prototype.md#feedback-and-retry-targets)
+  separately. No production policy or full T01/B0 acceptance is added.
 - Select OpenCode Go DeepSeek V4.1 Flash 1017 (`opencode-go/deepseek-v4.1-flash`,
   variant `max`) for future UI/UX presentation workers, replacing Haiku 5.5 `high`.
   All logic remains Codex `gpt-6.1-sol` `xhigh`. This coordination update does
