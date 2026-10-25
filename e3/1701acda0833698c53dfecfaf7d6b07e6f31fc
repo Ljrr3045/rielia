@@ -1,0 +1,55 @@
+AGENTS.md
+  s_4dc2680c096a90::t_fbe87f44a34277 38-39,41-44
+  s_4dc2680c096a90::t_4e9803068dcd15 106-108,112
+scripts/task-prototype.test.mjs
+  s_4dc2680c096a90::t_7458b98f5210b5 1-229
+apps/web/src/lib/task-prototype/seed.ts
+  s_4dc2680c096a90::t_dca65679f974d5 1-55
+docs/development/frontend-agent.md
+  s_4dc2680c096a90::t_fbe87f44a34277 41-45
+  s_4dc2680c096a90::t_4e9803068dcd15 1-40
+docs/development/task-prototype.md
+  s_4dc2680c096a90::t_caa9a1229f5cb9 1-137
+  s_4dc2680c096a90::t_958975ef8e23ee 138-144
+CHANGELOG.md
+  s_4dc2680c096a90::t_fbe87f44a34277 9-14,47-48,59-67,83-85
+  s_4dc2680c096a90::t_4e9803068dcd15 44-46
+apps/web/tsconfig.json
+  s_4dc2680c096a90::t_dca65679f974d5 9
+package.json
+  s_4dc2680c096a90::t_7458b98f5210b5 26-27
+apps/web/src/lib/task-prototype/types.ts
+  s_4dc2680c096a90::t_55d46fd3fb27a0 1-127
+apps/web/src/lib/task-prototype/controller.ts
+  s_4dc2680c096a90::t_97a5e786c6bec0 1,3-277
+  s_4dc2680c096a90::t_caa9a1229f5cb9 2
+apps/web/src/lib/task-prototype/index.ts
+  s_4dc2680c096a90::t_97a5e786c6bec0 1-2
+docs/development/progress.md
+  s_4dc2680c096a90::t_47d55af904957d 5-7,14-19,24,62-64,68-71,100-102,155,300-317,322-326
+  s_4dc2680c096a90::t_958975ef8e23ee 318-321
+docs/development/identity-ui.md
+  s_4dc2680c096a90::t_fbe87f44a34277 53-54,65-73
+  s_4dc2680c096a90::t_2abb626ada8a6d 74
+CONTRIBUTING.md
+  s_4dc2680c096a90::t_4e9803068dcd15 49-51,54-55
+  s_4dc2680c096a90::t_fbe87f44a34277 12-16,73,85-88
+apps/web/src/lib/task-prototype/use-task-prototype.ts
+  s_4dc2680c096a90::t_97a5e786c6bec0 1-11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e31701acda0833698c53dfecfaf7d6b07e6f31fc",
+  "prompts": {},
+  "sessions": {
+    "s_4dc2680c096a90": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1716d-0814-72f3-983b-5ee58a358ed7",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
