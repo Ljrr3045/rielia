@@ -139,6 +139,32 @@ test('a stale local edit never overwrites a status change; error retains the dra
   assert.equal(adapter.getSnapshot().taskDraft.status, 'done');
 });
 
+test('malformed collection changes report field errors and retain usable typed drafts instead of throwing', async () => {
+  const adapter = create(); const a = adapter.actions;
+  a.beginCreateTask(); a.updateTaskDraft({ title: 'Keep this task draft' });
+  for (const labelIds of [null, undefined, 42, {}, 'design', [null]]) {
+    assert.doesNotThrow(() => a.updateTaskDraft({ labelIds }));
+    assert.equal(adapter.getSnapshot().save.error.field, 'labelIds');
+    assert.deepEqual(adapter.getSnapshot().taskDraft.labelIds, []);
+    assert.equal(adapter.getSnapshot().taskDraft.title, 'Keep this task draft');
+    assert.equal(adapter.getSnapshot().tasks.length, 18);
+  }
+  a.updateTaskDraft({ labelIds: ['design'] }); assert.equal(await a.saveTask(), true);
+  a.beginCreateSprint(); a.updateSprintDraft({ name: 'Keep this sprint draft', goal: 'A demo goal', startsOn: '2026-12-01', endsOn: '2026-12-15' });
+  for (const taskIds of [null, undefined, 42, {}, 'demo-task-9', [null]]) {
+    assert.doesNotThrow(() => a.updateSprintDraft({ taskIds }));
+    assert.equal(adapter.getSnapshot().save.error.field, 'taskIds');
+    assert.deepEqual(adapter.getSnapshot().sprintDraft.taskIds, []);
+    assert.equal(adapter.getSnapshot().sprintDraft.name, 'Keep this sprint draft');
+    assert.equal(adapter.getSnapshot().sprints.length, 2);
+  }
+  a.updateSprintDraft({ taskIds: ['demo-task-9'], name: null });
+  assert.equal(await a.saveSprint(), false); assert.equal(adapter.getSnapshot().save.error.field, 'name');
+  a.updateSprintDraft({ name: 'Valid name', goal: null });
+  assert.equal(await a.saveSprint(), false); assert.equal(adapter.getSnapshot().save.error.field, 'goal');
+  a.updateSprintDraft({ goal: 'A demo goal' }); assert.equal(await a.saveSprint(), true);
+});
+
 test('planned sprint goal/dates/scope validate atomically and maintain at most one current sprint per task', async () => {
   const adapter = create(); const a = adapter.actions;
   a.beginCreateSprint(); a.updateSprintDraft({ name: 'Third demo sprint', goal: 'A bounded goal', startsOn: '2026-12-01', endsOn: '2026-12-01', taskIds: ['demo-task-9'] });

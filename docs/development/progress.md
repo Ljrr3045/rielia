@@ -312,7 +312,7 @@ Deterministic pre-commit failure preserves drafts and the captured retry without
 duplicate creation. A local stale task draft receives a version conflict.
 
 `pnpm install --frozen-lockfile` passed on this previously dependency-free checkout.
-Eleven action/invariant tests pass through `pnpm test:prototype` and `pnpm check`;
+Twelve action/invariant tests pass through `pnpm test:prototype` and `pnpm check`;
 the full check also passes lint, process cleanup, seven identity logic/client
 checks, strict types, production builds and real production HTTP smoke.
 The existing `pnpm test:identity` suite also passes 20 real-library/PostgreSQL
@@ -325,3 +325,10 @@ journeys and friction remain unverified here. No full T01/B0 or later ticket is
 completed by these tests. Current-head CI and Kody evidence must be checked in
 the single [logic PR #5](https://github.com/Ljrr3045/rielia/pull/5) before coordinator
 integration. Workers never trigger Kody or merge this PR.
+
+Kody's [collection-copy finding](https://github.com/Ljrr3045/rielia/pull/5#discussion_r4369776732)
+was accepted: malformed draft arrays could throw before validation. An actual
+action regression failed before boundary guards and passes afterwards; rejected
+patches retain the usable draft with field feedback. Sprint text validation also
+guards string operations. This pushed fix requires its own exact-head CI and
+fresh coordinator-triggered Kody round; earlier review evidence cannot approve it.

@@ -46,6 +46,9 @@ function validDate(value: string): boolean {
   const date = new Date(`${value}T00:00:00.000Z`);
   return !Number.isNaN(date.valueOf()) && date.toISOString().slice(0, 10) === value;
 }
+function stringArray(value: unknown): value is readonly string[] {
+  return Array.isArray(value) && Array.from(value).every(item => typeof item === 'string');
+}
 function taskFields(value: TaskFields): TaskFields {
   // Explicit allowlist: a UI payload cannot replace creator/provenance/IDs/version.
   return { title: value.title, description: value.description, status: value.status, priority: value.priority,
@@ -140,11 +143,12 @@ export function createTaskPrototype(options: { scenario?: PrototypeScenario; set
   function checkSprintDraft(draft: SprintDraft): PrototypeError | null {
     const existing = findSprint(draft.sprintId);
     if (existing && existing.state !== 'planned') return error('invalid-action', 'Only planned sprint details and scope can be edited.');
-    if (!draft.name.trim() || draft.name.trim().length > 100) return error('validation', 'Enter a sprint name within 100 characters.', 'name');
-    if (!draft.goal.trim() || draft.goal.trim().length > 500) return error('validation', 'Enter a sprint goal within 500 characters.', 'goal');
+    if (typeof draft.name !== 'string' || !draft.name.trim() || draft.name.trim().length > 100) return error('validation', 'Enter a sprint name within 100 characters.', 'name');
+    if (typeof draft.goal !== 'string' || !draft.goal.trim() || draft.goal.trim().length > 500) return error('validation', 'Enter a sprint goal within 500 characters.', 'goal');
     if (!validDate(draft.startsOn)) return error('validation', 'Enter a valid start date.', 'startsOn');
     if (!validDate(draft.endsOn) || draft.endsOn <= draft.startsOn)
       return error('validation', 'End date must be after start (exclusive end).', 'endsOn');
+    if (!stringArray(draft.taskIds)) return error('validation', 'Task scope must be a list of demo task IDs.', 'taskIds');
     if (new Set(draft.taskIds).size !== draft.taskIds.length) return error('validation', 'Select each task once.', 'taskIds');
     if (draft.taskIds.some(id => { const task = findTask(id); return !task || (task.sprintId !== null && task.sprintId !== draft.sprintId); }))
       return error('validation', 'Scope can include only backlog tasks or tasks already in this sprint.', 'taskIds');
@@ -171,8 +175,13 @@ export function createTaskPrototype(options: { scenario?: PrototypeScenario; set
     updateTaskDraft(fields) {
       if (state.save.status === 'pending' || !state.taskDraft) return;
       const draft = state.taskDraft;
+      const candidate = { ...draft, ...fields };
+      if (!stringArray(candidate.labelIds)) {
+        reject('task', error('validation', 'Labels must be a list of demo label IDs.', 'labelIds'));
+        return;
+      }
       clearFeedback();
-      publish({ taskDraft: { ...taskFields({ ...draft, ...fields }), taskId: draft.taskId, expectedVersion: draft.expectedVersion } });
+      publish({ taskDraft: { ...taskFields(candidate), taskId: draft.taskId, expectedVersion: draft.expectedVersion } });
     },
     discardTaskDraft() {
       if (state.save.status === 'pending') return;
@@ -222,6 +231,10 @@ export function createTaskPrototype(options: { scenario?: PrototypeScenario; set
       if (state.save.status === 'pending' || !state.sprintDraft) return;
       const draft = { ...state.sprintDraft, ...fields };
       const sprintId = state.sprintDraft.sprintId;
+      if (!stringArray(draft.taskIds)) {
+        reject('sprint', error('validation', 'Task scope must be a list of demo task IDs.', 'taskIds'));
+        return;
+      }
       clearFeedback();
       publish({ sprintDraft: { sprintId, name: draft.name, goal: draft.goal, startsOn: draft.startsOn, endsOn: draft.endsOn, taskIds: [...draft.taskIds] } });
     },

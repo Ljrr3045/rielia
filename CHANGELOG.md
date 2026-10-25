@@ -65,6 +65,9 @@ This records repository changes. No application version has been released.
   and [CI 40156199016](https://github.com/Ljrr3045/rielia/actions/runs/40156199016)
   on `f9c4cc70e51cadf7722dcac775b402f926fbf9a8`. Prior worktrees were removed
   after preserved delivery evidence; real OAuth/HTTPS remains unverified.
+- Reject malformed prototype draft collections with field feedback while retaining
+  the usable draft, and guard sprint text validation. An actual-action regression
+  reproduces the pre-fix throw and verifies correction/save after the fix.
 - Normalize identity paths before exact callback origin exemptions. Raw HTTP
   regressions reject disguised mutations/malformed paths and preserve valid
   callback/state behavior; nested form parsing verifies the existing Nest API call.

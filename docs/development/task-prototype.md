@@ -91,9 +91,9 @@ components, add fetch calls, connect to identity, or add storage.
 | `tasks`, `visibleTasks`, `columns` | `tasks` is canonical; visible records and column records share its frozen objects. Filter counts use the selected view's records. Sprint scope must use all `tasks`, not filtered records. |
 | `setView`, `setFilters`, `clearFilters` | View is `my-tasks`, `list`, `board`, or `sprints`. Filters compose with AND and persist across view changes. `my-tasks` adds the fixed current assignee restriction. Search is case-insensitive title/key substring. |
 | `filters` | Status/priority use `all` or an enum. Assignee uses `all`, `unassigned`, or principal ID; label uses `all` or label ID; sprint uses `all`, `backlog` (no current sprint), or sprint ID. `backlog` scope differs from backlog status. |
-| `selectTask(id or null)` | Select/close detail without resetting view/filters. `selectedTaskId` can be unknown while `selectedTask` is null: show a missing-task state. Routing, browser back and focus are presentation integration work. |
+| `selectTask(id or null)` | Select/close detail without resetting view/filters. `selectedTaskId` can be unknown while `selectedTask` is null: show a missing-task state. URL serialization/history restoration needs a separately assigned logic follow-up; presentation owns focus. |
 | `beginCreateTask(status?)`, `beginEditTask(id)` | Open one controlled draft. Default create status is backlog; assignment is null. Creating within a column may pass its status. Project is fixed. |
-| `updateTaskDraft`, `discardTaskDraft`, `saveTask` | Editable fields exclude IDs, version, creator and provenance. Failed save retains all draft fields; success clears the draft and selects the saved task. A new draft requires explicitly saving/discarding an existing task or sprint draft. |
+| `updateTaskDraft`, `discardTaskDraft`, `saveTask` | Editable fields exclude IDs, version, creator and provenance. Malformed collection patches produce a field error immediately and retain the existing typed draft. Failed save retains all draft fields; success clears the draft and selects the saved task. A new draft requires explicitly saving/discarding an existing task or sprint draft. |
 | `moveTask(id,status)` | Menu/keyboard and optional drag use the same action. Status stays unchanged until success. A failed move is retained for retry; no second task record is created. |
 | `beginCreateSprint`, `beginEditSprint`, `updateSprintDraft`, `discardSprintDraft`, `saveSprint` | Planned-only goal/date/scope editor. `taskIds` is the full chosen scope. Choose only unscoped tasks or tasks already in this sprint; deselection returns a task to backlog scope while preserving status. |
 | `startSprint(id)` | Only planned → active, with no other active sprint. Dates/goals were validated at planning; demo does not enforce today's date. |
@@ -136,9 +136,19 @@ inline findings and dispositions belong in the PR review evidence and the
 coordinator delivery report. A prior-head result never approves a changed head.
 The source handoff and its checksum baseline remain unchanged.
 
-Local validation on 2026-10-25: frozen install, 11 prototype tests, full
+Local validation on 2026-10-25: frozen install, 12 prototype tests, full
 `pnpm check`, 20 existing identity integration tests (real libraries/PostgreSQL,
 simulated provider HTTP), advisory audit (no known vulnerabilities), handoff
 integrity (47 files, 30 assets, 311 local links), and whitespace checks pass.
 The identity harness removed its disposable database. No new browser or
 real-provider evidence is claimed.
+
+Kody's [draft collection finding](https://github.com/Ljrr3045/rielia/pull/5#discussion_r4369776732)
+was valid: a malformed `labelIds`/`taskIds` patch could throw before validation.
+An actual-action regression failed with `value.labelIds is not iterable` before
+the fix. Draft update boundaries now reject non-array/non-string collections
+with field feedback, retaining the usable draft; sprint text validation also
+guards its string operations. The regression covers null, undefined, scalar,
+object, string and invalid-element collections and successful correction/save.
+Public signatures and prototype scope are unchanged. A new head requires fresh CI
+and the coordinator's new Kody trigger.
