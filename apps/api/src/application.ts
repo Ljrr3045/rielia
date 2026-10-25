@@ -22,13 +22,24 @@ export function configureApplication(app: NestExpressApplication): void {
   });
   if (identity.runtime) {
     const handler = toNodeHandler(identity.runtime.auth);
+    const callbacks = new Set(['/api/auth/callback/google', '/api/auth/callback/github']);
     express.all('/api/auth/*splat', (req: Request, res: Response, next: NextFunction) => {
       res.setHeader('Cache-Control', 'no-store');
+      let pathname: string;
+      try {
+        // Match the WHATWG normalization used by the auth Request boundary.
+        // Express req.path retains raw dot segments and cannot select exemptions.
+        pathname = new URL(req.originalUrl, 'http://identity.internal').pathname;
+        decodeURI(pathname); // Reject malformed percent encoding before dispatch.
+      } catch {
+        res.status(400).json({ message: 'Invalid identity request path.' });
+        return;
+      }
       // Social sign-in without an existing cookie is not covered by every
       // library CSRF branch. Browser mutations always require our exact origin.
       // Provider callbacks instead authenticate the library's state/PKCE flow.
       if (req.method !== 'GET' && req.method !== 'HEAD'
-        && !req.path.startsWith('/api/auth/callback/') && req.headers.origin !== identity.config.origin) {
+        && !callbacks.has(pathname) && req.headers.origin !== identity.config.origin) {
         res.status(403).json({ message: 'Untrusted identity request origin.' });
         return;
       }

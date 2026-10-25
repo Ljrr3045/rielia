@@ -145,6 +145,30 @@ installs apply the exact hashed patch. Remove it when a supported stable artifac
 passes the unchanged strict web/API checks without it. These compatibility costs
 remain spike evidence rather than full stack ratification.
 
+### PR #3 findings and dispositions
+
+Kody's [origin exemption finding](https://github.com/Ljrr3045/rielia/pull/3#discussion_r4369344549)
+was accepted. A Node raw HTTP target retaining
+`/api/auth/callback/../sign-in/social` bypassed the raw-prefix exemption and returned
+200 with no Origin, while Better Auth normalized it to a mutation. The boundary
+now compares a WHATWG-normalized pathname against the two exact callback paths;
+malformed percent encoding returns 400 before library dispatch. Missing/hostile
+Origin requests using plain/encoded dot segments or backslash paths return 403
+without creating OAuth state. A real callback POST without cookies still redirects
+to a GET that must pass the library's state-cookie validation. The regression failed
+before the fix and passes after it; browser/fetch normalization alone was insufficient.
+
+The [parser-argument finding](https://github.com/Ljrr3045/rielia/pull/3#discussion_r4369344677)
+was not applied. Pinned Nest 12.2.0's
+[public application interface](https://github.com/nestjs/nest/blob/v12.2.0/packages/platform-express/interfaces/nest-express-application.interface.ts)
+takes parser and options; its
+[core delegation](https://github.com/nestjs/nest/blob/v12.2.0/packages/core/nest-application.ts)
+inserts the raw-body flag before invoking the adapter's internal three-argument
+method. The existing call is correct. The integration test now verifies nested
+URL-encoded fields as well as JSON, retaining full strict typechecking. Each
+changed head still requires fresh coordinator-requested Kody review; an earlier
+approval does not approve the origin fix.
+
 ## Operator configuration prerequisites
 
 Operators create their own applications and supply client IDs/secrets through
@@ -288,7 +312,7 @@ git diff --check
 git diff --cached --check
 ```
 
-`pnpm test:identity` passed 18 tests/subtests with the real pinned library, Nest,
+`pnpm test:identity` passed 20 tests/subtests with the real pinned library, Nest,
 Prisma and PostgreSQL. It applies migrations twice, tests parsing/health, disabled
 identity, origin/return URL/state/rate-limit rejection, Google PKCE and token
 validation, GitHub private/missing email, same/cross-provider no-linking, encrypted
@@ -307,7 +331,8 @@ HTTP smoke. A fresh temporary copy without dependencies/build/generated files
 passed frozen installation (including the hashed declaration patch) and complete
 `pnpm check`. The high-level audit reported no known vulnerabilities. Handoff
 verification passed 47 unchanged imported files, 30 matching assets and 292 local
-file links; whitespace passed. Final PR/CI/Kody evidence is recorded in
+file links at the clean-install checkpoint; the review disposition adds one link
+(293 in the final verifier run). Whitespace passed. Final PR/CI/Kody evidence is recorded in
 [progress](progress.md) and the delivery PR.
 
 Still required for full T02: real Google and GitHub consent/cancellation/retry,

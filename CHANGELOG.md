@@ -42,6 +42,9 @@ This records repository changes. No application version has been released.
   Coordinator verified both prior completed worktrees removed.
 - Supervised development: UI/UX presentation uses OpenCode Claude Haiku 5.5
   `high`; all logic uses Codex `gpt-6.1-sol` `xhigh`. Kody remains PR reviewer.
+- Normalize identity paths before exact callback origin exemptions. Raw HTTP
+  regressions reject disguised mutations/malformed paths and preserve valid
+  callback/state behavior; nested form parsing verifies the existing Nest API call.
 - Pin fixture CI actions to verified full upstream commit SHAs and defensively
   handle smoke child processes that never acquired a PID. A focused Node regression
   checks same-tick failed-spawn cleanup and termination of the live sibling.

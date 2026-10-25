@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { test, mock } from 'node:test';
 import { generateKeyPairSync, sign } from 'node:crypto';
 import { Buffer } from 'node:buffer';
+import { request as rawHttpRequest } from 'node:http';
 import { NestFactory } from '@nestjs/core';
 import { Controller, Module, Post, Req } from '@nestjs/common';
 import { AppModule } from '../dist/app.module.js';
@@ -123,6 +124,20 @@ test('real Better Auth, Nest Express, Prisma and PostgreSQL (simulated provider 
   const post = (path, body, cookie = '', extraHeaders = {}) => request(path, {
     method: 'POST', headers: { 'content-type': 'application/json', origin: publicOrigin, cookie, ...extraHeaders }, body: JSON.stringify(body),
   });
+  function rawPost(path, body, origin, cookie) {
+    return new Promise((resolve, reject) => {
+      const server = new URL(context.url);
+      const outgoing = rawHttpRequest({ hostname: server.hostname, port: server.port,
+        path, method: 'POST', headers: { 'content-type': 'application/json',
+          ...(origin ? { origin } : {}), ...(cookie ? { cookie } : {}) } }, incoming => {
+        incoming.resume();
+        incoming.on('end', () => resolve({ status: incoming.statusCode, headers: incoming.headers }));
+      });
+      outgoing.on('error', reject);
+      outgoing.setTimeout(5000, () => outgoing.destroy(new Error('Raw HTTP fixture timed out.')));
+      outgoing.end(JSON.stringify(body));
+    });
+  }
   async function begin(extraHeaders = {}, provider = 'github', callbackURL = `${publicOrigin}/identity`) {
     mock.timers.tick(11000);
     const response = await post('/api/auth/sign-in/social', { provider, callbackURL, errorCallbackURL: `${publicOrigin}/identity?auth=error` }, '', extraHeaders);
@@ -156,8 +171,8 @@ test('real Better Auth, Nest Express, Prisma and PostgreSQL (simulated provider 
     assert.equal((await request('/api/v1/tasks')).status, 404);
     const parsed = await post('/api/v1/parse', { nested: { value: 42 } });
     assert.deepEqual(await parsed.json(), { nested: { value: 42 } });
-    const form = await request('/api/v1/parse', { method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' }, body: 'value=parsed' });
-    assert.deepEqual(await form.json(), { value: 'parsed' });
+    const form = await request('/api/v1/parse', { method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' }, body: 'value=parsed&nested[title]=preserved' });
+    assert.deepEqual(await form.json(), { value: 'parsed', nested: { title: 'preserved' } });
     assert.equal((await request('/api/auth/ok')).headers.get('cache-control'), 'no-store');
     assert.equal((await request('/api/v1/identity/config')).headers.get('cache-control'), 'no-store');
     assert.equal((await request('/api/auth/sign-up/email', { method: 'POST' })).status >= 400, true);
@@ -180,6 +195,35 @@ test('real Better Auth, Nest Express, Prisma and PostgreSQL (simulated provider 
       if (response.status === 429) { limited = true; break; }
     }
     assert.equal(limited, true);
+  });
+
+  await t.test('raw dot-segment targets cannot disguise mutations as callbacks; malformed encoding fails closed', async () => {
+    for (const origin of [undefined, 'https://attacker.example']) {
+      for (const path of ['/api/auth/callback/../sign-in/social', '/api/auth/callback/%2e%2e/sign-in/social',
+        '/api/auth/callback/x/../../sign-in/social', '/api/auth/callback/..\\sign-in/social']) {
+        const denied = await rawPost(path, { provider: 'github', callbackURL: `${publicOrigin}/identity` }, origin);
+        assert.equal(denied.status, 403, 'Raw non-callback mutation must require exact origin.');
+      }
+    }
+    const malformed = await rawPost('/api/auth/callback/%zz', {}, undefined);
+    assert.equal(malformed.status, 400);
+    assert.equal(await context.identity.runtime.prisma.verification.count(), 0);
+    assert.equal(await context.identity.runtime.prisma.session.count(), 0);
+  });
+
+  await t.test('callback POST without cookies redirects to the state-validated GET', async () => {
+    fixture = { id: 'callback-post', email: 'callback-post@example.test', verified: true };
+    const flow = await begin();
+    // Cross-site POST does not carry a SameSite=Lax state cookie. The redirect
+    // GET carries it, and must still pass the real library's state validation.
+    const forwarded = await rawPost('/api/auth/callback/github', { code: 'fixture', state: flow.state }, undefined);
+    assert.equal(forwarded.status, 302);
+    const target = new URL(forwarded.headers.location);
+    assert.equal(target.origin, publicOrigin);
+    assert.equal(target.pathname, '/api/auth/callback/github');
+    const completed = await request(target.pathname + target.search, { headers: { cookie: flow.cookie } });
+    assert.equal(completed.status, 302);
+    assert.ok(sessionCookie(completed));
   });
 
   await t.test('invalid/replayed OAuth state and provider cancellation create no session', async () => {

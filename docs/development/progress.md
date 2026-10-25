@@ -262,9 +262,18 @@ remain **unverified**, so full T02 is partial. T02.2 owns presentation and its
 keyboard/touch/mobile/accessibility checks. A fresh copy without dependencies,
 build output or generated code passed frozen install and complete `pnpm check`,
 including the declaration patch, strict checks and actual Next proxy smoke.
-The source checkout passed 18 real-library/DB tests and seven browser logic/client
+The source checkout passed 20 real-library/DB tests and seven browser logic/client
 tests. Final audit reported no known vulnerabilities; handoff and whitespace
 checks passed. CI and exact-head Kody evidence are recorded in
 [PR #3](https://github.com/Ljrr3045/rielia/pull/3) during delivery. Its review evidence
 identifies the requested/reviewed head and all three inspected surfaces;
 a previous-head result does not approve a changed head.
+
+PR #3's first Kody round exposed a valid raw-path normalization bypass in the
+callback origin exemption. A raw Node HTTP regression failed with 200 instead of
+403 before the fix; normalized exact callback matching and malformed-path rejection
+now pass, with state-validated callback behavior preserved. The parser argument
+suggestion was a false positive against the public Nest 12.2.0 application API;
+core inserts the adapter's raw-body argument, and nested URL-encoded parsing passes.
+See [technical dispositions](identity-spike.md#pr-3-findings-and-dispositions) and
+the PR threads. The changed code head needs a fresh coordinator-triggered round.
