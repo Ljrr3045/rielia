@@ -2115,6 +2115,16 @@
   color: var(--p-brand-ink);
 }
 
+.feedbackRecovery {
+  border-color: var(--control-border);
+  background: var(--p-surface-2);
+  color: var(--text-primary);
+}
+
+.feedbackTarget {
+  font-weight: 600;
+}
+
 .feedbackError {
   align-items: flex-start;
   border-color: var(--danger-text);
@@ -2132,6 +2142,17 @@
 
 .feedbackBody strong {
   color: var(--danger-text);
+}
+
+.feedback .secondaryButton {
+  max-width: 100%;
+  white-space: normal;
+}
+
+.retryTarget {
+  color: inherit;
+  font-weight: 500;
+  overflow-wrap: anywhere;
 }
 
 .spinner {

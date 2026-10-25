@@ -90,6 +90,16 @@ export function TaskDetail({ state, actions, lang, trapFocus, onClose, onEdit }:
     .map(labelId => state.labels.find(label => label.id === labelId))
     .filter((label): label is { id: string; name: string } => label !== undefined);
   const pending = state.save.status === 'pending';
+  const feedbackContext = state.save.context !== null
+    && (state.save.context.kind === 'task' || state.save.context.kind === 'status')
+    && state.save.context.taskId === task.id
+    ? state.save.context
+    : null;
+  const retryContext = state.retryContext !== null
+    && (state.retryContext.kind === 'task' || state.retryContext.kind === 'status')
+    && state.retryContext.taskId === task.id
+    ? state.retryContext
+    : null;
 
   return (
     <div className={styles.detailLayer}>
@@ -118,15 +128,19 @@ export function TaskDetail({ state, actions, lang, trapFocus, onClose, onEdit }:
 
         <div className={styles.detailBody}>
           <div className={styles.detailFeedback}>
-            <SaveFeedback
-              canRetry={state.canRetry}
-              lang={lang}
-              onRetry={() => {
-                void actions.retrySave();
-              }}
-              save={state.save}
-              showError
-            />
+            {(feedbackContext !== null || retryContext !== null) && (
+              <SaveFeedback
+                canRetry={retryContext !== null}
+                currentTarget={feedbackContext !== null ? task.key : null}
+                lang={lang}
+                onRetry={() => {
+                  void actions.retrySave();
+                }}
+                retryTarget={retryContext !== null ? task.key : null}
+                save={feedbackContext !== null ? state.save : null}
+                showError
+              />
+            )}
           </div>
 
           <div className={styles.detailTitleRow}>

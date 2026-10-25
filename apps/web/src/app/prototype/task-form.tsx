@@ -15,13 +15,24 @@ interface TaskFormProps {
 export function TaskForm({ state, actions, lang }: TaskFormProps) {
   const c = copy[lang];
   const draft = state.taskDraft;
+  const draftTaskId = draft?.taskId ?? null;
+  const feedbackContext = state.save.context !== null
+    && state.save.context.kind === 'task'
+    && state.save.context.taskId === draftTaskId
+    ? state.save.context
+    : null;
+  const retryContext = state.retryContext !== null
+    && state.retryContext.kind === 'task'
+    && state.retryContext.taskId === draftTaskId
+    ? state.retryContext
+    : null;
   const isCreate = draft?.expectedVersion === null;
   const [detailsOpen, setDetailsOpen] = useState(!isCreate);
   const [confirmDiscard, setConfirmDiscard] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
   const keepEditingRef = useRef<HTMLButtonElement>(null);
-  const errorField = state.save.status === 'error' ? state.save.error?.field ?? null : null;
-  const saveError = state.save.status === 'error' ? state.save.error : null;
+  const saveError = state.save.status === 'error' && feedbackContext !== null ? state.save.error : null;
+  const errorField = saveError?.field ?? null;
   const pending = state.save.status === 'pending';
   const versionConflict = saveError?.code === 'version-conflict';
 
@@ -58,6 +69,8 @@ export function TaskForm({ state, actions, lang }: TaskFormProps) {
     saveError !== null && saveError.field === field ? localizeError(saveError, lang) : null;
 
   const titleError = fieldError('title');
+  const targetLabel = state.tasks.find(task => task.id === draft.taskId)?.key ?? (draft.title.trim() || c.createTaskTitle);
+  const retryTarget = retryContext === null ? null : targetLabel;
 
   return (
     <div className={styles.modalLayer}>
@@ -105,15 +118,19 @@ export function TaskForm({ state, actions, lang }: TaskFormProps) {
           }}
         >
           <div className={styles.formScroll}>
-            <SaveFeedback
-              canRetry={state.canRetry}
-              lang={lang}
-              onRetry={() => {
-                void actions.retrySave();
-              }}
-              save={state.save}
-              showError
-            />
+            {(feedbackContext !== null || retryContext !== null) && (
+              <SaveFeedback
+                canRetry={retryContext !== null}
+                currentTarget={feedbackContext !== null ? targetLabel : null}
+                lang={lang}
+                onRetry={() => {
+                  void actions.retrySave();
+                }}
+                retryTarget={retryTarget}
+                save={feedbackContext !== null ? state.save : null}
+                showError
+              />
+            )}
 
             {versionConflict && (
               <button className={styles.secondaryButton} onClick={discard} type="button">

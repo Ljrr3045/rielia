@@ -6,7 +6,7 @@ import { useTaskPrototype } from '../../lib/task-prototype/use-task-prototype';
 import { BoardView } from './board-view';
 import { Filters, activeFilterCount } from './filters';
 import { SprintForm, SprintView, CloseSprintDialog } from './sprint-view';
-import { copy, VIEW_LABELS, type Lang } from './strings';
+import { copy, contextTargetLabel, VIEW_LABELS, type Lang } from './strings';
 import { TaskDetail } from './task-detail';
 import { TaskForm } from './task-form';
 import { TaskListView } from './task-views';
@@ -410,12 +410,14 @@ export function PrototypeApp() {
             <div className={styles.feedbackSlot}>
               {!modalOpen && !detailOpen && state.view !== 'sprints' && (
                 <SaveFeedback
-                  canRetry={state.canRetry}
+                  canRetry={state.retryContext !== null}
+                  currentTarget={contextTargetLabel(state.save.context, state.tasks, state.sprints)}
                   lang={lang}
                   onRetry={() => {
                     void actions.retrySave();
                   }}
-                  save={state.save}
+                  retryTarget={contextTargetLabel(state.retryContext, state.tasks, state.sprints)}
+                  save={state.save.status === 'idle' ? null : state.save}
                   showError
                 />
               )}

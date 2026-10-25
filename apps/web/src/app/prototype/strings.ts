@@ -1,4 +1,12 @@
-import type { PrototypeError, PrototypeView, TaskPriority, TaskStatus } from '../../lib/task-prototype/types';
+import type {
+  DemoSprint,
+  DemoTask,
+  PrototypeError,
+  PrototypeView,
+  SaveContext,
+  TaskPriority,
+  TaskStatus,
+} from '../../lib/task-prototype/types';
 
 export type Lang = 'es' | 'en';
 
@@ -126,6 +134,8 @@ export interface Copy {
   saveError: string;
   retry: string;
   retryPreviousSave: string;
+  recoveryTitle: string;
+  recoveryBody: string;
   draftKept: string;
   planned: string;
   active: string;
@@ -306,6 +316,8 @@ const es: Copy = {
   saveError: 'No se pudo guardar',
   retry: 'Reintentar',
   retryPreviousSave: 'Reintentar guardado anterior',
+  recoveryTitle: 'Guardado anterior pendiente',
+  recoveryBody: 'El último intento no se completó. Puedes reintentarlo.',
   draftKept: 'Tu borrador sigue aquí.',
   planned: 'Planificado',
   active: 'Activo',
@@ -486,6 +498,8 @@ const en: Copy = {
   saveError: 'Could not save',
   retry: 'Retry',
   retryPreviousSave: 'Retry previous save',
+  recoveryTitle: 'A previous save is still pending',
+  recoveryBody: 'The last attempt did not complete. You can retry it.',
   draftKept: 'Your draft is still here.',
   planned: 'Planned',
   active: 'Active',
@@ -650,6 +664,18 @@ const ES_ERRORS = new Map<string, string>([
 export function localizeError(error: PrototypeError, lang: Lang): string {
   if (lang === 'en') return error.message;
   return ES_ERRORS.get(error.message) ?? error.message;
+}
+
+export function contextTargetLabel(
+  context: SaveContext | null,
+  tasks: readonly DemoTask[],
+  sprints: readonly DemoSprint[],
+): string | null {
+  if (context === null) return null;
+  if (context.kind === 'task' || context.kind === 'status') {
+    return tasks.find(task => task.id === context.taskId)?.key ?? context.taskId;
+  }
+  return sprints.find(sprint => sprint.id === context.sprintId)?.name ?? context.sprintId;
 }
 
 export function savePendingLabel(kind: 'task' | 'status' | 'sprint' | 'start-sprint' | 'close-sprint', lang: Lang): string {

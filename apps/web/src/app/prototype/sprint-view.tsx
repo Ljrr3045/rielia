@@ -11,6 +11,7 @@ import type {
 import { getSprintSummary } from '../../lib/task-prototype';
 import {
   copy,
+  contextTargetLabel,
   formatSprintRange,
   localizeError,
   sprintStateLabel,
@@ -61,9 +62,18 @@ export function SprintView({
   const activeSprint = state.sprints.find(sprint => sprint.state === 'active') ?? null;
   const pending = state.save.status === 'pending';
   const draftOpen = state.taskDraft !== null || state.sprintDraft !== null;
-  const showLocalFeedback = state.save.kind === 'sprint'
-    || state.save.kind === 'start-sprint'
-    || state.save.kind === 'close-sprint';
+  const feedbackContext = state.save.context !== null
+    && (state.save.context.kind === 'sprint'
+      || state.save.context.kind === 'start-sprint'
+      || state.save.context.kind === 'close-sprint')
+    ? state.save.context
+    : null;
+  const retryContext = state.retryContext !== null
+    && (state.retryContext.kind === 'sprint'
+      || state.retryContext.kind === 'start-sprint'
+      || state.retryContext.kind === 'close-sprint')
+    ? state.retryContext
+    : null;
 
   if (state.sprints.length === 0) {
     return (
@@ -77,14 +87,16 @@ export function SprintView({
 
   return (
     <div className={styles.sprintFrame}>
-      {showLocalFeedback && (
+      {(feedbackContext !== null || retryContext !== null) && (
         <SaveFeedback
-          canRetry={state.canRetry}
+          canRetry={retryContext !== null}
+          currentTarget={contextTargetLabel(feedbackContext, state.tasks, state.sprints)}
           lang={lang}
           onRetry={() => {
             void actions.retrySave();
           }}
-          save={state.save}
+          retryTarget={contextTargetLabel(retryContext, state.tasks, state.sprints)}
+          save={feedbackContext !== null ? state.save : null}
           showError
         />
       )}
@@ -264,11 +276,22 @@ interface SprintFormProps {
 export function SprintForm({ state, actions, lang }: SprintFormProps) {
   const c = copy[lang];
   const draft = state.sprintDraft;
+  const draftSprintId = draft?.sprintId ?? null;
+  const feedbackContext = state.save.context !== null
+    && state.save.context.kind === 'sprint'
+    && state.save.context.sprintId === draftSprintId
+    ? state.save.context
+    : null;
+  const retryContext = state.retryContext !== null
+    && state.retryContext.kind === 'sprint'
+    && state.retryContext.sprintId === draftSprintId
+    ? state.retryContext
+    : null;
   const [confirmDiscard, setConfirmDiscard] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
   const keepEditingRef = useRef<HTMLButtonElement>(null);
   const pending = state.save.status === 'pending';
-  const saveError = state.save.status === 'error' ? state.save.error : null;
+  const saveError = state.save.status === 'error' && feedbackContext !== null ? state.save.error : null;
 
   useEffect(() => {
     if (confirmDiscard) keepEditingRef.current?.focus();
@@ -295,6 +318,8 @@ export function SprintForm({ state, actions, lang }: SprintFormProps) {
     .reduce((total, task) => total + (task.points ?? 0), 0);
   const fieldError = (field: string) =>
     saveError !== null && saveError.field === field ? localizeError(saveError, lang) : null;
+  const targetLabel = state.sprints.find(sprint => sprint.id === draft.sprintId)?.name ?? (draft.name.trim() || c.createSprintTitle);
+  const retryTarget = retryContext === null ? null : targetLabel;
 
   const update = (fields: Partial<SprintFields & { taskIds: readonly string[] }>) => {
     actions.updateSprintDraft(fields);
@@ -345,15 +370,19 @@ export function SprintForm({ state, actions, lang }: SprintFormProps) {
           }}
         >
           <div className={styles.formScroll}>
-            <SaveFeedback
-              canRetry={state.canRetry}
-              lang={lang}
-              onRetry={() => {
-                void actions.retrySave();
-              }}
-              save={state.save}
-              showError
-            />
+            {(feedbackContext !== null || retryContext !== null) && (
+              <SaveFeedback
+                canRetry={retryContext !== null}
+                currentTarget={feedbackContext !== null ? targetLabel : null}
+                lang={lang}
+                onRetry={() => {
+                  void actions.retrySave();
+                }}
+                retryTarget={retryTarget}
+                save={feedbackContext !== null ? state.save : null}
+                showError
+              />
+            )}
 
             <fieldset className={styles.formFields} disabled={pending}>
               <div className={styles.formGrid}>
@@ -513,16 +542,25 @@ interface CloseSprintDialogProps {
 export function CloseSprintDialog({ state, actions, lang, sprintId, onClose }: CloseSprintDialogProps) {
   const c = copy[lang];
   const sprint = state.sprints.find(item => item.id === sprintId) ?? null;
-  const [destination, setDestination] = useState<string>('backlog');
+  const closeFeedbackContext = state.save.context !== null
+    && state.save.context.kind === 'close-sprint'
+    && state.save.context.sprintId === sprintId
+    ? state.save.context
+    : null;
+  const closeRetryContext = state.retryContext !== null
+    && state.retryContext.kind === 'close-sprint'
+    && state.retryContext.sprintId === sprintId
+    ? state.retryContext
+    : null;
+  const capturedDestination = closeRetryContext?.destination ?? null;
+  const initialDestination = capturedDestination?.kind === 'sprint'
+    ? capturedDestination.sprintId
+    : 'backlog';
+  const [destination, setDestination] = useState<string>(initialDestination);
   const dialogRef = useRef<HTMLDivElement>(null);
   const pending = state.save.status === 'pending';
-  const errorField = state.save.status === 'error' ? state.save.error?.field ?? null : null;
-  const [retryIsClose, setRetryIsClose] = useState(false);
-
-  useEffect(() => {
-    if (!state.canRetry) setRetryIsClose(false);
-    else if (state.save.status === 'error' && state.save.kind === 'close-sprint') setRetryIsClose(true);
-  }, [state.canRetry, state.save.kind, state.save.status]);
+  const saveError = state.save.status === 'error' && closeFeedbackContext !== null ? state.save.error : null;
+  const errorField = saveError?.field ?? null;
 
   const closeIfAllowed = () => {
     if (!pending) onClose();
@@ -570,16 +608,18 @@ export function CloseSprintDialog({ state, actions, lang, sprintId, onClose }: C
         </header>
 
         <div className={styles.formScroll}>
-          {state.save.kind === 'close-sprint' && (
+          {(closeFeedbackContext !== null || closeRetryContext !== null) && (
             <SaveFeedback
-              canRetry={state.canRetry && retryIsClose}
+              canRetry={closeRetryContext !== null}
+              currentTarget={closeFeedbackContext !== null ? sprint.name : null}
               lang={lang}
               onRetry={() => {
                 void actions.retrySave().then(saved => {
                   if (saved) onClose();
                 });
               }}
-              save={state.save}
+              retryTarget={sprint.name}
+              save={closeFeedbackContext !== null ? state.save : null}
               showError
             />
           )}
@@ -621,7 +661,7 @@ export function CloseSprintDialog({ state, actions, lang, sprintId, onClose }: C
             </section>
           )}
 
-          <fieldset className={styles.destinationFieldset} disabled={pending || state.canRetry}>
+          <fieldset className={styles.destinationFieldset} disabled={pending || closeRetryContext !== null}>
             <legend className={styles.fieldLabel}>{c.destinationLabel}</legend>
             <label className={styles.destinationChoice}>
               <input
@@ -649,9 +689,9 @@ export function CloseSprintDialog({ state, actions, lang, sprintId, onClose }: C
               </label>
             ))}
             {otherSprints.length === 0 && <p className={styles.fieldHint}>{c.noOtherSprint}</p>}
-            {state.canRetry && <p className={styles.fieldHint}>{c.retryFrozenDestination}</p>}
-            {errorField === 'destination' && state.save.status === 'error' && state.save.error !== null && (
-              <p className={styles.fieldError}>{localizeError(state.save.error, lang)}</p>
+            {closeRetryContext !== null && <p className={styles.fieldHint}>{c.retryFrozenDestination}</p>}
+            {errorField === 'destination' && saveError !== null && (
+              <p className={styles.fieldError}>{localizeError(saveError, lang)}</p>
             )}
           </fieldset>
 

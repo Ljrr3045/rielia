@@ -38,10 +38,13 @@ or an Orca installation.
   Same-origin protocol/state logic and T02.2 presentation are merged in PRs #3/#4.
   Full T02 and complete stack
   ratification remain pending real provider/staging evidence and user decisions.
-- T01/B0 has a separately isolated fictional frontend-only demo adapter; see the
-  [prototype contract and limits](docs/development/task-prototype.md). It is not
-  production task/sprint policy or authorization. Presentation and reviewed
-  mobile/desktop journeys remain separate work; full T01/B0 is not complete.
+- T01/B0 has a separately isolated fictional frontend-only demo adapter and a
+  bounded responsive `/prototype` presentation; see the
+  [prototype contract](docs/development/task-prototype.md) and
+  [presentation evidence](docs/development/task-prototype-ui.md). It is not
+  production task/sprint policy or authorization. The bounded demo journeys exist,
+  but full T01/B0, real-user validation, backend persistence, and production
+  workflow remain incomplete.
 - `docs/handoff/` is an unchanged import of the original handoff. Preserve every
   filename, relative link, asset, and hash. Put decisions, corrections, and delivery
   evidence in `docs/development/`; never silently rewrite the source proposals or

@@ -378,50 +378,77 @@ export function EmptyState({ title, body, children }: { title: string; body: str
 }
 
 interface SaveFeedbackProps {
-  save: PrototypeState['save'];
+  save: PrototypeState['save'] | null;
   lang: Lang;
   canRetry: boolean;
+  currentTarget: string | null;
+  retryTarget: string | null;
   showError: boolean;
   onRetry: () => void;
 }
 
-export function SaveFeedback({ save, lang, canRetry, showError, onRetry }: SaveFeedbackProps) {
+export function SaveFeedback({ save, lang, canRetry, currentTarget, retryTarget, showError, onRetry }: SaveFeedbackProps) {
   const c = copy[lang];
-  if (save.status === 'idle') return null;
-  if (save.status === 'error' && !showError) return null;
+  const current = save !== null && save.status !== 'idle' && (save.status !== 'error' || showError) ? save : null;
+  if (current === null && !canRetry) return null;
 
-  if (save.status === 'pending') {
+  const retryButton = canRetry ? (
+    <button className={styles.secondaryButton} onClick={onRetry} type="button">
+      {c.retryPreviousSave}
+      {retryTarget !== null && <span className={styles.retryTarget}>· {retryTarget}</span>}
+    </button>
+  ) : null;
+
+  if (current === null) {
+    return (
+      <div className={cx(styles.feedback, styles.feedbackRecovery)} role="status">
+        <IconAlert size={18} />
+        <span className={styles.feedbackBody}>
+          <strong>{c.recoveryTitle}</strong>
+          <span>{c.recoveryBody}</span>
+        </span>
+        {retryButton}
+      </div>
+    );
+  }
+
+  if (current.status === 'pending') {
     return (
       <div aria-live="polite" className={cx(styles.feedback, styles.feedbackPending)} role="status">
         <Spinner />
-        <span>{savePendingLabel(save.kind ?? 'task', lang)}</span>
+        <span>
+          {savePendingLabel(current.kind ?? 'task', lang)}
+          {currentTarget !== null && <span className={styles.feedbackTarget}> · {currentTarget}</span>}
+        </span>
       </div>
     );
   }
 
-  if (save.status === 'saved') {
+  if (current.status === 'saved') {
     return (
       <div aria-live="polite" className={cx(styles.feedback, styles.feedbackSaved)} role="status">
         <IconCheck size={16} />
-        <span>{saveSavedLabel(save.kind ?? 'task', lang)}</span>
+        <span>
+          {saveSavedLabel(current.kind ?? 'task', lang)}
+          {currentTarget !== null && <span className={styles.feedbackTarget}> · {currentTarget}</span>}
+        </span>
       </div>
     );
   }
 
-  const problem = save.error;
+  const problem = current.error;
   if (problem === null) return null;
   return (
     <div className={cx(styles.feedback, styles.feedbackError)} role="alert">
       <IconAlert size={18} />
       <span className={styles.feedbackBody}>
-        <strong>{c.saveError}</strong>
+        <strong>
+          {c.saveError}
+          {currentTarget !== null && <span className={styles.feedbackTarget}> · {currentTarget}</span>}
+        </strong>
         <span>{localizeError(problem, lang)}</span>
       </span>
-      {canRetry && (
-        <button className={styles.secondaryButton} onClick={onRetry} type="button">
-          {c.retryPreviousSave}
-        </button>
-      )}
+      {retryButton}
     </div>
   );
 }
