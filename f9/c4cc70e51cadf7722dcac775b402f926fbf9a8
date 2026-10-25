@@ -1,0 +1,19 @@
+docs/development/identity-ui.md
+  s_bcfaacd7eb1206::t_44dc700d237f70 50-55
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f9c4cc70e51cadf7722dcac775b402f926fbf9a8",
+  "prompts": {},
+  "sessions": {
+    "s_bcfaacd7eb1206": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e8f46865affefyU7bVRrWNcudY",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
