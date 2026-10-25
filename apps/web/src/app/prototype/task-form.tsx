@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { TaskFields, TaskPrototypeActions, PrototypeState, TaskPriority, TaskStatus } from '../../lib/task-prototype/types';
 import { copy, localizeError, priorityLabel, statusLabel, type Lang } from './strings';
-import { IconClose, SaveFeedback, useFocusTrap } from './ui';
+import { IconClose, SaveFeedback, cx, useFocusTrap } from './ui';
 import styles from './prototype.module.css';
 
 interface TaskFormProps {
@@ -78,7 +78,7 @@ export function TaskForm({ state, actions, lang }: TaskFormProps) {
       >
         <header className={styles.modalHeader}>
           <div>
-            <p className={styles.modalEyebrow}>{isCreate ? c.createTask : c.editTaskTitle}</p>
+            <p className={styles.modalEyebrow}>{c.taskRecord}</p>
             <h2 className={styles.modalTitle} id="prototype-task-form-heading">
               {isCreate ? c.createTaskTitle : c.editTaskTitle}
             </h2>
@@ -160,7 +160,7 @@ export function TaskForm({ state, actions, lang }: TaskFormProps) {
                 </summary>
 
                 <div className={styles.formGrid}>
-                  <div className={cxField(styles.formField, styles.formFieldWide)}>
+                  <div className={cx(styles.formField, styles.formFieldWide)}>
                     <label className={styles.fieldLabel} htmlFor="prototype-task-description">
                       {c.descriptionLabel} <span className={styles.optionalMark}>{c.optional}</span>
                     </label>
@@ -270,7 +270,7 @@ export function TaskForm({ state, actions, lang }: TaskFormProps) {
                     {fieldError('points') !== null && <p className={styles.fieldError}>{fieldError('points')}</p>}
                   </div>
 
-                  <fieldset className={cxField(styles.formField, styles.formFieldWide)}>
+                  <fieldset className={cx(styles.formField, styles.formFieldWide)}>
                     <legend className={styles.fieldLabel}>{c.labels}</legend>
                     <div className={styles.labelChoices}>
                       {state.labels.map(label => (
@@ -338,8 +338,4 @@ export function TaskForm({ state, actions, lang }: TaskFormProps) {
       </div>
     </div>
   );
-}
-
-function cxField(...values: string[]): string {
-  return values.join(' ');
 }

@@ -42,6 +42,7 @@ export interface Copy {
   unassignedHint: string;
   label: string;
   sprint: string;
+  boardDragHint: string;
   all: string;
   unassigned: string;
   noSprint: string;
@@ -92,6 +93,7 @@ export interface Copy {
   createFirstTask: string;
   createTaskTitle: string;
   editTaskTitle: string;
+  taskRecord: string;
   titleLabel: string;
   titlePlaceholder: string;
   descriptionLabel: string;
@@ -131,6 +133,9 @@ export interface Copy {
   sprintGoal: string;
   sprintDates: string;
   sprintScope: string;
+  retainedTasksTitle: string;
+  retainedTasksHint: string;
+  noRetainedTasks: string;
   editPlan: string;
   startSprint: string;
   closeSprintAction: string;
@@ -217,6 +222,7 @@ const es: Copy = {
   unassignedHint: 'Sin asignar no aparecerá en Mis tareas.',
   label: 'Etiqueta',
   sprint: 'Sprint',
+  boardDragHint: 'Arrastra una tarjeta o cambia su estado',
   all: 'Todos',
   unassigned: 'Sin asignar',
   noSprint: 'Sin sprint',
@@ -267,6 +273,7 @@ const es: Copy = {
   createFirstTask: 'Crear la primera tarea',
   createTaskTitle: 'Nueva tarea',
   editTaskTitle: 'Editar tarea',
+  taskRecord: 'Tarea',
   titleLabel: 'Título',
   titlePlaceholder: '¿Qué hay que hacer?',
   descriptionLabel: 'Descripción',
@@ -306,6 +313,9 @@ const es: Copy = {
   sprintGoal: 'Objetivo',
   sprintDates: 'Fechas',
   sprintScope: 'Alcance',
+  retainedTasksTitle: 'Tareas que permanecen en este sprint',
+  retainedTasksHint: 'Solo quedan tareas terminadas o canceladas; las pendientes se movieron al cerrar.',
+  noRetainedTasks: 'No quedan tareas en este sprint.',
   editPlan: 'Editar plan',
   startSprint: 'Iniciar sprint',
   closeSprintAction: 'Cerrar sprint',
@@ -392,6 +402,7 @@ const en: Copy = {
   unassignedHint: 'Unassigned tasks do not appear in My tasks.',
   label: 'Label',
   sprint: 'Sprint',
+  boardDragHint: 'Drag a card or change its status',
   all: 'All',
   unassigned: 'Unassigned',
   noSprint: 'No sprint',
@@ -442,6 +453,7 @@ const en: Copy = {
   createFirstTask: 'Create the first task',
   createTaskTitle: 'New task',
   editTaskTitle: 'Edit task',
+  taskRecord: 'Task',
   titleLabel: 'Title',
   titlePlaceholder: 'What needs doing?',
   descriptionLabel: 'Description',
@@ -481,6 +493,9 @@ const en: Copy = {
   sprintGoal: 'Goal',
   sprintDates: 'Dates',
   sprintScope: 'Scope',
+  retainedTasksTitle: 'Tasks still in this sprint',
+  retainedTasksHint: 'Only done or canceled tasks remain; unfinished work moved when the sprint closed.',
+  noRetainedTasks: 'No tasks remain in this sprint.',
   editPlan: 'Edit plan',
   startSprint: 'Start sprint',
   closeSprintAction: 'Close sprint',
@@ -533,13 +548,13 @@ export const VIEW_LABELS: Record<Lang, Record<PrototypeView, { title: string; su
   es: {
     'my-tasks': { title: 'Mis tareas', subtitle: 'Asignadas a ti en el proyecto de demostración' },
     list: { title: 'Lista', subtitle: 'Todas las tareas del proyecto' },
-    board: { title: 'Tablero', subtitle: 'Arrastra una tarjeta o cambia su estado' },
+    board: { title: 'Tablero', subtitle: 'Cambia el estado desde cada tarjeta' },
     sprints: { title: 'Sprints', subtitle: 'Planifica, inicia y cierra iteraciones' },
   },
   en: {
     'my-tasks': { title: 'My tasks', subtitle: 'Assigned to you in the demo project' },
     list: { title: 'List', subtitle: 'Every task in the project' },
-    board: { title: 'Board', subtitle: 'Drag a card or change its status' },
+    board: { title: 'Board', subtitle: 'Change status from each card' },
     sprints: { title: 'Sprints', subtitle: 'Plan, start, and close iterations' },
   },
 };

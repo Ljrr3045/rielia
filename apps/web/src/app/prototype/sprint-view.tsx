@@ -160,16 +160,23 @@ export function SprintView({
 
               <div className={styles.sprintScopeBlock}>
                 <div className={styles.sprintScopeHeader}>
-                  <h3 className={styles.sprintScopeTitle}>{c.sprintScope}</h3>
+                  <h3 className={styles.sprintScopeTitle}>
+                    {sprint.state === 'closed' ? c.retainedTasksTitle : c.sprintScope}
+                  </h3>
                   <span className={styles.sprintScopeMeta}>
                     {c.taskCount(scope.length)}
-                    {scope.length > 0 && ` · ${c.pointsTotal(points.points)}`}
-                    {points.unestimated > 0 && ` · ${c.unestimatedCount(points.unestimated)}`}
+                    {sprint.state !== 'closed' && scope.length > 0 && ` · ${c.pointsTotal(points.points)}`}
+                    {sprint.state !== 'closed' && points.unestimated > 0 && ` · ${c.unestimatedCount(points.unestimated)}`}
                   </span>
                 </div>
 
-                {sprint.state !== 'closed' && scope.length > 0 && (
-                  <ul aria-label={`${c.sprintScope}: ${sprint.name}`} className={styles.sprintTaskList}>
+                {sprint.state === 'closed' && <p className={styles.fieldHint}>{c.retainedTasksHint}</p>}
+
+                {scope.length > 0 && (
+                  <ul
+                    aria-label={`${sprint.state === 'closed' ? c.retainedTasksTitle : c.sprintScope}: ${sprint.name}`}
+                    className={styles.sprintTaskList}
+                  >
                     {scope.map(task => (
                       <li className={styles.sprintTaskRow} key={task.id}>
                         <StatusDot status={task.status} />
@@ -178,18 +185,25 @@ export function SprintView({
                           {task.title}
                         </button>
                         <span className={styles.sprintTaskStatus}>{statusLabel(task.status, lang)}</span>
-                        <span className={styles.points}>
-                          {task.points === null ? c.unestimated : c.pointsTotal(task.points)}
-                        </span>
+                        {sprint.state !== 'closed' && (
+                          <span className={styles.points}>
+                            {task.points === null ? c.unestimated : c.pointsTotal(task.points)}
+                          </span>
+                        )}
                       </li>
                     ))}
                   </ul>
                 )}
 
-                {sprint.state !== 'closed' && scope.length === 0 && <p className={styles.columnEmpty}>{c.noScope}</p>}
+                {scope.length === 0 && (
+                  <p className={styles.columnEmpty}>
+                    {sprint.state === 'closed' ? c.noRetainedTasks : c.noScope}
+                  </p>
+                )}
 
                 {sprint.state === 'closed' && sprint.closure !== null && (
                   <div className={styles.closureSummary}>
+                    <h3 className={styles.sprintScopeTitle}>{c.closeSprintSummary}</h3>
                     <div className={styles.closureCounts}>
                       <span>
                         <strong>{sprint.closure.doneTaskIds.length}</strong> {c.doneTasks}
@@ -343,7 +357,7 @@ export function SprintForm({ state, actions, lang }: SprintFormProps) {
 
             <fieldset className={styles.formFields} disabled={pending}>
               <div className={styles.formGrid}>
-                <div className={cxField(styles.formField, styles.formFieldWide)}>
+                <div className={cx(styles.formField, styles.formFieldWide)}>
                   <label className={styles.fieldLabel} htmlFor="prototype-sprint-name">
                     {c.sprintNameLabel} <span className={styles.requiredMark}>{c.required}</span>
                   </label>
@@ -360,7 +374,7 @@ export function SprintForm({ state, actions, lang }: SprintFormProps) {
                   {fieldError('name') !== null && <p className={styles.fieldError}>{fieldError('name')}</p>}
                 </div>
 
-                <div className={cxField(styles.formField, styles.formFieldWide)}>
+                <div className={cx(styles.formField, styles.formFieldWide)}>
                   <label className={styles.fieldLabel} htmlFor="prototype-sprint-goal">
                     {c.sprintGoalLabel} <span className={styles.requiredMark}>{c.required}</span>
                   </label>
@@ -408,7 +422,7 @@ export function SprintForm({ state, actions, lang }: SprintFormProps) {
                   {fieldError('endsOn') !== null && <p className={styles.fieldError}>{fieldError('endsOn')}</p>}
                 </div>
 
-                <fieldset className={cxField(styles.formField, styles.formFieldWide, styles.scopeFieldset)}>
+                <fieldset className={cx(styles.formField, styles.formFieldWide, styles.scopeFieldset)}>
                   <legend className={styles.fieldLabel}>{c.scopeLabel}</legend>
                   <p className={styles.fieldHint}>{c.scopeHint}</p>
                   <div className={styles.scopeSummary}>
@@ -660,8 +674,4 @@ export function CloseSprintDialog({ state, actions, lang, sprintId, onClose }: C
       </div>
     </div>
   );
-}
-
-function cxField(...values: string[]): string {
-  return cx(...values);
 }

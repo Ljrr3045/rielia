@@ -44,16 +44,19 @@ export function Filters({ state, actions, lang, open }: FiltersProps) {
       className={cx(styles.filtersPanel, open && styles.filtersPanelOpen)}
       id="prototype-filters"
     >
-      <label className={cx(styles.filterField, styles.filterSearch)}>
-        <span className={styles.fieldLabel}>{c.search}</span>
+      <div className={cx(styles.filterField, styles.filterSearch)}>
+        <label className={styles.fieldLabel} htmlFor="prototype-filter-search">
+          {c.search}
+        </label>
         <span className={styles.searchBox}>
           <IconSearch size={16} />
           <input
             autoComplete="off"
             className={styles.textInput}
+            id="prototype-filter-search"
             onChange={event => actions.setFilters({ search: event.target.value })}
             placeholder={c.searchPlaceholder}
-            type="search"
+            type="text"
             value={state.filters.search}
           />
           {state.filters.search.length > 0 && (
@@ -67,7 +70,7 @@ export function Filters({ state, actions, lang, open }: FiltersProps) {
             </button>
           )}
         </span>
-      </label>
+      </div>
 
       <label className={styles.filterField}>
         <span className={styles.fieldLabel}>{c.status}</span>

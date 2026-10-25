@@ -511,6 +511,24 @@
   overflow-wrap: anywhere;
 }
 
+.desktopOnly {
+  display: none;
+}
+
+.mobileOnly {
+  display: inline;
+}
+
+@media (min-width: 1024px) {
+  .desktopOnly {
+    display: inline;
+  }
+
+  .mobileOnly {
+    display: none;
+  }
+}
+
 .viewActions {
   display: flex;
   flex-wrap: wrap;
@@ -1240,6 +1258,11 @@
 .iconButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.iconButton.sidebarClose,
+.iconButton.menuButton {
+  display: none;
 }
 
 .filterToggle {
@@ -2257,6 +2280,10 @@
     display: inline-flex;
   }
 
+  .iconButton.sidebarClose {
+    display: inline-flex;
+  }
+
   .sidebarBackdropVisible {
     display: block;
     position: fixed;
@@ -2266,6 +2293,10 @@
   }
 
   .menuButton {
+    display: inline-flex;
+  }
+
+  .iconButton.menuButton {
     display: inline-flex;
   }
 
@@ -2305,6 +2336,10 @@
   }
 
   .menuButton {
+    display: none;
+  }
+
+  .iconButton.menuButton {
     display: none;
   }
 
@@ -2512,8 +2547,36 @@
     padding: 0.75rem;
   }
 
+  .sprintTaskRow {
+    display: grid;
+    grid-template-areas:
+      "dot key title points"
+      ". . status status";
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
+    align-items: center;
+    row-gap: 0.1rem;
+  }
+
+  .sprintTaskRow > .statusDot {
+    grid-area: dot;
+  }
+
+  .sprintTaskRow > .taskKey {
+    grid-area: key;
+  }
+
+  .sprintTaskTitle {
+    grid-area: title;
+  }
+
   .sprintTaskStatus {
-    display: none;
+    grid-area: status;
+    display: block;
+  }
+
+  .sprintTaskRow > .points {
+    grid-area: points;
+    margin-left: 0;
   }
 
   .modalIntro,

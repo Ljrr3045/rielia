@@ -365,7 +365,16 @@ export function PrototypeApp() {
                 <h1 className={styles.viewTitle} ref={mainHeadingRef} tabIndex={-1}>
                   {viewTitle}
                 </h1>
-                <p className={styles.viewSubtitle}>{viewSubtitle}</p>
+                <p className={styles.viewSubtitle}>
+                  {state.view === 'board' ? (
+                    <>
+                      <span className={styles.desktopOnly}>{c.boardDragHint}</span>
+                      <span className={styles.mobileOnly}>{viewSubtitle}</span>
+                    </>
+                  ) : (
+                    viewSubtitle
+                  )}
+                </p>
               </div>
               <div className={styles.viewActions}>
                 {state.view !== 'sprints' && (
