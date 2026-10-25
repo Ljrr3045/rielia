@@ -38,17 +38,23 @@ function Bilingual({ es, en }: { es: string; en: string }) {
 
 export function IdentityView({ status, providers, user, pending, message, onRetry, onSignIn, onSignOut }: IdentityViewProps) {
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const controlRef = useRef<HTMLButtonElement | null>(null);
   const actionRef = useRef(false);
 
   useEffect(() => {
     if (!actionRef.current || pending !== null) return;
     actionRef.current = false;
+    const control = controlRef.current;
+    controlRef.current = null;
     const active = document.activeElement;
-    if (active === null || active === document.body) headingRef.current?.focus();
+    if (control !== null && !control.isConnected && (active === null || active === document.body)) {
+      headingRef.current?.focus();
+    }
   }, [pending, status, message]);
 
-  function act(callback: () => void) {
+  function act(control: HTMLButtonElement, callback: () => void) {
     if (pending !== null) return;
+    controlRef.current = control;
     actionRef.current = true;
     callback();
   }
@@ -90,7 +96,7 @@ export function IdentityView({ status, providers, user, pending, message, onRetr
       )}
       {status === 'signed-in' && (
         <div className="identity-actions">
-          <button type="button" className="refresh" aria-disabled={pending !== null} onClick={() => act(onSignOut)}>
+          <button type="button" className="refresh" aria-disabled={pending !== null} onClick={event => act(event.currentTarget, onSignOut)}>
             <Bilingual es="Cerrar sesión" en="Sign out" />
           </button>
         </div>
@@ -103,7 +109,7 @@ export function IdentityView({ status, providers, user, pending, message, onRetr
               className="refresh"
               key={provider}
               aria-disabled={pending !== null}
-              onClick={() => act(() => onSignIn(provider))}
+              onClick={event => act(event.currentTarget, () => onSignIn(provider))}
             >
               <Bilingual es={`Continuar con ${PROVIDER_NAMES[provider]}`} en={`Continue with ${PROVIDER_NAMES[provider]}`} />
             </button>
@@ -112,7 +118,7 @@ export function IdentityView({ status, providers, user, pending, message, onRetr
       )}
       {status === 'unavailable' && (
         <div className="identity-actions">
-          <button type="button" className="refresh button-secondary" aria-disabled={pending !== null} onClick={() => act(onRetry)}>
+          <button type="button" className="refresh button-secondary" aria-disabled={pending !== null} onClick={event => act(event.currentTarget, onRetry)}>
             <Bilingual es="Comprobar de nuevo" en="Check again" />
           </button>
         </div>
