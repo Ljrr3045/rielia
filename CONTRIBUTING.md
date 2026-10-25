@@ -2,9 +2,11 @@
 
 Read [START HERE](docs/handoff/00-START-HERE.md), [AGENTS.md](AGENTS.md), and
 [current progress](docs/development/progress.md) before selecting work. Either
-handoff language is sufficient. T00 prepares the repository; T01–T35 remain future
-work. There is no application build, dependency install, test runner, or deployment
-command yet. Do not invent successful tests or a working setup procedure.
+handoff language is sufficient. T00 is merged; T02.0 supplies a small runnable
+technical fixture for the T02/T03 spikes and partial T04 tooling. Full T01–T35
+acceptance and deployment remain future work. Use the real commands and limits in
+the [fixture guide](docs/development/technical-fixture.md); do not invent tests or
+claim that health checks verify OAuth, data, or product functionality.
 
 ## Select a bounded change
 
@@ -15,8 +17,8 @@ T04 and precedes T05/T06/T12. Preparing these contribution documents does not
 complete T16 or its real-project validation.
 
 License, stack confirmation, and OAuth credentials are pending user decisions.
-Documentation/prototype planning can proceed within scope; do not silently make
-those choices or treat unavailable OAuth smoke tests as passed. Name/logo and
+The authorized fixture uses the proposed stack provisionally; do not silently
+ratify the complete stack or treat unavailable OAuth smoke tests as passed. Name/logo and
 final landing design also remain unapproved. An imported proposal is not an
 implementation instruction.
 
@@ -47,10 +49,13 @@ affected source section. Never modify a baseline just to make a hash check pass.
 
 ## Validate and record evidence
 
-For the current documentation-only repository:
+Use Python 3.9+, Node 24.22.1, and pnpm 12.15.0. From the repository root:
 
 ```sh
 python3 scripts/verify-handoff.py
+pnpm install --frozen-lockfile
+pnpm check
+pnpm audit --audit-level=high
 git diff --check
 git diff --cached --check
 ```
@@ -60,12 +65,20 @@ comparison. Review the actual diff for unintended changes and credentials. Link
 new files with portable relative paths; keep English/Spanish filenames intact.
 The verifier checks local file targets, not remote sites or heading fragments.
 
-When implementation is separately assigned, add/run checks appropriate to the
+`pnpm check` runs lint, strict typechecks, production builds, and HTTP smoke.
+The smoke starts task-local servers on temporary ports and stops them afterwards;
+it verifies the API contract, bilingual HTML, and API-down fallback. No external
+credentials are needed. CI also enforces the immutable handoff/link checks.
+See the fixture guide for individual commands, optional environment values, and
+the documented screenshot/keyboard validation limitations.
+
+For subsequently assigned implementation, add/run checks appropriate to the
 real change: domain and contract checks; actual PostgreSQL isolation, constraints,
 idempotency, transactions and outbox; principal/author/revocation cases; affected
 API/MCP flows; responsive UI and accessibility; restart/recovery where relevant.
-Document exact commands/results and unavailable checks. No application checks
-have been run at T00 because the application does not exist.
+Document exact commands/results and unavailable checks. T00 ran documentation
+checks only; T02.0's startup/build evidence does not complete the identity/MCP
+spikes, database/worker tooling, or product/accessibility acceptance.
 
 For UI changes, include relevant P/US/UXR/UX or landing criteria, representative
 data and states, tested widths, keyboard/touch, save/conflict/network recovery,
@@ -121,6 +134,13 @@ are historical evidence and are not the current review gate.
 Only the coordinator merges. Do not deploy or merge from a worker task. A dispatched
 worker reports branch/worktree, PR/head SHA, validation/review evidence, and blockers
 through its active Orca preamble, then stops after its single completion message.
+
+After merge and finished delivery, the coordinator removes the completed worktree
+through Orca, as explicitly requested by the user. First verify the merge, clean
+working tree, and preserved evidence, then safely stop/settle task resources.
+This cleanup needs no recurring user confirmation. Workers leave changes committed
+and stop their own task-local servers before handoff; they never delete their
+active checkout or the coordinator's `dev` checkout.
 
 ## Credentials and licensing
 

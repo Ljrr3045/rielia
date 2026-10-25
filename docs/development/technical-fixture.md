@@ -4,6 +4,8 @@ Status: a reversible development scaffold using the proposed Next.js + NestJS
 stack. It supports the T02/T03 spikes and supplies **partial tooling for T04**.
 It does not complete T02, T03, or T04 and does not ratify the complete stack.
 The planning documents remain the source of product/architecture requirements.
+It follows the merged [T00 onboarding PR #1](https://github.com/Ljrr3045/rielia/pull/1),
+merge `8dd7c31f454c1989d017dbf7b40e6646112d2d2a`; the immutable handoff is unchanged.
 
 ## Delivered scope and boundaries
 
@@ -65,6 +67,7 @@ From the repository root:
 
 ```sh
 pnpm install --frozen-lockfile
+python3 scripts/verify-handoff.py
 pnpm lint
 pnpm typecheck
 pnpm build
@@ -114,16 +117,18 @@ then stops the API and verifies web's unavailable state. It tears down its
 processes in `finally`, including on assertion/startup failures. It does not
 use or stop an existing developer server.
 
-CI installs the frozen lockfile on Linux with the pinned toolchain, runs
-`pnpm check`, and fails on high/critical registry advisories. The existing
-OpenCode workflow is maintained separately. This fixture does not implement
+CI verifies handoff integrity/local links, installs the frozen lockfile on Linux
+with the pinned toolchain, runs `pnpm check`, and fails on high/critical registry
+advisories. Kody review follows the active repository governance; the retired
+OpenCode workflow is absent. This fixture does not implement
 the full architecture CI/release/security program.
 
 Local evidence on 2026-10-24: `pnpm check` passed with Node 24.22.1 and pnpm
 12.15.0 (lint, all strict typechecks, contracts/API/web production builds, and
 production HTTP smoke). `pnpm audit --audit-level=high` reported no known
 vulnerabilities after the Multer override. A separate temporary copy without
-`node_modules`, `dist`, or `.next` passed `pnpm install --frozen-lockfile`.
+`node_modules`, `dist`, or `.next` passed `pnpm install --frozen-lockfile` and the
+complete `pnpm check` pipeline.
 Sandbox-denied initial network/port attempts were rerun with approved access;
 those denied attempts are not counted as passes.
 
@@ -140,8 +145,7 @@ semantic language/heading structure. Manual foreground-browser/screen-reader
 review and trustworthy light/dark captures remain required; no AA compliance
 claim is made.
 
-PR/latest-head review results are recorded in active progress/changelog
-records after integration with T00.
+PR/latest-head Kody review results are recorded in active progress and PR evidence.
 
 Still required: T02 real Google/GitHub flows (including private email), web/API
 sessions, logout, expiry, proxy/HTTPS callbacks and staging evidence; T03 real

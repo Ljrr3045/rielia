@@ -28,10 +28,11 @@ or an Orca installation.
 
 ## Current scope and protected material
 
-- T00 is repository onboarding and delivery governance, including the user-directed
-  retirement/removal of OpenCode and adoption of coordinator-requested Kody AI review.
-  No application scaffold, landing implementation, deployment, or T01–T35
-  completion is included.
+- T00 onboarding/governance is complete and merged in [PR #1](https://github.com/Ljrr3045/rielia/pull/1).
+  T02.0 adds a runnable, provisional Next/Nest/pnpm technical fixture supporting
+  T02/T03 and partial T04 tooling. It completes none of the full T01–T35 tickets.
+  See [fixture commands, version research, and limits](docs/development/technical-fixture.md).
+  No landing implementation, product workflow, or deployment is included.
 - `docs/handoff/` is an unchanged import of the original handoff. Preserve every
   filename, relative link, asset, and hash. Put decisions, corrections, and delivery
   evidence in `docs/development/`; never silently rewrite the source proposals or
@@ -42,15 +43,18 @@ or an Orca installation.
 - License selection, stack confirmation, and OAuth credentials remain pending
   until the user/coordinator records an answer. Do not adopt Apache-2.0 merely
   because the plan proposes it. Do not add secrets to any tracked file or PR.
-- Name/logo, v0.1 assets, stack, ADRs, performance targets, and usability assumptions
-  retain their documented proposal/validation status. No working app is claimed.
+- Name/logo, v0.1 assets, complete stack, ADRs, performance targets, and usability
+  assumptions retain their proposal/validation status. The runnable fixture
+  exposes a development page and API liveness only; no working task product is claimed.
 - There is one public launch followed by continuous updates. B0–B3 are internal
   work batches. Do not publish assets, promise a waitlist/access calendar, or bring
   later capabilities forward because a reference image contains them.
 
-## Domain boundaries for subsequent implementation
+## Runtime and domain boundaries
 
-These rules constrain future code; the directories below are proposed, not present.
+`apps/web`, `apps/api`, and `packages/contracts` exist in the fixture. Database,
+identity, worker, API client, and MCP packages/capabilities remain future work.
+Keep these boundaries in both current and future code.
 
 - Web owns presentation, client state, and accessible interactions. It calls the
   public API and never imports database code or implements alternative task,
@@ -107,3 +111,9 @@ These rules constrain future code; the directories below are proposed, not prese
 7. Only the coordinator merges. Do not deploy or merge. A dispatched worker reports
    through its active Orca preamble with branch/worktree, PR/head, checks, review
    evidence, and blockers; send `worker_done` once and then stop task activity.
+8. After merge and finished delivery, the coordinator verifies the PR is merged,
+   the worktree is clean, and evidence is preserved; safely stops/settles its task
+   resources; then removes the completed worktree through Orca. The user has
+   authorized this cleanup without recurring confirmation. Workers must leave
+   changes committed and never delete their active checkout or the coordinator's
+   `dev` checkout.

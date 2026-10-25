@@ -20,6 +20,8 @@ jobs:
       NEXT_TELEMETRY_DISABLED: '1'
     steps:
       - uses: actions/checkout@v6
+      - name: Verify immutable handoff and local links
+        run: python3 scripts/verify-handoff.py
       - uses: actions/setup-node@v6
         with:
           node-version-file: .node-version

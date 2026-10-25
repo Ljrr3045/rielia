@@ -2,21 +2,22 @@
 
 Updated: 2026-10-24. This is repository delivery tracking, separate from the
 unchanged [handoff](../handoff/00-START-HERE.md). Plans describe intended outcomes,
-not completed implementation. This checkout has no app, scaffold, deployment, or
-software release. The coordinator owns integration and status across workers.
+not completed implementation. This checkout now has the T02.0 development fixture;
+it has no task product, deployment, or software release. The coordinator owns
+integration and status across workers.
 
 ## Current delivery
 
 | Field | Evidence/state |
 | --- | --- |
-| Scope | T00 onboarding/governance, user-directed OpenCode workflow removal, and coordinator-requested Kody AI review |
-| Base | `origin/dev` at `188a760c36f8ec6d09f10f5027d162facce13875` |
-| Branch | `Ljrr3045/rielia-t00-onboarding` |
-| Worktree | Isolated Orca checkout named `rielia-t00-onboarding` |
-| PR | [#1](https://github.com/Ljrr3045/rielia/pull/1), target `dev`, non-draft; coordinator merge only |
-| T00 | In review: import/docs and local checks pass; final-head Kody round and coordinator acceptance/merge pending |
-| T01–T35 | None complete; T02.0 fixture in progress separately (coordinator report); remaining full tickets not started |
-| Automated review | Kody AI: coordinator posts exact root `@kody start-review` for each ready head; latest-head evidence/dispositions tracked in [PR #1](https://github.com/Ljrr3045/rielia/pull/1) |
+| Scope | T02.0 supporting technical fixture for T02/T03 spikes and partial T04 tooling |
+| Base | Merged T00, `origin/dev` at `8dd7c31f454c1989d017dbf7b40e6646112d2d2a` |
+| Branch | `Ljrr3045/rielia-b0-fixture` |
+| Worktree | Isolated Orca checkout named `rielia-b0-fixture` |
+| Fixture PR | Not opened yet; next step after post-integration checks, target `dev`, non-draft |
+| T00 | Complete: [PR #1](https://github.com/Ljrr3045/rielia/pull/1) merged 2026-10-24T23:56:43Z as `8dd7c31f454c1989d017dbf7b40e6646112d2d2a` after final-head Kody SUCCESS/APPROVED |
+| T01–T35 | No full ticket complete; T02.0 is supporting scope only |
+| Automated review | Kody AI: coordinator alone posts exact root `@kody start-review` for each ready head; fixture latest-head review pending |
 
 T00 acceptance: complete byte-identical import with links/assets/hashes/proposal
 status; practical repository instructions and docs; truthful dependency/state
@@ -24,22 +25,37 @@ tracking; passing whitespace/integrity checks; one non-draft PR to `dev`; latest
 head Kody review handled with passing applicable checks. The user retired OpenCode
 and requested deletion of its entire workflow, including the inherited version.
 The coordinator alone posts each ready head's Kody trigger and merges after
-validation and feedback handling. No app/scaffold scope was added.
+validation and feedback handling. T00 itself added no app/scaffold scope; its
+final Kody approval covered head `53243fbea2ae6c4f5a1ab3e47d6e1dc8cc296cec`.
 
-## Coordinated work outside T00
+## T02.0 technical fixture
 
-The coordinator reported T02.0 in progress in a separate `rielia-b0-fixture`
-worktree (Orca task `task_cfe35a018420`). Its bounded scope is an executable
-Next/Nest/pnpm fixture and checks to support the spikes and partial T04 tooling.
-This is not full T02/T03/T04 completion or stack ratification. T00 has not
-validated that worker's files/results. Its PR must wait until this T00 PR is
-reviewed and merged; integration and any dependency exceptions belong to the
-coordinator. License, stack, and OAuth user answers remain pending.
+T02.0 (Orca task `task_cfe35a018420`) adds an executable Next/Nest/pnpm fixture
+after the coordinator's explicit T00-merged authorization. It includes a bilingual
+development page, live/API-down status, Nest liveness endpoint, shared public
+health contract, strict TypeScript, lint/build/typecheck/HTTP smoke, and CI with
+handoff integrity plus dependency advisory checks. The root/three workspace
+packages contain only used tooling/dependencies. See the
+[fixture guide](technical-fixture.md) for exact versions, primary research,
+commands, boundaries, and detailed evidence.
+
+It uses Node 24.22.1 LTS, pnpm 12.15.0, Next 16.4.3/React 19.3.1, Nest 12.2.0
+with Express 5.3.0, TypeScript 6.0.3, and ESLint 10.13.0. A scoped Multer 2.5.0
+override addresses the Nest adapter's affected 2.4.0 pin
+([GHSA-q7qp-rjg7-q26m](https://github.com/expressjs/multer/security/advisories/GHSA-q7qp-rjg7-q26m)).
+Audit subsequently reported no known vulnerabilities. Source handoff and inventory
+baselines are preserved; the retired OpenCode workflow is not restored.
+
+This is not full T02/T03/T04 completion or complete stack ratification. No
+DB/schema, identity, OAuth, worker/queue, MCP, sprint, deployment, or product
+functionality is implemented. License, complete stack, and OAuth user answers
+remain pending. UI DOM checks are bounded: screenshots and native Tab traversal
+were unreliable in the background Orca browser and remain unverified, not passed.
 
 ## Dependency-based first wave
 
-The T02.0 supporting fixture is already dispatched separately. After T00 is
-accepted, the coordinator can assign/continue these bounded starts:
+T00 is accepted/merged and T02.0 is under delivery. The coordinator can
+assign/continue these bounded starts without bypassing their source acceptance:
 
 1. **T01 / B0, UX prototype:** no ticket prerequisite. Select a real project/backlog
    and review the five mobile/desktop journeys and friction. Use P/US and UXR/UX
@@ -56,22 +72,23 @@ accepted, the coordinator can assign/continue these bounded starts:
 Convergence: T02 + T03 → T04 → **T35** → T05 → T06. The principal/authorship model
 must precede workspaces/tasks/credentials despite T35's number. T01 supplies UI
 evidence; the B0 exit still requires the reviewed prototype and technical vertical.
-No scaffold is authorized in T00. The full source acceptance remains in
+T02.0 is separately authorized supporting scope, not T00 expansion. Full source acceptance remains in
 [Architecture §7.3](../handoff/02-architecture-technical-plan.en.md#73-execution-ready-engineering-backlog).
 
 ## Ticket ledger
 
 `Not started` means no full-ticket implementation or acceptance evidence is
-recorded here. T02.0's reported start does not satisfy the full identity spike.
+recorded here. T02.0's fixture does not satisfy the full identity spike.
 Dependencies below reproduce the plan, not inferred completion. B labels
 are internal sequencing; T30–T34 form a separate future marketing track. T35 is a
 foundational prerequisite within the B1 track, not the final ticket to execute.
 
 | Ticket | Internal batch/track | Planned outcome | Dependencies | State |
 | --- | --- | --- | --- | --- |
-| T00 | Pre-B0 governance | Import, instructions, contribution/review process, ledger, Kody adoption/OpenCode removal | None | In review, PR #1; local checks pass, final-head Kody and coordinator acceptance pending |
+| T00 | Pre-B0 governance | Import, instructions, contribution/review process, ledger, Kody adoption/OpenCode removal | None | Complete, merged PR #1; final-head Kody success/approval |
+| T02.0 | B0 supporting scope | Runnable Next/Nest fixture and partial T04 tooling | T00 merge gate | Implemented/locally validated; fixture PR and final-head Kody pending |
 | T01 | B0 | Navigation and task prototype validation | None | Not started |
-| T02 | B0 | Identity/proxy integration spike | None; stack/OAuth decisions pending | In progress: T02.0 fixture elsewhere; full spike unverified |
+| T02 | B0 | Identity/proxy integration spike | None; stack/OAuth decisions pending | Supporting T02.0 fixture present; full spike unverified |
 | T03 | B0 | MCP SDK/wrapper/minimal remote profile spike | T02 for remote auth; stack decision pending | Not started |
 | T04 | B1 foundations | Monorepo, images, worker/queue, initial migration | T02–T03 | Not started as full ticket; T02.0 supports partial tooling |
 | T05 | B1a | Auth, workspaces, principal memberships | T04, T35 | Not started |
@@ -115,7 +132,7 @@ actual use/demand; no launch date or public capacity has been established.
 | Item | Current status | Owner / next evidence |
 | --- | --- | --- |
 | License | Pending user answer; Apache-2.0 remains a proposal; no LICENSE adopted | User/maintainer records selection and notice/dependency review |
-| Stack | Pending user confirmation; Next/Nest/PostgreSQL/Prisma/Better Auth remain proposed, untested together | User decision, then T02/T03 pinned-version compatibility evidence |
+| Stack | Pending user confirmation; Next/Nest subset validated only as T02.0 fixture; PostgreSQL/Prisma/Better Auth and complete integration remain proposed/unverified | User decision, then T02/T03 pinned-version compatibility evidence |
 | OAuth credentials/callbacks | Pending user/operator configuration; no secrets in repository | Installation operator provides through secret configuration; real provider smoke in T02 |
 | Name/logo and identity | Rielia working name and v0.1 kit remain proposals, not final approval | User/brand review; availability not recertified by import |
 | Landing | Current request is design planning for later development; no final design approved | Separate authorized design/implementation scope; use document 05 |
@@ -124,13 +141,14 @@ actual use/demand; no launch date or public capacity has been established.
 | Private-project admin visibility | Plan proposes owner/admin can read/administer all projects; requires B0 decision | User/maintainer ratification; communicate before implementation |
 | Operations/public service | VPS capacity, budget/date, registration policy, public obligations not established | Maintainer records decisions and measured readiness in later tickets |
 | Automated review | Kody AI replaces OpenCode; every ready PR/head needs an explicit root `@kody start-review` request | Coordinator alone posts trigger; worker verifies reviewed head, issue comments, formal reviews, inline comments, and applicable checks |
-| Retired reviewer | User explicitly requested full OpenCode workflow deletion, including the inherited version; no further repairs/runs or secret changes | Keep archive unchanged; final-head Kody feedback and validation are the current gate |
+| Completed worktree cleanup | User explicitly requested removal after PR merge and finished delivery, without recurring confirmation | Coordinator verifies merged PR, clean tree, and preserved evidence, safely stops/settles task resources, then removes via Orca; workers never delete active/coordinator checkouts |
+| Retired reviewer | User explicitly requested full OpenCode workflow deletion, including the inherited version; no further repairs/runs or secret changes | Deletion merged in PR #1; keep it absent and preserve the historical handoff |
 
-Pending product decisions do not block the bounded T00 import/governance work.
+Pending product decisions did not block T00 and do not ratify the provisional fixture.
 Record coordinator answers here without changing the historical source proposals.
 No credentials should be pasted into this ledger, PR comments, or validation logs.
 
-## Validation and PR evidence
+## T00 validation and merged PR evidence
 
 - Import: 47 files and four subdirectories copied; 2,435,020 bytes. Source-relative
   names/hashes captured before copy; source and destination rechecked immediately
@@ -165,18 +183,45 @@ No credentials should be pasted into this ledger, PR comments, or validation log
 - After reviewer replacement, direct-source/inventory comparison (47 files),
   manifest checks (30 assets), and local file links (272 across 34 documents) pass
   again. Worktree and staged whitespace checks pass; the retired workflow is
-  absent and appears as a deletion relative to `origin/dev`. The final Kody round
-  remains pending. The worker reports PR URL/head to the coordinator, who alone posts
-  the exact root `@kody start-review` comment. Any pushed fix needs another explicit
-  request for that new head and inspection/handling of all three review surfaces.
+  absent. The final [Kody approval](https://github.com/Ljrr3045/rielia/pull/1#pullrequestreview-5640660780)
+  applies to head `53243fbea2ae6c4f5a1ab3e47d6e1dc8cc296cec`, with `Kody Code Review`
+  SUCCESS on the same head. PR #1 is merged as
+  `8dd7c31f454c1989d017dbf7b40e6646112d2d2a`.
 - [Non-draft PR #1 to dev](https://github.com/Ljrr3045/rielia/pull/1) is the single
   T00 PR. Its review evidence section records the final head/Kody round and inspection of
   issue comments, submitted reviews, inline comments, and technical dispositions
   before worker handoff. Check current PR evidence; this file does not assert
   successful review merely because a PR exists.
-- Application, OAuth, runtime, UI, database, recovery, load, accessibility, and
-  deployment tests: not run; no application exists in T00. No remote URL/heading
+- At T00, application, OAuth, runtime, UI, database, recovery, load, accessibility,
+  and deployment tests were not run; T00 contained no application. No remote URL/heading
   fragment validation or fresh stack/brand research claimed.
+
+## T02.0 validation and PR evidence
+
+- Clean temporary copy without `node_modules`, `dist`, or `.next`:
+  `pnpm install --frozen-lockfile` and complete `pnpm check` passed with
+  Node 24.22.1 / pnpm 12.15.0. The latter covers lint, strict typechecks,
+  contracts/API/web production builds, and actual production HTTP smoke.
+- Smoke confirms exact API health JSON, content type/no-store, no task route,
+  bilingual web HTML, live API status, and API-down fallback. Temporary API/web
+  processes are stopped in cleanup; the separate visual-check server and browser
+  tab were also stopped/closed. No existing developer server is used or killed.
+- `pnpm audit --audit-level=high` reported no known vulnerabilities after the
+  scoped Multer patch. This is dated registry evidence, not a security guarantee.
+- DOM checks: one main region; no horizontal overflow at 320/375/768/1440 and
+  812×375 CSS px, or 375 px with 200% root text; button height ≥50 px. Computed
+  light palette matched intended background. Screenshot stitching/theme capture
+  and native Tab traversal were unreliable; no full visual/keyboard/AA acceptance
+  is claimed. See the fixture guide for exact limitations.
+- Post-T00 integration adds `python3 scripts/verify-handoff.py` to CI and updates
+  active docs without modifying the import/inventory. Post-integration `pnpm check`,
+  `pnpm audit --audit-level=high`, `python3 scripts/verify-handoff.py`, and
+  `git diff --check` passed. The verifier reports 47 unchanged imported files,
+  30 matching assets, and 278 local file links across 35 documents. The fixture
+  PR/Kody round is pending at this checkpoint.
+- Real OAuth/provider/proxy/session flows, MCP clients/discovery, DB/migration,
+  worker/queue persistence/restart, Docker/deployment, load, and full accessibility
+  acceptance: not run/not implemented. Full T02/T03/T04 remain unverified.
 
 The PR's checks/comments supply current-head evidence without a self-referential
 commit hash in this file. After a pushed fix, this record's prior review evidence
