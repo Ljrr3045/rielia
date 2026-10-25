@@ -6,6 +6,12 @@ This records repository changes. No application version has been released.
 
 ### Added
 
+- T01/B0 prototype presentation: responsive fictional `/prototype` with default
+  My tasks, project List/Board/Sprints, full task detail, minimal capture/edit,
+  sprint planning/start/close, visible simulated failure with draft-preserving
+  retry, and seeded/empty reset. Includes light/dark tokens, mobile drawer/bottom
+  navigation, focus recovery, and ES/EN chrome. No backend, identity, durable data,
+  or production workflow. [Presentation evidence](docs/development/task-prototype-ui.md).
 - T01/B0 prototype logic: fictional memory-only task adapter/hook with 18 samples,
   assignee-based My tasks, shared list/board/detail selectors, controlled create/
   edit/status/filter actions, sprint goal/date/scope/start/closure, and deterministic
@@ -41,6 +47,10 @@ This records repository changes. No application version has been released.
 
 ### Changed
 
+- Merge T01/B0 prototype logic [PR #5](https://github.com/Ljrr3045/rielia/pull/5)
+  into `dev` as `5099b39aef53d5b7e2f0205f3168727cb1dc9471`, preserving reviewed
+  head `55481ffb3613ccaadcb37f3e6dd3ad3118afb8c3`. Presentation is delivered
+  separately on that merged base.
 - Select OpenCode Go DeepSeek V4.1 Flash 1017 (`opencode-go/deepseek-v4.1-flash`,
   variant `max`) for future UI/UX presentation workers, replacing Haiku 5.5 `high`.
   All logic remains Codex `gpt-6.1-sol` `xhigh`. This coordination update does
@@ -86,11 +96,11 @@ This records repository changes. No application version has been released.
 
 ### Pending
 
-- T01 prototype presentation and five reviewed mobile/desktop demo journeys;
-  fictional logic tests do not complete T01 or B0. Real-provider consent,
-  private-email, HTTPS, and staging evidence for T02 remain open.
-  No full T01–T35 ticket is complete. Real provider/staging T02 acceptance,
-  T03 and full T04 remain unverified.
+- T01 prototype presentation exact-head CI/Kody review for the UI PR; fictional
+  demo journeys and targeted responsive/failure checks do not complete T01 or B0
+  or establish real-person usability. Real-provider consent, private-email, HTTPS,
+  and staging evidence for T02 remain open. No full T01–T35 ticket is complete.
+  Real provider/staging T02 acceptance, T03 and full T04 remain unverified.
 - User decisions on license, stack, and installation OAuth configuration; final
   identity and landing design remain proposals. T02.1's simulated OAuth/database
   evidence does not claim real provider consent, worker, MCP, product workflow,
