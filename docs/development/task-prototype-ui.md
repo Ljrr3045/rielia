@@ -1,15 +1,17 @@
 # Task prototype presentation (T01/B0)
 
-Status: presentation integrated on the merged T01/B0 fictional adapter and PR #5.
-This document records UI-owned decisions and evidence for `/prototype`. It does not
-complete T01/B0, provide production task/sprint policy, or claim real-user validation.
+Status: presentation integrated on the merged T01/B0 logic and typed save/retry
+context (PR #7 merged as `bfaf24d790daa2cebd1a92a5ecc5b3f9bbea6e3f`). This document
+records UI-owned decisions and evidence for `/prototype`. It does not complete
+T01/B0, provide production task/sprint policy, or claim real-user validation.
 
 ## Scope and ownership
 
 - `apps/web/src/app/prototype/` contains the route, client presentation, view
   components, scoped CSS module, and ES/EN copy. `page.tsx` owns route metadata;
   `prototype-app.tsx` mounts `useTaskPrototype()` once and passes state/actions down.
-- The presentation imports the published types, hook, and `getSprintSummary` from
+- The presentation imports the published types, hook, `getSprintSummary`, and the
+  typed `save.context`/`retryContext` fields from
   `apps/web/src/lib/task-prototype/`. It adds no controller, filtering, persistence,
   network, identity, API/database, or functional-test implementation.
 - `apps/web/src/app/page.tsx` gains one development-index link and a corrected
@@ -18,9 +20,10 @@ complete T01/B0, provide production task/sprint policy, or claim real-user valid
   or global stylesheet is changed. The visual tokens are scoped in
   `prototype.module.css`; existing Rielia semantic variables are reused.
 - Merge base: PR #5 head `55481ffb3613ccaadcb37f3e6dd3ad3118afb8c3`, then
-  `origin/dev` `5099b39aef53d5b7e2f0205f3168727cb1dc9471` (PR #5 merge). The final
-  PR is rebased/merged on that `dev` state and contains only the presentation/docs
-  delta.
+  `origin/dev` `5099b39aef53d5b7e2f0205f3168727cb1dc9471` (PR #5 merge). The typed
+  context prerequisite merged as PR #7, `bfaf24d790daa2cebd1a92a5ecc5b3f9bbea6e3f`,
+  from reviewed head `c90b437ca5948301b790b655256c8a460b3bef21`. The final PR is
+  merged on that `dev` state and contains only the presentation/docs delta.
 
 Applicable requirements: P04/P05/P07/P08/P09/P11/P33/P38; US04/US05/US06/US08/
 US11/US12; UX01–UX05, UX07, UX09, UX11; UXR01–UXR04. This is a bounded subset,
@@ -43,6 +46,13 @@ not acceptance of those requirements as a whole.
   description first, grouped properties, creator/provenance, and a separate
   assignee. Creator and assignee are never merged. Delegated human and autonomous
   Agent provenance are shown textually.
+- Current feedback and captured retry are separate presentation inputs. Detail,
+  forms, and the close dialog show a current outcome only when `save.context`
+  targets that record, and a retry only when `retryContext` targets it; the two are
+  rendered independently. A matching captured close retry restores/locks its
+  captured destination on dialog reopen. Global recovery and current sprint
+  outcomes include the task key or sprint name, so an unrelated success/error is not
+  presented as belonging to the record on screen.
 - Capture uses title plus fixed project context, with optional details collapsed.
   Edit uses the same controlled draft. Sprint planning edits goal, dates, and full
   scope; start/close are confirmed by the adapter, and closure distinguishes done,
@@ -63,7 +73,8 @@ not acceptance of those requirements as a whole.
 | Missing selected task | Recoverable missing-task panel |
 | Pending | Operation-specific progress text; controls disabled where a write is in flight |
 | Saved | Visible confirmation near the action/detail; never inferred from a click |
-| Simulated save failure | Alert with draft retained, retry labelled "Retry previous save" |
+| Simulated save failure | Alert with draft retained; retry target is the captured operation, not the latest kind/error |
+| Independent recovery | A captured retry remains reachable only by matching target even when latest feedback concerns another record; current outcome is hidden elsewhere |
 | Field validation | Inline field error and field association; draft retained |
 | Version conflict | Guidance to keep the draft and reopen current data |
 | Sprint closure | Summary, done/canceled/unfinished distinction, required destination |
@@ -71,9 +82,9 @@ not acceptance of those requirements as a whole.
 | Reset empty | Confirmation, then zero-task project state with first-task action |
 | Loading | Route-level skeleton file; data is in-memory and synchronous, so no network loading state is simulated |
 
-Retry uses `state.canRetry`, which refers to the captured previous simulated save,
-not merely the latest field error. Close-sprint retry also dismisses the closure
-dialog and restores focus through the saved action result.
+Retry rendering matches `state.retryContext` to the rendered task/sprint, not the
+latest save kind/error; `canRetry` remains the adapter invariant. Close-sprint retry
+also dismisses the closure dialog and restores focus through the saved action result.
 
 ## Accessibility decisions
 
@@ -101,10 +112,13 @@ dialog and restores focus through the saved action result.
 
 Repository checks on the merged-dev branch:
 
-- `PATH="$PWD/node_modules/.bin:$PATH" pnpm check` passed: lint; smoke-process;
-  identity logic/client; 13 prototype invariant tests; strict typecheck for contracts,
-  API, and web; production build; HTTP smoke. `/prototype` is generated as a static
-  route.
+- `PATH="$PWD/node_modules/.bin:$PATH" pnpm check` passed after integrating PR #7:
+  lint; smoke-process; identity logic/client; 19 prototype invariant tests; strict
+  typecheck for contracts, API, and web; production build; HTTP smoke. `/prototype`
+  is generated as a static route.
+- PR #7's reviewed head `c90b437` passed [Kody approval 5642060409](https://github.com/Ljrr3045/rielia/pull/7#pullrequestreview-5642060409)
+  and [CI 40172013213](https://github.com/Ljrr3045/rielia/actions/runs/40172013213)
+  before merge at `bfaf24d`.
 - `git diff --check` and `git diff --cached --check` pass.
 - No app-origin console errors were observed in independent QA; unrelated browser
   extension warnings were excluded.
@@ -130,6 +144,22 @@ preserved outside the repository):
 - Empty-title save exposed an `aria-describedby` field error; Escape showed discard
   confirmation, Keep editing retained the draft, and confirmed discard restored
   New-task focus.
+
+Post-fix typed-context regressions (local head `eddbd84`, independent Brave QA and
+UI-owner Orca checks):
+
+- Armed failure on RIE-12, then opened RIE-15: no foreign error, pending, retry, or
+  stale success appeared in RIE-15. Global and own-detail recovery named RIE-12;
+  retry changed only RIE-12 and left RIE-15 unchanged.
+- Unrelated RIE-15 failure, then opening Close sprint on active Clarity first: both
+  destination radios remained enabled, with no frozen hint or foreign retry.
+- Own close failure to Review and refine: failure feedback and retry named Clarity
+  first; the captured destination remained selected and locked. Cancel/reopen
+  restored that destination and retry. At 390 px, retry closed the dialog and sprint,
+  restored Sprints focus, moved exactly RIE-1/2/4 (target scope 2→5), and retained
+  two done + one canceled in the frozen closure. No horizontal overflow or app errors
+  were observed. Malformed state injection was not browser-tested; it is covered by
+  the adapter tests.
 
 Additional UI-owner checks:
 
@@ -199,7 +229,15 @@ these conclusions.
 
 ## Review
 
-Current-head CI, the coordinator's Kody trigger, issue comments, submitted reviews,
-inline findings, and dispositions are recorded in the PR and reconciled in
-[progress](progress.md) before coordinator merge. A prior-head result never approves
-a changed head.
+Kody's PR #6 review found two high-severity issues:
+[4369892911](https://github.com/Ljrr3045/rielia/pull/6#discussion_r4369892911)
+(global retry could disable the close-sprint destination) and
+[4369892991](https://github.com/Ljrr3045/rielia/pull/6#discussion_r4369892991)
+(task detail B could display/retry task A's captured save because the save kind
+was shared). Both were valid. The Sol-owned PR #7 now exposes `save.context` and
+independent `retryContext`; this presentation consumes them without UI-owned
+correlation logic. Post-fix Brave and UI-owner regressions above cover the reported
+A/B, stale-success, unrelated-close, own-close/reopen and 390 px retry cases. PR #7
+merged at `bfaf24d`; the final presentation head on `dev` still requires exact-head
+CI and a fresh coordinator Kody trigger, with all three review surfaces inspected
+before merge. The earlier PR #6 review does not approve the changed head.

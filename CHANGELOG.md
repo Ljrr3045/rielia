@@ -9,9 +9,10 @@ This records repository changes. No application version has been released.
 - T01/B0 prototype presentation: responsive fictional `/prototype` with default
   My tasks, project List/Board/Sprints, full task detail, minimal capture/edit,
   sprint planning/start/close, visible simulated failure with draft-preserving
-  retry, and seeded/empty reset. Includes light/dark tokens, mobile drawer/bottom
-  navigation, focus recovery, and ES/EN chrome. No backend, identity, durable data,
-  or production workflow. [Presentation evidence](docs/development/task-prototype-ui.md).
+  retry, typed current/captured-retry targets, and seeded/empty reset. Includes
+  light/dark tokens, mobile drawer/bottom navigation, focus recovery, and ES/EN
+  chrome. No backend, identity, durable data, or production workflow.
+  [Presentation evidence](docs/development/task-prototype-ui.md).
 - T01/B0 prototype logic: fictional memory-only task adapter/hook with 18 samples,
   assignee-based My tasks, shared list/board/detail selectors, controlled create/
   edit/status/filter actions, sprint goal/date/scope/start/closure, and deterministic
@@ -56,7 +57,8 @@ This records repository changes. No application version has been released.
   Navigation preserves recovery without retargeting it to another detail. Actual
   action regressions cover pending/saved/error, unrelated validation, malformed
   inputs and reset; presentation consumes the [typed contract](docs/development/task-prototype.md#feedback-and-retry-targets)
-  separately. No production policy or full T01/B0 acceptance is added.
+  separately. Merged in PR #7 as `bfaf24d790daa2cebd1a92a5ecc5b3f9bbea6e3f` from
+  reviewed head `c90b437`. No production policy or full T01/B0 acceptance is added.
 - Select OpenCode Go DeepSeek V4.1 Flash 1017 (`opencode-go/deepseek-v4.1-flash`,
   variant `max`) for future UI/UX presentation workers, replacing Haiku 5.5 `high`.
   All logic remains Codex `gpt-6.1-sol` `xhigh`. This coordination update does
