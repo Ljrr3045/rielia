@@ -1,0 +1,21 @@
+CHANGELOG.md
+  s_37950e3a25b53c::t_fc75e344b0a7ed 57-58
+docs/development/progress.md
+  s_37950e3a25b53c::t_fc75e344b0a7ed 17,267-270
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "dc66e20ea12d8b879cb1dffcc5feb339accf36ca",
+  "prompts": {},
+  "sessions": {
+    "s_37950e3a25b53c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a170a7-b55b-7081-80d5-f059e231f03c",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
