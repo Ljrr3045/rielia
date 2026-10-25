@@ -1,0 +1,25 @@
+docs/development/task-prototype-ui.md
+  s_01879676f2f728::t_16c62b9e9985b0 58-61,107-108,274-279
+docs/development/progress.md
+  s_01879676f2f728::t_6f2553e7afa182 367-373
+apps/web/src/app/prototype/prototype-app.tsx
+  s_01879676f2f728::t_2c08a537430a19 85-87,340
+CHANGELOG.md
+  s_01879676f2f728::t_09b24439a25c19 13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "411ab8cea7d7c9df5619c0be96e73452fa55d7ad",
+  "prompts": {},
+  "sessions": {
+    "s_01879676f2f728": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e8e91ff18ffeK2ckeyaYj5Zblh",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
