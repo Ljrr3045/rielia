@@ -10,11 +10,12 @@ integration and status across workers.
 
 | Field | Evidence/state |
 | --- | --- |
-| Scope | T02.1 experimental identity runtime, minimal persistence, same-origin protocol/state logic; P01/US01, architecture §2.2–2.4/T02 |
-| Base | Merged PR #2, `origin/dev` at `629932ad282c27c0b71c6b8d5daf15e3cc199965` |
-| Branch | `Ljrr3045/rielia-t02-identity` |
-| Worktree | Isolated Orca checkout named `rielia-t02-identity` |
-| Current PR | [#3](https://github.com/Ljrr3045/rielia/pull/3), non-draft to `dev`; current-head CI/Kody trigger/result/dispositions recorded in its review evidence before coordinator merge |
+| Scope | T02.2 experimental identity presentation on the merged T02.1 hook; P01/US01 presentation, UXR03/UX07/UX09; full T02 remains open |
+| Base | Merged PR #3, `origin/dev` at `096a1a31bd45a536017bffb4a424cd4c50062101` |
+| Branch | `Ljrr3045/rielia-t02-identity-web` |
+| Worktree | Isolated Orca checkout named `rielia-t02-identity-web` |
+| Current PR | [#4](https://github.com/Ljrr3045/rielia/pull/4), non-draft to `dev`; current-head CI, Kody trigger, and review dispositions are recorded in its PR evidence before coordinator merge |
+| T02.1 PR | [#3](https://github.com/Ljrr3045/rielia/pull/3) merged 2026-10-25T02:33:47Z as `096a1a31bd45a536017bffb4a424cd4c50062101` after reviewed head `b0dc76a062f301433b25fcf583f28aa125602eb3`, Kody approval [5641185728](https://github.com/Ljrr3045/rielia/pull/3#pullrequestreview-5641185728), and CI run [40154146443](https://github.com/Ljrr3045/rielia/actions/runs/40154146443) |
 | Fixture PR | [#2](https://github.com/Ljrr3045/rielia/pull/2) merged 2026-10-25T01:10:25Z as `629932ad282c27c0b71c6b8d5daf15e3cc199965`; [Kody approval](https://github.com/Ljrr3045/rielia/pull/2#pullrequestreview-5640882613), [CI](https://github.com/Ljrr3045/rielia/actions/runs/40148711191) |
 | T00 | Complete: [PR #1](https://github.com/Ljrr3045/rielia/pull/1) merged 2026-10-24T23:56:43Z as `8dd7c31f454c1989d017dbf7b40e6646112d2d2a` after final-head Kody SUCCESS/APPROVED |
 | T01–T35 | No full ticket complete; T02.0 is supporting scope only |
@@ -56,7 +57,7 @@ were unreliable in the background Orca browser and remain unverified, not passed
 
 ## Dependency-based first wave
 
-T00 and T02.0 are accepted/merged. T02.1 is under delivery; the coordinator can
+T00, T02.0, and T02.1 are accepted/merged; T02.2 presentation is under review in PR #4. The coordinator can
 assign/continue these bounded starts without bypassing their source acceptance:
 
 1. **T01 / B0, UX prototype:** no ticket prerequisite. Select a real project/backlog
@@ -89,8 +90,8 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | --- | --- | --- | --- | --- |
 | T00 | Pre-B0 governance | Import, instructions, contribution/review process, ledger, Kody adoption/OpenCode removal | None | Complete, merged PR #1; final-head Kody success/approval |
 | T02.0 | B0 supporting scope | Runnable Next/Nest fixture and partial T04 tooling | T00 merge gate | Complete bounded scope; merged PR #2 with Kody approval and passing CI |
-| T02.1 | B0 experiment | Backend identity, minimal auth persistence, web protocol/state logic | Coordinator experimental gate; does not ratify full stack | Implemented; validation/review under delivery; see [identity evidence](identity-spike.md) |
-| T02.2 | B0 presentation | Experimental identity page consuming T02.1 hook | T02.1 merge; UI/UX ownership | Implemented as presentation on the merged hook; see [identity presentation](identity-ui.md); live browser QA and PR review pending |
+| T02.1 | B0 experiment | Backend identity, minimal auth persistence, web protocol/state logic | Coordinator experimental gate; does not ratify full stack | Merged in PR #3; see [identity evidence](identity-spike.md) |
+| T02.2 | B0 presentation | Experimental identity page consuming T02.1 hook | T02.1 merge; UI/UX ownership | Presentation implemented in PR #4; see [identity presentation](identity-ui.md); PR review pending |
 | T01 | B0 | Navigation and task prototype validation | None | Not started |
 | T02 | B0 | Identity/proxy integration spike | None; stack/OAuth decisions pending | T02.1 is partial experimental evidence; real provider/staging and presentation acceptance remain open |
 | T03 | B0 | MCP SDK/wrapper/minimal remote profile spike | T02 for remote auth; stack decision pending | Not started |
@@ -264,10 +265,10 @@ build output or generated code passed frozen install and complete `pnpm check`,
 including the declaration patch, strict checks and actual Next proxy smoke.
 The source checkout passed 20 real-library/DB tests and seven browser logic/client
 tests. Final audit reported no known vulnerabilities; handoff and whitespace
-checks passed. CI and exact-head Kody evidence are recorded in
-[PR #3](https://github.com/Ljrr3045/rielia/pull/3) during delivery. Its review evidence
-identifies the requested/reviewed head and all three inspected surfaces;
-a previous-head result does not approve a changed head.
+checks passed. CI and exact-head Kody evidence for
+[PR #3](https://github.com/Ljrr3045/rielia/pull/3) were recorded in its review
+surfaces before the coordinator merged it. A previous-head result never approves a
+changed head.
 
 PR #3's first Kody round exposed a valid raw-path normalization bypass in the
 callback origin exemption. A raw Node HTTP regression failed with 200 instead of

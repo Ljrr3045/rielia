@@ -65,10 +65,14 @@ Integrated checks on the rebased branch (on `origin/dev` at `096a1a3`):
 - `pnpm check` passes end to end: lint, process smoke test, identity logic/client
   tests, typecheck, production build (`/identity` prerendered as static), and HTTP
   smoke including the identity proxy/disabled state and API-down fallback.
-- Live production route at `http://127.0.0.1:3100/identity` with the API on
-  `127.0.0.1:3001` and identity disabled by default. The config endpoint returns
-  `enabled:false`, and the page's disabled branch is the expected post-hydration
-  state.
+- Live production route `/identity` with the API running and identity disabled by
+  default. The config endpoint returns `enabled:false`. Coordinator browser QA on the
+  hydrated page confirmed the actual disabled status and a clean 320 px layout
+  (scroll width equal to viewport width, 320 px).
+- Live production route with the API stopped. Coordinator browser QA confirmed the
+  neutral unavailable status, "Check again" activated with Enter, and focus landed
+  on the section heading with a visible outline. The 320 px layout had no
+  horizontal overflow.
 
 Earlier, on the pre-integration presentation:
 
@@ -86,9 +90,6 @@ Earlier, on the pre-integration presentation:
 
 - Light theme visual capture. Headless Firefox ignored the profile override, so
   the light palette is checked only as token values.
-- Post-hydration screenshots of the live route. Headless Firefox captures at load
-  and does not wait for client-side fetches, so the live disabled state is not
-  shown in a capture.
 - Screen reader output, touch-device behavior, and orientation changes.
 - Real Google/GitHub consent, private-email flows, HTTPS callbacks, and staging.
 - Enlarged text and 200% zoom.
