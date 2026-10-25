@@ -12,6 +12,11 @@ This records repository changes. No application version has been released.
   ID-token verification hook. [Operator guide/evidence](docs/development/identity-spike.md).
 - Same-origin Next protocol routes and typed identity state/hook logic for a
   separately owned presentation change; no new identity page/CSS in T02.1.
+- T02.2: experimental bilingual `/identity` presentation for the merged identity
+  hook, with states for loading, unavailable API, disabled identity, unconfigured
+  providers, signed-out/in, pending actions, and recoverable sign-in/sign-out
+  messages. Keyboard focus recovery and an index link were added; no new dependency.
+  [Presentation evidence](docs/development/identity-ui.md).
 - Disposable pinned PostgreSQL integration tests with simulated provider HTTP,
   state/proxy/client timeout/recovery tests, and a declaration-only compatibility
   patch retaining strict TypeScript dependency checks.
@@ -57,8 +62,8 @@ This records repository changes. No application version has been released.
 
 ### Pending
 
-- T02.1 checks/exact-head Kody delivery in [PR #3](https://github.com/Ljrr3045/rielia/pull/3);
-  T02.2 presentation and accessibility.
+- T02.2 exact-head Kody review in [PR #4](https://github.com/Ljrr3045/rielia/pull/4);
+  real-provider consent, private-email, HTTPS, and staging evidence for T02 remain open.
   No full T01–T35 ticket is complete. Real provider/staging T02 acceptance,
   T03 and full T04 remain unverified.
 - User decisions on license, stack, and installation OAuth configuration; final
