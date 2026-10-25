@@ -1,0 +1,19 @@
+AGENTS.md
+  s_1dfee99ee7672b::t_f02b5c6f71ee4d 94-98
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b773cc37f4de4bce78c49cac186f4ffb680384e7",
+  "prompts": {},
+  "sessions": {
+    "s_1dfee99ee7672b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1701a-59ab-7cd2-a329-11faf6a09876",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
