@@ -1,0 +1,26 @@
+apps/web/src/app/identity/identity-view.tsx
+  s_bcfaacd7eb1206::t_9ecdfa2aa4c1e8 112
+  s_bcfaacd7eb1206::t_15a2fbf8c0b11c 41,47,55,57
+  s_bcfaacd7eb1206::t_2b9420b2a7a3b4 48,50-52
+  s_bcfaacd7eb1206::t_ac276375875554 99
+  s_bcfaacd7eb1206::t_1fce66e1265010 121
+docs/development/identity-ui.md
+  s_bcfaacd7eb1206::t_078610c7818c21 49-54
+  s_bcfaacd7eb1206::t_bcb97cca57af0d 79-93
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b2dc28b90cca3ea6098d53db23508a65e8cc9b62",
+  "prompts": {},
+  "sessions": {
+    "s_bcfaacd7eb1206": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e8f46865affefyU7bVRrWNcudY",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
