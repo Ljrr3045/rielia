@@ -1,0 +1,45 @@
+apps/web/src/app/prototype/prototype-app.tsx
+  s_01879676f2f728::t_3cf3b8e4dafb4e 77-78,81-82
+  s_01879676f2f728::t_e99c55adec70bc 55,206,262,266,326
+  s_01879676f2f728::t_1edc4702c32934 363
+  s_01879676f2f728::t_b8b8e7361950c1 27
+apps/web/src/app/prototype/strings.ts
+  s_01879676f2f728::t_b416b33d7b2189 126,301,476
+  s_01879676f2f728::t_a37a34a34c2401 392
+  s_01879676f2f728::t_e41a1cf22942bd 53,228,403
+  s_01879676f2f728::t_0cbb71cec10ee6 42,217
+  s_01879676f2f728::t_f5a8d089c74624 609-610
+apps/web/src/app/prototype/task-detail.tsx
+  s_01879676f2f728::t_faec3d3ada8a9e 69
+  s_01879676f2f728::t_9adbb384775804 108
+  s_01879676f2f728::t_2fb123a8d484fa 140-141
+apps/web/src/app/prototype/ui.tsx
+  s_01879676f2f728::t_7bb67473305c48 3,22-34,37-38,41-42,422
+apps/web/src/app/prototype/sprint-view.tsx
+  s_01879676f2f728::t_45276a193eedc3 506,509-510,560
+  s_01879676f2f728::t_a830fbb533fae7 563-565
+  s_01879676f2f728::t_42ea24d1750848 508,511
+  s_01879676f2f728::t_ee305b6d486c43 64-66
+  s_01879676f2f728::t_f31cf8bc25de3c 507
+apps/web/src/app/prototype/task-form.tsx
+  s_01879676f2f728::t_f033ad082f04e3 236
+apps/web/src/app/prototype/prototype.module.css
+  s_01879676f2f728::t_4f920c033e80b6 38,42,46
+  s_01879676f2f728::t_8360c2ad4919f3 1405-1415
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4f84a0401240e84d12266c2324332096e2ddb8cc",
+  "prompts": {},
+  "sessions": {
+    "s_01879676f2f728": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e8e91ff18ffeK2ckeyaYj5Zblh",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
