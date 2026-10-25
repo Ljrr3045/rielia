@@ -35,9 +35,13 @@ or an Orca installation.
   No landing implementation, product workflow, or deployment is included.
   T02.1 adds an opt-in backend identity experiment with Better Auth and a minimal
   Prisma/PostgreSQL identity schema. See [scope, operator setup, and evidence](docs/development/identity-spike.md).
-  Same-origin protocol/state logic is included; presentation is separate T02.2
-  work. Full T02 and complete stack
+  Same-origin protocol/state logic and T02.2 presentation are merged in PRs #3/#4.
+  Full T02 and complete stack
   ratification remain pending real provider/staging evidence and user decisions.
+- T01/B0 has a separately isolated fictional frontend-only demo adapter; see the
+  [prototype contract and limits](docs/development/task-prototype.md). It is not
+  production task/sprint policy or authorization. Presentation and reviewed
+  mobile/desktop journeys remain separate work; full T01/B0 is not complete.
 - `docs/handoff/` is an unchanged import of the original handoff. Preserve every
   filename, relative link, asset, and hash. Put decisions, corrections, and delivery
   evidence in `docs/development/`; never silently rewrite the source proposals or
@@ -99,11 +103,13 @@ Keep these boundaries in both current and future code.
 2. Use an isolated worktree from `origin/dev`. Confine edits to the assigned
    checkout; do not share it with another worker or alter the original handoff.
    In the supervised development workflow, coordinator-launched development
-   workers handling UI/UX presentation use **OpenCode with Claude Haiku 5.5,
-   variant `high`**; **all logic** uses **Codex `gpt-6.1-sol`, effort `xhigh`**,
+   workers handling UI/UX presentation use **OpenCode Go with DeepSeek V4.1
+   Flash 1017**, model `opencode-go/deepseek-v4.1-flash`, variant **`max`**;
+   **all logic** uses **Codex `gpt-6.1-sol`, effort `xhigh`**,
    including frontend auth/session/data hooks, proxies, and functional tests.
    Each works in its own worktree, per the user's explicit rule. Verify effective
    model/effort rather than silently substituting an unavailable configuration.
+   See the [model decision and verification limits](docs/development/frontend-agent.md).
    This does not prescribe tools/models
    for ordinary human contributors. Kody AI is the external PR reviewer invoked
    by the coordinator's root comment, not a development worker.
