@@ -16,5 +16,8 @@ overrides:
 allowBuilds:
   '@prisma/engines@7.10.1': true
   'prisma@7.10.1': true
+  # Published Inspector includes built clients. Its source-checkout installer
+  # is a no-op under node_modules; keep that unnecessary lifecycle disabled.
+  '@modelcontextprotocol/inspector@2.12.0': false
 patchedDependencies:
   better-auth@1.7.12: patches/better-auth@1.7.12.patch

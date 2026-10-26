@@ -14,6 +14,9 @@ presentation are merged in PRs #3/#4; real OAuth/HTTPS acceptance is still open.
 The [T01 prototype contract](docs/development/task-prototype.md) describes the
 fictional memory-only adapter for separately owned presentation. It is not a
 production domain implementation or full T01/B0 acceptance.
+The [local MCP guide](docs/development/local-mcp.md) documents T03.0/B0's private
+experimental stdio liveness wrapper, exact pins, terminal-client evidence and
+explicit configuration. It completes no task catalog, authorization or remote OAuth work.
 
 ## Select a bounded change
 
@@ -33,7 +36,13 @@ implementation instruction.
 
 Use your own worktree based on `origin/dev` and a focused branch. Do not share a
 worker checkout, edit another worker's files, or change the source handoff outside
-the repo. With ordinary Git, a contributor can start a clone as follows:
+the repo.
+
+Name new branches `feat/**`, `fix/**`, `refactor/**`, `docs/**`, `chore/**` or
+`test/**` according to purpose, without username prefixes. Worktree names should
+correspond. If Orca adds a username prefix, correct it before development.
+
+With ordinary Git, a contributor can start a clone as follows:
 
 ```sh
 git clone https://github.com/Ljrr3045/rielia.git
@@ -71,6 +80,7 @@ python3 scripts/verify-handoff.py
 pnpm install --frozen-lockfile
 pnpm check
 pnpm test:prototype
+pnpm test:mcp
 pnpm test:identity
 pnpm audit --audit-level=high
 git diff --check
@@ -84,7 +94,11 @@ The verifier checks local file targets, not remote sites or heading fragments.
 
 `pnpm check` runs lint, the focused smoke-process cleanup regression, identity
 logic/client and task-prototype tests, strict typechecks, production builds, and
-HTTP smoke. `pnpm test:prototype` can also run the focused demo action/invariant
+the local MCP subprocess/official Inspector suite plus HTTP smoke. `pnpm test:mcp`
+builds its prerequisites and runs that suite alone (about 7 seconds after build,
+60-second per-test deadline); it requires loopback permission and `openssl` for
+an ephemeral TLS rejection fixture, without credentials or a database.
+`pnpm test:prototype` can also run the focused demo action/invariant
 tests alone; it requires no backend, database, credentials, or browser.
 The smoke starts task-local servers on temporary ports and stops them afterwards;
 it verifies the API contract, bilingual HTML, and API-down fallback. No external

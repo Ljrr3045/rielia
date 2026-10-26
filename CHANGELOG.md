@@ -6,6 +6,13 @@ This records repository changes. No application version has been released.
 
 ### Added
 
+- T03.0/B0: private experimental `packages/mcp-local` stdio wrapper with one
+  argument-free public REST process-liveness tool, bounded validated output,
+  constrained loopback HTTP opt-in, normal HTTPS validation, sanitized failures,
+  no redirects and clean request/process shutdown. SDK 2.4.0 and independent
+  official Inspector 2.12.0 CLI integration runs in `pnpm check`; actual protocols
+  `2025-11-25` and `2026-07-28` are recorded in the [operator/evidence guide](docs/development/local-mcp.md).
+  No task data, credentials, remote transport or full T03 acceptance.
 - T01/B0 prototype presentation: responsive fictional `/prototype` with default
   My tasks, project List/Board/Sprints, full task detail, minimal capture/edit,
   sprint planning/start/close, visible simulated failure with draft-preserving
@@ -49,6 +56,15 @@ This records repository changes. No application version has been released.
 
 ### Changed
 
+- Reconcile fictional prototype PRs #5/#7/#6 as merged. PR #6 merged on
+  2026-10-25T08:13:36Z as `a869e317fd05e87d9afd62597842e5fc125e57ee`, after
+  [CI 40175255312](https://github.com/Ljrr3045/rielia/actions/runs/40175255312)
+  and [Kody approval 5642187480](https://github.com/Ljrr3045/rielia/pull/6#pullrequestreview-5642187480)
+  on `043c4507`. Full T01/B0 real-user validation remains open; prior worktrees
+  were removed and preview stopped by the coordinator.
+- Record user branch convention: `feat/**`, `fix/**`, `refactor/**`, `docs/**`,
+  `chore/**`, `test/**` by purpose, without username prefixes; corresponding
+  worktree names. Coordinator corrected Orca's prefix on the empty T03.0 branch.
 - Merge T01/B0 prototype logic [PR #5](https://github.com/Ljrr3045/rielia/pull/5)
   into `dev` as `5099b39aef53d5b7e2f0205f3168727cb1dc9471`, preserving reviewed
   head `55481ffb3613ccaadcb37f3e6dd3ad3118afb8c3`. Presentation is delivered
@@ -105,11 +121,11 @@ This records repository changes. No application version has been released.
 
 ### Pending
 
-- T01 prototype presentation exact-head CI/Kody review for the UI PR; fictional
-  demo journeys and targeted responsive/failure checks do not complete T01 or B0
+- Fictional demo journeys and targeted responsive/failure checks do not complete T01 or B0
   or establish real-person usability. Real-provider consent, private-email, HTTPS,
   and staging evidence for T02 remain open. No full T01–T35 ticket is complete.
-  Real provider/staging T02 acceptance, T03 and full T04 remain unverified.
+  Real provider/staging T02 acceptance, full T03 beyond the bounded local stdio
+  evidence, and full T04 remain unverified.
 - User decisions on license, stack, and installation OAuth configuration; final
   identity and landing design remain proposals. T02.1's simulated OAuth/database
   evidence does not claim real provider consent, worker, MCP, product workflow,

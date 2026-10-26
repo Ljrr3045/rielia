@@ -3,6 +3,10 @@
 T02.0 was merged in PR #2. This guide records its original bounded fixture;
 subsequent [T02.1 identity work](identity-spike.md) adds opt-in identity storage,
 protocol/state logic, and its own checks without completing full T02/T03/T04.
+The subsequent [T03.0 local MCP experiment](local-mcp.md) adds a private stdio
+liveness wrapper, SDK subprocess and independent official Inspector checks.
+It completes only that bounded local transport portion; remote auth/discovery,
+task catalog and full T03 remain open.
 
 Status: a reversible development scaffold using the proposed Next.js + NestJS
 stack. It supports the T02/T03 spikes and supplies **partial tooling for T04**.
@@ -23,6 +27,8 @@ merge `8dd7c31f454c1989d017dbf7b40e6646112d2d2a`; the immutable handoff is uncha
   no framework, Nest, Prisma, database, or domain dependencies.
 - Root TypeScript/ESLint configuration, pnpm workspace/lockfile, a production
   HTTP smoke script, and a CI workflow. There are no empty placeholder packages.
+- Subsequent `packages/mcp-local`: diagnostic-only stdio client of the existing
+  REST health route, without database/domain imports or a listening socket.
 
 Web consumes public contracts and HTTP. Backend use cases and future domain
 rules belong to the API; web must never import database/backend internals.
@@ -173,8 +179,9 @@ PR/latest-head Kody review results are recorded in active progress and PR eviden
 
 Still required: T02 real Google/GitHub flows (including private email), web/API
 sessions, logout, expiry, proxy/HTTPS callbacks and staging evidence; T03 real
-MCP client/SDK/discovery/version evidence; T04 database/migration, durable
+remote discovery/auth and product-client evidence beyond the bounded local
+MCP matrix linked above; T04 database/migration, durable
 queue/worker, image and restart acceptance. No OAuth verification, identity,
-schema, DB, worker, MCP, sprint, product workflow, Docker deployment, throughput,
+schema, DB, worker, product MCP catalog, sprint, product workflow, Docker deployment, throughput,
 accessibility audit, or launch readiness is claimed here. Stack ratification
 and all those acceptance criteria remain open.
