@@ -95,7 +95,7 @@ The verifier checks local file targets, not remote sites or heading fragments.
 `pnpm check` runs lint, the focused smoke-process cleanup regression, identity
 logic/client and task-prototype tests, strict typechecks, production builds, and
 the local MCP subprocess/official Inspector suite plus HTTP smoke. `pnpm test:mcp`
-builds its prerequisites and runs that suite alone (about 7 seconds after build,
+builds its prerequisites and runs that suite alone (about 10 seconds after build,
 60-second per-test deadline); it requires loopback permission and `openssl` for
 an ephemeral TLS rejection fixture, without credentials or a database.
 `pnpm test:prototype` can also run the focused demo action/invariant

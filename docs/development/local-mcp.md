@@ -157,8 +157,8 @@ Local evidence on 2026-10-26, Node 24.22.1/pnpm 12.15.0:
 | Shutdown and cancellation | Active stalled HTTP request | Client cancellation, EOF, SIGINT and SIGTERM release socket promptly; child exit and Nest port closure asserted |
 | HTTPS negative case | Ephemeral self-signed local HTTPS fixture | Untrusted certificate rejected before HTTP handler; sanitized failure. No trusted remote HTTPS success was exercised |
 
-The focused suite has 12 passing checks (including four shutdown subtests), about
-7 seconds locally, with a 60-second per-test timeout. It is included after builds
+The focused suite has 17 passing checks (including four shutdown and four upstream
+lifecycle subtests), about 10 seconds locally, with a 60-second per-test timeout. It is included after builds
 in `pnpm check`, so existing CI runs the actual Nest/SDK/Inspector integration.
 The suite needs loopback permission and `openssl` for an ephemeral TLS test
 certificate; it requires no DB or user/provider credentials. Sandboxed listeners
@@ -168,6 +168,16 @@ recording passing evidence; it did not indicate a runtime protocol defect.
 Full `pnpm check`, frozen install, 20 existing real-library/PostgreSQL identity
 checks (simulated provider HTTP), handoff verification (47 files/30 assets),
 dependency audit (no known vulnerabilities) and whitespace checks also passed.
+
+Kody's [truncated-body finding](https://github.com/Ljrr3045/rielia/pull/8#discussion_r4381459140)
+was not reproduced on Node 24.22.1: fixed-length FIN, chunked FIN and mid-body
+reset each return `LIVENESS_UNAVAILABLE` in about 30 ms through the built wrapper.
+An open stalled body instead reaches the 2-second deadline. The existing response
+`error` handler already covers the documented post-`aborted` `ECONNRESET` event;
+see [Node's HTTP event contract](https://nodejs.org/docs/latest-v24.x/api/http.html#httprequestoptions-callback).
+The retained wire regression checks this distinction without adding redundant
+runtime handlers. The earlier review/check attached to a previous head does not
+approve the regression's new head; current-head results remain in the PR.
 
 This matrix applies only to these tested versions and stdio profiles. No Cursor,
 Claude Desktop, other host, universal client compatibility, real remote HTTPS

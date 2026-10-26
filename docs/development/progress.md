@@ -444,17 +444,24 @@ loopback development HTTP is the only plaintext allowance; HTTPS retains normal
 certificate validation. Bounded total deadline/body/header sizes, no redirects,
 sanitized errors, EOF/signal/client cancellation and stdout discipline are covered.
 
-Twelve focused checks pass locally: real Nest through SDK child processes and
+Seventeen focused checks pass locally: real Nest through SDK child processes and
 independent official Inspector CLI initialize/list/call, actual `2025-11-25` and
 `2026-07-28`, invalid tool/arguments/config, malicious/malformed upstream data,
 HTTP failure, oversized body, redirect, refusal, timeout, recovery and active
 request shutdown. Self-signed HTTPS is rejected; no trusted remote HTTPS or remote
 MCP/OAuth discovery was exercised. The coordinator independently reran all 12
-successfully. Initial sandbox-denied listeners and a corrected test cleanup-hook
+successfully before the additional lifecycle regression. Initial sandbox-denied listeners and a corrected test cleanup-hook
 ordering failure are not passing evidence. `pnpm check` includes this real client
 suite after builds. Frozen install, full `pnpm check`, 20 existing real-library/
 PostgreSQL identity tests with simulated provider HTTP and database cleanup,
-audit (no known vulnerabilities), handoff integrity (47 files/30 assets/326 links)
+audit (no known vulnerabilities), handoff integrity (47 files/30 assets/327 links)
 and whitespace pass locally; current-head CI/Kody evidence is recorded in the PR
 before delivery. No full ticket, real-user acceptance,
 stack/license or provider decision is closed.
+
+Kody's truncated-response timeout claim did not reproduce: real wrapper wire
+probes return unavailable promptly for fixed-length/chunked FIN and mid-body
+reset; an open stalled stream instead times out. A focused retained regression
+guards that documented contract; the existing Node response error handler is
+sufficient. See the [measured disposition](local-mcp.md#observed-evidence-and-limits)
+and PR review surfaces. No speculative runtime handler or auth scope was added.

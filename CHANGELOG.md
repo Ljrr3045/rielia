@@ -13,6 +13,9 @@ This records repository changes. No application version has been released.
   official Inspector 2.12.0 CLI integration runs in `pnpm check`; actual protocols
   `2025-11-25` and `2026-07-28` are recorded in the [operator/evidence guide](docs/development/local-mcp.md).
   No task data, credentials, remote transport or full T03 acceptance.
+- Guard truncated HTTP versus open-stalled-body behavior with actual stdio
+  subprocess regressions: FIN/reset returns unavailable promptly, while an open
+  stream reaches the deadline. Existing runtime error handling is retained.
 - T01/B0 prototype presentation: responsive fictional `/prototype` with default
   My tasks, project List/Board/Sprints, full task detail, minimal capture/edit,
   sprint planning/start/close, visible simulated failure with draft-preserving
