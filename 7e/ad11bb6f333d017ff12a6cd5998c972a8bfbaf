@@ -1,0 +1,29 @@
+CONTRIBUTING.md
+  s_5a3d2a5098cd35::t_dc3834cea896d3 98
+docs/development/progress.md
+  s_5a3d2a5098cd35::t_84db9154c5027e 457
+  s_5a3d2a5098cd35::t_dc3834cea896d3 447,453,461-467
+CHANGELOG.md
+  s_5a3d2a5098cd35::t_dc3834cea896d3 16-18
+packages/mcp-local/test/upstream-lifecycle.test.mjs
+  s_5a3d2a5098cd35::t_dc3834cea896d3 1-26
+docs/development/local-mcp.md
+  s_5a3d2a5098cd35::t_dc3834cea896d3 160-161,172-180
+  s_5a3d2a5098cd35::t_8385d2d8d7937f 181
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "7ead11bb6f333d017ff12a6cd5998c972a8bfbaf",
+  "prompts": {},
+  "sessions": {
+    "s_5a3d2a5098cd35": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a17954-5620-73b0-b5c4-5f9d6efb8694",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
