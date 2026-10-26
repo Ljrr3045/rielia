@@ -143,7 +143,7 @@ test('configuration fails closed before protocol output and never prints values'
   for (const value of [undefined, 'http://example.com', 'http://127.0.0.1', 'ftp://127.0.0.1',
     'https://user:synthetic-secret@example.com', 'https://example.com?token=synthetic-secret',
     'https://example.com#synthetic-secret', 'https://example.com/private', 'https://@example.com',
-    'https://example.com?', 'not-a-url']) {
+    'https://example.com?', 'https://example.com\\private', 'https://example.com\n', 'not-a-url']) {
     const peer = wire(t, value === undefined ? {} : { RIELIA_API_ORIGIN: value });
     assert.deepEqual(await peer.exited, [1, null]);
     assert.equal(peer.lines.length, 0);

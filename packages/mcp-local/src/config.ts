@@ -7,7 +7,8 @@ export function healthEndpoint(env: NodeJS.ProcessEnv): URL {
     throw new Error('Invalid MCP configuration. Set an HTTPS RIELIA_API_ORIGIN; see the local MCP guide.');
   }
   const url = new URL(origin);
-  if (url.username || url.password || origin.includes('@') || url.search || url.hash
+  if (url.username || url.password || origin.includes('@') || origin.includes('\\')
+    || /\s/.test(origin) || url.pathname !== '/' || url.search || url.hash
     || (url.protocol !== 'https:' && !(url.protocol === 'http:' && allowance === 'true'
       && (url.hostname === '127.0.0.1' || url.hostname === '[::1]')))) {
     throw new Error('Invalid MCP configuration. HTTP requires explicit numeric-loopback development allowance.');
