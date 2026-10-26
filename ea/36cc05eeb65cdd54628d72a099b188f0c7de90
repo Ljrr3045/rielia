@@ -1,0 +1,23 @@
+packages/mcp-local/test/transport.test.mjs
+  s_5a3d2a5098cd35::t_2e09d563163bf3 146
+packages/mcp-local/src/config.ts
+  s_5a3d2a5098cd35::t_2e09d563163bf3 10-11
+docs/development/progress.md
+  s_5a3d2a5098cd35::t_2e09d563163bf3 19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ea36cc05eeb65cdd54628d72a099b188f0c7de90",
+  "prompts": {},
+  "sessions": {
+    "s_5a3d2a5098cd35": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a17954-5620-73b0-b5c4-5f9d6efb8694",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
