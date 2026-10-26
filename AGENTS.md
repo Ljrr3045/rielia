@@ -45,6 +45,10 @@ or an Orca installation.
   production task/sprint policy or authorization. The bounded demo journeys exist,
   but full T01/B0, real-user validation, backend persistence, and production
   workflow remain incomplete.
+- T03.0/B0 adds `packages/mcp-local`, a private experimental stdio wrapper exposing
+  only public process liveness through REST. See the [local MCP guide](docs/development/local-mcp.md)
+  for pins, configuration, independent terminal-client evidence and limits. No
+  credentials, task catalog, remote transport or full T03 acceptance is included.
 - `docs/handoff/` is an unchanged import of the original handoff. Preserve every
   filename, relative link, asset, and hash. Put decisions, corrections, and delivery
   evidence in `docs/development/`; never silently rewrite the source proposals or
@@ -65,9 +69,11 @@ or an Orca installation.
 
 ## Runtime and domain boundaries
 
-`apps/web`, `apps/api`, and `packages/contracts` exist in the fixture. T02.1's
+`apps/web`, `apps/api`, `packages/contracts`, and the diagnostic-only
+`packages/mcp-local` exist in the fixture. T02.1's
 identity runtime and identity-only Prisma schema live inside `apps/api`.
-The shared database package, domain schema, worker, API client, and MCP remain future work.
+The shared database package, domain schema, worker, generated API client, and
+product MCP catalog/authorization remain future work.
 Keep these boundaries in both current and future code.
 
 - Web owns presentation, client state, and accessible interactions. It calls the
@@ -105,6 +111,9 @@ Keep these boundaries in both current and future code.
    UXR/UX or LPR/S/LP IDs; state exclusions and acceptance before implementation.
 2. Use an isolated worktree from `origin/dev`. Confine edits to the assigned
    checkout; do not share it with another worker or alter the original handoff.
+   New branch names use `feat/**`, `fix/**`, `refactor/**`, `docs/**`, `chore/**`
+   or `test/**` by purpose, without username prefixes; worktree names correspond
+   to their branch purpose. Correct an Orca-added username prefix before development.
    In the supervised development workflow, coordinator-launched development
    workers handling UI/UX presentation use **OpenCode Go with DeepSeek V4.1
    Flash 1017**, model `opencode-go/deepseek-v4.1-flash`, variant **`max`**;

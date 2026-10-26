@@ -25,6 +25,10 @@ export default [
     },
   },
   {
+    files: ['packages/mcp-local/src/**/*.ts'],
+    rules: { 'no-restricted-imports': ['error', { patterns: ['@nestjs/*', '@prisma/*', '@rielia/api', '@rielia/api/*', '@rielia/database', '@rielia/database/*', '**/apps/**', '**/database/**'] }] },
+  },
+  {
     files: ['packages/contracts/**/*.ts'],
     rules: { 'no-restricted-imports': ['error', { patterns: ['@nestjs/*', '@prisma/*', '@rielia/api', '@rielia/database'] }] },
   },
