@@ -1,0 +1,108 @@
+# LOCAL preparation only. Real OAuth/HTTPS, production roles, backups and Dokploy
+# resources have their own uncompleted acceptance; do not deploy this file.
+x-backend: &backend
+  image: ${COMPOSE_PROJECT_NAME:-rielia-local}-api:local
+  init: true
+  read_only: true
+  tmpfs: ['/tmp:rw,noexec,nosuid,size=32m,mode=1777']
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  environment: &backend-environment
+    NODE_ENV: production
+    IDENTITY_ENABLED: 'false'
+    LOCAL_RUNTIME_ENABLED: 'true'
+    DATABASE_URL: postgresql://rielia:${LOCAL_POSTGRES_PASSWORD:?Set LOCAL_POSTGRES_PASSWORD to a private generated hex value}@postgres:5432/rielia
+  networks: [data]
+  stop_grace_period: 15s
+
+services:
+  postgres:
+    image: postgres:18.6@sha256:edb0c08dc33befd0262ab3b5cf1c4f3f8cfd8b09e88c05b45adee29d6761ddb6
+    environment:
+      POSTGRES_USER: rielia
+      POSTGRES_DB: rielia
+      POSTGRES_PASSWORD: ${LOCAL_POSTGRES_PASSWORD:?Set LOCAL_POSTGRES_PASSWORD to a private generated hex value}
+    volumes: [database:/var/lib/postgresql]
+    networks: [data]
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U rielia -d rielia']
+      interval: 2s
+      timeout: 3s
+      retries: 30
+    stop_grace_period: 20s
+
+  migrate:
+    <<: *backend
+    image: ${COMPOSE_PROJECT_NAME:-rielia-local}-migrate:local
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: migrate
+    command: [node, dist/migrate.js]
+    depends_on:
+      postgres: {condition: service_healthy}
+    restart: 'no'
+
+  api:
+    <<: *backend
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: api
+    environment:
+      <<: *backend-environment
+      HOST: 0.0.0.0
+      PORT: '3001'
+    networks: [data, frontend]
+    ports: ['127.0.0.1:${LOCAL_API_PORT:-3001}:3001']
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:3001/api/v1/readiness').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 3s
+      timeout: 5s
+      retries: 20
+
+  worker:
+    <<: *backend
+    command: [node, dist/worker.js]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+    healthcheck:
+      test: [CMD, node, dist/runtime/worker-health.js]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+
+  web:
+    image: ${COMPOSE_PROJECT_NAME:-rielia-local}-web:local
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: web
+    init: true
+    read_only: true
+    tmpfs: ['/tmp:rw,noexec,nosuid,size=32m,mode=1777']
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    environment:
+      API_BASE_URL: http://api:3001
+    networks: [frontend]
+    ports: ['127.0.0.1:${LOCAL_WEB_PORT:-3000}:3000']
+    depends_on:
+      api: {condition: service_healthy}
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:3000/').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    stop_grace_period: 15s
+
+networks:
+  frontend:
+  data:
+    internal: true
+
+volumes:
+  database:

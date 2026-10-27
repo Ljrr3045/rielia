@@ -17,6 +17,10 @@ production domain implementation or full T01/B0 acceptance.
 The [local MCP guide](docs/development/local-mcp.md) documents T03.0/B0's private
 experimental stdio liveness wrapper, exact pins, terminal-client evidence and
 explicit configuration. It completes no task catalog, authorization or remote OAuth work.
+The [local runtime guide](docs/development/local-runtime.md) describes T04.0/B0's
+opt-in Docker preparation, migration gate, readiness and persistent diagnostic
+job. It preserves default HTTP identity disablement and completes no full T04 or
+production deployment acceptance.
 
 ## Select a bounded change
 
@@ -82,6 +86,7 @@ pnpm check
 pnpm test:prototype
 pnpm test:mcp
 pnpm test:identity
+pnpm test:runtime
 pnpm audit --audit-level=high
 git diff --check
 git diff --cached --check
@@ -113,6 +118,17 @@ migration twice, runs real-library/session/security tests with simulated provide
 HTTP, and removes only its own container. It uses generated private test values;
 no Google/GitHub credentials or system PostgreSQL installation is needed. CI runs
 this separately from `pnpm check`; Docker is a test prerequisite, not a deployment.
+
+`pnpm test:runtime` builds pinned multi-stage API/web images with frozen installs,
+then runs an isolated Compose project on random loopback ports. It verifies
+migration failure/gating/repeatability, readiness versus liveness, DB recovery,
+bounded DB-lock/signal cleanup, and a fixed diagnostic job retained while the
+worker is stopped across full stack recreation and consumed after restart.
+It inspects nonroot runtime usability and credential/build-tool exclusions,
+then removes only its unique containers, networks, volume and image tags. It
+requires Docker Compose, network access to build dependencies, and up to 15 minutes
+for the build plus bounded lifecycle checks. CI runs it separately from `pnpm check`
+without live external providers; see the guide for exact pins and rebuild limits.
 
 For subsequently assigned implementation, add/run checks appropriate to the
 real change: domain and contract checks; actual PostgreSQL isolation, constraints,

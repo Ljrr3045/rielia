@@ -49,6 +49,11 @@ or an Orca installation.
   only public process liveness through REST. See the [local MCP guide](docs/development/local-mcp.md)
   for pins, configuration, independent terminal-client evidence and limits. No
   credentials, task catalog, remote transport or full T03 acceptance is included.
+- T04.0/B0 adds opt-in local Compose preparation for web/API/PostgreSQL, a gated
+  identity/queue migration one-shot and a diagnostic-only pg-boss worker. See the
+  [local runtime guide](docs/development/local-runtime.md) for commands, pins,
+  smoke and limits. Default container identity stays disabled; this is no
+  production deployment, business worker, stack ratification or full T04 acceptance.
 - `docs/handoff/` is an unchanged import of the original handoff. Preserve every
   filename, relative link, asset, and hash. Put decisions, corrections, and delivery
   evidence in `docs/development/`; never silently rewrite the source proposals or
@@ -72,8 +77,10 @@ or an Orca installation.
 `apps/web`, `apps/api`, `packages/contracts`, and the diagnostic-only
 `packages/mcp-local` exist in the fixture. T02.1's
 identity runtime and identity-only Prisma schema live inside `apps/api`.
-The shared database package, domain schema, worker, generated API client, and
+The shared database package, domain schema, business worker, generated API client, and
 product MCP catalog/authorization remain future work.
+The local diagnostic worker stays inside `apps/api`, shares its backend image,
+opens no listener and cannot migrate storage; only the explicit one-shot does so.
 Keep these boundaries in both current and future code.
 
 - Web owns presentation, client state, and accessible interactions. It calls the
