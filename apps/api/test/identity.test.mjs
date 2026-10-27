@@ -7,7 +7,7 @@ import { request as rawHttpRequest } from 'node:http';
 import { NestFactory } from '@nestjs/core';
 import { Controller, Module, Post, Req } from '@nestjs/common';
 import { AppModule } from '../dist/app.module.js';
-import { configureApplication } from '../dist/application.js';
+import { configureApplication, createHttpAdapter } from '../dist/application.js';
 import { IdentityService } from '../dist/identity/identity.service.js';
 import { readIdentityConfig } from '../dist/identity/config.js';
 import { proxyIdentity } from '../../web/src/lib/identity-proxy.ts';
@@ -24,7 +24,7 @@ class TestModule {}
 Module({ imports: [AppModule], controllers: [ParsingController] })(TestModule);
 
 async function start() {
-  const app = await NestFactory.create(TestModule, { bodyParser: false, logger: false });
+  const app = await NestFactory.create(TestModule, createHttpAdapter(), { bodyParser: false, logger: false });
   configureApplication(app);
   await app.listen(0, '127.0.0.1');
   return { app, identity: app.get(IdentityService), url: await app.getUrl() };
@@ -55,7 +55,7 @@ test('configuration fails closed without exposing values', () => {
   assert.equal(readIdentityConfig({ ...base, NODE_ENV: 'development', BETTER_AUTH_URL: 'http://127.0.0.1:3000', IDENTITY_ALLOW_HTTP_LOOPBACK: 'true' }).origin, 'http://127.0.0.1:3000');
 });
 
-test('real Better Auth, Nest Express, Prisma and PostgreSQL (simulated provider HTTP only)', async t => {
+test('real Better Auth, Nest NodeAdapter, Prisma and PostgreSQL (simulated provider HTTP only)', async t => {
   // Better Auth's process-wide memory limiter survives creating another app.
   // Advance only Date between cases to isolate real limiter windows; retain
   // real network/DB/timers and leave rate limiting enabled in all requests.
@@ -176,6 +176,20 @@ test('real Better Auth, Nest Express, Prisma and PostgreSQL (simulated provider 
     assert.equal((await request('/api/auth/ok')).headers.get('cache-control'), 'no-store');
     assert.equal((await request('/api/v1/identity/config')).headers.get('cache-control'), 'no-store');
     assert.equal((await request('/api/auth/sign-up/email', { method: 'POST' })).status >= 400, true);
+    assert.equal((await request('/api/v1/health')).headers.get('x-powered-by'), null);
+  });
+
+  await t.test('API parsers reject malformed/oversized JSON and prototype pollution without affecting liveness', async () => {
+    for (const [body, status] of [['{"broken":', 400], [JSON.stringify({ value: 'x'.repeat(110000) }), 413],
+      ['{"__proto__":{"polluted":true}}', 400], ['{"constructor":{"prototype":{"polluted":true}}}', 400]]) {
+      const response = await request('/api/v1/parse', { method: 'POST', headers: { 'content-type': 'application/json' }, body });
+      assert.equal(response.status, status);
+    }
+    const form = await request('/api/v1/parse', { method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      body: '__proto__[polluted]=true&nested[title]=safe' });
+    assert.equal(form.status, 400);
+    assert.equal(Object.prototype.polluted, undefined);
+    assert.equal((await request('/api/v1/health')).status, 200);
   });
 
   await t.test('unconfigured provider, malicious origins and untrusted return URLs fail', async () => {
@@ -224,6 +238,22 @@ test('real Better Auth, Nest Express, Prisma and PostgreSQL (simulated provider 
     const completed = await request(target.pathname + target.search, { headers: { cookie: flow.cookie } });
     assert.equal(completed.status, 302);
     assert.ok(sessionCookie(completed));
+  });
+
+  await t.test('decoded routing and callback lookalikes never bypass exact-origin or OAuth state checks', async () => {
+    for (const path of ['/api/auth/%73ign-in/social', '/%61pi/auth/sign-in/social',
+      '/api/auth/callback/github/', '/api/auth/callback/GitHub', '/api/auth/callback/github%2f..%2fsign-in/social']) {
+      const denied = await rawPost(path, { provider: 'github' }, 'https://attacker.example');
+      assert.equal(denied.status, 403, path);
+      assert.equal(denied.headers['cache-control'], 'no-store');
+    }
+    for (const path of ['/api/auth/callback/%C0%AF', '/api/auth/callback/%E0%A4%A']) {
+      assert.equal((await rawPost(path, {}, undefined)).status, 400);
+    }
+    const exact = await rawPost('/api/auth/callback/github', { code: 'fixture', state: 'invented' }, undefined);
+    assert.equal(exact.status, 302);
+    assert.equal(await context.identity.runtime.prisma.verification.count(), 0);
+    assert.equal(await context.identity.runtime.prisma.session.count(), 0);
   });
 
   await t.test('invalid/replayed OAuth state and provider cancellation create no session', async () => {
@@ -380,6 +410,20 @@ test('real Better Auth, Nest Express, Prisma and PostgreSQL (simulated provider 
     await login({ 'x-forwarded-for': '203.0.113.200, 198.51.100.10', 'x-forwarded-host': 'attacker.example', 'x-forwarded-proto': 'http' });
     const stored = await context.identity.runtime.prisma.session.findFirstOrThrow();
     assert.equal(stored.ipAddress, '198.51.100.10');
+  });
+
+  await t.test('a configured proxy outside the socket chain cannot lend trust to spoofed forwarding headers', async () => {
+    await context.app.close();
+    process.env.IDENTITY_TRUSTED_PROXIES = '192.0.2.10/32';
+    context = await start();
+    fixture = { id: 'untrusted-proxy', email: 'untrusted-proxy@example.test', verified: true };
+    const { response } = await login({ forwarded: 'for=203.0.113.8;host=attacker.example;proto=http',
+      'x-real-ip': '203.0.113.9', 'x-rielia-client-ip': '203.0.113.10', 'x-forwarded-for': '203.0.113.11',
+      'x-forwarded-host': 'attacker.example', 'x-forwarded-proto': 'http', 'x-forwarded-port': '80' });
+    assert.equal(response.headers.get('location'), `${publicOrigin}/identity`);
+    assert.ok(response.headers.getSetCookie().some(value => value.includes('session_token=') && /;\s*Secure/i.test(value)));
+    const stored = await context.identity.runtime.prisma.session.findFirstOrThrow();
+    assert.ok(['127.0.0.1', '::ffff:127.0.0.1'].includes(stored.ipAddress));
   });
 
   await t.test('database lookup failure returns unavailable and never authenticates', async () => {

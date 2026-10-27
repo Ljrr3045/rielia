@@ -26,7 +26,8 @@
     "test:prototype": "node --test scripts/task-prototype.test.mjs",
     "test:mcp": "pnpm --filter @rielia/contracts build && pnpm --filter @rielia/api build && pnpm --filter @rielia/mcp-local build && pnpm --filter @rielia/mcp-local test",
     "test:runtime": "node scripts/test-runtime.mjs",
-    "check": "pnpm lint && pnpm test:smoke && pnpm test:identity:logic && pnpm test:prototype && pnpm typecheck && pnpm build && pnpm --filter @rielia/mcp-local test && pnpm smoke",
+    "check:backend-closure": "node scripts/assert-backend-closure.mjs apps/api",
+    "check": "pnpm lint && pnpm check:backend-closure && pnpm test:smoke && pnpm test:identity:logic && pnpm test:prototype && pnpm typecheck && pnpm build && pnpm --filter @rielia/mcp-local test && pnpm smoke",
     "dev:web": "pnpm --filter @rielia/contracts build && pnpm --filter @rielia/web dev",
     "dev:api": "pnpm --filter @rielia/contracts build && pnpm --filter @rielia/api dev"
   },

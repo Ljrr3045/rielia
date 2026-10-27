@@ -3,10 +3,10 @@
 Research and implementation: 2026-10-25 UTC. The coordinator authorized T02.1 as a
 bounded, reversible experiment before user stack approval. The
 [2026-10-27 decision](stack-validation-decisions.md) now approves the current
-stack except Express; its removal is the first technical follow-up before new
-backend/domain expansion, with no replacement adapter selected. The Express
-integration below records current code and historical evidence, not the approved
-target. Real provider/HTTPS/staging acceptance is OPEN/DEFERRED until an advanced
+stack except Express. The [subsequent migration](nest-http-adapter.md) now uses
+official Nest NodeAdapter 12.3.2 and verifies backend deployed closure. Original
+PR #3 Express-specific findings below remain dated historical evidence.
+Real provider/HTTPS/staging acceptance is OPEN/DEFERRED until an advanced
 product slice and user scheduling; local security/integration checks remain
 required. License selection remains open. This document supplements the unchanged
 [architecture identity proposal](../handoff/02-architecture-technical-plan.en.md#2-identity-permissions-and-isolation).
@@ -20,7 +20,7 @@ web protocol/state logic, with a typed hook for separately owned T02.2 UI work.
 The latter follows the [UI guide](../handoff/04-ui-ux-development-guide.en.md),
 particularly UX07/UX09. No new page, component layout, or CSS ships in T02.1.
 
-The implementation mounts Better Auth in Nest's Express adapter at
+The implementation mounts Better Auth through Nest's official Node adapter at
 `/api/auth/*`, resolves database sessions through supported library APIs, and
 provides a same-origin Next client route. Persistence contains only the identity
 models required by the selected library. Google/GitHub are configured separately
@@ -48,7 +48,7 @@ pinned in the lockfile and exercised together:
 | PostgreSQL | `18.6` | [Official supported-version table](https://www.postgresql.org/support/versioning/); coordinator authorized disposable test infrastructure |
 | `pg` | `8.23.1` | [Registry](https://registry.npmjs.org/pg/8.23.1); compatible with the adapter's `^8.16.3` range |
 | `@types/pg` | `8.23.1` | [Registry](https://registry.npmjs.org/@types/pg/8.23.1) |
-| `@types/express` | `5.0.6` | [Registry](https://registry.npmjs.org/@types/express/5.0.6); existing Nest adapter uses Express `5.3.0` |
+| Nest common/core/platform-node | `12.3.2` | [Migration research](nest-http-adapter.md); replaces original Nest 12.2.0/Express 5.3.0 and removes `@types/express` |
 
 The registry's `prisma@latest` is `8.0.0-rc.27`; it is not a suitable unexamined
 replacement for the supported Prisma 7 peer range. [Prisma's current quickstart](https://www.prisma.io/docs/prisma-orm/quickstart/postgresql)
@@ -74,13 +74,14 @@ no Bun runtime, no global Bun override, and `skipLibCheck` remains `false`.
 ## Integration decisions
 
 - Use documented `toNodeHandler` from `better-auth/node`. [Express integration](https://better-auth.com/docs/integrations/express)
-  requires mounting before body parsers and uses a named wildcard for Express 5.
+  requires mounting before body parsers. The official Node adapter supports the
+  same named wildcard and raw Node request/response handler.
   JSON/urlencoded parsing follows it for other Nest routes. A test-only module
   verifies both parsers without adding a public echo route.
 - The [Nest-specific integration](https://better-auth.com/docs/integrations/nestjs)
-  is community maintained. Direct documented Express mounting avoids adding a
-  wrapper before its value and compatibility are established. Verify this with
-  the fixture's exact Nest 12.2.0/Express 5.3.0 versions.
+  is community maintained. Direct Node-handler mounting avoids adding a wrapper.
+  The real-library/database suite now exercises the shared production adapter
+  factory with coherent Nest 12.3.2 pins; see the migration guide for source evidence.
 - Use `auth.api.getSession` and `fromNodeHeaders`, with a required configured
   database. [Session documentation](https://better-auth.com/docs/concepts/session-management)
   explains that omitting the database enables stateless behavior and that cookie
@@ -91,9 +92,9 @@ no Bun runtime, no global Bun override, and `skipLibCheck` remains `false`.
   [options reference](https://better-auth.com/docs/reference/options) documents
   `baseURL`, exact trusted origins, and forwarded-header controls. Retain origin
   and CSRF checks, host-only HttpOnly cookies, and secure cookies for HTTPS.
-- Keep Express proxy trust off by default. If forwarding is needed, require known
+- Keep NodeAdapter proxy trust off by default. If forwarding is needed, require known
   proxy addresses and document header replacement and private backend reachability
-  according to [Express proxy guidance](https://expressjs.com/en/guide/behind-proxies/).
+  according to [Nest adapter proxy guidance](https://docs.nestjs.com/http/performance).
   Broad trust of all proxies is outside the proposed setup.
 - Explicitly disable implicit account linking. [Account documentation](https://better-auth.com/docs/concepts/users-accounts)
   states that trusted providers can otherwise link matching unverified emails.
@@ -111,7 +112,7 @@ Non-GET/HEAD auth requests outside provider callbacks require the exact configur
 explicitly enabled; the suite uses production mode because Better Auth's test mode
 otherwise skips origin validation by default.
 
-At the Node boundary, Express computes `req.ip` from the socket peer and the
+At the Node boundary, NodeAdapter computes `req.ip` from the socket peer and the
 explicit proxy list. Raw `Forwarded`, `X-Forwarded-*`, `X-Real-IP`, and incoming
 `X-Rielia-Client-IP` are removed before the library sees them. Only the derived IP
 is supplied through the library's configured IP header. See its

@@ -11,9 +11,9 @@ task catalog and full T03 remain open.
 Status: a bounded development scaffold supporting T02/T03 and **partial tooling
 for T04**, without completing those tickets. The user approved the current stack
 except Express in the [2026-10-27 decision](stack-validation-decisions.md).
-Express removal precedes new backend/domain expansion; no replacement adapter is
-selected. Current Express details below describe delivered code, not the approved
-target. Real provider/staging and real-project/user acceptance remain OPEN/DEFERRED
+The [subsequent migration](nest-http-adapter.md) now uses official Nest NodeAdapter
+12.3.2 with backend package/image closure checks. Original fixture pins and
+Express advisory history below are dated delivery evidence. Real provider/staging and real-project/user acceptance remain OPEN/DEFERRED
 under that decision; applicable local automated checks, CI and Kody still apply.
 The planning documents remain the source of product/architecture requirements.
 It follows the merged [T00 onboarding PR #1](https://github.com/Ljrr3045/rielia/pull/1),
@@ -24,7 +24,7 @@ merge `8dd7c31f454c1989d017dbf7b40e6646112d2d2a`; the immutable handoff is uncha
 - `apps/web`: Next.js App Router and React, with a small Spanish/English
   development page. It checks API liveness on each request, with a two-second
   timeout and an honest unavailable state. No external fonts/assets/services.
-- `apps/api`: NestJS with its Express adapter; `GET /api/v1/health` returns
+- `apps/api`: NestJS with its official Node adapter; `GET /api/v1/health` returns
   `{"status":"ok","service":"rielia-api"}` with `Cache-Control: no-store`.
   This is process liveness, not dependency readiness or product availability.
 - `packages/contracts`: one public response type and an unknown-input guard;
@@ -57,16 +57,17 @@ lockfile fixes transitive resolutions and integrity values.
 | pnpm | 12.15.0 | [Registry](https://registry.npmjs.org/pnpm/12.15.0), [Node/platform compatibility](https://pnpm.io/installation). `packageManager` pins pnpm; [devEngines.runtime](https://pnpm.io/package_json#devenginesruntime) pins/downloads Node and records its checksum in the lockfile. |
 | Next.js | 16.4.3 | [Registry](https://registry.npmjs.org/next/16.4.3), [installation requirements](https://nextjs.org/docs/app/getting-started/installation), [October security update](https://nextjs.org/blog/nextjs-security-update-october-14-2026). Node ≥20.9 and React 19 satisfy its declared peers. Pin exceeds the 16.4.1 security patch floor. |
 | React / React DOM | 19.3.1 / 19.3.1 | [React registry](https://registry.npmjs.org/react/19.3.1), [React DOM registry](https://registry.npmjs.org/react-dom/19.3.1). Matching versions satisfy React DOM's React peer. |
-| Nest common/core/platform-express | 12.2.0 | [Core registry](https://registry.npmjs.org/@nestjs/core/12.2.0), [adapter registry](https://registry.npmjs.org/@nestjs/platform-express/12.2.0), [v12 migration guide](https://docs.nestjs.com/migration-guide). ESM API, NodeNext resolution, and TS 6 avoid a CJS interoperability workaround. Adapter includes Express 5.3.0. |
+| Nest common/core/platform-node | 12.3.2 | [Current migration research](nest-http-adapter.md) and [official adapter guide](https://docs.nestjs.com/http/performance). Original PR #2 used 12.2.0/platform-express/Express 5.3.0; ESM, NodeNext and strict TypeScript remain. |
 | TypeScript | 6.0.3 | [Registry](https://registry.npmjs.org/typescript/6.0.3), [typescript-eslint compatibility](https://typescript-eslint.io/users/dependency-versions/). TS 7 exists but is outside the lint parser's supported `<6.1.0` range. `strict`, unchecked-index and exact-optional checks are enabled; library checks remain enabled. Web includes ES2024 library declarations required by Next. |
 | ESLint / JS rules | 10.13.0 / 10.0.1 | [ESLint registry](https://registry.npmjs.org/eslint/10.13.0), [support policy](https://eslint.org/version-support/). ESLint 9 is EOL. Use official `@next/eslint-plugin-next` 16.4.3 directly: the aggregate preset currently brings plugins whose peers stop at ESLint 9. |
 | typescript-eslint | 8.72.0 | [Registry](https://registry.npmjs.org/typescript-eslint/8.72.0); accepts ESLint 10 and TS 6. No ignored peer requirements. |
 | Supporting dependencies | reflect-metadata 0.2.2; rxjs 7.8.2; @types/node 24.19.2; @types/react and @types/react-dom 19.3.0 | Runtime peers required by Nest and matching type packages. Their exact pins are in the manifests and lockfile. |
 
 Security research also found [GHSA-q7qp-rjg7-q26m](https://github.com/expressjs/multer/security/advisories/GHSA-q7qp-rjg7-q26m):
-Nest's adapter pins affected Multer 2.4.0. A scoped pnpm override pins **2.5.0**,
-the maintainer's patch. The fixture exposes no upload route; remove the override
-when Nest carries a patched dependency and revalidate. The audit is a dated
+The original Express adapter pinned affected Multer 2.4.0, so PR #2 used a scoped
+**2.5.0** override. NodeAdapter now carries 2.5.0 itself and that obsolete override
+is removed. Its qs pin instead needs a scoped **6.16.1** security override; see
+the migration record. The fixture exposes no upload route. The audit is a dated
 registry check, not a guarantee against unknown issues.
 
 ## Reproduce locally

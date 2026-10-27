@@ -73,12 +73,23 @@ This records repository changes. No application version has been released.
 
 ### Changed
 
-- Record the user's [2026-10-27 stack and validation decision](docs/development/stack-validation-decisions.md):
-  current stack approved except Express. Its removal is the first technical
-  follow-up before new backend/domain expansion; current runtime remains Express,
-  replacement adapter unselected. Inventory and future runtime/transitive backend
-  closure plus identity/security parity acceptance are recorded; no migration,
-  dependency upgrade, runtime, test or workflow change ships here.
+- Replace the Nest Express runtime with official NodeAdapter, using matching
+  common/core/platform-node **12.3.2** and supported Nest APIs. Preserve raw
+  Better Auth integration, nested parsers, callback/origin/proxy/session safeguards,
+  disabled identity, liveness/readiness and shutdown. Add adapter/security
+  regressions and actual installed/deployed API/worker/migration Express-absence
+  guards. Remove obsolete Express dependencies/types/Multer override; retain
+  patched Multer 2.5.0 and scope qs 6.16.1 for its introduced advisory.
+  [Rationale, integrity, new-adapter maturity and exact age exceptions](docs/development/nest-http-adapter.md).
+  No UI/domain/schema/workflow/deployment or full-ticket acceptance.
+- Preserve the user's original [2026-10-27 stack and validation decision](docs/development/stack-validation-decisions.md)
+  as dated history, with the completed migration recorded separately. T35 is the
+  next dependency-based product foundation; it is not implemented here.
+- Reconcile [PR #10](https://github.com/Ljrr3045/rielia/pull/10) as merged
+  2026-10-27T19:58:09Z at `3efb49fde4f43d9d58964510c3ef61f744bea062`, after
+  reviewed/approved head `81f884122dd0ab99e0a73c767b99d7aa7db6ba64` and
+  [CI 40571647316](https://github.com/Ljrr3045/rielia/actions/runs/40571647316).
+  The coordinator removed its completed worktree; real validation remains deferred.
 - Defer real provider/HTTPS/staging, staging-dependent remote OAuth discovery and
   real-project/user acceptance until an advanced end-to-end product slice and user
   scheduling. Keep them OPEN/DEFERRED and retain source dependencies/history and

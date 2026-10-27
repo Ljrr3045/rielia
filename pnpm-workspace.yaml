@@ -6,10 +6,10 @@ saveExact: true
 strictPeerDependencies: true
 autoInstallPeers: false
 
-# Nest 12.2.0 pins Multer 2.4.0; upgrade within the same major for
-# GHSA-q7qp-rjg7-q26m. Remove once the adapter carries a patched version.
+# NodeAdapter 12.3.2 pins vulnerable qs 6.16.0. Preserve the former backend's
+# patched 6.16.1 floor for GHSA-6pq8-jhm2-2vcw until the adapter updates its pin.
 overrides:
-  '@nestjs/platform-express>multer': 2.5.0
+  '@nestjs/platform-node>qs': 6.16.1
 
 # Prisma's pinned engine downloader and runtime compatibility check are needed
 # for schema tooling. All other new dependency lifecycle scripts remain denied.
@@ -22,3 +22,10 @@ allowBuilds:
 patchedDependencies:
   better-auth@1.7.12: patches/better-auth@1.7.12.patch
   pg-boss@12.38.0: patches/pg-boss@12.38.0.patch
+# NodeAdapter first shipped today (2026-10-27). Exact reviewed/source-inspected
+# Nest 12.3.2 exceptions, accepted by the coordinator; no blanket age bypass.
+# See docs/development/nest-http-adapter.md for maturity and integrity evidence.
+minimumReleaseAgeExclude:
+  - '@nestjs/common@12.3.2'
+  - '@nestjs/core@12.3.2'
+  - '@nestjs/platform-node@12.3.2'

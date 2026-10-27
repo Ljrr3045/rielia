@@ -31,11 +31,14 @@ T04 and precedes T05/T06/T12. Preparing these contribution documents does not
 complete T16 or its real-project validation.
 
 The [2026-10-27 decision](docs/development/stack-validation-decisions.md) approves
-the current stack except Express. Removing Express is the first technical
-follow-up before new backend/domain expansion; no replacement HTTP adapter or
-Nest upgrade is selected. Current code still uses Express. Preserve Nest business
-logic/controllers/providers/guards and verify identity/security parity plus the
-actual runtime and transitive backend dependency closure in that migration.
+the current stack except Express. The [completed adapter migration](docs/development/nest-http-adapter.md)
+uses the official Nest NodeAdapter with matching common/core/platform-node 12.3.2.
+Preserve Nest controllers/providers/guards, identity/security parity and Express
+absence throughout the actual API/worker/migration closure, including optional
+peers. `pnpm check:backend-closure` follows installed Node resolution; runtime
+smoke also inspects the complete deployed stores. T35 is the next product
+foundation step under the user's sequencing override; this migration implements
+no domain principal or membership.
 
 Real provider/HTTPS/staging, staging-dependent remote OAuth discovery and
 real-project/user acceptance remain OPEN/DEFERRED until an advanced end-to-end
@@ -111,7 +114,7 @@ comparison. Review the actual diff for unintended changes and credentials. Link
 new files with portable relative paths; keep English/Spanish filenames intact.
 The verifier checks local file targets, not remote sites or heading fragments.
 
-`pnpm check` runs lint, the focused smoke-process cleanup regression, identity
+`pnpm check` runs lint, the backend dependency-closure guard, the focused smoke-process cleanup regression, identity
 logic/client and task-prototype tests, strict typechecks, production builds, and
 the local MCP subprocess/official Inspector suite plus HTTP smoke. `pnpm test:mcp`
 builds its prerequisites and runs that suite alone (about 10 seconds after build,

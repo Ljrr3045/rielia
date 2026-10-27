@@ -6,7 +6,8 @@ The source ticket is B1 with T02–T03 dependencies. Real T02 OAuth/HTTPS and T0
 remote discovery remain pending; this reversible local experiment does not close
 them, full T04, P34/self-hosting acceptance, or any product story. The
 [2026-10-27 decision](stack-validation-decisions.md) approves the current stack
-except Express, requires its removal before new backend/domain expansion, and
+except Express; the [Nest NodeAdapter migration](nest-http-adapter.md) removes it
+from API/worker/migration runtime and deployed package closure, and the decision
 defers real provider/HTTPS/staging and staging-dependent remote discovery evidence.
 Local automated checks/CI/Kody remain required; license remains undecided.
 There is no deployment, domain schema, task API, principal,
@@ -140,7 +141,8 @@ the worker; this is no audit trail or product retry policy.
 
 ## Build pins and primary research
 
-Researched 2026-10-27; existing application pins are preserved:
+Researched 2026-10-27; application pins are preserved except the separately
+documented coherent Nest 12.3.2 NodeAdapter migration:
 
 | Input | Exact selection and reason |
 | --- | --- |
@@ -150,6 +152,7 @@ Researched 2026-10-27; existing application pins are preserved:
 | pg-boss | `12.38.0`, Node `>=22.12.0`, compatible `pg ^8.23.1`; existing `pg 8.23.1` retained. Published queue schema version 46 |
 | OpenTelemetry API | `1.10.0`, satisfying pg-boss's required `^1.9.0` peer. No exporter, SDK or telemetry service is configured |
 | Prisma/Next | Existing `7.10.1`/`16.4.3`; no stack upgrade. A separate migration image carries Prisma CLI; API/worker share the production runtime target |
+| Nest common/core/platform-node | `12.3.2`; explicit official NodeAdapter, no Express in resolved/deployed API/worker/migration closure |
 | Debian runtime support | `openssl`/`libssl3 3.0.22-1~deb12u2`, `ca-certificates 20250419~deb12u2`, no recommended packages or retained apt lists |
 
 Exact apt versions intentionally fail if Debian mirrors retire those versions;
@@ -201,7 +204,8 @@ pnpm test:runtime
 
 The smoke creates a cryptographically unique Compose project, generated private
 password, temporary env file, random loopback application ports and owned image
-tags. Build has a 15-minute deadline; lifecycle commands, HTTP and polling have
+tags. It checks the actual dependency graph and complete deployed backend stores
+for Express, including orphan optional peers. Build has a 15-minute deadline; lifecycle commands, HTTP and polling have
 explicit bounds. It checks nonroot images/runtime files, credential exclusions,
 missing migrations, failed migration gating, delayed schema DDL, repeat deployment, migration/schema
 mismatch, DB outage versus liveness/recovery, real lock timeout and signal during
