@@ -38,8 +38,10 @@ or an Orca installation.
   Same-origin protocol/state logic and T02.2 presentation are merged in PRs #3/#4.
   The user approved the current stack except Express on 2026-10-27; see the
   [stack decision and deferred validation backlog](docs/development/stack-validation-decisions.md).
-  Express removal is the first technical follow-up before new backend/domain
-  expansion; the replacement HTTP adapter is not selected. Full T02 acceptance
+  The backend now uses the official Nest NodeAdapter with coherent Nest 12.3.2
+  pins; [migration evidence and limits](docs/development/nest-http-adapter.md)
+  cover identity parity and API/worker/migration dependency closure. T35 is the
+  next dependency-based product step. Full T02 acceptance
   remains open; real provider/staging validation is deferred by user sequencing.
 - T01/B0 has a separately isolated fictional frontend-only demo adapter and a
   bounded responsive `/prototype` presentation; see the
@@ -94,9 +96,10 @@ Keep these boundaries in both current and future code.
   public API and never imports database code or implements alternative task,
   sprint, tenant, or permission rules.
 - The modular backend owns use cases, policy, transactions, and canonical data.
-  It remains NestJS; remove Express before new backend/domain expansion, with
-  runtime/dependency-closure verification and identity/security parity as defined
-  in the stack decision. No separate Express routing or adapter choice is approved.
+  It remains NestJS with the official NodeAdapter; do not reintroduce Express
+  through bootstrap, dependencies or optional peers. Preserve runtime/dependency
+  closure checks and identity/security parity from the stack decision. No separate
+  routing framework is approved.
   REST and remote MCP adapters call the same services. A module owns its writes;
   cross-module work uses explicit services/contracts, not another module's tables.
 - `contracts` contains public schemas/errors/types and imports neither Nest nor

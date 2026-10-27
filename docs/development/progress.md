@@ -10,9 +10,10 @@ It has no production task product, deployment, or
 software release. The coordinator owns integration and status across workers.
 
 The user's [2026-10-27 stack and sequencing decision](stack-validation-decisions.md)
-approves the current stack except Express. Express removal is the first technical
-follow-up before new backend/domain expansion; its replacement adapter remains
-unselected. Real provider/staging, staging-dependent remote OAuth discovery and
+approves the current stack except Express. The [authorized migration](nest-http-adapter.md)
+now uses official Nest NodeAdapter 12.3.2 and checks actual API/worker/migration
+dependency closure. T35 is the next product foundation under the sequencing
+override. Real provider/staging, staging-dependent remote OAuth discovery and
 real-project/user acceptance are OPEN/DEFERRED until an advanced end-to-end slice
 and user scheduling. This overrides their immediate scheduling gate for local
 implementation, without completing tickets or weakening automated checks/launch gates.
@@ -21,11 +22,12 @@ implementation, without completing tickets or weakening automated checks/launch 
 
 | Field | Evidence/state |
 | --- | --- |
-| Scope | Documentation-only stack decision and deferred-validation backlog for T01–T04; architecture §1.3/§7.2–7.3, P01/US01, P34 and P38/US24–US25 boundaries retained. No runtime, dependency, test or workflow changes; no full-ticket acceptance |
-| Base | `origin/dev` at PR #9 merge `74779941905937ca7c05217169b0ef3028c10b9c` |
-| Branch | `docs/stack-validation-decisions`; purpose prefixes without usernames are the user convention |
-| Worktree | Isolated Orca checkout `docs-stack-validation-decisions`; sole owner Codex `gpt-6.1-sol`, `xhigh`, verified from live terminal state; no helpers |
-| Current PR | [#10](https://github.com/Ljrr3045/rielia/pull/10), one non-draft English PR to `dev`; handoff/link and diff checks pass. Existing CI and coordinator-triggered current-head Kody review/dispositions are recorded in the PR before delivery |
+| Scope | T02/T04 Nest migration without Express, preserving P01/US01 and P38/US24–US25 boundaries; supported NodeAdapter, identity/security regressions, installed/deployed closure guards and active docs. No UI/domain/schema/workflow/deployment or full-ticket acceptance |
+| Base | `origin/dev` at PR #10 merge `3efb49fde4f43d9d58964510c3ef61f744bea062` |
+| Branch | `refactor/nest-without-express`; purpose prefixes without usernames are the user convention |
+| Worktree | Isolated Orca checkout `refactor-nest-without-express`; sole owner Codex `gpt-6.1-sol`, `xhigh`, verified from live terminal state; no helpers |
+| Current PR | [#11](https://github.com/Ljrr3045/rielia/pull/11), one non-draft English PR to `dev`. All applicable local checks pass; current-head CI and coordinator-triggered Kody evidence/dispositions must be recorded in the PR before delivery |
+| Stack decision PR | [#10](https://github.com/Ljrr3045/rielia/pull/10) merged 2026-10-27T19:58:09Z as `3efb49fde4f43d9d58964510c3ef61f744bea062`; final reviewed head `81f884122dd0ab99e0a73c767b99d7aa7db6ba64`, Kody approved that head and [CI 40571647316](https://github.com/Ljrr3045/rielia/actions/runs/40571647316) passed. Fresh GitHub reads confirm merge/review/checks; coordinator reports its completed worktree removed |
 | T04.0 PR | [#9](https://github.com/Ljrr3045/rielia/pull/9) merged 2026-10-27T19:25:58Z as `74779941905937ca7c05217169b0ef3028c10b9c`; final reviewed head `0fcd6c4ea9b2aa05940b795c871d2d30ec3f4742`, [Kody approval 5672890614](https://github.com/Ljrr3045/rielia/pull/9#pullrequestreview-5672890614), [CI 40565906228](https://github.com/Ljrr3045/rielia/actions/runs/40565906228). Fresh GitHub reads confirm merge/approval/passing checks; coordinator confirms prior worktree removed |
 | T03.0 PR | [#8](https://github.com/Ljrr3045/rielia/pull/8) merged 2026-10-26T19:31:05Z as `cb92d90f433873c4e98f2a3b6a2401cc6ddad48b`; final reviewed head `7ead11bb6f333d017ff12a6cd5998c972a8bfbaf`, [Kody approval 5657821543](https://github.com/Ljrr3045/rielia/pull/8#pullrequestreview-5657821543). Fresh GitHub reads confirm merge/approval; Orca inventory confirms completed worktree removed |
 | T01 presentation PR | [#6](https://github.com/Ljrr3045/rielia/pull/6) merged 2026-10-25T08:13:36Z as `a869e317fd05e87d9afd62597842e5fc125e57ee`; reviewed head `043c4507eb385e43720849f43fc1812f43689ce0`, [Kody approval 5642187480](https://github.com/Ljrr3045/rielia/pull/6#pullrequestreview-5642187480), [CI 40175255312](https://github.com/Ljrr3045/rielia/actions/runs/40175255312). Fresh GitHub reads confirm PRs #5/#7/#6 all merged; full T01/B0 real-user acceptance remains open |
@@ -59,12 +61,14 @@ packages contain only used tooling/dependencies. See the
 [fixture guide](technical-fixture.md) for exact versions, primary research,
 commands, boundaries, and detailed evidence.
 
-It uses Node 24.22.1 LTS, pnpm 12.15.0, Next 16.4.3/React 19.3.1, Nest 12.2.0
-with Express 5.3.0, TypeScript 6.0.3, and ESLint 10.13.0. A scoped Multer 2.5.0
-override addresses the Nest adapter's affected 2.4.0 pin
+The original PR #2 used Node 24.22.1 LTS, pnpm 12.15.0, Next 16.4.3/React 19.3.1,
+Nest 12.2.0 with Express 5.3.0, TypeScript 6.0.3, and ESLint 10.13.0. Its scoped
+Multer 2.5.0 override addressed the Nest adapter's affected 2.4.0 pin
 ([GHSA-q7qp-rjg7-q26m](https://github.com/expressjs/multer/security/advisories/GHSA-q7qp-rjg7-q26m)).
 Audit subsequently reported no known vulnerabilities. Source handoff and inventory
 baselines are preserved; the retired OpenCode workflow is not restored.
+The current backend instead uses NodeAdapter 12.3.2; the migration guide records
+the supported minor update and removal of that obsolete Multer override.
 
 This was not full T02/T03/T04 completion or complete stack ratification. At T02.0 no
 DB/schema, identity, OAuth, worker/queue, MCP, sprint, deployment, or product
@@ -88,7 +92,7 @@ the following records preserve the original first-wave scope and acceptance:
    P/US and UXR/UX criteria; this is prototype validation, not a complete app or
    landing design.
 2. **T02 / B0, identity/proxy spike:** no source ticket prerequisite. Stack approval
-   now excludes Express; its removal precedes new backend/domain expansion. Later
+   excludes Express; the current NodeAdapter migration fulfills that technical follow-up. Later
    record real Google/GitHub, private-email, session, expiry/logout, and HTTPS/proxy evidence.
    An offline/mocked result cannot complete its real OAuth acceptance; those real
    checks are OPEN/DEFERRED, not immediate local implementation blockers.
@@ -103,6 +107,10 @@ the following records preserve the original first-wave scope and acceptance:
    durable diagnostic worker/job while real T02/T03 and stack confirmation were
    open. PR #9 is merged; see [runtime scope and evidence](local-runtime.md). This is a preparatory
    split of the B1 T04 ticket, without business effects, deployment or full acceptance.
+
+Next authorized product step after this migration: **T35**, bounded principal/
+authorship foundations under the user's local sequencing override. It is not
+implemented by this change and must precede T05/T06/T12.
 
 Convergence: T02 + T03 → T04 → **T35** → T05 → T06. The principal/authorship model
 must precede workspaces/tasks/credentials despite T35's number. T01 supplies UI
@@ -129,7 +137,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T03.0 | B0 experiment | Runnable diagnostic-only local MCP stdio wrapper | Coordinator's original provisional-stack experimental authorization | Merged PR #8 at `cb92d90` after final-head CI/Kody approval; [guide](local-mcp.md), without closing T03 |
 | T04.0 | B0 preparation | Local images/Compose, migration gate and durable diagnostic job/worker | Coordinator's original reversible provisional-stack authorization despite pending full T02/T03 | Merged [PR #9](https://github.com/Ljrr3045/rielia/pull/9) at `7477994`, final-head CI/Kody passed; [guide](local-runtime.md); no full T04 acceptance |
 | T01 | B0 | Navigation and task prototype validation | None | Bounded fictional frontend logic/context/presentation merged in PRs #5/#7/#6; [logic contract](task-prototype.md) and [presentation evidence](task-prototype-ui.md) record states, demo journeys, checks and limits. Full ticket and real-person validation remain incomplete |
-| T02 | B0 | Identity/proxy integration spike | None | T02.1/T02.2 merged partial evidence; Express removal first follow-up; real provider/staging acceptance OPEN/DEFERRED under user sequencing |
+| T02 | B0 | Identity/proxy integration spike | None | T02.1/T02.2 merged partial evidence; current NodeAdapter migration preserves local parity; real provider/staging acceptance OPEN/DEFERRED under user sequencing |
 | T03 | B0 | MCP SDK/wrapper/minimal remote profile spike | T02 for remote auth | Partial T03.0 local public liveness only; staging-dependent discovery/auth OPEN/DEFERRED; product catalog/credentials and full acceptance remain open |
 | T04 | B1 foundations | Monorepo, images, worker/queue, initial migration | T02–T03 | Partial T04.0 merged; full acceptance/dependencies stay open. Dated user override permits local implementation with listed real validation deferred |
 | T05 | B1a | Auth, workspaces, principal memberships | T04, T35 | Not started |
@@ -174,7 +182,7 @@ actual use/demand; no launch date or public capacity has been established.
 | --- | --- | --- |
 | License | Pending user answer; Apache-2.0 remains a proposal; no LICENSE adopted | User/maintainer records selection and notice/dependency review |
 | Stack | User approved current stack except Express, 2026-10-27 | [Dated decision](stack-validation-decisions.md); no automatic ratification of future dependencies/ADRs |
-| Express removal | OPEN; first technical follow-up before new backend/domain expansion; current runtime still uses Express | Replacement HTTP adapter unselected; inventory, runtime/transitive closure and identity/security parity acceptance in the dated decision |
+| Express removal | Implemented with coherent Nest NodeAdapter 12.3.2; current PR delivery/review gates apply | [Adapter rationale, source/integrity, security and closure evidence](nest-http-adapter.md); no Express runtime/deployed backend coupling; T35 next |
 | Real validation sequencing | OPEN/DEFERRED until advanced end-to-end product slice and user scheduling; no immediate blocker to authorized local implementation | Retain staging/provider/HTTPS, staging-dependent discovery and real-project/user backlog; automated checks/CI/Kody and public-launch gates still apply |
 | Local MCP split | Coordinator originally authorized T03.0 public health-only stdio before stack approval | [Versions, actual terminal-client matrix and limits](local-mcp.md); no remote OAuth/credential/domain acceptance |
 | Branch names | User requires `feat/**`, `fix/**`, `refactor/**`, `docs/**`, `chore/**`, `test/**` by purpose, never username prefixes | Worktree names correspond; coordinator renamed the empty Orca-created branch before development and verified `feat/t03-local-mcp` |
@@ -195,13 +203,57 @@ by the Express exclusion and does not resolve license/brand/admin policy.
 Record coordinator answers here without changing the historical source proposals.
 No credentials should be pasted into this ledger, PR comments, or validation logs.
 
-## 2026-10-27 documentation validation
+## 2026-10-27 NodeAdapter migration
+
+The official NodeAdapter replaces Express in the real bootstrap and shared test
+factory; controllers/modules/providers, Better Auth's raw Node handler, explicit
+JSON/nested-form parsers, normalized callback/origin boundary and derived IP/header
+sanitization remain. Session cookies, refresh/logout/revocation/expiry, linking
+safeguards, disabled identity, liveness/readiness and shutdown contracts remain.
+Three new security cases extend the real-library/PostgreSQL suite to 23 tests.
+Prototype-key form rejection is stricter (400), with valid forms preserved.
+
+The first install retained a stale optional Express peer; fresh manifest-only
+resolution removed it without altering package metadata. Unrelated compatible
+baseline-browser-mapping, ignore and undici-types locked versions are preserved.
+New Nest common legitimately uses file-type 22.2.0/inflate 0.5.2. Strict peers and
+disabled automatic peers remain; installed and full deployed-store guards cover
+API/worker and migration images. The adapter itself pins Multer 2.5.0, so its
+obsolete predecessor's override is removed. Advisory review identified its qs
+6.16.0 pin; a scoped 6.16.1 override preserves the prior patched floor.
+
+Coherent Nest 12.3.2 pins and exact automatic release-age exclusions are narrowly
+accepted by the coordinator after published source/integrity/parity inspection;
+the first NodeAdapter release was on the same day. [Rationale and maturity limits](nest-http-adapter.md)
+remain explicit. No manual package pruning, relaxed strict types, new framework,
+provider credential or staging request is introduced.
+
+Corrected-lock frozen install, `pnpm check` (lint, installed closure guard,
+one process-cleanup regression, seven identity logic/client tests, 19 prototype
+tests, strict checks/builds, 17 MCP checks and real HTTP smoke), and all 23
+PostgreSQL/real-library identity tests pass. Identity migrations were deployed
+twice; the disposable database was removed. Advisory review reports no known
+vulnerabilities. Handoff verification passed 47 unchanged imported files, 30
+matching assets and 363 local file links across 44 documents at this checkpoint;
+whitespace passes. Corrected-lock `pnpm test:runtime` also passes: actual graph
+and complete deployed-store scans contain no Express in API/worker or migration;
+nonroot runtime files/exclusions, failed/repeated/slow-DDL migration, readiness
+versus liveness/DB recovery, bounded lock/startup signal cleanup and durable-job
+retention/consumption/graceful restart all pass. ARM64 uncompressed image sizes
+were 1,265,513,560 bytes API/worker, 1,294,915,499 migration and 421,924,768 web.
+All owned containers, networks, volume and image tags were removed and absence
+verified; shared base images/cache remain. No task-local servers remain.
+CI/current-head Kody evidence is recorded in the PR before delivery. Initial
+parser-test expectation correction and pre-qs-override Docker success are interim
+evidence, not final corrected-lock proof.
+
+## Historical PR #10 documentation validation (2026-10-27)
 
 - `python3 scripts/verify-handoff.py`: PASS, all 47 imported files and 30 asset
   hashes/sizes unchanged; 347 local file links checked across 43 documents.
 - `git diff --check` and `git diff --cached --check`: PASS. The PR diff is limited
   to ten documentation files; protected paths are unchanged. Remote CI/review evidence belongs in
-  the current PR, without self-referential commit updates here.
+  PR #10, without self-referential commit updates here.
 - Read actual backend manifests/bootstrap/auth setup and the official Nest
   HTTP-adapter guide for the inventory and unselected-adapter follow-up. Fresh
   GitHub reads confirm PR #9 merge, exact-head approval and passing CI above.
@@ -303,7 +355,7 @@ round for that head. Workers do not post duplicate trigger comments.
 The coordinator originally approved a reversible experiment while user stack/OAuth
 answers were pending. The dated decision above supersedes that stack status.
 [Identity research/operator/evidence](identity-spike.md) records
-the exact pins, supported Nest/Express mounting, identity-only migration, DB-backed
+the exact pins, supported Node-handler mounting (originally Nest/Express), identity-only migration, DB-backed
 session/cookie/origin/proxy behavior, Google verifier hook, browser state logic,
 and declaration-only compatibility patch. No domain principal, role, workspace,
 task, MCP catalog, deployment, license, or full T04 acceptance is included.

@@ -117,6 +117,7 @@ try {
   buildAttempted = true;
   console.log(`Building local images for isolated project ${project} (15-minute deadline).`);
   await compose('Frozen multi-stage image build', ['build', 'api', 'web', 'migrate'], { timeout: 900000 });
+  const closureCheck = await readFile(join(root, 'scripts/assert-backend-closure.mjs'), 'utf8');
   for (const service of ['api', 'web', 'migrate']) {
     const image = config.services[service].image;
     const [details] = JSON.parse(await command('Image configuration', ['image', 'inspect', image]));
@@ -131,6 +132,12 @@ try {
     const inspection = await command('Nonroot image usability and exclusions', ['run', '--rm', '--network', 'none', '--read-only', '--cap-drop', 'ALL', '--security-opt', 'no-new-privileges:true', '--entrypoint', 'node', image, '-e', check]);
     console.log(`${service} image: ${details.Size} bytes; nonroot runtime files and exclusions verified.`);
     console.log(inspection);
+    if (service !== 'web') {
+      await command('Deployed backend dependency closure', ['run', '--rm', '--network', 'none', '--read-only',
+        '--cap-drop', 'ALL', '--security-opt', 'no-new-privileges:true', '--entrypoint', 'node', image,
+        '--input-type=module', '-e', `${closureCheck}\nassertBackendClosure('/app', { deployed: true });`]);
+      console.log(`${service}${service === 'api' ? '/worker' : ''}: resolved closure and complete deployed store contain no Express.`);
+    }
   }
 
   resourcesAttempted = true;
