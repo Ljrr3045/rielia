@@ -13,9 +13,9 @@ This records repository changes. No application version has been released.
   business effects or public enqueue route. Isolated Docker smoke/CI covers
   failures, restart/persistence, bounded lock/signal cleanup and image exclusions.
   [Local operator guide, pins and limits](docs/development/local-runtime.md);
-  [PR #9](https://github.com/Ljrr3045/rielia/pull/9) tracks final-head CI/review.
+  [PR #9](https://github.com/Ljrr3045/rielia/pull/9) merged after final-head CI/Kody.
   Default production-mode local HTTP identity remains disabled; no full T04,
-  production deployment, domain workflow or stack ratification is claimed.
+  production deployment or domain workflow is claimed by that delivery.
 - Exact pg-boss 12.38.0/OpenTelemetry API 1.10.0 peer pins and declaration-only
   patch for upstream's stripped internal type; strict dependency checks remain.
 - Separate bounded migration DDL budget from short readiness/diagnostic queries,
@@ -73,6 +73,24 @@ This records repository changes. No application version has been released.
 
 ### Changed
 
+- Record the user's [2026-10-27 stack and validation decision](docs/development/stack-validation-decisions.md):
+  current stack approved except Express. Its removal is the first technical
+  follow-up before new backend/domain expansion; current runtime remains Express,
+  replacement adapter unselected. Inventory and future runtime/transitive backend
+  closure plus identity/security parity acceptance are recorded; no migration,
+  dependency upgrade, runtime, test or workflow change ships here.
+- Defer real provider/HTTPS/staging, staging-dependent remote OAuth discovery and
+  real-project/user acceptance until an advanced end-to-end product slice and user
+  scheduling. Keep them OPEN/DEFERRED and retain source dependencies/history and
+  public-launch gates; they are not immediate local implementation blockers.
+  Applicable automated unit/integration/security/local Docker checks, CI and Kody
+  remain required; no credential/staging request or test date is introduced.
+- Reconcile T04.0 [PR #9](https://github.com/Ljrr3045/rielia/pull/9) as merged
+  2026-10-27T19:25:58Z at `74779941905937ca7c05217169b0ef3028c10b9c`, after
+  final reviewed head `0fcd6c4ea9b2aa05940b795c871d2d30ec3f4742`,
+  [Kody approval 5672890614](https://github.com/Ljrr3045/rielia/pull/9#pullrequestreview-5672890614)
+  and [CI 40565906228](https://github.com/Ljrr3045/rielia/actions/runs/40565906228).
+  The coordinator removed its completed worktree; full T04 remains open.
 - Reconcile T03.0 [PR #8](https://github.com/Ljrr3045/rielia/pull/8) as merged
   2026-10-26T19:31:05Z at `cb92d90`, after final reviewed head `7ead11b` and
   [Kody approval 5657821543](https://github.com/Ljrr3045/rielia/pull/8#pullrequestreview-5657821543).
@@ -144,10 +162,13 @@ This records repository changes. No application version has been released.
 
 - Fictional demo journeys and targeted responsive/failure checks do not complete T01 or B0
   or establish real-person usability. Real-provider consent, private-email, HTTPS,
-  and staging evidence for T02 remain open. No full T01–T35 ticket is complete.
+  and staging evidence for T02 remain OPEN/DEFERRED under the dated user decision.
+  No full T01–T35 ticket is complete.
   Real provider/staging T02 acceptance, full T03 beyond the bounded local stdio
   evidence, and full T04 remain unverified.
-- User decisions on license, stack, and installation OAuth configuration; final
-  identity and landing design remain proposals. T02.1's simulated OAuth/database
+- User decisions on license, final brand/name/logo, private-project admin visibility
+  and installation OAuth configuration remain open; real-provider configuration
+  is deferred. Final identity and landing design remain proposals. Stack approval
+  is recorded above with the Express exclusion. T02.1's simulated OAuth/database
   evidence does not claim real provider consent, worker, MCP, product workflow,
   or deployment acceptance; UI capture/keyboard limits remain documented.

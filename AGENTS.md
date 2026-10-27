@@ -29,15 +29,18 @@ or an Orca installation.
 ## Current scope and protected material
 
 - T00 onboarding/governance is complete and merged in [PR #1](https://github.com/Ljrr3045/rielia/pull/1).
-  T02.0 adds a runnable, provisional Next/Nest/pnpm technical fixture supporting
+  T02.0 adds a runnable, bounded Next/Nest/pnpm technical fixture supporting
   T02/T03 and partial T04 tooling. It completes none of the full T01–T35 tickets.
   See [fixture commands, version research, and limits](docs/development/technical-fixture.md).
   No landing implementation, product workflow, or deployment is included.
   T02.1 adds an opt-in backend identity experiment with Better Auth and a minimal
   Prisma/PostgreSQL identity schema. See [scope, operator setup, and evidence](docs/development/identity-spike.md).
   Same-origin protocol/state logic and T02.2 presentation are merged in PRs #3/#4.
-  Full T02 and complete stack
-  ratification remain pending real provider/staging evidence and user decisions.
+  The user approved the current stack except Express on 2026-10-27; see the
+  [stack decision and deferred validation backlog](docs/development/stack-validation-decisions.md).
+  Express removal is the first technical follow-up before new backend/domain
+  expansion; the replacement HTTP adapter is not selected. Full T02 acceptance
+  remains open; real provider/staging validation is deferred by user sequencing.
 - T01/B0 has a separately isolated fictional frontend-only demo adapter and a
   bounded responsive `/prototype` presentation; see the
   [prototype contract](docs/development/task-prototype.md) and
@@ -53,7 +56,7 @@ or an Orca installation.
   identity/queue migration one-shot and a diagnostic-only pg-boss worker. See the
   [local runtime guide](docs/development/local-runtime.md) for commands, pins,
   smoke and limits. Default container identity stays disabled; this is no
-  production deployment, business worker, stack ratification or full T04 acceptance.
+  production deployment, business worker or full T04 acceptance.
 - `docs/handoff/` is an unchanged import of the original handoff. Preserve every
   filename, relative link, asset, and hash. Put decisions, corrections, and delivery
   evidence in `docs/development/`; never silently rewrite the source proposals or
@@ -61,10 +64,14 @@ or an Orca installation.
 - OpenCode review is retired. Its workflow is deleted, including the version
   inherited from `dev`; do not restore, repair, or run it. Kody AI review follows
   the explicit process below. Do not modify secrets or substitute personal tokens.
-- License selection, stack confirmation, and OAuth credentials remain pending
-  until the user/coordinator records an answer. Do not adopt Apache-2.0 merely
+- License selection, final brand and private-project admin visibility remain
+  undecided. Real OAuth/staging and real-project/user acceptance stay OPEN/DEFERRED
+  until an advanced end-to-end product slice and user scheduling; do not request
+  credentials or staging now. These deferred checks do not immediately block
+  authorized local implementation; applicable automated unit/integration/security/
+  local Docker checks, CI and Kody remain required. Do not adopt Apache-2.0 merely
   because the plan proposes it. Do not add secrets to any tracked file or PR.
-- Name/logo, v0.1 assets, complete stack, ADRs, performance targets, and usability
+- Name/logo, v0.1 assets, unratified ADRs, performance targets, and usability
   assumptions retain their proposal/validation status. The runnable fixture
   exposes a development page, API liveness, and optional experimental identity;
   no working task product is claimed.
@@ -87,6 +94,9 @@ Keep these boundaries in both current and future code.
   public API and never imports database code or implements alternative task,
   sprint, tenant, or permission rules.
 - The modular backend owns use cases, policy, transactions, and canonical data.
+  It remains NestJS; remove Express before new backend/domain expansion, with
+  runtime/dependency-closure verification and identity/security parity as defined
+  in the stack decision. No separate Express routing or adapter choice is approved.
   REST and remote MCP adapters call the same services. A module owns its writes;
   cross-module work uses explicit services/contracts, not another module's tables.
 - `contracts` contains public schemas/errors/types and imports neither Nest nor

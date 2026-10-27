@@ -8,9 +8,13 @@ liveness wrapper, SDK subprocess and independent official Inspector checks.
 It completes only that bounded local transport portion; remote auth/discovery,
 task catalog and full T03 remain open.
 
-Status: a reversible development scaffold using the proposed Next.js + NestJS
-stack. It supports the T02/T03 spikes and supplies **partial tooling for T04**.
-It does not complete T02, T03, or T04 and does not ratify the complete stack.
+Status: a bounded development scaffold supporting T02/T03 and **partial tooling
+for T04**, without completing those tickets. The user approved the current stack
+except Express in the [2026-10-27 decision](stack-validation-decisions.md).
+Express removal precedes new backend/domain expansion; no replacement adapter is
+selected. Current Express details below describe delivered code, not the approved
+target. Real provider/staging and real-project/user acceptance remain OPEN/DEFERRED
+under that decision; applicable local automated checks, CI and Kody still apply.
 The planning documents remain the source of product/architecture requirements.
 It follows the merged [T00 onboarding PR #1](https://github.com/Ljrr3045/rielia/pull/1),
 merge `8dd7c31f454c1989d017dbf7b40e6646112d2d2a`; the immutable handoff is unchanged.
@@ -177,11 +181,12 @@ claim is made.
 
 PR/latest-head Kody review results are recorded in active progress and PR evidence.
 
-Still required: T02 real Google/GitHub flows (including private email), web/API
+Source acceptance still requires T02 real Google/GitHub flows (including private email), web/API
 sessions, logout, expiry, proxy/HTTPS callbacks and staging evidence; T03 real
 remote discovery/auth and product-client evidence beyond the bounded local
 MCP matrix linked above; T04 database/migration, durable
 queue/worker, image and restart acceptance. No OAuth verification, identity,
 schema, DB, worker, product MCP catalog, sprint, product workflow, Docker deployment, throughput,
-accessibility audit, or launch readiness is claimed here. Stack ratification
-and all those acceptance criteria remain open.
+accessibility audit, or launch readiness is claimed by T02.0 itself. Later bounded
+identity/runtime evidence is recorded in the linked guides; the dated decision
+supersedes stack-confirmation and immediate real-validation scheduling assertions.

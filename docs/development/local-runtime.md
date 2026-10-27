@@ -4,8 +4,12 @@ This coordinator-authorized T04/B0 preparatory split implements architecture
 §1.2/§6.2 and the local build, migration and persistent-job portion of T04.
 The source ticket is B1 with T02–T03 dependencies. Real T02 OAuth/HTTPS and T03
 remote discovery remain pending; this reversible local experiment does not close
-them, full T04, P34/self-hosting acceptance, or any product story. Stack and license
-decisions remain open. There is no deployment, domain schema, task API, principal,
+them, full T04, P34/self-hosting acceptance, or any product story. The
+[2026-10-27 decision](stack-validation-decisions.md) approves the current stack
+except Express, requires its removal before new backend/domain expansion, and
+defers real provider/HTTPS/staging and staging-dependent remote discovery evidence.
+Local automated checks/CI/Kody remain required; license remains undecided.
+There is no deployment, domain schema, task API, principal,
 Redis, shared database package or UI redesign.
 
 ## Start and stop
