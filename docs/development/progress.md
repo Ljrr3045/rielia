@@ -17,7 +17,7 @@ software release. The coordinator owns integration and status across workers.
 | Base | `origin/dev` at PR #8 merge `cb92d90f433873c4e98f2a3b6a2401cc6ddad48b` |
 | Branch | `feat/t04-local-runtime`; purpose prefixes without usernames are the user convention |
 | Worktree | Isolated Orca checkout `feat-t04-local-runtime`; sole logic owner Codex `gpt-6.1-sol`, `xhigh`, verified from the live launch/terminal; no subagents |
-| Current PR | In preparation; one non-draft English PR to `dev` will record final checks, exact-head coordinator Kody request and all findings before delivery |
+| Current PR | [#9](https://github.com/Ljrr3045/rielia/pull/9), one non-draft English PR to `dev`; local checks pass, final-head CI/coordinator Kody review and dispositions are recorded in the PR before delivery |
 | T03.0 PR | [#8](https://github.com/Ljrr3045/rielia/pull/8) merged 2026-10-26T19:31:05Z as `cb92d90f433873c4e98f2a3b6a2401cc6ddad48b`; final reviewed head `7ead11bb6f333d017ff12a6cd5998c972a8bfbaf`, [Kody approval 5657821543](https://github.com/Ljrr3045/rielia/pull/8#pullrequestreview-5657821543). Fresh GitHub reads confirm merge/approval; Orca inventory confirms completed worktree removed |
 | T01 presentation PR | [#6](https://github.com/Ljrr3045/rielia/pull/6) merged 2026-10-25T08:13:36Z as `a869e317fd05e87d9afd62597842e5fc125e57ee`; reviewed head `043c4507eb385e43720849f43fc1812f43689ce0`, [Kody approval 5642187480](https://github.com/Ljrr3045/rielia/pull/6#pullrequestreview-5642187480), [CI 40175255312](https://github.com/Ljrr3045/rielia/actions/runs/40175255312). Fresh GitHub reads confirm PRs #5/#7/#6 all merged; full T01/B0 real-user acceptance remains open |
 | T01 logic PR | [#5](https://github.com/Ljrr3045/rielia/pull/5) merged 2026-10-25T06:01:32Z as `5099b39aef53d5b7e2f0205f3168727cb1dc9471`; reviewed head `55481ffb3613ccaadcb37f3e6dd3ad3118afb8c3`, [Kody approval 5641785181](https://github.com/Ljrr3045/rielia/pull/5#pullrequestreview-5641785181), [CI 40166748588](https://github.com/Ljrr3045/rielia/actions/runs/40166748588); logic worktree removed |
@@ -112,7 +112,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T02.1 | B0 experiment | Backend identity, minimal auth persistence, web protocol/state logic | Coordinator experimental gate; does not ratify full stack | Merged in PR #3; see [identity evidence](identity-spike.md) |
 | T02.2 | B0 presentation | Experimental identity page consuming T02.1 hook | T02.1 merge; UI/UX ownership | Merged PR #4 with exact-head Kody approval and passing CI; see [identity presentation](identity-ui.md); real-provider/HTTPS and documented browser limits remain |
 | T03.0 | B0 experiment | Runnable diagnostic-only local MCP stdio wrapper | Coordinator's provisional-stack experimental authorization | Merged PR #8 at `cb92d90` after final-head CI/Kody approval; [guide](local-mcp.md), without closing T03 |
-| T04.0 | B0 preparation | Local images/Compose, migration gate and durable diagnostic job/worker | Coordinator's reversible provisional-stack authorization despite pending full T02/T03 | Local Docker/lifecycle/identity and repository validation passed; PR/CI/exact-head review pending, [guide](local-runtime.md); no full T04 acceptance |
+| T04.0 | B0 preparation | Local images/Compose, migration gate and durable diagnostic job/worker | Coordinator's reversible provisional-stack authorization despite pending full T02/T03 | Local Docker/lifecycle/identity and repository validation passed; [PR #9](https://github.com/Ljrr3045/rielia/pull/9) tracks CI/exact-head review, [guide](local-runtime.md); no full T04 acceptance |
 | T01 | B0 | Navigation and task prototype validation | None | Bounded fictional frontend logic/context/presentation merged in PRs #5/#7/#6; [logic contract](task-prototype.md) and [presentation evidence](task-prototype-ui.md) record states, demo journeys, checks and limits. Full ticket and real-person validation remain incomplete |
 | T02 | B0 | Identity/proxy integration spike | None; stack/OAuth decisions pending | T02.1/T02.2 are merged partial experimental evidence; real provider/staging acceptance remains open |
 | T03 | B0 | MCP SDK/wrapper/minimal remote profile spike | T02 for remote auth; stack decision pending | Partial T03.0 local public liveness only; remote discovery/auth, product catalog/credentials and full acceptance remain open |
@@ -530,5 +530,6 @@ were corrected before the passing run. None of those failures are reported as
 successful runtime evidence. The optional further footprint probe was cancelled
 by the coordinator; supported frozen packaging and strict peers are retained.
 Exact apt pins can fail when mirrors retire packages; the guide records this
-rebuild/update boundary. AMD64 CI, exact-head Kody review and all review-surface
-dispositions remain pending until their actual PR results are recorded.
+rebuild/update boundary. [PR #9](https://github.com/Ljrr3045/rielia/pull/9) tracks
+AMD64 CI, exact-head Kody review and all review-surface dispositions; those remain
+pending until their actual results are recorded there before delivery.

@@ -12,7 +12,8 @@ This records repository changes. No application version has been released.
   pg-boss diagnostic job has operator-only enqueue/status/wait commands and no
   business effects or public enqueue route. Isolated Docker smoke/CI covers
   failures, restart/persistence, bounded lock/signal cleanup and image exclusions.
-  [Local operator guide, pins and limits](docs/development/local-runtime.md).
+  [Local operator guide, pins and limits](docs/development/local-runtime.md);
+  [PR #9](https://github.com/Ljrr3045/rielia/pull/9) tracks final-head CI/review.
   Default production-mode local HTTP identity remains disabled; no full T04,
   production deployment, domain workflow or stack ratification is claimed.
 - Exact pg-boss 12.38.0/OpenTelemetry API 1.10.0 peer pins and declaration-only
