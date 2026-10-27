@@ -6,6 +6,20 @@ This records repository changes. No application version has been released.
 
 ### Added
 
+- T04.0/B0: provisional local Docker Compose runtime with Next standalone,
+  a shared nonroot API/worker backend image, private PostgreSQL/named volume,
+  migration one-shot gate and separate database/schema readiness. A single fixed
+  pg-boss diagnostic job has operator-only enqueue/status/wait commands and no
+  business effects or public enqueue route. Isolated Docker smoke/CI covers
+  failures, restart/persistence, bounded lock/signal cleanup and image exclusions.
+  [Local operator guide, pins and limits](docs/development/local-runtime.md);
+  [PR #9](https://github.com/Ljrr3045/rielia/pull/9) tracks final-head CI/review.
+  Default production-mode local HTTP identity remains disabled; no full T04,
+  production deployment, domain workflow or stack ratification is claimed.
+- Exact pg-boss 12.38.0/OpenTelemetry API 1.10.0 peer pins and declaration-only
+  patch for upstream's stripped internal type; strict dependency checks remain.
+- Separate bounded migration DDL budget from short readiness/diagnostic queries,
+  with a real slow-DDL regression and retained heartbeat tracking during shutdown.
 - T03.0/B0: private experimental `packages/mcp-local` stdio wrapper with one
   argument-free public REST process-liveness tool, bounded validated output,
   constrained loopback HTTP opt-in, normal HTTPS validation, sanitized failures,
@@ -59,6 +73,10 @@ This records repository changes. No application version has been released.
 
 ### Changed
 
+- Reconcile T03.0 [PR #8](https://github.com/Ljrr3045/rielia/pull/8) as merged
+  2026-10-26T19:31:05Z at `cb92d90`, after final reviewed head `7ead11b` and
+  [Kody approval 5657821543](https://github.com/Ljrr3045/rielia/pull/8#pullrequestreview-5657821543).
+  Its completed worktree was removed by the coordinator; full T03 stays open.
 - Reconcile fictional prototype PRs #5/#7/#6 as merged. PR #6 merged on
   2026-10-25T08:13:36Z as `a869e317fd05e87d9afd62597842e5fc125e57ee`, after
   [CI 40175255312](https://github.com/Ljrr3045/rielia/actions/runs/40175255312)

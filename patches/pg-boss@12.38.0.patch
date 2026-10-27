@@ -1,0 +1,40 @@
+diff --git a/dist/types.d.ts b/dist/types.d.ts
+index b67c86aa06ff7d05e56a9b3a8b4b2123e0efbc1a..5f703cebbbc0c0a217ca5d4ae0cb0ab82a41e949 100644
+--- a/dist/types.d.ts
++++ b/dist/types.d.ts
+@@ -522,6 +522,35 @@ export interface ConstructorOptions extends DatabaseOptions, SchedulingOptions,
+  * Options for a queue. All retry, expiration, and retention options set on a
+  * queue will be inherited by each job in the queue unless they are overridden.
+  */
++// Restore internal declarations stripped from the published 12.38.0 build while
++// public declarations still reference them. Matches the tagged source types.
++export interface CompatibilityFlags {
++    noSkipLocked?: boolean;
++    noMultiMutationCte?: boolean;
++    noTablePartitioning?: boolean;
++    noDeferrableConstraints?: boolean;
++    noAdvisoryLocks?: boolean;
++    noCoveringIndexes?: boolean;
++    inlineTableIndexes?: boolean;
++    noAddColumnBackfill?: boolean;
++    noListenNotify?: boolean;
++    noIndexProgressView?: boolean;
++    noReindex?: boolean;
++    noMonitorVacuum?: boolean;
++    noTransactionalHeartbeat?: boolean;
++}
++export interface ResolvedConstructorOptions extends ConstructorOptions, CompatibilityFlags {
++    schema: string;
++    clock: Clock;
++    monitorIntervalSeconds: number;
++    cronMonitorIntervalSeconds: number;
++    maintenanceIntervalSeconds: number;
++    bamIntervalSeconds: number;
++    flowIntervalSeconds: number;
++    reindexIntervalSeconds: number;
++    registerInstance: boolean;
++    instanceHeartbeatSeconds: number;
++}
+ export interface QueueOptions {
+     /**
+      * How many seconds a job may be in active state before being retried or

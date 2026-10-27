@@ -1,10 +1,11 @@
 # Delivery progress and decisions
 
-Updated: 2026-10-26 UTC. This is repository delivery tracking, separate from the
+Updated: 2026-10-27 UTC. This is repository delivery tracking, separate from the
 unchanged [handoff](../handoff/00-START-HERE.md). Plans describe intended outcomes,
 not completed implementation. This checkout has the T02.0 fixture, merged T02.1/
 T02.2 identity experiment, and a fictional T01/B0 task-prototype logic adapter plus
-its responsive presentation, plus the T03.0 experimental local MCP health wrapper.
+its responsive presentation, the merged T03.0 experimental local MCP health wrapper,
+and T04.0's opt-in preparatory local Docker runtime/diagnostic worker.
 It has no production task product, deployment, or
 software release. The coordinator owns integration and status across workers.
 
@@ -12,11 +13,12 @@ software release. The coordinator owns integration and status across workers.
 
 | Field | Evidence/state |
 | --- | --- |
-| Scope | T03.0/B0 bounded local stdio transport, one experimental public process-liveness tool; architecture §5/T03. P12/P13/P21/P38 and US10/17/24/25 constrain future catalog/auth work and are not completed. No task data, credentials, remote transport or domain policy |
-| Base | `origin/dev` at PR #6 merge `a869e317fd05e87d9afd62597842e5fc125e57ee` |
-| Branch | `feat/t03-local-mcp`; purpose prefixes without usernames are the user convention |
-| Worktree | Isolated Orca checkout `feat-t03-local-mcp`; sole logic owner Codex `gpt-6.1-sol`, `xhigh`, no subagents. Coordinator corrected Orca's automatic username prefix before development |
-| Current PR | [#8](https://github.com/Ljrr3045/rielia/pull/8), one non-draft English PR to `dev`; current-head CI, coordinator Kody trigger and review dispositions are recorded in the PR before delivery |
+| Scope | T04.0/B0 preparatory local runtime split; architecture §1.2/§6.2/T04. P34/self-hosting is partial infrastructure context; P38/US24–US25 remain constraints for future business jobs, without principal/domain implementation. No full ticket or product-story acceptance |
+| Base | `origin/dev` at PR #8 merge `cb92d90f433873c4e98f2a3b6a2401cc6ddad48b` |
+| Branch | `feat/t04-local-runtime`; purpose prefixes without usernames are the user convention |
+| Worktree | Isolated Orca checkout `feat-t04-local-runtime`; sole logic owner Codex `gpt-6.1-sol`, `xhigh`, verified from the live launch/terminal; no subagents |
+| Current PR | [#9](https://github.com/Ljrr3045/rielia/pull/9), one non-draft English PR to `dev`; local checks pass, final-head CI/coordinator Kody review and dispositions are recorded in the PR before delivery |
+| T03.0 PR | [#8](https://github.com/Ljrr3045/rielia/pull/8) merged 2026-10-26T19:31:05Z as `cb92d90f433873c4e98f2a3b6a2401cc6ddad48b`; final reviewed head `7ead11bb6f333d017ff12a6cd5998c972a8bfbaf`, [Kody approval 5657821543](https://github.com/Ljrr3045/rielia/pull/8#pullrequestreview-5657821543). Fresh GitHub reads confirm merge/approval; Orca inventory confirms completed worktree removed |
 | T01 presentation PR | [#6](https://github.com/Ljrr3045/rielia/pull/6) merged 2026-10-25T08:13:36Z as `a869e317fd05e87d9afd62597842e5fc125e57ee`; reviewed head `043c4507eb385e43720849f43fc1812f43689ce0`, [Kody approval 5642187480](https://github.com/Ljrr3045/rielia/pull/6#pullrequestreview-5642187480), [CI 40175255312](https://github.com/Ljrr3045/rielia/actions/runs/40175255312). Fresh GitHub reads confirm PRs #5/#7/#6 all merged; full T01/B0 real-user acceptance remains open |
 | T01 logic PR | [#5](https://github.com/Ljrr3045/rielia/pull/5) merged 2026-10-25T06:01:32Z as `5099b39aef53d5b7e2f0205f3168727cb1dc9471`; reviewed head `55481ffb3613ccaadcb37f3e6dd3ad3118afb8c3`, [Kody approval 5641785181](https://github.com/Ljrr3045/rielia/pull/5#pullrequestreview-5641785181), [CI 40166748588](https://github.com/Ljrr3045/rielia/actions/runs/40166748588); logic worktree removed |
 | T01 context PR | [#7](https://github.com/Ljrr3045/rielia/pull/7) merged 2026-10-25T07:25:09Z as `bfaf24d790daa2cebd1a92a5ecc5b3f9bbea6e3f`; reviewed head `c90b437ca5948301b790b655256c8a460b3bef21`, [Kody approval 5642060409](https://github.com/Ljrr3045/rielia/pull/7#pullrequestreview-5642060409), [CI 40172013213](https://github.com/Ljrr3045/rielia/actions/runs/40172013213) |
@@ -83,6 +85,11 @@ assign/continue these bounded starts without bypassing their source acceptance:
    remains pending. The [local MCP guide](local-mcp.md) records bounded public
    liveness, exact versions, real terminal-client and negative/lifecycle evidence.
    Remote discovery/auth still depends on real T02; this split completes no full T03.
+4. **T04.0 / B0, local runtime preparation:** coordinator explicitly authorized
+   reproducible local images/Compose, the existing identity migration, and one
+   durable diagnostic worker/job while real T02/T03 and stack confirmation remain
+   open. See [runtime scope and evidence](local-runtime.md). This is a preparatory
+   split of the B1 T04 ticket, without business effects, deployment or full acceptance.
 
 Convergence: T02 + T03 → T04 → **T35** → T05 → T06. The principal/authorship model
 must precede workspaces/tasks/credentials despite T35's number. T01 supplies UI
@@ -104,11 +111,12 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T02.0 | B0 supporting scope | Runnable Next/Nest fixture and partial T04 tooling | T00 merge gate | Complete bounded scope; merged PR #2 with Kody approval and passing CI |
 | T02.1 | B0 experiment | Backend identity, minimal auth persistence, web protocol/state logic | Coordinator experimental gate; does not ratify full stack | Merged in PR #3; see [identity evidence](identity-spike.md) |
 | T02.2 | B0 presentation | Experimental identity page consuming T02.1 hook | T02.1 merge; UI/UX ownership | Merged PR #4 with exact-head Kody approval and passing CI; see [identity presentation](identity-ui.md); real-provider/HTTPS and documented browser limits remain |
-| T03.0 | B0 experiment | Runnable diagnostic-only local MCP stdio wrapper | Coordinator's provisional-stack experimental authorization | Implemented with SDK/Inspector evidence; checks/review tracked in current PR and [guide](local-mcp.md), without closing T03 |
+| T03.0 | B0 experiment | Runnable diagnostic-only local MCP stdio wrapper | Coordinator's provisional-stack experimental authorization | Merged PR #8 at `cb92d90` after final-head CI/Kody approval; [guide](local-mcp.md), without closing T03 |
+| T04.0 | B0 preparation | Local images/Compose, migration gate and durable diagnostic job/worker | Coordinator's reversible provisional-stack authorization despite pending full T02/T03 | Local Docker/lifecycle/identity and repository validation passed; [PR #9](https://github.com/Ljrr3045/rielia/pull/9) tracks CI/exact-head review, [guide](local-runtime.md); no full T04 acceptance |
 | T01 | B0 | Navigation and task prototype validation | None | Bounded fictional frontend logic/context/presentation merged in PRs #5/#7/#6; [logic contract](task-prototype.md) and [presentation evidence](task-prototype-ui.md) record states, demo journeys, checks and limits. Full ticket and real-person validation remain incomplete |
 | T02 | B0 | Identity/proxy integration spike | None; stack/OAuth decisions pending | T02.1/T02.2 are merged partial experimental evidence; real provider/staging acceptance remains open |
 | T03 | B0 | MCP SDK/wrapper/minimal remote profile spike | T02 for remote auth; stack decision pending | Partial T03.0 local public liveness only; remote discovery/auth, product catalog/credentials and full acceptance remain open |
-| T04 | B1 foundations | Monorepo, images, worker/queue, initial migration | T02–T03 | Not started as full ticket; T02.0 supports partial tooling |
+| T04 | B1 foundations | Monorepo, images, worker/queue, initial migration | T02–T03 | Partial preparatory T04.0 local runtime; full acceptance/dependencies/stack decision remain open |
 | T05 | B1a | Auth, workspaces, principal memberships | T04, T35 | Not started |
 | T06 | B1a | Projects/tasks, versions, idempotency, atomic activity/outbox | T05 | Not started |
 | T07 | B1b | Invitations, revocation, roles/private projects | T06 | Not started |
@@ -465,3 +473,78 @@ reset; an open stalled stream instead times out. A focused retained regression
 guards that documented contract; the existing Node response error handler is
 sufficient. See the [measured disposition](local-mcp.md#observed-evidence-and-limits)
 and PR review surfaces. No speculative runtime handler or auth scope was added.
+
+## T04.0 local runtime preparation
+
+The coordinator authorized a reversible T04/B0 preparatory split while full T02
+real-provider/HTTPS, T03 remote discovery and complete stack confirmation remain
+open. [Local runtime scope/operator/evidence](local-runtime.md) records exact
+pins and commands for web/API/private PostgreSQL, a migration one-shot, and a
+single fixed diagnostic pg-boss job. API and worker share a nonroot backend image;
+the migration variant exposes Prisma CLI tooling. Worker starts without Nest HTTP,
+has no listening socket, and cannot install or migrate queue storage. Production
+identity remains disabled in the default local HTTP containers; existing HTTPS,
+cookie, origin and provider requirements were not weakened. There is no domain
+policy, principal, public enqueue, business effect, Redis, shared database
+extraction, deployment or full T04/P34/product-story acceptance.
+
+Local ARM64 Docker Engine 29.9.2 / Compose 5.6.1 validation passed:
+
+- `pnpm test:runtime` built all three pinned image targets through frozen install
+  and frozen production deployment. Actual nonroot uid 1000 execution verified
+  runtime/generated Prisma/migration/static files and credential/Git/root-tool
+  exclusions. Normalized tmpfs settings are asserted before build. A recorded passing run
+  measured 1,280,859,801 bytes API/worker, 1,310,649,182 migration and 421,962,904
+  web (uncompressed Docker sizes). Frozen optional peer bindings retain nested
+  Prisma/Studio in API, plus TypeScript in the migration target; the target split
+  is lifecycle separation, with no footprint-reduction claim or manual pruning.
+- A worker on an unmigrated DB failed without creating queue schema. A migration
+  using a nonexistent database role exited 1 and prevented API/worker startup.
+  Repeated successful deploy preserved identity migration history; corrupted
+  identity checksum and incompatible queue version returned readiness 503, and
+  the worker rejected the queue version without migrating it.
+- A real PostgreSQL table lock made diagnostic enqueue fail within its query
+  deadline. SIGTERM during blocked worker startup waited for pending work,
+  exited 0, and left no worker DB connections. A DB outage returned readiness
+  503 while exact liveness stayed 200; API readiness recovered after DB restart.
+  Skipped heartbeat ticks retain the actual pending promise so shutdown waits for
+  that work before closing the shared pool.
+- Enqueue while worker stopped stayed `created` across full Compose down/up with
+  the same named volume. Starting the worker completed that UUID with only
+  `{"diagnostic":"ok"}`; graceful stop/restart preserved the completed result.
+  Worker/API image identity, read-only root, worker-owned TCP socket absence and
+  successful shutdown were asserted. All owned containers, networks, volume and
+  image tags were removed and their absence verified; shared bases/cache remain.
+- Frozen host install, full `pnpm check` (strict checks/builds, 17 MCP checks,
+  seven identity logic/client checks, 19 prototype tests and real HTTP smoke),
+  the separate 20-test PostgreSQL/real-library identity suite with simulated
+  provider HTTP, advisory audit (no known vulnerabilities), handoff verification
+  (47 files, 30 assets, 338 local links) and whitespace passed. Identity removed
+  its disposable DB and all test servers exited. CI also runs the Docker smoke
+  without real provider credentials; current-head remote evidence belongs in
+  the PR before final handoff.
+
+Initial sandbox restrictions, pg-boss's published missing declaration (fixed by
+a declaration-only pin-specific patch), missing slim OpenSSL, legacy deployment
+peer errors, empty public-directory packaging, unquoted tmpfs mount parsing,
+an unsuitable negative DB-name fixture and partition-lock harness detection
+were corrected before the passing run. None of those failures are reported as
+successful runtime evidence. The optional further footprint probe was cancelled
+by the coordinator; supported frozen packaging and strict peers are retained.
+Exact apt pins can fail when mirrors retire packages; the guide records this
+rebuild/update boundary. [PR #9](https://github.com/Ljrr3045/rielia/pull/9) tracks
+AMD64 CI, exact-head Kody review and all review-surface dispositions; those remain
+pending until their actual results are recorded there before delivery.
+
+The initial automatic Kody round identified a valid [migration DDL timeout](https://github.com/Ljrr3045/rielia/pull/9#discussion_r4392869741):
+reusing the two-second readiness budget can abort a slow pg-boss schema install.
+A real PostgreSQL event-trigger delay of three seconds during only the one-shot's
+`CREATE SCHEMA` reproduced startup failure before the fix. The one-shot now has
+a separate 30-second client/server SQL budget, retaining two-second connection
+acquisition and the 90-second whole-process limit. API/worker/diagnostic query
+budgets remain two seconds. The same delayed-DDL regression and the complete
+runtime smoke pass afterwards, including short locked-enqueue failure, startup
+SIGTERM, persistence/consumption/restart and owned-resource cleanup. The helper
+is removed immediately and exists only in the disposable test database, never in
+runtime migrations. Lint/backend build pass; a changed head still requires fresh
+CI and the coordinator's exact-head Kody round.

@@ -1,0 +1,28 @@
+# Allow only build inputs. Local credentials, Git metadata and reports never enter
+# the build context, including when a contributor keeps .env inside an app.
+**
+!package.json
+!pnpm-lock.yaml
+!pnpm-workspace.yaml
+!tsconfig.base.json
+!patches/
+!patches/**
+!apps/
+!apps/api/
+!apps/api/**
+!apps/web/
+!apps/web/**
+!packages/
+!packages/contracts/
+!packages/contracts/**
+!packages/mcp-local/
+!packages/mcp-local/package.json
+**/node_modules
+**/dist
+**/.next
+**/src/generated
+**/.env
+**/.env.*
+**/*.log
+**/*.tsbuildinfo
+**/.DS_Store

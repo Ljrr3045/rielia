@@ -15,7 +15,7 @@ concurrency:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     env:
       NEXT_TELEMETRY_DISABLED: '1'
     steps:
@@ -33,4 +33,6 @@ jobs:
       - run: pnpm check
       - name: Real PostgreSQL identity integration (simulated provider HTTP)
         run: pnpm test:identity
+      - name: Local Docker runtime, migration failure and durable job restart
+        run: pnpm test:runtime
       - run: pnpm audit --audit-level=high

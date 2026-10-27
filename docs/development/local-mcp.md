@@ -179,6 +179,12 @@ The retained wire regression checks this distinction without adding redundant
 runtime handlers. The earlier review/check attached to a previous head does not
 approve the regression's new head; current-head results remain in the PR.
 
+PR #8 subsequently merged on 2026-10-26T19:31:05Z as `cb92d90`, after final
+reviewed head `7ead11b` and [Kody approval 5657821543](https://github.com/Ljrr3045/rielia/pull/8#pullrequestreview-5657821543).
+The coordinator removed its completed worktree. T04.0's later reconciliation
+verified the merge/review through GitHub and the removal through Orca inventory;
+this bounded delivery still closes no full T03 acceptance.
+
 This matrix applies only to these tested versions and stdio profiles. No Cursor,
 Claude Desktop, other host, universal client compatibility, real remote HTTPS
 backend, remote MCP/Streamable HTTP, OAuth discovery/consent/PKCE/revocation,

@@ -21,3 +21,4 @@ allowBuilds:
   '@modelcontextprotocol/inspector@2.12.0': false
 patchedDependencies:
   better-auth@1.7.12: patches/better-auth@1.7.12.patch
+  pg-boss@12.38.0: patches/pg-boss@12.38.0.patch
