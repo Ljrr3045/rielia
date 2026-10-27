@@ -1,0 +1,50 @@
+docs/development/technical-fixture.md
+  s_1420fbb5dad314::t_627e8c7b53be18 11-17,184,190-192
+docs/development/stack-validation-decisions.md
+  s_1420fbb5dad314::t_0f274e70cee5ea 1-89
+README.md
+  s_1420fbb5dad314::t_0f274e70cee5ea 26,33-39
+docs/development/local-mcp.md
+  s_1420fbb5dad314::t_b018ea8c839ebb 196-198
+  s_1420fbb5dad314::t_627e8c7b53be18 3-6,17-18,195
+docs/development/identity-spike.md
+  s_1420fbb5dad314::t_627e8c7b53be18 4-11
+CONTRIBUTING.md
+  s_1420fbb5dad314::t_0f274e70cee5ea 33-47,90-92
+  s_b8020eceba4182::t_dca527adde0b0e 93
+AGENTS.md
+  s_1420fbb5dad314::t_0f274e70cee5ea 32,39-43,59,67-72,74,97-99
+docs/development/local-runtime.md
+  s_1420fbb5dad314::t_627e8c7b53be18 7-12
+CHANGELOG.md
+  s_1420fbb5dad314::t_627e8c7b53be18 16,18,76-93,169-172
+  s_1420fbb5dad314::t_b018ea8c839ebb 165-166
+docs/development/progress.md
+  s_1420fbb5dad314::t_b018ea8c839ebb 84-85,91-92,129,198-210
+  s_1420fbb5dad314::t_892919ad4b165e 12-19,24-29,71-73,81-82,90,93-97,99-100,103-104,109-111,130,132-134,176-179,181,193-194,303-305,501-502,514,569-573,585-586
+  s_b8020eceba4182::t_2a0af8616a99cb 211
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "31b7c239f51f9a9a537eea656e80501f6b92aaec",
+  "prompts": {},
+  "sessions": {
+    "s_1420fbb5dad314": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a17edf-5e10-7990-ac78-d48178be0ed8",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    },
+    "s_b8020eceba4182": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a17016-ab9e-7501-b8a7-f63987eb61f7",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
