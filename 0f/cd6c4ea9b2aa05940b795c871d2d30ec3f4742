@@ -1,0 +1,32 @@
+docs/development/local-runtime.md
+  s_0d390cd4199bea::t_7842d553a829bf 96-98,202
+apps/api/src/worker.ts
+  s_0d390cd4199bea::t_30b74def931ce8 59
+CHANGELOG.md
+  s_0d390cd4199bea::t_f9a0b203de5f07 21-22
+apps/api/src/runtime/database.ts
+  s_0d390cd4199bea::t_7842d553a829bf 17,20-21
+docs/development/progress.md
+  s_0d390cd4199bea::t_c9f2b6819ce50c 496,510-511
+  s_0d390cd4199bea::t_f9a0b203de5f07 538-550
+apps/api/src/migrate.ts
+  s_0d390cd4199bea::t_7842d553a829bf 11-12
+scripts/test-runtime.mjs
+  s_0d390cd4199bea::t_06f77d08bacb3c 149-154,156,158
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0fcd6c4ea9b2aa05940b795c871d2d30ec3f4742",
+  "prompts": {},
+  "sessions": {
+    "s_0d390cd4199bea": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a17e86-05fb-7f41-a91d-cd8700fb71fc",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
