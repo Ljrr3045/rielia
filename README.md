@@ -23,15 +23,20 @@ the T02/T03 spikes and partial T04 tooling without completing those tickets.
 | [Landing plan](docs/handoff/05-landing-page-plan.en.md) | Design guidance for later work; no implementation authorized by the plan |
 | [Asset inventory](docs/handoff/06-brand-assets-guide.en.md) | Candidate assets and provenance; no final identity approval |
 | [Progress and decisions](docs/development/progress.md) | T00/T01–T35 state, first wave, blockers, and PR evidence |
+| [Stack and validation decision](docs/development/stack-validation-decisions.md) | 2026-10-27 stack approval, Express-removal follow-up, and deferred real validation |
 | [Technical fixture](docs/development/technical-fixture.md) | Exact toolchain, local commands, primary research, checks, and limitations |
 | [Identity spike](docs/development/identity-spike.md) | Experimental auth/database, operator setup, same-origin logic, and bounded test evidence |
 | [Contributing](CONTRIBUTING.md) / [Agent instructions](AGENTS.md) | Delivery, verification, review, and ownership rules |
 | [Changelog](CHANGELOG.md) | Recorded repository changes; no application release yet |
 
 The plans recommend a TypeScript monorepo with Next.js, NestJS, PostgreSQL,
-Prisma, Better Auth, a durable worker, and local/remote MCP adapters. **Stack
-confirmation and complete compatibility spikes are pending.** The fixture pins
-and validates the Next/Nest/React/pnpm subset provisionally. T02.1 experimentally
+Prisma, Better Auth, a durable worker, and local/remote MCP adapters. **The user
+approved the current stack except Express on 2026-10-27.** Express remains in
+the code and must be removed before new backend/domain expansion; no replacement
+HTTP adapter is selected. Real provider/staging and real-project/user acceptance
+remain OPEN/DEFERRED until an advanced product slice and user scheduling, without
+blocking authorized local implementation or completing full tickets. See the
+decision above. The fixture pins and validates a bounded subset. T02.1 experimentally
 integrates Better Auth with an identity-only Prisma/PostgreSQL schema and web
 logic; its presentation is separately owned T02.2 work. Google/GitHub OAuth credentials and
 callbacks must be configured per installation; none are included.

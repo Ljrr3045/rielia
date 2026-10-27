@@ -30,11 +30,21 @@ and exclusions. Use ticket dependencies rather than numerical order: T35 follows
 T04 and precedes T05/T06/T12. Preparing these contribution documents does not
 complete T16 or its real-project validation.
 
-License, stack confirmation, and OAuth credentials are pending user decisions.
-The authorized fixture uses the proposed stack provisionally; do not silently
-ratify the complete stack or treat unavailable OAuth smoke tests as passed. Name/logo and
-final landing design also remain unapproved. An imported proposal is not an
-implementation instruction.
+The [2026-10-27 decision](docs/development/stack-validation-decisions.md) approves
+the current stack except Express. Removing Express is the first technical
+follow-up before new backend/domain expansion; no replacement HTTP adapter or
+Nest upgrade is selected. Current code still uses Express. Preserve Nest business
+logic/controllers/providers/guards and verify identity/security parity plus the
+actual runtime and transitive backend dependency closure in that migration.
+
+Real provider/HTTPS/staging, staging-dependent remote OAuth discovery and
+real-project/user acceptance remain OPEN/DEFERRED until an advanced end-to-end
+product slice and user scheduling. They do not immediately block authorized local
+implementation; do not ask for credentials/staging now or report missing checks
+as passed. Preserve source dependencies and public-launch acceptance. Applicable
+automated unit/integration/security/local Docker checks, CI and Kody remain
+required. License, brand/final landing design and private-project admin visibility
+remain undecided; an imported proposal is not an implementation instruction.
 
 ## Branch and checkout
 
@@ -76,6 +86,10 @@ ratifications/corrections separately under `docs/development/` and link the
 affected source section. Never modify a baseline just to make a hash check pass.
 
 ## Validate and record evidence
+
+Documentation-only changes run the handoff/link verifier and unstaged/staged
+whitespace checks below, inspect the diff, and retain existing CI and Kody gates.
+Unrelated local application suites need not be rerun for prose-only edits.
 
 Use Python 3.9+, Node 24.22.1, and pnpm 12.15.0. From the repository root:
 

@@ -1,9 +1,14 @@
 # T02 identity and proxy spike
 
 Research and implementation: 2026-10-25 UTC. The coordinator authorized T02.1 as a
-bounded, reversible experiment on the proposed stack. This is **not user
-ratification of the complete stack**; stack/OAuth configuration answers and the
-license selection remain pending. This document supplements the unchanged
+bounded, reversible experiment before user stack approval. The
+[2026-10-27 decision](stack-validation-decisions.md) now approves the current
+stack except Express; its removal is the first technical follow-up before new
+backend/domain expansion, with no replacement adapter selected. The Express
+integration below records current code and historical evidence, not the approved
+target. Real provider/HTTPS/staging acceptance is OPEN/DEFERRED until an advanced
+product slice and user scheduling; local security/integration checks remain
+required. License selection remains open. This document supplements the unchanged
 [architecture identity proposal](../handoff/02-architecture-technical-plan.en.md#2-identity-permissions-and-isolation).
 
 ## Scope and acceptance

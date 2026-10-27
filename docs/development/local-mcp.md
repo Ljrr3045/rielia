@@ -1,7 +1,9 @@
 # T03.0 / B0 local MCP transport experiment
 
-Status: bounded local stdio spike on the provisional fixture, authorized by the
-coordinator while the user's stack decision remains pending. It adds one
+Status: bounded local stdio spike, originally authorized before user stack
+approval. The [2026-10-27 decision](stack-validation-decisions.md) approves the
+current stack except Express and defers real staging-dependent discovery/provider
+validation; local checks/CI/Kody remain required. This spike adds one
 experimental read-only diagnostic, `rielia_health`, which calls the existing
 `GET /api/v1/health` REST route. Its result is exactly
 `{"status":"ok","service":"rielia-api"}`. This is **process liveness only**:
@@ -12,8 +14,8 @@ Traceability: architecture §5 and T03/B0, with T02 required for the future remo
 auth portion. P12/P13/US10 remain future task/planning operations; P21/US17 remain
 remote OAuth/discovery work; P38/US24/US25 remain identity/authorization boundaries,
 not features satisfied by public health. The package is not the T13 catalog,
-full T03 acceptance, or B0's signed-in task/agent vertical. It ratifies no stack
-or license decision.
+full T03 acceptance, or B0's signed-in task/agent vertical. This spike itself made
+no stack or license decision.
 
 ## Pins and official research
 
@@ -190,6 +192,7 @@ Claude Desktop, other host, universal client compatibility, real remote HTTPS
 backend, remote MCP/Streamable HTTP, OAuth discovery/consent/PKCE/revocation,
 PAT/service token, domain permissions or task/agent workflow was tested. Those
 remain future T02/T03/T13/T20/T35 work in dependency order. Full T01/B0 real-user
-validation, stack ratification, license and installation OAuth decisions remain
-open. PR checks and current-head coordinator-triggered Kody evidence belong in
-the PR and [progress](progress.md), without self-referential commit updates here.
+validation and installation OAuth/staging evidence are OPEN/DEFERRED under the
+dated decision; license remains undecided. PR checks and current-head
+coordinator-triggered Kody evidence belong in the PR and [progress](progress.md),
+without self-referential commit updates here.
