@@ -25,7 +25,7 @@ implementation, without completing tickets or weakening automated checks/launch 
 | Base | `origin/dev` at PR #9 merge `74779941905937ca7c05217169b0ef3028c10b9c` |
 | Branch | `docs/stack-validation-decisions`; purpose prefixes without usernames are the user convention |
 | Worktree | Isolated Orca checkout `docs-stack-validation-decisions`; sole owner Codex `gpt-6.1-sol`, `xhigh`, verified from live terminal state; no helpers |
-| Current PR | Not yet opened; the actual URL is recorded here before the final ready-head push. Handoff/link and diff checks plus existing CI/current-head coordinator Kody review are required |
+| Current PR | [#10](https://github.com/Ljrr3045/rielia/pull/10), one non-draft English PR to `dev`; handoff/link and diff checks pass. Existing CI and coordinator-triggered current-head Kody review/dispositions are recorded in the PR before delivery |
 | T04.0 PR | [#9](https://github.com/Ljrr3045/rielia/pull/9) merged 2026-10-27T19:25:58Z as `74779941905937ca7c05217169b0ef3028c10b9c`; final reviewed head `0fcd6c4ea9b2aa05940b795c871d2d30ec3f4742`, [Kody approval 5672890614](https://github.com/Ljrr3045/rielia/pull/9#pullrequestreview-5672890614), [CI 40565906228](https://github.com/Ljrr3045/rielia/actions/runs/40565906228). Fresh GitHub reads confirm merge/approval/passing checks; coordinator confirms prior worktree removed |
 | T03.0 PR | [#8](https://github.com/Ljrr3045/rielia/pull/8) merged 2026-10-26T19:31:05Z as `cb92d90f433873c4e98f2a3b6a2401cc6ddad48b`; final reviewed head `7ead11bb6f333d017ff12a6cd5998c972a8bfbaf`, [Kody approval 5657821543](https://github.com/Ljrr3045/rielia/pull/8#pullrequestreview-5657821543). Fresh GitHub reads confirm merge/approval; Orca inventory confirms completed worktree removed |
 | T01 presentation PR | [#6](https://github.com/Ljrr3045/rielia/pull/6) merged 2026-10-25T08:13:36Z as `a869e317fd05e87d9afd62597842e5fc125e57ee`; reviewed head `043c4507eb385e43720849f43fc1812f43689ce0`, [Kody approval 5642187480](https://github.com/Ljrr3045/rielia/pull/6#pullrequestreview-5642187480), [CI 40175255312](https://github.com/Ljrr3045/rielia/actions/runs/40175255312). Fresh GitHub reads confirm PRs #5/#7/#6 all merged; full T01/B0 real-user acceptance remains open |
@@ -199,8 +199,8 @@ No credentials should be pasted into this ledger, PR comments, or validation log
 
 - `python3 scripts/verify-handoff.py`: PASS, all 47 imported files and 30 asset
   hashes/sizes unchanged; 347 local file links checked across 43 documents.
-- `git diff --check`: PASS. Staged/PR whitespace and unchanged protected paths
-  are checked before the ready-head push; remote CI/review evidence belongs in
+- `git diff --check` and `git diff --cached --check`: PASS. The PR diff is limited
+  to ten documentation files; protected paths are unchanged. Remote CI/review evidence belongs in
   the current PR, without self-referential commit updates here.
 - Read actual backend manifests/bootstrap/auth setup and the official Nest
   HTTP-adapter guide for the inventory and unselected-adapter follow-up. Fresh
