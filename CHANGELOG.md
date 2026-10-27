@@ -18,6 +18,8 @@ This records repository changes. No application version has been released.
   production deployment, domain workflow or stack ratification is claimed.
 - Exact pg-boss 12.38.0/OpenTelemetry API 1.10.0 peer pins and declaration-only
   patch for upstream's stripped internal type; strict dependency checks remain.
+- Separate bounded migration DDL budget from short readiness/diagnostic queries,
+  with a real slow-DDL regression and retained heartbeat tracking during shutdown.
 - T03.0/B0: private experimental `packages/mcp-local` stdio wrapper with one
   argument-free public REST process-liveness tool, bounded validated output,
   constrained loopback HTTP opt-in, normal HTTPS validation, sanitized failures,

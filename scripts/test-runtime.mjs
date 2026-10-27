@@ -146,8 +146,16 @@ try {
   assert.match(await compose('Migration failure evidence', ['logs', '--no-color', 'migrate']), /Local migration failed/);
   console.log('Unmigrated worker failed without schema writes; failed migration blocked API and worker.');
 
+  // Model cold/slow schema DDL on the real database, only for this one-shot's
+  // connection. Readiness/worker/diagnostic query deadlines must stay short.
+  await sql(`CREATE FUNCTION public.runtime_smoke_delay() RETURNS event_trigger LANGUAGE plpgsql AS $$
+    BEGIN IF current_setting('application_name') = 'rielia-runtime-migrate' THEN PERFORM pg_sleep(3); END IF; END $$;
+    CREATE EVENT TRIGGER runtime_smoke_delay ON ddl_command_start WHEN TAG IN ('CREATE SCHEMA')
+    EXECUTE FUNCTION public.runtime_smoke_delay();`);
   await compose('Migrated API/web startup', ['up', '-d', '--wait', '--wait-timeout', '90', 'api', 'web']);
+  await sql('DROP EVENT TRIGGER runtime_smoke_delay; DROP FUNCTION public.runtime_smoke_delay()');
   assert.equal((await container('migrate')).State.ExitCode, 0);
+  console.log('Migration succeeded with a controlled 3-second pg-boss schema DDL delay; temporary helper removed.');
   const api = await endpoint('api', '3001');
   const web = await endpoint('web', '3000');
   assert.deepEqual(await (await response(`${api}/api/v1/health`, 200)).json(), { status: 'ok', service: 'rielia-api' });

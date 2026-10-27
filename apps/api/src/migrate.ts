@@ -8,7 +8,8 @@ const stop = () => abort.abort();
 process.once('SIGTERM', stop);
 process.once('SIGINT', stop);
 const deadline = setTimeout(() => { stop(); process.exit(1); }, 90000);
-const pool = databasePool('rielia-runtime-migrate');
+// Schema DDL has a separate bounded budget from interactive readiness/queue work.
+const pool = databasePool('rielia-runtime-migrate', 30000);
 const boss = diagnosticBoss(pool, true);
 
 try {

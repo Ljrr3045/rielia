@@ -493,7 +493,7 @@ Local ARM64 Docker Engine 29.9.2 / Compose 5.6.1 validation passed:
 - `pnpm test:runtime` built all three pinned image targets through frozen install
   and frozen production deployment. Actual nonroot uid 1000 execution verified
   runtime/generated Prisma/migration/static files and credential/Git/root-tool
-  exclusions. Normalized tmpfs settings are asserted before build. The final run
+  exclusions. Normalized tmpfs settings are asserted before build. A recorded passing run
   measured 1,280,859,801 bytes API/worker, 1,310,649,182 migration and 421,962,904
   web (uncompressed Docker sizes). Frozen optional peer bindings retain nested
   Prisma/Studio in API, plus TypeScript in the migration target; the target split
@@ -507,6 +507,8 @@ Local ARM64 Docker Engine 29.9.2 / Compose 5.6.1 validation passed:
   deadline. SIGTERM during blocked worker startup waited for pending work,
   exited 0, and left no worker DB connections. A DB outage returned readiness
   503 while exact liveness stayed 200; API readiness recovered after DB restart.
+  Skipped heartbeat ticks retain the actual pending promise so shutdown waits for
+  that work before closing the shared pool.
 - Enqueue while worker stopped stayed `created` across full Compose down/up with
   the same named volume. Starting the worker completed that UUID with only
   `{"diagnostic":"ok"}`; graceful stop/restart preserved the completed result.
@@ -533,3 +535,16 @@ Exact apt pins can fail when mirrors retire packages; the guide records this
 rebuild/update boundary. [PR #9](https://github.com/Ljrr3045/rielia/pull/9) tracks
 AMD64 CI, exact-head Kody review and all review-surface dispositions; those remain
 pending until their actual results are recorded there before delivery.
+
+The initial automatic Kody round identified a valid [migration DDL timeout](https://github.com/Ljrr3045/rielia/pull/9#discussion_r4392869741):
+reusing the two-second readiness budget can abort a slow pg-boss schema install.
+A real PostgreSQL event-trigger delay of three seconds during only the one-shot's
+`CREATE SCHEMA` reproduced startup failure before the fix. The one-shot now has
+a separate 30-second client/server SQL budget, retaining two-second connection
+acquisition and the 90-second whole-process limit. API/worker/diagnostic query
+budgets remain two seconds. The same delayed-DDL regression and the complete
+runtime smoke pass afterwards, including short locked-enqueue failure, startup
+SIGTERM, persistence/consumption/restart and owned-resource cleanup. The helper
+is removed immediately and exists only in the disposable test database, never in
+runtime migrations. Lint/backend build pass; a changed head still requires fresh
+CI and the coordinator's exact-head Kody round.

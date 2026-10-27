@@ -14,11 +14,11 @@ export function runtimeDatabaseUrl(): string {
   return process.env['DATABASE_URL'];
 }
 
-export function databasePool(applicationName = 'rielia-runtime-api'): pg.Pool {
+export function databasePool(applicationName = 'rielia-runtime-api', queryTimeoutMillis = 2000): pg.Pool {
   const pool = new pg.Pool({
     connectionString: runtimeDatabaseUrl(), max: 2,
-    connectionTimeoutMillis: 2000, query_timeout: 2000,
-    statement_timeout: 2000, idleTimeoutMillis: 1000,
+    connectionTimeoutMillis: 2000, query_timeout: queryTimeoutMillis,
+    statement_timeout: queryTimeoutMillis, idleTimeoutMillis: 1000,
     application_name: applicationName,
   });
   // An idle connection can fail when PostgreSQL is restarted. Readiness handles

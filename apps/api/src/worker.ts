@@ -56,6 +56,7 @@ async function bootstrap(): Promise<void> {
   await heartbeat();
   if (stopping) return;
   timer = setInterval(() => {
+    if (stopping || heartbeatRunning) return;
     activeHeartbeat = heartbeat().catch(() => {
       console.error('Diagnostic worker readiness failed.');
       void shutdown(true);

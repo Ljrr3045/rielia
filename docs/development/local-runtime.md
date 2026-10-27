@@ -93,7 +93,9 @@ diagnostics are disabled. No public route enqueues work.
 The worker loads the same compiled backend runtime without Nest HTTP bootstrap.
 Its pg-boss constructor sets `migrate: false`, `createSchema: false`; startup
 cannot install or upgrade queue storage. Each process uses one bounded `pg` pool
-(two connections, two-second acquisition/query/server-statement limits). Worker
+(two connections and two-second acquisition). API/worker/diagnostic queries have
+two-second client/server-statement limits; the migration one-shot uses a separate
+30-second DDL query budget under its 90-second process limit. Worker
 readiness writes a temporary heartbeat only after successful DB/schema queries,
 including oldest pending diagnostic-job age. Its container health check requires
 a heartbeat no older than 20 seconds. DB failure removes readiness and exits
@@ -197,7 +199,7 @@ The smoke creates a cryptographically unique Compose project, generated private
 password, temporary env file, random loopback application ports and owned image
 tags. Build has a 15-minute deadline; lifecycle commands, HTTP and polling have
 explicit bounds. It checks nonroot images/runtime files, credential exclusions,
-missing migrations, failed migration gating, repeat deployment, migration/schema
+missing migrations, failed migration gating, delayed schema DDL, repeat deployment, migration/schema
 mismatch, DB outage versus liveness/recovery, real lock timeout and signal during
 blocked worker startup, job persistence through full stack recreation, consumption,
 worker socket absence and graceful restart. Cleanup removes only that project's
