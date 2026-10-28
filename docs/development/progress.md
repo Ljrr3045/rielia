@@ -8,9 +8,10 @@ its responsive presentation, the merged T03.0 experimental local MCP health wrap
 and T04.0's opt-in preparatory local Docker runtime/diagnostic worker. T35.0 now
 adds bounded principal/minimal workspace/membership foundations and verified
 execution. T06 adds actual task attribution; comments/history UI/export remain future work.
-T05.0 adds actual workspace/membership/invitation backend and frontend logic,
-with merged T05.1 presentation. T06.0 adds bounded persisted project/task backend
-and frontend logic, with presentation separately owned. It has no deployed task product or
+T05.0 adds actual workspace/membership/invitation backend and frontend logic with
+merged T05.1 presentation. T06.0 adds bounded persisted project/task backend and
+frontend logic, and T06.1 adds its presentation; full T06/P05, private projects and
+collaboration scope remain open. It has no deployed task product, deployment or
 software release. The coordinator owns integration and status across workers.
 
 The user's [2026-10-27 stack and sequencing decision](stack-validation-decisions.md)
@@ -27,11 +28,12 @@ implementation, without completing tickets or weakening automated checks/launch 
 
 | Field | Evidence/state |
 | --- | --- |
-| Scope | T06.0/B1a real workspace-visible project/task create/read/edit/archive/restore, versions, scoped idempotency, immutable authorship and atomic activity/outbox; P02/P04/P05/P14/P38, US04/US08/US12/US24/US25, UX01/UX02/UX05/UX06/UX09/UX11. Backend/contracts/client/controller/hook/proxy/tests only; presentation separately owned, no full P05/P14/T06 acceptance |
-| Base | `origin/dev` at [PR #14](https://github.com/Ljrr3045/rielia/pull/14) merge `d27e3302a059cda6ef570c75efed42deda188a39` |
-| Branch | `feat/t06-project-task-flows`, one English non-draft PR to `dev`; renamed before implementation |
-| Worktree | Isolated `feat-t06-project-task-flows`; Codex `gpt-6.1-sol` `xhigh` verified by Orca terminal metadata. Helper launch rejected before effects by nested-depth limit; sole logic owner, no shared checkout |
-| Current PR | [#15](https://github.com/Ljrr3045/rielia/pull/15), English non-draft to `dev`; final-source local checks pass, exact-head CI and coordinator-triggered Kody remain required |
+| Scope | T06.1/B1a workspace-visible project/task presentation for P04/P05/P14/P33/P38 and US04/US08/US12/US24–US25 (UXR01/UXR02/UXR03/UXR06; UX01/UX02/UX03/UX05/UX06/UX07/UX09/UX11) on the merged T06 contracts/client logic. No backend/contracts/hooks/proxies/tests, private projects, sprints/board, advanced filters, checklist/subtasks/comments/history, credentials/MCP, deployment or full-ticket acceptance |
+| Base | `origin/dev` at the [PR #15](https://github.com/Ljrr3045/rielia/pull/15) merge `e23d2e495a2e4c3dc499bcdde4ac8dd84d74fdad` (reviewed source `338fc64725aa8448cd4512c3c3952d53f394e45d`, CI 40781598293 SUCCESS, Kody review 5690694480/check 123144649000 complete and all three threads resolved) |
+| Branch | `feat/t06-project-task-ui`, one English non-draft presentation/docs PR to `dev`; purpose name without username |
+| Worktree | Isolated `feat-t06-project-task-ui`; presentation owner OpenCode Go `opencode-go/deepseek-v4.1-flash` variant `max` (verified session API), logic/tests remain Sol-owned; no helpers |
+| Current PR | UI PR opens on the merged T06 base with the presentation/docs-only diff; exact UI URL/head/CI/Kody state lives in GitHub and the external delivery report |
+| T06.0 logic PR | [#15](https://github.com/Ljrr3045/rielia/pull/15) merged 2026-10-28T22:51:16Z as `e23d2e495a2e4c3dc499bcdde4ac8dd84d74fdad`; reviewed source `338fc64725aa8448cd4512c3c3952d53f394e45d`, CI 40781598293 SUCCESS, Kody review 5690694480/check 123144649000 complete with all three threads resolved |
 | T05.1 presentation PR | [#14](https://github.com/Ljrr3045/rielia/pull/14) merged 2026-10-28T20:57:11Z as `d27e3302a059cda6ef570c75efed42deda188a39`; reviewed source `6c0e64952129b10c25f195443f88ec7331ef1a02`, [CI 40764734574](https://github.com/Ljrr3045/rielia/actions/runs/40764734574) SUCCESS, [final Kody 6480178609](https://github.com/Ljrr3045/rielia/pull/14#issuecomment-6480178609) complete and exact-head check SUCCESS. Both findings resolved; coordinator reports completed worktrees removed |
 | T05.0 logic PR | [#13](https://github.com/Ljrr3045/rielia/pull/13) merged 2026-10-28T20:21:29Z as `01c9cc168bb9dde62b4290c049b982d62952c9a5`; reviewed source `11f886a4cbc28ab6d2e59c91a7aae096a9fefddd`, CI 40761116202, Kody completed; withdrawn fourth recovery finding resolved; coordinator merge only |
 | Principal foundations PR | [#12](https://github.com/Ljrr3045/rielia/pull/12) merged 2026-10-28T18:36:55Z as `b87dadb165971d0594429f6a08c047626f9d596e`; reviewed head `6c841a334987a51977af41d4fe19e0a151e1394e`, [Kody approval 5687764538](https://github.com/Ljrr3045/rielia/pull/12#pullrequestreview-5687764538), [CI 40745500251](https://github.com/Ljrr3045/rielia/actions/runs/40745500251). Both findings fixed; coordinator verified merge, preserved evidence and completed worktree removal |
@@ -234,6 +236,50 @@ passed CI 40764734574 and the fresh coordinator-triggered Kody completion
 completed worktrees removed. No full
 T05/T07/T35 or real-user acceptance is claimed.
 
+## T06.1/B1a project and task UI
+
+The [project/task UI guide](project-task-ui.md) records the bounded `/projects`
+presentation for P04/P05/P14/P33/P38 and US04/US08/US12/US24–US25
+(UXR01/UXR02/UXR03/UXR06; UX01/UX02/UX03/UX05/UX06/UX07/UX09/UX11). It covers
+workspace-visible project creation/settings/archive/restore, compact task lists,
+title-plus-current-project capture, URL-addressable detail (inline desktop panel,
+tablet overlay and full mobile), task edit/status/type/priority/date/assignee,
+immutable creator/provenance with textual Agent labeling, archived state, and
+active/archived views. It uses only the T06 production client/hook and safe Markdown
+AST; no fake API, model, metrics or backend import is added.
+
+Drafts stage into the Sol-owned hook so same-tab session loss and context changes
+retain the captured target/version; another account clears private recovery.
+Pending/success, invalid, forbidden, transient load/pager errors, unknown-outcome
+same-key Retry/Discard and current-vs-draft conflict comparison are presented.
+Archived projects freeze task edits; restoring a project does not restore
+individually archived tasks. A historical inactive assignee stays visible and is
+not silently replaced. ES is the default language with an EN selector; light/dark,
+44 px targets, visible focus, live feedback and responsive 320–1920 layouts are
+included.
+
+Root-browser findings during integration were fixed and reverified: the scoped
+page no longer inherits the global narrow `main` width (1920 now uses full readable
+columns); copy/attributes match the API limits (project name 1–200, key 2–10,
+description 20000, task title 1–300); viewer/date copy no longer exposes
+implementation language; drawer, detail, modal, conflict/rebase and success
+completion now keep meaningful focus; signed-out state exposes the promised
+**Actualizar** action; and one mobile route crash from a `find()` undefined focus
+fallback was fixed before handoff.
+
+Final local evidence: `pnpm check` passes lint, Express-free closure, process
+cleanup, 7 identity, 16 workspace, 16 project/task, 19 prototype, strict
+typechecks, production builds, 17 MCP checks and HTTP smoke; audit reports no known
+vulnerabilities; handoff integrity passes 47 files/30 assets/405 local links;
+whitespace checks pass. The disposable real PostgreSQL/Nest/Next harness exercised
+actual migrations/client/proxy and owner, conflict, session, unknown-outcome,
+viewer/tenant, keyboard and long-content journeys; native-viewport screenshots and
+external coordinator Brave QA are recorded in the UI guide. Full `pnpm test:identity`
+/Docker runtime were not rerun for the presentation-only diff; the T06 logic PR owns
+those checks and CI/Kody. No full T06/P05, real provider/staging/user, physical
+touch, screen-reader, Safari or real 200% browser-zoom acceptance is claimed.
+Full-ticket merge/review state remains in GitHub and the external delivery report.
+
 ## T35.0 principal/authorship foundations
 
 The [focused guide](principal-foundations.md) records exact scope, service trust
@@ -351,10 +397,11 @@ the following records preserve the original first-wave scope and acceptance:
    open. PR #9 is merged; see [runtime scope and evidence](local-runtime.md). This is a preparatory
    split of the B1 T04 ticket, without business effects, deployment or full acceptance.
 
-Current bounded product step: **T05.0** workspace/membership backend and frontend
-logic, following merged T35.0 under the user's sequencing override. Invitation/
-role overlap from T07 is explicitly authorized; private-project policy and full
-T35 domain/MCP/history/export integration remain incomplete.
+Current bounded product step: **T06** workspace-visible project/task backend,
+client logic and presentation, following merged T05 under the user's sequencing
+override. T06.0 logic and T06.1 presentation evidence are recorded above; the
+full ticket (all version/activity/outbox slices), private projects, collaboration
+and full T35 domain/MCP/history/export integration remain incomplete.
 
 Convergence: T02 + T03 → T04 → **T35** → T05 → T06. The principal/authorship model
 must precede workspaces/tasks/credentials despite T35's number. T01 supplies UI
@@ -384,8 +431,8 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T02 | B0 | Identity/proxy integration spike | None | T02.1/T02.2 merged partial evidence; current NodeAdapter migration preserves local parity; real provider/staging acceptance OPEN/DEFERRED under user sequencing |
 | T03 | B0 | MCP SDK/wrapper/minimal remote profile spike | T02 for remote auth | Partial T03.0 local public liveness only; staging-dependent discovery/auth OPEN/DEFERRED; product catalog/credentials and full acceptance remain open |
 | T04 | B1 foundations | Monorepo, images, worker/queue, initial migration | T02–T03 | Partial T04.0 merged; full acceptance/dependencies stay open. Dated user override permits local implementation with listed real validation deferred |
-| T05 | B1a | Auth, workspaces, principal memberships | T04, T35 | Bounded T05.0 logic/T05.1 presentation merged in PRs #13/#14; full acceptance remains open |
-| T06 | B1a | Projects/tasks, versions, idempotency, atomic activity/outbox | T05 | Bounded T06.0 real backend/client logic implemented in [PR #15](https://github.com/Ljrr3045/rielia/pull/15); presentation separately owned, full ticket/real-user acceptance remains open |
+| T05 | B1a | Auth, workspaces, principal memberships | T04, T35 | T05.0 logic merged in PR #13; T05.1 [presentation](workspace-ui.md) merged in PR #14. Full T05/T07/T35 acceptance remains open |
+| T06 | B1a | Projects/tasks, versions, idempotency, atomic activity/outbox | T05 | Bounded T06.0 real backend/client logic merged in [PR #15](https://github.com/Ljrr3045/rielia/pull/15); T06.1 [presentation](project-task-ui.md) delivered in the UI PR against disposable real PG/Nest/Next QA. Full ticket (all version/activity/outbox slices, private projects, collaboration) remains open |
 | T07 | B1b | Invitations, revocation, roles/private projects | T06 | Authorized invitation/role subset in T05.0; private projects and full acceptance not started |
 | T08 | B1b | List/Kanban, filters, ranking | T06 | Not started |
 | T09 | B1b | Subtasks, checklists, comments, history | T06 | Not started |
