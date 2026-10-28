@@ -186,8 +186,8 @@ viewport captures, no tiled images):
 
 Coordinator browser QA (Brave, separate profile) additionally covered desktop
 1920×878 readability after the shell-width correction, 390×844 detail/list with
-no overflow, project archive → task archive → project restore retaining task
-archive, independent task restore with the same ID, two-tab conflict, viewer/
+no overflow, task archive → project archive → project restore preserving the task
+archive, then independent task restore with the same ID, two-tab conflict, viewer/
 tenant denial, stable same-tab session recovery, and native date keyboard
 persistence. These are cited from the delivery handoff/report; the coordinator
 owns the independent profile evidence.
@@ -220,7 +220,9 @@ owns the independent profile evidence.
 
 ## PR evidence
 
-The UI PR is opened only after the T06 logic PR merges, rebased so the diff is
-presentation/docs-only. Exact UI PR URL, reviewed head, CI and coordinator-
-triggered Kody rounds are recorded in the PR/external delivery report; this
-document is not updated after approval merely to append transient review state.
+- UI PR: [#16](https://github.com/Ljrr3045/rielia/pull/16), English non-draft,
+  targeting `dev` from merged T06.0 logic `e23d2e4`.
+- The diff is presentation and delivery documentation only. Exact final head,
+  CI and coordinator-triggered Kody rounds are recorded in the PR/external
+  delivery report; this document is not updated after approval merely to append
+  transient review state.
