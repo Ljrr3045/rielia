@@ -1,0 +1,26 @@
+apps/api/test/workspaces.test.mjs
+  s_92fb51633d3111::t_b1001ce4f1b61a 200-213
+apps/api/src/workspaces/workspace.service.ts
+  s_92fb51633d3111::t_5de7cb9292ebd6 48-52,54
+docs/development/workspace-flows.md
+  s_92fb51633d3111::t_4612fc0c6a7cc4 190
+docs/development/progress.md
+  s_92fb51633d3111::t_4612fc0c6a7cc4 88,100-104
+  s_92fb51633d3111::t_01075aef2aa7f5 105
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "efb4bda5be526546b3fa57e9d8d93176bd9b1283",
+  "prompts": {},
+  "sessions": {
+    "s_92fb51633d3111": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a183f3-9ed6-7090-8a2b-0f3c948220af",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
