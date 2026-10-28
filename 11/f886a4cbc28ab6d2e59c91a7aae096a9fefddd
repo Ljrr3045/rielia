@@ -1,0 +1,47 @@
+apps/web/src/lib/workspace-controller.ts
+  s_92fb51633d3111::t_f850091a36aa0b 163-171
+  s_92fb51633d3111::t_c9b5e103cddf77 109
+  s_92fb51633d3111::t_f68b7e6803eb50 172
+docs/development/workspace-flows.md
+  s_92fb51633d3111::t_f68b7e6803eb50 121,153-156
+  s_92fb51633d3111::t_750eace11c7a61 146-150
+  s_92fb51633d3111::t_fb3ce34dc3a2a9 197-198,205-225
+docs/development/progress.md
+  s_92fb51633d3111::t_f68b7e6803eb50 106-110
+  s_92fb51633d3111::t_750eace11c7a61 87,111,113-117
+  s_92fb51633d3111::t_fb3ce34dc3a2a9 88,112,118-128
+  s_92fb51633d3111::t_becfee33e09395 129
+apps/web/src/lib/workspace-invitation-location.ts
+  s_92fb51633d3111::t_c9b5e103cddf77 1-20
+scripts/workspace-logic.test.mjs
+  s_92fb51633d3111::t_7afb8f95c16dd0 91-106
+  s_92fb51633d3111::t_3afbcde824496c 107-116,141-143
+  s_92fb51633d3111::t_fb3ce34dc3a2a9 160-173
+  s_92fb51633d3111::t_c9b5e103cddf77 5,117-140
+  s_92fb51633d3111::t_b5b18b41334376 144-159
+apps/api/test/workspaces.test.mjs
+  s_92fb51633d3111::t_b5b18b41334376 214-236
+apps/api/src/workspaces/workspace.service.ts
+  s_92fb51633d3111::t_f850091a36aa0b 35-39,81,109-110,193
+apps/web/src/lib/use-workspaces.ts
+  s_92fb51633d3111::t_c9b5e103cddf77 6,17,21
+  s_92fb51633d3111::t_f68b7e6803eb50 30
+CHANGELOG.md
+  s_92fb51633d3111::t_f68b7e6803eb50 15-16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "11f886a4cbc28ab6d2e59c91a7aae096a9fefddd",
+  "prompts": {},
+  "sessions": {
+    "s_92fb51633d3111": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a183f3-9ed6-7090-8a2b-0f3c948220af",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
