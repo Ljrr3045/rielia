@@ -1,0 +1,32 @@
+apps/web/src/lib/use-project-tasks.ts
+  s_0a489e8f2e5f0a::t_2bc86bd790ab5a 1-27
+apps/web/src/lib/project-task-client.ts
+  s_0a489e8f2e5f0a::t_a0b606e07425d2 1-60
+packages/contracts/src/project-tasks.ts
+  s_0a489e8f2e5f0a::t_7c6218b8f05299 31
+apps/web/src/lib/safe-markdown.ts
+  s_0a489e8f2e5f0a::t_689f138ba9ff96 8
+  s_0a489e8f2e5f0a::t_eb1f400d915558 1-7,9-50
+apps/web/src/lib/project-task-controller.ts
+  s_0a489e8f2e5f0a::t_2bc86bd790ab5a 1-183
+apps/web/src/app/api/v1/workspaces/[[...path]]/route.ts
+  s_0a489e8f2e5f0a::t_a0b606e07425d2 2,4-6
+apps/web/src/lib/project-task-proxy.ts
+  s_0a489e8f2e5f0a::t_a0b606e07425d2 1-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "5cdce3601cc0802b305137ca85de9df895b5a9d1",
+  "prompts": {},
+  "sessions": {
+    "s_0a489e8f2e5f0a": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18460-5f91-7740-af91-cd3f0d13a188",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
