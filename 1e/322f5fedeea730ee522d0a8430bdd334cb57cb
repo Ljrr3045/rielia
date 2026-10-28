@@ -1,0 +1,60 @@
+apps/web/src/app/workspaces/strings.ts
+  s_584a4bef4f79ee::t_b684784c82c51a 416,421,423,427,429,432,434,438,440,445,447,450,452
+  s_584a4bef4f79ee::t_dece9ff08f6353 32
+  s_584a4bef4f79ee::t_fa9224023aa5bf 105-113
+apps/web/src/app/workspaces/workspace-admin.tsx
+  s_584a4bef4f79ee::t_9a7a7fa5ac1494 903,918,932
+  s_584a4bef4f79ee::t_4ffeb4ae98a353 24,41-42,734
+  s_584a4bef4f79ee::t_2d14f3f19e8249 729,1065
+  s_584a4bef4f79ee::t_6eac51439e5657 468-469,476-477,487-498
+  s_584a4bef4f79ee::t_9928aeaaf7d51d 149-150,155-156,168-172,174-175,177-184,213,229
+  s_584a4bef4f79ee::t_67e70a92c863a9 48-49,54-55,65-78,108
+  s_584a4bef4f79ee::t_2e093578884e70 748,750,759,761,785-786
+  s_584a4bef4f79ee::t_ba513208504acb 960-961,970-971
+  s_584a4bef4f79ee::t_e7214c03ae3979 984-996,1114,1234-1235
+  s_584a4bef4f79ee::t_af05df5e574a5e 568
+  s_584a4bef4f79ee::t_ad2500b90a5fea 393,395,405,407,429-430,1213-1214
+  s_584a4bef4f79ee::t_43829ad538e593 1178,1180,1190,1192
+  s_584a4bef4f79ee::t_cccc730bd78936 816-817,823-824,838-843,845,847,849-863
+  s_92fb51633d3111::t_f5e30a109641ca 499,609
+apps/web/src/app/workspaces/workspace.module.css
+  s_584a4bef4f79ee::t_a3b1b48052a132 481-490
+  s_584a4bef4f79ee::t_01c7c4c9ec5c3a 171-180
+apps/web/src/app/workspaces/workspace-view.tsx
+  s_584a4bef4f79ee::t_d2eb8218103ff6 56,491-500,586,590-600
+  s_584a4bef4f79ee::t_74915788b9ed42 478,716
+  s_584a4bef4f79ee::t_39ccd0b6a4c442 875,877
+  s_584a4bef4f79ee::t_28a453a35ae482 522-526,787-788,848,850,861,863,885-886
+  s_584a4bef4f79ee::t_4c2859c30b96b2 394-434,829
+  s_584a4bef4f79ee::t_01239818809023 26
+  s_584a4bef4f79ee::t_7b06cd748976aa 313,316-317,370,372,374,377,560-565,665
+  s_584a4bef4f79ee::t_18730db2175456 772-782,799-827
+  s_584a4bef4f79ee::t_6a99b6b039d174 828
+  s_584a4bef4f79ee::t_d484e3b2c9a5cc 830
+apps/web/src/app/workspaces/workspace-ui.tsx
+  s_584a4bef4f79ee::t_9351ff1fcc2ada 3,9-18,21-22,26-27,38,53,62,81
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1e322f5fedeea730ee522d0a8430bdd334cb57cb",
+  "prompts": {},
+  "sessions": {
+    "s_584a4bef4f79ee": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e7c015eb1ffeq9F4TVu4L6uBxm",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    },
+    "s_92fb51633d3111": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a183f3-9ed6-7090-8a2b-0f3c948220af",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
