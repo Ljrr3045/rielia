@@ -168,6 +168,16 @@
   white-space: normal;
 }
 
+.localeField {
+  display: flex;
+  align-items: center;
+}
+
+.localeField select {
+  width: auto;
+  min-width: 7.5rem;
+}
+
 .headingBlock {
   margin-bottom: 1.5rem;
 }
@@ -466,6 +476,16 @@
 
 .scopeBlock {
   margin-top: 0.5rem;
+}
+
+.workspaceChooser {
+  display: grid;
+  gap: 0.5rem;
+  max-width: 34rem;
+}
+
+.workspaceChooser select {
+  width: 100%;
 }
 
 .workspaceBar {

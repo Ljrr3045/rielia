@@ -29,6 +29,7 @@ export const copy = {
     email: { es: 'Correo electrónico', en: 'Email address' },
     current: { es: 'Actual', en: 'Current' },
     newValue: { es: 'Nuevo', en: 'New' },
+    language: { es: 'Idioma', en: 'Language' },
   },
   header: {
     eyebrow: { es: 'Rielia', en: 'Rielia' },
@@ -101,6 +102,15 @@ export const copy = {
     nameRequired: { es: 'Escribe un nombre para el espacio.', en: 'Enter a workspace name.' },
     create: { es: 'Crear espacio', en: 'Create workspace' },
     loadMore: { es: 'Cargar más espacios', en: 'Load more workspaces' },
+    switchTitle: { es: 'Cambiar de espacio', en: 'Switch workspace' },
+    switchBody: {
+      es: 'La selección guardada puede pertenecer a un espacio sin acceso. Elige otro espacio autorizado o quita la selección para salir de este estado.',
+      en: 'The saved selection may belong to a workspace without access. Choose another authorized workspace or clear the selection to leave this state.',
+    },
+    availableTitle: { es: 'Espacios disponibles', en: 'Available workspaces' },
+    clearSelection: { es: 'Quitar selección', en: 'Clear selection' },
+    chooseWorkspace: { es: 'Elige un espacio', en: 'Choose a workspace' },
+    currentSelection: { es: 'Selección actual', en: 'Current selection' },
   },
   members: {
     title: { es: 'Miembros', en: 'Members' },
@@ -403,43 +413,43 @@ export const subjectLabel = {
   invitation: { es: 'Invitación', en: 'Invitation' },
 } as const;
 
-export const roleName: Record<MembershipRole, Bilingual> = {
+export const roleName = {
   owner: { es: 'Propietario', en: 'Owner' },
   admin: { es: 'Administrador', en: 'Admin' },
   member: { es: 'Miembro', en: 'Member' },
   viewer: { es: 'Lector', en: 'Viewer' },
-};
+} as const satisfies Record<MembershipRole, Bilingual>;
 
-export const limitedRoleName: Record<LimitedRole, Bilingual> = {
+export const limitedRoleName = {
   admin: roleName.admin,
   member: roleName.member,
   viewer: roleName.viewer,
-};
+} as const satisfies Record<LimitedRole, Bilingual>;
 
-export const agentRoleName: Record<'member' | 'viewer', Bilingual> = {
+export const agentRoleName = {
   member: { es: 'Miembro', en: 'Member' },
   viewer: { es: 'Lector', en: 'Viewer' },
-};
+} as const satisfies Record<'member' | 'viewer', Bilingual>;
 
-export const stateName: Record<MemberState, Bilingual> = {
+export const stateName = {
   active: { es: 'Activo', en: 'Active' },
   suspended: { es: 'Suspendido', en: 'Suspended' },
   revoked: { es: 'Retirado', en: 'Revoked' },
-};
+} as const satisfies Record<MemberState, Bilingual>;
 
-export const invitationStateName: Record<'pending' | 'expired' | 'accepted' | 'revoked', Bilingual> = {
+export const invitationStateName = {
   pending: copy.invitations.pending,
   expired: copy.invitations.expired,
   accepted: copy.invitations.accepted,
   revoked: copy.invitations.revoked,
-};
+} as const satisfies Record<'pending' | 'expired' | 'accepted' | 'revoked', Bilingual>;
 
-export const kindName: Record<'human' | 'agent', Bilingual> = {
+export const kindName = {
   human: copy.members.human,
   agent: copy.members.agent,
-};
+} as const satisfies Record<'human' | 'agent', Bilingual>;
 
-export const roleDescription: Record<LimitedRole, Bilingual> = {
+export const roleDescription = {
   admin: {
     es: 'Puede administrar miembros, invitaciones y agentes, excepto al propietario.',
     en: 'Can manage members, invitations and agents, except the owner.',

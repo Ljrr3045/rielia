@@ -23,7 +23,7 @@ import {
   type CommandType,
   type OutcomeKind,
 } from './strings';
-import { BilingualText, cx, phrase } from './workspace-ui';
+import { BilingualText, cx, LocaleProvider, type Lang } from './workspace-ui';
 import type { Bilingual } from './strings';
 import styles from './workspace.module.css';
 
@@ -53,7 +53,7 @@ function commandSubject(
   return null;
 }
 
-const toneClass: Record<Tone, string> = {
+const toneClass: Record<Tone, string | undefined> = {
   brand: styles.bannerBrand,
   info: styles.bannerInfo,
   success: styles.bannerSuccess,
@@ -310,9 +310,11 @@ function OperationPanel({
     body = copy.operation.draftScope;
   }
 
-  const scopeId = retryTarget?.workspaceId ?? (draftMismatch ? draftWorkspaceId : null);
+  const scopeId = retryTarget?.workspaceId ?? ((draftMismatch || recovery) ? draftWorkspaceId : null);
   const scopeName = workspaceNameById(workspaces, scopeId);
   const scopeMismatch = scopeId !== null && scopeId !== selectedWorkspaceId;
+  const subject: LastAction['subject'] = lastAction?.subject
+    ?? (recovery && draft?.type === 'invite' ? { kind: 'invitation', value: draft.recipientEmail } : null);
 
   if (retryTarget !== null) {
     tone = outcome === 'error' ? 'danger' : 'info';
@@ -365,14 +367,14 @@ function OperationPanel({
       )}
       <p className={styles.bannerBody}><BilingualText value={body} /></p>
       {extra !== null && <p className={styles.bannerBody}><BilingualText value={extra} /></p>}
-      {lastAction !== null && lastAction.subject !== null && !recovery && (
+      {subject !== null && (
         <p className={styles.bannerHint}>
-          <BilingualText value={subjectLabel[lastAction.subject.kind]} />
+          <BilingualText value={subjectLabel[subject.kind]} />
           {': '}
-          <span className={styles.longValue}>{lastAction.subject.value}</span>
+          <span className={styles.longValue}>{subject.value}</span>
         </p>
       )}
-      {scopeId !== null && (retryTarget !== null || draftMismatch) && (
+      {scopeId !== null && (retryTarget !== null || draftMismatch || recovery) && (
         <div className={styles.scopeBlock}>
           <p className={styles.bannerHint}>
             <BilingualText value={retryTarget !== null ? copy.operation.retryScope : copy.operation.scopeLabel} />
@@ -386,6 +388,47 @@ function OperationPanel({
       )}
       {actions !== null && <div className={styles.bannerActions}>{actions}</div>}
     </section>
+  );
+}
+
+function WorkspaceChooser({
+  workspaces,
+  selectedWorkspaceId,
+  pending,
+  onSelect,
+}: {
+  workspaces: Page<WorkspaceSummary>;
+  selectedWorkspaceId: string | null;
+  pending: CommandType | null;
+  onSelect: (workspaceId: string | null) => void;
+}) {
+  const id = useId();
+  const knownSelection = selectedWorkspaceId === null || workspaces.items.some(item => item.id === selectedWorkspaceId);
+  const value = selectedWorkspaceId ?? '';
+
+  return (
+    <div className={styles.workspaceChooser}>
+      <label htmlFor={id}><BilingualText value={copy.workspace.selectorLabel} /></label>
+      <select
+        id={id}
+        value={value}
+        disabled={pending !== null}
+        onChange={event => onSelect(event.currentTarget.value === '' ? null : event.currentTarget.value)}
+      >
+        {selectedWorkspaceId === null && (
+          <option value="" disabled><BilingualText value={copy.workspace.chooseWorkspace} /></option>
+        )}
+        {selectedWorkspaceId !== null && (
+          <option value=""><BilingualText value={copy.workspace.clearSelection} /></option>
+        )}
+        {!knownSelection && selectedWorkspaceId !== null && (
+          <option value={selectedWorkspaceId}><BilingualText value={copy.workspace.currentSelection} /></option>
+        )}
+        {workspaces.items.map(item => (
+          <option key={item.id} value={item.id}>{item.name}</option>
+        ))}
+      </select>
+    </div>
   );
 }
 
@@ -432,7 +475,7 @@ function WorkspaceBar({
         </div>
         <div>
           <dt><BilingualText value={copy.workspace.ownerLabel} /></dt>
-          <dd className={styles.longValue}>{owner ?? phrase(copy.workspace.ownerUnavailable)}</dd>
+          <dd className={styles.longValue}>{owner ?? <BilingualText value={copy.workspace.ownerUnavailable} />}</dd>
         </div>
       </dl>
       {workspaces.nextCursor !== null && (
@@ -445,6 +488,16 @@ function WorkspaceBar({
 }
 
 export function WorkspaceView() {
+  const [lang, setLang] = useState<Lang>('es');
+  return (
+    <LocaleProvider lang={lang}>
+      <WorkspaceScreen lang={lang} onLangChange={setLang} />
+    </LocaleProvider>
+  );
+}
+
+function WorkspaceScreen({ lang, onLangChange }: { lang: Lang; onLangChange: (lang: Lang) => void }) {
+  const localeId = useId();
   const ws = useWorkspaces();
   const [lastAction, setLastAction] = useState<LastAction | null>(null);
   const [loadingMore, setLoadingMore] = useState<LoadMoreKind | null>(null);
@@ -465,6 +518,11 @@ export function WorkspaceView() {
     && member.state === 'active'
     && member.principalState === 'active'
     && (member.role === 'owner' || member.role === 'admin')) ?? [];
+
+  function stageDraft(command: WorkspaceCommand) {
+    if (ws.pending !== null || ws.retryTarget !== null || draftMismatch) return;
+    ws.stage(command);
+  }
 
   function run(command: WorkspaceCommand) {
     if (ws.pending !== null || ws.retryTarget !== null || draftMismatch) return;
@@ -499,6 +557,12 @@ export function WorkspaceView() {
     setLastAction(null);
   }
 
+  function finishInvitationLink() {
+    if (!ws.hasInvitation) ws.clearInvitation();
+    ws.dismissOutcome();
+    setLastAction(null);
+  }
+
   async function loadMore(kind: LoadMoreKind) {
     if (loadingMore !== null || ws.pending !== null || ws.retryTarget !== null) return;
     setLoadingMore(kind);
@@ -519,10 +583,21 @@ export function WorkspaceView() {
   return (
     <>
       <a className={styles.skipLink} href="#main"><BilingualText value={copy.common.skip} /></a>
-      <main id="main" tabIndex={-1} className={styles.shell}>
+      <main id="main" tabIndex={-1} className={styles.shell} lang={lang}>
         <header className={styles.topbar}>
           <Link href="/" className={styles.backLink}><BilingualText value={copy.common.backHome} /></Link>
           <div className={styles.topbarActions}>
+            <div className={styles.localeField}>
+              <label className={styles.srOnly} htmlFor={localeId}><BilingualText value={copy.common.language} /></label>
+              <select
+                id={localeId}
+                value={lang}
+                onChange={event => onLangChange(event.currentTarget.value as Lang)}
+              >
+                <option value="es">Español</option>
+                <option value="en">English</option>
+              </select>
+            </div>
             {session !== null && (
               <span className={styles.account}>
                 <span className={styles.accountName}>{session.user.name}</span>
@@ -587,7 +662,7 @@ export function WorkspaceView() {
         />
 
         {invitationLinkVisible && invitationLink !== null && (
-          <InvitationLinkPanel link={invitationLink} onDone={dismiss} />
+          <InvitationLinkPanel link={invitationLink} onDone={finishInvitationLink} />
         )}
 
         {ws.status === 'loading' && (
@@ -638,7 +713,7 @@ export function WorkspaceView() {
                 {draftMemory && draftType !== null && (
                   <div className={styles.draftNotice}>
                     <p>
-                      <strong>{copy.operation.draftLabel.es} / <span lang="en">{copy.operation.draftLabel.en}</span>:</strong>{' '}
+                      <strong><BilingualText value={copy.operation.draftLabel} />:</strong>{' '}
                       <BilingualText value={commandName[draftType]} />
                     </p>
                     {draftScopeId !== null && (
@@ -694,18 +769,61 @@ export function WorkspaceView() {
           <section className={styles.emptyState} aria-labelledby="empty-heading">
             <h2 id="empty-heading" className={styles.sectionTitle}><BilingualText value={copy.status.emptyTitle} /></h2>
             <p className={styles.sectionBody}><BilingualText value={copy.status.emptyBody} /></p>
+            {workspaces !== null && workspaces.items.length > 0 && (
+              <div className={styles.card}>
+                <h3 className={styles.subheading}><BilingualText value={copy.workspace.availableTitle} /></h3>
+                <WorkspaceChooser
+                  workspaces={workspaces}
+                  selectedWorkspaceId={null}
+                  pending={ws.pending}
+                  onSelect={workspaceId => void ws.selectWorkspace(workspaceId)}
+                />
+              </div>
+            )}
             {ws.capabilities.canCreateWorkspace ? (
               <CreateWorkspaceForm
                 empty
                 disabled={commandsDisabled}
-                pending={ws.pending}
-                outcome={ws.outcome}
+                draft={ws.draft}
+                onStage={stageDraft}
                 onCommand={run}
               />
             ) : (
               <p className={styles.ownerNote}>
                 <BilingualText value={copy.status.emptyBody} />
               </p>
+            )}
+          </section>
+        )}
+
+        {(ws.status === 'forbidden' || ws.status === 'error') && (
+          <section className={styles.section} aria-labelledby="workspace-recovery-heading">
+            <div className={styles.sectionHeader}>
+              <div>
+                <h2 id="workspace-recovery-heading" className={styles.sectionTitle}>
+                  <BilingualText value={copy.workspace.switchTitle} />
+                </h2>
+                <p className={styles.sectionBody}><BilingualText value={copy.workspace.switchBody} /></p>
+              </div>
+            </div>
+            {workspaces !== null && workspaces.items.length > 0 && (
+              <div className={styles.card}>
+                <WorkspaceChooser
+                  workspaces={workspaces}
+                  selectedWorkspaceId={ws.selectedWorkspaceId}
+                  pending={ws.pending}
+                  onSelect={workspaceId => void ws.selectWorkspace(workspaceId)}
+                />
+              </div>
+            )}
+            {ws.capabilities.canCreateWorkspace && (
+              <CreateWorkspaceForm
+                empty={false}
+                disabled={commandsDisabled}
+                draft={ws.draft}
+                onStage={stageDraft}
+                onCommand={run}
+              />
             )}
           </section>
         )}
@@ -727,7 +845,9 @@ export function WorkspaceView() {
               canAdminister={ws.capabilities.canAdminister}
               disabled={commandsDisabled}
               busy={busy}
+              draft={ws.draft}
               loadingMore={loadingMore === 'members'}
+              onStage={stageDraft}
               onCommand={run}
               onLoadMore={() => void loadMore('members')}
             />
@@ -738,9 +858,9 @@ export function WorkspaceView() {
               canAdminister={ws.capabilities.canAdminister}
               disabled={commandsDisabled}
               busy={busy}
-              pending={ws.pending}
-              outcome={ws.outcome}
+              draft={ws.draft}
               loadingMore={loadingMore === 'members'}
+              onStage={stageDraft}
               onCommand={run}
               onLoadMore={() => void loadMore('members')}
             />
@@ -752,9 +872,9 @@ export function WorkspaceView() {
                 canAdminister={ws.capabilities.canAdminister}
                 disabled={commandsDisabled}
                 busy={busy || ws.retryTarget !== null}
-                pending={ws.pending}
-                outcome={ws.outcome}
+                draft={ws.draft}
                 loadingMore={loadingMore === 'invitations'}
+                onStage={stageDraft}
                 onCommand={run}
                 onLoadMore={() => void loadMore('invitations')}
               />
@@ -762,8 +882,8 @@ export function WorkspaceView() {
             <CreateWorkspaceForm
               empty={false}
               disabled={commandsDisabled}
-              pending={ws.pending}
-              outcome={ws.outcome}
+              draft={ws.draft}
+              onStage={stageDraft}
               onCommand={run}
             />
           </>

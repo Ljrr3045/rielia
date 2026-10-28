@@ -20,10 +20,8 @@ import {
   roleDescription,
   roleName,
   stateName,
-  type CommandType,
-  type OutcomeKind,
 } from './strings';
-import { Badge, BilingualText, ConfirmBox, cx, formatDate, phrase } from './workspace-ui';
+import { Badge, BilingualText, ConfirmBox, cx, formatDate, useLocale } from './workspace-ui';
 import styles from './workspace.module.css';
 
 const limitedRoles: readonly LimitedRole[] = ['admin', 'member', 'viewer'];
@@ -40,34 +38,44 @@ function memberName(members: Page<WorkspaceMember> | null, principalId: string |
 }
 
 function BilingualOption({ value }: { value: { es: string; en: string } }) {
-  return <>{phrase(value)}</>;
+  const lang = useLocale();
+  return <>{value[lang]}</>;
 }
 
 export function CreateWorkspaceForm({
   empty,
   disabled,
-  pending,
-  outcome,
+  draft,
+  onStage,
   onCommand,
 }: {
   empty: boolean;
   disabled: boolean;
-  pending: CommandType | null;
-  outcome: OutcomeKind | null;
+  draft: WorkspaceCommand | null;
+  onStage: (command: WorkspaceCommand) => void;
   onCommand: (command: WorkspaceCommand) => void;
 }) {
   const [name, setName] = useState('');
   const [error, setError] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
   const inputId = useId();
   const hintId = useId();
   const errorId = useId();
 
   useEffect(() => {
-    if (!submitted || pending !== null) return;
-    if (outcome === 'success') setName('');
-    if (outcome !== null) setSubmitted(false);
-  }, [outcome, pending, submitted]);
+    if (draft?.type === 'create-workspace') {
+      setName(draft.name);
+      setError(false);
+    } else if (draft === null) {
+      setName('');
+      setError(false);
+    }
+  }, [draft]);
+
+  function change(value: string) {
+    setName(value);
+    if (error) setError(false);
+    onStage({ type: 'create-workspace', name: value });
+  }
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -77,7 +85,6 @@ export function CreateWorkspaceForm({
       return;
     }
     setError(false);
-    setSubmitted(true);
     onCommand({ type: 'create-workspace', name: value });
   }
 
@@ -98,10 +105,7 @@ export function CreateWorkspaceForm({
             disabled={disabled}
             aria-invalid={error}
             aria-describedby={cx(hintId, error ? errorId : null)}
-            onChange={event => {
-              setName(event.currentTarget.value);
-              if (error) setError(false);
-            }}
+            onChange={event => change(event.currentTarget.value)}
           />
           <p id={hintId} className={styles.fieldHint}><BilingualText value={copy.workspace.nameHint} /></p>
           {error && (
@@ -142,34 +146,42 @@ export function CreateWorkspaceForm({
 function InviteForm({
   workspaceId,
   disabled,
-  pending,
-  outcome,
+  draft,
+  onStage,
   onCommand,
 }: {
   workspaceId: string;
   disabled: boolean;
-  pending: CommandType | null;
-  outcome: OutcomeKind | null;
+  draft: WorkspaceCommand | null;
+  onStage: (command: WorkspaceCommand) => void;
   onCommand: (command: WorkspaceCommand) => void;
 }) {
   const [email, setEmail] = useState('');
   const [role, setRole] = useState<LimitedRole>('member');
   const [error, setError] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
   const emailId = useId();
   const roleId = useId();
   const hintId = useId();
   const errorId = useId();
 
   useEffect(() => {
-    if (!submitted || pending !== null) return;
-    if (outcome === 'success') {
+    if (draft?.type === 'invite' && draft.workspaceId === workspaceId) {
+      setEmail(draft.recipientEmail);
+      setRole(draft.role);
+      setError(false);
+    } else if (draft === null) {
       setEmail('');
-      setSubmitted(false);
-    } else if (outcome !== null) {
-      setSubmitted(false);
+      setRole('member');
+      setError(false);
     }
-  }, [outcome, pending, submitted]);
+  }, [draft, workspaceId]);
+
+  function change(next: { email: string; role: LimitedRole }) {
+    setEmail(next.email);
+    setRole(next.role);
+    if (error) setError(false);
+    onStage({ type: 'invite', workspaceId, recipientEmail: next.email, role: next.role });
+  }
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -179,7 +191,6 @@ function InviteForm({
       return;
     }
     setError(false);
-    setSubmitted(true);
     onCommand({ type: 'invite', workspaceId, recipientEmail: value, role });
   }
 
@@ -199,10 +210,7 @@ function InviteForm({
             disabled={disabled}
             aria-invalid={error}
             aria-describedby={cx(hintId, error ? errorId : null)}
-            onChange={event => {
-              setEmail(event.currentTarget.value);
-              if (error) setError(false);
-            }}
+            onChange={event => change({ email: event.currentTarget.value, role })}
           />
           <p id={hintId} className={styles.fieldHint}><BilingualText value={copy.invitations.emailHint} /></p>
           {error && (
@@ -218,7 +226,7 @@ function InviteForm({
             name="invitation-role"
             value={role}
             disabled={disabled}
-            onChange={event => setRole(event.currentTarget.value as LimitedRole)}
+            onChange={event => change({ email, role: event.currentTarget.value as LimitedRole })}
           >
             {limitedRoles.map(value => (
               <option key={value} value={value}><BilingualOption value={limitedRoleName[value]} /></option>
@@ -382,9 +390,9 @@ export function InvitationsSection({
   canAdminister,
   disabled,
   busy,
-  pending,
-  outcome,
+  draft,
   loadingMore,
+  onStage,
   onCommand,
   onLoadMore,
 }: {
@@ -394,9 +402,9 @@ export function InvitationsSection({
   canAdminister: boolean;
   disabled: boolean;
   busy: boolean;
-  pending: CommandType | null;
-  outcome: OutcomeKind | null;
+  draft: WorkspaceCommand | null;
   loadingMore: boolean;
+  onStage: (command: WorkspaceCommand) => void;
   onCommand: (command: WorkspaceCommand) => void;
   onLoadMore: () => void;
 }) {
@@ -418,8 +426,8 @@ export function InvitationsSection({
         <InviteForm
           workspaceId={workspaceId}
           disabled={disabled}
-          pending={pending}
-          outcome={outcome}
+          draft={draft}
+          onStage={onStage}
           onCommand={onCommand}
         />
       </div>
@@ -457,12 +465,16 @@ function HumanMemberCard({
   workspaceId,
   canAdminister,
   disabled,
+  draft,
+  onStage,
   onCommand,
 }: {
   member: WorkspaceMember;
   workspaceId: string;
   canAdminister: boolean;
   disabled: boolean;
+  draft: WorkspaceCommand | null;
+  onStage: (command: WorkspaceCommand) => void;
   onCommand: (command: WorkspaceCommand) => void;
 }) {
   const baseRole: LimitedRole = member.role === 'owner' ? 'member' : member.role;
@@ -471,6 +483,19 @@ function HumanMemberCard({
   const roleId = useId();
   const openerRef = useRef<HTMLButtonElement | null>(null);
   const principalInactive = member.principalState !== 'active';
+
+  useEffect(() => {
+    if (draft?.type === 'update-member' && draft.workspaceId === workspaceId && draft.principalId === member.principalId && draft.role !== undefined) {
+      setNextRole(draft.role);
+    } else if (draft === null) {
+      setNextRole(baseRole);
+    }
+  }, [baseRole, draft, member.principalId, workspaceId]);
+
+  function changeRole(role: LimitedRole) {
+    setNextRole(role);
+    onStage({ type: 'update-member', workspaceId, principalId: member.principalId, version: member.version, role });
+  }
 
   function review(next: MemberAction, opener: HTMLButtonElement) {
     openerRef.current = opener;
@@ -540,7 +565,7 @@ function HumanMemberCard({
           <Badge tone={stateTone(member.state)}><BilingualText value={stateName[member.state]} /></Badge>
           {member.principalState !== member.state && (
             <Badge tone={stateTone(member.principalState)}>
-              {copy.members.principalState.es} / <span lang="en">{copy.members.principalState.en}: {stateName[member.principalState].es} / {stateName[member.principalState].en}</span>
+              <BilingualText value={copy.members.principalState} />: <BilingualText value={stateName[member.principalState]} />
             </Badge>
           )}
         </div>
@@ -581,7 +606,7 @@ function HumanMemberCard({
                     id={roleId}
                     value={nextRole}
                     disabled={disabled || action !== null}
-                    onChange={event => setNextRole(event.currentTarget.value as LimitedRole)}
+                    onChange={event => changeRole(event.currentTarget.value as LimitedRole)}
                   >
                     {limitedRoles.map(value => (
                       <option key={value} value={value}><BilingualOption value={limitedRoleName[value]} /></option>
@@ -701,12 +726,12 @@ function AgentMemberRow({
         </div>
         <div>
           <dt><BilingualText value={copy.members.custodian} /></dt>
-          <dd className={styles.longValue}>{custodian ?? member.custodianPrincipalId ?? phrase(copy.members.custodianUnavailable)}</dd>
+          <dd className={styles.longValue}>{custodian ?? member.custodianPrincipalId ?? <BilingualText value={copy.members.custodianUnavailable} />}</dd>
         </div>
       </dl>
       {member.principalState !== 'active' && (
         <p className={styles.ownerNote}>
-          {copy.members.principalState.es} / <span lang="en">{copy.members.principalState.en}</span>: {stateName[member.principalState].es} / {stateName[member.principalState].en}
+          <BilingualText value={copy.members.principalState} />: <BilingualText value={stateName[member.principalState]} />
         </p>
       )}
       {canAdminister && <a className={styles.inlineLink} href="#agents"><BilingualText value={copy.members.manageInAgents} /></a>}
@@ -720,7 +745,9 @@ export function MembersSection({
   canAdminister,
   disabled,
   busy,
+  draft,
   loadingMore,
+  onStage,
   onCommand,
   onLoadMore,
 }: {
@@ -729,7 +756,9 @@ export function MembersSection({
   canAdminister: boolean;
   disabled: boolean;
   busy: boolean;
+  draft: WorkspaceCommand | null;
   loadingMore: boolean;
+  onStage: (command: WorkspaceCommand) => void;
   onCommand: (command: WorkspaceCommand) => void;
   onLoadMore: () => void;
 }) {
@@ -753,6 +782,8 @@ export function MembersSection({
               workspaceId={workspaceId}
               canAdminister={canAdminister}
               disabled={disabled}
+              draft={draft}
+              onStage={onStage}
               onCommand={onCommand}
             />
           ) : (
@@ -782,22 +813,21 @@ function AgentRegistrationForm({
   workspaceId,
   custodians,
   disabled,
-  pending,
-  outcome,
+  draft,
+  onStage,
   onCommand,
 }: {
   workspaceId: string;
   custodians: readonly WorkspaceMember[];
   disabled: boolean;
-  pending: CommandType | null;
-  outcome: OutcomeKind | null;
+  draft: WorkspaceCommand | null;
+  onStage: (command: WorkspaceCommand) => void;
   onCommand: (command: WorkspaceCommand) => void;
 }) {
   const [name, setName] = useState('');
   const [role, setRole] = useState<'member' | 'viewer'>('member');
   const [custodian, setCustodian] = useState('');
   const [error, setError] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
   const nameId = useId();
   const roleId = useId();
   const custodianId = useId();
@@ -805,19 +835,32 @@ function AgentRegistrationForm({
   const errorId = useId();
 
   useEffect(() => {
-    if (!submitted || pending !== null) return;
-    if (outcome === 'success') {
+    if (draft?.type === 'register-agent' && draft.workspaceId === workspaceId) {
+      setName(draft.name);
+      setRole(draft.role);
+      setCustodian(draft.custodianPrincipalId);
+      setError(false);
+    } else if (draft === null) {
       setName('');
+      setRole('member');
       setCustodian('');
-      setSubmitted(false);
-    } else if (outcome !== null) {
-      setSubmitted(false);
+      setError(false);
     }
-  }, [outcome, pending, submitted]);
+  }, [draft, workspaceId]);
 
-  useEffect(() => {
-    if (custodian && !custodians.some(member => member.principalId === custodian)) setCustodian('');
-  }, [custodian, custodians]);
+  function change(next: { name: string; role: 'member' | 'viewer'; custodian: string }) {
+    setName(next.name);
+    setRole(next.role);
+    setCustodian(next.custodian);
+    if (error) setError(false);
+    onStage({
+      type: 'register-agent',
+      workspaceId,
+      name: next.name,
+      role: next.role,
+      custodianPrincipalId: next.custodian,
+    });
+  }
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -827,7 +870,6 @@ function AgentRegistrationForm({
       return;
     }
     setError(false);
-    setSubmitted(true);
     onCommand({
       type: 'register-agent',
       workspaceId,
@@ -858,10 +900,7 @@ function AgentRegistrationForm({
                 disabled={disabled}
                 aria-invalid={error}
                 aria-describedby={cx(hintId, error ? errorId : null)}
-                onChange={event => {
-                  setName(event.currentTarget.value);
-                  if (error) setError(false);
-                }}
+                onChange={event => change({ name: event.currentTarget.value, role, custodian })}
               />
               <p id={hintId} className={styles.fieldHint}><BilingualText value={copy.agents.nameHint} /></p>
               {error && (
@@ -876,7 +915,7 @@ function AgentRegistrationForm({
                 id={roleId}
                 value={role}
                 disabled={disabled}
-                onChange={event => setRole(event.currentTarget.value as 'member' | 'viewer')}
+                onChange={event => change({ name, role: event.currentTarget.value as 'member' | 'viewer', custodian })}
               >
                 <option value="member"><BilingualOption value={agentRoleName.member} /></option>
                 <option value="viewer"><BilingualOption value={agentRoleName.viewer} /></option>
@@ -890,10 +929,7 @@ function AgentRegistrationForm({
                 value={custodian}
                 disabled={disabled}
                 required
-                onChange={event => {
-                  setCustodian(event.currentTarget.value);
-                  if (error) setError(false);
-                }}
+                onChange={event => change({ name, role, custodian: event.currentTarget.value })}
               >
                 <option value=""><BilingualOption value={copy.agents.custodianPlaceholder} /></option>
                 {custodians.map(member => (
@@ -921,6 +957,8 @@ function AgentCard({
   custodians,
   canAdminister,
   disabled,
+  draft,
+  onStage,
   onCommand,
 }: {
   member: WorkspaceMember;
@@ -929,6 +967,8 @@ function AgentCard({
   custodians: readonly WorkspaceMember[];
   canAdminister: boolean;
   disabled: boolean;
+  draft: WorkspaceCommand | null;
+  onStage: (command: WorkspaceCommand) => void;
   onCommand: (command: WorkspaceCommand) => void;
 }) {
   const custodian = memberName(members, member.custodianPrincipalId);
@@ -940,6 +980,19 @@ function AgentCard({
   const membershipActive = member.state === 'active';
   const controlsAvailable = canAdminister && !disabled && membershipActive && !retired;
   const otherCustodians = custodians.filter(memberOption => memberOption.principalId !== member.custodianPrincipalId);
+
+  useEffect(() => {
+    if (draft?.type === 'manage-agent' && draft.workspaceId === workspaceId && draft.principalId === member.principalId && draft.custodianPrincipalId !== undefined) {
+      setNextCustodian(draft.custodianPrincipalId);
+    } else if (draft === null) {
+      setNextCustodian('');
+    }
+  }, [draft, member.principalId, workspaceId]);
+
+  function changeCustodian(custodianPrincipalId: string) {
+    setNextCustodian(custodianPrincipalId);
+    onStage({ type: 'manage-agent', workspaceId, principalId: member.principalId, version: member.version, custodianPrincipalId });
+  }
 
   function review(next: AgentAction, opener: HTMLButtonElement) {
     openerRef.current = opener;
@@ -1009,7 +1062,7 @@ function AgentCard({
         </div>
         <div>
           <dt><BilingualText value={copy.agents.currentCustodian} /></dt>
-          <dd className={styles.longValue}>{custodian ?? member.custodianPrincipalId ?? phrase(copy.members.custodianUnavailable)}</dd>
+          <dd className={styles.longValue}>{custodian ?? member.custodianPrincipalId ?? <BilingualText value={copy.members.custodianUnavailable} />}</dd>
         </div>
       </dl>
 
@@ -1058,7 +1111,7 @@ function AgentCard({
                 id={custodianId}
                 value={nextCustodian}
                 disabled={disabled || action !== null}
-                onChange={event => setNextCustodian(event.currentTarget.value)}
+                onChange={event => changeCustodian(event.currentTarget.value)}
               >
                 <option value=""><BilingualOption value={copy.agents.changeCustodian} /></option>
                 {otherCustodians.map(memberOption => (
@@ -1122,9 +1175,9 @@ export function AgentsSection({
   canAdminister,
   disabled,
   busy,
-  pending,
-  outcome,
+  draft,
   loadingMore,
+  onStage,
   onCommand,
   onLoadMore,
 }: {
@@ -1134,9 +1187,9 @@ export function AgentsSection({
   canAdminister: boolean;
   disabled: boolean;
   busy: boolean;
-  pending: CommandType | null;
-  outcome: OutcomeKind | null;
+  draft: WorkspaceCommand | null;
   loadingMore: boolean;
+  onStage: (command: WorkspaceCommand) => void;
   onCommand: (command: WorkspaceCommand) => void;
   onLoadMore: () => void;
 }) {
@@ -1157,8 +1210,8 @@ export function AgentsSection({
         workspaceId={workspaceId}
         custodians={custodians}
         disabled={disabled || custodians.length === 0}
-        pending={pending}
-        outcome={outcome}
+        draft={draft}
+        onStage={onStage}
         onCommand={onCommand}
       />
 
@@ -1178,6 +1231,8 @@ export function AgentsSection({
               custodians={custodians}
               canAdminister={canAdminister}
               disabled={disabled}
+              draft={draft}
+              onStage={onStage}
               onCommand={onCommand}
             />
           ))}

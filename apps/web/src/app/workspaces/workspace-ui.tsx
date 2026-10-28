@@ -1,25 +1,30 @@
 'use client';
 
-import { useEffect, useId, useRef } from 'react';
+import { createContext, useContext, useEffect, useId, useRef } from 'react';
 import type { ReactNode } from 'react';
 import type { Bilingual } from './strings';
 import { copy } from './strings';
 import styles from './workspace.module.css';
 
+export type Lang = 'es' | 'en';
+
+const LocaleContext = createContext<Lang>('es');
+
+export function LocaleProvider({ lang, children }: { lang: Lang; children: ReactNode }) {
+  return <LocaleContext.Provider value={lang}>{children}</LocaleContext.Provider>;
+}
+
+export function useLocale(): Lang {
+  return useContext(LocaleContext);
+}
+
 export function cx(...values: Array<string | false | null | undefined>): string {
   return values.filter((value): value is string => typeof value === 'string' && value.length > 0).join(' ');
 }
 
-export function phrase(value: Bilingual): string {
-  return `${value.es} / ${value.en}`;
-}
-
 export function BilingualText({ value }: { value: Bilingual }) {
-  return (
-    <>
-      {value.es} / <span lang="en">{value.en}</span>
-    </>
-  );
+  const lang = useLocale();
+  return <>{value[lang]}</>;
 }
 
 export function formatDate(value: string): string {
@@ -30,7 +35,7 @@ export function formatDate(value: string): string {
 
 type BadgeTone = 'neutral' | 'brand' | 'warning' | 'danger' | 'success';
 
-const badgeTone: Record<BadgeTone, string> = {
+const badgeTone: Record<BadgeTone, string | undefined> = {
   neutral: styles.badgeNeutral,
   brand: styles.badgeBrand,
   warning: styles.badgeWarning,
@@ -45,7 +50,7 @@ export function Badge({ children, tone = 'neutral' }: { children: ReactNode; ton
 export function ConfirmBox({
   title,
   consequence,
-  details,
+  children,
   confirmLabel,
   danger = false,
   disabled = false,
@@ -54,7 +59,7 @@ export function ConfirmBox({
 }: {
   title: Bilingual;
   consequence: Bilingual;
-  details?: ReactNode;
+  children?: ReactNode;
   confirmLabel: Bilingual;
   danger?: boolean;
   disabled?: boolean;
@@ -73,7 +78,7 @@ export function ConfirmBox({
       <h3 id={titleId} ref={headingRef} tabIndex={-1} className={styles.confirmTitle}>
         <BilingualText value={title} />
       </h3>
-      {details}
+      {children}
       <p className={styles.confirmText}><BilingualText value={consequence} /></p>
       <div className={styles.formActions}>
         <button
