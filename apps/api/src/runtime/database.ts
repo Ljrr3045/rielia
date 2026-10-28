@@ -47,7 +47,10 @@ export async function assertIdentitySchema(pool: pg.Pool): Promise<void> {
   }
   const tables = await pool.query<{ valid: boolean }>(`SELECT
     to_regclass('public.user') IS NOT NULL AND to_regclass('public.session') IS NOT NULL
-    AND to_regclass('public.account') IS NOT NULL AND to_regclass('public.verification') IS NOT NULL AS valid`);
+    AND to_regclass('public.account') IS NOT NULL AND to_regclass('public.verification') IS NOT NULL
+    AND to_regclass('public.principal') IS NOT NULL AND to_regclass('public.workspace') IS NOT NULL
+    AND to_regclass('public.membership') IS NOT NULL AND to_regclass('public.execution_grant') IS NOT NULL
+    AND to_regclass('public.principal_policy_fence') IS NOT NULL AS valid`);
   if (!tables.rows[0]?.valid) throw new Error('Identity schema is unavailable.');
 }
 

@@ -1,19 +1,22 @@
 # Delivery progress and decisions
 
-Updated: 2026-10-27 UTC. This is repository delivery tracking, separate from the
+Updated: 2026-10-28 UTC. This is repository delivery tracking, separate from the
 unchanged [handoff](../handoff/00-START-HERE.md). Plans describe intended outcomes,
 not completed implementation. This checkout has the T02.0 fixture, merged T02.1/
 T02.2 identity experiment, and a fictional T01/B0 task-prototype logic adapter plus
 its responsive presentation, the merged T03.0 experimental local MCP health wrapper,
-and T04.0's opt-in preparatory local Docker runtime/diagnostic worker.
+and T04.0's opt-in preparatory local Docker runtime/diagnostic worker. T35.0 now
+adds bounded principal/minimal workspace/membership foundations and verified
+execution, with actual task/comment/history/export integration still future work.
 It has no production task product, deployment, or
 software release. The coordinator owns integration and status across workers.
 
 The user's [2026-10-27 stack and sequencing decision](stack-validation-decisions.md)
 approves the current stack except Express. The [authorized migration](nest-http-adapter.md)
 now uses official Nest NodeAdapter 12.3.2 and checks actual API/worker/migration
-dependency closure. T35 is the next product foundation under the sequencing
-override. Real provider/staging, staging-dependent remote OAuth discovery and
+dependency closure. [T35.0 foundations](principal-foundations.md) follow it under
+the sequencing override; full T35 and T05/T06/T12 remain incomplete.
+Real provider/staging, staging-dependent remote OAuth discovery and
 real-project/user acceptance are OPEN/DEFERRED until an advanced end-to-end slice
 and user scheduling. This overrides their immediate scheduling gate for local
 implementation, without completing tickets or weakening automated checks/launch gates.
@@ -22,11 +25,12 @@ implementation, without completing tickets or weakening automated checks/launch 
 
 | Field | Evidence/state |
 | --- | --- |
-| Scope | T02/T04 Nest migration without Express, preserving P01/US01 and P38/US24–US25 boundaries; supported NodeAdapter, identity/security regressions, installed/deployed closure guards and active docs. No UI/domain/schema/workflow/deployment or full-ticket acceptance |
-| Base | `origin/dev` at PR #10 merge `3efb49fde4f43d9d58964510c3ef61f744bea062` |
-| Branch | `refactor/nest-without-express`; purpose prefixes without usernames are the user convention |
-| Worktree | Isolated Orca checkout `refactor-nest-without-express`; sole owner Codex `gpt-6.1-sol`, `xhigh`, verified from live terminal state; no helpers |
-| Current PR | [#11](https://github.com/Ljrr3045/rielia/pull/11), one non-draft English PR to `dev`. All applicable local checks pass; current-head CI and coordinator-triggered Kody evidence/dispositions must be recorded in the PR before delivery |
+| Scope | T35.0/B1 principal/authorship foundation for P38/US24–US25 and principal portions of P03/P05/P10: additive PG constraints, minimal workspace/membership, internal policy services and verified web context. No UI, credentials, task/comment/export integration, deployment or full-ticket acceptance |
+| Base | `origin/dev` at PR #11 merge `70314c550b643fd5678375939535cdb93331c9b2` |
+| Branch | `feat/t35-principal-foundations`; purpose prefixes without usernames are the user convention |
+| Worktree | Isolated Orca checkout `feat-t35-principal-foundations`; sole owner Codex `gpt-6.1-sol`, `xhigh`, verified from live terminal preview; no helpers |
+| Current PR | [#12](https://github.com/Ljrr3045/rielia/pull/12), one English non-draft PR to `dev`; all applicable local checks pass. Exact-head CI and coordinator-triggered Kody review/dispositions are required before delivery |
+| Adapter migration PR | [#11](https://github.com/Ljrr3045/rielia/pull/11) merged 2026-10-27T20:30:56Z as `70314c550b643fd5678375939535cdb93331c9b2`; final reviewed head `eb8b19c91cd065b4308af2025f5d16d2533d6ea3`, [Kody approval 5673819042](https://github.com/Ljrr3045/rielia/pull/11#pullrequestreview-5673819042), [CI 40577221864](https://github.com/Ljrr3045/rielia/actions/runs/40577221864). Coordinator confirms its completed worktree removed |
 | Stack decision PR | [#10](https://github.com/Ljrr3045/rielia/pull/10) merged 2026-10-27T19:58:09Z as `3efb49fde4f43d9d58964510c3ef61f744bea062`; final reviewed head `81f884122dd0ab99e0a73c767b99d7aa7db6ba64`, Kody approved that head and [CI 40571647316](https://github.com/Ljrr3045/rielia/actions/runs/40571647316) passed. Fresh GitHub reads confirm merge/review/checks; coordinator reports its completed worktree removed |
 | T04.0 PR | [#9](https://github.com/Ljrr3045/rielia/pull/9) merged 2026-10-27T19:25:58Z as `74779941905937ca7c05217169b0ef3028c10b9c`; final reviewed head `0fcd6c4ea9b2aa05940b795c871d2d30ec3f4742`, [Kody approval 5672890614](https://github.com/Ljrr3045/rielia/pull/9#pullrequestreview-5672890614), [CI 40565906228](https://github.com/Ljrr3045/rielia/actions/runs/40565906228). Fresh GitHub reads confirm merge/approval/passing checks; coordinator confirms prior worktree removed |
 | T03.0 PR | [#8](https://github.com/Ljrr3045/rielia/pull/8) merged 2026-10-26T19:31:05Z as `cb92d90f433873c4e98f2a3b6a2401cc6ddad48b`; final reviewed head `7ead11bb6f333d017ff12a6cd5998c972a8bfbaf`, [Kody approval 5657821543](https://github.com/Ljrr3045/rielia/pull/8#pullrequestreview-5657821543). Fresh GitHub reads confirm merge/approval; Orca inventory confirms completed worktree removed |
@@ -49,6 +53,65 @@ and requested deletion of its entire workflow, including the inherited version.
 The coordinator alone posts each ready head's Kody trigger and merges after
 validation and feedback handling. T00 itself added no app/scaffold scope; its
 final Kody approval covered head `53243fbea2ae6c4f5a1ab3e47d6e1dc8cc296cec`.
+
+## T35.0 principal/authorship foundations
+
+The [focused guide](principal-foundations.md) records exact scope, service trust
+boundaries, migration/backfill, acceptance and limits. PostgreSQL checks enforce
+human User linkage/uniqueness, immutable identity, workspace-bound member/viewer
+agents, retained historical references and active human owner/admin custodians.
+Minimal workspace/membership storage is prerequisite substrate, not full T05.
+An additive migration backfills existing users and atomically maps new users;
+prior SQL remains byte-identical. A reserved System identity has no login or
+ordinary assignment. Internal immutable policy grants distinguish own-human
+delegation and autonomous subjects without implementing credentials.
+
+The read-only context endpoint verifies actual Better Auth sessions and current
+membership. Internal opaque contexts revalidate under the same SQL fence as
+policy mutations and session revocation. Custodian departure requires explicit
+transfer or suspension; creator/author attribution remains independent from
+nullable assignee. This is a foundation helper, not actual task/comment/history/
+export persistence. T06 project access, immutable domain authorship and atomic
+activity/outbox integration, plus T12 credential verification, remain incomplete.
+
+Local Node 24.22.1/pnpm 12.15.0 evidence: frozen install and final-source
+`pnpm check` pass (lint, 286-package Express-free backend closure, process cleanup,
+seven identity logic/client, 19 prototype and 17 MCP checks, strict types/builds
+and production HTTP smoke). `pnpm test:identity` passes 12 principal checks and
+all original 23 identity checks on real PostgreSQL 18.6; provider HTTP is simulated.
+Existing-user backfill and repeated deploy, direct SQL negative constraints,
+same-workspace delegated equality, viewer scope ceiling after promotion,
+two-workspace/forged context rejection, assignment independence, expiry/revocation
+and issuer/custodian independence are covered. Direct SQL races observe actual
+blocking at READ COMMITTED/REPEATABLE READ/SERIALIZABLE and recover after rollback
+and explicit transfer. A service mutation waits behind session revocation then
+denies without writing. The disposable database was removed.
+
+Complete Docker regression passes for the additive migration packaging/checksum
+gate, delayed DDL, readiness/DB recovery, durable diagnostic job/restart, lock and
+signal cleanup, nonroot image exclusions and deployed-store Express absence.
+The final-source Docker rerun also passes and removes its owned containers,
+networks, volume and image tags. Audit reports no known vulnerabilities.
+Handoff/link and whitespace checks pass;
+no dependency or source-handoff change is included. Current-head CI and complete
+coordinator-triggered Kody review remain required before worker delivery.
+
+The singleton policy/session write fence and deferred table scans deliberately
+favor correctness for this small substrate; pure context reads use compatible
+shared locks. No scale/performance claim is made.
+User deletion/terminal revocation retention policy, project policy, full T35,
+T05/T06/T12, RLS/least-privilege deployment roles and real provider/HTTPS/staging/
+real-project/user acceptance remain open. No UI, main-checkout file, credentials,
+staging or production deployment is touched.
+
+PR #12's first Kody round found valid [permanent-error classification](https://github.com/Ljrr3045/rielia/pull/12#discussion_r4404439258)
+and [exclusive context-read locking](https://github.com/Ljrr3045/rielia/pull/12#discussion_r4404439735)
+issues. Both added regressions fail pre-fix and pass with generic 400/409 mapping,
+explicit terminal-state conflict and shared read fences. Real Prisma/PG constraints
+are covered alongside an actual HTTP unavailable-storage 503 and observed
+read/write synchronization; original revocation/concurrent-write tests remain
+passing. Initial submitted reviews bind `25b91add`, not final approval. Changed
+heads require a fresh coordinator trigger and complete current-head review.
 
 ## T02.0 technical fixture
 
@@ -108,9 +171,9 @@ the following records preserve the original first-wave scope and acceptance:
    open. PR #9 is merged; see [runtime scope and evidence](local-runtime.md). This is a preparatory
    split of the B1 T04 ticket, without business effects, deployment or full acceptance.
 
-Next authorized product step after this migration: **T35**, bounded principal/
-authorship foundations under the user's local sequencing override. It is not
-implemented by this change and must precede T05/T06/T12.
+Current bounded product step: **T35.0**, principal/authorship foundations under
+the user's local sequencing override. The substrate precedes T05/T06/T12;
+remaining T35 domain/API/web/MCP/history/export integration is not complete.
 
 Convergence: T02 + T03 → T04 → **T35** → T05 → T06. The principal/authorship model
 must precede workspaces/tasks/credentials despite T35's number. T01 supplies UI
@@ -140,7 +203,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T02 | B0 | Identity/proxy integration spike | None | T02.1/T02.2 merged partial evidence; current NodeAdapter migration preserves local parity; real provider/staging acceptance OPEN/DEFERRED under user sequencing |
 | T03 | B0 | MCP SDK/wrapper/minimal remote profile spike | T02 for remote auth | Partial T03.0 local public liveness only; staging-dependent discovery/auth OPEN/DEFERRED; product catalog/credentials and full acceptance remain open |
 | T04 | B1 foundations | Monorepo, images, worker/queue, initial migration | T02–T03 | Partial T04.0 merged; full acceptance/dependencies stay open. Dated user override permits local implementation with listed real validation deferred |
-| T05 | B1a | Auth, workspaces, principal memberships | T04, T35 | Not started |
+| T05 | B1a | Auth, workspaces, principal memberships | T04, T35 | Not started as full workflow; T35.0 introduces only required minimal substrate |
 | T06 | B1a | Projects/tasks, versions, idempotency, atomic activity/outbox | T05 | Not started |
 | T07 | B1b | Invitations, revocation, roles/private projects | T06 | Not started |
 | T08 | B1b | List/Kanban, filters, ranking | T06 | Not started |
@@ -170,7 +233,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T32 | Marketing (optional capture) | Confirmed leads/backend/worker/SMTP | T04, T31 | Not started; no waitlist/access staging |
 | T33 | Marketing (future) | Metadata, localized SEO, minimal measurement | T31; T32 if capture active | Not started |
 | T34 | Marketing launch gate | Verify/enable public marketing launch | T31, T33; T32 if capture active | Not started |
-| T35 | B1 foundations | Principal model, immutable authorship, autonomous memberships | T04; precedes T05/T06/T12 | Not started |
+| T35 | B1 foundations | Principal model, immutable authorship, autonomous memberships | T04; precedes T05/T06/T12 | T35.0 bounded storage/policy/context implemented; full authorship/domain/export/credential integration incomplete |
 
 Public release is one launch followed by continuous updates. Internal B1 readiness,
 private T15 deployment, and marketing T34 do not substitute for T24. B3 follows
@@ -182,7 +245,7 @@ actual use/demand; no launch date or public capacity has been established.
 | --- | --- | --- |
 | License | Pending user answer; Apache-2.0 remains a proposal; no LICENSE adopted | User/maintainer records selection and notice/dependency review |
 | Stack | User approved current stack except Express, 2026-10-27 | [Dated decision](stack-validation-decisions.md); no automatic ratification of future dependencies/ADRs |
-| Express removal | Implemented with coherent Nest NodeAdapter 12.3.2; current PR delivery/review gates apply | [Adapter rationale, source/integrity, security and closure evidence](nest-http-adapter.md); no Express runtime/deployed backend coupling; T35 next |
+| Express removal | Merged PR #11 with coherent Nest NodeAdapter 12.3.2 and exact-head CI/Kody | [Adapter rationale, source/integrity, security and closure evidence](nest-http-adapter.md); T35.0 preserves runtime/deployed backend closure |
 | Real validation sequencing | OPEN/DEFERRED until advanced end-to-end product slice and user scheduling; no immediate blocker to authorized local implementation | Retain staging/provider/HTTPS, staging-dependent discovery and real-project/user backlog; automated checks/CI/Kody and public-launch gates still apply |
 | Local MCP split | Coordinator originally authorized T03.0 public health-only stdio before stack approval | [Versions, actual terminal-client matrix and limits](local-mcp.md); no remote OAuth/credential/domain acceptance |
 | Branch names | User requires `feat/**`, `fix/**`, `refactor/**`, `docs/**`, `chore/**`, `test/**` by purpose, never username prefixes | Worktree names correspond; coordinator renamed the empty Orca-created branch before development and verified `feat/t03-local-mcp` |
@@ -190,7 +253,7 @@ actual use/demand; no launch date or public capacity has been established.
 | Name/logo and identity | Rielia working name and v0.1 kit remain proposals, not final approval | User/brand review; availability not recertified by import |
 | Landing | Current request is design planning for later development; no final design approved | Separate authorized design/implementation scope; use document 05 |
 | Launch | One public launch, continuous updates; no access calendar/waitlist | Maintainer verifies T24 and applicable T34 checks before public access |
-| Principal/authorship | Fixed invariant: delegated user is author; autonomous Agent has own identity; creator/assignee separate | T35 then relevant API/web/MCP/isolation evidence |
+| Principal/authorship | T35.0 implements bounded identity/membership/policy and server-derived context; delegated user and autonomous Agent remain distinct | [Scope and local evidence](principal-foundations.md); actual task/comment/export and verified credential adapters remain future work |
 | Private-project admin visibility | Plan proposes owner/admin can read/administer all projects; requires B0 decision | User/maintainer ratification; communicate before implementation |
 | Operations/public service | VPS capacity, budget/date, registration policy, public obligations not established | Maintainer records decisions and measured readiness in later tickets |
 | Automated review | Kody AI replaces OpenCode; every ready PR/head needs an explicit root `@kody start-review` request | Coordinator alone posts trigger; worker verifies reviewed head, issue comments, formal reviews, inline comments, and applicable checks |

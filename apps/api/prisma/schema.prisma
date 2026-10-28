@@ -19,7 +19,74 @@ model User {
   updatedAt DateTime @updatedAt
   sessions Session[]
   accounts Account[]
+  principal Principal?
   @@map("user")
+}
+
+// T35.0 keeps the small domain substrate backend-local. SQL migration supplies
+// checks, immutable identity guards and deferred cross-row policy constraints.
+model Principal {
+  id String @id @default(dbgenerated("gen_random_uuid()::text"))
+  kind String
+  state String @default("active")
+  displayName String
+  userId String? @unique
+  user User? @relation(fields: [userId], references: [id], onDelete: Restrict)
+  workspaceId String?
+  workspace Workspace? @relation("AgentWorkspace", fields: [workspaceId], references: [id], onDelete: Restrict)
+  custodianPrincipalId String?
+  custodian Principal? @relation("Custodian", fields: [custodianPrincipalId], references: [id], onDelete: Restrict)
+  managedAgents Principal[] @relation("Custodian")
+  memberships Membership[]
+  ownedWorkspaces Workspace[] @relation("WorkspaceOwner")
+  subjectGrants ExecutionGrant[] @relation("GrantSubject")
+  authorizedGrants ExecutionGrant[] @relation("GrantAuthorizer")
+  createdAt DateTime @default(now())
+  @@index([workspaceId])
+  @@index([custodianPrincipalId])
+  @@map("principal")
+}
+
+model Workspace {
+  id String @id
+  name String
+  ownerPrincipalId String
+  owner Principal @relation("WorkspaceOwner", fields: [ownerPrincipalId], references: [id], onDelete: Restrict)
+  agents Principal[] @relation("AgentWorkspace")
+  memberships Membership[]
+  grants ExecutionGrant[]
+  createdAt DateTime @default(now())
+  @@map("workspace")
+}
+
+model Membership {
+  workspaceId String
+  principalId String
+  role String
+  state String @default("active")
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+  principal Principal @relation(fields: [principalId], references: [id], onDelete: Restrict)
+  @@id([workspaceId, principalId])
+  @@index([principalId])
+  @@map("membership")
+}
+
+// Policy records only: no token, OAuth consent, client authentication or secret.
+model ExecutionGrant {
+  id String @id
+  workspaceId String
+  subjectPrincipalId String
+  authorizedByPrincipalId String
+  mode String
+  allowedOperations String[]
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime @default(now())
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+  subject Principal @relation("GrantSubject", fields: [subjectPrincipalId], references: [id], onDelete: Restrict)
+  authorizer Principal @relation("GrantAuthorizer", fields: [authorizedByPrincipalId], references: [id], onDelete: Restrict)
+  @@index([workspaceId, subjectPrincipalId])
+  @@map("execution_grant")
 }
 
 model Session {

@@ -6,6 +6,17 @@ This records repository changes. No application version has been released.
 
 ### Added
 
+- T35.0/B1: PostgreSQL principal foundations with atomic unique human User mapping,
+  workspace-bound autonomous agents, reserved System identity, minimal workspace/
+  membership policy, retained historical identity, active owner/custodian guards,
+  internal immutable grant policy records and verified web execution context.
+  Add direct SQL, existing-user migration, two-workspace, impersonation, revocation
+  and observed concurrent-transaction regressions. Creator/author/independent
+  assignment types/helpers prepare future domain work; actual task/comment/
+  history/export integration and credentials remain incomplete.
+  [Scope, services, migration and limits](docs/development/principal-foundations.md);
+  [PR #12](https://github.com/Ljrr3045/rielia/pull/12).
+
 - T04.0/B0: provisional local Docker Compose runtime with Next standalone,
   a shared nonroot API/worker backend image, private PostgreSQL/named volume,
   migration one-shot gate and separate database/schema readiness. A single fixed
@@ -72,6 +83,18 @@ This records repository changes. No application version has been released.
   override addresses GHSA-q7qp-rjg7-q26m in the Nest adapter dependency.
 
 ### Changed
+
+- T35.0 review fixes: return sanitized 400/409 for permanent storage/state
+  failures, retaining 503 for outages; use compatible shared context-read fences
+  while policy/session mutations keep exclusive atomic authorization. Actual
+  PostgreSQL regressions reproduce both prior defects and verify the fixes.
+
+- Reconcile PR #11 as merged 2026-10-27T20:30:56Z at `70314c5`, following
+  reviewed head `eb8b19c`, exact-head Kody approval and CI 40577221864; its
+  completed worktree was removed. T35.0 follows it without completing full T35.
+- Extend local migration packaging/checksum regression to each additive migration;
+  preserve original identity SQL, disabled-identity default, official NodeAdapter,
+  Express-free backend closure and diagnostic-only worker boundaries.
 
 - Replace the Nest Express runtime with official NodeAdapter, using matching
   common/core/platform-node **12.3.2** and supported Nest APIs. Preserve raw

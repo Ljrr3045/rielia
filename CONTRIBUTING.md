@@ -36,9 +36,10 @@ uses the official Nest NodeAdapter with matching common/core/platform-node 12.3.
 Preserve Nest controllers/providers/guards, identity/security parity and Express
 absence throughout the actual API/worker/migration closure, including optional
 peers. `pnpm check:backend-closure` follows installed Node resolution; runtime
-smoke also inspects the complete deployed stores. T35 is the next product
-foundation step under the user's sequencing override; this migration implements
-no domain principal or membership.
+smoke also inspects the complete deployed stores. The separately delivered
+[T35.0 foundations](docs/development/principal-foundations.md) add backend-local
+principals, minimal workspace/membership policy and verified execution after that
+migration; full T35/T05/T06/T12 remain incomplete.
 
 Real provider/HTTPS/staging, staging-dependent remote OAuth discovery and
 real-project/user acceptance remain OPEN/DEFERRED until an advanced end-to-end
@@ -131,7 +132,8 @@ the documented screenshot/keyboard validation limitations.
 `pnpm test:identity` additionally requires an existing working Docker engine and
 registry access for the pinned PostgreSQL image. It builds the backend, starts a
 dedicated temporary database on a random loopback port, deploys the identity
-migration twice, runs real-library/session/security tests with simulated provider
+migrations twice over an existing-user fixture, runs principal/direct-SQL/concurrency
+and real-library/session/security tests with simulated provider
 HTTP, and removes only its own container. It uses generated private test values;
 no Google/GitHub credentials or system PostgreSQL installation is needed. CI runs
 this separately from `pnpm check`; Docker is a test prerequisite, not a deployment.

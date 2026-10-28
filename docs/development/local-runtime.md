@@ -10,8 +10,10 @@ except Express; the [Nest NodeAdapter migration](nest-http-adapter.md) removes i
 from API/worker/migration runtime and deployed package closure, and the decision
 defers real provider/HTTPS/staging and staging-dependent remote discovery evidence.
 Local automated checks/CI/Kody remain required; license remains undecided.
-There is no deployment, domain schema, task API, principal,
-Redis, shared database package or UI redesign.
+T04.0 itself added no domain schema or principal. The later
+[T35.0 foundations](principal-foundations.md) add an additive principal/minimal
+workspace/membership migration to the same explicit one-shot and checksum gate.
+There is no deployment, task API, Redis, shared database package or UI redesign.
 
 ## Start and stop
 
