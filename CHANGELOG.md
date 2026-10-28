@@ -6,6 +6,19 @@ This records repository changes. No application version has been released.
 
 ### Added
 
+- T06.0/B1a real workspace-visible project/task backend and frontend logic:
+  create/read/edit/archive/restore, immutable project keys, transactional increasing
+  task numbers, expected-version conflicts, current scoped human/Agent assignment,
+  independent immutable creator/provenance and atomic activity/outbox/receipts.
+  Production hook/controller/proxy provides paging, stable scoped URLs and archive
+  context, captured-draft/key recovery, explicit target return and conflict
+  compare/reload/rebase. Safe Markdown AST and disposable real PG/Nest/Next QA
+  harness support separately owned presentation. Real PG/HTTP, concurrent writes,
+  100-record paging and container-restart persistence regressions are included.
+  [Scope, integration contract, evidence and limits](docs/development/project-task-flows.md).
+  No JSX/CSS, private policy, full P05/P14/T06, MCP credentials/transport,
+  dispatcher/business worker, real provider/staging or deployment is included.
+
 - T05.1/B1 workspace and membership presentation: `/workspaces` flow for
   authorized selection/creation, compact human/Agent member rows with owner
   protection, admin invitations/revocation, explicit fragment acceptance, versioned
@@ -109,6 +122,12 @@ This records repository changes. No application version has been released.
   override addresses GHSA-q7qp-rjg7-q26m in the Nest adapter dependency.
 
 ### Changed
+
+- Reconcile T05.1 [PR #14](https://github.com/Ljrr3045/rielia/pull/14) as merged
+  2026-10-28T20:57:11Z at `d27e3302a059cda6ef570c75efed42deda188a39`, from
+  reviewed source `6c0e64952129b10c25f195443f88ec7331ef1a02`, successful
+  CI 40764734574 and [final Kody 6480178609](https://github.com/Ljrr3045/rielia/pull/14#issuecomment-6480178609).
+  Both presentation findings are resolved; completed worktrees were removed.
 
 - T35.0 review fixes: return sanitized 400/409 for permanent storage/state
   failures, retaining 503 for outages; use compatible shared context-read fences

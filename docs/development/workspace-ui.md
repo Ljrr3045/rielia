@@ -154,3 +154,12 @@ is counted as a completed flow.
   workspace option, matching `WorkspaceChooser`. Focused ESLint, web typecheck and
   production build pass. A new ready head requires a fresh coordinator trigger;
   prior-head review never approves changed code. Only the coordinator merges.
+- Final reviewed source: `6c0e64952129b10c25f195443f88ec7331ef1a02`.
+  [CI 40764734574](https://github.com/Ljrr3045/rielia/actions/runs/40764734574)
+  and the exact-head Kody check passed; the fresh coordinator-triggered
+  [final completion 6480178609](https://github.com/Ljrr3045/rielia/pull/14#issuecomment-6480178609)
+  found no remaining issues. Both initial findings are resolved.
+  PR #14 merged 2026-10-28T20:57:11Z as
+  `d27e3302a059cda6ef570c75efed42deda188a39`. The coordinator preserved
+  evidence and reports completed worktrees removed. Full-ticket and real-user
+  acceptance remain open.

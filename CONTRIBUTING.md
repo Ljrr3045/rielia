@@ -91,6 +91,14 @@ affected source section. Never modify a baseline just to make a hash check pass.
 
 ## Validate and record evidence
 
+The [T06.0 project/task guide](docs/development/project-task-flows.md) records
+the bounded real-data domain and frontend recovery contracts, additive migration,
+archive decisions and test-only local real PG/Nest/Next QA harness.
+`pnpm test:projects:logic` is included in `pnpm check`; `pnpm test:identity`
+also runs real domain HTTP/PG, paging/race/rollback and container-restart evidence.
+It uses a labelled disposable volume, verified before cleanup. Presentation,
+full P05/P14/T06/T35, private policy, MCP credentials and deployment remain separate.
+
 The [T05.0 workspace-flow guide](docs/development/workspace-flows.md) records the
 bounded real-data backend/client contracts. `pnpm test:workspaces:logic` runs its
 focused pure state/HTTP proxy checks and is included in `pnpm check`;
