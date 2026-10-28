@@ -1,0 +1,20 @@
+apps/api/test/project-task-qa.mjs
+  s_0a489e8f2e5f0a::t_1f822db4a4a1c7 12,21,33,77-93,103
+  s_0a489e8f2e5f0a::t_fcac8339ba6f11 23-28,39-41,44-45,76,97,108
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2cd73ded2754b64fbe56dbf59ad43fb6ef4dd563",
+  "prompts": {},
+  "sessions": {
+    "s_0a489e8f2e5f0a": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18460-5f91-7740-af91-cd3f0d13a188",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
