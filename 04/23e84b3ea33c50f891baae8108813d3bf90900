@@ -1,0 +1,23 @@
+docs/development/progress.md
+  s_92fb51633d3111::t_dd1dcefd37c271 33,94-97
+CHANGELOG.md
+  s_92fb51633d3111::t_dd1dcefd37c271 16-17
+docs/development/workspace-flows.md
+  s_92fb51633d3111::t_dd1dcefd37c271 189-193
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0423e84b3ea33c50f891baae8108813d3bf90900",
+  "prompts": {},
+  "sessions": {
+    "s_92fb51633d3111": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a183f3-9ed6-7090-8a2b-0f3c948220af",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
