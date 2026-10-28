@@ -124,6 +124,12 @@ This records repository changes. No application version has been released.
 
 ### Changed
 
+- Fix T06 paging/recovery review findings with monotonic project-sequence/task-number
+  cursors and an additive deterministic existing-project backfill, preserving all
+  prior SQL checksums. Transient next-page failure now retains loaded lists/detail,
+  cursor and mutation success with labelled `pageError` retry; auth denial still
+  clears private data. Both defects have pre-fix failing regressions.
+
 - Reconcile T05.1 [PR #14](https://github.com/Ljrr3045/rielia/pull/14) as merged
   2026-10-28T20:57:11Z at `d27e3302a059cda6ef570c75efed42deda188a39`, from
   reviewed source `6c0e64952129b10c25f195443f88ec7331ef1a02`, successful

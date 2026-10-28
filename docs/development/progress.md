@@ -85,15 +85,15 @@ the original target. URL state preserves scoped project/task IDs and archived
 list context through reload/Back. Safe Markdown AST logic leaves raw HTML/images
 inert. No JSX/CSS, fake-data path or product page is included in this logic PR.
 
-Local frozen install, full `pnpm check`, 15 focused controller/client/proxy/
+Local frozen install, full `pnpm check`, 16 focused controller/client/proxy/
 Markdown checks, audit (no known vulnerabilities), handoff and whitespace checks
-pass. The real-PG/HTTP run passes 14 domain, 12 principal, 12 workspace and 23
+pass. The real-PG/HTTP run passes 15 domain, 12 principal, 12 workspace and 23
 identity checks plus a five-table digest/count witness across actual PostgreSQL
 container restart and a subsequent real Nest read/number allocation. Actual
 100-record page boundaries, two tenants, assignments/provenance, grant removal,
 key/number/version races and deferred rollback of each event/receipt stage are
 covered. Docker runtime packaging/migration/checksum/readiness/worker/restart/
-lock/signal/nonroot checks pass with all four migrations, including a final-source
+lock/signal/nonroot checks pass with all five migrations, including a final-source
 repeat after the parser/correlation change; owned resources removed.
 The final narrow parser/request-correlation change passed full check and the PG
 suite. Test-only real PG/Nest/Next QA harness passed
@@ -103,6 +103,17 @@ switch fixtures. Initial harness restart/port/shadowing and
 concurrent dev-generated-type failures were corrected before the passing runs.
 No real OAuth/HTTPS/staging, browser presentation/assistive/touch or real-user
 acceptance is claimed. Full T06/T35/P05/P14 remains open.
+
+PR #15's initial two inline findings were accepted: random UUID pagination could
+miss late low-ID inserts and a transient next-page failure cleared already loaded
+data. The real-PG regression failed with three versus four tail records; an
+actual-controller regression failed with a null project instead of its retained
+detail. Monotonic project-sequence/task-number cursors and labelled page errors
+fix both. The new paging migration deterministically backfills existing projects
+and preserves every prior SQL checksum. Live totals remain explicitly nonsnapshot.
+Transient errors retain loaded lists/details/cursors and mutation success while
+401/403 still clear private data. Findings/dispositions are linked in the
+[guide](project-task-flows.md); the changed head requires fresh CI/root Kody.
 
 ## T05.0 workspace and membership logic
 

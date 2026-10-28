@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { randomUUID } from 'node:crypto';
+import { readFile } from 'node:fs/promises';
 import { setTimeout as delay } from 'node:timers/promises';
 import pg from 'pg';
 import { makeSignature } from 'better-auth/crypto';
@@ -38,6 +39,20 @@ test('T06 real PostgreSQL and HTTP project/task vertical', async t => {
   const counts = async () => Promise.all([prisma.project.count(), prisma.task.count(), prisma.activityEvent.count(), prisma.outboxEvent.count(), prisma.projectTaskOperation.count()]);
   const status = n => error => error.getStatus() === n;
 
+  await t.test('actual additive paging migration backfills existing projects deterministically and retains unique immutable allocation', async () => {
+    const schema = `t06_paging_${randomUUID().replaceAll('-', '')}`; const connection = await pool.connect();
+    try {
+      await connection.query(`CREATE SCHEMA ${schema}`); await connection.query(`SET search_path TO ${schema}, public`);
+      await connection.query('CREATE TABLE project(id text PRIMARY KEY, "createdAt" timestamp(3) NOT NULL, "workspaceId" text NOT NULL DEFAULT \'workspace\')');
+      await connection.query(`INSERT INTO project(id,"createdAt") VALUES ('later','2026-10-28'),('b','2026-10-27'),('a','2026-10-27')`);
+      await connection.query(await readFile(new URL('../prisma/migrations/20261028230000_project_task_paging/migration.sql', import.meta.url), 'utf8'));
+      assert.deepEqual((await connection.query('SELECT id, sequence FROM project ORDER BY sequence')).rows, [{ id: 'a', sequence: 1 }, { id: 'b', sequence: 2 }, { id: 'later', sequence: 3 }]);
+      assert.equal((await connection.query(`INSERT INTO project(id,"createdAt") VALUES ('new','2026-10-29') RETURNING sequence`)).rows[0].sequence, 4);
+      await assert.rejects(connection.query(`UPDATE project SET sequence=DEFAULT WHERE id='a'`), error => error.code === '23514');
+      await assert.rejects(connection.query(`INSERT INTO project(id,"createdAt",sequence) VALUES ('forged','2026-10-29',1)`), error => error.code === '428C9');
+    } finally { await connection.query('ROLLBACK'); await connection.query('SET search_path TO public'); await connection.query(`DROP SCHEMA IF EXISTS ${schema} CASCADE`); connection.release(); }
+  });
+
   await t.test('minimal capture, real paging/details, stable key/URL and immutable creator separate from unassigned task', async () => {
     const f = await fixture(); const member = await join(f); const task = await ok(member, f.tasks, { title: 'Capture' });
     assert.equal(task.key, 'RIE-1'); assert.equal(task.title, 'Capture'); assert.equal(task.assignee, null); assert.equal(task.assigneePrincipalId, null);
@@ -70,7 +85,7 @@ test('T06 real PostgreSQL and HTTP project/task vertical', async t => {
     assert.equal((await request(f.owner, f.tasks, { title: 'Denied' }, randomUUID(), { 'content-type': 'text/plain' })).status, 400);
     for (const field of ['createdByPrincipalId', 'authorPrincipalId', 'subjectPrincipalId', 'provenance', 'executionMode', 'source', 'grantId', 'projectId', 'workspaceId', 'labels', 'checklist', 'parentId']) assert.equal((await request(f.owner, f.tasks, { title: 'Denied', [field]: 'forged' })).status, 400);
     for (const field of ['actorPrincipalId', 'subjectPrincipalId', 'mode', 'source', 'grantId']) assert.equal((await request(f.owner, f.path, undefined, undefined, { [`x-rielia-${field}`]: 'forged' })).status, 400);
-    for (const query of ['?workspaceId=forged', '?view=private', '?cursor=bad%20id', '?view=active&view=archived']) assert.equal((await request(f.owner, f.path + query)).status, 400);
+    for (const query of ['?workspaceId=forged', '?view=private', '?cursor=bad%20id', '?cursor=abc', '?cursor=0', '?cursor=-1', '?cursor=2147483648', '?view=active&view=archived']) assert.equal((await request(f.owner, f.path + query)).status, 400);
     for (const body of [{}, { title: '' }, { title: 'x', status: 'custom' }, { title: 'x', dueDate: '2027-02-29' }, { title: 'x', dueDate: '2026-11-01T00:00:00Z' }, { title: 'x', dueDate: '0000-01-01' }, { title: 'x', priority: [] }]) assert.equal((await request(f.owner, f.tasks, body)).status, 400);
     for (const body of [{ name: 'x', key: 'lower' }, { name: 'x', key: 'PRI', visibility: 'private' }]) assert.equal((await request(f.owner, f.path, body)).status, 400);
     assert.equal((await request(f.owner, f.tasks, { title: 'x' }, 'bad-key')).status, 400);
@@ -85,15 +100,19 @@ test('T06 real PostgreSQL and HTTP project/task vertical', async t => {
     const context = (await principals.webContext({ cookie: f.owner.cookie }, f.workspace.id)).context;
     for (let n = 0; n < 102; n++) await service.createProject(context, f.workspace.id, randomUUID(), randomUUID(), { name: `Paged ${n}`, key: `PG${n}` });
     const first = await ok(f.owner, f.path); assert.equal(first.items.length, 100); assert.equal(first.total, 103); assert.ok(first.nextCursor);
-    const second = await ok(f.owner, `${f.path}?cursor=${first.nextCursor}`); assert.equal(second.items.length, 3); assert.equal(second.total, 103); assert.equal(second.nextCursor, null);
-    assert.equal(new Set([...first.items, ...second.items].map(row => row.id)).size, 103);
+    // A late fixed low UUID makes the previous random-ID cursor defect
+    // deterministic. Trusted fixture DML still takes real scope/policy triggers.
+    const late = await prisma.project.create({ data: { id: '00000000-0000-4000-8000-000000000000', workspaceId: f.workspace.id, key: 'LATE', name: 'Late insert', createdByPrincipalId: f.owner.principalId, creationMode: 'human', creationSource: 'web' } });
+    const second = await ok(f.owner, `${f.path}?cursor=${first.nextCursor}`); assert.equal(second.items.length, 4); assert.equal(second.total, 104); assert.equal(second.nextCursor, null);
+    assert.equal(new Set([...first.items, ...second.items].map(row => row.id)).size, 104); assert.ok(second.items.some(row => row.id === late.id));
     const outside = second.items[0]; assert.equal((await ok(f.owner, `${f.path}/${outside.id}`)).id, outside.id);
     for (let n = 0; n < 102; n++) await service.createTask(context, f.workspace.id, f.project.id, randomUUID(), randomUUID(), { title: `Paged task ${n}` });
     const tasks = await ok(f.owner, f.tasks); assert.equal(tasks.items.length, 100); assert.equal(tasks.total, 102);
-    const tail = await ok(f.owner, `${f.tasks}?cursor=${tasks.nextCursor}`); assert.equal(tail.items.length, 2); assert.equal(tail.nextCursor, null);
-    assert.equal(new Set([...tasks.items, ...tail.items].map(row => row.id)).size, 102);
+    const lateTask = await prisma.task.create({ data: { id: '00000000-0000-4000-8000-000000000001', workspaceId: f.workspace.id, projectId: f.project.id, number: 1, title: 'Late task', createdByPrincipalId: f.owner.principalId, creationMode: 'human', creationSource: 'web' } });
+    const tail = await ok(f.owner, `${f.tasks}?cursor=${tasks.nextCursor}`); assert.equal(tail.items.length, 3); assert.equal(tail.nextCursor, null);
+    assert.equal(new Set([...tasks.items, ...tail.items].map(row => row.id)).size, 103); assert.ok(tail.items.some(row => row.id === lateTask.id));
     await ok(f.owner, `${f.tasks}/${tail.items[0].id}/archive`, { expectedVersion: 1 });
-    assert.equal((await ok(f.owner, f.tasks)).total, 101); assert.equal((await ok(f.owner, `${f.tasks}?view=archived`)).total, 1);
+    assert.equal((await ok(f.owner, f.tasks)).total, 102); assert.equal((await ok(f.owner, `${f.tasks}?view=archived`)).total, 1);
     assert.equal((await ok(foreign.owner, foreign.path)).total, 1); assert.equal((await ok(foreign.owner, foreign.tasks)).total, 0);
   });
   await t.test('concurrent numbering, project-key uniqueness and scoped identical/different-payload replay', async () => {

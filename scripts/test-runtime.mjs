@@ -179,7 +179,7 @@ try {
   const migrationHistory = await sql('SELECT migration_name || checksum FROM public._prisma_migrations ORDER BY migration_name');
   await compose('Repeated local migration', ['run', '--rm', '--no-deps', '-T', 'migrate']);
   assert.equal(await sql('SELECT migration_name || checksum FROM public._prisma_migrations ORDER BY migration_name'), migrationHistory);
-  for (const migration of ['20261025000000_identity', '20261028000000_principal_foundations', '20261028190000_workspace_flows', '20261028220000_project_task_flows']) {
+  for (const migration of ['20261025000000_identity', '20261028000000_principal_foundations', '20261028190000_workspace_flows', '20261028220000_project_task_flows', '20261028230000_project_task_paging']) {
     const migrationPath = join(root, `apps/api/prisma/migrations/${migration}/migration.sql`);
     const checksum = createHash('sha256').update(await readFile(migrationPath)).digest('hex');
     await sql(`UPDATE public._prisma_migrations SET checksum = repeat('0',64) WHERE migration_name = '${migration}'`);

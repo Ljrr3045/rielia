@@ -72,7 +72,14 @@ dependency or alternative routing framework was added.
 | `POST /projects/:projectId/tasks/:taskId/archive` or `/restore` | `{expectedVersion}` |
 
 Pages contain `{items,total,nextCursor,capabilities:{canCreate}}`, at most 100
-records ordered by immutable ID. Counts, cursors and detail predicates always
+records in ascending allocation order: immutable internal project sequence and
+per-project task number. Numeric cursors are opaque to the client and validated
+as positive 32-bit integers. New inserts append after a previous cursor even when
+their public UUID sorts lower. Existing projects are deterministically backfilled
+by creation time/ID in the additive `20261028230000_project_task_paging` migration;
+all earlier SQL/checksums remain unchanged. Counts are live, not a snapshot:
+archive/restore or access changes between pages can change totals or require a
+Refresh to rediscover an older row. Counts, cursors and detail predicates always
 include workspace/project scope. Detail capabilities `canEdit/canArchive/canRestore`
 are current server policy projections, including current grant narrowing and
 archive state. Presentation consumes them without implementing a second policy.
@@ -129,7 +136,7 @@ to the fixed configured API. Client code imports no database/domain policy.
 State: `status`, `session`, `workspaces`, `workspace`, `members`, `projects`,
 `project`, `tasks`, `task`, `selection:{workspaceId,projectId,taskId}`,
 `views:{projects,tasks}`, `url`, `draft`, `pending`, `outcome`, `retryTarget`,
-`conflict`, `result`, `requestId`. Loading/disabled/signed-out/empty/ready/
+`conflict`, `result`, `requestId`, `pageError`. Loading/disabled/signed-out/empty/ready/
 forbidden/error are distinct. Empty project/task collections retain their own
 server capabilities. Members are paged; task creator/assignee projections remain
 available even when that member is outside the currently loaded member page.
@@ -137,7 +144,13 @@ available even when that member is outside the currently loaded member page.
 Actions: `refresh`, `selectWorkspace`, `selectProject`, `selectTask`,
 `setView('projects'|'tasks','active'|'archived')`, `loadMore`, `stage(command)`,
 `submit`, `retrySave`, `returnToDraft`, `discardDraft`, `cancelPending`,
-`reloadConflict`, `rebaseDraft`, `dismissOutcome`.
+`reloadConflict`, `rebaseDraft`, `dismissOutcome`, `dismissPageError`.
+
+Transient pagination failure preserves all loaded records, the next cursor,
+selection, drafts/recovery and mutation success. `pageError` identifies
+`{collection,requestId}`; show its message next to that collection's pager and
+retry with `loadMore(collection)`. Retry clears that page error. 401/403 still
+clear private data; stale page failures cannot replace a newer collection.
 
 Presentation uses one `/projects` route and query selectors
 `?workspace=W&project=P&task=T`. `projectsView=archived` and `tasksView=archived`
@@ -186,11 +199,11 @@ python3 scripts/verify-handoff.py
 git diff --check
 ```
 
-The 15 focused pure/client/proxy/Markdown checks cover captured target/version,
+The 16 focused pure/client/proxy/Markdown checks cover captured target/version,
 unknown-key retry, A/B navigation, conflict review/rebase, success versus refresh
 failure, stale response/paging, account change, archive URLs, HTTP deadlines,
 scoped response validation, safe rendering data and restricted proxy headers.
-`pnpm test:identity` adds 14 real-PG/HTTP domain checks beside the existing 12
+`pnpm test:identity` adds 15 real-PG/HTTP domain checks beside the existing 12
 principal, 12 workspace and 23 identity checks. It covers two tenants/roles,
 current revoked grants/memberships, active/historical human/Agent assignment,
 immutable creator/provenance, key/number races, scoped replay/different payload,
@@ -199,7 +212,7 @@ forced deferred failures at every event/receipt stage and Nest restart.
 An additional all-five-table digest/count witness survives an actual task-owned
 PostgreSQL container restart, then verifies a real Nest read and next allocation.
 The labelled temporary volume is removed after the suite. Docker smoke checks
-all four migration packages/checksums and preserves diagnostic worker boundaries.
+all five migration packages/checksums and preserves diagnostic worker boundaries.
 
 The test-only `apps/api/test/project-task-qa.mjs` is outside production `src`,
 compiled output and container inputs. After frozen install and API/contracts build:
@@ -237,3 +250,21 @@ Initial harness tmpfs/random-port restart and variable-shadowing failures were
 corrected before the passing persistence run. Real provider/HTTPS/staging,
 screen-reader/touch/browser presentation and real-person acceptance are unverified
 by this logic delivery and are not reported as passed.
+
+## PR #15 findings and dispositions
+
+Both initial findings were valid. The
+[paging finding](https://github.com/Ljrr3045/rielia/pull/15#discussion_r4406615231)
+is fixed with the monotonic allocation cursors above. A real PG regression inserted
+a deterministic late low UUID after the first 100-item page and failed pre-fix
+with three tail records instead of four. Both project and task page walks now
+retain late inserts without duplicate rows; the actual new migration is also run
+against an isolated existing-project fixture to verify deterministic backfill,
+identity allocation and sequence immutability.
+
+The [pagination recovery finding](https://github.com/Ljrr3045/rielia/pull/15#discussion_r4406615615)
+is fixed with labelled `pageError` state. An actual-controller regression failed
+pre-fix because the loaded project became null; it now retains project/task/list,
+cursor and successful mutation result, retries the same page and still clears
+data on 401/403. The earlier head's approval does not approve these changes;
+the final head requires fresh coordinator-triggered review and CI.

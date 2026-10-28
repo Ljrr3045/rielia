@@ -5,6 +5,11 @@ import type { Prisma, Project as ProjectRow, Task as TaskRow } from '../generate
 import { PrincipalService, type Transaction, type VerifiedExecution } from '../principals/principal.service.js';
 
 const identifier = (value: unknown): value is string => typeof value === 'string' && /^[A-Za-z0-9_-]{1,128}$/.test(value);
+function pageCursor(value: string | undefined): number | undefined {
+  if (value === undefined) return undefined;
+  if (!/^[1-9][0-9]{0,9}$/.test(value) || Number(value) > 2147483647) throw new BadRequestException('Invalid page cursor.');
+  return Number(value);
+}
 function object(value: unknown, allowed: string[], required: string[] = []): Record<string, unknown> {
   if (!value || typeof value !== 'object' || Array.isArray(value) || Object.keys(value).some(key => !allowed.includes(key))
     || required.some(key => !(key in value))) throw new BadRequestException('Invalid project/task request.');
@@ -98,23 +103,26 @@ export class ProjectTaskService {
   private archived(current: ProjectTaskResult) { throw new ConflictException({ code: 'archived', message: 'Restore the archived record or its project before editing.', current }); }
 
   projects(context: VerifiedExecution, workspaceId: string, view: ArchiveView = 'active', cursor?: string) {
+    const after = pageCursor(cursor);
     return this.principals.domainOperation(context, workspaceId, 'read', async (tx, _actor, canWrite) => {
       const where = { workspaceId, archivedAt: view === 'active' ? null : { not: null } };
-      const rows = await tx.project.findMany({ where: { ...where, ...(cursor ? { id: { gt: cursor } } : {}) }, orderBy: { id: 'asc' }, take: 101 });
+      const rows = await tx.project.findMany({ where: { ...where, ...(after === undefined ? {} : { sequence: { gt: after } }) }, orderBy: { sequence: 'asc' }, take: 101 });
       const people = await this.people(tx, workspaceId, rows.map(row => row.createdByPrincipalId));
-      return page(rows.map(row => this.projectDto(row, people, canWrite)), await tx.project.count({ where }), row => row.id, canWrite);
+      const result = page(rows, await tx.project.count({ where }), row => String(row.sequence), canWrite);
+      return { ...result, items: result.items.map(row => this.projectDto(row, people, canWrite)) };
     });
   }
   project(context: VerifiedExecution, workspaceId: string, projectId: string) {
     return this.principals.domainOperation(context, workspaceId, 'read', async (tx, _actor, canWrite) => this.projectView(tx, await this.projectRow(tx, workspaceId, projectId), canWrite));
   }
   tasks(context: VerifiedExecution, workspaceId: string, projectId: string, view: ArchiveView = 'active', cursor?: string) {
+    const after = pageCursor(cursor);
     return this.principals.domainOperation(context, workspaceId, 'read', async (tx, _actor, canWrite) => {
       const project = await this.projectRow(tx, workspaceId, projectId);
       const where = { workspaceId, projectId, archivedAt: view === 'active' ? null : { not: null } };
-      const rows = await tx.task.findMany({ where: { ...where, ...(cursor ? { id: { gt: cursor } } : {}) }, orderBy: { id: 'asc' }, take: 101 });
+      const rows = await tx.task.findMany({ where: { ...where, ...(after === undefined ? {} : { number: { gt: after } }) }, orderBy: { number: 'asc' }, take: 101 });
       const people = await this.people(tx, workspaceId, rows.flatMap(row => [row.createdByPrincipalId, ...(row.assigneePrincipalId ? [row.assigneePrincipalId] : [])]));
-      return page(rows.map(row => this.taskDto(row, project, people, canWrite)), await tx.task.count({ where }), row => row.id, canWrite && !project.archivedAt);
+      return page(rows.map(row => this.taskDto(row, project, people, canWrite)), await tx.task.count({ where }), row => String(row.number), canWrite && !project.archivedAt);
     });
   }
   task(context: VerifiedExecution, workspaceId: string, projectId: string, taskId: string) {

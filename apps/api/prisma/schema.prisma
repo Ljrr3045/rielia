@@ -173,6 +173,7 @@ model Verification {
 // immutable history, versions and allocation guards. No runtime schema writes.
 model Project {
   id String @id
+  sequence Int @unique @default(autoincrement())
   workspaceId String
   key String
   name String
@@ -189,6 +190,7 @@ model Project {
   updatedAt DateTime @default(now())
   @@unique([workspaceId, key])
   @@unique([workspaceId, id])
+  @@unique([workspaceId, sequence])
   @@map("project")
 }
 
