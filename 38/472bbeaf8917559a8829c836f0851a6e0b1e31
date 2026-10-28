@@ -1,0 +1,25 @@
+apps/web/src/app/projects/task-detail.tsx
+  s_c0d620db6aa2bf::t_ad5c5594b911ab 140
+apps/web/src/app/projects/projects-view.tsx
+  s_c0d620db6aa2bf::t_1603556e26f695 333,335-340,342-344,348-352,560,565
+docs/development/progress.md
+  s_c0d620db6aa2bf::t_cd0115abfff42e 268-272
+docs/development/project-task-ui.md
+  s_c0d620db6aa2bf::t_fc1abc928394e1 240-249
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "38472bbeaf8917559a8829c836f0851a6e0b1e31",
+  "prompts": {},
+  "sessions": {
+    "s_c0d620db6aa2bf": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e7b9ec2a9ffe0ZrPzcSvaTOFHw",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
