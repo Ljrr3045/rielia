@@ -1,0 +1,21 @@
+packages/contracts/src/index.ts
+  s_0a489e8f2e5f0a::t_a64278f0390612 2
+packages/contracts/src/project-tasks.ts
+  s_0a489e8f2e5f0a::t_a64278f0390612 1-62
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d35b43e4330fffe4c3cce3d1f24648bbb235f0e0",
+  "prompts": {},
+  "sessions": {
+    "s_0a489e8f2e5f0a": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18460-5f91-7740-af91-cd3f0d13a188",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
