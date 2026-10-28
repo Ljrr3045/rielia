@@ -220,7 +220,7 @@ owns the independent profile evidence.
 
 ## PR #16 review findings and dispositions
 
-Kody's first PR #16 round raised two valid presentation findings:
+Kody's PR #16 rounds raised four valid presentation findings:
 
 - [Inline 4407004747](https://github.com/Ljrr3045/rielia/pull/16#discussion_r4407004747):
   a server-denied save in an already open project/task modal had no visible
@@ -246,10 +246,26 @@ Kody's first PR #16 round raised two valid presentation findings:
   **Crear proyecto** opener; non-modal detail draft discard focused the task
   heading. `99-forbidden-discard-focus-1440.png`,
   `100-invalid-discard-focus-1440.png`.
+- [Inline 4407196055](https://github.com/Ljrr3045/rielia/pull/16#discussion_r4407196055):
+  a form resumed from the draft banner or automatic context return has no
+  user-clicked opener, but `modalOpenerRef` could still hold a control from a
+  previously closed modal, so resuming and then closing/discarding could move
+  focus to an unrelated control. `resumeDraft` now clears the stale opener before
+  presenting a resumed form; focus uses the mounted detail heading, project
+  heading or main fallback instead. Direct modal opens still restore their clicked
+  opener. Real-browser after evidence at 1440: direct project settings close
+  restored **Ajustes del proyecto**; same-context resumed close focused the
+  project `h1` while the old settings control remained connected; a direct reopen
+  restored the settings button; cross-project resumed close focused the project
+  `h1`; direct task edit close restored **Editar**; resumed task edit close focused
+  the mounted detail heading; resumed denied save → explicit **Descartar borrador**
+  focused `main#projects-main`. `101-resumed-draft-close-focus-1440.png` through
+  `105-resumed-discard-focus-1440.png`.
 - Focused `pnpm check`, audit, handoff and whitespace checks pass again after these
-  fixes. The transient pager UI remains honestly unexercised in the browser as
-  documented above. A changed head requires a fresh coordinator Kody trigger; the
-  prior-head review does not approve it.
+  fixes. All four findings are resolved or acknowledged. The transient pager UI
+  remains honestly unexercised in the browser as documented above. A changed head
+  requires a fresh coordinator Kody trigger; the prior-head review does not
+  approve it.
 
 ## PR evidence
 
