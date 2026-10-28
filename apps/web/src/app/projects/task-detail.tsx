@@ -137,7 +137,7 @@ export function TaskDetail({
         <div className={styles.detailBody}>
           {feedback}
 
-          <h2 className={styles.detailTitle} data-autofocus id={headingId} ref={headingRef} tabIndex={-1}>
+          <h2 className={styles.detailTitle} data-autofocus data-detail-heading id={headingId} ref={headingRef} tabIndex={-1}>
             {task.title}
           </h2>
 

@@ -237,7 +237,16 @@ Kody's first PR #16 round raised two valid presentation findings:
   and return reopens the exact unsaved title. Real-browser after evidence:
   `97-narrow-draft-after-detail-close-390.png`,
   `98-narrow-draft-resumed-390.png`.
-- Focused `pnpm check`, audit, handoff and whitespace checks pass again after both
+- [Final-round inline 4407105587](https://github.com/Ljrr3045/rielia/pull/16#discussion_r4407105587):
+  the shared discard helper closed an open modal without restoring focus. Discard
+  now restores focus centrally: the captured opener when it still exists, otherwise
+  the mounted detail heading, project heading or main fallback; non-modal discard
+  never uses a stale opener. Real-browser after evidence: denied-save → Discard
+  focused `main#projects-main`; invalid project save → Discard focused the
+  **Crear proyecto** opener; non-modal detail draft discard focused the task
+  heading. `99-forbidden-discard-focus-1440.png`,
+  `100-invalid-discard-focus-1440.png`.
+- Focused `pnpm check`, audit, handoff and whitespace checks pass again after these
   fixes. The transient pager UI remains honestly unexercised in the browser as
   documented above. A changed head requires a fresh coordinator Kody trigger; the
   prior-head review does not approve it.

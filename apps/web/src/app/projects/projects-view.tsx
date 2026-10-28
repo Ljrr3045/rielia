@@ -330,16 +330,24 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
     }
   }
 
+  function focusDismissedSurface(hadForm: boolean) {
+    requestAnimationFrame(() => {
+      if (hadForm) {
+        const opener = modalOpenerRef.current;
+        if (opener !== null && opener.isConnected) {
+          opener.focus();
+          return;
+        }
+      }
+      const detailHeading = document.querySelector<HTMLElement>('[data-detail-heading]');
+      const fallback = detailHeading ?? projectHeadingRef.current ?? document.getElementById('projects-main');
+      fallback?.focus();
+    });
+  }
+
   function closeForm() {
     setForm(null);
-    requestAnimationFrame(() => {
-      const opener = modalOpenerRef.current;
-      if (opener !== null && opener.isConnected) opener.focus();
-      else {
-        const fallback = projectHeadingRef.current ?? document.getElementById('projects-main');
-        fallback?.focus();
-      }
-    });
+    focusDismissedSurface(true);
   }
 
   function openProjectCreate(opener?: HTMLElement) {
@@ -549,10 +557,12 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   }
 
   function discardCurrentDraft() {
+    const hadForm = form !== null;
     discardDraft();
     setForm(null);
     setCaptureTitle('');
     setResumeDraftOnReady(false);
+    focusDismissedSurface(hadForm);
   }
 
   function handleReturnToDraft() {
