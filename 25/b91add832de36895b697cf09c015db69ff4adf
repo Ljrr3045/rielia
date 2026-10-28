@@ -1,0 +1,80 @@
+apps/api/test/principals.test.mjs
+  s_10e5bf4ef6d116::t_3a43f32fa2aac3 5,85-92,207-244
+  s_10e5bf4ef6d116::t_f0f5a5741fb9d8 51,131-132,163,168-171
+  s_10e5bf4ef6d116::t_f5b724fa32b9b0 60
+  s_10e5bf4ef6d116::t_07366cbf639c55 152-155,158-159
+  s_10e5bf4ef6d116::t_cda0a21fcd4ace 1-4,6-50,52-59,61-84,93-130,133-143,160-162,164-167,172-206,245-285,287-289,304-307
+  s_10e5bf4ef6d116::t_9d56c8fd5b9c06 144-151,156-157,286,290-303
+apps/api/prisma/schema.prisma
+  s_10e5bf4ef6d116::t_90e20ae131afe9 22,26-90
+  s_10e5bf4ef6d116::t_04945a65c36066 91
+apps/api/test/identity.test.mjs
+  s_10e5bf4ef6d116::t_e6c1f93c96940e 119-121
+apps/api/test/prepare-principal-backfill.mjs
+  s_10e5bf4ef6d116::t_e6c1f93c96940e 1-9
+AGENTS.md
+  s_10e5bf4ef6d116::t_09f844552ffb07 43-46,90-92
+apps/api/src/principals/principal.service.ts
+  s_10e5bf4ef6d116::t_9d56c8fd5b9c06 27
+  s_10e5bf4ef6d116::t_f0f5a5741fb9d8 156,159,161-162
+  s_10e5bf4ef6d116::t_1ad8969e03b50a 1-26,28-155,157-158,160,163-169,171,175-194
+  s_10e5bf4ef6d116::t_07366cbf639c55 170,172-174
+docs/development/nest-http-adapter.md
+  s_10e5bf4ef6d116::t_20daa54a611e8b 127-130
+CONTRIBUTING.md
+  s_10e5bf4ef6d116::t_09f844552ffb07 39-42,135-136
+docs/development/identity-spike.md
+  s_10e5bf4ef6d116::t_09f844552ffb07 236-239
+scripts/test-runtime.mjs
+  s_10e5bf4ef6d116::t_07366cbf639c55 174-175
+  s_10e5bf4ef6d116::t_e6c1f93c96940e 129,182-190
+apps/api/src/principals/principal.controller.ts
+  s_10e5bf4ef6d116::t_e6c1f93c96940e 1-13,19-23
+  s_10e5bf4ef6d116::t_f5b724fa32b9b0 14-15
+  s_10e5bf4ef6d116::t_f0f5a5741fb9d8 16-18
+apps/api/prisma/migrations/20261028000000_principal_foundations/migration.sql
+  s_10e5bf4ef6d116::t_f0f5a5741fb9d8 138-142
+  s_10e5bf4ef6d116::t_cb0461ea0e1045 125,130-137,143-145
+  s_10e5bf4ef6d116::t_1ad8969e03b50a 2-4
+  s_10e5bf4ef6d116::t_90e20ae131afe9 1,5-124,126-129,146-168
+apps/api/src/runtime/database.ts
+  s_10e5bf4ef6d116::t_e6c1f93c96940e 50-53
+scripts/test-identity.mjs
+  s_10e5bf4ef6d116::t_9d56c8fd5b9c06 50-52
+  s_10e5bf4ef6d116::t_e6c1f93c96940e 69-70,75-77
+docs/development/principal-foundations.md
+  s_10e5bf4ef6d116::t_09f844552ffb07 1-152
+docs/development/progress.md
+  s_10e5bf4ef6d116::t_5bce6e7b947703 93-95
+  s_10e5bf4ef6d116::t_20daa54a611e8b 3,8-10,17-19,28-33,164-166,196,226,238,246
+  s_10e5bf4ef6d116::t_f7a6da22ac2945 57-92,96-105
+packages/contracts/src/index.ts
+  s_10e5bf4ef6d116::t_1ad8969e03b50a 12-34
+docs/development/stack-validation-decisions.md
+  s_10e5bf4ef6d116::t_20daa54a611e8b 74-76
+docs/development/local-runtime.md
+  s_10e5bf4ef6d116::t_09f844552ffb07 13-16
+apps/api/src/app.module.ts
+  s_10e5bf4ef6d116::t_e6c1f93c96940e 7-8,10
+README.md
+  s_10e5bf4ef6d116::t_09f844552ffb07 36-39,43
+CHANGELOG.md
+  s_10e5bf4ef6d116::t_09f844552ffb07 9-18,86-91
+  s_10e5bf4ef6d116::t_45c474dd77772f 92
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "25b91add832de36895b697cf09c015db69ff4adf",
+  "prompts": {},
+  "sessions": {
+    "s_10e5bf4ef6d116": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a183a1-875b-7a30-8166-838a1756c0e9",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
