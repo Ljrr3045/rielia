@@ -215,7 +215,10 @@ The labelled temporary volume is removed after the suite. Docker smoke checks
 all five migration packages/checksums and preserves diagnostic worker boundaries.
 
 The test-only `apps/api/test/project-task-qa.mjs` is outside production `src`,
-compiled output and container inputs. After frozen install and API/contracts build:
+compiled output and the deployed API/migration package. The API package explicitly
+allows only `dist`, `prisma` and `prisma.config.ts`; dry-run packaging excludes
+tests and deployed-image smoke asserts `/app/test` is absent. After frozen install
+and API/contracts build:
 
 ```sh
 pnpm --filter @rielia/contracts build

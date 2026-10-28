@@ -124,7 +124,7 @@ try {
     assert.equal(details.Config.User, 'node');
     assert(!details.Config.Env.some((value) => /DATABASE_URL|POSTGRES_PASSWORD|AUTH_SECRET|CLIENT_SECRET|BUILD_SECRET_PROBE/.test(value)));
     const check = `const fs=require('node:fs');const assert=require('node:assert/strict');
-      assert.equal(process.getuid(),1000);for(const p of ['/app/.git','/app/.env','/app/src','/app/node_modules/typescript','/app/node_modules/eslint'])assert(!fs.existsSync(p),p);
+      assert.equal(process.getuid(),1000);for(const p of ['/app/.git','/app/.env','/app/src','/app/test','/app/apps/api/test','/app/node_modules/typescript','/app/node_modules/eslint'])assert(!fs.existsSync(p),p);
       for(const p of ['/app','/app/apps/api','/app/apps/web'])if(fs.existsSync(p))assert(!fs.readdirSync(p).some(n=>n.startsWith('.env')),p);
       ${service !== 'web' ? `assert(fs.existsSync('/app/dist/generated/prisma/client.js'));assert(fs.existsSync('/app/prisma/migrations/20261025000000_identity/migration.sql'));assert(fs.existsSync('/app/prisma/migrations/20261028000000_principal_foundations/migration.sql'));assert.equal(fs.existsSync('/app/node_modules/prisma/build/index.js'),${service === 'migrate'});assert.equal(require('pg-boss/package.json').pgboss.schema,46);require('pg');` : "assert(fs.existsSync('/app/apps/web/server.js'));assert(fs.existsSync('/app/apps/web/.next/static'));assert(fs.existsSync('/app/apps/web/public'));"}
       if(fs.existsSync('/app/node_modules/.pnpm'))console.log('Retained optional tooling peers: '+fs.readdirSync('/app/node_modules/.pnpm').filter(n=>/^(prisma@|typescript@|@prisma\\+studio-core@)/.test(n)).map(n=>n.split('_')[0]).join(', '));

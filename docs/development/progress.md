@@ -115,6 +115,11 @@ Transient errors retain loaded lists/details/cursors and mutation success while
 401/403 still clear private data. Findings/dispositions are linked in the
 [guide](project-task-flows.md); the changed head requires fresh CI/root Kody.
 
+Final packaging inspection found that default API deployment included test files.
+An explicit runtime/schema/config package allowlist now excludes the signed-session
+QA harness and all tests. Dry-run packaging retains generated Prisma/runtime and
+all migrations; deployed-image smoke additionally rejects `/app/test`.
+
 ## T05.0 workspace and membership logic
 
 The [workspace flow guide](workspace-flows.md) records scope/requirements, API,

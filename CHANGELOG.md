@@ -129,6 +129,9 @@ This records repository changes. No application version has been released.
   prior SQL checksums. Transient next-page failure now retains loaded lists/detail,
   cursor and mutation success with labelled `pageError` retry; auth denial still
   clears private data. Both defects have pre-fix failing regressions.
+- Limit the API deployment package to compiled runtime, Prisma schema/migrations
+  and Prisma config, excluding test-only signed-session QA fixtures and tests;
+  verify the exclusion in actual deployed API/worker/migration images.
 
 - Reconcile T05.1 [PR #14](https://github.com/Ljrr3045/rielia/pull/14) as merged
   2026-10-28T20:57:11Z at `d27e3302a059cda6ef570c75efed42deda188a39`, from
