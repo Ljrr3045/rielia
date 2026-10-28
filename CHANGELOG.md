@@ -13,7 +13,8 @@ This records repository changes. No application version has been released.
   terminal no-rejoin policy, atomic receipts, grant/authority invalidation and
   real PostgreSQL/HTTP regressions. Production-data hook/proxy preserves same-user
   drafts, original-scope retries and session/stale-response recovery without
-  presentation or fake data. [Contract and limits](docs/development/workspace-flows.md).
+  presentation or fake data. [Contract and limits](docs/development/workspace-flows.md);
+  [PR #13](https://github.com/Ljrr3045/rielia/pull/13).
   Full T05/T07/T35, projects/tasks, email, credentials and staging remain open.
 
 - T35.0/B1: PostgreSQL principal foundations with atomic unique human User mapping,

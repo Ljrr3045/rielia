@@ -30,7 +30,7 @@ implementation, without completing tickets or weakening automated checks/launch 
 | Base | `origin/dev` at PR #12 merge `b87dadb165971d0594429f6a08c047626f9d596e` |
 | Branch | `feat/t05-workspace-flows` |
 | Worktree | Isolated `feat-t05-workspace-flows`; sole logic owner Codex `gpt-6.1-sol`, `xhigh`, verified from live terminal and coordinator launch; no helpers |
-| Current PR | Pending creation after local validation; one English non-draft PR to `dev`. Exact-head CI/coordinator-triggered Kody remain required |
+| Current PR | [#13](https://github.com/Ljrr3045/rielia/pull/13), one English non-draft PR to `dev`. All applicable local checks pass; exact-head CI/coordinator-triggered Kody remain required |
 | Principal foundations PR | [#12](https://github.com/Ljrr3045/rielia/pull/12) merged 2026-10-28T18:36:55Z as `b87dadb165971d0594429f6a08c047626f9d596e`; reviewed head `6c841a334987a51977af41d4fe19e0a151e1394e`, [Kody approval 5687764538](https://github.com/Ljrr3045/rielia/pull/12#pullrequestreview-5687764538), [CI 40745500251](https://github.com/Ljrr3045/rielia/actions/runs/40745500251). Both findings fixed; coordinator verified merge, preserved evidence and completed worktree removal |
 | Adapter migration PR | [#11](https://github.com/Ljrr3045/rielia/pull/11) merged 2026-10-27T20:30:56Z as `70314c550b643fd5678375939535cdb93331c9b2`; final reviewed head `eb8b19c91cd065b4308af2025f5d16d2533d6ea3`, [Kody approval 5673819042](https://github.com/Ljrr3045/rielia/pull/11#pullrequestreview-5673819042), [CI 40577221864](https://github.com/Ljrr3045/rielia/actions/runs/40577221864). Coordinator confirms its completed worktree removed |
 | Stack decision PR | [#10](https://github.com/Ljrr3045/rielia/pull/10) merged 2026-10-27T19:58:09Z as `3efb49fde4f43d9d58964510c3ef61f744bea062`; final reviewed head `81f884122dd0ab99e0a73c767b99d7aa7db6ba64`, Kody approved that head and [CI 40571647316](https://github.com/Ljrr3045/rielia/actions/runs/40571647316) passed. Fresh GitHub reads confirm merge/review/checks; coordinator reports its completed worktree removed |
@@ -91,8 +91,10 @@ malformed/forged context, origin, hash-only tokens, wrong/unverified recipient,
 expiry/concurrent single use, issuer/session-removal races, grants/versions and
 rollback are covered; disposable PG was removed. Full Docker migration/checksum/
 readiness/worker/restart/lock/signal/nonroot checks pass; owned resources were
-removed. Audit reports no known vulnerabilities. Handoff/whitespace and exact-head
-CI/Kody evidence are finalized before handoff. No full T05/T07/T35, projects/tasks,
+removed. Audit reports no known vulnerabilities. Handoff integrity (47 files,
+30 assets, 387 local links) and whitespace checks pass. Exact-head CI/Kody
+evidence is recorded in [PR #13](https://github.com/Ljrr3045/rielia/pull/13) before handoff.
+No full T05/T07/T35, projects/tasks,
 real OAuth/staging/users, RLS/deployment or launch acceptance is claimed.
 
 ## T35.0 principal/authorship foundations

@@ -186,7 +186,11 @@ Docker smoke corrupts/restores the new migration checksum as well as both earlie
 ones and retains the diagnostic worker boundaries. Provider HTTP remains simulated.
 
 Command results and current PR/CI/Kody evidence belong in [progress](progress.md)
-and the delivery PR. Excluded: real OAuth/HTTPS/staging and real users/projects,
+and [PR #13](https://github.com/Ljrr3045/rielia/pull/13). All applicable local
+commands passed; the real-PG suite has 9 workspace checks, 12 principal checks
+and 23 original identity checks; the client/proxy suite has 11. Owned test
+databases, Docker runtime resources and external QA-harness smoke resources were
+removed. Audit reported no known vulnerabilities. Excluded: real OAuth/HTTPS/staging and real users/projects,
 SMTP/email delivery, projects/tasks, project visibility, remote MCP/agent
 credentials, execution hosting, ownership transfer/deletion/reauthentication,
 full audit/activity/outbox product integration, RLS/deployment and full-ticket
