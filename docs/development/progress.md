@@ -146,9 +146,14 @@ tokens and scoped responsive CSS, and provides light/dark, visible focus, live
 feedback and compact mobile rows. Local browser QA covered create/select,
 invite/accept, agent register/suspend/restore/custodian, owner protection, session
 loss with draft restoration, blocked-API recovery, ES/EN, dark/light and 320/390/
-768 no-horizontal-overflow; root Brave QA covered 1440/mobile and keyboard. Exact
-final base, checks, PR/CI/Kody evidence remain pending the coordinator's logic
-merge and rebase; no full T05/T07/T35 or real-user acceptance is claimed.
+768 no-horizontal-overflow; root Brave QA covered 1440/mobile and keyboard. The
+branch is rebased onto `origin/dev` at `01c9cc168bb9dde62b4290c049b982d62952c9a5`,
+the [PR #13](https://github.com/Ljrr3045/rielia/pull/13) merge (reviewed source
+`11f886a4`, CI 40761116202, Kody complete; fourth recovery finding withdrawn and
+resolved). Final UI `pnpm check`, audit, handoff and whitespace evidence plus the
+one English non-draft PR/CI/Kody rounds are recorded in the
+[workspace UI guide](workspace-ui.md); no full T05/T07/T35 or real-user acceptance
+is claimed.
 
 ## T35.0 principal/authorship foundations
 

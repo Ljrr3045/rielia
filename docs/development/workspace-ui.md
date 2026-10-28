@@ -3,7 +3,9 @@
 Updated: 2026-10-28 UTC. This bounded presentation delivery adds the
 `/workspaces` product flow for the [T05.0 logic](workspace-flows.md). It is not a
 full T05/T07/T35 delivery, a production announcement, or evidence of real-user
-acceptance. Final base/PR evidence is completed after the logic PR merges.
+acceptance. The branch is rebased onto `origin/dev`
+`01c9cc168bb9dde62b4290c049b982d62952c9a5`, the PR #13 merge; final UI PR/CI/Kody
+evidence is recorded below after creation.
 
 ## Scope and traceability
 
@@ -92,15 +94,22 @@ the textual guide and approved repository assets were used.
 
 ## Validation
 
-Provisional integrated head checks (final base re-runs follow the logic merge):
+Final-base checks (Node 24.22.1, pnpm 12.15.0):
 
 ```sh
-pnpm --filter @rielia/contracts build
-pnpm --filter @rielia/web typecheck
-pnpm --filter @rielia/web build
-pnpm exec eslint apps/web/src/app/workspaces apps/web/src/app/page.tsx
+pnpm check
+pnpm audit --audit-level=high
+python3 scripts/verify-handoff.py
 git diff --check
 ```
+
+`pnpm check` passes lint, the Express-free backend closure, smoke-process cleanup,
+identity logic/client (7), workspace logic/client (16), prototype (19), strict
+typechecks, production builds, MCP subprocess/Inspector checks (17) and the
+Next/API HTTP smoke. Audit reports no known vulnerabilities. Handoff verification
+passes 47 imported files, 30 asset hashes/sizes and 390 local links; whitespace
+checks pass. T05.0's Docker/PostgreSQL suites were not rerun for this UI-only
+change; the merged logic PR #13 retains those checks and CI gates.
 
 Additional interactive evidence from the integrated local harness: real workspace
 creation/selection; invite creation and verified-recipient acceptance; agent
@@ -128,8 +137,10 @@ is counted as a completed flow.
   capabilities beside the relevant controls rather than presenting future
   sections as working.
 
-## Pending finalization
+## Final PR evidence
 
-Final `origin/dev` base, exact-head checks, PR URL, CI and Kody evidence are added
-after the coordinator confirms the logic PR is merged and this presentation is
-rebased. Until then this document is provisional integration evidence.
+This branch targets `dev` with one English non-draft PR. PR URL, exact head SHA,
+CI run and coordinator-triggered Kody review/rounds are added to this section and
+[progress](progress.md) after creation. A prior-head review never approves a
+changed head; every pushed presentation head needs a fresh coordinator trigger.
+Only the coordinator merges.
