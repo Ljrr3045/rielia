@@ -6,7 +6,7 @@ This records repository changes. No application version has been released.
 
 ### Added
 
-- T05.1/B1 workspace and membership presentation: private `/workspaces` flow for
+- T05.1/B1 workspace and membership presentation: `/workspaces` flow for
   authorized selection/creation, compact human/Agent member rows with owner
   protection, admin invitations/revocation, explicit fragment acceptance, versioned
   role/suspend/restore/remove, and agent registration/state/custodian controls.

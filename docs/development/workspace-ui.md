@@ -25,7 +25,7 @@ the textual guide and approved repository assets were used.
 
 ## Composition
 
-- `apps/web/src/app/workspaces/page.tsx` supplies private-route metadata and
+- `apps/web/src/app/workspaces/page.tsx` supplies noindex route metadata and
   renders the client presentation. `workspace-view.tsx` owns shell/composition,
   status/recovery/invitation panels and the locale selector. `workspace-admin.tsx`
   owns the workspace/member/agent/invitation forms and compact lists.
@@ -83,14 +83,11 @@ the textual guide and approved repository assets were used.
   390/390, 320/320 and 768/753, with no horizontal page overflow. Root browser QA
   separately verified 1440 desktop and 320/390 mobile, including create, select,
   invite/recipient, role and stale-forbidden recovery.
-- Saved native Orca screenshots (outside the repository):
-  `/private/tmp/rielia-t05-ui-desktop.png` (1285 dark),
-  `/private/tmp/rielia-t05-ui-desktop-light.png` (1285 light),
-  `/private/tmp/rielia-t05-ui-mobile-390-dark.png` and
-  `/private/tmp/rielia-t05-ui-mobile-320-light.png`. The 1440 CDP captures are
-  discarded as tiled viewport artifacts, not application defects. Root's global
-  evidence is `/private/tmp/rielia-t05-root-browser-qa.md`; own bounded QA notes
-  are `/private/tmp/rielia-t05-ui-qa.md`.
+- External evidence kept outside the repository: native Orca dark/light desktop
+  captures and 390/320 mobile captures, plus root and worker browser QA reports.
+  They are referenced in the delivery handoff and PR #14, not committed as
+  repository artifacts. The 1440 CDP captures are discarded as tiled viewport
+  artifacts, not application defects.
 
 ## Validation
 
@@ -126,16 +123,18 @@ is counted as a completed flow.
 
 - Root owns shared browser QA; this delivery does not claim real OAuth,
   HTTPS/staging, real-person usability or cross-browser certification.
-- Conflict and invitation-link-unavailable were not cheaply induced through the
-  live browser for this delivery; their state rendering and recovery copy are
-  covered by the T05.0 logic/client regressions. No UI duplicated that logic.
+- Conflict and invitation-link-unavailable controller outcomes/recovery
+  transitions are tested by the merged T05.0 logic/client regressions, but the
+  corresponding JSX browser paths were not exercised end to end here. Their
+  browser rendering remains unverified in this delivery; no UI duplicated the
+  controller logic.
 - Functional test code remains Sol-owned. This delivery adds no auth/session/data
   hook, proxy, contract, backend, fake production path or test logic.
 - Full T05/T07/T35, projects/tasks, project visibility, SMTP, agent credentials,
   remote MCP, ownership transfer/deletion/reauthentication and deployment remain
-  open. The route is private (`noindex`) and explicitly labels unavailable
-  capabilities beside the relevant controls rather than presenting future
-  sections as working.
+  open. The route uses `noindex` metadata; API access is enforced by the backend,
+  not by indexing metadata. Unavailable capabilities are labeled beside the
+  relevant controls rather than presenting future sections as working.
 
 ## Final PR evidence
 
