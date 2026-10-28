@@ -2,11 +2,17 @@ docs/development/progress.md
   s_c0d620db6aa2bf::t_13558b6e0d3354 239-272,274-282
   s_c0d620db6aa2bf::t_4c9c9879797196 400-404,434
   s_c0d620db6aa2bf::t_a919467d8c5367 34
+  s_c0d620db6aa2bf::t_cebcb82d12d679 435
+  s_c0d620db6aa2bf::t_6e493d412f2468 273
+  s_c0d620db6aa2bf::t_4b0328ce677d3f 31-33,35-36
+  s_c0d620db6aa2bf::t_aa939b3aea3513 11-14
 CHANGELOG.md
   s_c0d620db6aa2bf::t_9d6b4bc1edca54 23-35
 docs/development/project-task-ui.md
   s_c0d620db6aa2bf::t_4349414694d419 151-153
   s_c0d620db6aa2bf::t_693341fdc0c30e 1-2,9-140,142-150,154-226
+  s_c0d620db6aa2bf::t_9833944afdc825 3-8
+  s_c0d620db6aa2bf::t_6e493d412f2468 141
 ---
 {
   "schema_version": "authorship/3.0.0",
