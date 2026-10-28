@@ -15,10 +15,10 @@ This records repository changes. No application version has been released.
   edits, scoped retry/recovery feedback, transient created-link clearing without
   discarding received tokens, forbidden/error workspace escape, ES-default/EN
   selector, light/dark tokens, visible focus and responsive 320–1440 presentation.
-  [Presentation scope, evidence and limits](docs/development/workspace-ui.md).
-  Rebased onto T05.0 logic merge `01c9cc168bb9dde62b4290c049b982d62952c9a5`
-  (PR #13); no full T05/T07/T35, real OAuth/staging or real-user acceptance is
-  claimed.
+  [Presentation scope, evidence and limits](docs/development/workspace-ui.md);
+  [PR #14](https://github.com/Ljrr3045/rielia/pull/14). Rebased onto T05.0 logic
+  merge `01c9cc168bb9dde62b4290c049b982d62952c9a5` (PR #13); no full T05/T07/T35,
+  real OAuth/staging or real-user acceptance is claimed.
 
 - T05.0/B1 backend/frontend logic: persisted workspace creation/selection, scoped
   human/Agent memberships, versioned human administration, bounded agent state/

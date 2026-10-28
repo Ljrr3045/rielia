@@ -26,11 +26,12 @@ implementation, without completing tickets or weakening automated checks/launch 
 
 | Field | Evidence/state |
 | --- | --- |
-| Scope | T05.0/B1 backend/frontend logic for P02/P03, US02/US03, applicable P01/US01 and P38/US24–US25. Persisted workspaces, human/Agent members, limited invitations, versioned policy and client recovery. Authorized T07 subset; no presentation, email, credentials, projects/tasks, deployment or full-ticket acceptance |
-| Base | `origin/dev` at PR #12 merge `b87dadb165971d0594429f6a08c047626f9d596e` |
-| Branch | `feat/t05-workspace-flows` |
-| Worktree | Isolated `feat-t05-workspace-flows`; sole logic owner Codex `gpt-6.1-sol`, `xhigh`, verified from live terminal and coordinator launch; no helpers |
-| Current PR | [#13](https://github.com/Ljrr3045/rielia/pull/13), one English non-draft PR to `dev`. All applicable local checks pass; exact-head CI/coordinator-triggered Kody remain required |
+| Scope | T05.1/B1 workspace/membership presentation for P02/P03/P33/P38 and US02/US03/US24–US25 (UXR01/UXR03; UX03/UX05/UX07/UX09/UX11) on the merged T05.0 logic. No backend/contracts/hooks/proxies/tests, projects/tasks, email, credentials, ownership transfer or full-ticket acceptance |
+| Base | `origin/dev` at [PR #13](https://github.com/Ljrr3045/rielia/pull/13) merge `01c9cc168bb9dde62b4290c049b982d62952c9a5` (reviewed source `11f886a4`, CI 40761116202, Kody complete; fourth recovery finding withdrawn/resolved) |
+| Branch | `feat/t05-workspace-ui`, one English non-draft PR to `dev`; purpose name without username |
+| Worktree | Isolated `feat-t05-workspace-ui`; presentation owner OpenCode Go `opencode-go/deepseek-v4.1-flash` variant `max` (verified session API), logic/tests remain Sol-owned; no helpers |
+| Current PR | [#14](https://github.com/Ljrr3045/rielia/pull/14), English non-draft PR to `dev`. Final-base `pnpm check`, audit, handoff and whitespace checks pass; exact-head CI/coordinator-triggered Kody remain required |
+| T05.0 logic PR | [#13](https://github.com/Ljrr3045/rielia/pull/13) merged 2026-10-28T20:21:29Z as `01c9cc168bb9dde62b4290c049b982d62952c9a5`; reviewed source `11f886a4cbc28ab6d2e59c91a7aae096a9fefddd`, CI 40761116202, Kody completed; withdrawn fourth recovery finding resolved; coordinator merge only |
 | Principal foundations PR | [#12](https://github.com/Ljrr3045/rielia/pull/12) merged 2026-10-28T18:36:55Z as `b87dadb165971d0594429f6a08c047626f9d596e`; reviewed head `6c841a334987a51977af41d4fe19e0a151e1394e`, [Kody approval 5687764538](https://github.com/Ljrr3045/rielia/pull/12#pullrequestreview-5687764538), [CI 40745500251](https://github.com/Ljrr3045/rielia/actions/runs/40745500251). Both findings fixed; coordinator verified merge, preserved evidence and completed worktree removal |
 | Adapter migration PR | [#11](https://github.com/Ljrr3045/rielia/pull/11) merged 2026-10-27T20:30:56Z as `70314c550b643fd5678375939535cdb93331c9b2`; final reviewed head `eb8b19c91cd065b4308af2025f5d16d2533d6ea3`, [Kody approval 5673819042](https://github.com/Ljrr3045/rielia/pull/11#pullrequestreview-5673819042), [CI 40577221864](https://github.com/Ljrr3045/rielia/actions/runs/40577221864). Coordinator confirms its completed worktree removed |
 | Stack decision PR | [#10](https://github.com/Ljrr3045/rielia/pull/10) merged 2026-10-27T19:58:09Z as `3efb49fde4f43d9d58964510c3ef61f744bea062`; final reviewed head `81f884122dd0ab99e0a73c767b99d7aa7db6ba64`, Kody approved that head and [CI 40571647316](https://github.com/Ljrr3045/rielia/actions/runs/40571647316) passed. Fresh GitHub reads confirm merge/review/checks; coordinator reports its completed worktree removed |
@@ -151,9 +152,9 @@ branch is rebased onto `origin/dev` at `01c9cc168bb9dde62b4290c049b982d62952c9a5
 the [PR #13](https://github.com/Ljrr3045/rielia/pull/13) merge (reviewed source
 `11f886a4`, CI 40761116202, Kody complete; fourth recovery finding withdrawn and
 resolved). Final UI `pnpm check`, audit, handoff and whitespace evidence plus the
-one English non-draft PR/CI/Kody rounds are recorded in the
-[workspace UI guide](workspace-ui.md); no full T05/T07/T35 or real-user acceptance
-is claimed.
+one English non-draft [PR #14](https://github.com/Ljrr3045/rielia/pull/14)/CI/Kody
+rounds are recorded in the [workspace UI guide](workspace-ui.md); no full T05/T07/
+T35 or real-user acceptance is claimed.
 
 ## T35.0 principal/authorship foundations
 

@@ -139,8 +139,13 @@ is counted as a completed flow.
 
 ## Final PR evidence
 
-This branch targets `dev` with one English non-draft PR. PR URL, exact head SHA,
-CI run and coordinator-triggered Kody review/rounds are added to this section and
-[progress](progress.md) after creation. A prior-head review never approves a
-changed head; every pushed presentation head needs a fresh coordinator trigger.
-Only the coordinator merges.
+- PR: [#14](https://github.com/Ljrr3045/rielia/pull/14), English non-draft,
+  targeting `dev`.
+- Initial code/check head: `ec84b7c7992ea713f8491ec711d21df1fb1e2617`.
+- Final-base validation: `pnpm check`, audit, handoff, whitespace and bounded
+  browser QA pass as recorded above. The follow-up docs commit adds this URL and
+  progress evidence without changing presentation behavior; the coordinator
+  receives the exact final head for CI/Kody.
+- Kody AI review/rounds: pending coordinator root trigger. Every pushed head needs
+  a fresh trigger; a prior-head review never approves changed code. Only the
+  coordinator merges.
