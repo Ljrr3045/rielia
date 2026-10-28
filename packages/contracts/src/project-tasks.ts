@@ -28,6 +28,7 @@ export type ProjectTaskCommand =
   | { type: 'archive-task' | 'restore-task'; workspaceId: string; projectId: string; taskId: string; expectedVersion: number };
 export type ProjectTaskResult = Project | Task;
 export type ArchiveView = 'active' | 'archived';
+export interface DomainPage<T> { items: T[]; total: number; nextCursor: string | null; capabilities: { canCreate: boolean } }
 export interface DomainConflict { code: 'version-conflict' | 'archived'; message: string; current: ProjectTaskResult }
 export function projectURL(workspaceId: string, projectId: string): string {
   return `/projects?workspace=${encodeURIComponent(workspaceId)}&project=${encodeURIComponent(projectId)}`;
