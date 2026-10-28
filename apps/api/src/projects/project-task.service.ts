@@ -103,12 +103,17 @@ export class ProjectTaskService {
   private archived(current: ProjectTaskResult) { throw new ConflictException({ code: 'archived', message: 'Restore the archived record or its project before editing.', current }); }
 
   projects(context: VerifiedExecution, workspaceId: string, view: ArchiveView = 'active', cursor?: string) {
-    const after = pageCursor(cursor);
+    if (cursor !== undefined && !identifier(cursor)) throw new BadRequestException('Invalid page cursor.');
     return this.principals.domainOperation(context, workspaceId, 'read', async (tx, _actor, canWrite) => {
+      // The global allocation key never leaves the backend. A cursor names an
+      // already visible public ID and resolves only within current scope. Keep
+      // archived anchors valid; records cannot be deleted or moved.
+      const anchor = cursor === undefined ? null : await tx.project.findUnique({ where: { workspaceId_id: { workspaceId, id: cursor } }, select: { sequence: true } });
+      if (cursor !== undefined && !anchor) throw new BadRequestException('Invalid page cursor.');
       const where = { workspaceId, archivedAt: view === 'active' ? null : { not: null } };
-      const rows = await tx.project.findMany({ where: { ...where, ...(after === undefined ? {} : { sequence: { gt: after } }) }, orderBy: { sequence: 'asc' }, take: 101 });
+      const rows = await tx.project.findMany({ where: { ...where, ...(anchor ? { sequence: { gt: anchor.sequence } } : {}) }, orderBy: { sequence: 'asc' }, take: 101 });
       const people = await this.people(tx, workspaceId, rows.map(row => row.createdByPrincipalId));
-      const result = page(rows, await tx.project.count({ where }), row => String(row.sequence), canWrite);
+      const result = page(rows, await tx.project.count({ where }), row => row.id, canWrite);
       return { ...result, items: result.items.map(row => this.projectDto(row, people, canWrite)) };
     });
   }

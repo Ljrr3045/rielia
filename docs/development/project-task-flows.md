@@ -73,8 +73,12 @@ dependency or alternative routing framework was added.
 
 Pages contain `{items,total,nextCursor,capabilities:{canCreate}}`, at most 100
 records in ascending allocation order: immutable internal project sequence and
-per-project task number. Numeric cursors are opaque to the client and validated
-as positive 32-bit integers. New inserts append after a previous cursor even when
+per-project task number. Project cursors expose only the last visible public ID;
+the backend resolves its allocation key through a current workspace/ID lookup,
+including archived anchors. Missing/foreign anchors receive the same generic 400.
+The global project sequence is never present in a DTO or cursor. Task cursors use
+their already visible per-project number, validated as positive 32-bit integers.
+Clients treat both cursor forms as opaque. New inserts append after a previous cursor even when
 their public UUID sorts lower. Existing projects are deterministically backfilled
 by creation time/ID in the additive `20261028230000_project_task_paging` migration;
 all earlier SQL/checksums remain unchanged. Counts are live, not a snapshot:
@@ -271,3 +275,12 @@ pre-fix because the loaded project became null; it now retains project/task/list
 cursor and successful mutation result, retries the same page and still clears
 data on 401/403. The earlier head's approval does not approve these changes;
 the final head requires fresh coordinator-triggered review and CI.
+
+The later [cursor privacy finding](https://github.com/Ljrr3045/rielia/pull/15#discussion_r4406803828)
+was also valid: exposing the internal global project sequence in a cursor leaks
+cross-tenant allocation activity. Only the already visible project ID now leaves
+the backend, with scoped anchor lookup and the same private monotonic ordering.
+The real-PG regression failed pre-fix with numeric cursor `105` instead of the
+visible project ID. It also verifies no sequence field in DTOs, identical foreign/
+missing-anchor denial, archived-anchor continuation and the original late-insert
+case. Task cursors remain project-local numbers; no new secret or migration.

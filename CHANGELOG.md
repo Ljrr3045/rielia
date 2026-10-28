@@ -129,6 +129,9 @@ This records repository changes. No application version has been released.
   prior SQL checksums. Transient next-page failure now retains loaded lists/detail,
   cursor and mutation success with labelled `pageError` retry; auth denial still
   clears private data. Both defects have pre-fix failing regressions.
+- Keep the global project allocation key private: expose a visible project ID as
+  cursor and resolve it only within current workspace scope, retaining monotonic
+  ordering, archived-anchor recovery and identical missing/foreign denial.
 - Limit the API deployment package to compiled runtime, Prisma schema/migrations
   and Prisma config, excluding test-only signed-session QA fixtures and tests;
   verify the exclusion in actual deployed API/worker/migration images.

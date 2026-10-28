@@ -86,6 +86,7 @@ test('T06 real PostgreSQL and HTTP project/task vertical', async t => {
     for (const field of ['createdByPrincipalId', 'authorPrincipalId', 'subjectPrincipalId', 'provenance', 'executionMode', 'source', 'grantId', 'projectId', 'workspaceId', 'labels', 'checklist', 'parentId']) assert.equal((await request(f.owner, f.tasks, { title: 'Denied', [field]: 'forged' })).status, 400);
     for (const field of ['actorPrincipalId', 'subjectPrincipalId', 'mode', 'source', 'grantId']) assert.equal((await request(f.owner, f.path, undefined, undefined, { [`x-rielia-${field}`]: 'forged' })).status, 400);
     for (const query of ['?workspaceId=forged', '?view=private', '?cursor=bad%20id', '?cursor=abc', '?cursor=0', '?cursor=-1', '?cursor=2147483648', '?view=active&view=archived']) assert.equal((await request(f.owner, f.path + query)).status, 400);
+    for (const cursor of ['abc', '0', '-1', '2147483648']) assert.equal((await request(f.owner, `${f.tasks}?cursor=${cursor}`)).status, 400);
     for (const body of [{}, { title: '' }, { title: 'x', status: 'custom' }, { title: 'x', dueDate: '2027-02-29' }, { title: 'x', dueDate: '2026-11-01T00:00:00Z' }, { title: 'x', dueDate: '0000-01-01' }, { title: 'x', priority: [] }]) assert.equal((await request(f.owner, f.tasks, body)).status, 400);
     for (const body of [{ name: 'x', key: 'lower' }, { name: 'x', key: 'PRI', visibility: 'private' }]) assert.equal((await request(f.owner, f.path, body)).status, 400);
     assert.equal((await request(f.owner, f.tasks, { title: 'x' }, 'bad-key')).status, 400);
@@ -100,11 +101,19 @@ test('T06 real PostgreSQL and HTTP project/task vertical', async t => {
     const context = (await principals.webContext({ cookie: f.owner.cookie }, f.workspace.id)).context;
     for (let n = 0; n < 102; n++) await service.createProject(context, f.workspace.id, randomUUID(), randomUUID(), { name: `Paged ${n}`, key: `PG${n}` });
     const first = await ok(f.owner, f.path); assert.equal(first.items.length, 100); assert.equal(first.total, 103); assert.ok(first.nextCursor);
+    assert.equal(first.nextCursor, first.items.at(-1).id, 'project cursors expose only an already visible scoped public ID, never global allocation');
+    assert.ok(first.items.every(row => !('sequence' in row)));
+    const missingCursor = await request(f.owner, `${f.path}?cursor=${randomUUID()}`);
+    const foreignCursor = await request(f.owner, `${f.path}?cursor=${foreign.project.id}`);
+    assert.equal(missingCursor.status, 400); assert.equal(foreignCursor.status, 400); assert.deepEqual(foreignCursor.data, missingCursor.data);
     // A late fixed low UUID makes the previous random-ID cursor defect
     // deterministic. Trusted fixture DML still takes real scope/policy triggers.
     const late = await prisma.project.create({ data: { id: '00000000-0000-4000-8000-000000000000', workspaceId: f.workspace.id, key: 'LATE', name: 'Late insert', createdByPrincipalId: f.owner.principalId, creationMode: 'human', creationSource: 'web' } });
     const second = await ok(f.owner, `${f.path}?cursor=${first.nextCursor}`); assert.equal(second.items.length, 4); assert.equal(second.total, 104); assert.equal(second.nextCursor, null);
     assert.equal(new Set([...first.items, ...second.items].map(row => row.id)).size, 104); assert.ok(second.items.some(row => row.id === late.id));
+    const anchor = first.items.at(-1); await ok(f.owner, `${f.path}/${anchor.id}/archive`, { expectedVersion: anchor.version });
+    const archivedAnchorPage = await ok(f.owner, `${f.path}?cursor=${first.nextCursor}`);
+    assert.deepEqual(archivedAnchorPage.items.map(row => row.id), second.items.map(row => row.id), 'archiving an anchor does not invalidate a scoped cursor');
     const outside = second.items[0]; assert.equal((await ok(f.owner, `${f.path}/${outside.id}`)).id, outside.id);
     for (let n = 0; n < 102; n++) await service.createTask(context, f.workspace.id, f.project.id, randomUUID(), randomUUID(), { title: `Paged task ${n}` });
     const tasks = await ok(f.owner, f.tasks); assert.equal(tasks.items.length, 100); assert.equal(tasks.total, 102);

@@ -115,6 +115,13 @@ Transient errors retain loaded lists/details/cursors and mutation success while
 401/403 still clear private data. Findings/dispositions are linked in the
 [guide](project-task-flows.md); the changed head requires fresh CI/root Kody.
 
+The next review's global cursor disclosure finding was valid. The internal
+monotonic project sequence now stays private: public cursor is an already visible
+project ID resolved only through the current workspace/ID fence. Foreign and
+missing anchors have identical generic denial; archived anchors remain valid.
+The real-PG regression failed pre-fix with numeric cursor `105` instead of the
+visible ID, then covers private DTOs, scoped anchors and late insert continuity.
+
 Final packaging inspection found that default API deployment included test files.
 An explicit runtime/schema/config package allowlist now excludes the signed-session
 QA harness and all tests. Dry-run packaging retains generated Prisma/runtime and
@@ -377,8 +384,8 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T02 | B0 | Identity/proxy integration spike | None | T02.1/T02.2 merged partial evidence; current NodeAdapter migration preserves local parity; real provider/staging acceptance OPEN/DEFERRED under user sequencing |
 | T03 | B0 | MCP SDK/wrapper/minimal remote profile spike | T02 for remote auth | Partial T03.0 local public liveness only; staging-dependent discovery/auth OPEN/DEFERRED; product catalog/credentials and full acceptance remain open |
 | T04 | B1 foundations | Monorepo, images, worker/queue, initial migration | T02–T03 | Partial T04.0 merged; full acceptance/dependencies stay open. Dated user override permits local implementation with listed real validation deferred |
-| T05 | B1a | Auth, workspaces, principal memberships | T04, T35 | T05.0 real workspace/member/invitation backend/client logic implemented; presentation and full acceptance remain open |
-| T06 | B1a | Projects/tasks, versions, idempotency, atomic activity/outbox | T05 | Not started |
+| T05 | B1a | Auth, workspaces, principal memberships | T04, T35 | Bounded T05.0 logic/T05.1 presentation merged in PRs #13/#14; full acceptance remains open |
+| T06 | B1a | Projects/tasks, versions, idempotency, atomic activity/outbox | T05 | Bounded T06.0 real backend/client logic implemented in [PR #15](https://github.com/Ljrr3045/rielia/pull/15); presentation separately owned, full ticket/real-user acceptance remains open |
 | T07 | B1b | Invitations, revocation, roles/private projects | T06 | Authorized invitation/role subset in T05.0; private projects and full acceptance not started |
 | T08 | B1b | List/Kanban, filters, ranking | T06 | Not started |
 | T09 | B1b | Subtasks, checklists, comments, history | T06 | Not started |
