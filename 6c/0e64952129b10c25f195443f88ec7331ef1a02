@@ -1,0 +1,26 @@
+docs/development/progress.md
+  s_584a4bef4f79ee::t_add1c16213e9bf 156-161
+apps/web/src/app/workspaces/workspace-view.tsx
+  s_584a4bef4f79ee::t_deca6cab2cfc9d 469-471
+apps/web/src/app/workspaces/workspace-admin.tsx
+  s_584a4bef4f79ee::t_d9a7d73964c4d9 1045-1049
+  s_584a4bef4f79ee::t_1965f825bba067 708-713
+docs/development/workspace-ui.md
+  s_584a4bef4f79ee::t_e95e42d7b7b786 148-156
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "6c0e64952129b10c25f195443f88ec7331ef1a02",
+  "prompts": {},
+  "sessions": {
+    "s_584a4bef4f79ee": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e7c015eb1ffeq9F4TVu4L6uBxm",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
