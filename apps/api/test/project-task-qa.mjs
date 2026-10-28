@@ -9,6 +9,7 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createServer } from 'node:net';
+import { createServer as createFixtureServer } from 'node:http';
 import { setTimeout as delay } from 'node:timers/promises';
 import { makeSignature } from 'better-auth/crypto';
 import { startProcess, stopProcess } from '../../../scripts/smoke-process.mjs';
@@ -17,21 +18,31 @@ const root = fileURLToPath(new URL('../../../', import.meta.url));
 const outputPath = resolve(process.argv[2] ?? join(tmpdir(), 'rielia-project-task-qa.json'));
 if (!outputPath.startsWith(resolve(tmpdir()) + '/') && !outputPath.startsWith('/private/tmp/')) throw new Error('Write the private QA state file under the temporary directory.');
 const execute = promisify(execFile); const token = randomBytes(8).toString('hex'); const name = `rielia-t06-qa-${token}`; const volume = `${name}-data`;
-const directory = await mkdtemp(join(tmpdir(), 'rielia-t06-qa-')); let app; let web; let stopping = false; let phase = 'loopback allocation';
+const directory = await mkdtemp(join(tmpdir(), 'rielia-t06-qa-')); let app; let web; let fixture; let stopping = false; let stopRequested = false; let phase = 'loopback allocation';
 const image = 'postgres:18.6@sha256:edb0c08dc33befd0262ab3b5cf1c4f3f8cfd8b09e88c05b45adee29d6761ddb6';
-async function command(executable, args, timeout = 120000) { return execute(executable, args, { cwd: root, env: process.env, timeout, maxBuffer: 2 * 1024 * 1024 }); }
+async function command(executable, args, timeout = 120000) {
+  if (stopRequested && !stopping) throw new Error('QA shutdown requested.');
+  const result = await execute(executable, args, { cwd: root, env: process.env, timeout, maxBuffer: 2 * 1024 * 1024 });
+  if (stopRequested && !stopping) throw new Error('QA shutdown requested.');
+  return result;
+}
 async function port() { const server = createServer(); await new Promise((yes, no) => { server.once('error', no); server.listen(0, '127.0.0.1', yes); }); const value = server.address().port; await new Promise(yes => server.close(yes)); return value; }
 let resolveStop; const stopped = new Promise(yes => { resolveStop = yes; });
 async function cleanup() {
   if (stopping) return; stopping = true;
+  if (fixture) { fixture.closeAllConnections(); await new Promise((yes, no) => fixture.close(error => error ? no(error) : yes())); }
   await stopProcess(web ?? { stopped: true }); await app?.close();
   const owned = await command('docker', ['inspect', '--format', '{{index .Config.Labels "rielia.t06-qa"}}', name], 10000).catch(() => null);
   if (owned?.stdout.trim() === token) await command('docker', ['rm', '--force', name], 10000);
   const ownedVolume = await command('docker', ['volume', 'inspect', '--format', '{{index .Labels "rielia.t06-qa"}}', volume], 10000).catch(() => null);
   if (ownedVolume?.stdout.trim() === token) await command('docker', ['volume', 'rm', volume], 10000);
+  const containers = await command('docker', ['ps', '--all', '--filter', `label=rielia.t06-qa=${token}`, '--format', '{{.ID}}'], 10000);
+  const volumes = await command('docker', ['volume', 'ls', '--filter', `label=rielia.t06-qa=${token}`, '--format', '{{.Name}}'], 10000);
+  if (containers.stdout.trim() || volumes.stdout.trim()) throw new Error('QA resources remain after cleanup.');
   await rm(directory, { recursive: true, force: true }); await rm(outputPath, { force: true }); resolveStop();
 }
-const stop = () => { void cleanup().catch(() => { process.exitCode = 1; resolveStop(); }); };
+// Let each in-flight command settle, then the single finally block owns cleanup.
+const stop = () => { stopRequested = true; resolveStop(); };
 process.once('SIGTERM', stop); process.once('SIGINT', stop);
 try {
   const password = randomBytes(36).toString('hex'); const secret = randomBytes(48).toString('base64'); const webPort = await port(); const origin = `http://127.0.0.1:${webPort}`;
@@ -62,18 +73,37 @@ try {
   const agentId = await principals.registerAgent(context, { name: 'QA Builder', role: 'member', custodianPrincipalId: owner.principalId });
   const project = await domain.createProject(context, workspaceId, randomUUID(), randomUUID(), { key: 'QAT', name: 'QA Persistent Project', description: 'Fictional local QA data' });
   const task = await domain.createTask(context, workspaceId, project.id, randomUUID(), randomUUID(), { title: 'QA persistent task', description: '# Safe Markdown\n\n[Documentation](https://example.test) and `<script>` as text.', assigneePrincipalId: agentId, dueDate: '2027-01-15' });
+  if (stopRequested) throw new Error('QA shutdown requested.');
+  // Separate loopback test server; it never shares product routing or bundles.
+  // Host headers cannot select redirect destinations or fixture subjects.
+  const subjects = { owner, member, viewer, outsider };
+  fixture = createFixtureServer((req, res) => {
+    res.setHeader('Cache-Control', 'no-store');
+    const match = /^\/as\/(owner|member|viewer|outsider|signed-out)$/.exec(req.url ?? '');
+    if (req.method !== 'GET' || !match) { res.writeHead(404); res.end(); return; }
+    const subject = match[1];
+    res.setHeader('Set-Cookie', subject === 'signed-out' ? 'better-auth.session_token=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0'
+      : `${subjects[subject].cookie}; Path=/; HttpOnly; SameSite=Lax`);
+    res.writeHead(303, { Location: `${origin}/projects` }); res.end();
+  });
+  await new Promise((yes, no) => { fixture.once('error', no); fixture.listen(0, '127.0.0.1', yes); });
+  const fixtureOrigin = `http://127.0.0.1:${fixture.address().port}`;
+  const fixtureURLs = Object.fromEntries(['owner', 'member', 'viewer', 'outsider', 'signed-out'].map(subject => [subject, `${fixtureOrigin}/as/${subject}`]));
+  const fixtureProbe = await fetch(fixtureURLs.owner, { redirect: 'manual' });
+  if (fixtureProbe.status !== 303 || fixtureProbe.headers.get('location') !== `${origin}/projects` || !fixtureProbe.headers.get('set-cookie')?.includes('HttpOnly')) throw new Error('QA fixture session switching failed.');
   phase = 'Next startup/proxy'; web = startProcess('T06 QA Next', ['node_modules/next/dist/bin/next', 'dev', '--hostname', '127.0.0.1', '--port', String(webPort)], join(root, 'apps/web'), { ...process.env, API_BASE_URL: apiURL });
   let webReady = false;
   for (let n = 0; n < 120; n++) {
+    if (stopRequested) throw new Error('QA shutdown requested.');
     if (web.child.exitCode !== null || web.error) throw new Error('QA Next process failed.');
     try { const response = await fetch(`${origin}/api/v1/workspaces/${workspaceId}/projects/${project.id}/tasks/${task.id}`, { headers: { cookie: owner.cookie }, signal: AbortSignal.timeout(1000) }); if (response.status === 200 && (await response.json()).id === task.id) { webReady = true; break; } } catch { /* bounded readiness retry */ }
     await delay(250);
   }
   if (!webReady) throw new Error('QA Next real proxy readiness failed.');
-  await writeFile(outputPath, JSON.stringify({ pid: process.pid, origin, apiURL, container: name, volume, workspaceId, otherWorkspaceId, projectId: project.id, taskId: task.id, agentId, owner, member, viewer, outsider,
+  await writeFile(outputPath, JSON.stringify({ pid: process.pid, origin, apiURL, fixtureURLs, container: name, volume, workspaceId, otherWorkspaceId, projectId: project.id, taskId: task.id, agentId, owner, member, viewer, outsider,
     projectURL: `${origin}${project.url}`, taskURL: `${origin}${task.url}` }, null, 2), { mode: 0o600 });
   console.log(`Real PG/Nest/Next QA ready at ${origin}; private session/state file: ${outputPath}. SIGTERM/SIGINT cleans owned servers, container, volume and state file.`);
   if (process.argv.includes('--smoke')) resolveStop();
   await stopped;
-} catch (error) { console.error(`Local project/task QA failed during ${phase} (${typeof error?.code === 'string' ? error.code : 'failed'}); diagnostics withheld because runtime values are private.`); process.exitCode = 1; }
+} catch (error) { if (!stopRequested) { console.error(`Local project/task QA failed during ${phase} (${typeof error?.code === 'string' ? error.code : 'failed'}); diagnostics withheld because runtime values are private.`); process.exitCode = 1; } }
 finally { await cleanup(); process.removeListener('SIGTERM', stop); process.removeListener('SIGINT', stop); }
