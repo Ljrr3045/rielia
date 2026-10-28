@@ -14,7 +14,8 @@ This records repository changes. No application version has been released.
   and observed concurrent-transaction regressions. Creator/author/independent
   assignment types/helpers prepare future domain work; actual task/comment/
   history/export integration and credentials remain incomplete.
-  [Scope, services, migration and limits](docs/development/principal-foundations.md).
+  [Scope, services, migration and limits](docs/development/principal-foundations.md);
+  [PR #12](https://github.com/Ljrr3045/rielia/pull/12).
 
 - T04.0/B0: provisional local Docker Compose runtime with Next standalone,
   a shared nonroot API/worker backend image, private PostgreSQL/named volume,
