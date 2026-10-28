@@ -1,0 +1,69 @@
+scripts/project-task-client.test.mjs
+  s_0a489e8f2e5f0a::t_0163ee0140bfda 1-27,30-44
+  s_0a489e8f2e5f0a::t_dd5adc830fd37a 28-29
+apps/web/src/lib/project-task-controller.ts
+  s_0a489e8f2e5f0a::t_76bedb8720d0ea 21-27,51,114-115,180-189
+apps/api/src/principals/principal.service.ts
+  s_0a489e8f2e5f0a::t_def71b31a1196e 121-142
+package.json
+  s_0a489e8f2e5f0a::t_0163ee0140bfda 27,32
+scripts/project-task-logic.test.mjs
+  s_0a489e8f2e5f0a::t_0163ee0140bfda 1-50,66-67,69-75,77,79-83,85-89,91-94,96-116
+  s_0a489e8f2e5f0a::t_2a316d336be52c 51-65
+  s_0a489e8f2e5f0a::t_f03e0d99cf5769 68,76,78,84,90,95
+scripts/test-identity.mjs
+  s_0a489e8f2e5f0a::t_de39b024813bc1 83-85
+  s_0a489e8f2e5f0a::t_4c92b5eaa260af 86-95,103-104
+  s_0a489e8f2e5f0a::t_14af332bb350ec 15,45,48,96-102,124-128
+apps/api/prisma/migrations/20261028220000_project_task_flows/migration.sql
+  s_0a489e8f2e5f0a::t_2d59afa121c98c 61
+  s_0a489e8f2e5f0a::t_106cb152304769 1-60,62-121
+apps/api/test/project-tasks.test.mjs
+  s_0a489e8f2e5f0a::t_dd5adc830fd37a 77-78
+  s_0a489e8f2e5f0a::t_4c92b5eaa260af 82-98
+  s_0a489e8f2e5f0a::t_de39b024813bc1 1-76,79-81,99-210
+apps/web/src/lib/use-project-tasks.ts
+  s_0a489e8f2e5f0a::t_76bedb8720d0ea 26
+apps/api/test/project-task-persistence.mjs
+  s_0a489e8f2e5f0a::t_4c92b5eaa260af 1-35,39-42
+  s_0a489e8f2e5f0a::t_a5aae287564326 36-38
+scripts/test-runtime.mjs
+  s_0a489e8f2e5f0a::t_de39b024813bc1 182
+apps/api/src/projects/project-task.controller.ts
+  s_0a489e8f2e5f0a::t_7c6218b8f05299 1-16,18-64
+  s_0a489e8f2e5f0a::t_dd5adc830fd37a 17
+apps/api/src/app.module.ts
+  s_0a489e8f2e5f0a::t_7c6218b8f05299 11-12,14
+apps/web/src/lib/project-task-client.ts
+  s_0a489e8f2e5f0a::t_dd5adc830fd37a 56-64
+  s_0a489e8f2e5f0a::t_ab088da83c8e92 4-7
+apps/api/prisma/schema.prisma
+  s_0a489e8f2e5f0a::t_106cb152304769 171-258
+apps/api/test/project-task-qa.mjs
+  s_0a489e8f2e5f0a::t_7dd08c0661bc79 1-19,21-26,28-38,40-46,48-49,51-58,60-64,66-72,74-75,77,79
+  s_0a489e8f2e5f0a::t_d1d80f0457c2ec 20,27,39,47,50,59,65,78
+  s_0a489e8f2e5f0a::t_2983aa32d8317d 73,76
+apps/api/src/projects/project-task.service.ts
+  s_0a489e8f2e5f0a::t_7c6218b8f05299 3,53-54,105,117
+  s_0a489e8f2e5f0a::t_2d59afa121c98c 167
+  s_0a489e8f2e5f0a::t_659b2d3bdb1178 1-2,4-52,55-104,106-116,118-166,168-181,183-193
+  s_0a489e8f2e5f0a::t_689f138ba9ff96 182
+apps/api/src/application.ts
+  s_0a489e8f2e5f0a::t_dd5adc830fd37a 5,15-22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ecdbd128fbb4eea36acb3db931bfb5ecdf9ac5a4",
+  "prompts": {},
+  "sessions": {
+    "s_0a489e8f2e5f0a": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18460-5f91-7740-af91-cd3f0d13a188",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
