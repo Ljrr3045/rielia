@@ -124,7 +124,7 @@ Real Google/GitHub, HTTPS/Traefik/staging, staging-dependent remote discovery an
 real-project/user acceptance stay OPEN/DEFERRED. Do not request credentials or
 provision staging for this migration. No full T02/T03/T04 or launch acceptance is
 closed. Under the user's local sequencing override, **T35 principal/authorship
-foundations is the next product step**, following the preparatory T04 evidence
-and preceding T05/T06/T12. It must distinguish human delegation from autonomous
-agents, derive subject/actor/grants server-side and preserve authorship/revocation;
-none of that domain implementation ships here.
+foundations follows this migration**, after preparatory T04 and before T05/T06/T12.
+The later [T35.0 slice](principal-foundations.md) adds bounded storage/policy/context;
+this adapter migration itself added none of that domain implementation. Full T35
+authorship, credential and domain integration remains incomplete.

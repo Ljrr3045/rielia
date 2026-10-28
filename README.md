@@ -33,12 +33,14 @@ The plans recommend a TypeScript monorepo with Next.js, NestJS, PostgreSQL,
 Prisma, Better Auth, a durable worker, and local/remote MCP adapters. **The user
 approved the current stack except Express on 2026-10-27.** The backend now uses
 the official Nest NodeAdapter 12.3.2; [migration evidence](docs/development/nest-http-adapter.md)
-records identity parity and backend package/image closure checks. T35 is the next
-dependency-based product foundation. Real provider/staging and real-project/user acceptance
+records identity parity and backend package/image closure checks. The bounded
+[T35.0 principal foundations](docs/development/principal-foundations.md) add
+principal/membership invariants and verified execution; full T35/T05/T06/T12 remain
+incomplete. Real provider/staging and real-project/user acceptance
 remain OPEN/DEFERRED until an advanced product slice and user scheduling, without
 blocking authorized local implementation or completing full tickets. See the
 decision above. The fixture pins and validates a bounded subset. T02.1 experimentally
-integrates Better Auth with an identity-only Prisma/PostgreSQL schema and web
+integrates Better Auth with its original identity schema and web
 logic; its presentation is separately owned T02.2 work. Google/GitHub OAuth credentials and
 callbacks must be configured per installation; none are included.
 

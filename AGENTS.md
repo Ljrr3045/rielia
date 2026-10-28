@@ -40,8 +40,10 @@ or an Orca installation.
   [stack decision and deferred validation backlog](docs/development/stack-validation-decisions.md).
   The backend now uses the official Nest NodeAdapter with coherent Nest 12.3.2
   pins; [migration evidence and limits](docs/development/nest-http-adapter.md)
-  cover identity parity and API/worker/migration dependency closure. T35 is the
-  next dependency-based product step. Full T02 acceptance
+  cover identity parity and API/worker/migration dependency closure. T35.0 adds
+  [bounded principal/authorship foundations](docs/development/principal-foundations.md),
+  minimal workspace/membership invariants and verified web execution context;
+  full T35/T05/T06/T12 remain incomplete. Full T02 acceptance
   remains open; real provider/staging validation is deferred by user sequencing.
 - T01/B0 has a separately isolated fictional frontend-only demo adapter and a
   bounded responsive `/prototype` presentation; see the
@@ -85,8 +87,9 @@ or an Orca installation.
 
 `apps/web`, `apps/api`, `packages/contracts`, and the diagnostic-only
 `packages/mcp-local` exist in the fixture. T02.1's
-identity runtime and identity-only Prisma schema live inside `apps/api`.
-The shared database package, domain schema, business worker, generated API client, and
+identity runtime and T35.0's additive principal/minimal workspace/membership schema
+live inside `apps/api`. The shared database package, remaining domain schema,
+business worker, generated API client, and
 product MCP catalog/authorization remain future work.
 The local diagnostic worker stays inside `apps/api`, shares its backend image,
 opens no listener and cannot migrate storage; only the explicit one-shot does so.

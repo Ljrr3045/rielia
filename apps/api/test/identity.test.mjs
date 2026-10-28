@@ -116,7 +116,9 @@ test('real Better Auth, Nest NodeAdapter, Prisma and PostgreSQL (simulated provi
     googleWrongSignature = false;
     context = await start();
     await context.identity.runtime.prisma.verification.deleteMany();
-    await context.identity.runtime.prisma.user.deleteMany();
+    // Administrator-only reset of this disposable DB; production references
+    // cannot be deleted or cascaded after T35.0 principal mapping.
+    await context.identity.runtime.prisma.$executeRawUnsafe('TRUNCATE TABLE "user", principal, workspace, membership, execution_grant CASCADE');
   });
   t.afterEach(async () => { await context?.app.close(); });
 

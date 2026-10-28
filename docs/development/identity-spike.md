@@ -233,7 +233,10 @@ pnpm --filter @rielia/api db:migrate
 pnpm dev:api
 ```
 
-Migration deploy is repeatable and generates no domain tables. API development
+Migration deploy is repeatable. The original T02.1 migration creates identity
+tables only; the later [T35.0 migration](principal-foundations.md) adds principal/
+minimal workspace/membership policy tables and atomically maps existing/new users.
+Social login still grants no workspace membership by itself. API development
 builds once; restart after source/config changes. For a production-mode local
 process, build first and set `NODE_ENV=production` in the process environment;
 HTTPS origin is mandatory. This guide does not deploy anything.

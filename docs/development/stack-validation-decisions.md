@@ -71,8 +71,9 @@ choice over Fastify. Installed resolution and complete API/worker/migration
 deployed-store checks guard Express absence. Current check/PR/review evidence is
 in [progress](progress.md); full provider/staging acceptance remains deferred.
 
-T35 is the next dependency-based product foundation under the user's sequencing
-override, before T05/T06/T12; this change implements none of those domain features.
+T35 follows that adapter migration under the user's sequencing override, before
+T05/T06/T12. The later [T35.0 foundations](principal-foundations.md) now implement
+bounded storage/policy/context; full T35 and those dependent workflows remain open.
 
 ## Deferred validation backlog
 

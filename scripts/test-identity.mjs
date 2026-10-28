@@ -47,7 +47,9 @@ try {
   started = true;
   let ready = false;
   for (let attempt = 0; attempt < 60 && !abort.signal.aborted; attempt++) {
-    const result = await execute('docker', ['exec', name, 'pg_isready', '-U', 'identity', '-d', 'identity_spike'], { timeout: 3000 }).catch(() => null);
+    // The image's temporary initialization server accepts Unix sockets before
+    // its final TCP server starts. Wait for TCP before running direct PG fixtures.
+    const result = await execute('docker', ['exec', name, 'pg_isready', '-h', '127.0.0.1', '-U', 'identity', '-d', 'identity_spike'], { timeout: 3000 }).catch(() => null);
     if (result) { ready = true; break; }
     await delay(250, undefined, { signal: abort.signal });
   }
@@ -64,10 +66,15 @@ try {
     IDENTITY_TRUSTED_PROXIES: '', IDENTITY_ALLOW_HTTP_LOOPBACK: 'false',
   };
   privateValues.push(env.DATABASE_URL, env.BETTER_AUTH_SECRET, env.GOOGLE_CLIENT_SECRET, env.GITHUB_CLIENT_SECRET);
+  await command('Legacy identity fixture', process.execPath, ['apps/api/test/prepare-principal-backfill.mjs'], { env, signal: abort.signal });
+  await command('Legacy migration history', 'pnpm', ['--filter', '@rielia/api', 'exec', 'prisma', 'migrate', 'resolve', '--applied', '20261025000000_identity'], { env, signal: abort.signal });
   await command('Identity migration', 'pnpm', ['--filter', '@rielia/api', 'exec', 'prisma', 'migrate', 'deploy'], { env, signal: abort.signal });
   // A second deployment proves the checked-in migration is safely repeatable.
   await command('Repeated identity migration', 'pnpm', ['--filter', '@rielia/api', 'exec', 'prisma', 'migrate', 'deploy'], { env, signal: abort.signal });
   console.log('Disposable PostgreSQL 18.6 ready; identity migration applied twice.');
+  const principals = await command('Identity integration suite', process.execPath,
+    ['--test', '--test-reporter=spec', 'apps/api/test/principals.test.mjs'], { env, signal: abort.signal });
+  process.stdout.write(principals.stdout);
   const tests = await command('Identity integration suite', process.execPath,
     ['--test', '--test-reporter=spec', 'apps/api/test/identity.test.mjs'], { env, signal: abort.signal });
   process.stdout.write(tests.stdout);
