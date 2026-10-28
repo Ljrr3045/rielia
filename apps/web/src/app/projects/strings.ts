@@ -1,0 +1,486 @@
+export type Lang = 'es' | 'en';
+
+export interface Bilingual {
+  readonly es: string;
+  readonly en: string;
+}
+
+export const copy = {
+  common: {
+    skip: { es: 'Ir al contenido', en: 'Skip to content' },
+    home: { es: 'Inicio', en: 'Home' },
+    workspace: { es: 'Espacio', en: 'Workspace' },
+    workspaces: { es: 'Espacios', en: 'Workspaces' },
+    projects: { es: 'Proyectos', en: 'Projects' },
+    project: { es: 'Proyecto', en: 'Project' },
+    task: { es: 'Tarea', en: 'Task' },
+    tasks: { es: 'Tareas', en: 'Tasks' },
+    archived: { es: 'Archivados', en: 'Archived' },
+    archivedTask: { es: 'Tarea archivada', en: 'Archived task' },
+    active: { es: 'Activos', en: 'Active' },
+    all: { es: 'Todos', en: 'All' },
+    refresh: { es: 'Actualizar', en: 'Refresh' },
+    retry: { es: 'Reintentar', en: 'Retry' },
+    cancel: { es: 'Cancelar', en: 'Cancel' },
+    close: { es: 'Cerrar', en: 'Close' },
+    save: { es: 'Guardar', en: 'Save' },
+    saving: { es: 'Guardando…', en: 'Saving…' },
+    edit: { es: 'Editar', en: 'Edit' },
+    create: { es: 'Crear', en: 'Create' },
+    loading: { es: 'Cargando…', en: 'Loading…' },
+    dismiss: { es: 'Cerrar aviso', en: 'Dismiss notice' },
+    confirm: { es: 'Confirmar', en: 'Confirm' },
+    back: { es: 'Volver', en: 'Back' },
+    backToProject: { es: 'Volver al proyecto', en: 'Back to project' },
+    menu: { es: 'Abrir navegación', en: 'Open navigation' },
+    closeMenu: { es: 'Cerrar navegación', en: 'Close navigation' },
+    language: { es: 'Idioma', en: 'Language' },
+    account: { es: 'Cuenta en otra pestaña', en: 'Account in a new tab' },
+    required: { es: 'Obligatorio', en: 'Required' },
+    optional: { es: 'Opcional', en: 'Optional' },
+    none: { es: 'Ninguno', en: 'None' },
+    unknown: { es: 'Sin datos', en: 'Unknown' },
+    error: { es: 'No se pudo completar la operación', en: 'The operation could not be completed' },
+    retrySave: { es: 'Reintentar guardado', en: 'Retry save' },
+    discardDraft: { es: 'Descartar borrador', en: 'Discard draft' },
+    keepEditing: { es: 'Seguir editando', en: 'Keep editing' },
+    loadMore: { es: 'Cargar más', en: 'Load more' },
+    notAvailable: { es: 'No disponible en esta versión', en: 'Not available in this release' },
+    timestamp: { es: 'Guardado', en: 'Saved' },
+  },
+  header: {
+    eyebrow: { es: 'Rielia · Proyectos y tareas', en: 'Rielia · Projects and tasks' },
+    projectsTitle: { es: 'Proyectos', en: 'Projects' },
+    projectsLede: {
+      es: 'Organiza el trabajo visible del espacio actual. Abre un proyecto para crear tareas, editarlas y revisar lo archivado.',
+      en: 'Organize the current workspace’s visible work. Open a project to create tasks, edit them, and review archived work.',
+    },
+    projectFallback: { es: 'Proyecto', en: 'Project' },
+    workspaceFallback: { es: 'Espacio actual', en: 'Current workspace' },
+    workspaceSelector: { es: 'Espacio actual', en: 'Current workspace' },
+    noWorkspace: { es: 'Sin espacio', en: 'No workspace' },
+  },
+  status: {
+    loadingTitle: { es: 'Cargando proyectos y tareas…', en: 'Loading projects and tasks…' },
+    loadingBody: {
+      es: 'Comprobando la sesión, el espacio actual y el acceso a los proyectos.',
+      en: 'Checking the session, current workspace, and project access.',
+    },
+    disabledTitle: { es: 'Identidad desactivada', en: 'Identity disabled' },
+    disabledBody: {
+      es: 'Esta instalación no tiene la identidad habilitada. Los proyectos y las tareas no están disponibles hasta configurarla.',
+      en: 'Identity is not enabled for this installation. Projects and tasks are unavailable until it is configured.',
+    },
+    signedOutTitle: { es: 'Sin sesión activa', en: 'No active session' },
+    signedOutBody: {
+      es: 'Inicia sesión para ver los proyectos del espacio, crear tareas o recuperar un borrador.',
+      en: 'Sign in to view the workspace projects, create tasks, or recover a draft.',
+    },
+    signIn: { es: 'Iniciar sesión', en: 'Sign in' },
+    signInNewTab: { es: 'Iniciar sesión en otra pestaña', en: 'Sign in in a new tab' },
+    signInReturn: {
+      es: 'Después de iniciar sesión, vuelve a esta página y pulsa Actualizar.',
+      en: 'After signing in, return to this page and choose Refresh.',
+    },
+    signInReturnMemory: {
+      es: 'Después de iniciar sesión en la otra pestaña, vuelve aquí y pulsa Actualizar. No recargues esta pestaña: el borrador solo existe en su memoria y se perdería.',
+      en: 'After signing in in the other tab, return here and choose Refresh. Do not reload this tab: the draft exists only in its memory and would be lost.',
+    },
+    memoryKept: {
+      es: 'El borrador se conserva solo en esta pestaña. Si la cierras o la recargas, tendrás que empezar de nuevo.',
+      en: 'The draft is kept only in this tab. If you close or reload it, you will need to start again.',
+    },
+    errorTitle: { es: 'No se pudieron cargar los proyectos', en: 'Projects could not be loaded' },
+    errorBody: {
+      es: 'No se pudo conectar con el servicio. Comprueba la conexión y vuelve a intentarlo.',
+      en: 'Could not connect to the service. Check the connection and try again.',
+    },
+    retryLoad: { es: 'Volver a cargar', en: 'Load again' },
+    forbiddenTitle: { es: 'Acceso no autorizado', en: 'Access not authorized' },
+    forbiddenBody: {
+      es: 'Tu cuenta no tiene acceso a este proyecto o a esta acción. Comprueba la cuenta o pide acceso a un administrador del espacio.',
+      en: 'Your account does not have access to this project or action. Check the account or ask a workspace administrator for access.',
+    },
+    missingProjectTitle: { es: 'Proyecto no disponible', en: 'Project unavailable' },
+    missingProjectBody: {
+      es: 'El proyecto no existe, fue archivado o ya no está disponible para esta cuenta. Vuelve a la lista de proyectos.',
+      en: 'The project does not exist, was archived, or is no longer available to this account. Return to the project list.',
+    },
+    missingTaskTitle: { es: 'Tarea no disponible', en: 'Task unavailable' },
+    missingTaskBody: {
+      es: 'La tarea no existe, está archivada o ya no está disponible para esta cuenta. Vuelve al proyecto para revisar las tareas activas o archivadas.',
+      en: 'The task does not exist, is archived, or is no longer available to this account. Return to the project to review active or archived tasks.',
+    },
+    emptyWorkspaceTitle: { es: 'Primero necesitas un espacio', en: 'You need a workspace first' },
+    emptyWorkspaceBody: {
+      es: 'Los proyectos viven dentro de un espacio de trabajo. Crea o elige un espacio y vuelve a esta página.',
+      en: 'Projects live inside a workspace. Create or choose a workspace, then return to this page.',
+    },
+    goWorkspaces: { es: 'Abrir espacios', en: 'Open workspaces' },
+    emptyProjectsTitle: { es: 'Todavía no hay proyectos', en: 'No projects yet' },
+    emptyProjectsBody: {
+      es: 'Crea el primer proyecto visible del espacio. Después podrás capturar tareas con solo un título y el proyecto actual.',
+      en: 'Create the workspace’s first visible project. Then capture tasks with only a title and the current project.',
+    },
+    emptyProjectsViewerBody: {
+      es: 'El espacio todavía no tiene proyectos visibles. Tu rol actual es de solo lectura; pide a un administrador que cree el primero.',
+      en: 'The workspace has no visible projects yet. Your current role is read-only; ask an administrator to create the first one.',
+    },
+    emptyTasksTitle: { es: 'Este proyecto aún no tiene tareas', en: 'This project has no tasks yet' },
+    emptyTasksBody: {
+      es: 'Captura la primera tarea con un título. Puedes completar el resto de propiedades después.',
+      en: 'Capture the first task with a title. You can complete the other properties later.',
+    },
+    emptyArchivedTasksTitle: { es: 'No hay tareas archivadas', en: 'No archived tasks' },
+    emptyArchivedTasksBody: {
+      es: 'Las tareas archivadas conservan su enlace y sus datos. Restaura una cuando vuelvas a necesitarla.',
+      en: 'Archived tasks keep their link and data. Restore one when you need it again.',
+    },
+    emptyArchivedProjectsTitle: { es: 'No hay proyectos archivados', en: 'No archived projects' },
+    emptyArchivedProjectsBody: {
+      es: 'Los proyectos archivados siguen disponibles para revisarlos o restaurarlos. Sus tareas no se pueden editar mientras el proyecto esté archivado.',
+      en: 'Archived projects remain available to review or restore. Their tasks cannot be edited while the project is archived.',
+    },
+    noAccessTitle: { es: 'Sin acceso a este espacio', en: 'No access to this workspace' },
+    noAccessBody: {
+      es: 'Cambia de espacio o comprueba la cuenta. La selección guardada no concede permisos; el servidor decide el acceso actual.',
+      en: 'Switch workspace or check the account. The saved selection does not grant permissions; the server decides current access.',
+    },
+  },
+  project: {
+    navLabel: { es: 'Proyectos del espacio', en: 'Workspace projects' },
+    allProjects: { es: 'Todos los proyectos', en: 'All projects' },
+    archivedProjects: { es: 'Proyectos archivados', en: 'Archived projects' },
+    activeProjects: { es: 'Proyectos activos', en: 'Active projects' },
+    createTitle: { es: 'Crear un proyecto', en: 'Create a project' },
+    createBody: {
+      es: 'Un proyecto reúne las tareas de un mismo objetivo. La clave aparece en cada tarea y no cambia después de crear el proyecto.',
+      en: 'A project groups tasks for one objective. The key appears on every task and does not change after the project is created.',
+    },
+    createDisclosure: { es: 'Crear proyecto', en: 'Create project' },
+    nameLabel: { es: 'Nombre del proyecto', en: 'Project name' },
+    nameHint: { es: 'Entre 1 y 200 caracteres.', en: 'Between 1 and 200 characters.' },
+    nameRequired: { es: 'Escribe un nombre para el proyecto.', en: 'Enter a project name.' },
+    keyLabel: { es: 'Clave', en: 'Key' },
+    keyHint: { es: 'De 2 a 10 letras mayúsculas o números, empieza por una letra. Por ejemplo, RIE.', en: 'Two to ten uppercase letters or numbers, starting with a letter. For example, RIE.' },
+    keyImmutableHint: {
+      es: 'La clave identifica las tareas del proyecto y no se puede cambiar después de crearlo.',
+      en: 'The key identifies the project’s tasks and cannot be changed after creation.',
+    },
+    keyRequired: { es: 'Escribe una clave válida para el proyecto.', en: 'Enter a valid project key.' },
+    descriptionLabel: { es: 'Descripción', en: 'Description' },
+    descriptionHint: { es: 'Opcional. Resume el objetivo del proyecto.', en: 'Optional. Summarize the project objective.' },
+    visibilityLabel: { es: 'Visibilidad', en: 'Visibility' },
+    visibilityWorkspace: { es: 'Visible en el espacio', en: 'Visible in the workspace' },
+    visibilityHint: {
+      es: 'Los proyectos privados todavía no están disponibles en esta versión.',
+      en: 'Private projects are not available in this release.',
+    },
+    create: { es: 'Crear proyecto', en: 'Create project' },
+    creating: { es: 'Creando proyecto…', en: 'Creating project…' },
+    createFirst: { es: 'Crear el primer proyecto', en: 'Create the first project' },
+    settingsTitle: { es: 'Ajustes del proyecto', en: 'Project settings' },
+    settingsBody: {
+      es: 'Cambia el nombre o la descripción. La clave y la visibilidad del espacio se conservan.',
+      en: 'Change the name or description. The key and workspace visibility are preserved.',
+    },
+    saveSettings: { es: 'Guardar cambios', en: 'Save changes' },
+    settingsSaved: { es: 'Proyecto actualizado.', en: 'Project updated.' },
+    archiveTitle: { es: 'Archivar proyecto', en: 'Archive project' },
+    archiveBody: {
+      es: 'Archivar retira el proyecto de las vistas activas sin perder enlaces ni datos. Las tareas quedan en solo lectura hasta restaurar el proyecto.',
+      en: 'Archiving removes the project from active views without losing links or data. Tasks stay read-only until the project is restored.',
+    },
+    archive: { es: 'Archivar proyecto', en: 'Archive project' },
+    archiving: { es: 'Archivando…', en: 'Archiving…' },
+    restore: { es: 'Restaurar proyecto', en: 'Restore project' },
+    restoring: { es: 'Restaurando…', en: 'Restoring…' },
+    archivedBadge: { es: 'Archivado', en: 'Archived' },
+    activeBadge: { es: 'Activo', en: 'Active' },
+    archivedNotice: {
+      es: 'Este proyecto está archivado. Restáuralo para editar sus tareas.',
+      en: 'This project is archived. Restore it to edit its tasks.',
+    },
+    archiveConfirmTitle: { es: '¿Archivar este proyecto?', en: 'Archive this project?' },
+    archiveConsequence: {
+      es: 'Dejará de aparecer entre los proyectos activos. Podrás restaurarlo desde Proyectos archivados.',
+      en: 'It will no longer appear among active projects. You can restore it from Archived projects.',
+    },
+    restoreConsequence: {
+      es: 'El proyecto volverá a las vistas activas. Las tareas que archivaste por separado seguirán archivadas.',
+      en: 'The project will return to active views. Tasks you archived separately will remain archived.',
+    },
+    taskCount: { es: (count: number) => (count === 1 ? '1 tarea' : `${count} tareas`), en: (count: number) => (count === 1 ? '1 task' : `${count} tasks`) },
+    archivedTaskCount: { es: (count: number) => (count === 1 ? '1 tarea archivada' : `${count} tareas archivadas`), en: (count: number) => (count === 1 ? '1 archived task' : `${count} archived tasks`) },
+    open: { es: 'Abrir proyecto', en: 'Open project' },
+    viewActive: { es: 'Ver proyectos activos', en: 'View active projects' },
+    viewArchived: { es: 'Ver proyectos archivados', en: 'View archived projects' },
+    activeHeading: { es: 'Proyectos activos', en: 'Active projects' },
+    archivedHeading: { es: 'Proyectos archivados', en: 'Archived projects' },
+    listLabel: { es: 'Proyectos del espacio', en: 'Workspace projects' },
+    newProject: { es: 'Nuevo proyecto', en: 'New project' },
+  },
+  task: {
+    listLabel: { es: 'Lista de tareas del proyecto', en: 'Project task list' },
+    captureLabel: { es: 'Título de la nueva tarea', en: 'New task title' },
+    capturePlaceholder: { es: '¿Qué hay que hacer?', en: 'What needs to be done?' },
+    captureHint: {
+      es: 'Solo el título es obligatorio. La tarea se añade al proyecto actual y queda sin asignar.',
+      en: 'Only the title is required. The task is added to the current project and remains unassigned.',
+    },
+    captureSubmit: { es: 'Crear tarea', en: 'Create task' },
+    capturing: { es: 'Creando tarea…', en: 'Creating task…' },
+    createTitle: { es: 'Nueva tarea', en: 'New task' },
+    editTitle: { es: 'Editar tarea', en: 'Edit task' },
+    titleLabel: { es: 'Título', en: 'Title' },
+    titleRequired: { es: 'Escribe un título para la tarea.', en: 'Enter a task title.' },
+    titleHint: { es: 'Entre 1 y 300 caracteres.', en: 'Between 1 and 300 characters.' },
+    descriptionLabel: { es: 'Descripción', en: 'Description' },
+    descriptionHint: { es: 'Opcional. Se conserva el texto tal como lo escribes.', en: 'Optional. Text is kept as you write it.' },
+    descriptionPlaceholder: { es: 'Añade contexto, criterios o enlaces.', en: 'Add context, acceptance criteria, or links.' },
+    statusLabel: { es: 'Estado', en: 'Status' },
+    priorityLabel: { es: 'Prioridad', en: 'Priority' },
+    typeLabel: { es: 'Tipo', en: 'Type' },
+    assigneeLabel: { es: 'Responsable', en: 'Assignee' },
+    assigneeHint: {
+      es: 'Puedes asignar a una persona o a un agente con acceso al proyecto. Crear una tarea no la asigna automáticamente.',
+      en: 'You can assign a person or an agent with project access. Creating a task does not assign it automatically.',
+    },
+    unassigned: { es: 'Sin asignar', en: 'Unassigned' },
+    inactiveAssignee: { es: 'Responsable anterior', en: 'Previous assignee' },
+    inactiveAssigneeHint: {
+      es: 'Esta persona o agente ya no está activo en el proyecto. Se conserva el responsable histórico; elige otro explícitamente si hace falta.',
+      en: 'This person or agent is no longer active in the project. The historical assignee is preserved; choose another explicitly if needed.',
+    },
+    dueDateLabel: { es: 'Fecha límite', en: 'Due date' },
+    dueDateHint: { es: 'Solo fecha, sin hora.', en: 'Date only, without a time.' },
+    noDueDate: { es: 'Sin fecha', en: 'No due date' },
+    properties: { es: 'Propiedades', en: 'Properties' },
+    details: { es: 'Detalles', en: 'Details' },
+    moreDetails: { es: 'Mostrar más campos', en: 'Show more fields' },
+    fewerDetails: { es: 'Mostrar menos campos', en: 'Show fewer fields' },
+    creatorLabel: { es: 'Creado por', en: 'Created by' },
+    provenanceLabel: { es: 'Procedencia', en: 'Provenance' },
+    throughWeb: { es: 'desde la web', en: 'from the web' },
+    throughClient: { es: 'mediante', en: 'through' },
+    autonomousAgent: { es: 'Agente autónomo', en: 'Autonomous agent' },
+    agentBadge: { es: 'Agente', en: 'Agent' },
+    systemBadge: { es: 'Sistema', en: 'System' },
+    creatorHint: {
+      es: 'El creador y la procedencia no se pueden editar. El responsable es independiente del creador.',
+      en: 'The creator and provenance cannot be edited. The assignee is independent from the creator.',
+    },
+    save: { es: 'Guardar tarea', en: 'Save task' },
+    saveChanges: { es: 'Guardar cambios', en: 'Save changes' },
+    saved: { es: 'Tarea guardada.', en: 'Task saved.' },
+    created: { es: 'Tarea creada.', en: 'Task created.' },
+    statusChanged: { es: 'Estado actualizado.', en: 'Status updated.' },
+    priorityChanged: { es: 'Prioridad actualizada.', en: 'Priority updated.' },
+    assigneeChanged: { es: 'Responsable actualizado.', en: 'Assignee updated.' },
+    dueChanged: { es: 'Fecha actualizada.', en: 'Due date updated.' },
+    archivedTaskNotice: {
+      es: 'Esta tarea está archivada. Restáurala para volver a editarla.',
+      en: 'This task is archived. Restore it to edit it again.',
+    },
+    archivedBadge: { es: 'Tarea archivada', en: 'Archived task' },
+    archiveTitle: { es: 'Archivar tarea', en: 'Archive task' },
+    archiveBody: {
+      es: 'La tarea deja de aparecer en las vistas activas, pero conserva su enlace, su clave y sus datos.',
+      en: 'The task leaves active views but keeps its link, key, and data.',
+    },
+    archive: { es: 'Archivar tarea', en: 'Archive task' },
+    archiving: { es: 'Archivando…', en: 'Archiving…' },
+    restore: { es: 'Restaurar tarea', en: 'Restore task' },
+    restoring: { es: 'Restaurando…', en: 'Restoring…' },
+    archiveConfirmTitle: { es: '¿Archivar esta tarea?', en: 'Archive this task?' },
+    archiveConsequence: {
+      es: 'Podrás restaurarla desde la vista de tareas archivadas del proyecto.',
+      en: 'You can restore it from the project’s archived tasks view.',
+    },
+    restoreConsequence: {
+      es: 'La tarea volverá a las vistas activas del proyecto.',
+      en: 'The task will return to the project’s active views.',
+    },
+    showArchived: { es: 'Ver tareas archivadas', en: 'View archived tasks' },
+    hideArchived: { es: 'Ver tareas activas', en: 'View active tasks' },
+    listCount: { es: (count: number) => (count === 1 ? '1 tarea' : `${count} tareas`), en: (count: number) => (count === 1 ? '1 task' : `${count} tasks`) },
+    openTask: { es: 'Abrir tarea', en: 'Open task' },
+    closeDetail: { es: 'Cerrar detalle de la tarea', en: 'Close task detail' },
+    missingTask: { es: 'La tarea ya no está disponible.', en: 'The task is no longer available.' },
+    noDescription: { es: 'Sin descripción.', en: 'No description.' },
+    viewActive: { es: 'Ver tareas activas', en: 'View active tasks' },
+    viewArchived: { es: 'Ver tareas archivadas', en: 'View archived tasks' },
+    viewerTitle: { es: 'Solo lectura', en: 'Read-only access' },
+    viewerBody: {
+      es: 'Tu rol actual puede consultar este proyecto, pero no editarlo.',
+      en: 'Your current role can view this project but not edit it.',
+    },
+    archivedProjectViewerBody: {
+      es: 'El proyecto está archivado. Todas las tareas son de solo lectura hasta que un administrador lo restaure.',
+      en: 'The project is archived. All tasks are read-only until an administrator restores it.',
+    },
+  },
+  form: {
+    projectContext: { es: 'Proyecto actual', en: 'Current project' },
+    taskContext: { es: 'Tarea', en: 'Task' },
+    discardTitle: { es: '¿Descartar los cambios sin guardar?', en: 'Discard unsaved changes?' },
+    discardBody: {
+      es: 'El borrador se eliminará de esta pestaña. Esta acción no se puede deshacer.',
+      en: 'The draft will be removed from this tab. This cannot be undone.',
+    },
+    discard: { es: 'Descartar cambios', en: 'Discard changes' },
+    unsaved: { es: 'Cambios sin guardar', en: 'Unsaved changes' },
+    requiredMark: { es: 'obligatorio', en: 'required' },
+    optionalMark: { es: 'opcional', en: 'optional' },
+    fieldError: { es: 'Revisa este campo.', en: 'Review this field.' },
+  },
+  feedback: {
+    pending: { es: 'Guardando cambios…', en: 'Saving changes…' },
+    saved: { es: 'Cambios guardados.', en: 'Changes saved.' },
+    invalidTitle: { es: 'Revisa los datos', en: 'Review the information' },
+    invalidBody: {
+      es: 'Algunos valores no son válidos. Corrige los campos indicados; el borrador se conserva.',
+      en: 'Some values are not valid. Correct the indicated fields; the draft is preserved.',
+    },
+    forbiddenTitle: { es: 'La acción no está permitida', en: 'The action is not allowed' },
+    forbiddenBody: {
+      es: 'La sesión actual no puede realizar este cambio. Comprueba tu rol o pide acceso a un administrador del espacio.',
+      en: 'The current session cannot make this change. Check your role or ask a workspace administrator for access.',
+    },
+    conflictTitle: { es: 'El registro cambió mientras lo editabas', en: 'The record changed while you were editing' },
+    conflictBody: {
+      es: 'Hay una versión más reciente y el guardado se detuvo para no sobrescribirla. Tu borrador sigue intacto. Revisa la versión actual antes de volver a guardar.',
+      en: 'A newer version exists, so the save stopped rather than overwrite it. Your draft is intact. Review the current version before saving again.',
+    },
+    conflictCurrentLabel: { es: 'Versión actual', en: 'Current version' },
+    conflictDraftLabel: { es: 'Tu borrador', en: 'Your draft' },
+    conflictChangedFields: { es: 'Campos que cambiaron', en: 'Fields that changed' },
+    conflictChanged: { es: 'Cambió', en: 'Changed' },
+    conflictReview: { es: 'Revisar versión actual', en: 'Review current version' },
+    conflictReload: { es: 'Cargar la versión actual', en: 'Load the current version' },
+    conflictKeepDraft: { es: 'Conservar mi borrador', en: 'Keep my draft' },
+    unknownTitle: { es: 'No sabemos si el cambio se guardó', en: 'We do not know whether the change was saved' },
+    unknownBody: {
+      es: 'La conexión se interrumpió después de enviar la operación. Reintenta con la misma clave para no duplicarla, o descarta el borrador si prefieres revisar antes.',
+      en: 'The connection was interrupted after the operation was sent. Retry with the same key to avoid a duplicate, or discard the draft if you prefer to review first.',
+    },
+    retrySame: { es: 'Reintentar con la misma clave', en: 'Retry with the same key' },
+    discard: { es: 'Descartar borrador', en: 'Discard draft' },
+    networkTitle: { es: 'No se pudo conectar', en: 'Could not connect' },
+    networkBody: {
+      es: 'La operación no llegó a confirmarse. Comprueba la conexión y vuelve a intentarlo; el borrador se conserva.',
+      en: 'The operation was not confirmed. Check the connection and try again; the draft is preserved.',
+    },
+    errorTitle: { es: 'No se pudo completar la operación', en: 'The operation could not be completed' },
+    errorBody: {
+      es: 'No se pudo completar la operación. El borrador se conserva; puedes reintentar o revisar los datos.',
+      en: 'The operation could not be completed. The draft is preserved; you can retry or review the information.',
+    },
+    successCreatedProject: { es: 'Proyecto creado.', en: 'Project created.' },
+    successUpdatedProject: { es: 'Proyecto actualizado.', en: 'Project updated.' },
+    successArchivedProject: { es: 'Proyecto archivado.', en: 'Project archived.' },
+    successRestoredProject: { es: 'Proyecto restaurado.', en: 'Project restored.' },
+    successCreatedTask: { es: 'Tarea creada.', en: 'Task created.' },
+    successUpdatedTask: { es: 'Tarea actualizada.', en: 'Task updated.' },
+    successArchivedTask: { es: 'Tarea archivada.', en: 'Task archived.' },
+    successRestoredTask: { es: 'Tarea restaurada.', en: 'Task restored.' },
+    targetProject: { es: 'Proyecto', en: 'Project' },
+    targetTask: { es: 'Tarea', en: 'Task' },
+    sessionTitle: { es: 'La sesión necesita atención', en: 'The session needs attention' },
+    sessionBody: {
+      es: 'Inicia sesión de nuevo en otra pestaña y vuelve aquí. No recargues esta pestaña: el borrador y la tarea capturada solo existen en su memoria.',
+      en: 'Sign in again in another tab and return here. Do not reload this tab: the draft and captured task exist only in its memory.',
+    },
+    draftTitle: { es: 'Tienes un borrador sin guardar', en: 'You have an unsaved draft' },
+    draftBody: {
+      es: 'El borrador se conserva solo en esta pestaña. Vuelve a él para seguir editando o descártalo de forma explícita.',
+      en: 'The draft is kept only in this tab. Return to it to keep editing, or discard it explicitly.',
+    },
+    draftReturn: { es: 'Volver al borrador', en: 'Return to draft' },
+    draftReview: { es: 'Revisar registro', en: 'Review record' },
+    draftContextTitle: { es: 'Tienes un borrador en otro contexto', en: 'You have a draft in another context' },
+    draftContextBody: {
+      es: 'Vuelve al proyecto o tarea donde empezaste el borrador, o descártalo antes de continuar. Así evitamos aplicar datos al proyecto equivocado.',
+      en: 'Return to the project or task where you started the draft, or discard it before continuing. This avoids applying data to the wrong project.',
+    },
+    draftContextReturn: { es: 'Volver al borrador', en: 'Return to draft' },
+    draftContextDiscard: { es: 'Descartar borrador', en: 'Discard draft' },
+    pendingContext: { es: 'Una operación sigue pendiente', en: 'An operation is still pending' },
+    pendingContextBody: {
+      es: 'Espera a que termine la operación actual antes de cambiar de proyecto o de tarea.',
+      en: 'Wait for the current operation to finish before changing project or task.',
+    },
+    dismissed: { es: 'Aviso cerrado.', en: 'Notice dismissed.' },
+    pageErrorTitle: { es: 'No se pudo cargar más contenido', en: 'More content could not be loaded' },
+    pageErrorBody: {
+      es: 'Lo que ya estaba cargado sigue disponible. Reintenta para continuar desde donde lo dejaste.',
+      en: 'What was already loaded remains available. Retry to continue where you left off.',
+    },
+    pageErrorRetry: { es: 'Reintentar carga', en: 'Retry loading' },
+    pageErrorTargets: {
+      workspaces: { es: 'Espacios', en: 'Workspaces' },
+      members: { es: 'Miembros', en: 'Members' },
+      projects: { es: 'Proyectos', en: 'Projects' },
+      tasks: { es: 'Tareas', en: 'Tasks' },
+    },
+  },
+  statusNames: {
+    backlog: { es: 'Pendiente', en: 'Backlog' },
+    todo: { es: 'Por hacer', en: 'To do' },
+    in_progress: { es: 'En curso', en: 'In progress' },
+    done: { es: 'Hecha', en: 'Done' },
+    canceled: { es: 'Cancelada', en: 'Canceled' },
+    blocked: { es: 'Bloqueada', en: 'Blocked' },
+  } as Record<string, Bilingual>,
+  priorityNames: {
+    none: { es: 'Sin prioridad', en: 'No priority' },
+    low: { es: 'Baja', en: 'Low' },
+    medium: { es: 'Media', en: 'Medium' },
+    high: { es: 'Alta', en: 'High' },
+    urgent: { es: 'Urgente', en: 'Urgent' },
+  } as Record<string, Bilingual>,
+  typeNames: {
+    task: { es: 'Tarea', en: 'Task' },
+    feature: { es: 'Mejora', en: 'Feature' },
+    bug: { es: 'Error', en: 'Bug' },
+    chore: { es: 'Mantenimiento', en: 'Chore' },
+  } as Record<string, Bilingual>,
+} as const;
+
+export function statusName(value: string): Bilingual {
+  return copy.statusNames[value] ?? { es: value, en: value };
+}
+
+export function priorityName(value: string): Bilingual {
+  return copy.priorityNames[value] ?? { es: value, en: value };
+}
+
+export function typeName(value: string): Bilingual {
+  return copy.typeNames[value] ?? { es: value, en: value };
+}
+
+export function formatDateOnly(value: string | null, lang: Lang): string {
+  if (value === null || value.length === 0) return '';
+  const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(value);
+  if (match === null) return value;
+  const date = new Date(Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3])));
+  if (!Number.isFinite(date.getTime())) return value;
+  return new Intl.DateTimeFormat(lang === 'es' ? 'es-ES' : 'en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    timeZone: 'UTC',
+  }).format(date);
+}
+
+export function projectTaskCount(count: number, lang: Lang): string {
+  return copy.project.taskCount[lang](count);
+}
+
+export function archivedTaskCount(count: number, lang: Lang): string {
+  return copy.project.archivedTaskCount[lang](count);
+}
+
+export function listCount(count: number, lang: Lang): string {
+  return copy.task.listCount[lang](count);
+}
