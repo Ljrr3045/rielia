@@ -1,0 +1,29 @@
+docs/development/progress.md
+  s_c0d620db6aa2bf::t_13558b6e0d3354 166-199,201-209
+  s_c0d620db6aa2bf::t_072b9f3f24948e 200
+  s_c0d620db6aa2bf::t_4c9c9879797196 327-331,361
+  s_c0d620db6aa2bf::t_a919467d8c5367 12-16,32-36
+  s_c0d620db6aa2bf::t_c01aac1b9460f5 362
+CHANGELOG.md
+  s_c0d620db6aa2bf::t_9d6b4bc1edca54 9-21
+docs/development/project-task-ui.md
+  s_c0d620db6aa2bf::t_4349414694d419 149-151
+  s_c0d620db6aa2bf::t_8da1e44d5dcef5 139
+  s_c0d620db6aa2bf::t_693341fdc0c30e 1-138,140-148,152-224
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "04aa3e5d8051fd95f7ae9e6087b2f5590930180d",
+  "prompts": {},
+  "sessions": {
+    "s_c0d620db6aa2bf": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e7b9ec2a9ffe0ZrPzcSvaTOFHw",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
