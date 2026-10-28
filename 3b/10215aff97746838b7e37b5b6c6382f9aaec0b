@@ -1,0 +1,31 @@
+docs/development/project-task-flows.md
+  s_0a489e8f2e5f0a::t_67ad1fd323bc95 1-216,225-232,235-238
+  s_0a489e8f2e5f0a::t_75c1dbd6a9d2fc 217-224,233-234
+docs/development/workspace-ui.md
+  s_0a489e8f2e5f0a::t_284e59042d532c 157-165
+docs/development/progress.md
+  s_0a489e8f2e5f0a::t_492a81a773c750 10
+  s_0a489e8f2e5f0a::t_284e59042d532c 12-13,30-35,62-96,99,102-105,206-210
+  s_0a489e8f2e5f0a::t_75c1dbd6a9d2fc 97-98,100-101
+CONTRIBUTING.md
+  s_0a489e8f2e5f0a::t_284e59042d532c 94-101
+CHANGELOG.md
+  s_0a489e8f2e5f0a::t_284e59042d532c 9-21,126-130
+  s_0a489e8f2e5f0a::t_5a95c80d302fb5 131
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3b10215aff97746838b7e37b5b6c6382f9aaec0b",
+  "prompts": {},
+  "sessions": {
+    "s_0a489e8f2e5f0a": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18460-5f91-7740-af91-cd3f0d13a188",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
