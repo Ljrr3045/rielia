@@ -168,3 +168,93 @@ model Verification {
   @@index([identifier])
   @@map("verification")
 }
+
+// T06 owns these backend-local tables; SQL supplies composite scope FKs,
+// immutable history, versions and allocation guards. No runtime schema writes.
+model Project {
+  id String @id
+  sequence Int @unique @default(autoincrement())
+  workspaceId String
+  key String
+  name String
+  description String @default("")
+  visibility String @default("workspace")
+  nextTaskNumber Int @default(1)
+  version Int @default(1)
+  archivedAt DateTime?
+  createdByPrincipalId String
+  creationMode String
+  creationSource String
+  creationGrantId String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  @@unique([workspaceId, key])
+  @@unique([workspaceId, id])
+  @@unique([workspaceId, sequence])
+  @@map("project")
+}
+
+model Task {
+  id String @id
+  workspaceId String
+  projectId String
+  number Int
+  title String
+  description String @default("")
+  type String @default("task")
+  priority String @default("none")
+  status String @default("backlog")
+  assigneePrincipalId String?
+  dueDate DateTime? @db.Date
+  version Int @default(1)
+  archivedAt DateTime?
+  createdByPrincipalId String
+  creationMode String
+  creationSource String
+  creationGrantId String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  @@unique([workspaceId, projectId, number])
+  @@unique([workspaceId, projectId, id])
+  @@map("task")
+}
+
+model ActivityEvent {
+  id String @id
+  workspaceId String
+  projectId String
+  taskId String?
+  actorPrincipalId String
+  executionMode String
+  source String
+  grantId String?
+  requestId String
+  action String
+  entityVersion Int
+  changedFields String[]
+  createdAt DateTime @default(now())
+  @@unique([workspaceId, id])
+  @@map("activity_event")
+}
+
+model OutboxEvent {
+  id String @id
+  workspaceId String
+  activityId String @unique
+  type String
+  payload Json
+  createdAt DateTime @default(now())
+  @@map("outbox_event")
+}
+
+model ProjectTaskOperation {
+  workspaceId String
+  actorPrincipalId String
+  executionScope String
+  key String
+  requestHash String
+  response Json
+  createdAt DateTime @default(now())
+  @@id([workspaceId, actorPrincipalId, executionScope, key])
+  @@map("project_task_operation")
+}

@@ -2,6 +2,7 @@ import { NodeAdapter, type NestNodeApplication, type NodeRequest, type NodeRespo
 import { toNodeHandler } from 'better-auth/node';
 import { IdentityService } from './identity/identity.service.js';
 import { readIdentityConfig } from './identity/config.js';
+import { randomUUID } from 'node:crypto';
 
 // Bootstrap and integration tests use the same supported adapter configuration.
 export function createHttpAdapter(): NodeAdapter {
@@ -11,6 +12,14 @@ export function createHttpAdapter(): NodeAdapter {
 
 export function configureApplication(app: NestNodeApplication): void {
   const identity = app.get(IdentityService);
+  app.use((req: NodeRequest, res: NodeResponse, next: () => void) => {
+    // Install before parsers so rejected/oversized JSON and unmatched domain
+    // routes have the same no-store/correlation boundary as controller results.
+    if (/^\/api\/v1\/workspaces\/[^/]+\/projects(?:\/|\?|$)/.test(req.originalUrl)) {
+      res.setHeader('Cache-Control', 'no-store'); res.setHeader('X-Request-Id', randomUUID());
+    }
+    next();
+  });
   app.use((req: NodeRequest, _res: NodeResponse, next: () => void) => {
     // The adapter checks the socket peer and configured proxy chain first. Better
     // Auth must never independently trust client-supplied forwarding headers.

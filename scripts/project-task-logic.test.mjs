@@ -1,0 +1,128 @@
+import assert from 'node:assert/strict';
+import { test } from 'node:test';
+import { createProjectTaskController } from '../apps/web/src/lib/project-task-controller.ts';
+import { ProjectTaskFailure } from '../apps/web/src/lib/project-task-client.ts';
+import { parseSafeMarkdown, safeMarkdownLink } from '../apps/web/src/lib/safe-markdown.ts';
+
+const session = { user: { id: 'human', name: 'Human', email: 'human@example.test', emailVerified: true }, session: { id: 'session', expiresAt: '2035-01-01T00:00:00.000Z' } };
+const page = items => ({ items, total: items.length, nextCursor: null, capabilities: { canCreate: true } });
+const workspace = id => ({ id, name: id, role: 'member', ownerPrincipalId: 'owner', createdAt: '2026-01-01T00:00:00.000Z' });
+const creator = { principalId: 'human', name: 'Human', kind: 'human', active: true };
+const project = (id = 'p', workspaceId = 'a', version = 1) => ({ id, workspaceId, key: 'RIE', name: 'Project', description: '', version, visibility: 'workspace', archivedAt: null,
+  createdAt: '2026-01-01T00:00:00.000Z', updatedAt: '2026-01-01T00:00:00.000Z', creator, provenance: { actorPrincipalId: 'human', executionMode: 'human', source: 'web', grantId: null },
+  capabilities: { canEdit: true, canArchive: true, canRestore: false }, url: `/projects?workspace=${workspaceId}&project=${id}` });
+const task = (id = 't', projectId = 'p', workspaceId = 'a', version = 1) => ({ ...project(id, workspaceId, version), projectId, projectKey: 'RIE', key: 'RIE-1', number: 1,
+  title: 'Original', description: '', type: 'task', priority: 'none', status: 'backlog', assigneePrincipalId: null, assignee: null, dueDate: null, projectArchivedAt: null });
+const draft = () => ({ type: 'edit-task', workspaceId: 'a', projectId: 'p', taskId: 't', expectedVersion: 1, fields: { title: 'Unsent draft' } });
+function deferred() { let resolve; let reject; const promise = new Promise((a, b) => { resolve = a; reject = b; }); return { promise, resolve, reject }; }
+function fixture(overrides = {}) {
+  let keys = 0; const calls = []; const values = { session, configuration: { enabled: true, providers: [] }, ...overrides.values };
+  const transport = { projects: async w => page([project('p', w)]), project: async (w, p) => project(p, w), tasks: async (w, p) => page([task('t', p, w)]),
+    task: async (w, p, t) => task(t, p, w), mutate: async (command, key) => { calls.push({ command, key }); return 'taskId' in command ? task(command.taskId, command.projectId, command.workspaceId, 2) : project('new', command.workspaceId); }, ...overrides.transport };
+  const workspaces = { workspaces: async () => page([workspace('a'), workspace('b')]), detail: async w => workspace(w), members: async () => page([]), ...overrides.workspaces };
+  const controller = createProjectTaskController({ identity: { configuration: async () => values.configuration, session: async () => values.session }, workspaces, transport, key: () => `key-${++keys}`, ...overrides.options });
+  return { controller, values, transport, workspaces, calls };
+}
+
+test('real-data controller distinguishes disabled/auth/empty/forbidden/error and server creation capabilities', async () => {
+  const f = fixture({ values: { configuration: { enabled: false, providers: [] } } }); await f.controller.refresh(); assert.equal(f.controller.getState().status, 'disabled');
+  f.values.configuration.enabled = true; f.values.session = null; await f.controller.refresh(); assert.equal(f.controller.getState().status, 'signed-out');
+  f.values.session = session; f.workspaces.workspaces = async () => page([]); await f.controller.refresh(); assert.equal(f.controller.getState().status, 'empty');
+  f.workspaces.workspaces = async () => page([workspace('a')]); f.transport.projects = async () => ({ ...page([]), capabilities: { canCreate: false } }); await f.controller.refresh();
+  assert.equal(f.controller.getState().status, 'empty'); assert.equal(f.controller.getState().projects.capabilities.canCreate, false);
+  f.transport.projects = async () => { throw new ProjectTaskFailure(403); }; await f.controller.refresh(); assert.equal(f.controller.getState().status, 'forbidden'); assert.equal(f.controller.getState().projects, null);
+  f.values.session = { bad: true }; await f.controller.refresh(); assert.equal(f.controller.getState().status, 'error'); assert.equal(f.controller.getState().session, null);
+});
+test('scoped stable URL roundtrip and stale project/task responses cannot replace a new selection', async () => {
+  const slow = deferred(); let delay = false; const locations = [];
+  const f = fixture({ transport: { task: async (w, p, t) => delay && t === 't' ? slow.promise : task(t, p, w) }, options: { navigate: url => locations.push(url) } });
+  await f.controller.openLocation('?workspace=a&project=p&task=t'); assert.equal(f.controller.getState().task.id, 't'); assert.equal(f.controller.getState().url, '/projects?workspace=a&project=p&task=t');
+  delay = true; const stale = f.controller.selectTask('t'); await f.controller.selectWorkspace('b'); slow.resolve(task()); await stale;
+  assert.equal(f.controller.getState().workspace.id, 'b'); assert.equal(f.controller.getState().task, null); assert.equal(locations.at(-1), '/projects?workspace=b');
+  await f.controller.openLocation('?workspace=bad%20id&project=p'); assert.equal(f.controller.getState().status, 'error'); assert.equal(f.controller.getState().task, null);
+});
+test('same form retains captured target/version/draft while refresh replaces current data', async () => {
+  const f = fixture(); await f.controller.refresh(); const original = draft(); f.controller.stage(original); original.fields.title = 'Caller mutated';
+  f.transport.task = async () => task('t', 'p', 'a', 8); await f.controller.selectTask('t');
+  f.controller.stage({ ...draft(), expectedVersion: 8, fields: { title: 'Continued' } });
+  assert.equal(f.controller.getState().draft.expectedVersion, 1); assert.equal(f.controller.getState().draft.fields.title, 'Continued');
+  await f.controller.selectWorkspace('b'); assert.equal(f.controller.getState().draft.workspaceId, 'a'); await f.controller.submit(); assert.equal(f.calls.length, 0);
+});
+test('saving task A from detail B is rejected until explicit return to captured target, including unknown retry', async () => {
+  const f = fixture(); await f.controller.openLocation('?workspace=a&project=p&task=t'); f.controller.stage(draft());
+  await f.controller.selectTask('other'); await f.controller.submit(); assert.equal(f.calls.length, 0); assert.equal(f.controller.getState().outcome, 'invalid');
+  await f.controller.returnToDraft(); assert.equal(f.controller.getState().selection.taskId, 't');
+  f.transport.mutate = async (command, key) => { f.calls.push({ command, key }); throw new Error('unknown'); }; await f.controller.submit();
+  await f.controller.selectTask('other'); await f.controller.retrySave(); assert.equal(f.calls.length, 1);
+  await f.controller.returnToDraft(); f.transport.mutate = async (command, key) => { f.calls.push({ command, key }); return task('t', 'p', 'a', 2); }; await f.controller.retrySave();
+  assert.equal(f.calls.length, 2); assert.equal(f.calls[0].key, f.calls[1].key);
+});
+test('archived project/task return context roundtrips through detail URL and browser location', async () => {
+  const f = fixture(); await f.controller.refresh(); await f.controller.setView('projects', 'archived'); await f.controller.setView('tasks', 'archived'); await f.controller.selectTask('t');
+  const url = new URL(f.controller.getState().url, 'https://app.example.test'); assert.equal(url.searchParams.get('projectsView'), 'archived'); assert.equal(url.searchParams.get('tasksView'), 'archived');
+  const restored = fixture(); await restored.controller.openLocation(url.search); assert.deepEqual(restored.controller.getState().views, { projects: 'archived', tasks: 'archived' }); assert.equal(restored.controller.getState().task.id, 't');
+  await restored.controller.selectTask(null); assert.equal(new URL(restored.controller.getState().url, url.origin).searchParams.get('tasksView'), 'archived');
+});
+test('unknown committed outcome keeps original key/target and blocks replacement or duplicate submissions', async () => {
+  const pending = deferred(); const calls = []; const f = fixture({ transport: { mutate: async (command, key) => { calls.push({ command, key }); if (calls.length === 1) return pending.promise; return task('t', 'p', 'a', 2); } } });
+  await f.controller.refresh(); await f.controller.selectTask("t"); f.controller.stage(draft()); const saving = f.controller.submit(); await f.controller.submit(); assert.equal(calls.length, 1);
+  pending.reject(new Error('Commit outcome unknown')); await saving; assert.equal(f.controller.getState().outcome, 'error'); assert.equal(f.controller.getState().retryTarget.taskId, 't');
+  f.controller.stage({ type: 'create-project', workspaceId: 'a', key: 'NEW', name: 'New' }); assert.equal(f.controller.getState().draft.taskId, 't');
+  await f.controller.retrySave(); assert.equal(calls.length, 2); assert.equal(calls[1].key, calls[0].key); assert.deepEqual(calls[1].command, calls[0].command);
+  assert.equal(f.controller.getState().outcome, 'success'); assert.equal(f.controller.getState().retryTarget, null);
+});
+test('navigation/cancellation during save ignores late success and retains original recovery until explicit retry/discard', async () => {
+  const pending = deferred(); const calls = []; const f = fixture({ transport: { mutate: async (command, key) => { calls.push({ command, key }); return calls.length === 1 ? pending.promise : task('t', 'p', 'a', 2); } } });
+  await f.controller.refresh(); await f.controller.selectTask("t"); f.controller.stage(draft()); const saving = f.controller.submit(); await f.controller.selectWorkspace('b'); pending.resolve(task()); await saving;
+  assert.equal(f.controller.getState().workspace.id, 'b'); assert.equal(f.controller.getState().result, null); assert.equal(f.controller.getState().retryTarget.workspaceId, 'a');
+  await f.controller.retrySave(); assert.equal(calls.length, 1); await f.controller.returnToDraft(); await f.controller.retrySave(); assert.equal(calls[0].key, calls[1].key);
+  f.transport.mutate = async () => { throw new Error(); }; f.controller.stage(draft()); await f.controller.submit(); f.controller.cancelPending();
+  assert.ok(f.controller.getState().retryTarget); f.controller.discardDraft(); assert.equal(f.controller.getState().retryTarget, null); assert.equal(f.controller.getState().draft, null);
+});
+test('conflict compare/reload retains unsent values and explicit rebase adopts only the matching current version', async () => {
+  const f = fixture({ transport: { mutate: async () => { throw new ProjectTaskFailure(409, 'version-conflict', task('t', 'p', 'a', 3)); } } });
+  await f.controller.refresh(); await f.controller.selectTask("t"); f.controller.stage(draft()); await f.controller.submit(); assert.equal(f.controller.getState().conflict.version, 3); assert.equal(f.controller.getState().draft.expectedVersion, 1);
+  f.transport.task = async () => task('t', 'p', 'a', 5); await f.controller.reloadConflict(); assert.equal(f.controller.getState().conflict.version, 5);
+  assert.equal(f.controller.getState().draft.fields.title, 'Unsent draft'); f.controller.rebaseDraft(); assert.equal(f.controller.getState().draft.expectedVersion, 5); assert.equal(f.controller.getState().draft.fields.title, 'Unsent draft');
+  assert.equal(f.controller.getState().conflict, null); f.transport.mutate = async () => task('t', 'p', 'a', 6); await f.controller.submit(); assert.equal(f.controller.getState().outcome, 'success');
+});
+test('successful mutation remains successful with result after a failed refresh and never becomes a retry', async () => {
+  const f = fixture(); await f.controller.refresh(); await f.controller.selectTask("t"); f.controller.stage(draft()); f.transport.projects = async () => { throw new Error(); }; await f.controller.submit();
+  assert.equal(f.controller.getState().status, 'error'); assert.equal(f.controller.getState().outcome, 'success'); assert.equal(f.controller.getState().result.version, 2);
+  assert.equal(f.controller.getState().retryTarget, null); assert.equal(f.controller.getState().draft, null);
+});
+test('session loss preserves same-human draft/key, another account clears private data and selection', async () => {
+  const f = fixture({ transport: { mutate: async () => { throw new ProjectTaskFailure(401); } } }); await f.controller.refresh(); await f.controller.selectTask("t"); f.controller.stage(draft()); await f.controller.submit();
+  assert.equal(f.controller.getState().status, 'signed-out'); assert.equal(f.controller.getState().task, null); assert.ok(f.controller.getState().draft); assert.ok(f.controller.getState().retryTarget);
+  await f.controller.refresh(); assert.equal(f.controller.getState().draft.fields.title, 'Unsent draft');
+  f.values.session = { ...session, user: { ...session.user, id: 'other' } }; await f.controller.refresh();
+  for (const key of ['draft', 'retryTarget', 'conflict', 'result', 'outcome']) assert.equal(f.controller.getState()[key], null);
+});
+test('archived views and paging retain server capabilities, de-duplicate pages and ignore old-scope pages', async () => {
+  const slow = deferred(); const calls = [];
+  const f = fixture({ transport: { projects: async (w, view, _signal, cursor) => { calls.push({ w, view, cursor }); return cursor ? slow.promise : { ...page([project('p', w)]), total: 2, nextCursor: 'p' }; } } });
+  await f.controller.refresh(); const paging = f.controller.loadMore('projects'); await f.controller.selectWorkspace('b'); slow.resolve(page([project('old', 'a')])); await paging;
+  assert.deepEqual(f.controller.getState().projects.items.map(row => row.id), ['p']);
+  await f.controller.setView('projects', 'archived'); assert.equal(calls.at(-1).view, 'archived'); assert.equal(f.controller.getState().views.projects, 'archived');
+});
+test('transient next-page failure preserves list/detail/success and cursor for retry; auth denial still clears private data', async () => {
+  const f = fixture({ transport: { projects: async (_w, _view, _signal, cursor) => { if (cursor) throw new ProjectTaskFailure(503, null, null, 'page-request'); return { ...page([project()]), total: 2, nextCursor: 'next' }; } } });
+  await f.controller.openLocation('?workspace=a&project=p&task=t'); f.controller.stage(draft()); await f.controller.submit(); const before = f.controller.getState();
+  await f.controller.loadMore('projects'); const after = f.controller.getState();
+  assert.equal(after.project, before.project); assert.equal(after.task, before.task); assert.equal(after.projects, before.projects); assert.equal(after.status, 'ready');
+  assert.equal(after.outcome, 'success'); assert.equal(after.result, before.result); assert.equal(after.projects.nextCursor, 'next'); assert.deepEqual(after.pageError, { collection: 'projects', requestId: 'page-request' });
+  f.transport.projects = async () => page([project('p2')]); await f.controller.loadMore('projects'); assert.equal(f.controller.getState().projects.items.length, 2); assert.equal(f.controller.getState().pageError, null);
+  for (const denial of [403, 401]) {
+    f.transport.projects = async (_w, _v, _s, cursor) => { if (cursor) throw new ProjectTaskFailure(denial); return { ...page([project()]), total: 2, nextCursor: 'next' }; };
+    await f.controller.refresh(); await f.controller.loadMore('projects'); assert.equal(f.controller.getState().project, null); assert.equal(f.controller.getState().status, denial === 401 ? 'signed-out' : 'forbidden');
+  }
+});
+test('safe Markdown AST preserves useful formatting and treats executable content as inert text', () => {
+  const source = '# Heading\n\n**Strong** and *emphasis* with `code` and [safe](https://example.test/a)\n\n- first\n- second\n\n```js\n<script>evil()</script>\n```\n\n<img src=x onerror=evil()> [bad](javascript:evil) ![image](https://evil.test/image)';
+  const ast = parseSafeMarkdown(source); assert.equal(ast[0].type, 'heading'); assert.equal(ast[2].type, 'list'); assert.equal(ast[3].type, 'code');
+  const links = ast.filter(row => 'content' in row).flatMap(row => row.content).filter(row => row.type === 'link'); assert.deepEqual(links.map(row => row.href), ['https://example.test/a']);
+  assert.ok(JSON.stringify(ast).includes('<img src=x onerror=evil()>'));
+  for (const value of ['javascript:evil', 'data:text/html,x', 'vbscript:x', '//evil.test', '/\\evil.test', 'https://user:pass@evil.test', ' https://evil.test', 'java\nscript:evil']) assert.equal(safeMarkdownLink(value), null);
+  assert.equal(safeMarkdownLink('/projects?workspace=a'), '/projects?workspace=a'); assert.equal(safeMarkdownLink('#heading'), '#heading');
+  assert.ok(JSON.stringify(parseSafeMarkdown('x'.repeat(100000))).length < 21000);
+});
