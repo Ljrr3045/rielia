@@ -6,6 +6,16 @@ This records repository changes. No application version has been released.
 
 ### Added
 
+- T05.0/B1 backend/frontend logic: persisted workspace creation/selection, scoped
+  human/Agent memberships, versioned human administration, bounded agent state/
+  custodian operations and expiring verified-recipient single-use invitations
+  with explicit copyable links. Adds hash-only storage, current issuer checks,
+  terminal no-rejoin policy, atomic receipts, grant/authority invalidation and
+  real PostgreSQL/HTTP regressions. Production-data hook/proxy preserves same-user
+  drafts, original-scope retries and session/stale-response recovery without
+  presentation or fake data. [Contract and limits](docs/development/workspace-flows.md).
+  Full T05/T07/T35, projects/tasks, email, credentials and staging remain open.
+
 - T35.0/B1: PostgreSQL principal foundations with atomic unique human User mapping,
   workspace-bound autonomous agents, reserved System identity, minimal workspace/
   membership policy, retained historical identity, active owner/custodian guards,

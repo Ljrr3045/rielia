@@ -41,6 +41,8 @@ model Principal {
   ownedWorkspaces Workspace[] @relation("WorkspaceOwner")
   subjectGrants ExecutionGrant[] @relation("GrantSubject")
   authorizedGrants ExecutionGrant[] @relation("GrantAuthorizer")
+  invitations Invitation[] @relation("InvitationIssuer")
+  workspaceOperations WorkspaceOperation[]
   createdAt DateTime @default(now())
   @@index([workspaceId])
   @@index([custodianPrincipalId])
@@ -55,6 +57,7 @@ model Workspace {
   agents Principal[] @relation("AgentWorkspace")
   memberships Membership[]
   grants ExecutionGrant[]
+  invitations Invitation[]
   createdAt DateTime @default(now())
   @@map("workspace")
 }
@@ -64,11 +67,43 @@ model Membership {
   principalId String
   role String
   state String @default("active")
+  version Int @default(1)
   workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
   principal Principal @relation(fields: [principalId], references: [id], onDelete: Restrict)
+  issuedInvitations Invitation[]
   @@id([workspaceId, principalId])
   @@index([principalId])
   @@map("membership")
+}
+
+model Invitation {
+  id String @id
+  workspaceId String
+  issuerPrincipalId String
+  recipientEmail String
+  role String
+  tokenHash String @unique
+  expiresAt DateTime
+  consumedAt DateTime?
+  revokedAt DateTime?
+  createdAt DateTime @default(now())
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+  issuer Principal @relation("InvitationIssuer", fields: [issuerPrincipalId], references: [id], onDelete: Restrict)
+  issuerMembership Membership @relation(fields: [workspaceId, issuerPrincipalId], references: [workspaceId, principalId], onDelete: Restrict)
+  @@index([workspaceId, createdAt])
+  @@map("invitation")
+}
+
+// Successful request receipts contain no raw invitation/session/credential token.
+model WorkspaceOperation {
+  actorPrincipalId String
+  key String
+  requestHash String
+  response Json
+  createdAt DateTime @default(now())
+  actor Principal @relation(fields: [actorPrincipalId], references: [id], onDelete: Restrict)
+  @@id([actorPrincipalId, key])
+  @@map("workspace_operation")
 }
 
 // Policy records only: no token, OAuth consent, client authentication or secret.

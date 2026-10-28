@@ -172,5 +172,13 @@ context resolution to complete, but an observed policy mutation waits for its
 release. Original competing-writer and session-revocation regressions still pass.
 There are now 12 principal checks plus the original 23 identity checks. The global
 write-fence/scan limits remain explicit; no broad performance claim is added.
-The initial submitted reviews reference an earlier head and are not final-head
-approval. Every changed ready head still requires fresh coordinator review.
+The initial submitted reviews reference an earlier head. Final reviewed head
+`6c841a334987a51977af41d4fe19e0a151e1394e` received
+[Kody approval 5687764538](https://github.com/Ljrr3045/rielia/pull/12#pullrequestreview-5687764538)
+and passed [CI 40745500251](https://github.com/Ljrr3045/rielia/actions/runs/40745500251).
+PR #12 merged 2026-10-28T18:36:55Z as
+`b87dadb165971d0594429f6a08c047626f9d596e`; the coordinator verified preserved
+evidence, clean state and completed worktree removal. The subsequent
+[T05.0 slice](workspace-flows.md) adds workspace/invitation routes and explicit
+terminal-subject/write-grant invalidation; the original scope stays historical
+rather than full T35 acceptance.

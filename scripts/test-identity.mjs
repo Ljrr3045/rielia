@@ -75,6 +75,9 @@ try {
   const principals = await command('Identity integration suite', process.execPath,
     ['--test', '--test-reporter=spec', 'apps/api/test/principals.test.mjs'], { env, signal: abort.signal });
   process.stdout.write(principals.stdout);
+  const workspaces = await command('Identity integration suite', process.execPath,
+    ['--test', '--test-reporter=spec', 'apps/api/test/workspaces.test.mjs'], { env, signal: abort.signal });
+  process.stdout.write(workspaces.stdout);
   const tests = await command('Identity integration suite', process.execPath,
     ['--test', '--test-reporter=spec', 'apps/api/test/identity.test.mjs'], { env, signal: abort.signal });
   process.stdout.write(tests.stdout);

@@ -227,7 +227,7 @@ test('T35.0 PostgreSQL principal, policy and verified execution foundations', as
     const grantId = await service.recordInternalGrant(a.context, grantInput(agent));
     const autonomous = await service.internalGrantContext(grantId, a.workspaceId);
     await service.manageAgent(a.context, agent, { state: 'revoked' });
-    await assert.rejects(service.creationAttribution(autonomous, {}), status(403));
+    await assert.rejects(service.creationAttribution(autonomous, {}), status(401));
     await badSql(`UPDATE principal SET state='active' WHERE id=$1`, [agent]);
     assert.equal((await prisma.executionGrant.findUniqueOrThrow({ where: { id: grantId } })).subjectPrincipalId, agent);
   });
