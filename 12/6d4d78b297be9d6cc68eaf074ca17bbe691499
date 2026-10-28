@@ -1,0 +1,97 @@
+CHANGELOG.md
+  s_92fb51633d3111::t_81f59a02d9570a 9-18
+apps/web/src/app/api/v1/workspaces/[[...path]]/route.ts
+  s_92fb51633d3111::t_5f83986f18080b 1-4
+docs/development/principal-foundations.md
+  s_92fb51633d3111::t_81f59a02d9570a 175-184
+apps/api/test/principals.test.mjs
+  s_92fb51633d3111::t_0ad09d7da6d919 230
+apps/web/src/lib/workspace-client.ts
+  s_92fb51633d3111::t_5f83986f18080b 1-2,6-62
+  s_92fb51633d3111::t_568306422b2af1 3-5
+scripts/test-identity.mjs
+  s_92fb51633d3111::t_809f6ce84af56a 78-80
+apps/web/src/lib/identity-controller.ts
+  s_92fb51633d3111::t_e311778b38e186 24,29,52-53
+CONTRIBUTING.md
+  s_92fb51633d3111::t_9103f3e41956d2 94-99
+apps/api/src/app.module.ts
+  s_92fb51633d3111::t_13a380f44b672f 9-10,12
+apps/web/src/lib/workspace-proxy.ts
+  s_92fb51633d3111::t_5f83986f18080b 1-24
+apps/web/src/lib/use-workspaces.ts
+  s_92fb51633d3111::t_e311778b38e186 1-34
+apps/api/src/principals/principal.service.ts
+  s_92fb51633d3111::t_ecbaf03e50e8b7 9-10,83-105,145-148,164-167,181-184
+apps/api/prisma/schema.prisma
+  s_92fb51633d3111::t_f1e3798a7eb286 44-45,60,70,79-91,93-107
+  s_92fb51633d3111::t_dc5ac6129a8f3f 73,92
+  s_b8020eceba4182::t_284a290abb508b 108
+apps/web/src/lib/workspace-controller.ts
+  s_92fb51633d3111::t_35549becb7476e 45,85
+  s_92fb51633d3111::t_8f96e280464553 166
+  s_92fb51633d3111::t_e311778b38e186 1,4-44,46-84,86-92,94-136,141-165,167-169
+  s_92fb51633d3111::t_568306422b2af1 2-3
+  s_92fb51633d3111::t_c4fae20b8da55f 93,137-140
+apps/api/test/workspaces.test.mjs
+  s_92fb51633d3111::t_b49f5f068885a0 165-167
+  s_92fb51633d3111::t_0ad09d7da6d919 71,139
+  s_92fb51633d3111::t_809f6ce84af56a 1-70,72-138,140-153,157-164,168-186,200
+  s_92fb51633d3111::t_e77deeb9d2e6eb 154-156
+  s_92fb51633d3111::t_8f96e280464553 187-199
+scripts/workspace-client.test.mjs
+  s_92fb51633d3111::t_b49f5f068885a0 1-54,56
+  s_92fb51633d3111::t_8f96e280464553 55
+apps/api/prisma/migrations/20261028190000_workspace_flows/migration.sql
+  s_92fb51633d3111::t_3b76f1d7c890bd 1-26,28-45,56-66,70-96
+  s_92fb51633d3111::t_dc5ac6129a8f3f 27,46-55,67-69
+scripts/test-runtime.mjs
+  s_92fb51633d3111::t_809f6ce84af56a 182
+scripts/workspace-logic.test.mjs
+  s_92fb51633d3111::t_c4fae20b8da55f 1-95
+docs/development/workspace-flows.md
+  s_92fb51633d3111::t_26006b60bdf769 1-193
+package.json
+  s_92fb51633d3111::t_c4fae20b8da55f 26,31
+docs/development/progress.md
+  s_92fb51633d3111::t_6d325eee6d2efc 215-218,248,250
+  s_92fb51633d3111::t_46955e52bd530a 11-12,29-34,59-97,137-138,154-155
+packages/contracts/src/index.ts
+  s_92fb51633d3111::t_ecbaf03e50e8b7 35-60,64-68,70-74,77-81
+  s_92fb51633d3111::t_e77deeb9d2e6eb 61-63,69,75-76
+apps/api/src/workspaces/workspace.service.ts
+  s_92fb51633d3111::t_13a380f44b672f 48,51-54
+  s_92fb51633d3111::t_dc5ac6129a8f3f 11,49-50,119,163,174,185
+  s_92fb51633d3111::t_cab7ddadeba127 1-10,12-41,44-47,55-118,120-162,164-173,175-184,186-194
+  s_92fb51633d3111::t_e77deeb9d2e6eb 42-43
+apps/api/src/workspaces/workspace.controller.ts
+  s_92fb51633d3111::t_13a380f44b672f 1-66
+scripts/smoke.mjs
+  s_92fb51633d3111::t_8f96e280464553 82-89
+apps/web/src/app/api/v1/workspace-invitations/accept/route.ts
+  s_92fb51633d3111::t_5f83986f18080b 1-3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "126d4d78b297be9d6cc68eaf074ca17bbe691499",
+  "prompts": {},
+  "sessions": {
+    "s_92fb51633d3111": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a183f3-9ed6-7090-8a2b-0f3c948220af",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    },
+    "s_b8020eceba4182": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a17016-ab9e-7501-b8a7-f63987eb61f7",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
