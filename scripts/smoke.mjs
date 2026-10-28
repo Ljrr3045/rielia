@@ -79,6 +79,14 @@ try {
   assert.equal(config.headers.get('cache-control'), 'no-store');
   assert.deepEqual(await config.json(), { enabled: false, providers: [] });
   assert.equal((await fetch(`${webUrl}/api/v1/identity/session`)).status, 503);
+  for (const path of ['workspaces', 'workspaces/unknown/members']) {
+    const response = await fetch(`${webUrl}/api/v1/${path}`);
+    assert.equal(response.status, 503);
+    assert.equal(response.headers.get('cache-control'), 'no-store');
+  }
+  const acceptance = await fetch(`${webUrl}/api/v1/workspace-invitations/accept`, { method: 'POST',
+    headers: { 'content-type': 'application/json', 'idempotency-key': '00000000-0000-4000-8000-000000000000' }, body: JSON.stringify({ token: 'x'.repeat(43) }) });
+  assert.equal(acceptance.status, 403, 'Next acceptance route must reach the backend origin guard');
   assert.equal((await fetch(`${webUrl}/api/v1/identity/unknown`)).status, 404);
   assert.equal((await fetch(`${webUrl}/api/auth/ok`)).status, 404);
 

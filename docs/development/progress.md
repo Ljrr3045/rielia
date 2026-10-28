@@ -8,7 +8,8 @@ its responsive presentation, the merged T03.0 experimental local MCP health wrap
 and T04.0's opt-in preparatory local Docker runtime/diagnostic worker. T35.0 now
 adds bounded principal/minimal workspace/membership foundations and verified
 execution, with actual task/comment/history/export integration still future work.
-It has no production task product, deployment, or
+T05.0 adds actual workspace/membership/invitation backend and frontend logic,
+with presentation separately owned. It has no production task product, deployment, or
 software release. The coordinator owns integration and status across workers.
 
 The user's [2026-10-27 stack and sequencing decision](stack-validation-decisions.md)
@@ -25,11 +26,12 @@ implementation, without completing tickets or weakening automated checks/launch 
 
 | Field | Evidence/state |
 | --- | --- |
-| Scope | T35.0/B1 principal/authorship foundation for P38/US24–US25 and principal portions of P03/P05/P10: additive PG constraints, minimal workspace/membership, internal policy services and verified web context. No UI, credentials, task/comment/export integration, deployment or full-ticket acceptance |
-| Base | `origin/dev` at PR #11 merge `70314c550b643fd5678375939535cdb93331c9b2` |
-| Branch | `feat/t35-principal-foundations`; purpose prefixes without usernames are the user convention |
-| Worktree | Isolated Orca checkout `feat-t35-principal-foundations`; sole owner Codex `gpt-6.1-sol`, `xhigh`, verified from live terminal preview; no helpers |
-| Current PR | [#12](https://github.com/Ljrr3045/rielia/pull/12), one English non-draft PR to `dev`; all applicable local checks pass. Exact-head CI and coordinator-triggered Kody review/dispositions are required before delivery |
+| Scope | T05.0/B1 backend/frontend logic for P02/P03, US02/US03, applicable P01/US01 and P38/US24–US25. Persisted workspaces, human/Agent members, limited invitations, versioned policy and client recovery. Authorized T07 subset; no presentation, email, credentials, projects/tasks, deployment or full-ticket acceptance |
+| Base | `origin/dev` at PR #12 merge `b87dadb165971d0594429f6a08c047626f9d596e` |
+| Branch | `feat/t05-workspace-flows` |
+| Worktree | Isolated `feat-t05-workspace-flows`; sole logic owner Codex `gpt-6.1-sol`, `xhigh`, verified from live terminal and coordinator launch; no helpers |
+| Current PR | [#13](https://github.com/Ljrr3045/rielia/pull/13), one English non-draft PR to `dev`. All applicable local checks pass; exact-head CI/coordinator-triggered Kody remain required |
+| Principal foundations PR | [#12](https://github.com/Ljrr3045/rielia/pull/12) merged 2026-10-28T18:36:55Z as `b87dadb165971d0594429f6a08c047626f9d596e`; reviewed head `6c841a334987a51977af41d4fe19e0a151e1394e`, [Kody approval 5687764538](https://github.com/Ljrr3045/rielia/pull/12#pullrequestreview-5687764538), [CI 40745500251](https://github.com/Ljrr3045/rielia/actions/runs/40745500251). Both findings fixed; coordinator verified merge, preserved evidence and completed worktree removal |
 | Adapter migration PR | [#11](https://github.com/Ljrr3045/rielia/pull/11) merged 2026-10-27T20:30:56Z as `70314c550b643fd5678375939535cdb93331c9b2`; final reviewed head `eb8b19c91cd065b4308af2025f5d16d2533d6ea3`, [Kody approval 5673819042](https://github.com/Ljrr3045/rielia/pull/11#pullrequestreview-5673819042), [CI 40577221864](https://github.com/Ljrr3045/rielia/actions/runs/40577221864). Coordinator confirms its completed worktree removed |
 | Stack decision PR | [#10](https://github.com/Ljrr3045/rielia/pull/10) merged 2026-10-27T19:58:09Z as `3efb49fde4f43d9d58964510c3ef61f744bea062`; final reviewed head `81f884122dd0ab99e0a73c767b99d7aa7db6ba64`, Kody approved that head and [CI 40571647316](https://github.com/Ljrr3045/rielia/actions/runs/40571647316) passed. Fresh GitHub reads confirm merge/review/checks; coordinator reports its completed worktree removed |
 | T04.0 PR | [#9](https://github.com/Ljrr3045/rielia/pull/9) merged 2026-10-27T19:25:58Z as `74779941905937ca7c05217169b0ef3028c10b9c`; final reviewed head `0fcd6c4ea9b2aa05940b795c871d2d30ec3f4742`, [Kody approval 5672890614](https://github.com/Ljrr3045/rielia/pull/9#pullrequestreview-5672890614), [CI 40565906228](https://github.com/Ljrr3045/rielia/actions/runs/40565906228). Fresh GitHub reads confirm merge/approval/passing checks; coordinator confirms prior worktree removed |
@@ -53,6 +55,77 @@ and requested deletion of its entire workflow, including the inherited version.
 The coordinator alone posts each ready head's Kody trigger and merges after
 validation and feedback handling. T00 itself added no app/scaffold scope; its
 final Kody approval covered head `53243fbea2ae6c4f5a1ab3e47d6e1dc8cc296cec`.
+
+## T05.0 workspace and membership logic
+
+The [workspace flow guide](workspace-flows.md) records scope/requirements, API,
+storage, invitation/rejoin decisions, policy, idempotency and the UI integration
+contract. Humans create/list/select persisted workspaces and view scoped human/
+Agent members. Human owner/admin can issue/revoke limited, expiring invitations,
+manage versioned roles/state and register/manage bounded agents. Acceptance
+requires the verified recipient and current issuer rights. Revoked membership
+stays terminal; suspended membership is explicitly restored by an administrator.
+Custodian departure requires transfer or agent suspension first. Owner transfer/
+deletion, email and agent credentials are excluded.
+
+Invitation hashes, composite issuer membership references, versions, authority
+invalidation and actor/key receipts are additive. Every operation reloads current
+session/policy under the fence; membership/consumption/receipt commit together or
+roll back. Removal revokes subject grants; viewer demotion revokes write grants,
+preserving legitimate read grants and independent autonomous-agent authority.
+
+Production-data `useWorkspaces` and same-origin Next proxy add no JSX/CSS or fake
+adapter. They distinguish auth/loading/empty/forbidden/error/pending/success/
+conflict, invalidate stale scope/page responses and preserve same-human memory
+drafts plus original-target/key recovery. Another account clears recovery.
+Invitation links use memory-only fragments, immediate history clearing and
+explicit POST acceptance. Signed-out recipients sign in in a separate tab, then
+Refresh the original tab; reloading needs the original invite link. Separate UI
+delivery owns responsive/keyboard/touch/accessibility/real-user evidence.
+
+Local Node 24.22.1/pnpm 12.15.0 validation passes: frozen install, full `pnpm check`
+(workspace client/proxy, existing suites, strict types/builds, Express-free
+closure and actual Next route smoke), real PG/HTTP workspace suite (12 checks),
+12 principal and original 23 identity checks. Two tenants, roles/owner/custodian,
+malformed/forged context, origin, hash-only tokens, wrong/unverified recipient,
+expiry/concurrent single use, issuer/session-removal races, grants/versions and
+rollback are covered; disposable PG was removed. Full Docker migration/checksum/
+readiness/worker/restart/lock/signal/nonroot checks pass; owned resources were
+removed. Audit reports no known vulnerabilities. Handoff integrity (47 files,
+30 assets, 387 local links) and whitespace checks pass. Exact-head CI/Kody
+evidence is recorded in [PR #13](https://github.com/Ljrr3045/rielia/pull/13) before handoff.
+No full T05/T07/T35, projects/tasks,
+real OAuth/staging/users, RLS/deployment or launch acceptance is claimed.
+
+Self-review added a real-PG receipt regression: after a consistent external
+ownership/membership change, replaying workspace creation returned the historical
+owner summary (201). It now reloads the scoped current summary and denies lost
+membership (403), just as accepted-invitation replay does. The regression failed
+before the fix and passes afterwards; no ownership-transfer endpoint was added.
+
+UI integration added a narrow `clearGeneratedInvitationLink` hook action. A
+regression verifies that closing the created outbound link preserves a separately
+received token and its later explicit acceptance. Clearing both tokens remains
+the separate explicit `clearInvitation` action; presentation adds no token state
+machine or functional helper.
+
+The final focused client/proxy suite has 16 checks. Integrated browser QA found
+that same-document invite fragments needed capture after mount; the hook now
+observes `hashchange`, clears token history immediately and removes its listener
+on cleanup. A pending acceptance clears only its own token, retaining a newer
+received invitation. The A/B race regression failed before the fix and passes
+afterwards, alongside lifecycle, draft/selection preservation and cleanup checks.
+
+PR #13's initial inline findings were valid: member pagination re-queried each
+row, principal revocation was misclassified as forbidden, and the Accept action
+could replace an unknown-outcome request key. The new real-PG/HTTP regressions
+failed pre-fix with four individual member lookups instead of one and 403 instead
+of 409. Eager principal loading now keeps lookup count bounded; terminal agent
+checks use both membership and principal state. Client regression failed pre-fix
+with `key-2` instead of `key-1`; Accept now reuses matching captured recovery and
+cannot overwrite another token's recovery. All three fixes and the integration
+patch share one changed head requiring fresh coordinator review; earlier approval
+on `efb4bda5` does not approve that head.
 
 ## T35.0 principal/authorship foundations
 
@@ -93,8 +166,8 @@ signal cleanup, nonroot image exclusions and deployed-store Express absence.
 The final-source Docker rerun also passes and removes its owned containers,
 networks, volume and image tags. Audit reports no known vulnerabilities.
 Handoff/link and whitespace checks pass;
-no dependency or source-handoff change is included. Current-head CI and complete
-coordinator-triggered Kody review remain required before worker delivery.
+no dependency or source-handoff change was included. Final reviewed head,
+CI/Kody approval, merge and coordinator cleanup are recorded in the table above.
 
 The singleton policy/session write fence and deferred table scans deliberately
 favor correctness for this small substrate; pure context reads use compatible
@@ -110,8 +183,8 @@ issues. Both added regressions fail pre-fix and pass with generic 400/409 mappin
 explicit terminal-state conflict and shared read fences. Real Prisma/PG constraints
 are covered alongside an actual HTTP unavailable-storage 503 and observed
 read/write synchronization; original revocation/concurrent-write tests remain
-passing. Initial submitted reviews bind `25b91add`, not final approval. Changed
-heads require a fresh coordinator trigger and complete current-head review.
+passing. Initial reviews bind `25b91add`. Final reviewed head `6c841a334987a51977af41d4fe19e0a151e1394e`
+passed CI/Kody above; both findings were fixed before PR #12 merged.
 
 ## T02.0 technical fixture
 
@@ -171,9 +244,10 @@ the following records preserve the original first-wave scope and acceptance:
    open. PR #9 is merged; see [runtime scope and evidence](local-runtime.md). This is a preparatory
    split of the B1 T04 ticket, without business effects, deployment or full acceptance.
 
-Current bounded product step: **T35.0**, principal/authorship foundations under
-the user's local sequencing override. The substrate precedes T05/T06/T12;
-remaining T35 domain/API/web/MCP/history/export integration is not complete.
+Current bounded product step: **T05.0** workspace/membership backend and frontend
+logic, following merged T35.0 under the user's sequencing override. Invitation/
+role overlap from T07 is explicitly authorized; private-project policy and full
+T35 domain/MCP/history/export integration remain incomplete.
 
 Convergence: T02 + T03 → T04 → **T35** → T05 → T06. The principal/authorship model
 must precede workspaces/tasks/credentials despite T35's number. T01 supplies UI
@@ -203,9 +277,9 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T02 | B0 | Identity/proxy integration spike | None | T02.1/T02.2 merged partial evidence; current NodeAdapter migration preserves local parity; real provider/staging acceptance OPEN/DEFERRED under user sequencing |
 | T03 | B0 | MCP SDK/wrapper/minimal remote profile spike | T02 for remote auth | Partial T03.0 local public liveness only; staging-dependent discovery/auth OPEN/DEFERRED; product catalog/credentials and full acceptance remain open |
 | T04 | B1 foundations | Monorepo, images, worker/queue, initial migration | T02–T03 | Partial T04.0 merged; full acceptance/dependencies stay open. Dated user override permits local implementation with listed real validation deferred |
-| T05 | B1a | Auth, workspaces, principal memberships | T04, T35 | Not started as full workflow; T35.0 introduces only required minimal substrate |
+| T05 | B1a | Auth, workspaces, principal memberships | T04, T35 | T05.0 real workspace/member/invitation backend/client logic implemented; presentation and full acceptance remain open |
 | T06 | B1a | Projects/tasks, versions, idempotency, atomic activity/outbox | T05 | Not started |
-| T07 | B1b | Invitations, revocation, roles/private projects | T06 | Not started |
+| T07 | B1b | Invitations, revocation, roles/private projects | T06 | Authorized invitation/role subset in T05.0; private projects and full acceptance not started |
 | T08 | B1b | List/Kanban, filters, ranking | T06 | Not started |
 | T09 | B1b | Subtasks, checklists, comments, history | T06 | Not started |
 | T10 | B1b | Search, My tasks, responsive layout, SSE | T07–T09 | Not started |

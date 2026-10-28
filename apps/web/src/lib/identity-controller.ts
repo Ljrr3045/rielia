@@ -21,12 +21,12 @@ export interface IdentityTransport {
 function record(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
 }
-function configuration(value: unknown): { enabled: boolean; providers: IdentityProvider[] } {
+export function parseIdentityConfiguration(value: unknown): { enabled: boolean; providers: IdentityProvider[] } {
   if (!record(value) || typeof value['enabled'] !== 'boolean' || !Array.isArray(value['providers'])
     || !value['providers'].every(provider => provider === 'google' || provider === 'github')) throw new Error('Invalid identity configuration response.');
   return { enabled: value['enabled'], providers: [...new Set(value['providers'] as IdentityProvider[])] };
 }
-function session(value: unknown): IdentitySession | null {
+export function parseIdentitySession(value: unknown): IdentitySession | null {
   if (value === null) return null;
   if (!record(value) || !record(value['user']) || !record(value['session'])) throw new Error('Invalid identity session response.');
   const user = value['user']; const data = value['session'];
@@ -49,8 +49,8 @@ export function createIdentityController(transport: IdentityTransport) {
     const current = ++generation;
     publish({ ...state, status: 'loading', session: null });
     try {
-      const config = configuration(await transport.configuration());
-      const data = config.enabled ? session(await transport.session()) : null;
+      const config = parseIdentityConfiguration(await transport.configuration());
+      const data = config.enabled ? parseIdentitySession(await transport.session()) : null;
       if (current !== generation) return;
       publish({ ...state, status: config.enabled ? data ? 'signed-in' : 'signed-out' : 'disabled',
         providers: config.enabled ? config.providers : [], session: data });

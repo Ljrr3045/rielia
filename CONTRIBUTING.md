@@ -91,6 +91,12 @@ affected source section. Never modify a baseline just to make a hash check pass.
 
 ## Validate and record evidence
 
+The [T05.0 workspace-flow guide](docs/development/workspace-flows.md) records the
+bounded real-data backend/client contracts. `pnpm test:workspaces:logic` runs its
+focused pure state/HTTP proxy checks and is included in `pnpm check`;
+`pnpm test:identity` also runs the real PostgreSQL/HTTP workspace suite. Presentation
+is separately owned; no full T05/T07/T35 acceptance is implied.
+
 Documentation-only changes run the handoff/link verifier and unstaged/staged
 whitespace checks below, inspect the diff, and retain existing CI and Kody gates.
 Unrelated local application suites need not be rerun for prose-only edits.

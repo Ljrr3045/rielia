@@ -23,11 +23,12 @@
     "test:smoke": "node --test scripts/smoke-process.test.mjs",
     "test:identity": "pnpm --filter @rielia/contracts build && pnpm --filter @rielia/api build && node scripts/test-identity.mjs",
     "test:identity:logic": "node --test scripts/identity-logic.test.mjs scripts/identity-client.test.mjs",
+    "test:workspaces:logic": "pnpm --filter @rielia/contracts build && node --test scripts/workspace-logic.test.mjs scripts/workspace-client.test.mjs",
     "test:prototype": "node --test scripts/task-prototype.test.mjs",
     "test:mcp": "pnpm --filter @rielia/contracts build && pnpm --filter @rielia/api build && pnpm --filter @rielia/mcp-local build && pnpm --filter @rielia/mcp-local test",
     "test:runtime": "node scripts/test-runtime.mjs",
     "check:backend-closure": "node scripts/assert-backend-closure.mjs apps/api",
-    "check": "pnpm lint && pnpm check:backend-closure && pnpm test:smoke && pnpm test:identity:logic && pnpm test:prototype && pnpm typecheck && pnpm build && pnpm --filter @rielia/mcp-local test && pnpm smoke",
+    "check": "pnpm lint && pnpm check:backend-closure && pnpm test:smoke && pnpm test:identity:logic && pnpm test:workspaces:logic && pnpm test:prototype && pnpm typecheck && pnpm build && pnpm --filter @rielia/mcp-local test && pnpm smoke",
     "dev:web": "pnpm --filter @rielia/contracts build && pnpm --filter @rielia/web dev",
     "dev:api": "pnpm --filter @rielia/contracts build && pnpm --filter @rielia/api dev"
   },
