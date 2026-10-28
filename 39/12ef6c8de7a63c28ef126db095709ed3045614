@@ -1,0 +1,38 @@
+apps/web/src/app/page.tsx
+  s_584a4bef4f79ee::t_413fd6de2a6c47 33,41
+apps/web/src/app/workspaces/workspace.module.css
+  s_584a4bef4f79ee::t_f378d658b93de0 536-537,543,545,547,554,556,562,567-569
+  s_584a4bef4f79ee::t_30a0d9489c7e10 513,518-519
+  s_b8020eceba4182::t_1c1d41b4b2db55 570-572
+apps/web/src/app/workspaces/strings.ts
+  s_584a4bef4f79ee::t_e14d0de42f9fec 199-200,247-248
+  s_584a4bef4f79ee::t_0389d0c72ca448 38-39
+apps/web/src/app/workspaces/workspace-view.tsx
+  s_584a4bef4f79ee::t_e74e109b00ede5 504-509,587-588
+apps/web/src/app/workspaces/workspace-admin.tsx
+  s_584a4bef4f79ee::t_b131f22dcaff29 711-715,1042-1046
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3912ef6c8de7a63c28ef126db095709ed3045614",
+  "prompts": {},
+  "sessions": {
+    "s_584a4bef4f79ee": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e7c015eb1ffeq9F4TVu4L6uBxm",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    },
+    "s_b8020eceba4182": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a17016-ab9e-7501-b8a7-f63987eb61f7",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
