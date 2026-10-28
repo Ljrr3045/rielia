@@ -1,0 +1,23 @@
+CHANGELOG.md
+  s_584a4bef4f79ee::t_b5823f81d68801 18-21
+docs/development/workspace-ui.md
+  s_584a4bef4f79ee::t_a3ce602ea65088 142-151
+docs/development/progress.md
+  s_584a4bef4f79ee::t_8ae38fe6f7abdc 29-34,155-157
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "494aaaf5bacc032f583bc5e4448a9fea16522a2f",
+  "prompts": {},
+  "sessions": {
+    "s_584a4bef4f79ee": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e7c015eb1ffeq9F4TVu4L6uBxm",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
