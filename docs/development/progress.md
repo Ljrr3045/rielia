@@ -84,8 +84,8 @@ Refresh the original tab; reloading needs the original invite link. Separate UI
 delivery owns responsive/keyboard/touch/accessibility/real-user evidence.
 
 Local Node 24.22.1/pnpm 12.15.0 validation passes: frozen install, full `pnpm check`
-(11 workspace client/proxy, existing suites, strict types/builds, Express-free
-closure and actual Next route smoke), real PG/HTTP workspace suite (10 checks),
+(workspace client/proxy, existing suites, strict types/builds, Express-free
+closure and actual Next route smoke), real PG/HTTP workspace suite (12 checks),
 12 principal and original 23 identity checks. Two tenants, roles/owner/custodian,
 malformed/forged context, origin, hash-only tokens, wrong/unverified recipient,
 expiry/concurrent single use, issuer/session-removal races, grants/versions and
@@ -102,6 +102,30 @@ ownership/membership change, replaying workspace creation returned the historica
 owner summary (201). It now reloads the scoped current summary and denies lost
 membership (403), just as accepted-invitation replay does. The regression failed
 before the fix and passes afterwards; no ownership-transfer endpoint was added.
+
+UI integration added a narrow `clearGeneratedInvitationLink` hook action. A
+regression verifies that closing the created outbound link preserves a separately
+received token and its later explicit acceptance. Clearing both tokens remains
+the separate explicit `clearInvitation` action; presentation adds no token state
+machine or functional helper.
+
+The final focused client/proxy suite has 16 checks. Integrated browser QA found
+that same-document invite fragments needed capture after mount; the hook now
+observes `hashchange`, clears token history immediately and removes its listener
+on cleanup. A pending acceptance clears only its own token, retaining a newer
+received invitation. The A/B race regression failed before the fix and passes
+afterwards, alongside lifecycle, draft/selection preservation and cleanup checks.
+
+PR #13's initial inline findings were valid: member pagination re-queried each
+row, principal revocation was misclassified as forbidden, and the Accept action
+could replace an unknown-outcome request key. The new real-PG/HTTP regressions
+failed pre-fix with four individual member lookups instead of one and 403 instead
+of 409. Eager principal loading now keeps lookup count bounded; terminal agent
+checks use both membership and principal state. Client regression failed pre-fix
+with `key-2` instead of `key-1`; Accept now reuses matching captured recovery and
+cannot overwrite another token's recovery. All three fixes and the integration
+patch share one changed head requiring fresh coordinator review; earlier approval
+on `efb4bda5` does not approve that head.
 
 ## T35.0 principal/authorship foundations
 

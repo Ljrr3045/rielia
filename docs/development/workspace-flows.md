@@ -118,7 +118,7 @@ can have an empty member/invitation page without becoming a global empty state.
 
 Actions: `refresh`, `selectWorkspace(id|null)`, `stage(WorkspaceCommand)`,
 `submit`, `retrySave`, `loadMore('workspaces'|'members'|'invitations')`,
-`acceptInvitation`, `clearInvitation`, `discardDraft`, `cancelPending`, and
+`acceptInvitation`, `clearInvitation`, `clearGeneratedInvitationLink`, `discardDraft`, `cancelPending`, and
 `dismissOutcome`. Draft commands cover creation, invitation/revoke, versioned
 member/agent changes and agent registration. UI passes server member versions,
 renders capabilities as affordances, and always handles server denial. It must
@@ -143,10 +143,17 @@ drafts, tokens, links and request keys are not persisted in browser storage.
 
 The hook creates copyable links from the actual browser origin:
 `/workspaces#invitation=<token>`. It captures the fragment in memory and immediately
-replaces the current history entry to clear it. No token GET, external Host-built
+replaces the current history entry to clear it, both on mount and on same-document
+`hashchange` navigation. Listener cleanup prevents capture after unmount. If a
+new invitation arrives while another acceptance is pending, completing the old
+request clears only that old token; the new one remains for explicit acceptance.
+No token GET, external Host-built
 link, emailed invitation, or log is used. `hasInvitation` prompts an explicit
 POST acceptance. Display a newly created link only transiently; never persist or
-log it. `clearInvitation` clears the received token and displayed link.
+log it. `clearGeneratedInvitationLink` clears only the created outbound link,
+preserving any received invitation for explicit acceptance. Use it for the link
+panel's Done action (and dismiss feedback separately if desired). `clearInvitation`
+explicitly clears both the received token and displayed link.
 
 For a signed-out recipient, open `/identity` in a separate tab and explain
 returning to the original workspace tab and Refresh. Same-tab OAuth navigation
@@ -187,11 +194,32 @@ ones and retains the diagnostic worker boundaries. Provider HTTP remains simulat
 
 Command results and current PR/CI/Kody evidence belong in [progress](progress.md)
 and [PR #13](https://github.com/Ljrr3045/rielia/pull/13). All applicable local
-commands passed; the real-PG suite has 10 workspace checks, 12 principal checks
-and 23 original identity checks; the client/proxy suite has 11. Owned test
+commands passed; the real-PG suite has 12 workspace checks, 12 principal checks
+and 23 original identity checks; the client/proxy suite has 16. Owned test
 databases, Docker runtime resources and external QA-harness smoke resources were
 removed. Audit reported no known vulnerabilities. Excluded: real OAuth/HTTPS/staging and real users/projects,
 SMTP/email delivery, projects/tasks, project visibility, remote MCP/agent
 credentials, execution hosting, ownership transfer/deletion/reauthentication,
 full audit/activity/outbox product integration, RLS/deployment and full-ticket
 acceptance. Their deferral does not weaken the local automated review gates.
+
+## PR #13 review fixes
+
+All three initial inline findings were accepted. The
+[member query finding](https://github.com/Ljrr3045/rielia/pull/13#discussion_r4405462649)
+is fixed by loading principals with the scoped page and projecting those rows.
+The real-PG/HTTP query-count regression failed with four individual membership
+lookups for three records; it now observes one for current authorization, without
+one lookup per listed row. The
+[terminal agent finding](https://github.com/Ljrr3045/rielia/pull/13#discussion_r4405463204)
+is fixed by checking both membership and principal revocation. Its HTTP regression
+failed with 403, now returns 409 and preserves terminal state/version.
+
+The [acceptance retry finding](https://github.com/Ljrr3045/rielia/pull/13#discussion_r4405463706)
+is fixed by reusing the same captured command/key on Accept after an unknown
+outcome. A regression failed with `key-2` versus `key-1` before the fix and now
+replays successfully. A different received token cannot overwrite that recovery;
+finish/discard the old operation explicitly before accepting the new token.
+The generated-link clearing and same-document fragment/pending-token fixes above
+were batched with these changes. Initial approval of `efb4bda5` is prior-head
+evidence; the changed head requires its own coordinator-triggered full review.

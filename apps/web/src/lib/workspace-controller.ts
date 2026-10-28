@@ -106,7 +106,7 @@ export function createWorkspaceController(options: {
       const result = await options.transport.mutate(command, key, request.signal);
       if (!current(request)) return;
       retry = null;
-      if (command.type === 'accept-invitation') inbound = null;
+      if (command.type === 'accept-invitation' && inbound === command.token) inbound = null;
       let invitationLink: string | null = null;
       if (command.type === 'invite' && 'token' in result) {
         const origin = options.origin?.();
@@ -160,7 +160,16 @@ export function createWorkspaceController(options: {
   }
   return { getState: () => state, subscribe(listener: () => void) { listeners.add(listener); return () => { listeners.delete(listener); }; },
     refresh, selectWorkspace, stage, submit, retrySave, loadMore, captureInvitation,
-    async acceptInvitation() { if (inbound) await execute({ type: 'accept-invitation', token: inbound }, (options.key ?? (() => crypto.randomUUID()))()); },
+    async acceptInvitation() {
+      if (!inbound) return;
+      if (retry) {
+        if (retry.command.type === 'accept-invitation' && retry.command.token === inbound) await retrySave();
+        else publish({ ...state, outcome: 'invalid' });
+        return;
+      }
+      await execute({ type: 'accept-invitation', token: inbound }, (options.key ?? (() => crypto.randomUUID()))());
+    },
+    clearGeneratedInvitationLink() { publish({ ...state, invitationLink: null }); },
     clearInvitation() { inbound = null; publish({ ...state, hasInvitation: false, invitationLink: null }); },
     discardDraft() { if (!state.pending) { retry = null; publish({ ...state, draft: null, retryTarget: null, outcome: null }); } },
     cancelPending() { begin(); publish({ ...state, status: state.status === 'loading' ? 'error' : state.status, pending: null, retryTarget: retry ? { type: retry.command.type, workspaceId: 'workspaceId' in retry.command ? retry.command.workspaceId : null } : null }); },

@@ -32,6 +32,11 @@ function invitation(row: Invitation): WorkspaceInvitation {
     issuerPrincipalId: row.issuerPrincipalId, createdAt: row.createdAt.toISOString(), expiresAt: row.expiresAt.toISOString(),
     state: row.consumedAt ? 'accepted' : row.revokedAt ? 'revoked' : row.expiresAt <= new Date() ? 'expired' : 'pending' };
 }
+function memberDto(row: Prisma.MembershipGetPayload<{ include: { principal: true } }>): WorkspaceMember {
+  return { principalId: row.principalId, kind: row.principal.kind as 'human' | 'agent', name: row.principal.displayName,
+    role: row.role as WorkspaceMember['role'], state: row.state as MemberState, principalState: row.principal.state as MemberState,
+    custodianPrincipalId: row.principal.custodianPrincipalId, version: row.version };
+}
 
 @Injectable()
 export class WorkspaceService {
@@ -73,9 +78,7 @@ export class WorkspaceService {
     const row = await tx.membership.findUnique({ where: { workspaceId_principalId: { workspaceId, principalId } }, include: { principal: true } });
     if (!row) throw new ForbiddenException('Member access is denied.');
     if (version !== undefined && version !== row.version) throw new ConflictException('Member changed. Refresh before saving.');
-    return { principalId, kind: row.principal.kind as 'human' | 'agent', name: row.principal.displayName,
-      role: row.role as WorkspaceMember['role'], state: row.state as MemberState, principalState: row.principal.state as MemberState,
-      custodianPrincipalId: row.principal.custodianPrincipalId, version: row.version };
+    return memberDto(row);
   }
 
   create(headers: IncomingHttpHeaders, key: string, payload: unknown) {
@@ -103,9 +106,8 @@ export class WorkspaceService {
 
   members(headers: IncomingHttpHeaders, workspaceId: string, cursor?: string) {
     return this.principals.workspaceOperation(headers, workspaceId, 'read', async tx => {
-      const rows = await tx.membership.findMany({ where: { workspaceId, ...(cursor ? { principalId: { gt: cursor } } : {}) }, orderBy: { principalId: 'asc' }, take: 101 });
-      const items = await Promise.all(rows.map(row => this.member(tx, workspaceId, row.principalId)));
-      return page(items, await tx.membership.count({ where: { workspaceId } }), row => row.principalId);
+      const rows = await tx.membership.findMany({ where: { workspaceId, ...(cursor ? { principalId: { gt: cursor } } : {}) }, orderBy: { principalId: 'asc' }, take: 101, include: { principal: true } });
+      return page(rows.map(memberDto), await tx.membership.count({ where: { workspaceId } }), row => row.principalId);
     }, true);
   }
 
@@ -188,7 +190,7 @@ export class WorkspaceService {
     const patch = { ...('state' in input ? { state: input['state'] as MemberState } : {}), ...('custodianPrincipalId' in input ? { custodianPrincipalId: input['custodianPrincipalId'] as string } : {}) };
     return this.principals.workspaceOperation(headers, workspaceId, 'admin', (tx, actor) => this.receipt(tx, actor, key, `agent/${workspaceId}/${principalId}`, input, async () => {
       const existing = await this.member(tx, workspaceId, principalId, Number(input['version']));
-      if (existing.state === 'revoked') throw new ConflictException('Revoked membership cannot be reactivated.');
+      if (existing.state === 'revoked' || existing.principalState === 'revoked') throw new ConflictException('Revoked agent cannot change.');
       await this.principals.manageAgentInTransaction(tx, actor.context!, principalId, patch);
       return this.member(tx, workspaceId, principalId);
     }));

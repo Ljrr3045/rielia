@@ -211,4 +211,27 @@ test('T05.0 PostgreSQL and HTTP workspace workflows', async t => {
     assert.equal((await request(original, 'workspaces', { name: 'Receipt scope' }, key)).status, 403);
     assert.equal((await ok(successor, `workspaces/${created.id}`)).role, 'owner');
   });
+
+  await t.test('member page loads principals in a bounded batch instead of querying each member again', async () => {
+    const f = await fixture(); await join(f, await human(), 'viewer');
+    await ok(f.owner, `${f.path}/agents`, { name: 'Batch Agent', role: 'viewer', custodianPrincipalId: f.owner.principalId });
+    let lookups = 0;
+    identity.runtime.prisma = prisma.$extends({ query: { membership: { findUnique({ args, query }) { lookups++; return query(args); } } } });
+    try {
+      const result = await ok(f.owner, `${f.path}/members`);
+      assert.equal(result.total, 3); assert.equal(result.items.length, 3);
+      assert.equal(result.items.filter(row => row.kind === 'agent').length, 1);
+      assert.equal(lookups, 1, 'only current authorization should look up an individual membership');
+    } finally { identity.runtime.prisma = prisma; }
+  });
+
+  await t.test('revoked agent principal returns terminal conflict without misclassifying workspace access', async () => {
+    const f = await fixture(); const agent = await ok(f.owner, `${f.path}/agents`, { name: 'Terminal Agent', role: 'member', custodianPrincipalId: f.owner.principalId });
+    const revoked = await ok(f.owner, `${f.path}/agents/${agent.principalId}`, { version: agent.version, state: 'revoked' });
+    assert.equal(revoked.state, 'active'); assert.equal(revoked.principalState, 'revoked');
+    const result = await request(f.owner, `${f.path}/agents/${agent.principalId}`, { version: revoked.version, state: 'active' });
+    assert.equal(result.status, 409);
+    const current = await member(f, { principalId: agent.principalId });
+    assert.equal(current.principalState, 'revoked'); assert.equal(current.version, revoked.version);
+  });
 });
