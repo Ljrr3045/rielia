@@ -145,6 +145,12 @@ is counted as a completed flow.
   browser QA pass as recorded above. The follow-up docs commit adds this URL and
   progress evidence without changing presentation behavior; the coordinator
   receives the exact final head for CI/Kody.
-- Kody AI review/rounds: pending coordinator root trigger. Every pushed head needs
-  a fresh trigger; a prior-head review never approves changed code. Only the
-  coordinator merges.
+- Kody AI review, first reviewed head: two valid presentation findings.
+  `AgentMemberRow` derived its state badge from membership state while agent
+  controls change principal state; the members list now uses `principalState` and
+  shows an explicit membership-state badge only when the two differ (also added to
+  `AgentCard`). `WorkspaceBar` could show the first loaded option when the selected
+  workspace was outside the paginated list; it now synthesizes the current
+  workspace option, matching `WorkspaceChooser`. Focused ESLint, web typecheck and
+  production build pass. A new ready head requires a fresh coordinator trigger;
+  prior-head review never approves changed code. Only the coordinator merges.

@@ -466,6 +466,9 @@ function WorkspaceBar({
           disabled={pending !== null}
           onChange={event => onSelect(event.currentTarget.value)}
         >
+          {!workspaces.items.some(item => item.id === workspace.id) && (
+            <option value={workspace.id}>{workspace.name}</option>
+          )}
           {workspaces.items.map(item => (
             <option key={item.id} value={item.id}>{item.name}</option>
           ))}

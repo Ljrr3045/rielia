@@ -153,8 +153,12 @@ the [PR #13](https://github.com/Ljrr3045/rielia/pull/13) merge (reviewed source
 `11f886a4`, CI 40761116202, Kody complete; fourth recovery finding withdrawn and
 resolved). Final UI `pnpm check`, audit, handoff and whitespace evidence plus the
 one English non-draft [PR #14](https://github.com/Ljrr3045/rielia/pull/14)/CI/Kody
-rounds are recorded in the [workspace UI guide](workspace-ui.md); no full T05/T07/
-T35 or real-user acceptance is claimed.
+rounds are recorded in the [workspace UI guide](workspace-ui.md). The first Kody
+round found two valid presentation bindings: agent member badges now distinguish
+principal/membership state accurately, and the workspace selector synthesizes the
+current workspace when it is outside the loaded page. Both are fixed with focused
+lint/type/build evidence; the changed head requires a fresh review trigger. No full
+T05/T07/T35 or real-user acceptance is claimed.
 
 ## T35.0 principal/authorship foundations
 

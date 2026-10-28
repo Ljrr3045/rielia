@@ -705,7 +705,12 @@ function AgentMemberRow({
         <div className={styles.badgeRow}>
           <Badge tone="brand"><BilingualText value={kindName.agent} /></Badge>
           <Badge tone="neutral"><BilingualText value={roleName[member.role]} /></Badge>
-          <Badge tone={stateTone(member.state)}><BilingualText value={stateName[member.state]} /></Badge>
+          <Badge tone={stateTone(member.principalState)}><BilingualText value={stateName[member.principalState]} /></Badge>
+          {member.state !== member.principalState && (
+            <Badge tone={stateTone(member.state)}>
+              <BilingualText value={copy.members.membership} />: <BilingualText value={stateName[member.state]} />
+            </Badge>
+          )}
         </div>
       </div>
       <p className={styles.memberMeta}>
@@ -1037,6 +1042,11 @@ function AgentCard({
           <Badge tone="brand"><BilingualText value={kindName.agent} /></Badge>
           <Badge tone="neutral"><BilingualText value={roleName[member.role]} /></Badge>
           <Badge tone={stateTone(member.principalState)}><BilingualText value={stateName[member.principalState]} /></Badge>
+          {member.state !== member.principalState && (
+            <Badge tone={stateTone(member.state)}>
+              <BilingualText value={copy.members.membership} />: <BilingualText value={stateName[member.state]} />
+            </Badge>
+          )}
         </div>
       </div>
       <p className={styles.memberMeta}>
