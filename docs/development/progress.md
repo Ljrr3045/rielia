@@ -127,6 +127,29 @@ cannot overwrite another token's recovery. All three fixes and the integration
 patch share one changed head requiring fresh coordinator review; earlier approval
 on `efb4bda5` does not approve that head.
 
+## T05.1 workspace and membership UI
+
+The [workspace UI guide](workspace-ui.md) records the bounded `/workspaces`
+presentation for P02/P03/P33/P38 and US02/US03/US24–US25 (UXR01/UXR03;
+UX03/UX05/UX07/UX09/UX11): workspace selection/creation, compact human/Agent
+members, admin invitations/revocation, explicit acceptance, versioned member role/
+suspend/restore/remove, owner protection, and agent registration/state/custodian
+controls. It uses only `useWorkspaces` production data; no fake adapter, metrics,
+credentials, SMTP, owner transfer/deletion or rejoin is presented as working.
+
+Forms hydrate from `ws.draft` and stage edits so Refresh/remount/session loss keeps
+unsent input and scoped versions. Recovery shows the affected subject and original
+workspace, preserves success when a follow-up read fails, keeps conflict drafts,
+and directs invitation-link-unavailable to Refresh/explicit revoke. The route is
+single-language Spanish default with an EN selector, uses the shared semantic
+tokens and scoped responsive CSS, and provides light/dark, visible focus, live
+feedback and compact mobile rows. Local browser QA covered create/select,
+invite/accept, agent register/suspend/restore/custodian, owner protection, session
+loss with draft restoration, blocked-API recovery, ES/EN, dark/light and 320/390/
+768 no-horizontal-overflow; root Brave QA covered 1440/mobile and keyboard. Exact
+final base, checks, PR/CI/Kody evidence remain pending the coordinator's logic
+merge and rebase; no full T05/T07/T35 or real-user acceptance is claimed.
+
 ## T35.0 principal/authorship foundations
 
 The [focused guide](principal-foundations.md) records exact scope, service trust

@@ -322,6 +322,10 @@ export const copy = {
       es: 'Si el servidor rechazó la invitación, comprueba que la sesión usa el correo invitado o pide una invitación nueva.',
       en: 'If the server rejected the invitation, check that the session uses the invited email or request a new invitation.',
     },
+    blockedByRecovery: {
+      es: 'Hay una operación pendiente de reintento o descarte. Resuélvela con las acciones de recuperación antes de aceptar esta invitación.',
+      en: 'An operation is pending retry or discard. Resolve it with the recovery actions before accepting this invitation.',
+    },
     dismissWarning: {
       es: 'El enlace no se guarda. Si descartas la invitación, tendrás que abrir de nuevo el enlace original.',
       en: 'The link is not stored. If you dismiss the invitation, you will need to reopen the original link.',

@@ -134,6 +134,9 @@ function InvitationPanel({
       {(outcome === 'forbidden' || outcome === 'conflict') && (
         <p className={styles.bannerBody}><BilingualText value={copy.invitations.checkAccount} /></p>
       )}
+      {blocked && pending === null && sessionEmail !== null && status !== 'disabled' && status !== 'signed-out' && (
+        <p className={styles.bannerBody}><BilingualText value={copy.invitations.blockedByRecovery} /></p>
+      )}
       <div className={styles.bannerActions}>
         {canAccept && (
           <button type="button" className={styles.primary} disabled={pending !== null} onClick={onAccept}>
@@ -564,7 +567,7 @@ function WorkspaceScreen({ lang, onLangChange }: { lang: Lang; onLangChange: (la
   }
 
   function finishInvitationLink() {
-    if (!ws.hasInvitation) ws.clearInvitation();
+    ws.clearGeneratedInvitationLink();
     ws.dismissOutcome();
     setLastAction(null);
   }
