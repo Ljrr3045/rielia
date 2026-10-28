@@ -1,0 +1,22 @@
+docs/development/project-task-ui.md
+  s_edb3f07bd274d1::t_7ccd25c926e0e5 249-263,265-268
+  s_edb3f07bd274d1::t_d7d3b1c2dc5112 223
+apps/web/src/app/projects/projects-view.tsx
+  s_edb3f07bd274d1::t_245e37bfd4c729 298-300
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "6a2ea554abe86a0a74beebc4b67f18fc806849e2",
+  "prompts": {},
+  "sessions": {
+    "s_edb3f07bd274d1": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e7b17e224ffeqODuUkFRkn1PGO",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
