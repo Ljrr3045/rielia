@@ -510,11 +510,13 @@
 .workspaceSummary {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.35rem 1.25rem;
+  gap: 0.5rem 1.5rem;
   margin: 0;
 }
 
 .workspaceSummary div {
+  display: grid;
+  gap: 0.05rem;
   min-width: 0;
 }
 
@@ -531,34 +533,40 @@
 
 .memberGrid {
   display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  gap: 0.5rem;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .memberCard {
   display: flex;
   flex-direction: column;
-  gap: 0.7rem;
+  gap: 0.35rem;
   min-width: 0;
-  padding: clamp(0.85rem, 2vw, 1.1rem);
+  padding: 0.7rem 0.85rem;
   border: 1px solid var(--divider);
-  border-radius: 0.75rem;
+  border-radius: 0.6rem;
   background: var(--surface);
 }
 
 .memberHeader {
   display: flex;
   flex-wrap: wrap;
-  align-items: start;
+  align-items: center;
   justify-content: space-between;
-  gap: 0.5rem;
+  gap: 0.35rem 0.75rem;
   min-width: 0;
 }
 
 .memberName {
   min-width: 0;
-  font-size: 1.0625rem;
+  font-size: 1rem;
   line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.memberMeta {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
   overflow-wrap: anywhere;
 }
 
@@ -736,17 +744,6 @@
 
 .linkInput {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 0.875rem;
-}
-
-.footer {
-  display: grid;
-  gap: 0.35rem;
-  max-width: 76ch;
-  margin-top: 3rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--divider);
-  color: var(--text-secondary);
   font-size: 0.875rem;
 }
 

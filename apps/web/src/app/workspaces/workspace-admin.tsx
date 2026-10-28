@@ -570,17 +570,6 @@ function HumanMemberCard({
           )}
         </div>
       </div>
-      <dl className={styles.metaGrid}>
-        <div>
-          <dt><BilingualText value={copy.common.role} /></dt>
-          <dd><BilingualText value={roleName[member.role]} /></dd>
-        </div>
-        <div>
-          <dt><BilingualText value={copy.members.membership} /></dt>
-          <dd><BilingualText value={stateName[member.state]} /></dd>
-        </div>
-      </dl>
-
       {member.role === 'owner' && (
         <p className={styles.ownerNote}><BilingualText value={copy.members.ownerProtected} /></p>
       )}
@@ -719,16 +708,11 @@ function AgentMemberRow({
           <Badge tone={stateTone(member.state)}><BilingualText value={stateName[member.state]} /></Badge>
         </div>
       </div>
-      <dl className={styles.metaGrid}>
-        <div>
-          <dt><BilingualText value={copy.common.role} /></dt>
-          <dd><BilingualText value={roleName[member.role]} /></dd>
-        </div>
-        <div>
-          <dt><BilingualText value={copy.members.custodian} /></dt>
-          <dd className={styles.longValue}>{custodian ?? member.custodianPrincipalId ?? <BilingualText value={copy.members.custodianUnavailable} />}</dd>
-        </div>
-      </dl>
+      <p className={styles.memberMeta}>
+        <BilingualText value={copy.members.custodian} />
+        {': '}
+        <span className={styles.longValue}>{custodian ?? member.custodianPrincipalId ?? <BilingualText value={copy.members.custodianUnavailable} />}</span>
+      </p>
       {member.principalState !== 'active' && (
         <p className={styles.ownerNote}>
           <BilingualText value={copy.members.principalState} />: <BilingualText value={stateName[member.principalState]} />
@@ -1055,16 +1039,11 @@ function AgentCard({
           <Badge tone={stateTone(member.principalState)}><BilingualText value={stateName[member.principalState]} /></Badge>
         </div>
       </div>
-      <dl className={styles.metaGrid}>
-        <div>
-          <dt><BilingualText value={copy.common.role} /></dt>
-          <dd><BilingualText value={roleName[member.role]} /></dd>
-        </div>
-        <div>
-          <dt><BilingualText value={copy.agents.currentCustodian} /></dt>
-          <dd className={styles.longValue}>{custodian ?? member.custodianPrincipalId ?? <BilingualText value={copy.members.custodianUnavailable} />}</dd>
-        </div>
-      </dl>
+      <p className={styles.memberMeta}>
+        <BilingualText value={copy.agents.currentCustodian} />
+        {': '}
+        <span className={styles.longValue}>{custodian ?? member.custodianPrincipalId ?? <BilingualText value={copy.members.custodianUnavailable} />}</span>
+      </p>
 
       {retired && <p className={styles.ownerNote}><BilingualText value={copy.agents.revokedNote} /></p>}
       {!retired && !membershipActive && (

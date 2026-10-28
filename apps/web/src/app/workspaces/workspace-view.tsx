@@ -501,6 +501,12 @@ function WorkspaceScreen({ lang, onLangChange }: { lang: Lang; onLangChange: (la
   const ws = useWorkspaces();
   const [lastAction, setLastAction] = useState<LastAction | null>(null);
   const [loadingMore, setLoadingMore] = useState<LoadMoreKind | null>(null);
+  const knownWorkspaceNames = useRef<Record<string, string>>({});
+
+  useEffect(() => {
+    if (ws.workspaces === null) return;
+    for (const item of ws.workspaces.items) knownWorkspaceNames.current[item.id] = item.name;
+  }, [ws.workspaces]);
 
   const draftWorkspaceId = ws.draft !== null && 'workspaceId' in ws.draft ? ws.draft.workspaceId : null;
   const draftMismatch = draftWorkspaceId !== null && draftWorkspaceId !== ws.selectedWorkspaceId;
@@ -578,7 +584,8 @@ function WorkspaceScreen({ lang, onLangChange }: { lang: Lang; onLangChange: (la
   const memoryPresent = ws.hasInvitation || draftMemory;
   const draftType = ws.draft?.type ?? ws.retryTarget?.type ?? null;
   const draftScopeId = draftWorkspaceId ?? ws.retryTarget?.workspaceId ?? null;
-  const draftScopeName = workspaceNameById(workspaces, draftScopeId);
+  const draftScopeName = workspaceNameById(workspaces, draftScopeId)
+    ?? (draftScopeId === null ? null : knownWorkspaceNames.current[draftScopeId] ?? null);
 
   return (
     <>
@@ -889,10 +896,6 @@ function WorkspaceScreen({ lang, onLangChange }: { lang: Lang; onLangChange: (la
           </>
         )}
 
-        <footer className={styles.footer}>
-          <p><BilingualText value={copy.footer.scope} /></p>
-          <p><BilingualText value={copy.footer.permissions} /></p>
-        </footer>
       </main>
     </>
   );

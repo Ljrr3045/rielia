@@ -35,8 +35,8 @@ export const copy = {
     eyebrow: { es: 'Rielia', en: 'Rielia' },
     title: { es: 'Espacios de trabajo', en: 'Workspaces' },
     lede: {
-      es: 'Selecciona un espacio para revisar sus miembros, invitaciones y agentes. El servidor aplica los permisos y devuelve solo los datos autorizados.',
-      en: 'Select a workspace to review its members, invitations and agents. The server applies permissions and returns only authorized data.',
+      es: 'Selecciona un espacio para revisar sus miembros, invitaciones y agentes.',
+      en: 'Select a workspace to review its members, invitations and agents.',
     },
   },
   status: {
@@ -196,8 +196,8 @@ export const copy = {
     custodianLabel: { es: 'Custodio', en: 'Custodian' },
     custodianPlaceholder: { es: 'Elige una persona', en: 'Choose a person' },
     custodianHint: {
-      es: 'Debe ser una persona propietaria o administradora activa. No hereda los permisos del agente.',
-      en: 'Must be an active human owner or administrator. They do not inherit the agent’s permissions.',
+      es: 'Debe ser una persona propietaria o administradora activa. El agente no hereda los permisos del custodio.',
+      en: 'Must be an active human owner or administrator. The agent does not inherit the custodian’s permissions.',
     },
     custodianRequired: { es: 'Elige una persona custodio.', en: 'Choose a custodian.' },
     noCustodians: {
@@ -244,8 +244,8 @@ export const copy = {
       en: 'The identity is permanently retired and cannot be reactivated. Authorship history is preserved.',
     },
     custodianConsequence: {
-      es: 'El nuevo custodio debe ser una persona administradora activa. Gestiona la identidad, pero no hereda sus permisos.',
-      en: 'The new custodian must be an active human administrator. They manage the identity but do not inherit its permissions.',
+      es: 'El nuevo custodio debe ser una persona administradora activa. Gestiona la identidad; el agente no hereda los permisos del custodio.',
+      en: 'The new custodian must be an active human administrator. They manage the identity; the agent does not inherit the custodian’s permissions.',
     },
     loadMore: { es: 'Cargar más miembros', en: 'Load more members' },
     countOne: { es: 'agente visible', en: 'visible agent' },
@@ -325,16 +325,6 @@ export const copy = {
     dismissWarning: {
       es: 'El enlace no se guarda. Si descartas la invitación, tendrás que abrir de nuevo el enlace original.',
       en: 'The link is not stored. If you dismiss the invitation, you will need to reopen the original link.',
-    },
-  },
-  footer: {
-    scope: {
-      es: 'Esta pantalla cubre espacios, miembros, invitaciones y agentes. No incluye transferencia o eliminación de espacios, credenciales de agente, correo saliente ni reingreso.',
-      en: 'This screen covers workspaces, members, invitations and agents. It does not include workspace transfer or deletion, agent credentials, outgoing email or rejoining.',
-    },
-    permissions: {
-      es: 'Los permisos, las versiones y el estado de cada membresía se comprueban en el servidor.',
-      en: 'Permissions, versions and each membership’s state are checked by the server.',
     },
   },
   operation: {

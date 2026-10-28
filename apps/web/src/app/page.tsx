@@ -30,7 +30,7 @@ export default async function Home() {
         </header>
         <section aria-labelledby="es-heading" lang="es">
           <h2 id="es-heading">Una base técnica para empezar</h2>
-          <p>Esta página verifica el arranque de la web y la conexión con la API. La aplicación de trabajo sigue en desarrollo.</p>
+          <p>Esta página verifica el arranque de la web y la conexión con la API. Todavía no es una aplicación completa de gestión de trabajo.</p>
           <p>Hay una prueba de acceso experimental y opcional. También hay una interfaz de espacios, miembros e invitaciones con datos reales de la API y un prototipo visual de tareas y sprints con datos ficticios. No hay un producto completo ni MCP. El nombre y la identidad visual siguen siendo propuestas.</p>
           <p><Link href="/workspaces">Espacios / <span lang="en">Workspaces</span></Link></p>
           <p><Link href="/identity">Prueba de identidad / <span lang="en">Identity spike</span></Link></p>
@@ -38,7 +38,7 @@ export default async function Home() {
         </section>
         <section aria-labelledby="en-heading" lang="en">
           <h2 id="en-heading">A technical starting point</h2>
-          <p>This page checks web startup and the API connection. The work-management application remains in development.</p>
+          <p>This page checks web startup and the API connection. It is not yet a complete work-management application.</p>
           <p>An optional, experimental sign-in check is available. A workspace, member and invitation interface uses real API data, and a visual task and sprint prototype uses fictional data. There is no complete product or MCP. The name and visual identity remain proposals.</p>
           <p><Link href="/workspaces">Espacios / <span lang="en">Workspaces</span></Link></p>
           <p><Link href="/identity">Prueba de identidad / <span lang="en">Identity spike</span></Link></p>
