@@ -197,4 +197,18 @@ test('T05.0 PostgreSQL and HTTP workspace workflows', async t => {
     await ok(recipient, 'workspace-invitations/accept', { token: issued.token }, key);
     assert.equal(await prisma.membership.count({ where: { workspaceId: f.workspace.id, principalId: recipient.principalId } }), 1);
   });
+
+  await t.test('workspace-create receipt cannot return data after external authorized ownership/membership changes', async () => {
+    const original = await human(); const successor = await human(); const key = randomUUID();
+    const created = await ok(original, 'workspaces', { name: 'Receipt scope' }, key);
+    // Installation fixture prepares a consistent later state. No ownership
+    // transfer endpoint or product reauthentication bypass is introduced.
+    await prisma.$transaction(async tx => {
+      await tx.membership.create({ data: { workspaceId: created.id, principalId: successor.principalId, role: 'owner' } });
+      await tx.workspace.update({ where: { id: created.id }, data: { ownerPrincipalId: successor.principalId } });
+      await tx.membership.update({ where: { workspaceId_principalId: { workspaceId: created.id, principalId: original.principalId } }, data: { role: 'member', state: 'revoked' } });
+    });
+    assert.equal((await request(original, 'workspaces', { name: 'Receipt scope' }, key)).status, 403);
+    assert.equal((await ok(successor, `workspaces/${created.id}`)).role, 'owner');
+  });
 });

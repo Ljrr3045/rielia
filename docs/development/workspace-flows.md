@@ -187,7 +187,7 @@ ones and retains the diagnostic worker boundaries. Provider HTTP remains simulat
 
 Command results and current PR/CI/Kody evidence belong in [progress](progress.md)
 and [PR #13](https://github.com/Ljrr3045/rielia/pull/13). All applicable local
-commands passed; the real-PG suite has 9 workspace checks, 12 principal checks
+commands passed; the real-PG suite has 10 workspace checks, 12 principal checks
 and 23 original identity checks; the client/proxy suite has 11. Owned test
 databases, Docker runtime resources and external QA-harness smoke resources were
 removed. Audit reported no known vulnerabilities. Excluded: real OAuth/HTTPS/staging and real users/projects,

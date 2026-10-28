@@ -85,7 +85,7 @@ delivery owns responsive/keyboard/touch/accessibility/real-user evidence.
 
 Local Node 24.22.1/pnpm 12.15.0 validation passes: frozen install, full `pnpm check`
 (11 workspace client/proxy, existing suites, strict types/builds, Express-free
-closure and actual Next route smoke), real PG/HTTP workspace suite (9 checks),
+closure and actual Next route smoke), real PG/HTTP workspace suite (10 checks),
 12 principal and original 23 identity checks. Two tenants, roles/owner/custodian,
 malformed/forged context, origin, hash-only tokens, wrong/unverified recipient,
 expiry/concurrent single use, issuer/session-removal races, grants/versions and
@@ -96,6 +96,12 @@ removed. Audit reports no known vulnerabilities. Handoff integrity (47 files,
 evidence is recorded in [PR #13](https://github.com/Ljrr3045/rielia/pull/13) before handoff.
 No full T05/T07/T35, projects/tasks,
 real OAuth/staging/users, RLS/deployment or launch acceptance is claimed.
+
+Self-review added a real-PG receipt regression: after a consistent external
+ownership/membership change, replaying workspace creation returned the historical
+owner summary (201). It now reloads the scoped current summary and denies lost
+membership (403), just as accepted-invitation replay does. The regression failed
+before the fix and passes afterwards; no ownership-transfer endpoint was added.
 
 ## T35.0 principal/authorship foundations
 

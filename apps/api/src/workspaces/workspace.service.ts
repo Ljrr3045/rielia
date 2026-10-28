@@ -45,11 +45,13 @@ export class WorkspaceService {
     if (previous) {
       if (previous.requestHash !== requestHash) throw new ConflictException('Idempotency key belongs to another request.');
       if (secret) throw new ConflictException({ code: 'invitation-link-unavailable', message: 'Link was already issued. Revoke it and create a new invitation.' });
-      if (route === 'accept-invitation') {
-        const accepted = await tx.invitation.findUnique({ where: { tokenHash: (input as { tokenHash: string }).tokenHash } });
-        if (!accepted || !actor.emailVerified || email(actor.email) !== accepted.recipientEmail) throw new ForbiddenException('Invitation acceptance is denied.');
+      if (route === 'accept-invitation' || route === 'create-workspace') {
+        if (route === 'accept-invitation') {
+          const accepted = await tx.invitation.findUnique({ where: { tokenHash: (input as { tokenHash: string }).tokenHash } });
+          if (!accepted || !actor.emailVerified || email(actor.email) !== accepted.recipientEmail) throw new ForbiddenException('Invitation acceptance is denied.');
+        }
         const saved = previous.response as { id?: string };
-        if (!saved.id) throw new ConflictException('Invitation receipt is unavailable.');
+        if (!saved.id) throw new ConflictException('Workspace receipt is unavailable.');
         return await this.summary(tx, actor, saved.id) as T;
       }
       return previous.response as T;
