@@ -265,7 +265,12 @@ description 20000, task title 1–300); viewer/date copy no longer exposes
 implementation language; drawer, detail, modal, conflict/rebase and success
 completion now keep meaningful focus; signed-out state exposes the promised
 **Actualizar** action; and one mobile route crash from a `find()` undefined focus
-fallback was fixed before handoff.
+fallback was fixed before handoff. Kody PR #16's first round found two further
+valid presentation issues: forbidden feedback was missing in an open modal, and a
+narrow unmounted-detail draft banner was suppressed. Both are fixed with focused
+browser evidence and fresh checks in the [UI guide findings
+section](project-task-ui.md#pr-16-review-findings-and-dispositions); the changed
+head requires a fresh review round.
 
 Final local evidence: `pnpm check` passes lint, Express-free closure, process
 cleanup, 7 identity, 16 workspace, 16 project/task, 19 prototype, strict

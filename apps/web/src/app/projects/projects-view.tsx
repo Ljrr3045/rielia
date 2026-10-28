@@ -335,7 +335,10 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
     requestAnimationFrame(() => {
       const opener = modalOpenerRef.current;
       if (opener !== null && opener.isConnected) opener.focus();
-      else projectHeadingRef.current?.focus();
+      else {
+        const fallback = projectHeadingRef.current ?? document.getElementById('projects-main');
+        fallback?.focus();
+      }
     });
   }
 
@@ -725,6 +728,29 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
         />
       );
     }
+    if (outcome === 'forbidden') {
+      return (
+        <FeedbackPanel
+          actions={(
+            <>
+              <button className={styles.secondary} onClick={() => { dismissOutcome(); closeForm(); }} type="button">
+                {copy.common.close[lang]}
+              </button>
+              {draft !== null && (
+                <button className={styles.ghostButton} onClick={discardCurrentDraft} type="button">
+                  {copy.common.discardDraft[lang]}
+                </button>
+              )}
+            </>
+          )}
+          autoFocus
+          body={copy.feedback.forbiddenBody}
+          target={draft === null ? null : commandLabel(draft)}
+          title={copy.feedback.forbiddenTitle}
+          tone="danger"
+        />
+      );
+    }
     if (outcome === 'invalid') {
       return (
         <FeedbackPanel
@@ -831,8 +857,8 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
     )
     : null;
 
-  const draftInDetail = draftBanner !== null
-    && (detailOverlay || task !== null && draft?.type === 'edit-task' && draft.taskId === task.id);
+  const draftInDetail = task !== null && draftBanner !== null
+    && (detailOverlay || draft?.type === 'edit-task' && draft.taskId === task.id);
 
   const recoveryBlock = (
     <>
@@ -1339,7 +1365,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
         >
           {feedbackNode}
           {pageError?.collection === 'members' && pageErrorBlock}
-          {(form.kind === 'project-create' || form.kind === 'project-edit') && (
+          {outcome !== 'forbidden' && (form.kind === 'project-create' || form.kind === 'project-edit') && (
             <>
               <p className={styles.stateHint}>
                 {form.kind === 'project-create' ? copy.project.createBody[lang] : copy.project.settingsBody[lang]}
@@ -1355,7 +1381,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
               />
             </>
           )}
-          {form.kind === 'task-edit' && project !== null && (
+          {outcome !== 'forbidden' && form.kind === 'task-edit' && project !== null && (
             <TaskEditForm
               members={assigneeMembers}
               onChange={stageTask}
@@ -1368,7 +1394,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
               value={taskValue}
             />
           )}
-          {(form.kind === 'project-archive' || form.kind === 'project-restore') && (
+          {outcome !== 'forbidden' && (form.kind === 'project-archive' || form.kind === 'project-restore') && (
             <ConfirmBox
               busy={pending !== null}
               disabled={retryTarget !== null}
@@ -1381,7 +1407,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
               title={form.kind === 'project-archive' ? copy.project.archiveConfirmTitle : copy.project.restore}
             />
           )}
-          {(form.kind === 'task-archive' || form.kind === 'task-restore') && (
+          {outcome !== 'forbidden' && (form.kind === 'task-archive' || form.kind === 'task-restore') && (
             <ConfirmBox
               busy={pending !== null}
               disabled={retryTarget !== null}

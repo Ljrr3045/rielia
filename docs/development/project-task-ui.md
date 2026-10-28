@@ -218,6 +218,30 @@ owns the independent profile evidence.
 - This delivery adds no repo test code, auth bypass, fake API/model, metrics,
   backend import, staging credential, or deployment.
 
+## PR #16 review findings and dispositions
+
+Kody's first PR #16 round raised two valid presentation findings:
+
+- [Inline 4407004747](https://github.com/Ljrr3045/rielia/pull/16#discussion_r4407004747):
+  a server-denied save in an already open project/task modal had no visible
+  forbidden feedback; the status page changed behind the dialog. The dialog now
+  renders a focused, assertive forbidden panel, hides its form fields, and exposes
+  **Cerrar** and, when applicable, explicit **Descartar borrador**; closing reveals
+  the forbidden page and focuses the main fallback. Real-browser after evidence:
+  `95-forbidden-in-modal-1440.png`, `96-forbidden-after-close-1440.png`.
+- [Inline 4407005097](https://github.com/Ljrr3045/rielia/pull/16#discussion_r4407005097):
+  `draftInDetail` could suppress the global draft notice on narrow/tablet when
+  `detailOverlay` matched but no task was mounted. It now requires a mounted task;
+  after closing the form and detail at 390 px, the other-context draft notice,
+  exact target, **Volver al borrador** and **Descartar borrador** remain visible,
+  and return reopens the exact unsaved title. Real-browser after evidence:
+  `97-narrow-draft-after-detail-close-390.png`,
+  `98-narrow-draft-resumed-390.png`.
+- Focused `pnpm check`, audit, handoff and whitespace checks pass again after both
+  fixes. The transient pager UI remains honestly unexercised in the browser as
+  documented above. A changed head requires a fresh coordinator Kody trigger; the
+  prior-head review does not approve it.
+
 ## PR evidence
 
 - UI PR: [#16](https://github.com/Ljrr3045/rielia/pull/16), English non-draft,
