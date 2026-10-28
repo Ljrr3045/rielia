@@ -84,6 +84,11 @@ This records repository changes. No application version has been released.
 
 ### Changed
 
+- T35.0 review fixes: return sanitized 400/409 for permanent storage/state
+  failures, retaining 503 for outages; use compatible shared context-read fences
+  while policy/session mutations keep exclusive atomic authorization. Actual
+  PostgreSQL regressions reproduce both prior defects and verify the fixes.
+
 - Reconcile PR #11 as merged 2026-10-27T20:30:56Z at `70314c5`, following
   reviewed head `eb8b19c`, exact-head Kody approval and CI 40577221864; its
   completed worktree was removed. T35.0 follows it without completing full T35.

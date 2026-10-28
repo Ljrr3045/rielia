@@ -11,6 +11,7 @@ import { AppModule } from '../dist/app.module.js';
 import { configureApplication, createHttpAdapter } from '../dist/application.js';
 import { IdentityService } from '../dist/identity/identity.service.js';
 import { PrincipalService } from '../dist/principals/principal.service.js';
+import { storageConstraintException } from '../dist/principals/principal-errors.js';
 
 test('T35.0 PostgreSQL principal, policy and verified execution foundations', async t => {
   const app = await NestFactory.create(AppModule, createHttpAdapter(), { bodyParser: false, logger: false });
@@ -242,6 +243,64 @@ test('T35.0 PostgreSQL principal, policy and verified execution foundations', as
     const attribution = await service.creationAttribution(context, {});
     assert.equal(attribution.createdByPrincipalId, agent);
     await assert.rejects(service.registerAgent(administrator, { name: 'Denied', role: 'member', custodianPrincipalId: a.owner.principalId }), status(403));
+  });
+
+  await t.test('permanent database constraints return sanitized 4xx and outages remain 503', async () => {
+    const a = await fixture(); const member = await human();
+    await service.addHumanMember(a.context, member.id, 'member');
+    await assert.rejects(service.addHumanMember(a.context, member.id, 'member'), status(409));
+    await assert.rejects(service.bootstrapWorkspaceForHuman(a.owner.id, 'Duplicate', a.workspaceId), status(409));
+    await assert.rejects(service.bootstrapWorkspaceForHuman(a.owner.id, ''), error => error.getStatus?.() === 400 && error.message === 'Principal data violates a storage constraint.');
+    await assert.rejects(service.registerAgent(a.context, { name: 'x'.repeat(201), role: 'member', custodianPrincipalId: a.owner.principalId }), status(400));
+    await service.updateMember(a.context, member.principalId, { state: 'revoked' });
+    await assert.rejects(service.updateMember(a.context, member.principalId, { state: 'active' }), status(409));
+    for (const operation of [
+      () => prisma.membership.create({ data: { workspaceId: a.workspaceId, principalId: 'missing-principal', role: 'member' } }),
+      () => pool.query(`INSERT INTO membership("workspaceId","principalId",role) VALUES ($1,'missing-principal','member')`, [a.workspaceId]),
+      () => pool.query(`UPDATE principal SET kind='agent' WHERE id=$1`, [a.owner.principalId]),
+      () => pool.query(`DELETE FROM "user" WHERE id=$1`, [a.owner.id]),
+    ]) {
+      await assert.rejects(operation(), error => {
+        const translated = storageConstraintException(error);
+        assert.deepEqual(translated?.getResponse(), { message: 'Principal data violates a storage constraint.', error: 'Bad Request', statusCode: 400 });
+        return true;
+      });
+    }
+    await pool.query('ALTER TABLE principal_policy_fence RENAME TO test_unavailable_fence');
+    try {
+      await assert.rejects(service.bootstrapWorkspaceForHuman(a.owner.id, 'Unavailable'), status(503));
+      const response = await fetch(`${url}/api/v1/workspaces/${a.workspaceId}/execution-context`, { headers: { cookie: a.owner.cookie } });
+      assert.equal(response.status, 503);
+      assert.deepEqual(await response.json(), { message: 'Principal operation is unavailable.', error: 'Service Unavailable', statusCode: 503 });
+    } finally { await pool.query('ALTER TABLE test_unavailable_fence RENAME TO principal_policy_fence'); }
+  });
+
+  await t.test('context resolution shares a read fence while mutations still wait for exclusive authorization', async () => {
+    const a = await fixture(); const connection = await pool.connect();
+    let read; let mutation;
+    try {
+      await connection.query('BEGIN');
+      await connection.query('SELECT singleton FROM principal_policy_fence WHERE singleton FOR SHARE');
+      let resolved = false;
+      read = service.webContext({ cookie: a.owner.cookie }, a.workspaceId).then(result => { resolved = true; return result; });
+      for (let n = 0; n < 100 && !resolved; n++) {
+        const waiting = await pool.query(`SELECT count(*)::int AS n FROM pg_stat_activity WHERE wait_event_type='Lock' AND query LIKE 'UPDATE principal_policy_fence%'`);
+        if (waiting.rows[0].n > 0) break;
+        await delay(10);
+      }
+      assert.ok(resolved, 'context read must finish while another shared reader holds the fence');
+      assert.equal((await read).context.actorPrincipalId, a.owner.principalId);
+      mutation = service.registerAgent(a.context, { name: 'Waits for shared reader', role: 'member', custodianPrincipalId: a.owner.principalId });
+      let blocked = false;
+      for (let n = 0; n < 100; n++) {
+        const waiting = await pool.query(`SELECT count(*)::int AS n FROM pg_stat_activity WHERE wait_event_type='Lock' AND query LIKE 'UPDATE principal_policy_fence%'`);
+        if (waiting.rows[0].n > 0) { blocked = true; break; }
+        await delay(10);
+      }
+      assert.ok(blocked, 'policy mutation must still acquire an exclusive fence');
+      await connection.query('COMMIT');
+      assert.ok(await mutation);
+    } finally { await connection.query('ROLLBACK'); await read; await mutation; connection.release(); }
   });
 
   await t.test('direct SQL competing custodian demotion and agent activation cannot commit write skew', async () => {

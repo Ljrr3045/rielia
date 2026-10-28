@@ -53,8 +53,12 @@ stale REPEATABLE READ/SERIALIZABLE snapshot, unlike relying on an advisory lock
 alone. See PostgreSQL's [consistency guidance](https://www.postgresql.org/docs/current/applevel-consistency.html)
 and [isolation behavior](https://www.postgresql.org/docs/current/transaction-iso.html).
 
-This deliberately serializes the small foundation, including context resolution,
-and deferred validation scans its small tables. It makes no throughput claim and
+Pure web/internal context resolution takes `SELECT ... FOR SHARE` on that row:
+concurrent reads coexist while policy/session writers wait. A read never upgrades
+to a mutation lock; subsequent service operations obtain an exclusive fence and
+revalidate from their private evidence again. Missing fence rows fail closed.
+The fence deliberately serializes policy/session writes, while deferred validation
+scans the small foundation tables. It makes no throughput claim and
 must be revisited with targeted locks/constraints before scale or task traffic.
 Conflicting transactions roll back; callers can retry the whole operation after
 refreshing state. No automatic mutation retry or generic idempotency framework is
@@ -73,6 +77,10 @@ subject, including viewer read records. Owner/admin may revoke workspace records
 delegated/autonomous execution cannot administer or revoke through that seam.
 Expired/revoked grants and inactive principals/memberships deny subsequent use.
 An autonomous issuer's later demotion does not lend or replace the agent's rights.
+Known structured uniqueness failures return generic 409; permanent storage
+constraints return generic 400, and terminal membership reactivation is an
+explicit 409 conflict. Unknown errors/outages retain generic 503. No SQL, driver
+messages, private identifiers or configuration appear in these error responses.
 
 The only new route is:
 
@@ -150,3 +158,19 @@ Actual command results, PR and current-head CI/Kody evidence are recorded in
 remote credential authentication, full workspace/project/task CRUD, project
 visibility policy, exports, RLS, production deployment and full T35 acceptance
 remain OPEN/DEFERRED. No credentials or staging are requested by this slice.
+
+## PR #12 review fixes
+
+The initial Kody round's [constraint-error finding](https://github.com/Ljrr3045/rielia/pull/12#discussion_r4404439258)
+and [exclusive-read-lock finding](https://github.com/Ljrr3045/rielia/pull/12#discussion_r4404439735)
+were valid. Two added real-PG service regressions failed before the changes and
+pass afterwards. They verify duplicate membership/workspace 409, invalid names
+400, terminal membership reactivation 409, real Prisma/PG FK/check/restrict errors
+mapped without driver details, and unavailable storage still returning sanitized
+503 through the actual context HTTP boundary. A live shared reader permits
+context resolution to complete, but an observed policy mutation waits for its
+release. Original competing-writer and session-revocation regressions still pass.
+There are now 12 principal checks plus the original 23 identity checks. The global
+write-fence/scan limits remain explicit; no broad performance claim is added.
+The initial submitted reviews reference an earlier head and are not final-head
+approval. Every changed ready head still requires fresh coordinator review.

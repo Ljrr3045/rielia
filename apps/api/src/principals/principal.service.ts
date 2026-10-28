@@ -1,9 +1,10 @@
-import { BadRequestException, ForbiddenException, Inject, Injectable, ServiceUnavailableException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ConflictException, ForbiddenException, HttpException, Inject, Injectable, ServiceUnavailableException, UnauthorizedException } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 import type { IncomingHttpHeaders } from 'node:http';
 import type { CreationAttribution, ExecutionContextResponse, MembershipRole } from '@rielia/contracts';
 import type { Prisma } from '../generated/prisma/client.js';
 import { IdentityService } from '../identity/identity.service.js';
+import { storageConstraintException } from './principal-errors.js';
 
 type Transaction = Prisma.TransactionClient;
 type Evidence = { workspaceId: string } & ({ sessionId: string; userId: string } | { grantId: string });
@@ -21,14 +22,19 @@ export class PrincipalService {
     return this.identity.runtime.prisma;
   }
 
-  private async transaction<T>(work: (tx: Transaction) => Promise<T>): Promise<T> {
+  private async transaction<T>(work: (tx: Transaction) => Promise<T>, readOnly = false): Promise<T> {
     try {
       return await this.database.$transaction(async tx => {
-        if (await tx.$executeRaw`UPDATE principal_policy_fence SET revision = revision + 1 WHERE singleton` !== 1) throw new ServiceUnavailableException('Principal policy is unavailable.');
+        if (readOnly) {
+          const rows = await tx.$queryRaw<unknown[]>`SELECT singleton FROM principal_policy_fence WHERE singleton FOR SHARE`;
+          if (rows.length !== 1) throw new ServiceUnavailableException('Principal policy is unavailable.');
+        } else if (await tx.$executeRaw`UPDATE principal_policy_fence SET revision = revision + 1 WHERE singleton` !== 1) throw new ServiceUnavailableException('Principal policy is unavailable.');
         return work(tx);
       }, { maxWait: 5000, timeout: 10000 });
     } catch (error) {
-      if (error instanceof BadRequestException || error instanceof ForbiddenException || error instanceof UnauthorizedException || error instanceof ServiceUnavailableException) throw error;
+      if (error instanceof HttpException) throw error;
+      const constraint = storageConstraintException(error);
+      if (constraint) throw constraint;
       // Never expose Prisma/PG diagnostics, identifiers or configuration.
       throw new ServiceUnavailableException('Principal operation is unavailable.');
     }
@@ -68,7 +74,7 @@ export class PrincipalService {
     const session = await this.identity.session(headers);
     if (!session.data) throw new UnauthorizedException('Authentication is required.');
     const evidence: Evidence = { workspaceId, sessionId: session.data.session.id, userId: session.data.user.id };
-    const context = await this.transaction(tx => this.resolve(tx, evidence, 'read'));
+    const context = await this.transaction(tx => this.resolve(tx, evidence, 'read'), true);
     this.evidence.set(context, evidence);
     return { context, headers: session.headers };
   }
@@ -77,7 +83,7 @@ export class PrincipalService {
    * No controller, MCP adapter or request field can call this as authentication. */
   async internalGrantContext(grantId: string, workspaceId: string): Promise<VerifiedExecution> {
     const evidence: Evidence = { grantId, workspaceId };
-    const context = await this.transaction(tx => this.resolve(tx, evidence, 'read'));
+    const context = await this.transaction(tx => this.resolve(tx, evidence, 'read'), true);
     this.evidence.set(context, evidence);
     return context;
   }
@@ -133,6 +139,7 @@ export class PrincipalService {
       const member = await tx.membership.findUnique({ where: { workspaceId_principalId: { workspaceId: current.workspaceId, principalId } } });
       const principal = await tx.principal.findUnique({ where: { id: principalId } });
       if (!member || !principal || member.role === 'owner' || (principal.kind === 'agent' && patch.role === 'admin')) throw new ForbiddenException('Membership change is denied.');
+      if (member.state === 'revoked' && patch.state !== undefined && patch.state !== 'revoked') throw new ConflictException('Revoked membership cannot change state.');
       if ((patch.role && !['owner', 'admin'].includes(patch.role)) || (patch.state && patch.state !== 'active')) {
         if (await tx.principal.count({ where: { custodianPrincipalId: principalId, workspaceId: current.workspaceId, state: 'active' } })) throw new ForbiddenException('Transfer management or suspend dependent agents first.');
       }

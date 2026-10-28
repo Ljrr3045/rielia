@@ -77,7 +77,7 @@ activity/outbox integration, plus T12 credential verification, remain incomplete
 Local Node 24.22.1/pnpm 12.15.0 evidence: frozen install and final-source
 `pnpm check` pass (lint, 286-package Express-free backend closure, process cleanup,
 seven identity logic/client, 19 prototype and 17 MCP checks, strict types/builds
-and production HTTP smoke). `pnpm test:identity` passes 10 principal checks and
+and production HTTP smoke). `pnpm test:identity` passes 12 principal checks and
 all original 23 identity checks on real PostgreSQL 18.6; provider HTTP is simulated.
 Existing-user backfill and repeated deploy, direct SQL negative constraints,
 same-workspace delegated equality, viewer scope ceiling after promotion,
@@ -96,12 +96,22 @@ Handoff/link and whitespace checks pass;
 no dependency or source-handoff change is included. Current-head CI and complete
 coordinator-triggered Kody review remain required before worker delivery.
 
-The singleton policy/session fence and deferred table scans deliberately favor
-correctness for this small substrate; no scale/performance claim is made.
+The singleton policy/session write fence and deferred table scans deliberately
+favor correctness for this small substrate; pure context reads use compatible
+shared locks. No scale/performance claim is made.
 User deletion/terminal revocation retention policy, project policy, full T35,
 T05/T06/T12, RLS/least-privilege deployment roles and real provider/HTTPS/staging/
 real-project/user acceptance remain open. No UI, main-checkout file, credentials,
 staging or production deployment is touched.
+
+PR #12's first Kody round found valid [permanent-error classification](https://github.com/Ljrr3045/rielia/pull/12#discussion_r4404439258)
+and [exclusive context-read locking](https://github.com/Ljrr3045/rielia/pull/12#discussion_r4404439735)
+issues. Both added regressions fail pre-fix and pass with generic 400/409 mapping,
+explicit terminal-state conflict and shared read fences. Real Prisma/PG constraints
+are covered alongside an actual HTTP unavailable-storage 503 and observed
+read/write synchronization; original revocation/concurrent-write tests remain
+passing. Initial submitted reviews bind `25b91add`, not final approval. Changed
+heads require a fresh coordinator trigger and complete current-head review.
 
 ## T02.0 technical fixture
 
