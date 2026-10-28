@@ -118,6 +118,28 @@ export class PrincipalService {
     return this.transaction(async tx => work(tx, await this.resolve(tx, evidence, operation)));
   }
 
+  /** Domain owners use this seam, never a serialized context. The current
+   * principal/session/grant and membership stay fenced until the domain commits. */
+  async domainOperation<T>(context: VerifiedExecution, workspaceId: string, operation: 'read' | 'write',
+    work: (tx: Transaction, current: ExecutionContextResponse, canWrite: boolean) => Promise<T>): Promise<T> {
+    const evidence = this.evidence.get(context);
+    if (!evidence || evidence.workspaceId !== workspaceId) throw new UnauthorizedException('Verified scoped execution is required.');
+    return this.transaction(async tx => {
+      const current = await this.resolve(tx, evidence, operation);
+      const grant = 'grantId' in evidence ? await tx.executionGrant.findUnique({ where: { id: evidence.grantId } }) : null;
+      const canWrite = current.role !== 'viewer' && (!grant || grant.allowedOperations.includes('write'));
+      return work(tx, current, canWrite);
+    }, operation === 'read');
+  }
+
+  /** Same-scope active assignees only; retaining an unchanged historical
+   * assignment is the domain owner's explicit edit policy. */
+  async assertAssignable(tx: Transaction, workspaceId: string, principalId: string): Promise<void> {
+    const member = await tx.membership.findUnique({ where: { workspaceId_principalId: { workspaceId, principalId } }, include: { principal: true } });
+    if (!member || member.state !== 'active' || member.principal.state !== 'active' || !['human', 'agent'].includes(member.principal.kind)
+      || (member.principal.kind === 'agent' && member.principal.workspaceId !== workspaceId)) throw new ForbiddenException('Assignment is denied.');
+  }
+
   /** Trusted installation/bootstrap seam, not an API or delegated operation.
    * T05 will own registration/invitations and invoke this through verified policy. */
   async bootstrapWorkspaceForHuman(userId: string, name: string, workspaceId = randomUUID()): Promise<string> {

@@ -23,5 +23,5 @@ export function useProjectTasks() {
   }, [controller, state.session]);
   return { ...state, refresh: controller.refresh, selectWorkspace: controller.selectWorkspace, selectProject: controller.selectProject, selectTask: controller.selectTask,
     setView: controller.setView, loadMore: controller.loadMore, stage: controller.stage, submit: controller.submit, retrySave: controller.retrySave, discardDraft: controller.discardDraft,
-    cancelPending: controller.cancelPending, reloadConflict: controller.reloadConflict, rebaseDraft: controller.rebaseDraft, dismissOutcome: controller.dismissOutcome };
+    cancelPending: controller.cancelPending, returnToDraft: controller.returnToDraft, reloadConflict: controller.reloadConflict, rebaseDraft: controller.rebaseDraft, dismissOutcome: controller.dismissOutcome };
 }

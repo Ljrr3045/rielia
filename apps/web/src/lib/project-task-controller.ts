@@ -18,10 +18,13 @@ export interface ProjectTaskState {
 const selectionEmpty: ProjectTaskSelection = { workspaceId: null, projectId: null, taskId: null };
 const cleared = { workspace: null, members: null, projects: null, project: null, tasks: null, task: null };
 const id = (value: unknown): value is string => typeof value === 'string' && /^[A-Za-z0-9_-]{1,128}$/.test(value);
-function urlFor(s: ProjectTaskSelection): string {
-  if (!s.workspaceId) return '/projects';
-  if (!s.projectId) return `/projects?workspace=${encodeURIComponent(s.workspaceId)}`;
-  return s.taskId ? taskURL(s.workspaceId, s.projectId, s.taskId) : projectURL(s.workspaceId, s.projectId);
+function urlFor(s: ProjectTaskSelection, views: ProjectTaskState['views']): string {
+  const path = !s.workspaceId ? '/projects' : !s.projectId ? `/projects?workspace=${encodeURIComponent(s.workspaceId)}`
+    : s.taskId ? taskURL(s.workspaceId, s.projectId, s.taskId) : projectURL(s.workspaceId, s.projectId);
+  const url = new URL(path, 'https://location.invalid');
+  if (views.projects === 'archived') url.searchParams.set('projectsView', 'archived');
+  if (views.tasks === 'archived') url.searchParams.set('tasksView', 'archived');
+  return url.pathname + url.search;
 }
 function sameTarget(a: ProjectTaskCommand, b: ProjectTaskCommand): boolean {
   return a.type === b.type && a.workspaceId === b.workspaceId && ('projectId' in a ? a.projectId : null) === ('projectId' in b ? b.projectId : null)
@@ -45,7 +48,7 @@ export function createProjectTaskController(options: {
   const current = (request: { generation: number }) => generation === request.generation;
   const fresh = () => state.session !== null && Date.parse(state.session.session.expiresAt) > Date.now();
   function select(selection: ProjectTaskSelection, navigate = true) {
-    const url = urlFor(selection); publish({ ...state, selection: { ...selection }, url });
+    const url = urlFor(selection, state.views); publish({ ...state, selection: { ...selection }, url });
     if (navigate) options.navigate?.(url);
   }
   function expire() { begin(); publish({ ...state, ...cleared, status: 'signed-out', session: null, workspaces: null, pending: null, retryTarget: retry ? structuredClone(retry.command) : null, result: null, conflict: null }); }
@@ -108,7 +111,8 @@ export function createProjectTaskController(options: {
   async function execute(command: ProjectTaskCommand, key: string): Promise<void> {
     if (state.pending) return;
     if (!fresh()) { expire(); return; }
-    if (command.workspaceId !== state.selection.workspaceId || ('projectId' in command && command.projectId !== state.selection.projectId)) { publish({ ...state, outcome: 'invalid' }); return; }
+    if (command.workspaceId !== state.selection.workspaceId || ('projectId' in command && command.projectId !== state.selection.projectId)
+      || ('taskId' in command && command.taskId !== state.selection.taskId)) { publish({ ...state, outcome: 'invalid' }); return; }
     const request = begin(); retry = { command: structuredClone(command), key };
     publish({ ...state, pending: command.type, retryTarget: structuredClone(command), outcome: null, conflict: null, requestId: null });
     try {
@@ -173,8 +177,16 @@ export function createProjectTaskController(options: {
     },
     async openLocation(search: string) {
       const query = new URLSearchParams(search); const w = query.get('workspace'); const p = query.get('project'); const t = query.get('task');
-      if ((w !== null && !id(w)) || (p !== null && (!id(p) || !w)) || (t !== null && (!id(t) || !p))) { begin(); publish({ ...state, ...cleared, status: 'error' }); return; }
-      begin(); select({ workspaceId: w, projectId: p, taskId: t }, false); publish({ ...state, pending: null, retryTarget: retry ? structuredClone(retry.command) : null }); await refresh();
+      const projectsView = query.get('projectsView') ?? 'active'; const tasksView = query.get('tasksView') ?? 'active';
+      if ((w !== null && !id(w)) || (p !== null && (!id(p) || !w)) || (t !== null && (!id(t) || !p))
+        || !['active', 'archived'].includes(projectsView) || !['active', 'archived'].includes(tasksView)
+        || ['workspace', 'project', 'task', 'projectsView', 'tasksView'].some(key => query.getAll(key).length > 1)) { begin(); publish({ ...state, ...cleared, status: 'error' }); return; }
+      begin(); publish({ ...state, views: { projects: projectsView as ArchiveView, tasks: tasksView as ArchiveView } });
+      select({ workspaceId: w, projectId: p, taskId: t }, false); publish({ ...state, pending: null, retryTarget: retry ? structuredClone(retry.command) : null }); await refresh();
+    },
+    async returnToDraft() {
+      const command = retry?.command ?? state.draft; if (!command) return;
+      await changeSelection({ workspaceId: command.workspaceId, projectId: 'projectId' in command ? command.projectId : null, taskId: 'taskId' in command ? command.taskId : null });
     },
     discardDraft() { if (!state.pending) { retry = null; publish({ ...state, draft: null, retryTarget: null, conflict: null, outcome: null }); } },
     cancelPending() { begin(); publish({ ...state, pending: null, status: state.status === 'loading' ? 'error' : state.status, retryTarget: retry ? structuredClone(retry.command) : null }); },

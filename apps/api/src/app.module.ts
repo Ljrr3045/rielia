@@ -8,6 +8,8 @@ import { PrincipalController } from './principals/principal.controller.js';
 import { PrincipalService } from './principals/principal.service.js';
 import { WorkspaceController } from './workspaces/workspace.controller.js';
 import { WorkspaceService } from './workspaces/workspace.service.js';
+import { ProjectTaskController } from './projects/project-task.controller.js';
+import { ProjectTaskService } from './projects/project-task.service.js';
 
-@Module({ controllers: [HealthController, IdentityController, ReadinessController, PrincipalController, WorkspaceController], providers: [IdentityService, RuntimeService, PrincipalService, WorkspaceService] })
+@Module({ controllers: [HealthController, IdentityController, ReadinessController, PrincipalController, WorkspaceController, ProjectTaskController], providers: [IdentityService, RuntimeService, PrincipalService, WorkspaceService, ProjectTaskService] })
 export class AppModule {}

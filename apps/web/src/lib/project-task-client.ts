@@ -1,7 +1,10 @@
 import { isPage, isRecord, isProject, isTask, type ArchiveView, type DomainPage, type Project, type ProjectTaskCommand, type ProjectTaskResult, type Task } from '@rielia/contracts';
 
 export class ProjectTaskFailure extends Error {
-  constructor(readonly status: number, readonly code: string | null = null, readonly current: ProjectTaskResult | null = null, readonly requestId: string | null = null) { super('Project/task request failed.'); }
+  readonly status: number; readonly code: string | null; readonly current: ProjectTaskResult | null; readonly requestId: string | null;
+  constructor(status: number, code: string | null = null, current: ProjectTaskResult | null = null, requestId: string | null = null) {
+    super('Project/task request failed.'); this.status = status; this.code = code; this.current = current; this.requestId = requestId;
+  }
 }
 export interface ProjectTaskTransport {
   projects(workspaceId: string, view: ArchiveView, signal: AbortSignal, cursor?: string): Promise<DomainPage<Project>>;
@@ -50,7 +53,15 @@ export function createProjectTaskTransport(options: { baseURL?: string; timeout?
         case 'edit-task': path += `/${segment(command.projectId)}/tasks/${segment(command.taskId)}`; body = { ...command.fields, expectedVersion: command.expectedVersion }; break;
         case 'archive-task': case 'restore-task': path += `/${segment(command.projectId)}/tasks/${segment(command.taskId)}/${command.type === 'archive-task' ? 'archive' : 'restore'}`; body = { expectedVersion: command.expectedVersion }; break;
       }
-      const value = await request(path, signal, body, key);
+      let value: unknown;
+      try { value = await request(path, signal, body, key); }
+      catch (error) {
+        if (error instanceof ProjectTaskFailure && error.current && !scoped(error.current, command.workspaceId,
+          'projectId' in command ? command.projectId : undefined, 'taskId' in command ? command.taskId : undefined)) {
+          throw new ProjectTaskFailure(error.status, error.code, null, error.requestId);
+        }
+        throw error;
+      }
       const taskCommand = command.type.endsWith('task');
       if (!(taskCommand ? isTask(value) : isProject(value)) || !scoped(value as ProjectTaskResult, command.workspaceId,
         'projectId' in command ? command.projectId : undefined, 'taskId' in command ? command.taskId : undefined)) throw new ProjectTaskFailure(502);
