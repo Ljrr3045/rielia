@@ -295,8 +295,8 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   }, [resumeDraftOnReady, draft, status, selection, project, task, tasks, views.tasks]);
 
   function resumeDraft(command: ProjectTaskCommand) {
-    // Resumed forms have no user-clicked opener. Never restore focus to a
-    // control left behind by a previously closed modal.
+    // Resumed forms must not reuse a previous modal opener. Never restore
+    // focus to a control left behind by a previously closed modal.
     modalOpenerRef.current = null;
     if (command.type === 'create-project') {
       setProjectValue({ name: command.name, key: command.key, description: command.description ?? '' });

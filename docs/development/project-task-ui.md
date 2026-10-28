@@ -247,8 +247,8 @@ Kody's PR #16 rounds raised four valid presentation findings:
   heading. `99-forbidden-discard-focus-1440.png`,
   `100-invalid-discard-focus-1440.png`.
 - [Inline 4407196055](https://github.com/Ljrr3045/rielia/pull/16#discussion_r4407196055):
-  a form resumed from the draft banner or automatic context return has no
-  user-clicked opener, but `modalOpenerRef` could still hold a control from a
+  a form resumed from the draft banner or automatic context return must not reuse
+  a previous modal opener, but `modalOpenerRef` could still hold a control from a
   previously closed modal, so resuming and then closing/discarding could move
   focus to an unrelated control. `resumeDraft` now clears the stale opener before
   presenting a resumed form; focus uses the mounted detail heading, project
@@ -262,10 +262,10 @@ Kody's PR #16 rounds raised four valid presentation findings:
   focused `main#projects-main`. `101-resumed-draft-close-focus-1440.png` through
   `105-resumed-discard-focus-1440.png`.
 - Focused `pnpm check`, audit, handoff and whitespace checks pass again after these
-  fixes. All four findings are resolved or acknowledged. The transient pager UI
-  remains honestly unexercised in the browser as documented above. A changed head
-  requires a fresh coordinator Kody trigger; the prior-head review does not
-  approve it.
+  fixes. Fixes and evidence for all four findings are recorded here; exact review
+  state remains in GitHub. The transient pager UI remains honestly unexercised in
+  the browser as documented above. A changed head requires a fresh coordinator
+  Kody trigger; the prior-head review does not approve it.
 
 ## PR evidence
 
