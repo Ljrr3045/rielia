@@ -1,0 +1,47 @@
+apps/api/prisma/schema.prisma
+  s_0a489e8f2e5f0a::t_8e6dad2a77c509 176,193
+apps/api/test/project-tasks.test.mjs
+  s_0a489e8f2e5f0a::t_534e74867027c8 46-47,88
+  s_0a489e8f2e5f0a::t_2aa1299888e3e9 51
+  s_0a489e8f2e5f0a::t_a764350213912b 5,42-45,48-50,52-54
+  s_0a489e8f2e5f0a::t_a0087208df0b80 103-107,111-113,115
+  s_b8020eceba4182::t_b2e168028e5975 55
+apps/api/prisma/migrations/20261028230000_project_task_paging/migration.sql
+  s_0a489e8f2e5f0a::t_8e6dad2a77c509 1-5,13-23
+  s_0a489e8f2e5f0a::t_a764350213912b 6-12
+scripts/test-runtime.mjs
+  s_0a489e8f2e5f0a::t_8e6dad2a77c509 182
+docs/development/project-task-flows.md
+  s_0a489e8f2e5f0a::t_ab0b305667efe2 75-82,139,147-153,202,206,215,253-270
+CHANGELOG.md
+  s_0a489e8f2e5f0a::t_ab0b305667efe2 127-132
+docs/development/progress.md
+  s_0a489e8f2e5f0a::t_ab0b305667efe2 88,90,96,107-116
+  s_0a489e8f2e5f0a::t_6ad69040d34d90 117
+apps/api/src/projects/project-task.service.ts
+  s_0a489e8f2e5f0a::t_8e6dad2a77c509 8-12,106,109,111-112,119,123,125
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f72b3b750ba90447509b62bddaa746c7201ee57e",
+  "prompts": {},
+  "sessions": {
+    "s_0a489e8f2e5f0a": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18460-5f91-7740-af91-cd3f0d13a188",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    },
+    "s_b8020eceba4182": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a17016-ab9e-7501-b8a7-f63987eb61f7",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
