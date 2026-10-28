@@ -16,6 +16,7 @@ This records repository changes. No application version has been released.
   harness support separately owned presentation. Real PG/HTTP, concurrent writes,
   100-record paging and container-restart persistence regressions are included.
   [Scope, integration contract, evidence and limits](docs/development/project-task-flows.md).
+  [PR #15](https://github.com/Ljrr3045/rielia/pull/15).
   No JSX/CSS, private policy, full P05/P14/T06, MCP credentials/transport,
   dispatcher/business worker, real provider/staging or deployment is included.
 

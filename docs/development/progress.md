@@ -31,7 +31,7 @@ implementation, without completing tickets or weakening automated checks/launch 
 | Base | `origin/dev` at [PR #14](https://github.com/Ljrr3045/rielia/pull/14) merge `d27e3302a059cda6ef570c75efed42deda188a39` |
 | Branch | `feat/t06-project-task-flows`, one English non-draft PR to `dev`; renamed before implementation |
 | Worktree | Isolated `feat-t06-project-task-flows`; Codex `gpt-6.1-sol` `xhigh` verified by Orca terminal metadata. Helper launch rejected before effects by nested-depth limit; sole logic owner, no shared checkout |
-| Current PR | Pending creation after final local checks; exact-head CI and coordinator-triggered Kody remain required |
+| Current PR | [#15](https://github.com/Ljrr3045/rielia/pull/15), English non-draft to `dev`; final-source local checks pass, exact-head CI and coordinator-triggered Kody remain required |
 | T05.1 presentation PR | [#14](https://github.com/Ljrr3045/rielia/pull/14) merged 2026-10-28T20:57:11Z as `d27e3302a059cda6ef570c75efed42deda188a39`; reviewed source `6c0e64952129b10c25f195443f88ec7331ef1a02`, [CI 40764734574](https://github.com/Ljrr3045/rielia/actions/runs/40764734574) SUCCESS, [final Kody 6480178609](https://github.com/Ljrr3045/rielia/pull/14#issuecomment-6480178609) complete and exact-head check SUCCESS. Both findings resolved; coordinator reports completed worktrees removed |
 | T05.0 logic PR | [#13](https://github.com/Ljrr3045/rielia/pull/13) merged 2026-10-28T20:21:29Z as `01c9cc168bb9dde62b4290c049b982d62952c9a5`; reviewed source `11f886a4cbc28ab6d2e59c91a7aae096a9fefddd`, CI 40761116202, Kody completed; withdrawn fourth recovery finding resolved; coordinator merge only |
 | Principal foundations PR | [#12](https://github.com/Ljrr3045/rielia/pull/12) merged 2026-10-28T18:36:55Z as `b87dadb165971d0594429f6a08c047626f9d596e`; reviewed head `6c841a334987a51977af41d4fe19e0a151e1394e`, [Kody approval 5687764538](https://github.com/Ljrr3045/rielia/pull/12#pullrequestreview-5687764538), [CI 40745500251](https://github.com/Ljrr3045/rielia/actions/runs/40745500251). Both findings fixed; coordinator verified merge, preserved evidence and completed worktree removal |
@@ -93,7 +93,8 @@ container restart and a subsequent real Nest read/number allocation. Actual
 100-record page boundaries, two tenants, assignments/provenance, grant removal,
 key/number/version races and deferred rollback of each event/receipt stage are
 covered. Docker runtime packaging/migration/checksum/readiness/worker/restart/
-lock/signal/nonroot checks pass with all four migrations; owned resources removed.
+lock/signal/nonroot checks pass with all four migrations, including a final-source
+repeat after the parser/correlation change; owned resources removed.
 The final narrow parser/request-correlation change passed full check and the PG
 suite. Test-only real PG/Nest/Next QA harness passed
 actual proxy detail readiness with fictional signed sessions and cleaned its

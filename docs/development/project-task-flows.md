@@ -229,9 +229,10 @@ may need removal before `pnpm check`. Do not edit `next-env.d.ts` by hand or tou
 another checkout. This harness does not exercise real OAuth providers or staging.
 
 Command outcomes and exact-head PR/CI/Kody evidence are tracked in
-[progress](progress.md). Full check, audit, handoff and the complete PG suite passed
-locally; the full runtime smoke also passed and is being repeated after source
-freeze. PR review evidence remains to be recorded before delivery.
+[progress](progress.md) and [PR #15](https://github.com/Ljrr3045/rielia/pull/15).
+Full check, audit, handoff and the complete PG suite passed locally; the full
+runtime smoke passed again after the final production-source change. PR review
+evidence remains to be recorded before delivery.
 Initial harness tmpfs/random-port restart and variable-shadowing failures were
 corrected before the passing persistence run. Real provider/HTTPS/staging,
 screen-reader/touch/browser presentation and real-person acceptance are unverified
