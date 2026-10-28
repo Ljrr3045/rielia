@@ -14,9 +14,10 @@ export interface ProjectTaskState {
   outcome: 'success' | 'invalid' | 'forbidden' | 'conflict' | 'error' | null;
   retryTarget: ProjectTaskCommand | null; conflict: ProjectTaskResult | null; result: ProjectTaskResult | null;
   requestId: string | null;
+  pageError: { collection: 'workspaces' | 'members' | 'projects' | 'tasks'; requestId: string | null } | null;
 }
 const selectionEmpty: ProjectTaskSelection = { workspaceId: null, projectId: null, taskId: null };
-const cleared = { workspace: null, members: null, projects: null, project: null, tasks: null, task: null };
+const cleared = { workspace: null, members: null, projects: null, project: null, tasks: null, task: null, pageError: null };
 const id = (value: unknown): value is string => typeof value === 'string' && /^[A-Za-z0-9_-]{1,128}$/.test(value);
 function urlFor(s: ProjectTaskSelection, views: ProjectTaskState['views']): string {
   const path = !s.workspaceId ? '/projects' : !s.projectId ? `/projects?workspace=${encodeURIComponent(s.workspaceId)}`
@@ -114,7 +115,7 @@ export function createProjectTaskController(options: {
     if (command.workspaceId !== state.selection.workspaceId || ('projectId' in command && command.projectId !== state.selection.projectId)
       || ('taskId' in command && command.taskId !== state.selection.taskId)) { publish({ ...state, outcome: 'invalid' }); return; }
     const request = begin(); retry = { command: structuredClone(command), key };
-    publish({ ...state, pending: command.type, retryTarget: structuredClone(command), outcome: null, conflict: null, requestId: null });
+    publish({ ...state, pending: command.type, retryTarget: structuredClone(command), outcome: null, conflict: null, requestId: null, pageError: null });
     try {
       const result = await options.transport.mutate(command, key, request.signal);
       if (!current(request)) return;
@@ -139,6 +140,7 @@ export function createProjectTaskController(options: {
   async function loadMore(collection: 'workspaces' | 'members' | 'projects' | 'tasks') {
     const previous = state[collection]; if (!previous?.nextCursor || state.pending || !fresh()) return;
     const request = { generation, signal: abort.signal }; const s = { ...state.selection };
+    if (state.pageError?.collection === collection) publish({ ...state, pageError: null });
     try {
       const next = collection === 'workspaces' ? await options.workspaces.workspaces(request.signal, previous.nextCursor)
         : collection === 'members' && s.workspaceId ? await options.workspaces.members(s.workspaceId, request.signal, previous.nextCursor)
@@ -149,7 +151,11 @@ export function createProjectTaskController(options: {
       const seen = new Set<string>();
       const items = rows.filter(row => { const key = 'principalId' in row ? row.principalId : row.id; if (seen.has(key)) return false; seen.add(key); return true; });
       publish({ ...state, [collection]: { ...next, items } });
-    } catch (error) { if (current(request)) readFailure(error); }
+    } catch (error) {
+      if (!current(request) || state[collection] !== previous) return;
+      if ((error instanceof ProjectTaskFailure || error instanceof WorkspaceFailure) && [401, 403].includes(error.status)) readFailure(error);
+      else publish({ ...state, pageError: { collection, requestId: error instanceof ProjectTaskFailure ? error.requestId : null } });
+    }
   }
   async function reloadConflict() {
     const draft = state.draft; if (!draft || state.pending || !('projectId' in draft) || !fresh()) return;
@@ -191,5 +197,6 @@ export function createProjectTaskController(options: {
     discardDraft() { if (!state.pending) { retry = null; publish({ ...state, draft: null, retryTarget: null, conflict: null, outcome: null }); } },
     cancelPending() { begin(); publish({ ...state, pending: null, status: state.status === 'loading' ? 'error' : state.status, retryTarget: retry ? structuredClone(retry.command) : null }); },
     dismissOutcome() { publish({ ...state, outcome: null }); },
+    dismissPageError() { publish({ ...state, pageError: null }); },
   };
 }

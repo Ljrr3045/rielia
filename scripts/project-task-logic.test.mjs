@@ -105,6 +105,18 @@ test('archived views and paging retain server capabilities, de-duplicate pages a
   assert.deepEqual(f.controller.getState().projects.items.map(row => row.id), ['p']);
   await f.controller.setView('projects', 'archived'); assert.equal(calls.at(-1).view, 'archived'); assert.equal(f.controller.getState().views.projects, 'archived');
 });
+test('transient next-page failure preserves list/detail/success and cursor for retry; auth denial still clears private data', async () => {
+  const f = fixture({ transport: { projects: async (_w, _view, _signal, cursor) => { if (cursor) throw new ProjectTaskFailure(503, null, null, 'page-request'); return { ...page([project()]), total: 2, nextCursor: 'next' }; } } });
+  await f.controller.openLocation('?workspace=a&project=p&task=t'); f.controller.stage(draft()); await f.controller.submit(); const before = f.controller.getState();
+  await f.controller.loadMore('projects'); const after = f.controller.getState();
+  assert.equal(after.project, before.project); assert.equal(after.task, before.task); assert.equal(after.projects, before.projects); assert.equal(after.status, 'ready');
+  assert.equal(after.outcome, 'success'); assert.equal(after.result, before.result); assert.equal(after.projects.nextCursor, 'next'); assert.deepEqual(after.pageError, { collection: 'projects', requestId: 'page-request' });
+  f.transport.projects = async () => page([project('p2')]); await f.controller.loadMore('projects'); assert.equal(f.controller.getState().projects.items.length, 2); assert.equal(f.controller.getState().pageError, null);
+  for (const denial of [403, 401]) {
+    f.transport.projects = async (_w, _v, _s, cursor) => { if (cursor) throw new ProjectTaskFailure(denial); return { ...page([project()]), total: 2, nextCursor: 'next' }; };
+    await f.controller.refresh(); await f.controller.loadMore('projects'); assert.equal(f.controller.getState().project, null); assert.equal(f.controller.getState().status, denial === 401 ? 'signed-out' : 'forbidden');
+  }
+});
 test('safe Markdown AST preserves useful formatting and treats executable content as inert text', () => {
   const source = '# Heading\n\n**Strong** and *emphasis* with `code` and [safe](https://example.test/a)\n\n- first\n- second\n\n```js\n<script>evil()</script>\n```\n\n<img src=x onerror=evil()> [bad](javascript:evil) ![image](https://evil.test/image)';
   const ast = parseSafeMarkdown(source); assert.equal(ast[0].type, 'heading'); assert.equal(ast[2].type, 'list'); assert.equal(ast[3].type, 'code');
