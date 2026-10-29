@@ -309,7 +309,8 @@ visibility transitions and retained rows, admin explicit removal with automatic
 access preserved, stale access paging, visibility conflict/rebase, pending versus
 unknown outcome, cross-context return and same-key retry, archived revoke-only,
 eligible-assignee paging/historical assignee, independent auxiliary failures,
-content-pager plus policy-error coexistence/recovery, 320–1440 responsive, EN/ES,
+content-pager plus policy-error coexistence/recovery, archived-revoke conflict/
+rebase and missing-current exact-target review, 320–1440 responsive, EN/ES,
 light/dark, 44 px targets and focus trap/restoration.
 Screenshots are external to the repository; no screenshot alone is treated as
 flow proof. Physical touch, screen-reader and cross-browser certification remain

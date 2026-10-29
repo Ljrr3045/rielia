@@ -1769,7 +1769,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
         <ModalFrame
           busy={anyPending}
           eyebrow={form.kind === 'project-access'
-            ? copy.access.eyebrow
+            ? copy.common.project
             : form.kind === 'project-create' || form.kind === 'project-edit'
               ? copy.common.project
               : form.kind === 'task-edit' || form.kind === 'task-archive' || form.kind === 'task-restore'

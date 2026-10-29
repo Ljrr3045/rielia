@@ -16,6 +16,7 @@ This records repository changes. No application version has been released.
   unavailable labels. Policy and content drafts share the canonical lifecycle:
   review captures target/version, pending is distinct from unknown outcome,
   exact-target conflict review/rebase and changed-page refresh are explicit,
+  including archived-revoke recovery and missing-current exact-target review;
   access/assignee first-page failures retry independently without clearing content,
   cross-context unknown outcomes require Return before Retry, and shared guards
   prevent replacing an unresolved policy draft. ES/EN, light/dark, 44 px targets,

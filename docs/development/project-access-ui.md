@@ -160,7 +160,15 @@ repository):
   exposed **Volver al cambio pendiente**; return restored the access modal and the
   same-key retry revoked exactly once.
 - Archived: visibility/grant controls were absent, explicit revoke remained, and
-  restore returned normal controls.
+  restore returned normal controls. A two-tab stale revoke against the archived
+  project produced a 409; Review/Rebase stayed available for the allowed revoke,
+  rebase focused the confirmation and the retried revoke succeeded.
+- Missing-current conflict: a controlled 409 without `current`/`accessCurrent`
+  showed the no-blind-rebase warning with exact-target **Revisar acceso actual**
+  and explicit discard; review restored the current-vs-requested compare and
+  reviewed rebase affordance.
+- Header consistency: a workspace-visible project’s access modal used the generic
+  **Proyecto/Project** eyebrow and workspace intro, not “Private project”.
 - Assignees: historical unavailable assignee stayed selected and labelled
   “Responsable anterior”; first page was bounded and **Cargar más personas**
   produced 102 options in the QA workspace.
@@ -175,11 +183,12 @@ repository):
 - Responsive/theme: 1440/1024/768/390/375/320 px had no page/dialog horizontal
   overflow; measured interactive targets were at least 44 px; ES/EN and light/dark
   were reviewed; final Escape restored Access.
-- Final screenshots include `01`–`28` (private header, access panel, confirmations,
+- Final screenshots include `01`–`35` (private header, access panel, confirmations,
   retained/admin rights, changed page, conflict, unknown/cross-context, archive,
   create visibility, member read-only, historical assignee, paging, auxiliary
-  errors, width set, EN and dark). They support the flows above but do not alone
-  prove persistence/authorization.
+  errors, width set, EN/dark, archived-revoke conflict/rebase, missing-current
+  review and workspace-visible header). They support the flows above but do not
+  alone prove persistence/authorization.
 
 ## Limits and remaining work
 
@@ -190,8 +199,10 @@ repository):
   and measured target sizes are layout/implementation evidence, not WCAG
   certification.
 - Access, assignee and content-pager failures were browser-induced; their combined
-  content/policy recovery is recorded above. The fixture used local disposable data,
-  not a real project/user or staging environment.
+  content/policy recovery is recorded above. The missing-current 409 branch used
+  controlled browser fault injection, not a backend defect; the archived-revoke
+  conflict used a real two-tab version race. The fixture used local disposable
+  data, not a real project/user or staging environment.
 - The Next dev indicator appears in captures; it is development tooling, not product
   UI. QA state/screenshots live outside the repository and are not committed.
 - No functional test source, auth bypass, fake API/model, metrics, backend import,
