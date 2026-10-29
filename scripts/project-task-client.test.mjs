@@ -4,7 +4,7 @@ import { createProjectTaskTransport, ProjectTaskFailure } from '../apps/web/src/
 import { proxyProjectTask } from '../apps/web/src/lib/project-task-proxy.ts';
 const creator = { principalId: 'human', name: 'Human', kind: 'human', active: true };
 const project = { id: 'p', workspaceId: 'w', key: 'RIE', name: 'Project', description: '', visibility: 'workspace', version: 1, archivedAt: null, createdAt: '2026-01-01T00:00:00.000Z', updatedAt: '2026-01-01T00:00:00.000Z', creator,
-  provenance: { actorPrincipalId: 'human', executionMode: 'human', source: 'web', grantId: null }, capabilities: { canEdit: true, canArchive: true, canRestore: false }, url: '/projects?workspace=w&project=p' };
+  provenance: { actorPrincipalId: 'human', executionMode: 'human', source: 'web', grantId: null }, capabilities: { canEdit: true, canArchive: true, canRestore: false, canManageAccess: false, canChangeVisibility: false, canGrantAccess: false, canRevokeAccess: false }, url: '/projects?workspace=w&project=p' };
 const page = items => ({ items, total: items.length, nextCursor: null, capabilities: { canCreate: true } });
 const task = { ...project, id: 't', projectId: 'p', projectKey: 'RIE', key: 'RIE-1', number: 1, title: 'Title', type: 'task', priority: 'none', status: 'backlog', assigneePrincipalId: null, assignee: null, dueDate: null, projectArchivedAt: null };
 const signal = () => new AbortController().signal;
@@ -41,4 +41,34 @@ test('proxy forwards only required cookie/origin/key, no redirects or forwarding
   for (const path of ['/api/v1/workspaces/w/projects/p/export', '/api/v1/workspaces/w/projects/p/tasks/t/evil', '/api/v1/workspaces/w/projects/p/tasks/t/members']) assert.equal((await proxyProjectTask(new Request(`https://app.example.test${path}`))).status, 400);
   assert.equal((await proxyProjectTask(new Request('https://app.example.test/api/v1/workspaces/w/projects', { headers: { 'x-rielia-source': 'forged' } }))).status, 400);
   globalThis.fetch = async () => { throw new Error('Private upstream details'); }; const failed = await proxyProjectTask(new Request('https://app.example.test/api/v1/workspaces/w/projects')); assert.equal(failed.status, 503); assert.ok(!(await failed.text()).includes('Private'));
+});
+
+test('private policy transport preserves exact visibility/access body, captured version/key and scoped pages', async t => {
+  const original = globalThis.fetch; t.after(() => { globalThis.fetch = original; }); const calls = []; let value = { ...project, visibility: 'private' };
+  globalThis.fetch = async (url, init) => { calls.push({ url: String(url), init }); return Response.json(value); };
+  const api = createProjectTaskTransport();
+  await api.mutate({ type: 'create-project', workspaceId: 'w', key: 'NEW', name: 'Private', visibility: 'private' }, 'create-key', signal()); assert.equal(JSON.parse(calls.at(-1).init.body).visibility, 'private');
+  await api.mutate({ type: 'change-visibility', workspaceId: 'w', projectId: 'p', expectedVersion: 3, visibility: 'workspace' }, 'visibility-key', signal());
+  assert.ok(calls.at(-1).url.endsWith('/projects/p/visibility')); assert.deepEqual(JSON.parse(calls.at(-1).init.body), { expectedVersion: 3, visibility: 'workspace' });
+  await api.mutate({ type: 'change-access', workspaceId: 'w', projectId: 'p', principalId: 'agent', expectedVersion: 7, state: 'revoked' }, 'access-key', signal());
+  assert.ok(calls.at(-1).url.endsWith('/projects/p/access/agent')); assert.deepEqual(JSON.parse(calls.at(-1).init.body), { expectedVersion: 7, state: 'revoked' }); assert.equal(calls.at(-1).init.headers['Idempotency-Key'], 'access-key');
+  value = { ...page([{ ...creator, role: 'admin', explicitAccess: 'revoked', implicitAccess: true, effectiveAccess: true, capabilities: { canGrant: true, canRevoke: false } }]), workspaceId: 'w', projectId: 'p', projectVersion: 7 };
+  assert.equal((await api.access('w', 'p', signal(), 'human')).items[0].effectiveAccess, true); assert.ok(calls.at(-1).url.endsWith('/access?cursor=human'));
+  value = { ...value, projectId: 'foreign' }; await assert.rejects(api.access('w', 'p', signal()), e => e.status === 502);
+  value = { ...page([creator]), workspaceId: 'w', projectId: 'p' }; assert.equal((await api.assignees('w', 'p', signal())).items.length, 1);
+  value = { ...value, items: [{ ...creator, active: false }] }; await assert.rejects(api.assignees('w', 'p', signal()), e => e.status === 502);
+  const member = { ...creator, role: 'member', explicitAccess: 'active', implicitAccess: false, effectiveAccess: true, capabilities: { canGrant: false, canRevoke: true } };
+  value = { project, member }; assert.equal((await api.accessReview('w', 'p', 'human', signal())).member.principalId, 'human');
+  value = { project, member: { ...member, principalId: 'other' } }; await assert.rejects(api.accessReview('w', 'p', 'human', signal()), e => e.status === 502);
+  globalThis.fetch = async () => Response.json({ code: 'version-conflict', current: project, accessCurrent: { ...member, principalId: 'other' } }, { status: 409 });
+  await assert.rejects(api.mutate({ type: 'change-access', workspaceId: 'w', projectId: 'p', principalId: 'human', expectedVersion: 1, state: 'revoked' }, 'key', signal()), e => e.current.id === 'p' && e.accessCurrent === null);
+});
+test('privacy proxy allowlist admits only the exact new route and method combinations', async t => {
+  const original = globalThis.fetch; t.after(() => { globalThis.fetch = original; }); let calls = 0;
+  globalThis.fetch = async () => { calls++; return Response.json({}); };
+  const root = 'https://app.example.test/api/v1/workspaces/w/projects/p';
+  for (const [suffix, method] of [['/visibility', 'POST'], ['/access', 'GET'], ['/access/human', 'POST'], ['/access/human', 'GET'], ['/assignees', 'GET']]) assert.equal((await proxyProjectTask(new Request(root + suffix, { method }))).status, 200);
+  assert.equal(calls, 5);
+  for (const [suffix, method] of [['/visibility', 'GET'], ['/access', 'POST'], ['/assignees', 'POST'], ['/access/human/restore', 'POST'], ['/assignees/human', 'GET'], ['/access', 'DELETE']]) assert.equal((await proxyProjectTask(new Request(root + suffix, { method }))).status, 400);
+  assert.equal(calls, 5);
 });

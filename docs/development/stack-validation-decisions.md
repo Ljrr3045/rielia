@@ -103,7 +103,8 @@ or invented result is recorded. Resume the deferred backlog when the advanced
 slice and user scheduling are available. The single public launch and its T24/
 applicable T34 acceptance gates remain unchanged.
 
-License, final name/logo/brand, and private-project administrator visibility
-remain undecided. Stack approval does not resolve those policies or supply OAuth
-credentials. Historical pins, adapter rationale and test results in the guides
+License and final name/logo/brand remain undecided. The separate
+[2026-10-29 private-project decision](project-access.md) ratifies automatic content
+access for active human workspace owners/admins; stack approval itself did not
+resolve that policy or supply OAuth credentials. Historical pins, adapter rationale and test results in the guides
 describe delivered code until the separately reviewed migration replaces it.

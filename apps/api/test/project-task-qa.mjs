@@ -67,19 +67,29 @@ try {
     const value = `${raw}.${await makeSignature(raw, secret)}`; return { principalId: principal.id, userId: id, sessionId, cookie: `better-auth.session_token=${encodeURIComponent(value)}`,
       browserCookie: { name: 'better-auth.session_token', value: encodeURIComponent(value), domain: '127.0.0.1', path: '/', httpOnly: true, secure: false, sameSite: 'Lax' } };
   }
-  phase = 'fictional real-data fixture'; const owner = await human('QA Owner'); const member = await human('QA Collaborator'); const viewer = await human('QA Viewer'); const outsider = await human('QA Other Tenant');
+  phase = 'fictional real-data fixture'; const owner = await human('QA Owner'); const admin = await human('QA Administrator'); const unavailable = await human('QA Historical Assignee'); const member = await human('QA Collaborator'); const viewer = await human('QA Viewer'); const outsider = await human('QA Other Tenant');
   const workspaceId = await principals.bootstrapWorkspaceForHuman(owner.userId, 'QA Workspace'); const otherWorkspaceId = await principals.bootstrapWorkspaceForHuman(outsider.userId, 'Other QA Tenant');
-  const context = (await principals.webContext({ cookie: owner.cookie }, workspaceId)).context; await principals.addHumanMember(context, member.userId, 'member'); await principals.addHumanMember(context, viewer.userId, 'viewer');
+  const context = (await principals.webContext({ cookie: owner.cookie }, workspaceId)).context; await principals.addHumanMember(context, admin.userId, 'admin'); await principals.addHumanMember(context, unavailable.userId, 'member'); await principals.addHumanMember(context, member.userId, 'member'); await principals.addHumanMember(context, viewer.userId, 'viewer');
   const agentId = await principals.registerAgent(context, { name: 'QA Builder', role: 'member', custodianPrincipalId: owner.principalId });
   const project = await domain.createProject(context, workspaceId, randomUUID(), randomUUID(), { key: 'QAT', name: 'QA Persistent Project', description: 'Fictional local QA data' });
   const task = await domain.createTask(context, workspaceId, project.id, randomUUID(), randomUUID(), { title: 'QA persistent task', description: '# Safe Markdown\n\n[Documentation](https://example.test) and `<script>` as text.', assigneePrincipalId: agentId, dueDate: '2027-01-15' });
+  let privateProject = await domain.createProject(context, workspaceId, randomUUID(), randomUUID(), { key: 'QAP', name: 'QA Private Project', description: 'Workspace owners and admins automatically see this content.' });
+  const historicalTask = await domain.createTask(context, workspaceId, privateProject.id, randomUUID(), randomUUID(), { title: 'QA historical unavailable assignee', assigneePrincipalId: unavailable.principalId });
+  privateProject = await domain.changeVisibility(context, workspaceId, privateProject.id, randomUUID(), randomUUID(), { expectedVersion: privateProject.version, visibility: 'private' });
+  for (const principalId of [member.principalId, viewer.principalId, agentId]) privateProject = await domain.changeAccess(context, workspaceId, privateProject.id, principalId, randomUUID(), randomUUID(), { expectedVersion: privateProject.version, state: 'active' });
+  if (process.argv.includes('--large-members')) {
+    for (let n = 0; n < 101; n++) {
+      const person = await human(`QA Paging Member ${n + 1}`); await principals.addHumanMember(context, person.userId, 'member');
+      privateProject = await domain.changeAccess(context, workspaceId, privateProject.id, person.principalId, randomUUID(), randomUUID(), { expectedVersion: privateProject.version, state: 'active' });
+    }
+  }
   if (stopRequested) throw new Error('QA shutdown requested.');
   // Separate loopback test server; it never shares product routing or bundles.
   // Host headers cannot select redirect destinations or fixture subjects.
-  const subjects = { owner, member, viewer, outsider };
+  const subjects = { owner, admin, member, viewer, unavailable, outsider };
   fixture = createFixtureServer((req, res) => {
     res.setHeader('Cache-Control', 'no-store');
-    const match = /^\/as\/(owner|member|viewer|outsider|signed-out)$/.exec(req.url ?? '');
+    const match = /^\/as\/(owner|admin|member|viewer|unavailable|outsider|signed-out)$/.exec(req.url ?? '');
     if (req.method !== 'GET' || !match) { res.writeHead(404); res.end(); return; }
     const subject = match[1];
     res.setHeader('Set-Cookie', subject === 'signed-out' ? 'better-auth.session_token=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0'
@@ -88,7 +98,7 @@ try {
   });
   await new Promise((yes, no) => { fixture.once('error', no); fixture.listen(0, '127.0.0.1', yes); });
   const fixtureOrigin = `http://127.0.0.1:${fixture.address().port}`;
-  const fixtureURLs = Object.fromEntries(['owner', 'member', 'viewer', 'outsider', 'signed-out'].map(subject => [subject, `${fixtureOrigin}/as/${subject}`]));
+  const fixtureURLs = Object.fromEntries(['owner', 'admin', 'member', 'viewer', 'unavailable', 'outsider', 'signed-out'].map(subject => [subject, `${fixtureOrigin}/as/${subject}`]));
   const fixtureProbe = await fetch(fixtureURLs.owner, { redirect: 'manual' });
   if (fixtureProbe.status !== 303 || fixtureProbe.headers.get('location') !== `${origin}/projects` || !fixtureProbe.headers.get('set-cookie')?.includes('HttpOnly')) throw new Error('QA fixture session switching failed.');
   phase = 'Next startup/proxy'; web = startProcess('T06 QA Next', ['node_modules/next/dist/bin/next', 'dev', '--hostname', '127.0.0.1', '--port', String(webPort)], join(root, 'apps/web'), { ...process.env, API_BASE_URL: apiURL });
@@ -100,8 +110,14 @@ try {
     await delay(250);
   }
   if (!webReady) throw new Error('QA Next real proxy readiness failed.');
-  await writeFile(outputPath, JSON.stringify({ pid: process.pid, origin, apiURL, fixtureURLs, container: name, volume, workspaceId, otherWorkspaceId, projectId: project.id, taskId: task.id, agentId, owner, member, viewer, outsider,
-    projectURL: `${origin}${project.url}`, taskURL: `${origin}${task.url}` }, null, 2), { mode: 0o600 });
+  for (const [person, expectedStatus] of [[owner, 200], [admin, 200], [member, 200], [viewer, 200], [unavailable, 403], [outsider, 403]]) {
+    const response = await fetch(`${origin}/api/v1/workspaces/${workspaceId}/projects/${privateProject.id}`, { headers: { cookie: person.cookie } });
+    if (response.status !== expectedStatus) throw new Error('QA private project access probe failed.');
+  }
+  const historyResponse = await fetch(`${origin}/api/v1/workspaces/${workspaceId}/projects/${privateProject.id}/tasks/${historicalTask.id}`, { headers: { cookie: admin.cookie } });
+  if (historyResponse.status !== 200 || (await historyResponse.json()).assignee.active !== false) throw new Error('QA historical assignee probe failed.');
+  await writeFile(outputPath, JSON.stringify({ pid: process.pid, origin, apiURL, fixtureURLs, container: name, volume, workspaceId, otherWorkspaceId, projectId: project.id, taskId: task.id, agentId, owner, admin, member, viewer, unavailable, outsider, privateProjectId: privateProject.id, historicalTaskId: historicalTask.id, largeMembers: process.argv.includes('--large-members'),
+    projectURL: `${origin}${project.url}`, taskURL: `${origin}${task.url}`, privateProjectURL: `${origin}${privateProject.url}`, historicalTaskURL: `${origin}${historicalTask.url}` }, null, 2), { mode: 0o600 });
   console.log(`Real PG/Nest/Next QA ready at ${origin}; private session/state file: ${outputPath}. SIGTERM/SIGINT cleans owned servers, container, volume and state file.`);
   if (process.argv.includes('--smoke')) resolveStop();
   await stopped;

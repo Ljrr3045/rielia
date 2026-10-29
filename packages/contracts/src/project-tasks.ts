@@ -1,4 +1,14 @@
-/** T06 bounded workspace-visible domain. No configurable workflow is implied. */
+/** Bounded project/task domain. No configurable workflow is implied. */
+import type { MembershipRole } from './index.js';
+export type ProjectVisibility = 'workspace' | 'private';
+export interface ProjectCapabilities extends DomainCapabilities { canManageAccess: boolean; canChangeVisibility: boolean; canGrantAccess: boolean; canRevokeAccess: boolean }
+export interface ProjectAccessMember extends DomainPerson {
+  role: MembershipRole; explicitAccess: 'active' | 'revoked' | null; implicitAccess: boolean; effectiveAccess: boolean;
+  capabilities: { canGrant: boolean; canRevoke: boolean };
+}
+export interface ProjectAccessPage { workspaceId: string; projectId: string; items: ProjectAccessMember[]; total: number; nextCursor: string | null; projectVersion: number }
+export interface ProjectAccessReview { project: Project; member: ProjectAccessMember }
+export interface ProjectAssigneePage { workspaceId: string; projectId: string; items: DomainPerson[]; total: number; nextCursor: string | null }
 export const taskStatuses = ['backlog', 'todo', 'in_progress', 'done', 'canceled'] as const;
 export const taskTypes = ['task', 'bug', 'feature'] as const;
 export const taskPriorities = ['none', 'low', 'medium', 'high', 'urgent'] as const;
@@ -9,9 +19,9 @@ export interface DomainPerson { principalId: string; name: string; kind: 'human'
 export interface DomainProvenance { actorPrincipalId: string; executionMode: 'human' | 'delegated' | 'autonomous'; source: 'web' | 'mcp'; grantId: string | null }
 export interface DomainCapabilities { canEdit: boolean; canArchive: boolean; canRestore: boolean }
 export interface Project {
-  id: string; workspaceId: string; key: string; name: string; description: string; visibility: 'workspace';
+  id: string; workspaceId: string; key: string; name: string; description: string; visibility: ProjectVisibility;
   version: number; archivedAt: string | null; createdAt: string; updatedAt: string;
-  creator: DomainPerson; provenance: DomainProvenance; capabilities: DomainCapabilities; url: string;
+  creator: DomainPerson; provenance: DomainProvenance; capabilities: ProjectCapabilities; url: string;
 }
 export interface TaskFields { title: string; description: string; type: TaskType; priority: TaskPriority; status: TaskStatus; assigneePrincipalId: string | null; dueDate: string | null }
 export interface Task extends TaskFields {
@@ -20,15 +30,19 @@ export interface Task extends TaskFields {
   creator: DomainPerson; assignee: DomainPerson | null; provenance: DomainProvenance; capabilities: DomainCapabilities; url: string;
 }
 export type ProjectTaskCommand =
-  | { type: 'create-project'; workspaceId: string; name: string; key: string; description?: string }
+  | { type: 'create-project'; workspaceId: string; name: string; key: string; description?: string; visibility?: ProjectVisibility }
   | { type: 'edit-project'; workspaceId: string; projectId: string; expectedVersion: number; name: string; description: string }
   | { type: 'archive-project' | 'restore-project'; workspaceId: string; projectId: string; expectedVersion: number }
   | { type: 'create-task'; workspaceId: string; projectId: string; fields: Pick<TaskFields, 'title'> & Partial<Omit<TaskFields, 'title'>> }
   | { type: 'edit-task'; workspaceId: string; projectId: string; taskId: string; expectedVersion: number; fields: Partial<TaskFields> }
   | { type: 'archive-task' | 'restore-task'; workspaceId: string; projectId: string; taskId: string; expectedVersion: number };
+export type ProjectPolicyCommand =
+  | { type: 'change-visibility'; workspaceId: string; projectId: string; expectedVersion: number; visibility: ProjectVisibility }
+  | { type: 'change-access'; workspaceId: string; projectId: string; expectedVersion: number; principalId: string; state: 'active' | 'revoked' };
+export type ProjectCommand = ProjectTaskCommand | ProjectPolicyCommand;
 export type ProjectTaskResult = Project | Task;
 export type ArchiveView = 'active' | 'archived';
-export interface DomainPage<T> { items: T[]; total: number; nextCursor: string | null; capabilities: { canCreate: boolean } }
+export interface DomainPage<T> { items: T[]; total: number; nextCursor: string | null; capabilities: { canCreate: boolean; canCreatePrivate?: boolean } }
 export interface DomainConflict { code: 'version-conflict' | 'archived'; message: string; current: ProjectTaskResult }
 export function projectURL(workspaceId: string, projectId: string): string {
   return `/projects?workspace=${encodeURIComponent(workspaceId)}&project=${encodeURIComponent(projectId)}`;
@@ -52,7 +66,15 @@ function common(value: Record<string, unknown>) {
     && record(c) && ['canEdit', 'canArchive', 'canRestore'].every(k => typeof c[k] === 'boolean');
 }
 export function isProject(value: unknown): value is Project {
-  return record(value) && common(value) && str(value['name']) && str(value['description']) && str(value['key']) && value['visibility'] === 'workspace';
+  const capabilities = record(value) ? value['capabilities'] : null;
+  return record(value) && common(value) && str(value['name']) && str(value['description']) && str(value['key']) && str(value['visibility']) && ['workspace', 'private'].includes(value['visibility'])
+    && record(capabilities) && ['canManageAccess', 'canChangeVisibility', 'canGrantAccess', 'canRevokeAccess'].every(k => typeof capabilities[k] === 'boolean');
+}
+export function isProjectAccessMember(value: unknown): value is ProjectAccessMember {
+  return isDomainPerson(value) && record(value) && str(value['role']) && ['owner', 'admin', 'member', 'viewer'].includes(value['role'])
+    && (value['explicitAccess'] === null || (str(value['explicitAccess']) && ['active', 'revoked'].includes(value['explicitAccess'])))
+    && typeof value['implicitAccess'] === 'boolean' && typeof value['effectiveAccess'] === 'boolean'
+    && record(value['capabilities']) && typeof value['capabilities']['canGrant'] === 'boolean' && typeof value['capabilities']['canRevoke'] === 'boolean';
 }
 export function isTask(value: unknown): value is Task {
   return record(value) && common(value) && str(value['projectId']) && str(value['projectKey']) && positive(value['number']) && str(value['key'])

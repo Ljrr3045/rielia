@@ -3,8 +3,10 @@ export async function proxyProjectTask(request: Request): Promise<Response> {
   const fail = (status: number) => Response.json({ message: 'Project/task request unavailable.' }, { status, headers: { 'Cache-Control': 'no-store' } });
   try {
     const incoming = new URL(request.url); const id = '[A-Za-z0-9_-]{1,128}';
-    if (!new RegExp(`^/api/v1/workspaces/${id}/projects(?:/${id}(?:/(?:archive|restore|tasks(?:/${id}(?:/(?:archive|restore))?)?))?)?$`).test(incoming.pathname)
-      || !['GET', 'POST'].includes(request.method)) return fail(400);
+    const root = `/api/v1/workspaces/${id}/projects`;
+    const read = new RegExp(`^${root}(?:/${id}(?:/(?:access(?:/${id})?|assignees|tasks(?:/${id})?))?)?$`);
+    const write = new RegExp(`^${root}(?:/${id}(?:/(?:archive|restore|visibility|access/${id}|tasks(?:/${id}(?:/(?:archive|restore))?)?))?)?$`);
+    if (!(request.method === 'GET' ? read : request.method === 'POST' ? write : null)?.test(incoming.pathname)) return fail(400);
     const forbidden = new Set(['actorprincipalid', 'authorprincipalid', 'subjectprincipalid', 'principalid', 'principalkind', 'executionmode', 'mode', 'source', 'grantid', 'connectionid']);
     if ([...request.headers.keys()].some(key => forbidden.has(key.replace(/^x-(?:rielia-)?/, '').replaceAll('-', '')))) return fail(400);
     if (request.method === 'GET' && (request.headers.has('transfer-encoding') || (request.headers.has('content-length') && request.headers.get('content-length') !== '0'))) return fail(400);
