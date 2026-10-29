@@ -34,7 +34,7 @@ implementation, without completing tickets or weakening automated checks/launch 
 | Base | `origin/dev` at merged [PR #17](https://github.com/Ljrr3045/rielia/pull/17), `c72831c1be4ca2332a6162adc2af85d529b441b8`; coordinator verified logic worktree removed after clean settlement |
 | Branch | `feat/t07-project-access-ui`, one English non-draft presentation/docs PR to `dev` |
 | Worktree | Isolated `feat-t07-project-access-ui`; presentation owner OpenCode Go `opencode-go/deepseek-v4.1-flash` variant `max` (verified effective session); no helpers; logic/tests remain Sol-owned |
-| Current PR | Presentation/docs PR pending creation from this branch; final URL/head, checks and review state live in GitHub and the external delivery report |
+| Current PR | [#18](https://github.com/Ljrr3045/rielia/pull/18), English non-draft presentation/docs PR to `dev`; exact final head, CI and coordinator-triggered Kody state live in GitHub and the external delivery report |
 | T07.0 logic PR | [#17](https://github.com/Ljrr3045/rielia/pull/17) merged 2026-10-29T16:51:39Z as `c72831c1be4ca2332a6162adc2af85d529b441b8`; final reviewed head `bf9e6fcf`, CI SUCCESS and Kody approval `5701623155`; coordinator verified clean settlement, preserved the external logic report and removed its worktree |
 | T06.1 presentation PR | [#16](https://github.com/Ljrr3045/rielia/pull/16) merged as `545473c3d381a7a532e8f5b9ad77f30d6b5a70bc`; prior final review/CI evidence remains in GitHub and its external delivery report; both T06 worktrees removed |
 | T06.0 logic PR | [#15](https://github.com/Ljrr3045/rielia/pull/15) merged 2026-10-28T22:51:16Z as `e23d2e495a2e4c3dc499bcdde4ac8dd84d74fdad`; reviewed source `338fc64725aa8448cd4512c3c3952d53f394e45d`, CI 40781598293 SUCCESS, Kody review 5690694480/check 123144649000 complete with all three threads resolved. Coordinator confirms the logic worktree was removed |
@@ -320,10 +320,11 @@ bypass, fake API/model, secrets or deployment was added.
 PR #17 merged 2026-10-29T16:51:39Z as
 `c72831c1be4ca2332a6162adc2af85d529b441b8` after final head `bf9e6fcf`, CI
 SUCCESS and Kody approval `5701623155`; the coordinator verified settlement,
-preserved the external logic report and removed its worktree. The UI PR is the
-presentation/docs PR from `feat/t07-project-access-ui`; final URL/head and review
-state remain in GitHub and the external delivery report. No full T07/T35,
-invitation/guest/lead, collaboration or real-user acceptance is claimed.
+preserved the external logic report and removed its worktree. The UI PR is
+[#18](https://github.com/Ljrr3045/rielia/pull/18) from `feat/t07-project-access-ui`;
+final head and review state remain in GitHub and the external delivery report. No
+full T07/T35, invitation/guest/lead, collaboration or real-user acceptance is
+claimed.
 
 ## T06.1/B1a project and task UI
 

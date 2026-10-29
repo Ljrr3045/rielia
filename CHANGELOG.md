@@ -21,8 +21,9 @@ This records repository changes. No application version has been released.
   prevent replacing an unresolved policy draft. ES/EN, light/dark, 44 px targets,
   focus trap/restoration and 320–1440 layouts are covered by actual PG/Nest/Next
   browser QA. [UI guide, evidence and limits](docs/development/project-access-ui.md).
-  The UI PR carries this entry; T07.0 [PR #17](https://github.com/Ljrr3045/rielia/pull/17)
-  is merged as `c72831c` and its worktree was removed. Full T07/T35, invitations/
+  [PR #18](https://github.com/Ljrr3045/rielia/pull/18). The T07.0
+  [PR #17](https://github.com/Ljrr3045/rielia/pull/17) is merged as `c72831c` and
+  its worktree was removed. Full T07/T35, invitations/
   guests, collaboration and real-user acceptance remain open.
 
 - T07.0/B1b private-project and explicit human/Agent access logic, under the

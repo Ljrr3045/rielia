@@ -211,7 +211,8 @@ repository):
 
 ## PR evidence
 
-- UI PR: presentation/docs PR opened from `feat/t07-project-access-ui` against
-  `dev`, based on merged logic `c72831c`. Final URL/head, checks and review state
-  are recorded in the external delivery report and GitHub; this document is not
-  updated merely to append transient review state.
+- UI PR: [#18](https://github.com/Ljrr3045/rielia/pull/18), presentation/docs PR
+  opened from `feat/t07-project-access-ui` against `dev`, based on merged logic
+  `c72831c`. Final head/checks/review state are recorded in the external delivery
+  report and GitHub; this document is not updated merely to append transient
+  review state.
