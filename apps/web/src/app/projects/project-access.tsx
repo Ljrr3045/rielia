@@ -397,7 +397,7 @@ export function ProjectAccessPanel({
             tone="warning"
           />
         )}
-        {access !== null && access.nextCursor !== null && (
+        {access !== null && access.nextCursor !== null && accessError?.reason !== 'changed' && (
           <button className={styles.loadMoreButton} disabled={controlsDisabled} onClick={onLoadMore} type="button">
             {copy.access.loadMorePeople[lang]}
           </button>

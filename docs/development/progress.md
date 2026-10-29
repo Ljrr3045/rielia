@@ -313,10 +313,11 @@ content-pager plus policy-error coexistence/recovery, archived-revoke conflict/
 rebase and missing-current exact-target review, 320–1440 responsive, EN/ES,
 light/dark, 44 px targets and focus trap/restoration.
 Screenshots are external to the repository; no screenshot alone is treated as
-flow proof. Physical touch, screen-reader and cross-browser certification remain
-unavailable; content-pager-plus-policy coexistence is controller-tested but was
-not induced with a >100-task browser fixture. No functional test source, auth
-bypass, fake API/model, secrets or deployment was added.
+flow proof. Kody inline 4415985054 was valid and fixed: a changed-version access
+page now hides stale Load more and keeps full Refresh over the loaded rows
+(`36`/`37`). Physical touch, screen-reader and cross-browser certification remain
+unavailable. No functional test source, auth bypass, fake API/model, secrets or
+deployment was added.
 
 PR #17 merged 2026-10-29T16:51:39Z as
 `c72831c1be4ca2332a6162adc2af85d529b441b8` after final head `bf9e6fcf`, CI

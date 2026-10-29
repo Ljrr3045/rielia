@@ -150,8 +150,10 @@ repository):
 - Admin explicit removal: the row kept automatic administrator access after its
   explicit row was revoked; success said “Permiso explícito revocado” and explained
   that automatic access remained.
-- Access paging: stale second-page fetch after another tab changed visibility kept
-  the loaded rows and exposed **Actualizar lista**; refresh recovered the page.
+- Access paging: a stale second-page fetch after another tab changed visibility kept
+  the loaded rows, hid the stale Load-more control, and exposed **Actualizar
+  lista**; refresh recovered the page and a subsequent next page loaded normally
+  (`36`/`37`).
 - Conflict: a staged visibility change submitted after another admin changed the
   version produced the side-by-side conflict; explicit rebase focused the
   confirmation and the reviewed retry succeeded.
@@ -183,12 +185,11 @@ repository):
 - Responsive/theme: 1440/1024/768/390/375/320 px had no page/dialog horizontal
   overflow; measured interactive targets were at least 44 px; ES/EN and light/dark
   were reviewed; final Escape restored Access.
-- Final screenshots include `01`–`35` (private header, access panel, confirmations,
-  retained/admin rights, changed page, conflict, unknown/cross-context, archive,
-  create visibility, member read-only, historical assignee, paging, auxiliary
-  errors, width set, EN/dark, archived-revoke conflict/rebase, missing-current
-  review and workspace-visible header). They support the flows above but do not
-  alone prove persistence/authorization.
+- Final screenshots include `01`–`37` (private header, access panel, confirmations,
+  retained/admin rights, changed page/refresh, conflict, unknown/cross-context,
+  archive, create visibility, member read-only, historical assignee, paging,
+  auxiliary errors, width set, EN/dark, archived-revoke conflict/rebase,
+  missing-current review, workspace-visible header and changed-page no-load-more).
 
 ## Limits and remaining work
 
@@ -219,6 +220,22 @@ repository):
   external logic delivery report and removed `feat-t07-project-access-logic`
   through Orca. Delegated decisions, contracts and limits remain in
   [project-access.md](project-access.md).
+
+## PR #18 review findings and dispositions
+
+- [Inline 4415985054](https://github.com/Ljrr3045/rielia/pull/18#discussion_r4415985054):
+  the access panel kept rendering **Load more** with the preserved stale
+  `nextCursor` while `policyPageError.reason === 'changed'`, so activating it
+  re-requested the rejected cursor and repeated the failure. The button is now
+  suppressed for the changed-version state while the loaded rows, changed warning
+  and full **Actualizar lista** remain. A focused real PG/Nest/Next browser run
+  induced the stale second page (another tab changed visibility), asserted no
+  Load-more button beside the full Refresh, refreshed, then loaded the next page
+  successfully; output `CHANGED LOADMORE PASS`, screenshots
+  `36-changed-page-no-loadmore-1440.png` and `37-changed-page-refreshed-1440.png`.
+  Focused typecheck, lint, production build and document checks pass for this
+  presentation-only fix; the changed head needs a fresh coordinator-triggered Kody
+  review because a prior-head review does not approve it.
 
 ## PR evidence
 
