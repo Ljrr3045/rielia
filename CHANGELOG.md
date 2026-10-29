@@ -20,6 +20,19 @@ This records repository changes. No application version has been released.
   No JSX/CSS, private policy, full P05/P14/T06, MCP credentials/transport,
   dispatcher/business worker, real provider/staging or deployment is included.
 
+- T06.1/B1a project and task presentation: `/projects` workspace-visible project
+  rail/create/settings/archive/restore, compact task list with title-only
+  project-scoped capture, URL-addressable task detail (desktop panel, tablet
+  overlay, full mobile), task edit/status/type/priority/date/assignee, immutable
+  creator/provenance with textual Agent labeling, archived views and active/
+  archived task behavior. Presentation uses only the T06 production client/hook
+  and safe Markdown AST, with staged drafts, same-tab session/context recovery,
+  pending/success/conflict/unknown-outcome retry, transient pager recovery,
+  ES-default/EN, light/dark, focus management and responsive 320–1920 layouts.
+  [Scope, evidence and limits](docs/development/project-task-ui.md). No private
+  projects, sprints/board, comments/checklist/history, credentials/MCP,
+  deployment, real-user/provider acceptance or full T06/P05 is claimed.
+
 - T05.1/B1 workspace and membership presentation: `/workspaces` flow for
   authorized selection/creation, compact human/Agent member rows with owner
   protection, admin invitations/revocation, explicit fragment acceptance, versioned
