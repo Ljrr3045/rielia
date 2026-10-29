@@ -1,0 +1,25 @@
+apps/web/src/app/projects/project-access.tsx
+  s_de9be2a81122d7::t_8505d8c963a89a 400
+docs/development/project-access-ui.md
+  s_de9be2a81122d7::t_d4e3c8c67a7810 188-192
+  s_de9be2a81122d7::t_88863bcf275af0 224-239
+  s_de9be2a81122d7::t_52a5bc12097c63 153-156
+docs/development/progress.md
+  s_de9be2a81122d7::t_c37e82702f8a04 316-320
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8d43fdc6a827144fe25ee4f2e41276c4e65179f0",
+  "prompts": {},
+  "sessions": {
+    "s_de9be2a81122d7": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e77ac95eeffeY5PakRKI0li3ts",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
