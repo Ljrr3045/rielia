@@ -157,6 +157,10 @@ dictionary for independent recovery. `dismissPageError` clears shared feedback
 while preserving independent policy-page errors and their Retry actions. A new
 load or successful page fetch removes obsolete per-collection failures.
 Neither data retry resubmits a mutation.
+An existing content pager `pageError` takes priority in shared feedback: policy
+failure/success/retry cannot replace it. Independent policy errors remain in
+`policyPageErrors`, so both content and policy retries stay available in either
+response order.
 
 401/403 from either auxiliary request clears private data immediately and
 invalidates its generation, so a late sibling cannot repopulate it. Navigation
@@ -196,7 +200,7 @@ SIGTERM/SIGINT stops owned servers and removes the labelled container, volume an
 private state. Stop Next dev before typegen/build; generated dev types are not
 product changes. See the [T06 harness contract](project-task-flows.md).
 
-Frozen install, 27 focused controller/client/proxy checks, real PG/Nest tests
+Frozen install, 28 focused controller/client/proxy checks, real PG/Nest tests
 (24 domain, 12 principal, 12 workspace, 23 identity), six-table restart/revocation
 witness, final-migration Docker runtime smoke, enlarged QA smoke, audit and handoff
 verification pass locally. Full `pnpm check` also passes after removing the
@@ -228,9 +232,17 @@ The [auxiliary failure finding](https://github.com/Ljrr3045/rielia/pull/17#discu
 was valid. Its focused regression failed before the fix with `error` rather than
 `ready`; content now survives independently, both missing first pages have
 separate retry errors, and 401/403 clears immediately with late-sibling
-invalidation. The 27 focused checks cover confirmed success, first-page retry,
+invalidation. The 28 focused checks cover confirmed success, first-page retry,
 simultaneous failures, auth failure and stale navigation. The first ready head's
 Kody approval is prior-head evidence; changed source needs a fresh root trigger.
+
+The later [content pager finding](https://github.com/Ljrr3045/rielia/pull/17#discussion_r4415163807)
+was valid: shared policy feedback could replace the only stored content pager
+error. Its regression failed with `projectAccess` instead of `tasks`; the helper
+now retains an incumbent content error while recording the policy failure in its
+independent map. Tests exercise both response orders and both policy collections,
+then retry policy and content independently without losing loaded records or
+cursors. The earlier fix/head's approval does not cover this change.
 
 Excluded: Kanban/filters/sprints/comments/history UI, SSE, project-limited
 credentials/MCP authorization adapter, RLS/deployment, SMTP, ownership transfer,

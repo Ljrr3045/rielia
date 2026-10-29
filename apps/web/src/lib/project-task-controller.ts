@@ -65,7 +65,9 @@ export function createProjectTaskController(options: {
       conflict: null, accessConflict: null, ...((error instanceof ProjectTaskFailure || error instanceof WorkspaceFailure) && error.status === 403 ? { result: null } : {}), requestId: error instanceof ProjectTaskFailure ? error.requestId : null });
   }
   function policyFailure(collection: PolicyCollection, failure: PolicyPageFailure) {
-    publish({ ...state, policyPageErrors: { ...state.policyPageErrors, [collection]: failure }, pageError: { collection, ...failure } });
+    const incumbent = state.pageError;
+    const pageError: ProjectTaskState['pageError'] = incumbent === null || incumbent.collection === 'projectAccess' || incumbent.collection === 'assignees' ? { collection, ...failure } : incumbent;
+    publish({ ...state, policyPageErrors: { ...state.policyPageErrors, [collection]: failure }, pageError });
   }
   function withoutPolicyFailure(collection: PolicyCollection): Pick<ProjectTaskState, 'policyPageErrors' | 'pageError'> {
     const errors = { ...state.policyPageErrors }; delete errors[collection];

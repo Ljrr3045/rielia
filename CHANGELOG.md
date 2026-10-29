@@ -19,6 +19,7 @@ This records repository changes. No application version has been released.
   rollback/restart and client recovery regressions preserve prior migrations.
   Transient access/assignee-page failures retain confirmed content with independent
   first-page errors/retry, while 401/403 clears immediately and rejects late responses.
+  Content pager errors coexist with policy failures and remain retryable independently.
   [Decision, frontend contract, QA and limits](docs/development/project-access.md).
   [PR #17](https://github.com/Ljrr3045/rielia/pull/17).
   T06 [PR #16](https://github.com/Ljrr3045/rielia/pull/16) is merged as `545473c`;

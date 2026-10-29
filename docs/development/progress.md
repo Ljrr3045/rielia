@@ -87,7 +87,7 @@ clears prior full result/conflict/policy data. Access pages with changed aggrega
 versions cannot append stale rows under a new version; target access review is
 available beyond page one before explicit conflict rebase. No JSX/CSS is changed.
 
-Local frozen install, full `pnpm check`, 27 focused project client/proxy checks,
+Local frozen install, full `pnpm check`, 28 focused project client/proxy checks,
 real PG/Nest suites (24 domain, 12 principal, 12 workspace, 23 identity), six-table
 container-restart witness, final-migration Docker runtime smoke, enlarged
 101-extra-member QA smoke, audit, handoff and whitespace checks pass. Audit has

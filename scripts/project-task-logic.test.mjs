@@ -215,3 +215,17 @@ test('dismissing feedback preserves missing-page recovery and a successful follo
   f.controller.dismissPageError(); assert.equal(f.controller.getState().pageError, null); assert.ok(f.controller.getState().policyPageErrors.projectAccess); assert.equal(f.controller.getState().projectAccess, null);
   failing = false; f.controller.stage(draft()); await f.controller.submit(); assert.equal(f.controller.getState().status, 'ready'); assert.ok(f.controller.getState().projectAccess); assert.deepEqual(f.controller.getState().policyPageErrors, {}); assert.equal(f.controller.getState().pageError, null); assert.equal(f.controller.getState().outcome, 'success');
 });
+test('content and policy pager failures coexist through independent retry in either response order', async () => {
+  for (const collection of ['projectAccess', 'assignees']) for (const order of ['content-first', 'policy-first']) {
+    let failContent = true; let failPolicy = true;
+    const policyEntry = { ...creator, role: 'member', explicitAccess: 'active', implicitAccess: false, effectiveAccess: true, capabilities: { canGrant: false, canRevoke: true } };
+    const f = fixture({ transport: { project: async (w, p) => ({ ...project(p, w), capabilities: { ...project().capabilities, canManageAccess: true } }),
+      tasks: async (w, p, _view, _signal, cursor) => { if (cursor && failContent) throw new ProjectTaskFailure(503, null, null, 'content-request'); return { ...page([task(cursor ? 't2' : 't', p, w)]), total: 2, nextCursor: cursor ? null : '1' }; },
+      [collection === 'projectAccess' ? 'access' : 'assignees']: async (w, p, _signal, cursor) => { if (cursor && failPolicy) throw new ProjectTaskFailure(503, null, null, 'policy-request'); return { ...page([policyEntry]), workspaceId: w, projectId: p, projectVersion: 1, total: 2, nextCursor: cursor ? null : 'human' }; } } });
+    await f.controller.openLocation('?workspace=a&project=p&task=t');
+    for (const target of order === 'content-first' ? ['tasks', collection] : [collection, 'tasks']) await f.controller.loadMore(target);
+    let state = f.controller.getState(); assert.equal(state.pageError.collection, 'tasks'); assert.equal(state.pageError.requestId, 'content-request'); assert.equal(state.policyPageErrors[collection].requestId, 'policy-request'); assert.equal(state.task.id, 't'); assert.equal(state.tasks.nextCursor, '1');
+    failPolicy = false; await f.controller.loadMore(collection); state = f.controller.getState(); assert.equal(state.pageError.collection, 'tasks'); assert.equal(state.policyPageErrors[collection], undefined); assert.equal(state.tasks.nextCursor, '1');
+    failContent = false; await f.controller.loadMore('tasks'); state = f.controller.getState(); assert.equal(state.pageError, null); assert.deepEqual(state.tasks.items.map(row => row.id), ['t', 't2']); assert.equal(state.task.id, 't');
+  }
+});
