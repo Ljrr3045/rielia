@@ -1,0 +1,24 @@
+CHANGELOG.md
+  s_de9be2a81122d7::t_d747e2f7cb6866 24-26
+docs/development/progress.md
+  s_de9be2a81122d7::t_de2bb83c1fc326 323-327
+  s_de9be2a81122d7::t_09e1a76998b86b 37
+docs/development/project-access-ui.md
+  s_de9be2a81122d7::t_cf7a51268375ea 214-218
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b34ab44b3028281e84d52e35436ccbd9509a89be",
+  "prompts": {},
+  "sessions": {
+    "s_de9be2a81122d7": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e77ac95eeffeY5PakRKI0li3ts",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
