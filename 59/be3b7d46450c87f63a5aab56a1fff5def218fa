@@ -1,0 +1,45 @@
+CHANGELOG.md
+  s_2b9ed4ae0d2958::t_4b578d5fb0f15f 20-21
+docs/development/progress.md
+  s_2b9ed4ae0d2958::t_14395a5bf5c136 90
+apps/api/test/project-tasks.test.mjs
+  s_2b9ed4ae0d2958::t_a6cba4a8f5d443 263-267
+docs/development/project-access.md
+  s_2b9ed4ae0d2958::t_4b578d5fb0f15f 146-155,159-164,218-230,232-233
+  s_2b9ed4ae0d2958::t_14395a5bf5c136 156-158,199,231
+  s_b8020eceba4182::t_e6d706d0b49f93 234
+scripts/project-task-logic.test.mjs
+  s_2b9ed4ae0d2958::t_14395a5bf5c136 210-217
+  s_2b9ed4ae0d2958::t_4bf0b9fd1b5d7a 201-209
+  s_2b9ed4ae0d2958::t_b2721fde038a75 180-200
+  s_2b9ed4ae0d2958::t_4b578d5fb0f15f 3
+apps/web/src/lib/project-task-controller.ts
+  s_2b9ed4ae0d2958::t_c9993f9c5c6986 70,72
+  s_2b9ed4ae0d2958::t_6b2628904d5da3 63,89-93,95-97,99-101,168-169,174-180,182,185
+  s_2b9ed4ae0d2958::t_4bf0b9fd1b5d7a 7-8,15,24,67-69,71,74,98,172,183,192
+  s_2b9ed4ae0d2958::t_14395a5bf5c136 73,88,94,171
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "59be3b7d46450c87f63a5aab56a1fff5def218fa",
+  "prompts": {},
+  "sessions": {
+    "s_2b9ed4ae0d2958": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1883d-c55e-7b43-90c7-1e2797dc0e2c",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    },
+    "s_b8020eceba4182": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a17016-ab9e-7501-b8a7-f63987eb61f7",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
