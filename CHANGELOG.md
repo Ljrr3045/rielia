@@ -18,6 +18,7 @@ This records repository changes. No application version has been released.
   pages cannot promote stale entries. Additive migration, real PG isolation/race/
   rollback/restart and client recovery regressions preserve prior migrations.
   [Decision, frontend contract, QA and limits](docs/development/project-access.md).
+  [PR #17](https://github.com/Ljrr3045/rielia/pull/17).
   T06 [PR #16](https://github.com/Ljrr3045/rielia/pull/16) is merged as `545473c`;
   both T06 worktrees were removed. Presentation, full T07/T35, new credentials,
   real OAuth/staging/users, RLS and deployment remain separate.

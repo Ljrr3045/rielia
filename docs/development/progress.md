@@ -33,7 +33,7 @@ implementation, without completing tickets or weakening automated checks/launch 
 | Base | `origin/dev` at merged [PR #16](https://github.com/Ljrr3045/rielia/pull/16), `545473c3d381a7a532e8f5b9ad77f30d6b5a70bc`; coordinator confirms both T06 worktrees removed |
 | Branch | `feat/t07-project-access-logic`, one English non-draft logic/docs PR to `dev` |
 | Worktree | Isolated `feat-t07-project-access-logic`; Codex `gpt-6.1-sol` effort `xhigh` confirmed in effective turn metadata and launch receipt; no helpers or second editor |
-| Current PR | T07 logic PR preparation; final ready URL/head and exact-head CI/Kody evidence will be recorded before delivery |
+| Current PR | [#17](https://github.com/Ljrr3045/rielia/pull/17), English non-draft logic/docs PR to `dev`; local checks pass and coordinator-triggered exact-head CI/Kody review is pending |
 | T06.1 presentation PR | [#16](https://github.com/Ljrr3045/rielia/pull/16) merged as `545473c3d381a7a532e8f5b9ad77f30d6b5a70bc`; prior final review/CI evidence remains in GitHub and its external delivery report; both T06 worktrees removed |
 | T06.0 logic PR | [#15](https://github.com/Ljrr3045/rielia/pull/15) merged 2026-10-28T22:51:16Z as `e23d2e495a2e4c3dc499bcdde4ac8dd84d74fdad`; reviewed source `338fc64725aa8448cd4512c3c3952d53f394e45d`, CI 40781598293 SUCCESS, Kody review 5690694480/check 123144649000 complete with all three threads resolved. Coordinator confirms the logic worktree was removed |
 | T05.1 presentation PR | [#14](https://github.com/Ljrr3045/rielia/pull/14) merged 2026-10-28T20:57:11Z as `d27e3302a059cda6ef570c75efed42deda188a39`; reviewed source `6c0e64952129b10c25f195443f88ec7331ef1a02`, [CI 40764734574](https://github.com/Ljrr3045/rielia/actions/runs/40764734574) SUCCESS, [final Kody 6480178609](https://github.com/Ljrr3045/rielia/pull/14#issuecomment-6480178609) complete and exact-head check SUCCESS. Both findings resolved; coordinator reports completed worktrees removed |
@@ -95,7 +95,8 @@ no known vulnerabilities; handoff retains 47 files/30 assets and verifies 418
 local links. Owned test servers/databases/volumes/runtime tags and private QA state
 are removed. The guide records intermediate upsert-version, concurrent migration
 edit and generated Next dev-cache failures and their verified resolutions.
-Exact ready PR/head/CI/Kody evidence is being recorded before delivery.
+Implementation is in [PR #17](https://github.com/Ljrr3045/rielia/pull/17);
+exact ready head/CI/Kody evidence is being recorded before delivery.
 Real OAuth/HTTPS/staging/users, new MCP
 credentials, SSE, RLS/deployment and full T07/T35 acceptance remain open. The
 coordinator owns every review trigger, merge and finished-worktree cleanup.
