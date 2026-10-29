@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
+import { setImmediate } from 'node:timers';
 import { createProjectTaskController } from '../apps/web/src/lib/project-task-controller.ts';
 import { ProjectTaskFailure } from '../apps/web/src/lib/project-task-client.ts';
 import { parseSafeMarkdown, safeMarkdownLink } from '../apps/web/src/lib/safe-markdown.ts';
@@ -175,4 +176,42 @@ test('access conflict rebase requires actual target state and reload fetches tha
   await f.controller.reloadConflict(); assert.deepEqual(reviews, [{ w: 'a', p: 'p', principalId: accessCurrent.principalId }]); assert.equal(f.controller.getState().accessConflict.explicitAccess, 'revoked');
   assert.equal(f.controller.getState().conflict.version, 7); f.controller.rebaseDraft(); assert.equal(f.controller.getState().draft.expectedVersion, 7);
   includeTarget = true; await f.controller.submit(); assert.equal(f.controller.getState().accessConflict.principalId, accessCurrent.principalId); f.controller.rebaseDraft(); assert.equal(f.controller.getState().draft.expectedVersion, 5);
+});
+test('transient initial policy page failure preserves confirmed content and success, and first-page retry recovers', async () => {
+  for (const collection of ['projectAccess', 'assignees']) {
+    let failing = true;
+    const f = fixture({ transport: { project: async (w, p) => ({ ...project(p, w), capabilities: { ...project().capabilities, canManageAccess: true } }),
+      [collection === 'projectAccess' ? 'access' : 'assignees']: async (w, p) => { if (failing) throw new ProjectTaskFailure(503, null, null, 'aux-request'); return { ...page([]), workspaceId: w, projectId: p, projectVersion: 1 }; } } });
+    await f.controller.openLocation('?workspace=a&project=p&task=t');
+    assert.equal(f.controller.getState().status, 'ready'); assert.equal(f.controller.getState().task.id, 't'); assert.equal(f.controller.getState()[collection], null);
+    assert.deepEqual(f.controller.getState().pageError, { collection, requestId: 'aux-request' });
+    f.controller.stage(draft()); await f.controller.submit(); assert.equal(f.controller.getState().outcome, 'success'); assert.ok(f.controller.getState().result); assert.equal(f.controller.getState().status, 'ready');
+    failing = false; await f.controller.loadMore(collection); assert.ok(f.controller.getState()[collection]); assert.equal(f.controller.getState().pageError, null); assert.equal(f.calls.length, 1);
+  }
+});
+test('policy page auth failure clears content immediately and a late sibling cannot repopulate it', async () => {
+  for (const denial of [401, 403]) {
+    const denied = deferred(); const late = deferred();
+    const f = fixture({ transport: { project: async (w, p) => ({ ...project(p, w), capabilities: { ...project().capabilities, canManageAccess: true } }), access: () => denied.promise, assignees: () => late.promise } });
+    const loading = f.controller.refresh(); await new Promise(setImmediate); assert.equal(f.controller.getState().project.id, 'p');
+    denied.reject(new ProjectTaskFailure(denial)); await new Promise(setImmediate); assert.equal(f.controller.getState().project, null); assert.equal(f.controller.getState().status, denial === 401 ? 'signed-out' : 'forbidden');
+    late.resolve({ ...page([creator]), workspaceId: 'a', projectId: 'p' }); await loading; assert.equal(f.controller.getState().assignees, null); assert.equal(f.controller.getState().result, null);
+  }
+});
+test('simultaneous policy page failures retain independent retry errors', async () => {
+  let failAccess = true; let failAssignees = true;
+  const f = fixture({ transport: { project: async (w, p) => ({ ...project(p, w), capabilities: { ...project().capabilities, canManageAccess: true } }),
+    access: async (w, p) => { if (failAccess) throw new ProjectTaskFailure(503, null, null, 'access-request'); return { ...page([]), workspaceId: w, projectId: p, projectVersion: 1 }; },
+    assignees: async (w, p) => { if (failAssignees) throw new ProjectTaskFailure(503, null, null, 'assignees-request'); return { ...page([]), workspaceId: w, projectId: p }; } } });
+  await f.controller.refresh(); assert.equal(f.controller.getState().status, 'ready'); assert.equal(f.controller.getState().policyPageErrors.projectAccess.requestId, 'access-request'); assert.equal(f.controller.getState().policyPageErrors.assignees.requestId, 'assignees-request');
+  failAssignees = false; await f.controller.loadMore('assignees'); assert.deepEqual(f.controller.getState().policyPageErrors, { projectAccess: { requestId: 'access-request' } }); assert.equal(f.controller.getState().pageError.collection, 'projectAccess');
+  failAccess = false; await f.controller.loadMore('projectAccess'); assert.deepEqual(f.controller.getState().policyPageErrors, {}); assert.equal(f.controller.getState().pageError, null);
+});
+test('dismissing feedback preserves missing-page recovery and a successful follow-up clears obsolete errors', async () => {
+  let failing = true;
+  const f = fixture({ transport: { project: async (w, p) => ({ ...project(p, w), capabilities: { ...project().capabilities, canManageAccess: true } }),
+    access: async (w, p) => { if (failing) throw new ProjectTaskFailure(503, null, null, 'old-error'); return { ...page([]), workspaceId: w, projectId: p, projectVersion: 2 }; } } });
+  await f.controller.openLocation('?workspace=a&project=p&task=t'); assert.ok(f.controller.getState().policyPageErrors.projectAccess);
+  f.controller.dismissPageError(); assert.equal(f.controller.getState().pageError, null); assert.ok(f.controller.getState().policyPageErrors.projectAccess); assert.equal(f.controller.getState().projectAccess, null);
+  failing = false; f.controller.stage(draft()); await f.controller.submit(); assert.equal(f.controller.getState().status, 'ready'); assert.ok(f.controller.getState().projectAccess); assert.deepEqual(f.controller.getState().policyPageErrors, {}); assert.equal(f.controller.getState().pageError, null); assert.equal(f.controller.getState().outcome, 'success');
 });

@@ -143,6 +143,25 @@ the original rows/version/cursor remain and `policyPageError.reason` is `changed
 Show Refresh; retrying the old cursor does not replace reviewing the full refreshed
 collection. This prevents stale entries adopting an unseen aggregate version.
 
+Project/task content becomes ready independently of access/assignee first pages.
+Transient failures preserve that content, confirmed mutation success, selection
+and draft, with separate `policyPageErrors.projectAccess` and
+`policyPageErrors.assignees` entries containing `{requestId,reason?}`. Show Retry
+for each failed collection, including simultaneous failures. `loadMore` on a null
+policy page retries its first page and clears only its own error; it appends
+normally once a page/cursor exists. Missing page/no error means still loading
+(or unavailable by `canManageAccess` for access administration). Disable its
+assignment/access controls until the authoritative page is available. The older
+`policyPageError` remains a most-recent pager projection; use the per-collection
+dictionary for independent recovery. `dismissPageError` clears shared feedback
+while preserving independent policy-page errors and their Retry actions. A new
+load or successful page fetch removes obsolete per-collection failures.
+Neither data retry resubmits a mutation.
+
+401/403 from either auxiliary request clears private data immediately and
+invalidates its generation, so a late sibling cannot repopulate it. Navigation
+and account changes retain the existing stale-response guards.
+
 Presentation must visibly disclose that workspace owners/admins automatically
 see private content, distinguish explicit entry removal from actual loss of
 access, confirm workspace/private visibility consequences, and consume server
@@ -177,7 +196,7 @@ SIGTERM/SIGINT stops owned servers and removes the labelled container, volume an
 private state. Stop Next dev before typegen/build; generated dev types are not
 product changes. See the [T06 harness contract](project-task-flows.md).
 
-Frozen install, 23 focused controller/client/proxy checks, real PG/Nest tests
+Frozen install, 27 focused controller/client/proxy checks, real PG/Nest tests
 (24 domain, 12 principal, 12 workspace, 23 identity), six-table restart/revocation
 witness, final-migration Docker runtime smoke, enlarged QA smoke, audit and handoff
 verification pass locally. Full `pnpm check` also passes after removing the
@@ -195,6 +214,23 @@ loopback/Docker execution. Next's retained dev route declarations caused the
 documented duplicate typecheck failure, resolved by removing only generated dev
 cache before the final passing full check. None of those intermediate failures is
 reported as a passed run.
+
+## PR #17 review dispositions
+
+The [kind finding](https://github.com/Ljrr3045/rielia/pull/17#discussion_r4414843653)
+is unreachable under the existing schema: principal kind is restricted to human,
+Agent and the reserved System, and the original deferred membership consistency
+guard rejects every System membership at commit. A real-PG adversarial insertion
+confirms SQLSTATE `23514` and the access page retains its correct four-member
+count. No backend query or existing migration was changed for that finding.
+
+The [auxiliary failure finding](https://github.com/Ljrr3045/rielia/pull/17#discussion_r4414844781)
+was valid. Its focused regression failed before the fix with `error` rather than
+`ready`; content now survives independently, both missing first pages have
+separate retry errors, and 401/403 clears immediately with late-sibling
+invalidation. The 27 focused checks cover confirmed success, first-page retry,
+simultaneous failures, auth failure and stale navigation. The first ready head's
+Kody approval is prior-head evidence; changed source needs a fresh root trigger.
 
 Excluded: Kanban/filters/sprints/comments/history UI, SSE, project-limited
 credentials/MCP authorization adapter, RLS/deployment, SMTP, ownership transfer,

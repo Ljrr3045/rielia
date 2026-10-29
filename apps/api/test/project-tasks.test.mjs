@@ -260,6 +260,11 @@ test('T06 real PostgreSQL and HTTP project/task vertical', async t => {
 
   await t.test('T07 automatic human administration, explicit human/viewer access and two-tenant content matrix', async () => {
     const f = await fixture(); const admin = await join(f, 'admin'); const member = await join(f); const viewer = await join(f, 'viewer'); const foreign = await fixture();
+    // Kody kind concern: the complete principal kind CHECK permits only these
+    // two assignable kinds plus the reserved System; the deferred consistency
+    // trigger forbids System membership even through ordinary direct SQL.
+    await assert.rejects(pool.query('INSERT INTO membership("workspaceId","principalId",role) VALUES ($1,$2,$3)', [f.workspace.id, 'rielia-system', 'viewer']), e => e.code === '23514');
+    assert.equal((await ok(f.owner, `${f.p}/access`)).total, 4);
     const task = await ok(f.owner, f.tasks, { title: 'Private title', assigneePrincipalId: member.principalId });
     const privateProject = await setVisibility(f, 'private'); assert.equal(privateProject.version, 2);
     for (const user of [f.owner, admin]) {
