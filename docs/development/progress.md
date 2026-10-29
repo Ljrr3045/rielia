@@ -1,6 +1,6 @@
 # Delivery progress and decisions
 
-Updated: 2026-10-28 UTC. This is repository delivery tracking, separate from the
+Updated: 2026-10-29 UTC. This is repository delivery tracking, separate from the
 unchanged [handoff](../handoff/00-START-HERE.md). Plans describe intended outcomes,
 not completed implementation. This checkout has the T02.0 fixture, merged T02.1/
 T02.2 identity experiment, and a fictional T01/B0 task-prototype logic adapter plus
@@ -10,8 +10,9 @@ adds bounded principal/minimal workspace/membership foundations and verified
 execution. T06 adds actual task attribution; comments/history UI/export remain future work.
 T05.0 adds actual workspace/membership/invitation backend and frontend logic with
 merged T05.1 presentation. T06.0 adds bounded persisted project/task backend and
-frontend logic, and T06.1 adds its presentation; full T06/P05, private projects and
-collaboration scope remain open. It has no deployed task product, deployment or
+frontend logic, and merged T06.1 adds its presentation. T07.0 adds bounded private
+project/access logic under the ratified administrative visibility policy; its
+presentation, full T06/P05/T07 and collaboration scope remain open. It has no deployed task product, deployment or
 software release. The coordinator owns integration and status across workers.
 
 The user's [2026-10-27 stack and sequencing decision](stack-validation-decisions.md)
@@ -28,11 +29,12 @@ implementation, without completing tickets or weakening automated checks/launch 
 
 | Field | Evidence/state |
 | --- | --- |
-| Scope | T06.1/B1a workspace-visible project/task presentation for P04/P05/P14/P33/P38 and US04/US08/US12/US24–US25 (UXR01/UXR02/UXR03/UXR06; UX01/UX02/UX03/UX05/UX06/UX07/UX09/UX11) on the merged T06 contracts/client logic. No backend/contracts/hooks/proxies/tests, private projects, sprints/board, advanced filters, checklist/subtasks/comments/history, credentials/MCP, deployment or full-ticket acceptance |
-| Base | `origin/dev` at the [PR #15](https://github.com/Ljrr3045/rielia/pull/15) merge `e23d2e495a2e4c3dc499bcdde4ac8dd84d74fdad` (reviewed source `338fc64725aa8448cd4512c3c3952d53f394e45d`, CI 40781598293 SUCCESS, Kody review 5690694480/check 123144649000 complete and all three threads resolved) |
-| Branch | `feat/t06-project-task-ui`, one English non-draft presentation/docs PR to `dev`; purpose name without username |
-| Worktree | Isolated `feat-t06-project-task-ui`; presentation owner OpenCode Go `opencode-go/deepseek-v4.1-flash` variant `max` (verified session API), logic/tests remain Sol-owned; no helpers |
-| Current PR | [#16](https://github.com/Ljrr3045/rielia/pull/16), English non-draft presentation/docs-only PR to `dev` on merge `e23d2e4`. Final-base `pnpm check`, audit, handoff and whitespace checks pass; exact-head CI/Kody state lives in GitHub and the external delivery report |
+| Scope | T07.0/B1b project privacy/access backend and frontend logic for P02/P03/P04/P14/P38, US02/US03/US08/US12/US24–US25 and UX01/UX05/UX06/UX07/UX09/UX11; human-web-only privacy administration, automatic owner/admin private content access, explicit human/Agent access, current-policy filtering and recovery. No JSX/CSS, new project lead/guest/credentials, real OAuth/staging/users, RLS/deployment or full-ticket acceptance |
+| Base | `origin/dev` at merged [PR #16](https://github.com/Ljrr3045/rielia/pull/16), `545473c3d381a7a532e8f5b9ad77f30d6b5a70bc`; coordinator confirms both T06 worktrees removed |
+| Branch | `feat/t07-project-access-logic`, one English non-draft logic/docs PR to `dev` |
+| Worktree | Isolated `feat-t07-project-access-logic`; Codex `gpt-6.1-sol` effort `xhigh` confirmed in effective turn metadata and launch receipt; no helpers or second editor |
+| Current PR | [#17](https://github.com/Ljrr3045/rielia/pull/17), English non-draft logic/docs PR to `dev`; local checks pass and coordinator-triggered exact-head CI/Kody review is pending |
+| T06.1 presentation PR | [#16](https://github.com/Ljrr3045/rielia/pull/16) merged as `545473c3d381a7a532e8f5b9ad77f30d6b5a70bc`; prior final review/CI evidence remains in GitHub and its external delivery report; both T06 worktrees removed |
 | T06.0 logic PR | [#15](https://github.com/Ljrr3045/rielia/pull/15) merged 2026-10-28T22:51:16Z as `e23d2e495a2e4c3dc499bcdde4ac8dd84d74fdad`; reviewed source `338fc64725aa8448cd4512c3c3952d53f394e45d`, CI 40781598293 SUCCESS, Kody review 5690694480/check 123144649000 complete with all three threads resolved. Coordinator confirms the logic worktree was removed |
 | T05.1 presentation PR | [#14](https://github.com/Ljrr3045/rielia/pull/14) merged 2026-10-28T20:57:11Z as `d27e3302a059cda6ef570c75efed42deda188a39`; reviewed source `6c0e64952129b10c25f195443f88ec7331ef1a02`, [CI 40764734574](https://github.com/Ljrr3045/rielia/actions/runs/40764734574) SUCCESS, [final Kody 6480178609](https://github.com/Ljrr3045/rielia/pull/14#issuecomment-6480178609) complete and exact-head check SUCCESS. Both findings resolved; coordinator reports completed worktrees removed |
 | T05.0 logic PR | [#13](https://github.com/Ljrr3045/rielia/pull/13) merged 2026-10-28T20:21:29Z as `01c9cc168bb9dde62b4290c049b982d62952c9a5`; reviewed source `11f886a4cbc28ab6d2e59c91a7aae096a9fefddd`, CI 40761116202, Kody completed; withdrawn fourth recovery finding resolved; coordinator merge only |
@@ -60,6 +62,44 @@ and requested deletion of its entire workflow, including the inherited version.
 The coordinator alone posts each ready head's Kody trigger and merges after
 validation and feedback handling. T00 itself added no app/scaffold scope; its
 final Kody approval covered head `53243fbea2ae6c4f5a1ab3e47d6e1dc8cc296cec`.
+
+## T07.0 project privacy and explicit access
+
+The [project access guide](project-access.md) records the 2026-10-29 user
+ratification: active human workspace owner/admin automatically reads all scoped
+private projects. Delegated human content uses that subject's entitlement under
+its grant ceiling; autonomous Agents require their own explicit access and never
+inherit custodian/issuer rights. Only human web owner/admin can create private
+projects, change visibility or manage explicit entries. T05 invitations/roles and
+membership lifecycle remain canonical. Member/Agent workspace-visible project
+creation remains authorized; no project-lead role is introduced.
+
+Current policy filters every existing read/count/cursor/detail/write/assignment/
+conflict/replay under the transaction fence. Explicit access survives visibility
+transitions but does not revive membership. Project aggregate versions serialize
+policy edits; immutable subject-specific activity, outbox and receipt commit with
+the business effect. Archived access revocation is allowed; granting and visibility
+changes require restore. Historical attribution and assignment remain immutable.
+
+The production hook adds server access/eligible-assignee pages and policy command
+recovery while preserving existing content presentation types. Read-side 403
+clears prior full result/conflict/policy data. Access pages with changed aggregate
+versions cannot append stale rows under a new version; target access review is
+available beyond page one before explicit conflict rebase. No JSX/CSS is changed.
+
+Local frozen install, full `pnpm check`, 28 focused project client/proxy checks,
+real PG/Nest suites (24 domain, 12 principal, 12 workspace, 23 identity), six-table
+container-restart witness, final-migration Docker runtime smoke, enlarged
+101-extra-member QA smoke, audit, handoff and whitespace checks pass. Audit has
+no known vulnerabilities; handoff retains 47 files/30 assets and verifies 418
+local links. Owned test servers/databases/volumes/runtime tags and private QA state
+are removed. The guide records intermediate upsert-version, concurrent migration
+edit and generated Next dev-cache failures and their verified resolutions.
+Implementation is in [PR #17](https://github.com/Ljrr3045/rielia/pull/17);
+exact ready head/CI/Kody evidence is being recorded before delivery.
+Real OAuth/HTTPS/staging/users, new MCP
+credentials, SSE, RLS/deployment and full T07/T35 acceptance remain open. The
+coordinator owns every review trigger, merge and finished-worktree cleanup.
 
 ## T06.0 project and task logic
 
@@ -403,11 +443,10 @@ the following records preserve the original first-wave scope and acceptance:
    open. PR #9 is merged; see [runtime scope and evidence](local-runtime.md). This is a preparatory
    split of the B1 T04 ticket, without business effects, deployment or full acceptance.
 
-Current bounded product step: **T06** workspace-visible project/task backend,
-client logic and presentation, following merged T05 under the user's sequencing
-override. T06.0 logic and T06.1 presentation evidence are recorded above; the
-full ticket (all version/activity/outbox slices), private projects, collaboration
-and full T35 domain/MCP/history/export integration remain incomplete.
+Current bounded product step: **T07.0** private-project/access backend and client
+logic, following merged T06 logic/presentation under the user's sequencing
+override. Separate privacy presentation, full T06/T07/T35, collaboration and
+MCP/history/export integration remain incomplete.
 
 Convergence: T02 + T03 → T04 → **T35** → T05 → T06. The principal/authorship model
 must precede workspaces/tasks/credentials despite T35's number. T01 supplies UI
@@ -438,8 +477,8 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T03 | B0 | MCP SDK/wrapper/minimal remote profile spike | T02 for remote auth | Partial T03.0 local public liveness only; staging-dependent discovery/auth OPEN/DEFERRED; product catalog/credentials and full acceptance remain open |
 | T04 | B1 foundations | Monorepo, images, worker/queue, initial migration | T02–T03 | Partial T04.0 merged; full acceptance/dependencies stay open. Dated user override permits local implementation with listed real validation deferred |
 | T05 | B1a | Auth, workspaces, principal memberships | T04, T35 | T05.0 logic merged in PR #13; T05.1 [presentation](workspace-ui.md) merged in PR #14. Full T05/T07/T35 acceptance remains open |
-| T06 | B1a | Projects/tasks, versions, idempotency, atomic activity/outbox | T05 | Bounded T06.0 real backend/client logic merged in [PR #15](https://github.com/Ljrr3045/rielia/pull/15); T06.1 [presentation](project-task-ui.md) delivered in the UI PR against disposable real PG/Nest/Next QA. Full ticket (all version/activity/outbox slices, private projects, collaboration) remains open |
-| T07 | B1b | Invitations, revocation, roles/private projects | T06 | Authorized invitation/role subset in T05.0; private projects and full acceptance not started |
+| T06 | B1a | Projects/tasks, versions, idempotency, atomic activity/outbox | T05 | Bounded T06.0 real backend/client logic merged in [PR #15](https://github.com/Ljrr3045/rielia/pull/15); T06.1 [presentation](project-task-ui.md) delivered in the UI PR against disposable real PG/Nest/Next QA. Full ticket (all version/activity/outbox slices, collaboration) remains open |
+| T07 | B1b | Invitations, revocation, roles/private projects | T06 | Invitation/role subset remains in T05.0; bounded [T07.0 privacy/access logic](project-access.md) is in delivery. Separate presentation and full acceptance remain open |
 | T08 | B1b | List/Kanban, filters, ranking | T06 | Not started |
 | T09 | B1b | Subtasks, checklists, comments, history | T06 | Not started |
 | T10 | B1b | Search, My tasks, responsive layout, SSE | T07–T09 | Not started |
@@ -488,7 +527,7 @@ actual use/demand; no launch date or public capacity has been established.
 | Landing | Current request is design planning for later development; no final design approved | Separate authorized design/implementation scope; use document 05 |
 | Launch | One public launch, continuous updates; no access calendar/waitlist | Maintainer verifies T24 and applicable T34 checks before public access |
 | Principal/authorship | T35.0 implements bounded identity/membership/policy and server-derived context; delegated user and autonomous Agent remain distinct | [Scope and local evidence](principal-foundations.md); actual task/comment/export and verified credential adapters remain future work |
-| Private-project admin visibility | Plan proposes owner/admin can read/administer all projects; requires B0 decision | User/maintainer ratification; communicate before implementation |
+| Private-project admin visibility | Ratified 2026-10-29: active human workspace owners/admins automatically read every scoped private project; delegated content keeps grant ceilings and privacy administration remains human web only | [Decision and bounded T07 contract](project-access.md); presentation must disclose automatic administrative access |
 | Operations/public service | VPS capacity, budget/date, registration policy, public obligations not established | Maintainer records decisions and measured readiness in later tickets |
 | Automated review | Kody AI replaces OpenCode; every ready PR/head needs an explicit root `@kody start-review` request | Coordinator alone posts trigger; worker verifies reviewed head, issue comments, formal reviews, inline comments, and applicable checks |
 | Development models | User's 2026-10-25 rule: UI/UX presentation uses OpenCode Go DeepSeek V4.1 Flash 1017 (`opencode-go/deepseek-v4.1-flash`, `max`); all logic uses Codex `gpt-6.1-sol` `xhigh`, including browser auth/data/hooks/proxy/tests | [Model evidence and limits](frontend-agent.md); verify effective sessions and isolated worktrees. User resumed bounded T01/B0 development after the model-only pause checkpoint; OpenCode development does not restore its retired review workflow |

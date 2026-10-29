@@ -71,6 +71,7 @@ model Membership {
   workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
   principal Principal @relation(fields: [principalId], references: [id], onDelete: Restrict)
   issuedInvitations Invitation[]
+  projectAccesses ProjectAccess[]
   @@id([workspaceId, principalId])
   @@index([principalId])
   @@map("membership")
@@ -188,10 +189,26 @@ model Project {
   creationGrantId String?
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
+  accesses ProjectAccess[]
   @@unique([workspaceId, key])
   @@unique([workspaceId, id])
   @@unique([workspaceId, sequence])
   @@map("project")
+}
+
+// T07 access is independent of (and never restores) workspace membership.
+model ProjectAccess {
+  workspaceId String
+  projectId String
+  principalId String
+  state String @default("active")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  project Project @relation(fields: [workspaceId, projectId], references: [workspaceId, id], onDelete: Restrict)
+  membership Membership @relation(fields: [workspaceId, principalId], references: [workspaceId, principalId], onDelete: Restrict)
+  @@id([workspaceId, projectId, principalId])
+  @@index([workspaceId, principalId, state, projectId])
+  @@map("project_access")
 }
 
 model Task {
@@ -232,6 +249,7 @@ model ActivityEvent {
   action String
   entityVersion Int
   changedFields String[]
+  accessPrincipalId String?
   createdAt DateTime @default(now())
   @@unique([workspaceId, id])
   @@map("activity_event")

@@ -14,12 +14,17 @@ real-user/project acceptance and public launch remain open.
 
 ## Bounded decisions
 
+These describe the delivered T06 baseline. The subsequent
+[T07 project-access decision and implementation](project-access.md) add private
+visibility and ratified automatic human owner/admin content access, while keeping
+the task/archive/authorship/recovery rules below.
+
 - Only workspace-visible projects exist. Active workspace owner/admin/member
   can create/edit/archive/restore projects and tasks; viewer is read-only.
   The same policy applies to current human, delegated and autonomous subjects,
   narrowed by their existing operation grants. No new credential/auth adapter
-  is introduced. Private visibility is rejected; private owner/admin content
-  policy remains unresolved for T07.
+  is introduced. T06 rejected private visibility and left its policy for T07;
+  the later ratification is recorded in the linked project-access guide.
 - Project key is a conservative immutable 2–10 character uppercase ASCII value,
   starting with a letter and followed by letters/digits. It is unique within the
   workspace, including archived projects. Name and Markdown description can

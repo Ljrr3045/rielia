@@ -6,6 +6,26 @@ This records repository changes. No application version has been released.
 
 ### Added
 
+- T07.0/B1b private-project and explicit human/Agent access logic, under the
+  2026-10-29 ratification of automatic private content access for active human
+  workspace owners/admins. Current policy filters project/task reads, counts,
+  cursors, writes, conflicts, assignments and receipt replay. Human-web-only
+  privacy administration uses project versions and atomic activity/outbox/receipts;
+  archived revocation is allowed while grants/visibility remain frozen.
+  Backend-authorized eligible-assignee/access pages and exact-target access
+  conflict review extend the production hook/client/proxy without JSX/CSS.
+  The read-side 403 path clears prior full mutation results; mixed-version access
+  pages cannot promote stale entries. Additive migration, real PG isolation/race/
+  rollback/restart and client recovery regressions preserve prior migrations.
+  Transient access/assignee-page failures retain confirmed content with independent
+  first-page errors/retry, while 401/403 clears immediately and rejects late responses.
+  Content pager errors coexist with policy failures and remain retryable independently.
+  [Decision, frontend contract, QA and limits](docs/development/project-access.md).
+  [PR #17](https://github.com/Ljrr3045/rielia/pull/17).
+  T06 [PR #16](https://github.com/Ljrr3045/rielia/pull/16) is merged as `545473c`;
+  both T06 worktrees were removed. Presentation, full T07/T35, new credentials,
+  real OAuth/staging/users, RLS and deployment remain separate.
+
 - T06.0/B1a real workspace-visible project/task backend and frontend logic:
   create/read/edit/archive/restore, immutable project keys, transactional increasing
   task numbers, expected-version conflicts, current scoped human/Agent assignment,
@@ -271,7 +291,7 @@ This records repository changes. No application version has been released.
   No full T01–T35 ticket is complete.
   Real provider/staging T02 acceptance, full T03 beyond the bounded local stdio
   evidence, and full T04 remain unverified.
-- User decisions on license, final brand/name/logo, private-project admin visibility
+- User decisions on license, final brand/name/logo
   and installation OAuth configuration remain open; real-provider configuration
   is deferred. Final identity and landing design remain proposals. Stack approval
   is recorded above with the Express exclusion. T02.1's simulated OAuth/database

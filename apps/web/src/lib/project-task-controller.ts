@@ -1,23 +1,27 @@
-import { projectURL, taskURL, type ArchiveView, type DomainPage, type Page, type Project, type ProjectTaskCommand, type ProjectTaskResult, type Task, type WorkspaceMember, type WorkspaceSummary } from '@rielia/contracts';
+import { projectURL, taskURL, type ArchiveView, type DomainPage, type Page, type Project, type ProjectCommand, type ProjectTaskResult, type Task, type ProjectAccessPage, type ProjectAssigneePage, type ProjectAccessMember, type WorkspaceMember, type WorkspaceSummary } from '@rielia/contracts';
 import { parseIdentityConfiguration, parseIdentitySession, type IdentitySession, type IdentityTransport } from './identity-controller.ts';
 import { WorkspaceFailure, type WorkspaceTransport } from './workspace-client.ts';
 import { ProjectTaskFailure, type ProjectTaskTransport } from './project-task-client.ts';
 
 export interface ProjectTaskSelection { workspaceId: string | null; projectId: string | null; taskId: string | null }
+type PolicyCollection = 'projectAccess' | 'assignees';
+interface PolicyPageFailure { requestId: string | null; reason?: 'changed' }
 export interface ProjectTaskState {
   status: 'loading' | 'disabled' | 'signed-out' | 'ready' | 'empty' | 'forbidden' | 'error';
   session: IdentitySession | null;
   workspaces: Page<WorkspaceSummary> | null; workspace: WorkspaceSummary | null; members: Page<WorkspaceMember> | null;
   projects: DomainPage<Project> | null; project: Project | null; tasks: DomainPage<Task> | null; task: Task | null;
+  accessConflict: ProjectAccessMember | null; projectAccess: ProjectAccessPage | null; assignees: ProjectAssigneePage | null;
+  policyPageErrors: Partial<Record<PolicyCollection, PolicyPageFailure>>;
   selection: ProjectTaskSelection; views: { projects: ArchiveView; tasks: ArchiveView }; url: string;
-  draft: ProjectTaskCommand | null; pending: ProjectTaskCommand['type'] | null;
+  draft: ProjectCommand | null; pending: ProjectCommand['type'] | null;
   outcome: 'success' | 'invalid' | 'forbidden' | 'conflict' | 'error' | null;
-  retryTarget: ProjectTaskCommand | null; conflict: ProjectTaskResult | null; result: ProjectTaskResult | null;
+  retryTarget: ProjectCommand | null; conflict: ProjectTaskResult | null; result: ProjectTaskResult | null;
   requestId: string | null;
-  pageError: { collection: 'workspaces' | 'members' | 'projects' | 'tasks'; requestId: string | null } | null;
+  pageError: { collection: 'workspaces' | 'members' | 'projects' | 'tasks' | 'projectAccess' | 'assignees'; requestId: string | null; reason?: 'changed' } | null;
 }
 const selectionEmpty: ProjectTaskSelection = { workspaceId: null, projectId: null, taskId: null };
-const cleared = { workspace: null, members: null, projects: null, project: null, tasks: null, task: null, pageError: null };
+const cleared = { policyPageErrors: {}, accessConflict: null, projectAccess: null, assignees: null, workspace: null, members: null, projects: null, project: null, tasks: null, task: null, pageError: null };
 const id = (value: unknown): value is string => typeof value === 'string' && /^[A-Za-z0-9_-]{1,128}$/.test(value);
 function urlFor(s: ProjectTaskSelection, views: ProjectTaskState['views']): string {
   const path = !s.workspaceId ? '/projects' : !s.projectId ? `/projects?workspace=${encodeURIComponent(s.workspaceId)}`
@@ -27,9 +31,10 @@ function urlFor(s: ProjectTaskSelection, views: ProjectTaskState['views']): stri
   if (views.tasks === 'archived') url.searchParams.set('tasksView', 'archived');
   return url.pathname + url.search;
 }
-function sameTarget(a: ProjectTaskCommand, b: ProjectTaskCommand): boolean {
+function sameTarget(a: ProjectCommand, b: ProjectCommand): boolean {
   return a.type === b.type && a.workspaceId === b.workspaceId && ('projectId' in a ? a.projectId : null) === ('projectId' in b ? b.projectId : null)
-    && ('taskId' in a ? a.taskId : null) === ('taskId' in b ? b.taskId : null);
+    && ('taskId' in a ? a.taskId : null) === ('taskId' in b ? b.taskId : null)
+    && ('principalId' in a ? a.principalId : null) === ('principalId' in b ? b.principalId : null);
 }
 
 /** Memory-only drafts and keys. Public selectors choose scope; every request
@@ -40,9 +45,9 @@ export function createProjectTaskController(options: {
   transport: ProjectTaskTransport; key?: () => string; navigate?: (url: string) => void;
 }) {
   let state: ProjectTaskState = { status: 'loading', session: null, workspaces: null, ...cleared, selection: { ...selectionEmpty }, views: { projects: 'active', tasks: 'active' }, url: '/projects',
-    draft: null, pending: null, outcome: null, retryTarget: null, conflict: null, result: null, requestId: null };
+    draft: null, pending: null, outcome: null, retryTarget: null, conflict: null, accessConflict: null, result: null, requestId: null };
   let generation = 0; let abort = new AbortController(); let owner: string | null = null;
-  let retry: { command: ProjectTaskCommand; key: string } | null = null;
+  let retry: { command: ProjectCommand; key: string } | null = null;
   const listeners = new Set<() => void>();
   const publish = (next: ProjectTaskState) => { state = next; for (const listener of listeners) listener(); };
   const begin = () => { abort.abort(); abort = new AbortController(); return { generation: ++generation, signal: abort.signal }; };
@@ -55,8 +60,19 @@ export function createProjectTaskController(options: {
   function expire() { begin(); publish({ ...state, ...cleared, status: 'signed-out', session: null, workspaces: null, pending: null, retryTarget: retry ? structuredClone(retry.command) : null, result: null, conflict: null }); }
   function readFailure(error: unknown) {
     if ((error instanceof ProjectTaskFailure || error instanceof WorkspaceFailure) && error.status === 401) { expire(); return; }
+    if ((error instanceof ProjectTaskFailure || error instanceof WorkspaceFailure) && error.status === 403) begin();
     publish({ ...state, ...cleared, status: (error instanceof ProjectTaskFailure || error instanceof WorkspaceFailure) && error.status === 403 ? 'forbidden' : 'error',
-      conflict: null, requestId: error instanceof ProjectTaskFailure ? error.requestId : null });
+      conflict: null, accessConflict: null, ...((error instanceof ProjectTaskFailure || error instanceof WorkspaceFailure) && error.status === 403 ? { result: null } : {}), requestId: error instanceof ProjectTaskFailure ? error.requestId : null });
+  }
+  function policyFailure(collection: PolicyCollection, failure: PolicyPageFailure) {
+    const incumbent = state.pageError;
+    const pageError: ProjectTaskState['pageError'] = incumbent === null || incumbent.collection === 'projectAccess' || incumbent.collection === 'assignees' ? { collection, ...failure } : incumbent;
+    publish({ ...state, policyPageErrors: { ...state.policyPageErrors, [collection]: failure }, pageError });
+  }
+  function withoutPolicyFailure(collection: PolicyCollection): Pick<ProjectTaskState, 'policyPageErrors' | 'pageError'> {
+    const errors = { ...state.policyPageErrors }; delete errors[collection];
+    const other: PolicyCollection = collection === 'assignees' ? 'projectAccess' : 'assignees';
+    return { policyPageErrors: errors, pageError: state.pageError?.collection === collection ? errors[other] ? { collection: other, ...errors[other] } : null : state.pageError };
   }
   async function load(request: { generation: number; signal: AbortSignal }) {
     const s = { ...state.selection }; const views = { ...state.views };
@@ -71,7 +87,20 @@ export function createProjectTaskController(options: {
     const [project, tasks, task] = await Promise.all([options.transport.project(w, projectId, request.signal), options.transport.tasks(w, projectId, views.tasks, request.signal),
       s.taskId ? options.transport.task(w, projectId, s.taskId, request.signal) : Promise.resolve(null)]);
     if (!current(request)) return;
-    publish({ ...state, project, tasks, task, status: 'ready' });
+    publish({ ...state, project, tasks, task, projectAccess: null, assignees: null, policyPageErrors: {}, pageError: null, status: 'ready' });
+    // Eligibility/management pages are independently recoverable. Auth denial
+    // still clears content and invalidates a late sibling's completion.
+    async function auxiliary(collection: 'projectAccess' | 'assignees') {
+      try {
+        const value = collection === 'projectAccess' ? await options.transport.access(w, projectId!, request.signal) : await options.transport.assignees(w, projectId!, request.signal);
+        if (current(request)) publish({ ...state, ...withoutPolicyFailure(collection), [collection]: value });
+      } catch (error) {
+        if (!current(request)) return;
+        if ((error instanceof ProjectTaskFailure || error instanceof WorkspaceFailure) && [401, 403].includes(error.status)) readFailure(error);
+        else policyFailure(collection, { requestId: error instanceof ProjectTaskFailure ? error.requestId : null });
+      }
+    }
+    await Promise.all([project.capabilities.canManageAccess ? auxiliary('projectAccess') : Promise.resolve(), auxiliary('assignees')]);
   }
   async function refresh(): Promise<void> {
     if (state.pending) return;
@@ -84,7 +113,7 @@ export function createProjectTaskController(options: {
         publish({ ...state, status: config.enabled ? 'signed-out' : 'disabled', session: null, result: null, conflict: null }); return;
       }
       if (owner !== null && owner !== session.user.id) {
-        retry = null; publish({ ...state, selection: { ...selectionEmpty }, url: '/projects', draft: null, retryTarget: null, outcome: null, result: null, conflict: null, requestId: null });
+        retry = null; publish({ ...state, selection: { ...selectionEmpty }, url: '/projects', draft: null, retryTarget: null, outcome: null, result: null, conflict: null, accessConflict: null, requestId: null });
       }
       owner = session.user.id; publish({ ...state, session });
       const workspaces = await options.workspaces.workspaces(request.signal);
@@ -100,22 +129,22 @@ export function createProjectTaskController(options: {
     if (!fresh()) { await refresh(); return; }
     try { await load(request); } catch (error) { if (current(request)) readFailure(error); }
   }
-  function stage(command: ProjectTaskCommand) {
+  function stage(command: ProjectCommand) {
     if (state.pending) return;
     if (retry) { publish({ ...state, outcome: 'invalid' }); return; }
     const draft = structuredClone(command);
     // Same form edits retain the version captured when it was opened, even if
     // a refresh replaces the visible record in the meantime.
     if (state.draft && sameTarget(state.draft, draft) && 'expectedVersion' in state.draft && 'expectedVersion' in draft) draft.expectedVersion = state.draft.expectedVersion;
-    publish({ ...state, draft, outcome: null, conflict: null, requestId: null });
+    publish({ ...state, draft, outcome: null, conflict: null, accessConflict: null, requestId: null });
   }
-  async function execute(command: ProjectTaskCommand, key: string): Promise<void> {
+  async function execute(command: ProjectCommand, key: string): Promise<void> {
     if (state.pending) return;
     if (!fresh()) { expire(); return; }
     if (command.workspaceId !== state.selection.workspaceId || ('projectId' in command && command.projectId !== state.selection.projectId)
       || ('taskId' in command && command.taskId !== state.selection.taskId)) { publish({ ...state, outcome: 'invalid' }); return; }
     const request = begin(); retry = { command: structuredClone(command), key };
-    publish({ ...state, pending: command.type, retryTarget: structuredClone(command), outcome: null, conflict: null, requestId: null, pageError: null });
+    publish({ ...state, pending: command.type, retryTarget: structuredClone(command), outcome: null, conflict: null, accessConflict: null, requestId: null, pageError: null });
     try {
       const result = await options.transport.mutate(command, key, request.signal);
       if (!current(request)) return;
@@ -130,30 +159,39 @@ export function createProjectTaskController(options: {
       if (status >= 400 && status < 500 && status !== 401 && status !== 408 && status !== 429) retry = null;
       const outcome = status === 409 ? 'conflict' : status === 403 ? 'forbidden' : status === 400 ? 'invalid' : 'error';
       publish({ ...state, pending: null, outcome, retryTarget: retry ? structuredClone(command) : null,
-        conflict: status === 409 && error instanceof ProjectTaskFailure ? error.current : null, requestId: error instanceof ProjectTaskFailure ? error.requestId : null });
+        conflict: status === 409 && error instanceof ProjectTaskFailure ? error.current : null, accessConflict: status === 409 && error instanceof ProjectTaskFailure ? error.accessCurrent : null, requestId: error instanceof ProjectTaskFailure ? error.requestId : null });
       if (status === 401) expire();
-      else if (status === 403) publish({ ...state, ...cleared, status: 'forbidden', conflict: null, result: null });
+      else if (status === 403) publish({ ...state, ...cleared, status: 'forbidden', conflict: null, accessConflict: null, result: null });
     }
   }
   async function submit() { if (retry) { await retrySave(); return; } if (state.draft) await execute(structuredClone(state.draft), (options.key ?? (() => crypto.randomUUID()))()); }
   async function retrySave() { if (retry) await execute(structuredClone(retry.command), retry.key); }
-  async function loadMore(collection: 'workspaces' | 'members' | 'projects' | 'tasks') {
-    const previous = state[collection]; if (!previous?.nextCursor || state.pending || !fresh()) return;
+  async function loadMore(collection: 'workspaces' | 'members' | 'projects' | 'tasks' | 'projectAccess' | 'assignees') {
+    const previous = state[collection]; const initialPolicy = (collection === 'projectAccess' || collection === 'assignees') && previous === null && state.project !== null;
+    if ((!initialPolicy && !previous?.nextCursor) || state.pending || !fresh() || (collection === 'projectAccess' && !state.project?.capabilities.canManageAccess)) return;
     const request = { generation, signal: abort.signal }; const s = { ...state.selection };
-    if (state.pageError?.collection === collection) publish({ ...state, pageError: null });
+    if (collection === 'projectAccess' || collection === 'assignees') publish({ ...state, ...withoutPolicyFailure(collection) });
+    else if (state.pageError?.collection === collection) publish({ ...state, pageError: null });
     try {
-      const next = collection === 'workspaces' ? await options.workspaces.workspaces(request.signal, previous.nextCursor)
-        : collection === 'members' && s.workspaceId ? await options.workspaces.members(s.workspaceId, request.signal, previous.nextCursor)
-        : collection === 'projects' && s.workspaceId ? await options.transport.projects(s.workspaceId, state.views.projects, request.signal, previous.nextCursor)
-        : collection === 'tasks' && s.workspaceId && s.projectId ? await options.transport.tasks(s.workspaceId, s.projectId, state.views.tasks, request.signal, previous.nextCursor) : null;
+      const cursor = previous?.nextCursor ?? undefined;
+      const next = collection === 'workspaces' ? await options.workspaces.workspaces(request.signal, cursor)
+        : collection === 'members' && s.workspaceId ? await options.workspaces.members(s.workspaceId, request.signal, cursor)
+        : collection === 'projects' && s.workspaceId ? await options.transport.projects(s.workspaceId, state.views.projects, request.signal, cursor)
+        : collection === 'tasks' && s.workspaceId && s.projectId ? await options.transport.tasks(s.workspaceId, s.projectId, state.views.tasks, request.signal, cursor)
+        : collection === 'projectAccess' && s.workspaceId && s.projectId ? await options.transport.access(s.workspaceId, s.projectId, request.signal, cursor)
+        : collection === 'assignees' && s.workspaceId && s.projectId ? await options.transport.assignees(s.workspaceId, s.projectId, request.signal, cursor) : null;
       if (!current(request) || state[collection] !== previous || !next) return;
-      const rows = [...previous.items, ...next.items];
+      if (collection === 'projectAccess' && previous && 'projectVersion' in previous && 'projectVersion' in next && previous.projectVersion !== next.projectVersion) {
+        policyFailure(collection, { requestId: null, reason: 'changed' }); return;
+      }
+      const rows = [...(previous?.items ?? []), ...next.items];
       const seen = new Set<string>();
       const items = rows.filter(row => { const key = 'principalId' in row ? row.principalId : row.id; if (seen.has(key)) return false; seen.add(key); return true; });
       publish({ ...state, [collection]: { ...next, items } });
     } catch (error) {
       if (!current(request) || state[collection] !== previous) return;
       if ((error instanceof ProjectTaskFailure || error instanceof WorkspaceFailure) && [401, 403].includes(error.status)) readFailure(error);
+      else if (collection === 'projectAccess' || collection === 'assignees') policyFailure(collection, { requestId: error instanceof ProjectTaskFailure ? error.requestId : null });
       else publish({ ...state, pageError: { collection, requestId: error instanceof ProjectTaskFailure ? error.requestId : null } });
     }
   }
@@ -161,15 +199,21 @@ export function createProjectTaskController(options: {
     const draft = state.draft; if (!draft || state.pending || !('projectId' in draft) || !fresh()) return;
     const request = begin();
     try {
+      if (draft.type === 'change-access') {
+        const review = await options.transport.accessReview(draft.workspaceId, draft.projectId, draft.principalId, request.signal);
+        if (current(request) && state.draft === draft) publish({ ...state, conflict: review.project, accessConflict: review.member, outcome: 'conflict' });
+        return;
+      }
       const record = 'taskId' in draft ? await options.transport.task(draft.workspaceId, draft.projectId, draft.taskId, request.signal) : await options.transport.project(draft.workspaceId, draft.projectId, request.signal);
       if (current(request) && state.draft === draft) publish({ ...state, conflict: record, outcome: 'conflict' });
     } catch (error) { if (current(request)) readFailure(error); }
   }
   function rebaseDraft() {
     const { draft, conflict } = state;
+    if (draft?.type === 'change-access' && (!state.accessConflict || state.accessConflict.principalId !== draft.principalId)) return;
     if (!draft || !conflict || retry || state.pending || !('expectedVersion' in draft) || !('projectId' in draft) || draft.workspaceId !== conflict.workspaceId
       || ('taskId' in draft ? !('projectId' in conflict) || draft.taskId !== conflict.id || draft.projectId !== conflict.projectId : 'projectId' in conflict || draft.projectId !== conflict.id)) return;
-    publish({ ...state, draft: { ...draft, expectedVersion: conflict.version }, conflict: null, outcome: null });
+    publish({ ...state, draft: { ...draft, expectedVersion: conflict.version }, conflict: null, accessConflict: null, outcome: null });
   }
   return { getState: () => state, subscribe(listener: () => void) { listeners.add(listener); return () => { listeners.delete(listener); }; },
     refresh, stage, submit, retrySave, loadMore, reloadConflict, rebaseDraft,
@@ -194,7 +238,7 @@ export function createProjectTaskController(options: {
       const command = retry?.command ?? state.draft; if (!command) return;
       await changeSelection({ workspaceId: command.workspaceId, projectId: 'projectId' in command ? command.projectId : null, taskId: 'taskId' in command ? command.taskId : null });
     },
-    discardDraft() { if (!state.pending) { retry = null; publish({ ...state, draft: null, retryTarget: null, conflict: null, outcome: null }); } },
+    discardDraft() { if (!state.pending) { retry = null; publish({ ...state, draft: null, retryTarget: null, conflict: null, accessConflict: null, outcome: null }); } },
     cancelPending() { begin(); publish({ ...state, pending: null, status: state.status === 'loading' ? 'error' : state.status, retryTarget: retry ? structuredClone(retry.command) : null }); },
     dismissOutcome() { publish({ ...state, outcome: null }); },
     dismissPageError() { publish({ ...state, pageError: null }); },

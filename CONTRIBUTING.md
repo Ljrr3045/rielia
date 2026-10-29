@@ -47,8 +47,11 @@ product slice and user scheduling. They do not immediately block authorized loca
 implementation; do not ask for credentials/staging now or report missing checks
 as passed. Preserve source dependencies and public-launch acceptance. Applicable
 automated unit/integration/security/local Docker checks, CI and Kody remain
-required. License, brand/final landing design and private-project admin visibility
-remain undecided; an imported proposal is not an implementation instruction.
+required. License and brand/final landing design remain undecided. The
+[2026-10-29 project policy](docs/development/project-access.md) ratifies automatic
+private content access for active human workspace owner/admin, with current grant
+ceilings and human-web-only privacy administration; imported proposals alone are
+not implementation instructions.
 
 ## Branch and checkout
 
@@ -98,6 +101,12 @@ archive decisions and test-only local real PG/Nest/Next QA harness.
 also runs real domain HTTP/PG, paging/race/rollback and container-restart evidence.
 It uses a labelled disposable volume, verified before cleanup. Presentation,
 full P05/P14/T06/T35, private policy, MCP credentials and deployment remain separate.
+
+The [T07.0 project access guide](docs/development/project-access.md) records the
+ratified private-project policy, explicit human/Agent access, filtered paging and
+assignment, atomic versioned policy writes and current-authority replay. Its
+client/proxy/security regressions run in the same focused and real-PG suites;
+presentation remains a separate delivery.
 
 The [T05.0 workspace-flow guide](docs/development/workspace-flows.md) records the
 bounded real-data backend/client contracts. `pnpm test:workspaces:logic` runs its

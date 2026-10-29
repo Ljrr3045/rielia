@@ -1,6 +1,6 @@
 import { BadRequestException, ConflictException, ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { createHash, randomUUID } from 'node:crypto';
-import { projectURL, taskURL, taskStatuses, taskTypes, taskPriorities, type ArchiveView, type DomainPage, type DomainPerson, type ExecutionContextResponse, type Project, type ProjectTaskResult, type Task } from '@rielia/contracts';
+import { projectURL, taskURL, taskStatuses, taskTypes, taskPriorities, type ArchiveView, type DomainPage, type DomainPerson, type ExecutionContextResponse, type Project, type ProjectTaskResult, type Task, type ProjectAccessPage, type ProjectAssigneePage, type MembershipRole, type ProjectAccessReview } from '@rielia/contracts';
 import type { Prisma, Project as ProjectRow, Task as TaskRow } from '../generated/prisma/client.js';
 import { PrincipalService, type Transaction, type VerifiedExecution } from '../principals/principal.service.js';
 
@@ -69,8 +69,21 @@ function canonical(value: unknown): unknown {
 export class ProjectTaskService {
   constructor(@Inject(PrincipalService) private readonly principals: PrincipalService) {}
 
-  private async projectRow(tx: Transaction, workspaceId: string, projectId: string) {
-    const row = await tx.project.findUnique({ where: { workspaceId_id: { workspaceId, id: projectId } } });
+  private administrator(actor: ExecutionContextResponse) { return actor.principalKind === 'human' && ['owner', 'admin'].includes(actor.role); }
+  private canManage(actor: ExecutionContextResponse) { return actor.executionMode === 'human' && this.administrator(actor); }
+  private requireManagement(actor: ExecutionContextResponse) { if (!this.canManage(actor)) throw new ForbiddenException('Human project administration is required.'); }
+  private readable(actor: ExecutionContextResponse): Prisma.ProjectWhereInput {
+    return { workspaceId: actor.workspaceId, ...(this.administrator(actor) ? {} : { OR: [{ visibility: 'workspace' }, { accesses: { some: { principalId: actor.actorPrincipalId, state: 'active' } } }] }) };
+  }
+  private eligible(project: ProjectRow): Prisma.MembershipWhereInput {
+    return { workspaceId: project.workspaceId, state: 'active', principal: { state: 'active', kind: { in: ['human', 'agent'] } },
+      ...(project.visibility === 'workspace' ? {} : { OR: [
+        { role: { in: ['owner', 'admin'] }, principal: { kind: 'human' } },
+        { projectAccesses: { some: { projectId: project.id, state: 'active' } } },
+      ] }) };
+  }
+  private async projectRow(tx: Transaction, workspaceId: string, projectId: string, actor: ExecutionContextResponse) {
+    const row = await tx.project.findFirst({ where: { ...this.readable(actor), workspaceId, id: projectId } });
     if (!row) throw new ForbiddenException('Project/task access is denied.'); return row;
   }
   private async taskRow(tx: Transaction, workspaceId: string, projectId: string, taskId: string) {
@@ -81,22 +94,29 @@ export class ProjectTaskService {
     const rows = await tx.membership.findMany({ where: { workspaceId, principalId: { in: [...new Set(ids)] } }, include: { principal: true } });
     return new Map(rows.map(row => [row.principalId, { principalId: row.principalId, name: row.principal.displayName, kind: row.principal.kind as 'human' | 'agent', active: row.state === 'active' && row.principal.state === 'active' }]));
   }
-  private projectDto(row: ProjectRow, people: Map<string, DomainPerson>, canWrite: boolean): Project {
-    return { id: row.id, workspaceId: row.workspaceId, key: row.key, name: row.name, description: row.description, visibility: 'workspace', version: row.version,
+  private projectDto(row: ProjectRow, people: Map<string, DomainPerson>, canWrite: boolean, actor: ExecutionContextResponse): Project {
+    return { id: row.id, workspaceId: row.workspaceId, key: row.key, name: row.name, description: row.description, visibility: row.visibility as Project['visibility'], version: row.version,
       archivedAt: iso(row.archivedAt), createdAt: row.createdAt.toISOString(), updatedAt: row.updatedAt.toISOString(), creator: people.get(row.createdByPrincipalId)!, provenance: provenance(row),
-      capabilities: { canEdit: canWrite && !row.archivedAt, canArchive: canWrite && !row.archivedAt, canRestore: canWrite && !!row.archivedAt }, url: projectURL(row.workspaceId, row.id) };
+      capabilities: { canEdit: canWrite && !row.archivedAt, canArchive: canWrite && !row.archivedAt, canRestore: canWrite && !!row.archivedAt, canManageAccess: this.canManage(actor), canChangeVisibility: this.canManage(actor) && !row.archivedAt, canGrantAccess: this.canManage(actor) && !row.archivedAt, canRevokeAccess: this.canManage(actor) }, url: projectURL(row.workspaceId, row.id) };
   }
-  private taskDto(row: TaskRow, project: ProjectRow, people: Map<string, DomainPerson>, canWrite: boolean): Task {
+  private taskDto(row: TaskRow, project: ProjectRow, people: Map<string, DomainPerson>, canWrite: boolean, eligible: Set<string>): Task {
     const active = !project.archivedAt && !row.archivedAt;
     return { id: row.id, workspaceId: row.workspaceId, projectId: row.projectId, projectKey: project.key, number: row.number, key: `${project.key}-${row.number}`,
       title: row.title, description: row.description, type: row.type as Task['type'], priority: row.priority as Task['priority'], status: row.status as Task['status'],
-      assigneePrincipalId: row.assigneePrincipalId, assignee: row.assigneePrincipalId ? people.get(row.assigneePrincipalId)! : null,
+      assigneePrincipalId: row.assigneePrincipalId, assignee: row.assigneePrincipalId ? { ...people.get(row.assigneePrincipalId)!, active: eligible.has(row.assigneePrincipalId) } : null,
       dueDate: row.dueDate?.toISOString().slice(0, 10) ?? null, version: row.version, archivedAt: iso(row.archivedAt), projectArchivedAt: iso(project.archivedAt),
       createdAt: row.createdAt.toISOString(), updatedAt: row.updatedAt.toISOString(), creator: people.get(row.createdByPrincipalId)!, provenance: provenance(row),
       capabilities: { canEdit: canWrite && active, canArchive: canWrite && active, canRestore: canWrite && !project.archivedAt && !!row.archivedAt }, url: taskURL(row.workspaceId, row.projectId, row.id) };
   }
-  private async projectView(tx: Transaction, row: ProjectRow, canWrite: boolean) { return this.projectDto(row, await this.people(tx, row.workspaceId, [row.createdByPrincipalId]), canWrite); }
-  private async taskView(tx: Transaction, row: TaskRow, project: ProjectRow, canWrite: boolean) { return this.taskDto(row, project, await this.people(tx, row.workspaceId, [row.createdByPrincipalId, ...(row.assigneePrincipalId ? [row.assigneePrincipalId] : [])]), canWrite); }
+  private async projectView(tx: Transaction, row: ProjectRow, canWrite: boolean, actor: ExecutionContextResponse) { return this.projectDto(row, await this.people(tx, row.workspaceId, [row.createdByPrincipalId]), canWrite, actor); }
+  private async taskPeople(tx: Transaction, project: ProjectRow, rows: TaskRow[]) {
+    const people = await this.people(tx, project.workspaceId, rows.flatMap(row => [row.createdByPrincipalId, ...(row.assigneePrincipalId ? [row.assigneePrincipalId] : [])]));
+    const eligible = new Set((await tx.membership.findMany({ where: { ...this.eligible(project), principalId: { in: rows.flatMap(row => row.assigneePrincipalId ? [row.assigneePrincipalId] : []) } }, select: { principalId: true } })).map(row => row.principalId));
+    return { people, eligible };
+  }
+  private async taskView(tx: Transaction, row: TaskRow, project: ProjectRow, canWrite: boolean) {
+    const { people, eligible } = await this.taskPeople(tx, project, [row]); return this.taskDto(row, project, people, canWrite, eligible);
+  }
   private conflict(current: ProjectTaskResult, version: number) {
     if (version !== current.version) throw new ConflictException({ code: 'version-conflict', message: 'Record changed. Compare the current record before saving again.', current });
   }
@@ -104,56 +124,128 @@ export class ProjectTaskService {
 
   projects(context: VerifiedExecution, workspaceId: string, view: ArchiveView = 'active', cursor?: string) {
     if (cursor !== undefined && !identifier(cursor)) throw new BadRequestException('Invalid page cursor.');
-    return this.principals.domainOperation(context, workspaceId, 'read', async (tx, _actor, canWrite) => {
+    return this.principals.domainOperation(context, workspaceId, 'read', async (tx, actor, canWrite) => {
       // The global allocation key never leaves the backend. A cursor names an
       // already visible public ID and resolves only within current scope. Keep
       // archived anchors valid; records cannot be deleted or moved.
-      const anchor = cursor === undefined ? null : await tx.project.findUnique({ where: { workspaceId_id: { workspaceId, id: cursor } }, select: { sequence: true } });
+      const anchor = cursor === undefined ? null : await tx.project.findFirst({ where: { ...this.readable(actor), id: cursor }, select: { sequence: true } });
       if (cursor !== undefined && !anchor) throw new BadRequestException('Invalid page cursor.');
-      const where = { workspaceId, archivedAt: view === 'active' ? null : { not: null } };
+      const where = { ...this.readable(actor), archivedAt: view === 'active' ? null : { not: null } };
       const rows = await tx.project.findMany({ where: { ...where, ...(anchor ? { sequence: { gt: anchor.sequence } } : {}) }, orderBy: { sequence: 'asc' }, take: 101 });
       const people = await this.people(tx, workspaceId, rows.map(row => row.createdByPrincipalId));
       const result = page(rows, await tx.project.count({ where }), row => row.id, canWrite);
-      return { ...result, items: result.items.map(row => this.projectDto(row, people, canWrite)) };
+      return { ...result, capabilities: { ...result.capabilities, canCreatePrivate: this.canManage(actor) }, items: result.items.map(row => this.projectDto(row, people, canWrite, actor)) };
     });
   }
   project(context: VerifiedExecution, workspaceId: string, projectId: string) {
-    return this.principals.domainOperation(context, workspaceId, 'read', async (tx, _actor, canWrite) => this.projectView(tx, await this.projectRow(tx, workspaceId, projectId), canWrite));
+    return this.principals.domainOperation(context, workspaceId, 'read', async (tx, actor, canWrite) => this.projectView(tx, await this.projectRow(tx, workspaceId, projectId, actor), canWrite, actor));
   }
   tasks(context: VerifiedExecution, workspaceId: string, projectId: string, view: ArchiveView = 'active', cursor?: string) {
     const after = pageCursor(cursor);
-    return this.principals.domainOperation(context, workspaceId, 'read', async (tx, _actor, canWrite) => {
-      const project = await this.projectRow(tx, workspaceId, projectId);
+    return this.principals.domainOperation(context, workspaceId, 'read', async (tx, actor, canWrite) => {
+      const project = await this.projectRow(tx, workspaceId, projectId, actor);
       const where = { workspaceId, projectId, archivedAt: view === 'active' ? null : { not: null } };
       const rows = await tx.task.findMany({ where: { ...where, ...(after === undefined ? {} : { number: { gt: after } }) }, orderBy: { number: 'asc' }, take: 101 });
-      const people = await this.people(tx, workspaceId, rows.flatMap(row => [row.createdByPrincipalId, ...(row.assigneePrincipalId ? [row.assigneePrincipalId] : [])]));
-      return page(rows.map(row => this.taskDto(row, project, people, canWrite)), await tx.task.count({ where }), row => String(row.number), canWrite && !project.archivedAt);
+      const { people, eligible } = await this.taskPeople(tx, project, rows);
+      return page(rows.map(row => this.taskDto(row, project, people, canWrite, eligible)), await tx.task.count({ where }), row => String(row.number), canWrite && !project.archivedAt);
     });
   }
   task(context: VerifiedExecution, workspaceId: string, projectId: string, taskId: string) {
-    return this.principals.domainOperation(context, workspaceId, 'read', async (tx, _actor, canWrite) => this.taskView(tx, await this.taskRow(tx, workspaceId, projectId, taskId), await this.projectRow(tx, workspaceId, projectId), canWrite));
+    return this.principals.domainOperation(context, workspaceId, 'read', async (tx, actor, canWrite) => { const project = await this.projectRow(tx, workspaceId, projectId, actor); return this.taskView(tx, await this.taskRow(tx, workspaceId, projectId, taskId), project, canWrite); });
+  }
+
+  private async assertAssignable(tx: Transaction, project: ProjectRow, principalId: string) {
+    await this.principals.assertAssignable(tx, project.workspaceId, principalId);
+    if (!await tx.membership.findFirst({ where: { ...this.eligible(project), principalId }, select: { principalId: true } })) throw new ForbiddenException('Assignment is denied.');
+  }
+  private async memberAnchor(tx: Transaction, where: Prisma.MembershipWhereInput, cursor?: string) {
+    if (cursor !== undefined && (!identifier(cursor) || !await tx.membership.findFirst({ where: { ...where, principalId: cursor }, select: { principalId: true } }))) throw new BadRequestException('Invalid page cursor.');
+  }
+  private accessDto(row: Prisma.MembershipGetPayload<{ include: { principal: true; projectAccesses: true } }>, project: ProjectRow) {
+    const active = row.state === 'active' && row.principal.state === 'active';
+    const explicitAccess = row.projectAccesses[0]?.state as 'active' | 'revoked' | undefined;
+    const implicitAccess = active && row.principal.kind === 'human' && ['owner', 'admin'].includes(row.role);
+    return { principalId: row.principalId, name: row.principal.displayName, kind: row.principal.kind as 'human' | 'agent', active, role: row.role as MembershipRole,
+      explicitAccess: explicitAccess ?? null, implicitAccess, effectiveAccess: active && (project.visibility === 'workspace' || implicitAccess || explicitAccess === 'active'),
+      capabilities: { canGrant: active && !project.archivedAt && explicitAccess !== 'active', canRevoke: explicitAccess === 'active' } };
+  }
+  private async accessMember(tx: Transaction, project: ProjectRow, principalId: string) {
+    const row = await tx.membership.findUnique({ where: { workspaceId_principalId: { workspaceId: project.workspaceId, principalId } }, include: { principal: true, projectAccesses: { where: { projectId: project.id } } } });
+    if (!row) throw new ForbiddenException('Project access is denied.'); return this.accessDto(row, project);
+  }
+  accessReview(context: VerifiedExecution, workspaceId: string, projectId: string, principalId: string): Promise<ProjectAccessReview> {
+    return this.principals.domainOperation(context, workspaceId, 'read', async (tx, actor, canWrite) => {
+      this.requireManagement(actor); const project = await this.projectRow(tx, workspaceId, projectId, actor);
+      return { project: await this.projectView(tx, project, canWrite, actor), member: await this.accessMember(tx, project, principalId) };
+    });
+  }
+  access(context: VerifiedExecution, workspaceId: string, projectId: string, cursor?: string): Promise<ProjectAccessPage> {
+    return this.principals.domainOperation(context, workspaceId, 'read', async (tx, actor) => {
+      this.requireManagement(actor); const project = await this.projectRow(tx, workspaceId, projectId, actor);
+      const where = { workspaceId }; await this.memberAnchor(tx, where, cursor);
+      const rows = await tx.membership.findMany({ where: { ...where, ...(cursor ? { principalId: { gt: cursor } } : {}) }, orderBy: { principalId: 'asc' }, take: 101,
+        include: { principal: true, projectAccesses: { where: { projectId } } } });
+      return { workspaceId, projectId, total: await tx.membership.count({ where }), nextCursor: rows.length > 100 ? rows[99]!.principalId : null, projectVersion: project.version,
+        items: rows.slice(0, 100).map(row => this.accessDto(row, project)) };
+    });
+  }
+  assignees(context: VerifiedExecution, workspaceId: string, projectId: string, cursor?: string): Promise<ProjectAssigneePage> {
+    return this.principals.domainOperation(context, workspaceId, 'read', async (tx, actor) => {
+      const project = await this.projectRow(tx, workspaceId, projectId, actor); const where = this.eligible(project); await this.memberAnchor(tx, where, cursor);
+      const rows = await tx.membership.findMany({ where: { ...where, ...(cursor ? { principalId: { gt: cursor } } : {}) }, orderBy: { principalId: 'asc' }, take: 101, include: { principal: true } });
+      return { workspaceId, projectId, total: await tx.membership.count({ where }), nextCursor: rows.length > 100 ? rows[99]!.principalId : null,
+        items: rows.slice(0, 100).map(row => ({ principalId: row.principalId, name: row.principal.displayName, kind: row.principal.kind as 'human' | 'agent', active: true })) };
+    });
+  }
+  changeVisibility(context: VerifiedExecution, workspaceId: string, projectId: string, key: string, requestId: string, payload: unknown) {
+    const input = object(payload, ['expectedVersion', 'visibility'], ['expectedVersion', 'visibility']); const version = expected(input['expectedVersion']);
+    if (typeof input['visibility'] !== 'string' || !['workspace', 'private'].includes(input['visibility'])) throw new BadRequestException('Invalid project visibility.');
+    const visibility = input['visibility'] as 'workspace' | 'private';
+    return this.mutation(context, workspaceId, key, requestId, 'change-visibility', [projectId], { expectedVersion: version, visibility }, async (tx, actor) => {
+      const project = await this.projectRow(tx, workspaceId, projectId, actor); const current = await this.projectView(tx, project, true, actor); this.conflict(current, version);
+      if (project.archivedAt) this.archived(current);
+      const row = await tx.project.update({ where: { workspaceId_id: { workspaceId, id: projectId } }, data: { visibility, version: { increment: 1 } } });
+      return this.projectView(tx, row, true, actor);
+    }, true);
+  }
+  changeAccess(context: VerifiedExecution, workspaceId: string, projectId: string, principalId: string, key: string, requestId: string, payload: unknown) {
+    const input = object(payload, ['expectedVersion', 'state'], ['expectedVersion', 'state']); const version = expected(input['expectedVersion']);
+    if (!identifier(principalId) || typeof input['state'] !== 'string' || !['active', 'revoked'].includes(input['state'])) throw new BadRequestException('Invalid project access.');
+    const state = input['state'] as 'active' | 'revoked';
+    return this.mutation(context, workspaceId, key, requestId, 'change-access', [projectId, principalId], { expectedVersion: version, state }, async (tx, actor) => {
+      const project = await this.projectRow(tx, workspaceId, projectId, actor); const current = await this.projectView(tx, project, true, actor);
+      const member = await this.accessMember(tx, project, principalId);
+      if (version !== current.version) throw new ConflictException({ code: 'version-conflict', message: 'Project access changed. Review the current target access before saving again.', current, accessCurrent: member });
+      if (state === 'active' && project.archivedAt) this.archived(current);
+      if (state === 'active') await this.principals.assertAssignable(tx, workspaceId, principalId);
+      await tx.projectAccess.upsert({ where: { workspaceId_projectId_principalId: { workspaceId, projectId, principalId } }, create: { workspaceId, projectId, principalId, state }, update: { state } });
+      // The access trigger advances the aggregate version in this transaction.
+      return this.projectView(tx, await this.projectRow(tx, workspaceId, projectId, actor), true, actor);
+    }, true);
   }
 
   private mutation(context: VerifiedExecution, workspaceId: string, key: string, requestId: string, action: string, target: string[], input: unknown,
-    work: (tx: Transaction, actor: ExecutionContextResponse) => Promise<ProjectTaskResult>) {
+    work: (tx: Transaction, actor: ExecutionContextResponse) => Promise<ProjectTaskResult>, administration = false) {
     if (!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(key)) throw new BadRequestException('A UUID v4 Idempotency-Key is required.');
     const requestHash = createHash('sha256').update(JSON.stringify(canonical([action, target, input]))).digest('hex');
     return this.principals.domainOperation(context, workspaceId, 'write', async (tx, actor) => {
+      if (administration) this.requireManagement(actor);
+      if (target[0]) await this.projectRow(tx, workspaceId, target[0], actor);
       const scope = { workspaceId, actorPrincipalId: actor.actorPrincipalId, executionScope: actor.grantId ? `grant:${actor.grantId}` : 'web', key };
       const previous = await tx.projectTaskOperation.findUnique({ where: { workspaceId_actorPrincipalId_executionScope_key: scope } });
-      // Current execution and full workspace access were rechecked before any
-      // replay. This slice admits no private project policy or soft deletion.
+      // Current execution and target access are rechecked before every replay.
+      // Stored results are never authorization or a source of current content.
       if (previous) {
         if (previous.requestHash !== requestHash) throw new ConflictException('Idempotency key belongs to another request.');
         const saved = previous.response as unknown as ProjectTaskResult;
-        if ('projectId' in saved) return this.taskView(tx, await this.taskRow(tx, workspaceId, saved.projectId, saved.id), await this.projectRow(tx, workspaceId, saved.projectId), true);
-        return this.projectView(tx, await this.projectRow(tx, workspaceId, saved.id), true);
+        if ('projectId' in saved) return this.taskView(tx, await this.taskRow(tx, workspaceId, saved.projectId, saved.id), await this.projectRow(tx, workspaceId, saved.projectId, actor), true);
+        return this.projectView(tx, await this.projectRow(tx, workspaceId, saved.id, actor), true, actor);
       }
       const result = await work(tx, actor);
       const activityId = randomUUID();
       await tx.activityEvent.create({ data: { id: activityId, workspaceId, projectId: 'projectId' in result ? result.projectId : result.id, taskId: 'projectId' in result ? result.id : null,
         actorPrincipalId: actor.actorPrincipalId, executionMode: actor.executionMode, source: actor.source, grantId: actor.grantId, requestId,
-        action, entityVersion: result.version, changedFields: Object.keys(input as object).filter(field => field !== 'expectedVersion') } });
+        action, entityVersion: result.version, accessPrincipalId: action === 'change-access' ? target[1]! : null, changedFields: Object.keys(input as object).filter(field => field !== 'expectedVersion') } });
       await tx.outboxEvent.create({ data: { id: randomUUID(), workspaceId, activityId, type: 'domain.activity', payload: { activityId } } });
       await tx.projectTaskOperation.create({ data: { ...scope, requestHash, response: result as unknown as Prisma.InputJsonValue } });
       return result;
@@ -162,30 +254,30 @@ export class ProjectTaskService {
   createProject(context: VerifiedExecution, workspaceId: string, key: string, requestId: string, payload: unknown) {
     const input = object(payload, ['name', 'key', 'description', 'visibility'], ['name', 'key']);
     const name = text(input['name'], 200, true); const description = text(input['description'] ?? '', 20000);
-    if (typeof input['key'] !== 'string' || !/^[A-Z][A-Z0-9]{1,9}$/.test(input['key']) || ('visibility' in input && input['visibility'] !== 'workspace')) throw new BadRequestException('Use a 2–10 character uppercase project key and workspace visibility.');
-    const projectKey = input['key'];
-    return this.mutation(context, workspaceId, key, requestId, 'create-project', [], { name, key: projectKey, description, visibility: 'workspace' }, async (tx, actor) => {
-      const row = await tx.project.create({ data: { id: randomUUID(), workspaceId, name, key: projectKey, description, ...attribution(actor) } });
-      return this.projectView(tx, row, true);
-    });
+    if (typeof input['key'] !== 'string' || !/^[A-Z][A-Z0-9]{1,9}$/.test(input['key']) || ('visibility' in input && (typeof input['visibility'] !== 'string' || !['workspace', 'private'].includes(input['visibility'])))) throw new BadRequestException('Use a 2–10 character uppercase project key and valid visibility.');
+    const projectKey = input['key']; const visibility = input['visibility'] === 'private' ? 'private' : 'workspace';
+    return this.mutation(context, workspaceId, key, requestId, 'create-project', [], { name, key: projectKey, description, visibility }, async (tx, actor) => {
+      const row = await tx.project.create({ data: { id: randomUUID(), workspaceId, name, key: projectKey, description, visibility, ...attribution(actor) } });
+      return this.projectView(tx, row, true, actor);
+    }, visibility === 'private');
   }
   changeProject(context: VerifiedExecution, workspaceId: string, projectId: string, key: string, requestId: string, action: 'edit-project' | 'archive-project' | 'restore-project', payload: unknown) {
     const input = object(payload, action === 'edit-project' ? ['expectedVersion', 'name', 'description'] : ['expectedVersion'], ['expectedVersion']);
     const version = expected(input['expectedVersion']);
     const patch = action === 'edit-project' ? { name: text(input['name'], 200, true), description: text(input['description'], 20000) } : { archivedAt: action === 'archive-project' ? new Date() : null };
-    return this.mutation(context, workspaceId, key, requestId, action, [projectId], action === 'edit-project' ? { expectedVersion: version, ...patch } : { expectedVersion: version }, async (tx) => {
-      const row = await this.projectRow(tx, workspaceId, projectId); const current = await this.projectView(tx, row, true); this.conflict(current, version);
+    return this.mutation(context, workspaceId, key, requestId, action, [projectId], action === 'edit-project' ? { expectedVersion: version, ...patch } : { expectedVersion: version }, async (tx, actor) => {
+      const row = await this.projectRow(tx, workspaceId, projectId, actor); const current = await this.projectView(tx, row, true, actor); this.conflict(current, version);
       if (action !== 'restore-project' && row.archivedAt) this.archived(current);
       if (action === 'restore-project' && !row.archivedAt) throw new ConflictException({ code: 'archived', message: 'Project is already active.', current });
-      return this.projectView(tx, await tx.project.update({ where: { workspaceId_id: { workspaceId, id: projectId } }, data: { ...patch, version: { increment: 1 } } }), true);
+      return this.projectView(tx, await tx.project.update({ where: { workspaceId_id: { workspaceId, id: projectId } }, data: { ...patch, version: { increment: 1 } } }), true, actor);
     });
   }
   createTask(context: VerifiedExecution, workspaceId: string, projectId: string, key: string, requestId: string, payload: unknown) {
     const input = object(payload, taskProperties, ['title']); const fields = taskFields(input, true);
     return this.mutation(context, workspaceId, key, requestId, 'create-task', [projectId], fields, async (tx, actor) => {
-      const project = await this.projectRow(tx, workspaceId, projectId);
-      if (project.archivedAt) this.archived(await this.projectView(tx, project, true));
-      if (fields.assigneePrincipalId) await this.principals.assertAssignable(tx, workspaceId, fields.assigneePrincipalId);
+      const project = await this.projectRow(tx, workspaceId, projectId, actor);
+      if (project.archivedAt) this.archived(await this.projectView(tx, project, true, actor));
+      if (fields.assigneePrincipalId) await this.assertAssignable(tx, project, fields.assigneePrincipalId);
       const row = await tx.task.create({ data: { id: randomUUID(), workspaceId, projectId, number: 1, ...fields, title: fields.title!, ...attribution(actor) } });
       return this.taskView(tx, row, project, true);
     });
@@ -195,11 +287,11 @@ export class ProjectTaskService {
     const properties = Object.fromEntries(Object.entries(input).filter(([field]) => field !== 'expectedVersion'));
     const fields = action === 'edit-task' ? taskFields(properties, false) : { archivedAt: action === 'archive-task' ? new Date() : null };
     if (action === 'edit-task' && !Object.keys(fields).length) throw new BadRequestException('A task change is required.');
-    return this.mutation(context, workspaceId, key, requestId, action, [projectId, taskId], action === 'edit-task' ? { expectedVersion: version, ...fields } : { expectedVersion: version }, async tx => {
-      const project = await this.projectRow(tx, workspaceId, projectId); const row = await this.taskRow(tx, workspaceId, projectId, taskId); const current = await this.taskView(tx, row, project, true); this.conflict(current, version);
+    return this.mutation(context, workspaceId, key, requestId, action, [projectId, taskId], action === 'edit-task' ? { expectedVersion: version, ...fields } : { expectedVersion: version }, async (tx, actor) => {
+      const project = await this.projectRow(tx, workspaceId, projectId, actor); const row = await this.taskRow(tx, workspaceId, projectId, taskId); const current = await this.taskView(tx, row, project, true); this.conflict(current, version);
       if (project.archivedAt || (action !== 'restore-task' && row.archivedAt)) this.archived(current);
       if (action === 'restore-task' && !row.archivedAt) throw new ConflictException({ code: 'archived', message: 'Task is already active.', current });
-      if ('assigneePrincipalId' in fields && fields.assigneePrincipalId && fields.assigneePrincipalId !== row.assigneePrincipalId) await this.principals.assertAssignable(tx, workspaceId, fields.assigneePrincipalId);
+      if ('assigneePrincipalId' in fields && fields.assigneePrincipalId && fields.assigneePrincipalId !== row.assigneePrincipalId) await this.assertAssignable(tx, project, fields.assigneePrincipalId);
       return this.taskView(tx, await tx.task.update({ where: { workspaceId_projectId_id: { workspaceId, projectId, id: taskId } }, data: fields }), project, true);
     });
   }
