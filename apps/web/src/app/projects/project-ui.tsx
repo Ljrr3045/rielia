@@ -169,6 +169,7 @@ export function ModalFrame({
   title,
   busy = false,
   small = false,
+  wide = false,
   onClose,
   children,
 }: {
@@ -176,6 +177,7 @@ export function ModalFrame({
   title: Bilingual;
   busy?: boolean;
   small?: boolean;
+  wide?: boolean;
   onClose: () => void;
   children: ReactNode;
 }) {
@@ -197,7 +199,7 @@ export function ModalFrame({
       <div
         aria-labelledby={titleId}
         aria-modal="true"
-        className={cx(styles.modal, small && styles.modalSmall)}
+        className={cx(styles.modal, small && styles.modalSmall, wide && styles.modalWide)}
         ref={ref}
         role="dialog"
         tabIndex={-1}
@@ -384,6 +386,15 @@ export function IconTask({ size = 20 }: { size?: number }) {
     <IconBase size={size}>
       <rect x="4" y="3" width="16" height="18" rx="2" />
       <path d="M8 8h8M8 12h8M8 16h5" />
+    </IconBase>
+  );
+}
+
+export function IconUsers({ size = 20 }: { size?: number }) {
+  return (
+    <IconBase size={size}>
+      <circle cx="9" cy="8" r="3" />
+      <path d="M3.5 19a5.5 5.5 0 0 1 11 0M16 5.5a3 3 0 0 1 0 5.8M17.5 19a5 5 0 0 0-2.2-4.1" />
     </IconBase>
   );
 }

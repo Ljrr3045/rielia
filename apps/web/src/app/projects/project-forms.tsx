@@ -2,19 +2,22 @@
 
 import { useId, useState } from 'react';
 import type { FormEvent } from 'react';
+import type { ProjectVisibility } from '@rielia/contracts';
 import { Badge, FieldError, useLocale } from './project-ui';
-import { copy } from './strings';
+import { copy, visibilityName } from './strings';
 import styles from './projects.module.css';
 
 export interface ProjectFormValue {
   name: string;
   key: string;
   description: string;
+  visibility: ProjectVisibility;
 }
 
 export function ProjectForm({
   mode,
   value,
+  canCreatePrivate = false,
   pending,
   disabled = false,
   errorField = null,
@@ -25,6 +28,7 @@ export function ProjectForm({
 }: {
   mode: 'create' | 'edit';
   value: ProjectFormValue;
+  canCreatePrivate?: boolean;
   pending: boolean;
   disabled?: boolean;
   errorField?: string | null;
@@ -37,6 +41,7 @@ export function ProjectForm({
   const nameId = useId();
   const keyId = useId();
   const descriptionId = useId();
+  const visibilityId = useId();
   const nameErrorId = useId();
   const keyErrorId = useId();
   const [localError, setLocalError] = useState<'name' | 'key' | null>(null);
@@ -144,13 +149,67 @@ export function ProjectForm({
             : <p className={styles.fieldHint}>{copy.project.descriptionHint[lang]}</p>}
         </div>
 
-        <div className={styles.fieldWide}>
-          <div className={styles.fixedContext}>
-            <span>{copy.project.visibilityLabel[lang]}</span>
-            <Badge tone="neutral">{copy.project.visibilityWorkspace[lang]}</Badge>
-            <span className={styles.fieldHint}>{copy.project.visibilityHint[lang]}</span>
+        {mode === 'create' && (
+          <fieldset className={styles.choiceFieldset}>
+            <legend className={styles.fieldLabel}>
+              {copy.project.visibilityLabel[lang]} <span className={styles.requiredMark}>{copy.form.requiredMark[lang]}</span>
+            </legend>
+            {canCreatePrivate ? (
+              <>
+                <div className={styles.choiceGroup}>
+                  <label className={styles.choice} htmlFor={visibilityId + '-workspace'}>
+                    <input
+                      checked={value.visibility === 'workspace'}
+                      disabled={blocked}
+                      id={visibilityId + '-workspace'}
+                      name="project-visibility"
+                      onChange={() => onChange({ visibility: 'workspace' })}
+                      type="radio"
+                      value="workspace"
+                    />
+                    <span>
+                      <span className={styles.choiceTitle}>{copy.project.visibilityWorkspace[lang]}</span>
+                      <span className={styles.fieldHint}>{copy.project.visibilityWorkspaceHint[lang]}</span>
+                    </span>
+                  </label>
+                  <label className={styles.choice} htmlFor={visibilityId + '-private'}>
+                    <input
+                      checked={value.visibility === 'private'}
+                      disabled={blocked}
+                      id={visibilityId + '-private'}
+                      name="project-visibility"
+                      onChange={() => onChange({ visibility: 'private' })}
+                      type="radio"
+                      value="private"
+                    />
+                    <span>
+                      <span className={styles.choiceTitle}>{copy.project.visibilityPrivate[lang]}</span>
+                      <span className={styles.fieldHint}>{copy.project.visibilityPrivateHint[lang]}</span>
+                    </span>
+                  </label>
+                </div>
+                {value.visibility === 'private' && (
+                  <p className={styles.fieldHint}>{copy.access.automaticNote[lang]}</p>
+                )}
+              </>
+            ) : (
+              <div className={styles.fixedContext}>
+                <Badge tone="neutral">{copy.project.visibilityWorkspace[lang]}</Badge>
+                <span className={styles.fieldHint}>{copy.project.visibilityUnavailableHint[lang]}</span>
+              </div>
+            )}
+          </fieldset>
+        )}
+
+        {mode === 'edit' && (
+          <div className={styles.fieldWide}>
+            <div className={styles.fixedContext}>
+              <span>{copy.project.visibilityLabel[lang]}</span>
+              <Badge tone={value.visibility === 'private' ? 'warning' : 'neutral'}>{visibilityName(value.visibility)[lang]}</Badge>
+              <span className={styles.fieldHint}>{copy.project.visibilityManageHint[lang]}</span>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       <div className={styles.formActions}>

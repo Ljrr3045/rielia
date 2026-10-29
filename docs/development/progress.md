@@ -11,8 +11,9 @@ execution. T06 adds actual task attribution; comments/history UI/export remain f
 T05.0 adds actual workspace/membership/invitation backend and frontend logic with
 merged T05.1 presentation. T06.0 adds bounded persisted project/task backend and
 frontend logic, and merged T06.1 adds its presentation. T07.0 adds bounded private
-project/access logic under the ratified administrative visibility policy; its
-presentation, full T06/P05/T07 and collaboration scope remain open. It has no deployed task product, deployment or
+project/access logic under the ratified administrative visibility policy; T07.1
+adds its presentation on that logic. Invitations/guests, full T06/P05/T07,
+collaboration and integration scope remain open. It has no deployed task product, deployment or
 software release. The coordinator owns integration and status across workers.
 
 The user's [2026-10-27 stack and sequencing decision](stack-validation-decisions.md)
@@ -29,11 +30,12 @@ implementation, without completing tickets or weakening automated checks/launch 
 
 | Field | Evidence/state |
 | --- | --- |
-| Scope | T07.0/B1b project privacy/access backend and frontend logic for P02/P03/P04/P14/P38, US02/US03/US08/US12/US24–US25 and UX01/UX05/UX06/UX07/UX09/UX11; human-web-only privacy administration, automatic owner/admin private content access, explicit human/Agent access, current-policy filtering and recovery. No JSX/CSS, new project lead/guest/credentials, real OAuth/staging/users, RLS/deployment or full-ticket acceptance |
-| Base | `origin/dev` at merged [PR #16](https://github.com/Ljrr3045/rielia/pull/16), `545473c3d381a7a532e8f5b9ad77f30d6b5a70bc`; coordinator confirms both T06 worktrees removed |
-| Branch | `feat/t07-project-access-logic`, one English non-draft logic/docs PR to `dev` |
-| Worktree | Isolated `feat-t07-project-access-logic`; Codex `gpt-6.1-sol` effort `xhigh` confirmed in effective turn metadata and launch receipt; no helpers or second editor |
-| Current PR | [#17](https://github.com/Ljrr3045/rielia/pull/17), English non-draft logic/docs PR to `dev`; local checks pass and coordinator-triggered exact-head CI/Kody review is pending |
+| Scope | T07.1/B1b private-project access presentation for P02/P03/P04/P14/P33/P38, US02/US03/US08/US12/US24–US25 and UX01/UX03/UX05/UX06/UX07/UX09/UX11 on merged T07.0 logic. Create visibility, private/workspace disclosure, human-admin access/visibility/retained-rights panel, paginated eligible assignees, pending/unknown/conflict/changed-page recovery. No hooks/controllers/proxies/contracts/backend/tests, invitations/guests/lead, full collaboration, credentials/MCP, RLS/deployment, real OAuth/staging/users or full T07/T35 acceptance |
+| Base | `origin/dev` at merged [PR #17](https://github.com/Ljrr3045/rielia/pull/17), `c72831c1be4ca2332a6162adc2af85d529b441b8`; coordinator verified logic worktree removed after clean settlement |
+| Branch | `feat/t07-project-access-ui`, one English non-draft presentation/docs PR to `dev` |
+| Worktree | Isolated `feat-t07-project-access-ui`; presentation owner OpenCode Go `opencode-go/deepseek-v4.1-flash` variant `max` (verified effective session); no helpers; logic/tests remain Sol-owned |
+| Current PR | [#18](https://github.com/Ljrr3045/rielia/pull/18), English non-draft presentation/docs PR to `dev`; exact final head, CI and coordinator-triggered Kody state live in GitHub and the external delivery report |
+| T07.0 logic PR | [#17](https://github.com/Ljrr3045/rielia/pull/17) merged 2026-10-29T16:51:39Z as `c72831c1be4ca2332a6162adc2af85d529b441b8`; final reviewed head `bf9e6fcf`, CI SUCCESS and Kody approval `5701623155`; coordinator verified clean settlement, preserved the external logic report and removed its worktree |
 | T06.1 presentation PR | [#16](https://github.com/Ljrr3045/rielia/pull/16) merged as `545473c3d381a7a532e8f5b9ad77f30d6b5a70bc`; prior final review/CI evidence remains in GitHub and its external delivery report; both T06 worktrees removed |
 | T06.0 logic PR | [#15](https://github.com/Ljrr3045/rielia/pull/15) merged 2026-10-28T22:51:16Z as `e23d2e495a2e4c3dc499bcdde4ac8dd84d74fdad`; reviewed source `338fc64725aa8448cd4512c3c3952d53f394e45d`, CI 40781598293 SUCCESS, Kody review 5690694480/check 123144649000 complete with all three threads resolved. Coordinator confirms the logic worktree was removed |
 | T05.1 presentation PR | [#14](https://github.com/Ljrr3045/rielia/pull/14) merged 2026-10-28T20:57:11Z as `d27e3302a059cda6ef570c75efed42deda188a39`; reviewed source `6c0e64952129b10c25f195443f88ec7331ef1a02`, [CI 40764734574](https://github.com/Ljrr3045/rielia/actions/runs/40764734574) SUCCESS, [final Kody 6480178609](https://github.com/Ljrr3045/rielia/pull/14#issuecomment-6480178609) complete and exact-head check SUCCESS. Both findings resolved; coordinator reports completed worktrees removed |
@@ -276,6 +278,56 @@ passed CI 40764734574 and the fresh coordinator-triggered Kody completion
 completed worktrees removed. No full
 T05/T07/T35 or real-user acceptance is claimed.
 
+## T07.1/B1b private-project access UI
+
+The [project access UI guide](project-access-ui.md) records the bounded
+presentation on merged T07.0 logic `c72831c` for P02/P03/P04/P14/P33/P38,
+US02/US03/US08/US12/US24–US25 and UX01/UX03/UX05/UX06/UX07/UX09/UX11. It adds
+create-time visibility, private/workspace header disclosure, a human-admin
+access/visibility panel with automatic owner/admin disclosure, paginated
+people/Agents, explicit grant/re-grant/revoke with consequence-specific copy and
+retained automatic/workspace access, archived revoke-only behavior, and
+server-eligible paginated assignees with the historical unavailable assignee
+retained.
+
+Policy and content drafts share the canonical controller. Row actions stage the
+captured target/version when review opens; Confirm submits that draft. Pending is
+distinct from unknown outcome (disabled Confirm, plain Retry/Discard, no spinning
+success). Conflict review uses the exact current target member; access pages keep
+rows on a changed version and require full refresh; access/assignee first-page
+failures retry independently while content stays usable; cross-context unknown
+outcomes require Return before Retry. Workspace selector, view toggles, create/
+restore and task/detail controls honor policy pending/draft without replacing the
+outstanding command.
+
+Validation: frozen install, full `pnpm check` (lint, Express-free closure, 7
+identity, 16 workspace, 28 project/task, 19 prototype, typechecks, production
+builds, 17 MCP checks and HTTP smoke), real PG/Nest/Next browser QA with
+`--large-members`, audit, handoff verifier and whitespace checks. Browser flows
+covered owner/admin automatic access, member/viewer grant/revoke/re-grant,
+visibility transitions and retained rows, admin explicit removal with automatic
+access preserved, stale access paging, visibility conflict/rebase, pending versus
+unknown outcome, cross-context return and same-key retry, archived revoke-only,
+eligible-assignee paging/historical assignee, independent auxiliary failures,
+content-pager plus policy-error coexistence/recovery, archived-revoke conflict/
+rebase and missing-current exact-target review, 320–1440 responsive, EN/ES,
+light/dark, 44 px targets and focus trap/restoration.
+Screenshots are external to the repository; no screenshot alone is treated as
+flow proof. Kody inline 4415985054 was valid and fixed: a changed-version access
+page now hides stale Load more and keeps full Refresh over the loaded rows
+(`36`/`37`). Physical touch, screen-reader and cross-browser certification remain
+unavailable. No functional test source, auth bypass, fake API/model, secrets or
+deployment was added.
+
+PR #17 merged 2026-10-29T16:51:39Z as
+`c72831c1be4ca2332a6162adc2af85d529b441b8` after final head `bf9e6fcf`, CI
+SUCCESS and Kody approval `5701623155`; the coordinator verified settlement,
+preserved the external logic report and removed its worktree. The UI PR is
+[#18](https://github.com/Ljrr3045/rielia/pull/18) from `feat/t07-project-access-ui`;
+final head and review state remain in GitHub and the external delivery report. No
+full T07/T35, invitation/guest/lead, collaboration or real-user acceptance is
+claimed.
+
 ## T06.1/B1a project and task UI
 
 The [project/task UI guide](project-task-ui.md) records the bounded `/projects`
@@ -443,9 +495,9 @@ the following records preserve the original first-wave scope and acceptance:
    open. PR #9 is merged; see [runtime scope and evidence](local-runtime.md). This is a preparatory
    split of the B1 T04 ticket, without business effects, deployment or full acceptance.
 
-Current bounded product step: **T07.0** private-project/access backend and client
-logic, following merged T06 logic/presentation under the user's sequencing
-override. Separate privacy presentation, full T06/T07/T35, collaboration and
+Current bounded product step: **T07.1** private-project access presentation,
+following the merged T07.0 logic and T06 presentation under the user's sequencing
+override. Invitations/guests, full T06/T07/T35, collaboration and
 MCP/history/export integration remain incomplete.
 
 Convergence: T02 + T03 → T04 → **T35** → T05 → T06. The principal/authorship model
@@ -478,7 +530,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T04 | B1 foundations | Monorepo, images, worker/queue, initial migration | T02–T03 | Partial T04.0 merged; full acceptance/dependencies stay open. Dated user override permits local implementation with listed real validation deferred |
 | T05 | B1a | Auth, workspaces, principal memberships | T04, T35 | T05.0 logic merged in PR #13; T05.1 [presentation](workspace-ui.md) merged in PR #14. Full T05/T07/T35 acceptance remains open |
 | T06 | B1a | Projects/tasks, versions, idempotency, atomic activity/outbox | T05 | Bounded T06.0 real backend/client logic merged in [PR #15](https://github.com/Ljrr3045/rielia/pull/15); T06.1 [presentation](project-task-ui.md) delivered in the UI PR against disposable real PG/Nest/Next QA. Full ticket (all version/activity/outbox slices, collaboration) remains open |
-| T07 | B1b | Invitations, revocation, roles/private projects | T06 | Invitation/role subset remains in T05.0; bounded [T07.0 privacy/access logic](project-access.md) is in delivery. Separate presentation and full acceptance remain open |
+| T07 | B1b | Invitations, revocation, roles/private projects | T06 | Invitation/role subset remains in T05.0; bounded [T07.0 privacy/access logic](project-access.md) merged in PR #17 and [T07.1 presentation](project-access-ui.md) delivered in the UI PR. Full T07 acceptance remains open |
 | T08 | B1b | List/Kanban, filters, ranking | T06 | Not started |
 | T09 | B1b | Subtasks, checklists, comments, history | T06 | Not started |
 | T10 | B1b | Search, My tasks, responsive layout, SSE | T07–T09 | Not started |

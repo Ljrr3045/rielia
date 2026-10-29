@@ -18,7 +18,11 @@ import styles from './projects.module.css';
 
 export function TaskEditForm({
   value,
-  members,
+  assignees,
+  assigneesNext = false,
+  assigneesLoading = false,
+  assigneesError = false,
+  assigneesPageMissing = false,
   projectName,
   projectKey,
   pending,
@@ -28,9 +32,14 @@ export function TaskEditForm({
   onChange,
   onSubmit,
   onCancel,
+  onLoadMoreAssignees,
 }: {
   value: TaskFields;
-  members: readonly DomainPerson[];
+  assignees: readonly DomainPerson[];
+  assigneesNext?: boolean;
+  assigneesLoading?: boolean;
+  assigneesError?: boolean;
+  assigneesPageMissing?: boolean;
   projectName: string;
   projectKey: string;
   pending: boolean;
@@ -40,6 +49,7 @@ export function TaskEditForm({
   onChange: (fields: Partial<TaskFields>) => void;
   onSubmit: () => void;
   onCancel: () => void;
+  onLoadMoreAssignees: () => void;
 }) {
   const lang = useLocale();
   const titleId = useId();
@@ -54,10 +64,7 @@ export function TaskEditForm({
   const titleError = errorField === 'title' || localError === 'title';
   const titleMessage = errorField === 'title' && errorMessage !== null ? errorMessage : copy.task.titleRequired[lang];
   const blocked = pending || disabled;
-
-  const assignees = members.filter(
-    member => member.active || member.principalId === value.assigneePrincipalId,
-  );
+  const assigneeUnavailable = assigneesLoading || (assigneesError && assigneesPageMissing);
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -175,7 +182,7 @@ export function TaskEditForm({
         <div className={styles.fieldWide}>
           <label className={styles.fieldLabel} htmlFor={assigneeId}>{copy.task.assigneeLabel[lang]}</label>
           <select
-            disabled={blocked}
+            disabled={blocked || assigneeUnavailable}
             id={assigneeId}
             onChange={event => onChange({ assigneePrincipalId: event.currentTarget.value.length === 0 ? null : event.currentTarget.value })}
             value={value.assigneePrincipalId ?? ''}
@@ -190,6 +197,22 @@ export function TaskEditForm({
             ))}
           </select>
           <p className={styles.fieldHint}>{copy.task.assigneeHint[lang]}</p>
+          {assigneesLoading && (
+            <p className={styles.fieldHint} role="status">{copy.access.loadingPeople[lang]}</p>
+          )}
+          {assigneesError && (
+            <div className={styles.fieldRecovery} role="alert">
+              <p className={styles.fieldError}>{copy.access.pageErrorBody[lang]}</p>
+              <button className={styles.secondary} disabled={blocked} onClick={onLoadMoreAssignees} type="button">
+                {copy.access.retryPeople[lang]}
+              </button>
+            </div>
+          )}
+          {assigneesNext && (
+            <button className={styles.loadMoreButton} disabled={blocked} onClick={onLoadMoreAssignees} type="button">
+              {copy.access.loadMorePeople[lang]}
+            </button>
+          )}
         </div>
       </div>
 

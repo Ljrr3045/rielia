@@ -6,6 +6,27 @@ This records repository changes. No application version has been released.
 
 ### Added
 
+- T07.1/B1b private-project access presentation on merged T07.0 logic, under the
+  2026-10-29 administrative-visibility policy. `/projects` now exposes create-time
+  visibility when the server permits it, textual private/workspace disclosure, a
+  human-admin access panel with automatic owner/admin disclosure, paginated
+  people/Agents, explicit grant/re-grant/revoke with exact-target confirmation,
+  retained explicit rows and consequence-specific admin/workspace copy, archived
+  revoke-only behavior, and server-eligible paginated assignees with historical
+  unavailable labels. Policy and content drafts share the canonical lifecycle:
+  review captures target/version, pending is distinct from unknown outcome,
+  exact-target conflict review/rebase and changed-page refresh are explicit,
+  including archived-revoke recovery and missing-current exact-target review;
+  access/assignee first-page failures retry independently without clearing content,
+  cross-context unknown outcomes require Return before Retry, and shared guards
+  prevent replacing an unresolved policy draft. ES/EN, light/dark, 44 px targets,
+  focus trap/restoration and 320–1440 layouts are covered by actual PG/Nest/Next
+  browser QA. [UI guide, evidence and limits](docs/development/project-access-ui.md).
+  [PR #18](https://github.com/Ljrr3045/rielia/pull/18). The T07.0
+  [PR #17](https://github.com/Ljrr3045/rielia/pull/17) is merged as `c72831c` and
+  its worktree was removed. Full T07/T35, invitations/
+  guests, collaboration and real-user acceptance remain open.
+
 - T07.0/B1b private-project and explicit human/Agent access logic, under the
   2026-10-29 ratification of automatic private content access for active human
   workspace owners/admins. Current policy filters project/task reads, counts,
