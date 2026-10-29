@@ -1,3 +1,5 @@
+import type { ProjectVisibility } from '@rielia/contracts';
+
 export type Lang = 'es' | 'en';
 
 export interface Bilingual {
@@ -172,9 +174,38 @@ export const copy = {
     descriptionHint: { es: 'Opcional. Resume el objetivo del proyecto.', en: 'Optional. Summarize the project objective.' },
     visibilityLabel: { es: 'Visibilidad', en: 'Visibility' },
     visibilityWorkspace: { es: 'Visible en el espacio', en: 'Visible in the workspace' },
-    visibilityHint: {
-      es: 'Los proyectos privados todavía no están disponibles en esta versión.',
-      en: 'Private projects are not available in this release.',
+    visibilityPrivate: { es: 'Privado', en: 'Private' },
+    visibilityWorkspaceHint: {
+      es: 'Todos los miembros activos del espacio pueden verlo y trabajar según su rol.',
+      en: 'All active workspace members can see it and work according to their role.',
+    },
+    visibilityPrivateHint: {
+      es: 'Solo los propietarios y administradores humanos del espacio y las personas o agentes con acceso explícito pueden verlo.',
+      en: 'Only human workspace owners and administrators, plus people or Agents with explicit access, can see it.',
+    },
+    visibilityUnavailableHint: {
+      es: 'Solo un propietario o administrador humano puede crear proyectos privados desde la web.',
+      en: 'Only a human owner or administrator can create private projects from the web.',
+    },
+    visibilityReadOnlyHint: {
+      es: 'Solo un propietario o administrador humano puede cambiar la visibilidad.',
+      en: 'Only a human owner or administrator can change visibility.',
+    },
+    visibilityArchivedHint: {
+      es: 'La visibilidad está congelada mientras el proyecto está archivado. Restáuralo para cambiarla.',
+      en: 'Visibility is frozen while the project is archived. Restore it to change visibility.',
+    },
+    visibilityManageHint: {
+      es: 'La visibilidad se cambia desde Acceso del proyecto.',
+      en: 'Visibility is changed from Project access.',
+    },
+    visibilityAutoAccess: {
+      es: 'Acceso automático de administración',
+      en: 'Automatic administrator access',
+    },
+    visibilityGranted: {
+      es: 'Acceso concedido',
+      en: 'Access granted',
     },
     create: { es: 'Crear proyecto', en: 'Create project' },
     creating: { es: 'Creando proyecto…', en: 'Creating project…' },
@@ -334,6 +365,211 @@ export const copy = {
     optionalMark: { es: 'opcional', en: 'optional' },
     fieldError: { es: 'Revisa este campo.', en: 'Review this field.' },
   },
+  access: {
+    button: { es: 'Acceso', en: 'Access' },
+    title: { es: 'Acceso del proyecto', en: 'Project access' },
+    eyebrow: { es: 'Proyecto privado', en: 'Private project' },
+    introTitle: {
+      es: 'Quién puede ver este proyecto',
+      en: 'Who can see this project',
+    },
+    introBody: {
+      es: 'Los propietarios y administradores humanos del espacio ven todo el contenido privado. Las demás personas y agentes necesitan acceso explícito.',
+      en: 'Human workspace owners and administrators see all private content. Other people and Agents need explicit access.',
+    },
+    automaticNote: {
+      es: 'Las personas y los agentes necesitan acceso explícito a un proyecto privado, salvo los propietarios y administradores humanos del espacio.',
+      en: 'People and Agents need explicit access to a private project, except human workspace owners and administrators.',
+    },
+    workspaceNote: {
+      es: 'Todo el espacio puede ver este proyecto. Los permisos explícitos se conservan por si vuelve a ser privado.',
+      en: 'Everyone in the workspace can see this project. Explicit permissions are retained in case it becomes private again.',
+    },
+    visibilitySection: { es: 'Visibilidad', en: 'Visibility' },
+    visibilityCurrent: { es: 'Visibilidad actual', en: 'Current visibility' },
+    visibilityChange: { es: 'Cambiar visibilidad', en: 'Change visibility' },
+    visibilityReview: { es: 'Revisar cambio', en: 'Review change' },
+    visibilityFrozen: {
+      es: 'Proyecto archivado: la visibilidad y las nuevas concesiones están congeladas. Puedes revocar accesos explícitos; para conceder o volver a conceder, restaura el proyecto.',
+      en: 'Archived project: visibility and new grants are frozen. You can revoke explicit access; restore the project to grant or re-grant access.',
+    },
+    toPrivateTitle: { es: '¿Hacer privado este proyecto?', en: 'Make this project private?' },
+    toPrivateConsequence: {
+      es: 'Dejará de ser visible para los miembros y agentes sin acceso efectivo. Los accesos explícitos conservados se aplicarán de nuevo, y los propietarios y administradores mantendrán su acceso automático.',
+      en: 'It will no longer be visible to members and Agents without effective access. Retained explicit access applies again, and owners and administrators keep automatic access.',
+    },
+    toWorkspaceTitle: {
+      es: '¿Hacer visible este proyecto en el espacio?',
+      en: 'Make this project visible in the workspace?',
+    },
+    toWorkspaceConsequence: {
+      es: 'Todos los miembros activos del espacio podrán verlo y trabajar según su rol. Los accesos explícitos se conservan por si el proyecto vuelve a ser privado.',
+      en: 'All active workspace members can see it and work according to their role. Explicit access is retained in case the project becomes private again.',
+    },
+    peopleSection: { es: 'Personas y agentes', en: 'People and Agents' },
+    peopleCount: {
+      es: (count: number) => (count === 1 ? '1 persona o agente' : `${count} personas y agentes`),
+      en: (count: number) => (count === 1 ? '1 person or Agent' : `${count} people and Agents`),
+    },
+    loadingPeople: { es: 'Cargando personas y agentes…', en: 'Loading people and Agents…' },
+    emptyPeople: { es: 'No hay membresías en este espacio.', en: 'There are no memberships in this workspace.' },
+    loadMorePeople: { es: 'Cargar más personas', en: 'Load more people' },
+    retryPeople: { es: 'Reintentar carga', en: 'Retry loading' },
+    refreshPeople: { es: 'Actualizar lista', en: 'Refresh list' },
+    changedTitle: { es: 'La lista de accesos cambió', en: 'The access list changed' },
+    changedBody: {
+      es: 'Otra operación actualizó el proyecto mientras se cargaba otra página. Actualiza la lista completa antes de conceder o revocar; no se aplicó ningún cambio.',
+      en: 'Another operation updated the project while another page was loading. Refresh the complete list before granting or revoking; no change was applied.',
+    },
+    pageErrorBody: {
+      es: 'No se pudo cargar esta lista. El contenido del proyecto sigue disponible; reintenta solo esta carga.',
+      en: 'This list could not load. Project content remains available; retry only this load.',
+    },
+    adminAutomatic: { es: 'Acceso por su rol de administrador', en: 'Access through their administrator role' },
+    workspaceAccess: { es: 'Acceso por pertenencia al espacio', en: 'Access through workspace membership' },
+    grantedAccess: { es: 'Acceso concedido', en: 'Access granted' },
+    noAccess: { es: 'Sin acceso', en: 'No access' },
+    inactiveMember: { es: 'Miembro inactivo', en: 'Inactive member' },
+    inactiveHint: {
+      es: 'La membresía está inactiva. Se conserva el registro histórico; no puede recibir acceso nuevo.',
+      en: 'The membership is inactive. The historical record is retained; it cannot receive new access.',
+    },
+    retainedActive: { es: 'Acceso explícito activo, conservado', en: 'Explicit access active, retained' },
+    retainedRevoked: { es: 'Acceso explícito revocado', en: 'Explicit access revoked' },
+    grant: { es: 'Conceder acceso', en: 'Grant access' },
+    regrant: { es: 'Volver a conceder', en: 'Re-grant access' },
+    revoke: { es: 'Revocar acceso', en: 'Revoke access' },
+    grantActionLabel: {
+      es: (name: string) => `Conceder acceso a ${name}`,
+      en: (name: string) => `Grant access to ${name}`,
+    },
+    regrantActionLabel: {
+      es: (name: string) => `Volver a conceder acceso a ${name}`,
+      en: (name: string) => `Re-grant access to ${name}`,
+    },
+    revokeActionLabel: {
+      es: (name: string) => `Revocar acceso a ${name}`,
+      en: (name: string) => `Revoke access for ${name}`,
+    },
+    grantTitle: {
+      es: (name: string) => `¿Conceder acceso a ${name}?`,
+      en: (name: string) => `Grant access to ${name}?`,
+    },
+    regrantTitle: {
+      es: (name: string) => `¿Volver a conceder acceso a ${name}?`,
+      en: (name: string) => `Re-grant access to ${name}?`,
+    },
+    revokeTitle: {
+      es: (name: string) => `¿Revocar el acceso de ${name}?`,
+      en: (name: string) => `Revoke access for ${name}?`,
+    },
+    grantPrivate: {
+      es: 'Podrá ver el contenido privado y trabajar según su rol. No se asigna ninguna tarea ni cambia la autoría histórica.',
+      en: 'They will see private content and work according to their role. No task is assigned and historical authorship does not change.',
+    },
+    grantWorkspace: {
+      es: 'El proyecto ya es visible para el espacio. Este acceso explícito se conserva por si el proyecto vuelve a ser privado.',
+      en: 'The project is already visible in the workspace. This explicit access is retained in case the project becomes private again.',
+    },
+    grantViewer: {
+      es: 'Podrá consultar el contenido; su rol de lector sigue siendo de solo lectura.',
+      en: 'They can view content; their viewer role remains read-only.',
+    },
+    grantAgent: {
+      es: 'El agente accede con su propia identidad y rol; no hereda los permisos de su custodio.',
+      en: 'The Agent accesses with its own identity and role; it does not inherit its custodian’s permissions.',
+    },
+    grantAdmin: {
+      es: 'Ya conserva el acceso automático por su rol de administrador; el acceso explícito queda retenido por si cambia de rol.',
+      en: 'They already keep automatic access through their administrator role; the explicit access is retained in case their role changes.',
+    },
+    revokeAdmin: {
+      es: 'Se eliminará su acceso explícito, pero conservará el acceso automático por su rol de administrador del espacio. No perderá el contenido por esta acción.',
+      en: 'Their explicit access will be removed, but they keep automatic access through their workspace administrator role. They will not lose content from this action.',
+    },
+    revokeWorkspace: {
+      es: 'Se eliminará el acceso explícito conservado. Como el proyecto es visible en el espacio, mantiene el acceso actual; si vuelve a ser privado, necesitará una nueva concesión.',
+      en: 'The retained explicit access will be removed. Because the project is visible in the workspace, current access remains; if it becomes private again, a new grant will be needed.',
+    },
+    revokeInactive: {
+      es: 'Se revocará el acceso explícito conservado. La membresía inactiva no tiene acceso efectivo.',
+      en: 'The retained explicit access will be revoked. The inactive membership has no effective access.',
+    },
+    revokePrivate: {
+      es: 'Dejará de ver el contenido privado y no podrá trabajar en él. La autoría y las asignaciones históricas se conservan; no se reasignan tareas.',
+      en: 'They will no longer see or work on private content. Authorship and historical assignments are retained; tasks are not reassigned.',
+    },
+    successVisibility: { es: 'Visibilidad del proyecto actualizada.', en: 'Project visibility updated.' },
+    successGrant: { es: 'Permiso explícito concedido.', en: 'Explicit permission granted.' },
+    successRevoke: { es: 'Permiso explícito revocado.', en: 'Explicit permission revoked.' },
+    successAdminRetained: {
+      es: 'Su acceso automático por rol de administrador no cambia.',
+      en: 'Their automatic administrator access does not change.',
+    },
+    successWorkspaceRetained: {
+      es: 'El proyecto sigue visible en el espacio, así que mantiene el acceso actual.',
+      en: 'The project remains visible in the workspace, so current access remains.',
+    },
+    successAdminGranted: {
+      es: 'Ya tenía acceso automático; el permiso explícito queda conservado por si cambia su rol.',
+      en: 'They already had automatic access; the explicit permission is retained in case their role changes.',
+    },
+    successWorkspaceGranted: {
+      es: 'El proyecto sigue visible para el espacio; el permiso explícito se conserva por si vuelve a ser privado.',
+      en: 'The project remains visible in the workspace; the explicit permission is retained in case it becomes private again.',
+    },
+    changingVisibility: { es: 'Actualizando la visibilidad…', en: 'Updating visibility…' },
+    changingAccess: { es: 'Actualizando el acceso…', en: 'Updating access…' },
+    targetVisibility: { es: 'Visibilidad', en: 'Visibility' },
+    targetMember: { es: 'Persona o agente', en: 'Person or Agent' },
+    selectedMember: { es: 'la persona o agente seleccionado', en: 'the selected person or Agent' },
+    draftTitle: { es: 'Tienes un cambio de acceso sin guardar', en: 'You have an unsaved access change' },
+    draftBody: {
+      es: 'El cambio conserva su versión y su clave. Vuelve a Acceso para revisarlo o descártalo explícitamente.',
+      en: 'The change keeps its captured version and key. Return to Access to review it, or discard it explicitly.',
+    },
+    draftResume: { es: 'Volver a Acceso', en: 'Return to Access' },
+    conflictAccessTitle: { es: 'El acceso de esta persona cambió', en: 'This person’s access changed' },
+    conflictAccessBody: {
+      es: 'Otra operación actualizó el proyecto o el acceso de esta persona. Revisa el estado actual exacto antes de volver a guardar.',
+      en: 'Another operation updated the project or this person’s access. Review the exact current state before saving again.',
+    },
+    conflictVisibilityCurrent: { es: 'Visibilidad actual', en: 'Current visibility' },
+    conflictVisibilityDraft: { es: 'Visibilidad solicitada', en: 'Requested visibility' },
+    conflictMemberCurrent: { es: 'Acceso actual', en: 'Current access' },
+    conflictMemberRequested: { es: 'Acceso solicitado', en: 'Requested access' },
+    conflictEffective: { es: 'Acceso efectivo', en: 'Effective access' },
+    conflictExplicit: { es: 'Acceso explícito', en: 'Explicit access' },
+    explicitActive: { es: 'Activo', en: 'Active' },
+    explicitRevoked: { es: 'Revocado', en: 'Revoked' },
+    explicitNone: { es: 'Sin acceso explícito', en: 'No explicit access' },
+    finishAccessDraft: {
+      es: 'Hay un cambio de acceso en revisión. Confírmalo o descártalo antes de cambiar la visibilidad.',
+      en: 'An access change is under review. Confirm or discard it before changing visibility.',
+    },
+    reviewAccess: { es: 'Revisar acceso actual', en: 'Review current access' },
+    requestGrant: { es: 'Conceder', en: 'Grant' },
+    requestRevoke: { es: 'Revocar', en: 'Revoke' },
+    conflictMissingTarget: {
+      es: 'No se pudo revisar el acceso actual de esta persona. Vuelve a intentar la revisión antes de guardar.',
+      en: 'This person’s current access could not be reviewed. Retry the review before saving.',
+    },
+    conflictMissingCurrent: {
+      es: 'El servidor informó un conflicto, pero no devolvió el estado actual completo. Revisa el registro actual antes de volver a guardar; no se aplicó ningún cambio.',
+      en: 'The server reported a conflict but did not return the complete current state. Review the current record before saving again; no change was applied.',
+    },
+    returnToChange: {
+      es: 'Volver al cambio pendiente',
+      en: 'Return to the pending change',
+    },
+    focusAfterClose: { es: 'Acceso del proyecto', en: 'Project access' },
+  },
+  roleNames: {
+    owner: { es: 'Propietario', en: 'Owner' },
+    admin: { es: 'Administrador', en: 'Admin' },
+    member: { es: 'Miembro', en: 'Member' },
+    viewer: { es: 'Lector', en: 'Viewer' },
+  } as Record<string, Bilingual>,
   feedback: {
     pending: { es: 'Guardando cambios…', en: 'Saving changes…' },
     saved: { es: 'Cambios guardados.', en: 'Changes saved.' },
@@ -361,10 +597,10 @@ export const copy = {
     conflictKeepDraft: { es: 'Conservar mi borrador', en: 'Keep my draft' },
     unknownTitle: { es: 'No sabemos si el cambio se guardó', en: 'We do not know whether the change was saved' },
     unknownBody: {
-      es: 'La conexión se interrumpió después de enviar la operación. Reintenta con la misma clave para no duplicarla, o descarta el borrador si prefieres revisar antes.',
-      en: 'The connection was interrupted after the operation was sent. Retry with the same key to avoid a duplicate, or discard the draft if you prefer to review first.',
+      es: 'La conexión se interrumpió después de enviar la operación. Reintenta para confirmar el resultado sin duplicarla, o descarta el borrador si prefieres revisar antes.',
+      en: 'The connection was interrupted after the operation was sent. Retry to confirm the result without duplicating it, or discard the draft if you prefer to review first.',
     },
-    retrySame: { es: 'Reintentar con la misma clave', en: 'Retry with the same key' },
+    retrySame: { es: 'Reintentar', en: 'Retry' },
     discard: { es: 'Descartar borrador', en: 'Discard draft' },
     networkTitle: { es: 'No se pudo conectar', en: 'Could not connect' },
     networkBody: {
@@ -457,6 +693,14 @@ export function priorityName(value: string): Bilingual {
 
 export function typeName(value: string): Bilingual {
   return copy.typeNames[value] ?? { es: value, en: value };
+}
+
+export function roleName(value: string): Bilingual {
+  return copy.roleNames[value] ?? { es: value, en: value };
+}
+
+export function visibilityName(value: ProjectVisibility): Bilingual {
+  return value === 'private' ? copy.project.visibilityPrivate : copy.project.visibilityWorkspace;
 }
 
 export function formatDateOnly(value: string | null, lang: Lang): string {

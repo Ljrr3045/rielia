@@ -8,14 +8,17 @@ import {
   isTask,
   type DomainPerson,
   type Project,
+  type ProjectAccessMember,
+  type ProjectPolicyCommand,
   type ProjectTaskCommand,
   type ProjectTaskResult,
+  type ProjectVisibility,
   type Task,
   type TaskFields,
-  type WorkspaceMember,
 } from '@rielia/contracts';
 import { useProjectTasks } from '../../lib/use-project-tasks';
 import { ConflictPanel, FeedbackPanel, type ConflictFieldView } from './feedback';
+import { ProjectAccessPanel, projectPolicyConflictFields } from './project-access';
 import { ProjectForm, type ProjectFormValue } from './project-forms';
 import {
   Badge,
@@ -30,6 +33,7 @@ import {
   IconRestore,
   IconSettings,
   IconTask,
+  IconUsers,
   LocaleProvider,
   ModalFrame,
   StateCard,
@@ -50,6 +54,7 @@ import {
   projectTaskCount,
   statusName,
   typeName,
+  visibilityName,
   type Bilingual,
   type Lang,
 } from './strings';
@@ -58,11 +63,12 @@ import styles from './projects.module.css';
 type FormState =
   | { kind: 'project-create'; workspaceId: string }
   | { kind: 'project-edit'; workspaceId: string; projectId: string; version: number }
+  | { kind: 'project-access'; workspaceId: string; projectId: string }
   | { kind: 'task-edit'; workspaceId: string; projectId: string; taskId: string; version: number }
   | { kind: 'project-archive' | 'project-restore'; workspaceId: string; projectId: string; version: number }
   | { kind: 'task-archive' | 'task-restore'; workspaceId: string; projectId: string; taskId: string; version: number };
 
-const emptyProject: ProjectFormValue = { name: '', key: '', description: '' };
+const emptyProject: ProjectFormValue = { name: '', key: '', description: '', visibility: 'workspace' };
 const emptyTask: TaskFields = {
   title: '',
   description: '',
@@ -101,21 +107,12 @@ function isProjectResult(value: ProjectTaskResult): value is Project {
   return isProject(value);
 }
 
-function memberActive(member: WorkspaceMember): boolean {
-  return member.state === 'active' && member.principalState === 'active';
-}
+type LifecycleFormState = Extract<FormState, { kind: 'project-archive' | 'project-restore' | 'task-archive' | 'task-restore' }>;
 
-function memberPerson(member: WorkspaceMember): DomainPerson {
-  return { principalId: member.principalId, name: member.name, kind: member.kind, active: memberActive(member) };
-}
-
-function formCommandType(kind: FormState['kind']): ProjectTaskCommand['type'] {
+function formCommandType(kind: LifecycleFormState['kind']): ProjectTaskCommand['type'] {
   switch (kind) {
-    case 'project-create': return 'create-project';
-    case 'project-edit': return 'edit-project';
     case 'project-archive': return 'archive-project';
     case 'project-restore': return 'restore-project';
-    case 'task-edit': return 'edit-task';
     case 'task-archive': return 'archive-task';
     case 'task-restore': return 'restore-task';
   }
@@ -159,8 +156,10 @@ export function ProjectsView() {
 function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: Lang) => void }) {
   const projectTasks = useProjectTasks();
   const {
-    status, workspaces, workspace, members, projects, project, tasks, task,
+    status, workspaces, workspace, projects, project, tasks, task,
     selection, views, draft, pending, outcome, retryTarget, conflict, result, pageError,
+    projectAccess, assignees, policyPageErrors, accessConflict,
+    policyDraft, policyPending, policyRetryTarget,
     refresh, selectWorkspace, selectProject, selectTask, setView, loadMore,
     stage, submit, retrySave, discardDraft, returnToDraft, reloadConflict, rebaseDraft, dismissOutcome, dismissPageError,
   } = projectTasks;
@@ -170,6 +169,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   const [taskValue, setTaskValue] = useState<TaskFields>(emptyTask);
   const [captureTitle, setCaptureTitle] = useState('');
   const [resumeDraftOnReady, setResumeDraftOnReady] = useState(false);
+  const [resumeAccessOnReady, setResumeAccessOnReady] = useState(false);
   const captureRef = useRef<HTMLInputElement>(null);
   const projectHeadingRef = useRef<HTMLHeadingElement>(null);
   const sidebarRef = useRef<HTMLElement>(null);
@@ -177,41 +177,46 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   const modalOpenerRef = useRef<HTMLElement | null>(null);
   const returnFocusRef = useRef<HTMLElement | null>(null);
   const lastCommandRef = useRef<ProjectTaskCommand | null>(null);
+  const lastPolicyCommandRef = useRef<ProjectPolicyCommand | null>(null);
+  const lastPolicyMemberRef = useRef<ProjectAccessMember | null>(null);
+  const lastOutcomeSourceRef = useRef<'content' | 'policy'>('content');
   const hadDetailRef = useRef(false);
+  const dismissFocusPendingRef = useRef(false);
 
   const sidebarDrawer = useIsSidebarDrawer();
   const detailOverlay = useIsDetailOverlay();
   const detailOpen = task !== null && selection.taskId !== null;
   const overlayOpen = detailOverlay && detailOpen;
-  const blocked = pending !== null || retryTarget !== null;
+  const contentBlocked = pending !== null || retryTarget !== null;
+  const policyBlocked = policyPending !== null || policyRetryTarget !== null;
+  const blocked = contentBlocked || policyBlocked;
+  const anyPending = pending !== null || policyPending !== null;
   const activeProjectId = project?.id ?? selection.projectId;
   const projectArchived = project?.archivedAt != null;
   const canCreateProject = projects?.capabilities.canCreate === true && views.projects === 'active';
+  const canCreatePrivate = projects?.capabilities.canCreatePrivate === true;
   const canCapture = tasks?.capabilities.canCreate === true
     && project !== null
     && !projectArchived
     && project.capabilities.canEdit
-    && views.tasks === 'active';
+    && views.tasks === 'active'
+    && !policyBlocked
+    && policyDraft === null;
   const canEditProject = project?.capabilities.canEdit === true && !projectArchived;
   const canArchiveProject = project?.capabilities.canArchive === true && !projectArchived;
   const canRestoreProject = project?.capabilities.canRestore === true && projectArchived;
+  const canManageAccess = project?.capabilities.canManageAccess === true;
 
-  const membersList: readonly WorkspaceMember[] = members?.items ?? [];
-  const assigneeMembers: readonly DomainPerson[] = (() => {
+  const assigneeOptions: readonly DomainPerson[] = (() => {
     const list: DomainPerson[] = [];
     const seen = new Set<string>();
-    for (const member of membersList) {
-      if (member.kind !== 'human' && member.kind !== 'agent') continue;
-      const person = memberPerson(member);
-      if (!person.active && person.principalId !== taskValue.assigneePrincipalId) continue;
+    for (const person of assignees?.items ?? []) {
       if (seen.has(person.principalId)) continue;
       seen.add(person.principalId);
       list.push(person);
     }
     const current = task?.assignee;
-    if (current !== undefined && current !== null) {
-      if (!seen.has(current.principalId)) list.push(current);
-    }
+    if (current !== null && current !== undefined && !seen.has(current.principalId)) list.push(current);
     return list;
   })();
 
@@ -267,7 +272,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   }, [form, selection.workspaceId, selection.projectId, selection.taskId]);
 
   useEffect(() => {
-    if (outcome === 'success' && form !== null) setForm(null);
+    if (outcome === 'success' && form !== null && form.kind !== 'project-access') setForm(null);
     if (outcome === 'success') setCaptureTitle('');
   }, [outcome, form]);
 
@@ -294,12 +299,21 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
     resumeDraft(draft);
   }, [resumeDraftOnReady, draft, status, selection, project, task, tasks, views.tasks]);
 
+  useEffect(() => {
+    const command = policyDraft ?? policyRetryTarget;
+    if (!resumeAccessOnReady || command === null || status !== 'ready') return;
+    if (command.workspaceId !== selection.workspaceId || command.projectId !== selection.projectId) return;
+    setResumeAccessOnReady(false);
+    modalOpenerRef.current = null;
+    setForm({ kind: 'project-access', workspaceId: command.workspaceId, projectId: command.projectId });
+  }, [resumeAccessOnReady, policyDraft, policyRetryTarget, status, selection.workspaceId, selection.projectId]);
+
   function resumeDraft(command: ProjectTaskCommand) {
     // Resumed forms must not reuse a previous modal opener. Never restore
     // focus to a control left behind by a previously closed modal.
     modalOpenerRef.current = null;
     if (command.type === 'create-project') {
-      setProjectValue({ name: command.name, key: command.key, description: command.description ?? '' });
+      setProjectValue({ name: command.name, key: command.key, description: command.description ?? '', visibility: command.visibility ?? 'workspace' });
       setForm({ kind: 'project-create', workspaceId: command.workspaceId });
       return;
     }
@@ -307,7 +321,10 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
       const key = project?.id === command.projectId
         ? project.key
         : projects?.items.find(item => item.id === command.projectId)?.key ?? '';
-      setProjectValue({ name: command.name, key, description: command.description });
+      const visibility = project?.id === command.projectId
+        ? project.visibility
+        : projects?.items.find(item => item.id === command.projectId)?.visibility ?? 'workspace';
+      setProjectValue({ name: command.name, key, description: command.description, visibility });
       setForm({ kind: 'project-edit', workspaceId: command.workspaceId, projectId: command.projectId, version: command.expectedVersion });
       return;
     }
@@ -334,31 +351,37 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   }
 
   function focusDismissedSurface(hadForm: boolean) {
-    requestAnimationFrame(() => {
+    requestAnimationFrame(() => requestAnimationFrame(() => {
       if (hadForm) {
         const opener = modalOpenerRef.current;
-        if (opener !== null && opener.isConnected) {
+        if (opener !== null && opener.isConnected && !opener.matches('[disabled]')) {
           opener.focus();
-          return;
+          if (document.activeElement === opener) return;
         }
       }
       const detailHeading = document.querySelector<HTMLElement>('[data-detail-heading]');
       const fallback = detailHeading ?? projectHeadingRef.current ?? document.getElementById('projects-main');
       fallback?.focus();
-    });
+    }));
   }
 
-  function closeForm() {
-    setForm(null);
+  useEffect(() => {
+    if (form !== null || !dismissFocusPendingRef.current) return;
+    dismissFocusPendingRef.current = false;
     focusDismissedSurface(true);
+  }, [form]);
+
+  function closeForm() {
+    dismissFocusPendingRef.current = true;
+    setForm(null);
   }
 
   function openProjectCreate(opener?: HTMLElement) {
-    if (!workspace || !canCreateProject || blocked) return;
+    if (!workspace || !canCreateProject || blocked || policyDraft !== null) return;
     if (draft !== null && draft.type !== 'create-project') return;
     rememberOpener(opener);
     const value = draft?.type === 'create-project'
-      ? { name: draft.name, key: draft.key, description: draft.description ?? '' }
+      ? { name: draft.name, key: draft.key, description: draft.description ?? '', visibility: draft.visibility ?? 'workspace' }
       : emptyProject;
     setProjectValue(value);
     setForm({ kind: 'project-create', workspaceId: workspace.id });
@@ -366,19 +389,26 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   }
 
   function openProjectSettings(opener?: HTMLElement) {
-    if (!project || !canEditProject || blocked) return;
+    if (!project || !canEditProject || blocked || policyDraft !== null) return;
     if (draft !== null && !(draft.type === 'edit-project' && draft.projectId === project.id)) return;
     rememberOpener(opener);
     const value = draft?.type === 'edit-project'
-      ? { name: draft.name, key: project.key, description: draft.description }
-      : { name: project.name, key: project.key, description: project.description };
+      ? { name: draft.name, key: project.key, description: draft.description, visibility: project.visibility }
+      : { name: project.name, key: project.key, description: project.description, visibility: project.visibility };
     setProjectValue(value);
     setForm({ kind: 'project-edit', workspaceId: project.workspaceId, projectId: project.id, version: project.version });
     dismissOutcome();
   }
 
+  function openProjectAccess(opener?: HTMLElement) {
+    if (!project || !canManageAccess || blocked || draft !== null) return;
+    rememberOpener(opener);
+    setForm({ kind: 'project-access', workspaceId: project.workspaceId, projectId: project.id });
+    dismissOutcome();
+  }
+
   function openTaskEdit(opener?: HTMLElement) {
-    if (!task || blocked || !task.capabilities.canEdit || task.archivedAt !== null || projectArchived) return;
+    if (!task || blocked || policyDraft !== null || !task.capabilities.canEdit || task.archivedAt !== null || projectArchived) return;
     if (draft !== null && !(draft.type === 'edit-task' && draft.taskId === task.id)) return;
     rememberOpener(opener);
     const value = draft?.type === 'edit-task'
@@ -390,7 +420,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   }
 
   function requestProjectArchive(restore: boolean, opener?: HTMLElement) {
-    if (!project || blocked || draft !== null) return;
+    if (!project || blocked || draft !== null || policyDraft !== null) return;
     if (restore ? !canRestoreProject : !canArchiveProject) return;
     rememberOpener(opener);
     setForm({
@@ -403,7 +433,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   }
 
   async function requestTaskArchive(restore: boolean, target: Task | null = task, opener?: HTMLElement) {
-    if (!target || blocked || draft !== null) return;
+    if (!target || blocked || draft !== null || policyDraft !== null) return;
     if (restore ? !target.capabilities.canRestore : !target.capabilities.canArchive) return;
     rememberOpener(opener);
     if (selection.taskId !== target.id) await selectTask(target.id);
@@ -428,6 +458,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
         name: next.name,
         key: next.key,
         description: next.description,
+        visibility: next.visibility,
       });
     } else if (form.kind === 'project-edit') {
       stage({
@@ -470,7 +501,9 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
         name: projectValue.name.trim(),
         key: projectValue.key.trim(),
         description: projectValue.description,
+        visibility: projectValue.visibility,
       };
+      lastOutcomeSourceRef.current = 'content';
       stage(command);
       lastCommandRef.current = command;
       void submit();
@@ -485,6 +518,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
         name: projectValue.name.trim(),
         description: projectValue.description,
       };
+      lastOutcomeSourceRef.current = 'content';
       stage(command);
       lastCommandRef.current = command;
       void submit();
@@ -501,6 +535,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
       expectedVersion: form.version,
       fields: { ...taskValue, title: taskValue.title.trim() },
     };
+    lastOutcomeSourceRef.current = 'content';
     stage(command);
     lastCommandRef.current = command;
     void submit();
@@ -516,6 +551,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
       projectId: project.id,
       fields: { title },
     };
+    lastOutcomeSourceRef.current = 'content';
     stage(command);
     lastCommandRef.current = command;
     void submit();
@@ -541,9 +577,62 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
       };
     }
     if (command === null) return;
+    lastOutcomeSourceRef.current = 'content';
     stage(command);
     lastCommandRef.current = command;
     void submit();
+  }
+
+  function stageVisibilityChange(visibility: ProjectVisibility) {
+    if (!project || !canManageAccess || blocked || policyDraft !== null) return;
+    const command: ProjectPolicyCommand = {
+      type: 'change-visibility',
+      workspaceId: project.workspaceId,
+      projectId: project.id,
+      expectedVersion: projectAccess?.projectVersion ?? project.version,
+      visibility,
+    };
+    lastPolicyCommandRef.current = command;
+    lastOutcomeSourceRef.current = 'policy';
+    stage(command);
+  }
+
+  function reviewAccess(member: ProjectAccessMember, state: 'active' | 'revoked') {
+    if (!project || !canManageAccess || blocked || policyDraft !== null) return;
+    const command: ProjectPolicyCommand = {
+      type: 'change-access',
+      workspaceId: project.workspaceId,
+      projectId: project.id,
+      expectedVersion: projectAccess?.projectVersion ?? project.version,
+      principalId: member.principalId,
+      state,
+    };
+    lastPolicyCommandRef.current = command;
+    lastPolicyMemberRef.current = member;
+    lastOutcomeSourceRef.current = 'policy';
+    stage(command);
+  }
+
+  function submitPolicy() {
+    if (policyDraft === null || blocked) return;
+    lastOutcomeSourceRef.current = 'policy';
+    void submit();
+  }
+
+  function retryPolicySave() {
+    if (policyRetryTarget === null || policyPending !== null) return;
+    lastOutcomeSourceRef.current = 'policy';
+    void retrySave();
+  }
+
+  function rebasePolicyDraft() {
+    lastOutcomeSourceRef.current = 'policy';
+    rebaseDraft();
+    requestAnimationFrame(() => {
+      const dialog = document.querySelector<HTMLElement>('[role="dialog"]');
+      const target = dialog?.querySelector<HTMLElement>('[data-access-confirm] h3, [data-access-confirm] [tabindex="-1"]');
+      target?.focus();
+    });
   }
 
   function focusFormStart() {
@@ -561,11 +650,33 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
 
   function discardCurrentDraft() {
     const hadForm = form !== null;
+    if (hadForm) dismissFocusPendingRef.current = true;
     discardDraft();
     setForm(null);
     setCaptureTitle('');
     setResumeDraftOnReady(false);
-    focusDismissedSurface(hadForm);
+    setResumeAccessOnReady(false);
+  }
+
+  function discardPolicyDraft() {
+    discardDraft();
+    setResumeAccessOnReady(false);
+    requestAnimationFrame(() => {
+      const fallback = projectHeadingRef.current ?? document.getElementById('projects-main');
+      fallback?.focus();
+    });
+  }
+
+  function handlePolicyResume() {
+    const command = policyDraft ?? policyRetryTarget;
+    if (command === null) return;
+    if (command.workspaceId === selection.workspaceId && command.projectId === selection.projectId && status === 'ready') {
+      modalOpenerRef.current = null;
+      setForm({ kind: 'project-access', workspaceId: command.workspaceId, projectId: command.projectId });
+      return;
+    }
+    setResumeAccessOnReady(true);
+    void returnToDraft();
   }
 
   function handleReturnToDraft() {
@@ -635,7 +746,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
           ? assigneeName(conflict.assignee)
           : nextFields.assigneePrincipalId === null
             ? copy.task.unassigned[lang]
-            : assigneeMembers.find(member => member.principalId === nextFields.assigneePrincipalId)?.name ?? nextFields.assigneePrincipalId),
+            : assigneeOptions.find(member => member.principalId === nextFields.assigneePrincipalId)?.name ?? nextFields.assigneePrincipalId),
         pair('due', copy.task.dueDateLabel, formatDateOnly(currentFields.dueDate, lang) || copy.task.noDueDate[lang], formatDateOnly(nextFields.dueDate, lang) || copy.task.noDueDate[lang]),
       ];
     }
@@ -648,6 +759,30 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
     return [];
   }
 
+  function policyMemberFor(principalId: string | null): ProjectAccessMember | null {
+    if (principalId === null) return null;
+    const fromPage = projectAccess?.items.find(member => member.principalId === principalId) ?? null;
+    if (fromPage !== null) return fromPage;
+    if (accessConflict !== null && accessConflict.principalId === principalId) return accessConflict;
+    const remembered = lastPolicyMemberRef.current;
+    return remembered !== null && remembered.principalId === principalId ? remembered : null;
+  }
+
+  function policyCommandLabel(command: ProjectPolicyCommand | null): string | null {
+    if (command === null) return null;
+    if (command.type === 'change-visibility') {
+      return `${copy.access.targetVisibility[lang]}: ${visibilityName(command.visibility)[lang]}`;
+    }
+    const member = policyMemberFor(command.principalId);
+    return `${copy.access.targetMember[lang]}: ${member?.name ?? copy.access.selectedMember[lang]}`;
+  }
+
+  const policyMember = policyDraft?.type === 'change-access' ? policyMemberFor(policyDraft.principalId) : null;
+  const policySource = lastOutcomeSourceRef.current === 'policy';
+  const policyMatches = policyDraft !== null
+    && policyDraft.workspaceId === selection.workspaceId
+    && policyDraft.projectId === selection.projectId;
+  const showPolicyBanner = policyDraft !== null && form === null && outcome === null && policyRetryTarget === null;
   const draftMatches = draft === null ? true : commandMatches(draft, selection);
   const retryMatches = retryTarget === null ? true : commandMatches(retryTarget, selection);
   const draftVisibleInCapture = draft?.type === 'create-task'
@@ -671,6 +806,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   const feedbackInForm = form !== null;
 
   const feedbackNode: ReactNode = (() => {
+    if (policySource && outcome !== null) return null;
     if (pending !== null) {
       const command = draft ?? lastCommandRef.current;
       return (
@@ -849,6 +985,250 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
     return null;
   })();
 
+  const policyFeedbackNode: ReactNode = (() => {
+    if (policyPending !== null) {
+      return (
+        <FeedbackPanel
+          busy
+          target={policyCommandLabel(policyDraft ?? lastPolicyCommandRef.current)}
+          title={policyPending === 'change-visibility' ? copy.access.changingVisibility : copy.access.changingAccess}
+          tone="info"
+        />
+      );
+    }
+    if (!policySource) return null;
+    if (outcome === 'success') {
+      const command = lastPolicyCommandRef.current;
+      const member = lastPolicyMemberRef.current;
+      const title = command?.type === 'change-access'
+        ? (command.state === 'active' ? copy.access.successGrant : copy.access.successRevoke)
+        : copy.access.successVisibility;
+      const body = command?.type === 'change-access' && member !== null
+        ? (command.state === 'revoked'
+          ? (member.implicitAccess
+            ? copy.access.successAdminRetained
+            : project?.visibility === 'workspace' && member.active
+              ? copy.access.successWorkspaceRetained
+              : undefined)
+          : member.implicitAccess
+            ? copy.access.successAdminGranted
+            : project?.visibility === 'workspace'
+              ? copy.access.successWorkspaceGranted
+              : undefined)
+        : undefined;
+      return (
+        <FeedbackPanel
+          actions={(
+            <button className={styles.secondary} onClick={dismissOutcome} type="button">
+              {copy.common.dismiss[lang]}
+            </button>
+          )}
+          autoFocus
+          {...(body !== undefined ? { body } : {})}
+          target={policyCommandLabel(command)}
+          title={title}
+          tone="success"
+        />
+      );
+    }
+    if (outcome === 'conflict' && policyDraft !== null) {
+      if (conflict === null || !isProject(conflict)) {
+        return (
+          <FeedbackPanel
+            actions={(
+              <>
+                <button className={styles.secondary} onClick={() => { void reloadConflict(); }} type="button">
+                  {policyDraft.type === 'change-access' ? copy.access.reviewAccess[lang] : copy.feedback.conflictReview[lang]}
+                </button>
+                <button className={styles.ghostButton} onClick={() => { discardPolicyDraft(); void refresh(); }} type="button">
+                  {copy.feedback.discard[lang]}
+                </button>
+              </>
+            )}
+            body={copy.access.conflictMissingCurrent}
+            target={policyCommandLabel(policyDraft)}
+            title={copy.feedback.conflictTitle}
+            tone="warning"
+          />
+        );
+      }
+      const archivedConflict = conflict.archivedAt !== null;
+      const needsReview = policyDraft.type === 'change-access'
+        && (accessConflict === null || accessConflict.principalId !== policyDraft.principalId);
+      const fields = needsReview ? [] : projectPolicyConflictFields(conflict, policyDraft, accessConflict, lang);
+      const rebaseAllowed = policyDraft.type === 'change-access'
+        ? policyDraft.state === 'revoked' || !archivedConflict
+        : !archivedConflict;
+      const reviewAllowed = policyDraft.type === 'change-access' || !archivedConflict;
+      const title = policyDraft.type === 'change-access' ? copy.access.conflictAccessTitle : copy.feedback.conflictTitle;
+      const body = policyDraft.type === 'change-access' ? copy.access.conflictAccessBody : copy.feedback.conflictBody;
+      if (fields.length > 0) {
+        return (
+          <ConflictPanel
+            actions={(
+              <>
+                {rebaseAllowed && (
+                  <button className={styles.secondary} onClick={rebasePolicyDraft} type="button">
+                    {copy.feedback.conflictKeepDraft[lang]}
+                  </button>
+                )}
+                <button className={styles.ghostButton} onClick={() => { discardPolicyDraft(); void refresh(); }} type="button">
+                  {copy.feedback.discard[lang]}
+                </button>
+              </>
+            )}
+            body={body}
+            currentLabel={copy.feedback.conflictCurrentLabel}
+            draftLabel={copy.feedback.conflictDraftLabel}
+            fields={fields}
+            title={title}
+          />
+        );
+      }
+      return (
+        <FeedbackPanel
+          actions={(
+            <>
+              {reviewAllowed && (
+                <button className={styles.secondary} onClick={() => { void reloadConflict(); }} type="button">
+                  {policyDraft.type === 'change-access' ? copy.access.reviewAccess[lang] : copy.feedback.conflictReview[lang]}
+                </button>
+              )}
+              <button className={styles.ghostButton} onClick={() => { discardPolicyDraft(); void refresh(); }} type="button">
+                {copy.feedback.discard[lang]}
+              </button>
+            </>
+          )}
+          body={needsReview ? copy.access.conflictMissingTarget : body}
+          target={policyCommandLabel(policyDraft)}
+          title={title}
+          tone="warning"
+        />
+      );
+    }
+    if (outcome === 'forbidden') {
+      return (
+        <FeedbackPanel
+          actions={(
+            <>
+              <button className={styles.secondary} onClick={() => { dismissOutcome(); closeForm(); }} type="button">
+                {copy.common.close[lang]}
+              </button>
+              {policyDraft !== null && (
+                <button className={styles.ghostButton} onClick={discardPolicyDraft} type="button">
+                  {copy.common.discardDraft[lang]}
+                </button>
+              )}
+            </>
+          )}
+          autoFocus
+          body={copy.feedback.forbiddenBody}
+          target={policyDraft === null ? null : policyCommandLabel(policyDraft)}
+          title={copy.feedback.forbiddenTitle}
+          tone="danger"
+        />
+      );
+    }
+    if (outcome === 'invalid') {
+      return (
+        <FeedbackPanel
+          actions={(
+            <>
+              <button className={styles.secondary} onClick={dismissOutcome} type="button">
+                {copy.common.dismiss[lang]}
+              </button>
+              {policyDraft !== null && (
+                <button className={styles.ghostButton} onClick={discardPolicyDraft} type="button">
+                  {copy.common.discardDraft[lang]}
+                </button>
+              )}
+            </>
+          )}
+          autoFocus
+          body={copy.feedback.invalidBody}
+          target={policyDraft === null ? null : policyCommandLabel(policyDraft)}
+          title={copy.feedback.invalidTitle}
+          tone="warning"
+        />
+      );
+    }
+    if (outcome === 'error' && policyRetryTarget !== null) {
+      const policyRetryMatches = policyRetryTarget.workspaceId === selection.workspaceId
+        && policyRetryTarget.projectId === selection.projectId;
+      return (
+        <FeedbackPanel
+          actions={(
+            <>
+              {policyRetryMatches
+                ? (
+                  <button className={styles.primary} onClick={retryPolicySave} type="button">
+                    {copy.feedback.retrySame[lang]}
+                  </button>
+                )
+                : (
+                  <button className={styles.primary} onClick={handlePolicyResume} type="button">
+                    {copy.access.returnToChange[lang]}
+                  </button>
+                )}
+              <button className={styles.ghostButton} onClick={discardPolicyDraft} type="button">
+                {copy.feedback.discard[lang]}
+              </button>
+            </>
+          )}
+          autoFocus
+          body={copy.feedback.unknownBody}
+          target={policyCommandLabel(policyRetryTarget)}
+          title={copy.feedback.unknownTitle}
+          tone="warning"
+        />
+      );
+    }
+    if (outcome === 'error') {
+      return (
+        <FeedbackPanel
+          actions={(
+            <>
+              <button className={styles.secondary} onClick={dismissOutcome} type="button">
+                {copy.common.dismiss[lang]}
+              </button>
+              {policyDraft !== null && (
+                <button className={styles.ghostButton} onClick={discardPolicyDraft} type="button">
+                  {copy.common.discardDraft[lang]}
+                </button>
+              )}
+            </>
+          )}
+          autoFocus
+          body={copy.feedback.errorBody}
+          title={copy.feedback.errorTitle}
+          tone="danger"
+        />
+      );
+    }
+    return null;
+  })();
+
+  const policyDraftBanner: ReactNode = showPolicyBanner && policyDraft !== null
+    ? (
+      <FeedbackPanel
+        actions={(
+          <>
+            <button className={styles.secondary} onClick={handlePolicyResume} type="button">
+              {copy.access.draftResume[lang]}
+            </button>
+            <button className={styles.ghostButton} onClick={discardPolicyDraft} type="button">
+              {copy.common.discardDraft[lang]}
+            </button>
+          </>
+        )}
+        body={copy.access.draftBody}
+        target={policyCommandLabel(policyDraft)}
+        title={copy.access.draftTitle}
+        tone={policyMatches ? 'info' : 'warning'}
+      />
+    )
+    : null;
+
   const draftBanner: ReactNode = showDraftBanner && draft !== null
     ? (
       <FeedbackPanel
@@ -876,7 +1256,9 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   const recoveryBlock = (
     <>
       {draftInDetail ? null : draftBanner}
+      {policyDraftBanner}
       {feedbackInDetail ? null : feedbackNode}
+      {form === null ? policyFeedbackNode : null}
     </>
   );
 
@@ -886,7 +1268,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
       <FeedbackPanel
         actions={(
           <>
-            <button className={styles.secondary} disabled={pending !== null} onClick={() => { void loadMore(pageError.collection); }} type="button">
+            <button className={styles.secondary} disabled={blocked} onClick={() => { void loadMore(pageError.collection); }} type="button">
               {copy.feedback.pageErrorRetry[lang]}
             </button>
             <button className={styles.ghostButton} onClick={dismissPageError} type="button">
@@ -908,19 +1290,19 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   }
 
   function openProject(projectId: string) {
-    if (pending !== null) return;
+    if (anyPending) return;
     void selectProject(projectId);
     closeDrawer();
   }
 
   function toggleProjectsView() {
-    if (pending !== null) return;
+    if (anyPending) return;
     void setView('projects', views.projects === 'active' ? 'archived' : 'active');
     closeDrawer();
   }
 
   function toggleTasksView() {
-    if (pending !== null) return;
+    if (anyPending) return;
     void setView('tasks', views.tasks === 'active' ? 'archived' : 'active');
   }
 
@@ -961,7 +1343,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
             ? (
               <select
                 aria-label={copy.header.workspaceSelector[lang]}
-                disabled={pending !== null}
+                disabled={anyPending}
                 id="projects-workspace-select"
                 onChange={event => { void selectWorkspace(event.currentTarget.value.length === 0 ? null : event.currentTarget.value); }}
                 value={selection.workspaceId ?? ''}
@@ -1050,7 +1432,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
               </p>
             )}
             {projects?.nextCursor !== null && projects !== null && (
-              <button className={styles.navArchivedLink} disabled={pending !== null} onClick={() => { void loadMore('projects'); }} type="button">
+              <button className={styles.navArchivedLink} disabled={anyPending} onClick={() => { void loadMore('projects'); }} type="button">
                 {copy.common.loadMore[lang]}
               </button>
             )}
@@ -1058,7 +1440,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
             <button
               aria-pressed={isArchivedProjects}
               className={styles.navArchivedLink}
-              disabled={pending !== null}
+              disabled={anyPending}
               onClick={toggleProjectsView}
               type="button"
             >
@@ -1068,7 +1450,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
             {canCreateProject && (
               <button
                 className={styles.navCreateLink}
-                disabled={blocked || (draft !== null && draft.type !== 'create-project')}
+                disabled={blocked || policyDraft !== null || (draft !== null && draft.type !== 'create-project')}
                 onClick={event => openProjectCreate(event.currentTarget)}
                 type="button"
               >
@@ -1099,7 +1481,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
               <button
                 aria-label={copy.project.newProject[lang]}
                 className={styles.mobileMenuButton}
-                disabled={!canCreateProject || blocked || (draft !== null && draft.type !== 'create-project')}
+                disabled={!canCreateProject || blocked || policyDraft !== null || (draft !== null && draft.type !== 'create-project')}
                 onClick={event => openProjectCreate(event.currentTarget)}
                 type="button"
               >
@@ -1204,16 +1586,16 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
               </div>
               <div className={styles.sectionHeader}>
                 <span className={styles.sectionHint}>{workspace?.name}</span>
-                <button className={styles.secondary} onClick={toggleProjectsView} type="button">
+                <button className={styles.secondary} disabled={anyPending} onClick={toggleProjectsView} type="button">
                   {isArchivedProjects ? copy.project.viewActive[lang] : copy.project.viewArchived[lang]}
                 </button>
               </div>
               {recoveryBlock}
               <EmptyState
                 actions={isArchivedProjects
-                  ? <button className={styles.secondary} onClick={toggleProjectsView} type="button">{copy.project.viewActive[lang]}</button>
+                  ? <button className={styles.secondary} disabled={anyPending} onClick={toggleProjectsView} type="button">{copy.project.viewActive[lang]}</button>
                   : canCreateProject
-                    ? <button className={styles.primary} onClick={event => openProjectCreate(event.currentTarget)} type="button">{copy.project.createFirst[lang]}</button>
+                    ? <button className={styles.primary} disabled={blocked || policyDraft !== null} onClick={event => openProjectCreate(event.currentTarget)} type="button">{copy.project.createFirst[lang]}</button>
                     : undefined}
                 body={isArchivedProjects
                   ? copy.status.emptyArchivedProjectsBody
@@ -1244,7 +1626,14 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
                       </div>
                       {project.description.length > 0 && <p className={styles.lede}>{project.description}</p>}
                       <div className={styles.metaLine}>
-                        <span>{copy.project.visibilityWorkspace[lang]}</span>
+                        <span className={styles.visibilityLine}>
+                          <Badge tone={project.visibility === 'private' ? 'warning' : 'neutral'}>
+                            {visibilityName(project.visibility)[lang]}
+                          </Badge>
+                          {project.visibility === 'workspace'
+                            ? null
+                            : <span>{canManageAccess ? copy.project.visibilityAutoAccess[lang] : copy.project.visibilityGranted[lang]}</span>}
+                        </span>
                         {tasks !== null && <span>{projectTaskCount(tasks.total, lang)}</span>}
                         <span>
                           {copy.task.creatorLabel[lang]}: {project.creator.name}
@@ -1253,20 +1642,31 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
                       </div>
                     </div>
                     <div className={styles.pageActions}>
+                      {canManageAccess && (
+                        <button
+                          className={styles.secondary}
+                          disabled={blocked || draft !== null}
+                          onClick={event => openProjectAccess(event.currentTarget)}
+                          type="button"
+                        >
+                          <IconUsers size={16} />
+                          {copy.access.button[lang]}
+                        </button>
+                      )}
                       {canEditProject && (
-                        <button className={styles.secondary} disabled={blocked || (draft !== null && !(draft.type === 'edit-project' && draft.projectId === project.id))} onClick={event => openProjectSettings(event.currentTarget)} type="button">
+                        <button className={styles.secondary} disabled={blocked || draft !== null || policyDraft !== null} onClick={event => openProjectSettings(event.currentTarget)} type="button">
                           <IconSettings size={16} />
                           {copy.project.settingsTitle[lang]}
                         </button>
                       )}
                       {canArchiveProject && (
-                        <button className={styles.secondary} disabled={blocked || draft !== null} onClick={event => requestProjectArchive(false, event.currentTarget)} type="button">
+                        <button className={styles.secondary} disabled={blocked || draft !== null || policyDraft !== null} onClick={event => requestProjectArchive(false, event.currentTarget)} type="button">
                           <IconArchive size={16} />
                           {copy.project.archive[lang]}
                         </button>
                       )}
                       {canRestoreProject && (
-                        <button className={styles.primary} disabled={blocked || draft !== null} onClick={event => requestProjectArchive(true, event.currentTarget)} type="button">
+                        <button className={styles.primary} disabled={blocked || draft !== null || policyDraft !== null} onClick={event => requestProjectArchive(true, event.currentTarget)} type="button">
                           <IconRestore size={16} />
                           {copy.project.restore[lang]}
                         </button>
@@ -1278,7 +1678,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
                 {projectArchived && (
                   <FeedbackPanel
                     actions={canRestoreProject
-                      ? <button className={styles.primary} disabled={blocked || draft !== null} onClick={event => requestProjectArchive(true, event.currentTarget)} type="button">{copy.project.restore[lang]}</button>
+                      ? <button className={styles.primary} disabled={blocked || draft !== null || policyDraft !== null} onClick={event => requestProjectArchive(true, event.currentTarget)} type="button">{copy.project.restore[lang]}</button>
                       : undefined}
                     body={copy.project.archivedNotice}
                     title={copy.project.archivedBadge}
@@ -1300,7 +1700,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
                     </span>
                   </div>
                   <div className={styles.toolbarActions}>
-                    <button className={styles.secondary} disabled={pending !== null} onClick={toggleTasksView} type="button">
+                    <button className={styles.secondary} disabled={anyPending} onClick={toggleTasksView} type="button">
                       <IconArchive size={16} />
                       {isArchivedTasks ? copy.task.viewActive[lang] : copy.task.viewArchived[lang]}
                     </button>
@@ -1329,7 +1729,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
                     onLoadMore={() => { void loadMore('tasks'); }}
                     onOpen={selectTaskFromList}
                     onRestore={(task, opener) => requestTaskArchive(true, task, opener)}
-                    pending={pending !== null}
+                    pending={blocked || policyDraft !== null}
                     tasks={taskList}
                   />
                 )}
@@ -1339,6 +1739,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
               {task !== null && (
                 <div>
                   <TaskDetail
+                    actionsDisabled={blocked || policyDraft !== null}
                     description={task.description.length > 0 ? <TaskDescription source={task.description} /> : undefined}
                     feedback={form === null && (feedbackInDetail || draftInDetail)
                       ? (
@@ -1366,42 +1767,72 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
 
       {form !== null && (
         <ModalFrame
-          busy={pending !== null}
-          eyebrow={form.kind === 'project-create' || form.kind === 'project-edit'
-            ? copy.common.project
-            : form.kind === 'task-edit' || form.kind === 'task-archive' || form.kind === 'task-restore'
-              ? copy.common.task
-              : copy.common.project}
+          busy={anyPending}
+          eyebrow={form.kind === 'project-access'
+            ? copy.access.eyebrow
+            : form.kind === 'project-create' || form.kind === 'project-edit'
+              ? copy.common.project
+              : form.kind === 'task-edit' || form.kind === 'task-archive' || form.kind === 'task-restore'
+                ? copy.common.task
+                : copy.common.project}
           onClose={closeForm}
           small={form.kind === 'project-archive' || form.kind === 'project-restore' || form.kind === 'task-archive' || form.kind === 'task-restore'}
           title={modalTitle(form)}
+          wide={form.kind === 'project-access'}
         >
-          {feedbackNode}
+          {form.kind === 'project-access'
+            ? (project === null || outcome === 'forbidden' ? policyFeedbackNode : null)
+            : feedbackNode}
           {pageError?.collection === 'members' && pageErrorBlock}
+          {form.kind === 'project-access' && project !== null && outcome !== 'forbidden' && (
+            <ProjectAccessPanel
+              access={projectAccess}
+              accessError={policyPageErrors.projectAccess ?? null}
+              feedback={policyFeedbackNode}
+              onReviewAccess={reviewAccess}
+              onDiscard={() => { discardDraft(); }}
+              onLoadMore={() => { void loadMore('projectAccess'); }}
+              onRefresh={() => { void refresh(); }}
+              onStageVisibility={stageVisibilityChange}
+              onSubmit={submitPolicy}
+              onSubmitVisibility={submitPolicy}
+              policyDraft={policyDraft}
+              policyMember={policyMember}
+              policyPending={policyPending}
+              policyRetryTarget={policyRetryTarget}
+              project={project}
+            />
+          )}
           {outcome !== 'forbidden' && (form.kind === 'project-create' || form.kind === 'project-edit') && (
             <>
               <p className={styles.stateHint}>
                 {form.kind === 'project-create' ? copy.project.createBody[lang] : copy.project.settingsBody[lang]}
               </p>
               <ProjectForm
+                canCreatePrivate={canCreatePrivate}
                 mode={form.kind === 'project-create' ? 'create' : 'edit'}
                 onChange={stageProject}
                 onCancel={closeForm}
                 onSubmit={submitProjectForm}
                 pending={pending !== null}
-                disabled={retryTarget !== null}
+                disabled={retryTarget !== null || policyBlocked}
                 value={projectValue}
               />
             </>
           )}
           {outcome !== 'forbidden' && form.kind === 'task-edit' && project !== null && (
             <TaskEditForm
-              members={assigneeMembers}
+              assignees={assigneeOptions}
+              assigneesError={policyPageErrors.assignees !== undefined}
+              assigneesLoading={assignees === null && policyPageErrors.assignees === undefined}
+              assigneesNext={assignees !== null && assignees.nextCursor !== null}
+              assigneesPageMissing={assignees === null}
               onChange={stageTask}
               onCancel={closeForm}
+              onLoadMoreAssignees={() => { void loadMore('assignees'); }}
               onSubmit={submitTaskForm}
               pending={pending !== null}
-              disabled={retryTarget !== null}
+              disabled={retryTarget !== null || policyBlocked}
               projectKey={project.key}
               projectName={project.name}
               value={taskValue}
@@ -1410,7 +1841,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
           {outcome !== 'forbidden' && (form.kind === 'project-archive' || form.kind === 'project-restore') && (
             <ConfirmBox
               busy={pending !== null}
-              disabled={retryTarget !== null}
+              disabled={retryTarget !== null || policyBlocked}
               consequence={form.kind === 'project-archive' ? copy.project.archiveConsequence : copy.project.restoreConsequence}
               confirmLabel={form.kind === 'project-archive' ? copy.project.archive : copy.project.restore}
               danger={form.kind === 'project-archive'}
@@ -1443,6 +1874,7 @@ function modalTitle(form: FormState): Bilingual {
   switch (form.kind) {
     case 'project-create': return copy.project.createTitle;
     case 'project-edit': return copy.project.settingsTitle;
+    case 'project-access': return copy.access.title;
     case 'task-edit': return copy.task.editTitle;
     case 'project-archive': return copy.project.archiveTitle;
     case 'project-restore': return copy.project.restore;

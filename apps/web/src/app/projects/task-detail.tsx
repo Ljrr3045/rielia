@@ -62,6 +62,7 @@ export function TaskDetail({
   projectArchived,
   overlay,
   modalOpen,
+  actionsDisabled = false,
   feedback,
   description,
   onClose,
@@ -73,6 +74,7 @@ export function TaskDetail({
   projectArchived: boolean;
   overlay: boolean;
   modalOpen: boolean;
+  actionsDisabled?: boolean;
   feedback?: ReactNode | undefined;
   description?: ReactNode | undefined;
   onClose: () => void;
@@ -124,7 +126,7 @@ export function TaskDetail({
           </div>
           <div className={styles.detailHeaderRight}>
             {!readOnly && (
-              <button className={styles.secondary} onClick={event => onEdit(event.currentTarget)} type="button">
+              <button className={styles.secondary} disabled={actionsDisabled} onClick={event => onEdit(event.currentTarget)} type="button">
                 {copy.common.edit[lang]}
               </button>
             )}
@@ -214,13 +216,13 @@ export function TaskDetail({
             <div className={styles.detailFooter}>
               {taskArchived
                 ? (
-                  <button className={styles.secondary} onClick={event => onRestore(event.currentTarget)} type="button">
+                  <button className={styles.secondary} disabled={actionsDisabled} onClick={event => onRestore(event.currentTarget)} type="button">
                     <IconRestore size={16} />
                     {copy.task.restore[lang]}
                   </button>
                 )
                 : (
-                  <button className={styles.secondary} onClick={event => onArchive(event.currentTarget)} type="button">
+                  <button className={styles.secondary} disabled={actionsDisabled} onClick={event => onArchive(event.currentTarget)} type="button">
                     <IconArchive size={16} />
                     {copy.task.archive[lang]}
                   </button>
