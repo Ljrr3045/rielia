@@ -1,0 +1,78 @@
+apps/web/src/lib/project-task-proxy.ts
+  s_1416ec281bc244::t_406e6dc02fc45c 2,9,11-18
+scripts/project-task-client.test.mjs
+  s_1416ec281bc244::t_f2fa408c5a0466 9
+  s_1416ec281bc244::t_695c43f6211535 11-12,14-27
+  s_1416ec281bc244::t_1c93c5951135ee 13
+scripts/test-runtime.mjs
+  s_1416ec281bc244::t_5a91cae4891613 182
+packages/contracts/src/project-tasks.ts
+  s_1416ec281bc244::t_64f252def89d3e 49,53
+  s_1416ec281bc244::t_4f986a7e78fca2 18-19,21-27,39,91,97,99-103,107
+  s_1416ec281bc244::t_0a6c7e3757b75b 20,104-106
+  s_1416ec281bc244::t_3de0e9751d36f7 98
+apps/api/test/project-tasks.test.mjs
+  s_1416ec281bc244::t_983d186f09a2a6 43-56,125-127
+  s_1416ec281bc244::t_098b655120dd1f 146-161
+  s_1416ec281bc244::t_b039609fb1f5e8 181-203
+  s_1416ec281bc244::t_f2fa408c5a0466 284-287
+  s_1416ec281bc244::t_fb12a91b049853 57-68,74-124,128-145,162-180,204
+  s_1416ec281bc244::t_5a91cae4891613 5
+  s_1416ec281bc244::t_1c93c5951135ee 69-73
+apps/api/src/projects/project-task.controller.ts
+  s_1416ec281bc244::t_406e6dc02fc45c 4,14-15,22-23,26-27,36,65,72-73
+apps/web/src/lib/use-project-tasks.ts
+  s_1416ec281bc244::t_27ffb261f914bc 42
+  s_1416ec281bc244::t_64f252def89d3e 5,34-35
+  s_1416ec281bc244::t_3de0e9751d36f7 11,13,41
+CHANGELOG.md
+  s_1416ec281bc244::t_550ed6d6ea52c8 9-24
+apps/api/prisma/migrations/20261030180000_task_views/migration.sql
+  s_1416ec281bc244::t_874c4f5b17f79c 1-64
+scripts/project-task-logic.test.mjs
+  s_1416ec281bc244::t_1c93c5951135ee 9,57-67
+  s_1416ec281bc244::t_49d29563961fdd 37-56,68,80-119
+  s_1416ec281bc244::t_f2fa408c5a0466 16
+  s_1416ec281bc244::t_27ffb261f914bc 69-79
+apps/api/test/project-task-qa.mjs
+  s_1416ec281bc244::t_5a91cae4891613 15,87-98,132-147
+apps/api/prisma/schema.prisma
+  s_1416ec281bc244::t_4f986a7e78fca2 184,225,238
+docs/development/progress.md
+  s_1416ec281bc244::t_95a6f173641c97 372-376
+  s_1416ec281bc244::t_550ed6d6ea52c8 3,15-17,35-40,71-114,583
+apps/api/src/projects/project-task.service.ts
+  s_1416ec281bc244::t_4bfa13e65c9507 3,102,113-115,140-142,145-169,171-172,185,187,193-212,352-353
+  s_1416ec281bc244::t_0a6c7e3757b75b 173-184,186
+  s_1416ec281bc244::t_2182245ba3d761 305
+apps/web/src/lib/project-task-controller.ts
+  s_1416ec281bc244::t_21ca4634ea5afe 74-75
+  s_1416ec281bc244::t_b039609fb1f5e8 250
+  s_1416ec281bc244::t_bafb87d2916aee 15-18,30,32,38-40,57,63,78-80,85,105-106,110-130,141,144,157-158,171,194,204-207,213,225,232,261,265-267,279,297-299,307-318,330-331,334-336
+  s_1416ec281bc244::t_27ffb261f914bc 9,197-203,208-212,214-220,306
+  s_1416ec281bc244::t_5051c7dc9f9e32 1,10,19,64-73,76-77
+  s_1416ec281bc244::t_1c93c5951135ee 58
+  s_1416ec281bc244::t_2182245ba3d761 107-109
+apps/web/src/lib/project-task-client.ts
+  s_1416ec281bc244::t_406e6dc02fc45c 1,13,49-52,56-57,84
+  s_1416ec281bc244::t_0a6c7e3757b75b 53-55
+docs/development/task-views.md
+  s_1416ec281bc244::t_95a6f173641c97 4-5
+  s_1416ec281bc244::t_e9d7c735077da4 1-3,6-237
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9a033a5bb216e69857942b48ac5fab52de3714bb",
+  "prompts": {},
+  "sessions": {
+    "s_1416ec281bc244": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18df3-0a13-7c02-8d2a-a53facd5c80a",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
