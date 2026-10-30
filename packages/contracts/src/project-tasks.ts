@@ -15,6 +15,16 @@ export const taskPriorities = ['none', 'low', 'medium', 'high', 'urgent'] as con
 export type TaskStatus = typeof taskStatuses[number];
 export type TaskType = typeof taskTypes[number];
 export type TaskPriority = typeof taskPriorities[number];
+export interface TaskFilters { status?: TaskStatus; assignee?: string; priority?: TaskPriority }
+export type TaskColumnCounts = Record<TaskStatus, number>;
+export interface TaskPage extends DomainPage<Task> { orderVersion: number; columnCounts: TaskColumnCounts; selectedAssignee: DomainPerson | null }
+export interface TaskView { layout: 'list' | 'board'; filters: TaskFilters; column: TaskStatus }
+export function isTaskFilters(value: unknown): value is TaskFilters {
+  return record(value) && Object.keys(value).every(key => ['status', 'assignee', 'priority'].includes(key))
+    && (!('status' in value) || taskStatuses.includes(value['status'] as TaskStatus))
+    && (!('priority' in value) || taskPriorities.includes(value['priority'] as TaskPriority))
+    && (!('assignee' in value) || (str(value['assignee']) && /^[A-Za-z0-9_-]{1,128}$/.test(value['assignee'])));
+}
 export interface DomainPerson { principalId: string; name: string; kind: 'human' | 'agent'; active: boolean }
 export interface DomainProvenance { actorPrincipalId: string; executionMode: 'human' | 'delegated' | 'autonomous'; source: 'web' | 'mcp'; grantId: string | null }
 export interface DomainCapabilities { canEdit: boolean; canArchive: boolean; canRestore: boolean }
@@ -26,7 +36,7 @@ export interface Project {
 export interface TaskFields { title: string; description: string; type: TaskType; priority: TaskPriority; status: TaskStatus; assigneePrincipalId: string | null; dueDate: string | null }
 export interface Task extends TaskFields {
   id: string; workspaceId: string; projectId: string; projectKey: string; number: number; key: string;
-  version: number; archivedAt: string | null; projectArchivedAt: string | null; createdAt: string; updatedAt: string;
+  version: number; orderVersion: number; archivedAt: string | null; projectArchivedAt: string | null; createdAt: string; updatedAt: string;
   creator: DomainPerson; assignee: DomainPerson | null; provenance: DomainProvenance; capabilities: DomainCapabilities; url: string;
 }
 export type ProjectTaskCommand =
@@ -36,10 +46,11 @@ export type ProjectTaskCommand =
   | { type: 'create-task'; workspaceId: string; projectId: string; fields: Pick<TaskFields, 'title'> & Partial<Omit<TaskFields, 'title'>> }
   | { type: 'edit-task'; workspaceId: string; projectId: string; taskId: string; expectedVersion: number; fields: Partial<TaskFields> }
   | { type: 'archive-task' | 'restore-task'; workspaceId: string; projectId: string; taskId: string; expectedVersion: number };
+export interface ProjectMoveCommand { type: 'move-task'; workspaceId: string; projectId: string; taskId: string; expectedVersion: number; expectedOrderVersion: number; status: TaskStatus; beforeTaskId: string | null }
 export type ProjectPolicyCommand =
   | { type: 'change-visibility'; workspaceId: string; projectId: string; expectedVersion: number; visibility: ProjectVisibility }
   | { type: 'change-access'; workspaceId: string; projectId: string; expectedVersion: number; principalId: string; state: 'active' | 'revoked' };
-export type ProjectCommand = ProjectTaskCommand | ProjectPolicyCommand;
+export type ProjectCommand = ProjectTaskCommand | ProjectPolicyCommand | ProjectMoveCommand;
 export type ProjectTaskResult = Project | Task;
 export type ArchiveView = 'active' | 'archived';
 export interface DomainPage<T> { items: T[]; total: number; nextCursor: string | null; capabilities: { canCreate: boolean; canCreatePrivate?: boolean } }
@@ -77,9 +88,20 @@ export function isProjectAccessMember(value: unknown): value is ProjectAccessMem
     && record(value['capabilities']) && typeof value['capabilities']['canGrant'] === 'boolean' && typeof value['capabilities']['canRevoke'] === 'boolean';
 }
 export function isTask(value: unknown): value is Task {
-  return record(value) && common(value) && str(value['projectId']) && str(value['projectKey']) && positive(value['number']) && str(value['key'])
+  return record(value) && common(value) && positive(value['orderVersion']) && str(value['projectId']) && str(value['projectKey']) && positive(value['number']) && str(value['key'])
     && str(value['title']) && str(value['description']) && taskTypes.includes(value['type'] as TaskType) && taskPriorities.includes(value['priority'] as TaskPriority)
     && taskStatuses.includes(value['status'] as TaskStatus) && (value['assigneePrincipalId'] === null || str(value['assigneePrincipalId']))
     && (value['assignee'] === null || isDomainPerson(value['assignee'])) && (value['projectArchivedAt'] === null || date(value['projectArchivedAt']))
     && (value['dueDate'] === null || (str(value['dueDate']) && /^\d{4}-\d{2}-\d{2}$/.test(value['dueDate'])));
+}
+export function isTaskPage(value: unknown): value is TaskPage {
+  const counts = record(value) ? value['columnCounts'] : null;
+  return record(value) && Array.isArray(value['items']) && value['items'].length <= 100 && value['items'].every(isTask)
+    && positive(value['orderVersion']) && value['items'].every(row => row.orderVersion === value['orderVersion'])
+    && Number.isSafeInteger(value['total']) && Number(value['total']) >= value['items'].length
+    && (value['nextCursor'] === null || (str(value['nextCursor']) && /^[A-Za-z0-9_-]{1,2048}$/.test(value['nextCursor'])))
+    && record(value['capabilities']) && typeof value['capabilities']['canCreate'] === 'boolean'
+    && (value['selectedAssignee'] === null || isDomainPerson(value['selectedAssignee']))
+    && record(counts) && taskStatuses.every(status => Number.isSafeInteger(counts[status]) && Number(counts[status]) >= 0)
+    && taskStatuses.reduce((sum, status) => sum + Number(counts[status]), 0) === value['total'];
 }

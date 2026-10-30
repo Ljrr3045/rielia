@@ -6,14 +6,14 @@ import { ProjectTaskFailure } from '../apps/web/src/lib/project-task-client.ts';
 import { parseSafeMarkdown, safeMarkdownLink } from '../apps/web/src/lib/safe-markdown.ts';
 
 const session = { user: { id: 'human', name: 'Human', email: 'human@example.test', emailVerified: true }, session: { id: 'session', expiresAt: '2035-01-01T00:00:00.000Z' } };
-const page = items => ({ items, total: items.length, nextCursor: null, capabilities: { canCreate: true } });
+const page = items => ({ items, total: items.length, nextCursor: null, capabilities: { canCreate: true }, orderVersion: 1, columnCounts: { backlog: items.length, todo: 0, in_progress: 0, done: 0, canceled: 0 }, selectedAssignee: null });
 const workspace = id => ({ id, name: id, role: 'member', ownerPrincipalId: 'owner', createdAt: '2026-01-01T00:00:00.000Z' });
 const creator = { principalId: 'human', name: 'Human', kind: 'human', active: true };
 const project = (id = 'p', workspaceId = 'a', version = 1) => ({ id, workspaceId, key: 'RIE', name: 'Project', description: '', version, visibility: 'workspace', archivedAt: null,
   createdAt: '2026-01-01T00:00:00.000Z', updatedAt: '2026-01-01T00:00:00.000Z', creator, provenance: { actorPrincipalId: 'human', executionMode: 'human', source: 'web', grantId: null },
   capabilities: { canEdit: true, canArchive: true, canRestore: false, canManageAccess: false, canChangeVisibility: false, canGrantAccess: false, canRevokeAccess: false }, url: `/projects?workspace=${workspaceId}&project=${id}` });
 const task = (id = 't', projectId = 'p', workspaceId = 'a', version = 1) => ({ ...project(id, workspaceId, version), projectId, projectKey: 'RIE', key: 'RIE-1', number: 1,
-  title: 'Original', description: '', type: 'task', priority: 'none', status: 'backlog', assigneePrincipalId: null, assignee: null, dueDate: null, projectArchivedAt: null });
+  title: 'Original', description: '', type: 'task', priority: 'none', status: 'backlog', assigneePrincipalId: null, assignee: null, dueDate: null, projectArchivedAt: null, orderVersion: 1 });
 const draft = () => ({ type: 'edit-task', workspaceId: 'a', projectId: 'p', taskId: 't', expectedVersion: 1, fields: { title: 'Unsent draft' } });
 function deferred() { let resolve; let reject; const promise = new Promise((a, b) => { resolve = a; reject = b; }); return { promise, resolve, reject }; }
 function fixture(overrides = {}) {
@@ -33,6 +33,89 @@ test('real-data controller distinguishes disabled/auth/empty/forbidden/error and
   assert.equal(f.controller.getState().status, 'empty'); assert.equal(f.controller.getState().projects.capabilities.canCreate, false);
   f.transport.projects = async () => { throw new ProjectTaskFailure(403); }; await f.controller.refresh(); assert.equal(f.controller.getState().status, 'forbidden'); assert.equal(f.controller.getState().projects, null);
   f.values.session = { bad: true }; await f.controller.refresh(); assert.equal(f.controller.getState().status, 'error'); assert.equal(f.controller.getState().session, null);
+});
+test('T08 validated board/filter/column URLs survive refresh, Back and detail outside filters without changing drafts', async () => {
+  const calls = []; const locations = [];
+  const f = fixture({ transport: { tasks: async (w, p, view, signal, cursor, filters) => { calls.push({ filters, cursor }); return page([]); } }, options: { navigate: url => locations.push(url) } });
+  await f.controller.openLocation('?workspace=a&project=p&task=t&taskLayout=board&column=done&priority=urgent&assignee=unassigned');
+  assert.equal(f.controller.getState().taskView.layout, 'board'); assert.equal(f.controller.getState().taskView.column, 'done'); assert.equal(f.controller.getState().task.id, 't');
+  assert.equal(calls.length, 5); assert.ok(calls.every(call => call.filters.priority === 'urgent' && call.filters.assignee === 'unassigned'));
+  f.controller.stage(draft()); await f.controller.setTaskFilters({ status: 'done' });
+  assert.equal(f.controller.getState().selection.taskId, 't'); assert.equal(f.controller.getState().draft.fields.title, 'Unsent draft');
+  assert.equal(new URL(locations.at(-1), 'https://test').searchParams.get('status'), 'done');
+  await f.controller.openLocation('?workspace=a&project=p&taskLayout=list'); assert.equal(f.controller.getState().taskView.layout, 'list');
+  for (const query of ['taskLayout=board&taskLayout=list', 'column=custom', 'status=custom', 'priority=urgent&priority=low', 'assignee=bad%20id']) {
+    await f.controller.openLocation(`?workspace=a&project=p&${query}`); assert.equal(f.controller.getState().status, 'error'); assert.equal(f.controller.getState().task, null);
+  }
+});
+test('T08 mixed board revisions retain original rows and block moves without promoting source versions', async () => {
+  const f = fixture({ transport: { tasks: async (w, p, view, signal, cursor, filters) => ({ ...page([{ ...task(filters.status, p, w), status: filters.status, orderVersion: filters.status === 'done' ? 2 : 1 }]), orderVersion: filters.status === 'done' ? 2 : 1 }) } });
+  await f.controller.openLocation('?workspace=a&project=p&taskLayout=board');
+  assert.equal(f.controller.getState().taskColumnsChanged, true); assert.equal(f.controller.getState().taskColumns.backlog.items[0].orderVersion, 1);
+  f.controller.stageMove('backlog', 'done', null); assert.equal(f.controller.getState().draft, null);
+  assert.equal(f.controller.getState().taskColumns.done.items[0].orderVersion, 2);
+  assert.equal(f.controller.getState().taskSummary.status, 'changed'); assert.equal(f.controller.getState().taskSummary.total, null);
+});
+test('T08 selected assignee metadata survives off-page/historical filters and board totals require coherent authoritative pages', async () => {
+  const f = fixture({ transport: { tasks: async (w, p, v, s, c, filters) => ({ ...page([]), selectedAssignee: filters.assignee === 'old' ? { ...creator, principalId: 'old', name: 'Historical Person', active: false } : null }) } });
+  await f.controller.openLocation('?workspace=a&project=p&taskLayout=board&assignee=old');
+  assert.equal(f.controller.getState().selectedTaskAssignee.name, 'Historical Person'); assert.equal(f.controller.getState().selectedTaskAssignee.active, false);
+  assert.equal(f.controller.getState().taskFilterAssigneeStatus, 'resolved'); assert.equal(f.controller.getState().taskSummary.total, 0); assert.equal(f.controller.getState().taskSummary.status, 'ready');
+  await f.controller.setTaskFilters({ assignee: 'unavailable' }); assert.equal(f.controller.getState().selectedTaskAssignee, null); assert.equal(f.controller.getState().taskFilterAssigneeStatus, 'unavailable');
+  assert.equal(f.controller.getState().taskView.filters.assignee, 'unavailable');
+  f.transport.tasks = async (w, p, v, s, c, filters) => { if (filters.status === 'done') throw new ProjectTaskFailure(503); return page([]); };
+  await f.controller.refresh(); assert.equal(f.controller.getState().taskSummary.status, 'partial'); assert.equal(f.controller.getState().taskSummary.total, null); assert.equal(f.controller.getState().taskSummary.canCreate, false);
+});
+test('T08 status-filtered board loads authorized destinations without clearing filters; another detail has explicit eligibility', async () => {
+  const calls = [];
+  const f = fixture({ transport: { tasks: async (w, p, v, s, c, filters) => { calls.push(filters); return page([{ ...task(filters.status, p, w), status: filters.status }]); } } });
+  await f.controller.openLocation('?workspace=a&project=p&taskLayout=board&status=todo&priority=urgent');
+  assert.equal(calls.length, 5); assert.ok(calls.every(filters => filters.priority === 'urgent'));
+  assert.equal(f.controller.moveEligibility('todo', 'done', null), 'ready'); assert.equal(f.controller.stageMove('todo', 'done', 'done'), 'ready');
+  assert.equal(f.controller.getState().taskView.filters.status, 'todo'); assert.equal(f.controller.getState().draft.beforeTaskId, 'done');
+  await f.controller.submit(); assert.equal(f.controller.getState().selection.taskId, null); assert.equal(f.controller.getState().taskView.filters.status, 'todo');
+  await f.controller.selectTask('another'); assert.equal(f.controller.moveEligibility('todo', 'done', null), 'different-detail');
+  assert.equal(f.controller.stageMove('todo', 'done', null), 'different-detail'); assert.equal(f.controller.getState().draft, null);
+});
+test('T08 board paging and auxiliary errors recover independently; changed pages require Refresh and auth denial clears siblings', async () => {
+  let fail = true; const slow = deferred();
+  const f = fixture({ transport: { assignees: async () => { throw new ProjectTaskFailure(503); }, tasks: async (w, p, view, signal, cursor, filters) => {
+    if (filters.status === 'todo' && fail) throw new ProjectTaskFailure(503, null, null, 'todo-error');
+    return { ...page([{ ...task(filters.status, p, w), status: filters.status }]), nextCursor: filters.status === 'backlog' ? 'cursor' : null };
+  } } });
+  await f.controller.openLocation('?workspace=a&project=p&taskLayout=board');
+  assert.equal(f.controller.getState().status, 'ready'); assert.equal(f.controller.getState().taskColumnErrors.todo.requestId, 'todo-error'); assert.ok(f.controller.getState().policyPageErrors.assignees);
+  fail = false; await f.controller.loadTaskColumn('todo'); assert.ok(f.controller.getState().taskColumns.todo); assert.ok(f.controller.getState().policyPageErrors.assignees);
+  f.transport.tasks = async () => { throw new ProjectTaskFailure(409, 'page-changed'); };
+  const old = f.controller.getState().taskColumns.backlog; await f.controller.loadTaskColumn('backlog');
+  assert.equal(f.controller.getState().taskColumns.backlog, old); assert.equal(f.controller.getState().taskColumnErrors.backlog.reason, 'changed');
+  f.transport.tasks = async (w, p, v, s, c, filters) => filters.status === 'todo' ? slow.promise : Promise.reject(new ProjectTaskFailure(403));
+  const refresh = f.controller.refresh(); await new Promise(resolve => setImmediate(resolve));
+  assert.equal(f.controller.getState().status, 'forbidden'); slow.resolve(page([task()])); await refresh;
+  assert.deepEqual(f.controller.getState().taskColumns, {}); assert.equal(f.controller.getState().project, null);
+});
+test('T08 actual row move shares exact-key unknown recovery, keeps board selection and requires fresh conflict destination', async () => {
+  const f = fixture({ transport: { tasks: async (w, p, view, signal, cursor, filters) => page(filters.status === 'backlog' ? [task('source', p, w)] : filters.status === 'done' ? [{ ...task('anchor', p, w), status: 'done' }] : []) } });
+  await f.controller.openLocation('?workspace=a&project=p&taskLayout=board'); f.controller.stageMove('source', 'done', 'anchor');
+  const command = f.controller.getState().draft; assert.equal(command.type, 'move-task'); assert.equal(command.expectedOrderVersion, 1);
+  f.transport.mutate = async (command, key) => { f.calls.push({ command, key }); throw new Error('outcome unknown'); };
+  await f.controller.submit(); const captured = f.controller.getState().retryTarget;
+  await f.controller.selectTask('different'); await f.controller.retrySave(); assert.equal(f.calls.length, 1);
+  await f.controller.returnToDraft(); f.transport.mutate = async (command, key) => { f.calls.push({ command, key }); return { ...task('source'), status: 'done', version: 2 }; };
+  await f.controller.retrySave(); assert.equal(f.calls[0].key, f.calls[1].key); assert.deepEqual(f.calls[1].command, captured);
+  await f.controller.selectTask(null); f.controller.stageMove('source', 'done', null);
+  f.transport.mutate = async () => { throw new ProjectTaskFailure(409, 'order-conflict', { ...task('source'), orderVersion: 4 }); };
+  await f.controller.submit(); assert.equal(f.controller.getState().moveNeedsDestination, true); f.controller.rebaseDraft();
+  assert.equal(f.controller.getState().draft.expectedOrderVersion, 1); assert.equal(f.controller.getState().draft.beforeTaskId, null);
+  f.controller.discardDraft(); assert.equal(f.controller.getState().draft, null);
+});
+test('T08 list mixed-version or page-changed append retains rows/cursor and labelled Refresh state', async () => {
+  const f = fixture({ transport: { tasks: async () => ({ ...page([task()]), nextCursor: 'cursor' }) } }); await f.controller.refresh();
+  const previous = f.controller.getState().tasks;
+  f.transport.tasks = async () => ({ ...page([{ ...task('new'), orderVersion: 2 }]), orderVersion: 2 }); await f.controller.loadMore('tasks');
+  assert.equal(f.controller.getState().tasks, previous); assert.equal(f.controller.getState().pageError.reason, 'changed');
+  f.transport.tasks = async () => { throw new ProjectTaskFailure(409, 'page-changed'); }; await f.controller.loadMore('tasks');
+  assert.equal(f.controller.getState().tasks, previous); assert.equal(f.controller.getState().pageError.reason, 'changed');
 });
 test('scoped stable URL roundtrip and stale project/task responses cannot replace a new selection', async () => {
   const slow = deferred(); let delay = false; const locations = [];

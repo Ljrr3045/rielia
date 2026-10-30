@@ -6,8 +6,25 @@ const creator = { principalId: 'human', name: 'Human', kind: 'human', active: tr
 const project = { id: 'p', workspaceId: 'w', key: 'RIE', name: 'Project', description: '', visibility: 'workspace', version: 1, archivedAt: null, createdAt: '2026-01-01T00:00:00.000Z', updatedAt: '2026-01-01T00:00:00.000Z', creator,
   provenance: { actorPrincipalId: 'human', executionMode: 'human', source: 'web', grantId: null }, capabilities: { canEdit: true, canArchive: true, canRestore: false, canManageAccess: false, canChangeVisibility: false, canGrantAccess: false, canRevokeAccess: false }, url: '/projects?workspace=w&project=p' };
 const page = items => ({ items, total: items.length, nextCursor: null, capabilities: { canCreate: true } });
-const task = { ...project, id: 't', projectId: 'p', projectKey: 'RIE', key: 'RIE-1', number: 1, title: 'Title', type: 'task', priority: 'none', status: 'backlog', assigneePrincipalId: null, assignee: null, dueDate: null, projectArchivedAt: null };
+const task = { ...project, id: 't', projectId: 'p', projectKey: 'RIE', key: 'RIE-1', number: 1, title: 'Title', type: 'task', priority: 'none', status: 'backlog', assigneePrincipalId: null, assignee: null, dueDate: null, projectArchivedAt: null, orderVersion: 1 };
 const signal = () => new AbortController().signal;
+test('T08 transport validates scoped revision pages and exact move payload; proxy rejects unsupported/repeated filters', async t => {
+  const original = globalThis.fetch; t.after(() => { globalThis.fetch = original; }); const calls = [];
+  let value = { ...page([{ ...task, priority: 'urgent' }]), orderVersion: 1, columnCounts: { backlog: 1, todo: 0, in_progress: 0, done: 0, canceled: 0 }, selectedAssignee: null };
+  globalThis.fetch = async (url, init) => { calls.push({ url: String(url), init }); return Response.json(value); };
+  const api = createProjectTaskTransport();
+  assert.equal((await api.tasks('w', 'p', 'active', signal(), undefined, { status: 'backlog', assignee: 'unassigned', priority: 'urgent' })).orderVersion, 1);
+  assert.ok(calls.at(-1).url.includes('assignee=unassigned'));
+  value = { ...value, orderVersion: 2 }; await assert.rejects(api.tasks('w', 'p', 'active', signal()), e => e.status === 502);
+  value = task;
+  await api.mutate({ type: 'move-task', workspaceId: 'w', projectId: 'p', taskId: 't', expectedVersion: 3, expectedOrderVersion: 4, status: 'done', beforeTaskId: null }, 'move-key', signal());
+  assert.ok(calls.at(-1).url.endsWith('/tasks/t/move')); assert.deepEqual(JSON.parse(calls.at(-1).init.body), { expectedVersion: 3, expectedOrderVersion: 4, status: 'done', beforeTaskId: null });
+  const root = 'https://app.example.test/api/v1/workspaces/w/projects/p/tasks';
+  const before = calls.length;
+  for (const query of ['status=custom', 'priority=high&priority=low', 'labels=x', 'assignee=bad%20id', 'cursor=bad!']) assert.equal((await proxyProjectTask(new Request(`${root}?${query}`))).status, 400);
+  assert.equal((await proxyProjectTask(new Request(root + '/t/move'))).status, 400); assert.equal(calls.length, before);
+  assert.equal((await proxyProjectTask(new Request(root + '/t/move', { method: 'POST', body: '{}' }))).status, 200);
+});
 
 test('transport uses fixed scoped paths, exact command data/version/key and validates authoritative responses', async t => {
   const original = globalThis.fetch; t.after(() => { globalThis.fetch = original; }); const calls = []; let value = page([project]);

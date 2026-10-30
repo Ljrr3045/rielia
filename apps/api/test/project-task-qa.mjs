@@ -12,6 +12,7 @@ import { createServer } from 'node:net';
 import { createServer as createFixtureServer } from 'node:http';
 import { setTimeout as delay } from 'node:timers/promises';
 import { makeSignature } from 'better-auth/crypto';
+import { taskStatuses, taskPriorities } from '@rielia/contracts';
 import { startProcess, stopProcess } from '../../../scripts/smoke-process.mjs';
 
 const root = fileURLToPath(new URL('../../../', import.meta.url));
@@ -83,6 +84,18 @@ try {
       privateProject = await domain.changeAccess(context, workspaceId, privateProject.id, person.principalId, randomUUID(), randomUUID(), { expectedVersion: privateProject.version, state: 'active' });
     }
   }
+  let taskViewFixtures = null;
+  if (process.argv.includes('--task-views')) {
+    const rows = [];
+    for (let n = 0; n < 114; n++) rows.push(await domain.createTask(context, workspaceId, project.id, randomUUID(), randomUUID(), {
+      title: n === 0 ? 'A long persistent task title for responsive list and board verification with explicit human and Agent attribution' : `QA ordered task ${n + 1}`,
+      status: n < 104 ? 'backlog' : taskStatuses[(n - 104) % taskStatuses.length], priority: taskPriorities[n % taskPriorities.length],
+      assigneePrincipalId: n % 3 === 0 ? agentId : n % 3 === 1 ? member.principalId : null,
+    }));
+    const archived = rows.at(-1); await domain.changeTask(context, workspaceId, project.id, archived.id, randomUUID(), randomUUID(), 'archive-task', { expectedVersion: archived.version });
+    taskViewFixtures = { sourceTaskId: rows[0].id, anchorTaskId: rows[1].id, taskIds: rows.map(row => row.id),
+      boardURL: `${origin}${project.url}&taskLayout=board`, filteredURL: `${origin}${project.url}&priority=urgent&assignee=unassigned` };
+  }
   if (stopRequested) throw new Error('QA shutdown requested.');
   // Separate loopback test server; it never shares product routing or bundles.
   // Host headers cannot select redirect destinations or fixture subjects.
@@ -116,7 +129,22 @@ try {
   }
   const historyResponse = await fetch(`${origin}/api/v1/workspaces/${workspaceId}/projects/${privateProject.id}/tasks/${historicalTask.id}`, { headers: { cookie: admin.cookie } });
   if (historyResponse.status !== 200 || (await historyResponse.json()).assignee.active !== false) throw new Error('QA historical assignee probe failed.');
-  await writeFile(outputPath, JSON.stringify({ pid: process.pid, origin, apiURL, fixtureURLs, container: name, volume, workspaceId, otherWorkspaceId, projectId: project.id, taskId: task.id, agentId, owner, admin, member, viewer, unavailable, outsider, privateProjectId: privateProject.id, historicalTaskId: historicalTask.id, largeMembers: process.argv.includes('--large-members'),
+  if (taskViewFixtures) {
+    const path = `${origin}/api/v1/workspaces/${workspaceId}/projects/${project.id}/tasks`;
+    const firstResponse = await fetch(`${path}?status=backlog`, { headers: { cookie: owner.cookie } }); const first = await firstResponse.json();
+    if (firstResponse.status !== 200 || first.items.length !== 100 || !first.nextCursor || first.orderVersion < 1) throw new Error('QA ordered page probe failed.');
+    const tailResponse = await fetch(`${path}?status=backlog&cursor=${first.nextCursor}`, { headers: { cookie: owner.cookie } }); const tail = await tailResponse.json();
+    if (tailResponse.status !== 200 || tail.orderVersion !== first.orderVersion || tail.items.length < 1) throw new Error('QA ordered tail probe failed.');
+    const source = first.items.find(row => row.id === taskViewFixtures.sourceTaskId); const key = randomUUID();
+    const body = JSON.stringify({ expectedVersion: source.version, expectedOrderVersion: first.orderVersion, status: 'todo', beforeTaskId: null });
+    const init = { method: 'POST', headers: { cookie: owner.cookie, origin, 'content-type': 'application/json', 'idempotency-key': key }, body };
+    const movedResponse = await fetch(`${path}/${source.id}/move`, init); const moved = await movedResponse.json();
+    const replayResponse = await fetch(`${path}/${source.id}/move`, init); const replay = await replayResponse.json();
+    if (movedResponse.status !== 201 || replayResponse.status !== 201 || moved.status !== 'todo' || moved.version !== replay.version || moved.orderVersion <= first.orderVersion) throw new Error('QA move/replay probe failed.');
+    const stale = await fetch(`${path}?status=backlog&cursor=${first.nextCursor}`, { headers: { cookie: owner.cookie } });
+    if (stale.status !== 409 || (await stale.json()).code !== 'page-changed') throw new Error('QA changed-page probe failed.');
+  }
+  await writeFile(outputPath, JSON.stringify({ pid: process.pid, origin, apiURL, fixtureURLs, container: name, volume, workspaceId, otherWorkspaceId, projectId: project.id, taskId: task.id, agentId, owner, admin, member, viewer, unavailable, outsider, privateProjectId: privateProject.id, historicalTaskId: historicalTask.id, largeMembers: process.argv.includes('--large-members'), taskViewFixtures,
     projectURL: `${origin}${project.url}`, taskURL: `${origin}${task.url}`, privateProjectURL: `${origin}${privateProject.url}`, historicalTaskURL: `${origin}${historicalTask.url}` }, null, 2), { mode: 0o600 });
   console.log(`Real PG/Nest/Next QA ready at ${origin}; private session/state file: ${outputPath}. SIGTERM/SIGINT cleans owned servers, container, volume and state file.`);
   if (process.argv.includes('--smoke')) resolveStop();
