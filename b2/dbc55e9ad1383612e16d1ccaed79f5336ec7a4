@@ -1,0 +1,23 @@
+CHANGELOG.md
+  s_1416ec281bc244::t_f5753dacf61092 21-22
+docs/development/progress.md
+  s_1416ec281bc244::t_f5753dacf61092 39,114-117
+docs/development/task-views.md
+  s_1416ec281bc244::t_f5753dacf61092 235-237
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b2dbc55e9ad1383612e16d1ccaed79f5336ec7a4",
+  "prompts": {},
+  "sessions": {
+    "s_1416ec281bc244": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a18df3-0a13-7c02-8d2a-a53facd5c80a",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
