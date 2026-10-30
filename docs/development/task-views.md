@@ -232,6 +232,8 @@ Stop Next dev before production typegen/build; remove only this checkout's stale
 ignored `.next/dev` output if duplicate generated route types remain.
 
 Current exact command outcomes and PR/CI/Kody evidence are recorded in
-[progress](progress.md) and the PR, with final settlement evidence external.
+[progress](progress.md) and [PR #19](https://github.com/Ljrr3045/rielia/pull/19),
+with final settlement evidence external. Exact-head CI/root Kody are pending
+before coordinator merge; review bookkeeping alone does not require source pushes.
 Real browser presentation/assistive/touch evidence belongs to the separate UI
 delivery. No real OAuth/HTTPS/staging/users or scale certification is claimed.

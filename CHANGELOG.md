@@ -18,7 +18,8 @@ This records repository changes. No application version has been released.
   Hook-owned URLs, independent column errors, coherent totals, explicit move
   eligibility and fresh-destination conflict recovery extend the existing shared
   draft lifecycle. Real PG races/rollback/aborted HTTP/restart, focused tests and
-  populated real Next-proxy QA are included. [Contract, evidence and limits](docs/development/task-views.md).
+  populated real Next-proxy QA are included. [Contract, evidence and limits](docs/development/task-views.md),
+  [PR #19](https://github.com/Ljrr3045/rielia/pull/19).
   No JSX/CSS, configurable workflows/labels/sprints/full US05, T09/T10/B2,
   new credentials, real OAuth/staging/users or deployment is included.
 

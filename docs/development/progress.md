@@ -36,7 +36,7 @@ implementation, without completing tickets or weakening automated checks/launch 
 | Base | `origin/dev` at merged [PR #18](https://github.com/Ljrr3045/rielia/pull/18), `ac3de5351e49b8b60bf3b2bbb55b8d695899f68d`; Orca inventory confirms both completed T07 worktrees removed |
 | Branch | `feat/t08-task-views-logic`, one English non-draft logic/docs PR to `dev` |
 | Worktree | Isolated `feat-t08-task-views-logic`; effective Orca terminal preview verifies Codex `gpt-6.1-sol` `xhigh`; no helpers; UI remains separately owned |
-| Current PR | Local checks passed; English non-draft PR and exact-head CI/coordinator-triggered Kody evidence are pending |
+| Current PR | [#19](https://github.com/Ljrr3045/rielia/pull/19), English non-draft logic/docs PR to `dev`; local checks passed, exact-head CI and coordinator-triggered Kody evidence pending |
 | T07.1 presentation PR | [#18](https://github.com/Ljrr3045/rielia/pull/18) merged as `ac3de5351e49b8b60bf3b2bbb55b8d695899f68d`; final review/CI evidence remains in GitHub and the external report; its completed worktree is absent from Orca inventory |
 | T07.0 logic PR | [#17](https://github.com/Ljrr3045/rielia/pull/17) merged 2026-10-29T16:51:39Z as `c72831c1be4ca2332a6162adc2af85d529b441b8`; final reviewed head `bf9e6fcf`, CI SUCCESS and Kody approval `5701623155`; coordinator verified clean settlement, preserved the external logic report and removed its worktree |
 | T06.1 presentation PR | [#16](https://github.com/Ljrr3045/rielia/pull/16) merged as `545473c3d381a7a532e8f5b9ad77f30d6b5a70bc`; prior final review/CI evidence remains in GitHub and its external delivery report; both T06 worktrees removed |
@@ -111,6 +111,10 @@ Next-dev route-type collision were corrected; generated Next instructions/types
 are excluded from this scoped PR. No JSX/CSS, screen-reader/physical-touch,
 real OAuth/staging/user or scale certification is claimed. Full T08/US05 remains
 open for separate presentation and absent configurable workflows/labels/sprints.
+Implementation is in [PR #19](https://github.com/Ljrr3045/rielia/pull/19); current
+head, CI, root trigger and all three review surfaces remain the live evidence
+before coordinator merge. Final settlement is preserved externally without
+source pushes solely for review bookkeeping.
 
 ## T07.0 project privacy and explicit access
 
