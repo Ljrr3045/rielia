@@ -1,6 +1,6 @@
 # Delivery progress and decisions
 
-Updated: 2026-10-29 UTC. This is repository delivery tracking, separate from the
+Updated: 2026-10-30 UTC. This is repository delivery tracking, separate from the
 unchanged [handoff](../handoff/00-START-HERE.md). Plans describe intended outcomes,
 not completed implementation. This checkout has the T02.0 fixture, merged T02.1/
 T02.2 identity experiment, and a fictional T01/B0 task-prototype logic adapter plus
@@ -12,7 +12,9 @@ T05.0 adds actual workspace/membership/invitation backend and frontend logic wit
 merged T05.1 presentation. T06.0 adds bounded persisted project/task backend and
 frontend logic, and merged T06.1 adds its presentation. T07.0 adds bounded private
 project/access logic under the ratified administrative visibility policy; T07.1
-adds its presentation on that logic. Invitations/guests, full T06/P05/T07,
+adds its presentation on that logic. T08.0 adds persistent status ordering,
+allowlisted task filters and versioned list/Kanban query/move logic without presentation.
+Invitations/guests, full T06/P05/T07/T08/US05,
 collaboration and integration scope remain open. It has no deployed task product, deployment or
 software release. The coordinator owns integration and status across workers.
 
@@ -30,11 +32,12 @@ implementation, without completing tickets or weakening automated checks/launch 
 
 | Field | Evidence/state |
 | --- | --- |
-| Scope | T07.1/B1b private-project access presentation for P02/P03/P04/P14/P33/P38, US02/US03/US08/US12/US24–US25 and UX01/UX03/UX05/UX06/UX07/UX09/UX11 on merged T07.0 logic. Create visibility, private/workspace disclosure, human-admin access/visibility/retained-rights panel, paginated eligible assignees, pending/unknown/conflict/changed-page recovery. No hooks/controllers/proxies/contracts/backend/tests, invitations/guests/lead, full collaboration, credentials/MCP, RLS/deployment, real OAuth/staging/users or full T07/T35 acceptance |
-| Base | `origin/dev` at merged [PR #17](https://github.com/Ljrr3045/rielia/pull/17), `c72831c1be4ca2332a6162adc2af85d529b441b8`; coordinator verified logic worktree removed after clean settlement |
-| Branch | `feat/t07-project-access-ui`, one English non-draft presentation/docs PR to `dev` |
-| Worktree | Isolated `feat-t07-project-access-ui`; presentation owner OpenCode Go `opencode-go/deepseek-v4.1-flash` variant `max` (verified effective session); no helpers; logic/tests remain Sol-owned |
-| Current PR | [#18](https://github.com/Ljrr3045/rielia/pull/18), English non-draft presentation/docs PR to `dev`; exact final head, CI and coordinator-triggered Kody state live in GitHub and the external delivery report |
+| Scope | T08.0/B1b existing-field list/Kanban logic for P05/P08/P14/P33/P38, US04/US05/US08/US12/US24–US25 and UX01/02/03/05/06/07/09/11. Persisted status-grouped order, status/assignee/unassigned/priority filters, bounded revision-bound pages/counts, atomic versioned moves, safe historical filter labels and canonical URL/draft recovery. P07 configurable workflows, labels/sprints/full US05, presentation, T09/T10/B2, new credentials, real OAuth/staging/users and deployment remain excluded |
+| Base | `origin/dev` at merged [PR #18](https://github.com/Ljrr3045/rielia/pull/18), `ac3de5351e49b8b60bf3b2bbb55b8d695899f68d`; Orca inventory confirms both completed T07 worktrees removed |
+| Branch | `feat/t08-task-views-logic`, one English non-draft logic/docs PR to `dev` |
+| Worktree | Isolated `feat-t08-task-views-logic`; effective Orca terminal preview verifies Codex `gpt-6.1-sol` `xhigh`; no helpers; UI remains separately owned |
+| Current PR | Local checks passed; English non-draft PR and exact-head CI/coordinator-triggered Kody evidence are pending |
+| T07.1 presentation PR | [#18](https://github.com/Ljrr3045/rielia/pull/18) merged as `ac3de5351e49b8b60bf3b2bbb55b8d695899f68d`; final review/CI evidence remains in GitHub and the external report; its completed worktree is absent from Orca inventory |
 | T07.0 logic PR | [#17](https://github.com/Ljrr3045/rielia/pull/17) merged 2026-10-29T16:51:39Z as `c72831c1be4ca2332a6162adc2af85d529b441b8`; final reviewed head `bf9e6fcf`, CI SUCCESS and Kody approval `5701623155`; coordinator verified clean settlement, preserved the external logic report and removed its worktree |
 | T06.1 presentation PR | [#16](https://github.com/Ljrr3045/rielia/pull/16) merged as `545473c3d381a7a532e8f5b9ad77f30d6b5a70bc`; prior final review/CI evidence remains in GitHub and its external delivery report; both T06 worktrees removed |
 | T06.0 logic PR | [#15](https://github.com/Ljrr3045/rielia/pull/15) merged 2026-10-28T22:51:16Z as `e23d2e495a2e4c3dc499bcdde4ac8dd84d74fdad`; reviewed source `338fc64725aa8448cd4512c3c3952d53f394e45d`, CI 40781598293 SUCCESS, Kody review 5690694480/check 123144649000 complete with all three threads resolved. Coordinator confirms the logic worktree was removed |
@@ -64,6 +67,50 @@ and requested deletion of its entire workflow, including the inherited version.
 The coordinator alone posts each ready head's Kody trigger and merges after
 validation and feedback handling. T00 itself added no app/scaffold scope; its
 final Kody approval covered head `53243fbea2ae6c4f5a1ab3e47d6e1dc8cc296cec`.
+
+## T08.0 persistent list/Kanban logic
+
+The [T08 guide](task-views.md) records the accepted bounded contract. PostgreSQL
+remains the only task source. A new additive migration backfills positive gapped
+bigint ranks within each of five existing statuses and adds a monotonic project
+task revision. List order groups semantic statuses then rank; board partitions
+query exactly that order. Create/status edits append, archive retains rank and
+restore retains position. Normal midpoint moves and rare transactional compaction
+preserve authorship, task versions and the separate project edit/access version.
+Compaction conservatively bumps affected row versions; one aggregate move event,
+outbox and receipt commit with all rank/status/revision effects or roll back.
+
+Status, assignee (including unassigned) and priority are scalar allowlisted
+filters. At most 100 rows per page, scoped counts and opaque query/revision-bound
+cursors prevent mixed-version append; any task mutation requires Refresh before
+continuing an older page. Selected assignee names are server-resolved from current
+project eligibility or historical assignment, independently of assignment options;
+foreign/unrelated identities receive the same unavailable metadata. Every
+read/count/cursor/move/conflict/replay rechecks current T07 private entitlement,
+membership/grant ceilings and archives under the existing fence.
+
+The production hook adds validated view/filter/column URLs, independent board
+pages/errors, honest coherent totals/capture eligibility, explicit move eligibility
+and projections over the same draft/key lifecycle. Status-filtered boards retain
+authorized hidden destinations. Mixed revisions remain readable but unmovable.
+Move conflicts require discard, Refresh and an explicitly fresh destination;
+ordinary version-only rebase is disabled. Selected detail survives filters and
+committed success survives a failed follow-up read. Auxiliary policy failures,
+session/account clearing and stale-response guards remain independent.
+
+Final-source frozen install, 36 focused project/client/controller/proxy checks,
+full `pnpm check`, real PG/Nest suites (32 domain, 12 principal, 12 workspace,
+23 identity), six-table digest/count container-restart witness, seven-migration
+Docker runtime smoke, populated real PG/Nest/Next QA smoke, audit, handoff and
+whitespace checks pass. Real aborted HTTP commit/retry, within/cross-column races,
+query-bound paging, actual migration preservation, forced compaction and deferred
+rollback of task/event/outbox/receipt are covered. Audit reports no known
+vulnerabilities. QA/runtime/identity clean their owned servers/containers/volumes
+and private state. The initial sandbox QA failure and temporary generated
+Next-dev route-type collision were corrected; generated Next instructions/types
+are excluded from this scoped PR. No JSX/CSS, screen-reader/physical-touch,
+real OAuth/staging/user or scale certification is claimed. Full T08/US05 remains
+open for separate presentation and absent configurable workflows/labels/sprints.
 
 ## T07.0 project privacy and explicit access
 
@@ -322,9 +369,11 @@ deployment was added.
 PR #17 merged 2026-10-29T16:51:39Z as
 `c72831c1be4ca2332a6162adc2af85d529b441b8` after final head `bf9e6fcf`, CI
 SUCCESS and Kody approval `5701623155`; the coordinator verified settlement,
-preserved the external logic report and removed its worktree. The UI PR is
-[#18](https://github.com/Ljrr3045/rielia/pull/18) from `feat/t07-project-access-ui`;
-final head and review state remain in GitHub and the external delivery report. No
+preserved the external logic report and removed its worktree. The UI PR
+[#18](https://github.com/Ljrr3045/rielia/pull/18) from `feat/t07-project-access-ui`
+merged as `ac3de5351e49b8b60bf3b2bbb55b8d695899f68d`; final head and review state
+remain in GitHub and the external delivery report. Both completed T07 worktrees
+are absent from current Orca inventory. No
 full T07/T35, invitation/guest/lead, collaboration or real-user acceptance is
 claimed.
 
@@ -531,7 +580,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T05 | B1a | Auth, workspaces, principal memberships | T04, T35 | T05.0 logic merged in PR #13; T05.1 [presentation](workspace-ui.md) merged in PR #14. Full T05/T07/T35 acceptance remains open |
 | T06 | B1a | Projects/tasks, versions, idempotency, atomic activity/outbox | T05 | Bounded T06.0 real backend/client logic merged in [PR #15](https://github.com/Ljrr3045/rielia/pull/15); T06.1 [presentation](project-task-ui.md) delivered in the UI PR against disposable real PG/Nest/Next QA. Full ticket (all version/activity/outbox slices, collaboration) remains open |
 | T07 | B1b | Invitations, revocation, roles/private projects | T06 | Invitation/role subset remains in T05.0; bounded [T07.0 privacy/access logic](project-access.md) merged in PR #17 and [T07.1 presentation](project-access-ui.md) delivered in the UI PR. Full T07 acceptance remains open |
-| T08 | B1b | List/Kanban, filters, ranking | T06 | Not started |
+| T08 | B1b | List/Kanban, filters, ranking | T06 | Bounded [T08.0 logic](task-views.md) implemented and locally validated; presentation/review/merge pending, configurable workflows/labels/sprints and full US05/T08 remain open |
 | T09 | B1b | Subtasks, checklists, comments, history | T06 | Not started |
 | T10 | B1b | Search, My tasks, responsive layout, SSE | T07–T09 | Not started |
 | T11 | B1c | Sprint lifecycle and scope history | T08–T09 | Not started |

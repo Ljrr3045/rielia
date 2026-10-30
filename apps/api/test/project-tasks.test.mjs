@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { randomUUID } from 'node:crypto';
+import { Buffer } from 'node:buffer';
 import { readFile } from 'node:fs/promises';
 import { setTimeout as delay } from 'node:timers/promises';
 import pg from 'pg';
@@ -38,6 +39,168 @@ test('T06 real PostgreSQL and HTTP project/task vertical', async t => {
   async function join(f, role = 'member') { const user = await human(); const issued = await ok(f.owner, `${f.root}/invitations`, { recipientEmail: user.email, role }); await ok(user, 'workspace-invitations/accept', { token: issued.token }); return user; }
   const counts = async () => Promise.all([prisma.project.count(), prisma.task.count(), prisma.activityEvent.count(), prisma.outboxEvent.count(), prisma.projectTaskOperation.count()]);
   const status = n => error => error.getStatus() === n;
+
+  await t.test('T08 actual additive migration backfills scoped status ranks without changing existing archived rows or versions', async () => {
+    const schema = `t08_migration_${randomUUID().replaceAll('-', '')}`; const connection = await pool.connect();
+    try {
+      await connection.query(`CREATE SCHEMA ${schema}`); await connection.query(`SET search_path TO ${schema}, public`);
+      await connection.query('CREATE TABLE project(id text PRIMARY KEY,"workspaceId" text NOT NULL,version integer NOT NULL DEFAULT 7,"archivedAt" timestamp(3)); CREATE TABLE task(id text PRIMARY KEY,"workspaceId" text NOT NULL,"projectId" text NOT NULL,number integer NOT NULL,status text NOT NULL,version integer NOT NULL DEFAULT 4,"archivedAt" timestamp(3)); CREATE TABLE activity_event(action text CONSTRAINT activity_event_action_check CHECK(action IN (\'create-task\')))');
+      await connection.query(`CREATE FUNCTION preserve_task() RETURNS trigger LANGUAGE plpgsql AS 'BEGIN RAISE EXCEPTION ''existing archived row must not be edited''; END'; CREATE TRIGGER preserve_task BEFORE UPDATE ON task FOR EACH ROW EXECUTE FUNCTION preserve_task()`);
+      await connection.query(`INSERT INTO project(id,"workspaceId","archivedAt") VALUES ('p','w',now()); INSERT INTO task(id,"workspaceId","projectId",number,status,"archivedAt") VALUES ('later','w','p',3,'todo',NULL),('first','w','p',1,'todo',now()),('other','w','p',2,'done',NULL)`);
+      await connection.query(await readFile(new URL('../prisma/migrations/20261030180000_task_views/migration.sql', import.meta.url), 'utf8'));
+      assert.deepEqual((await connection.query('SELECT id,rank::text,version FROM task ORDER BY id')).rows, [{ id: 'first', rank: '1024', version: 4 }, { id: 'later', rank: '2048', version: 4 }, { id: 'other', rank: '1024', version: 4 }]);
+      assert.deepEqual((await connection.query('SELECT version,"taskRevision" FROM project')).rows, [{ version: 7, taskRevision: 1 }]);
+      await assert.rejects(connection.query(`UPDATE task SET rank=3 WHERE id='first'`), /existing archived row/);
+    } finally { await connection.query('ROLLBACK'); await connection.query('SET search_path TO public'); await connection.query(`DROP SCHEMA IF EXISTS ${schema} CASCADE`); connection.release(); }
+  });
+
+  await t.test('T08 list and status columns share persisted order, filters/counts, historical assignees and unchanged project edit version', async () => {
+    const f = await fixture(); const member = await join(f);
+    const a = await ok(f.owner, f.tasks, { title: 'A', status: 'done', priority: 'urgent' });
+    const b = await ok(f.owner, f.tasks, { title: 'B', priority: 'urgent', assigneePrincipalId: member.principalId });
+    const c = await ok(f.owner, f.tasks, { title: 'C', priority: 'low' });
+    const all = await ok(f.owner, f.tasks); assert.deepEqual(all.items.map(row => row.id), [b.id, c.id, a.id]);
+    assert.deepEqual(all.columnCounts, { backlog: 2, todo: 0, in_progress: 0, done: 1, canceled: 0 }); assert.equal(all.items[0].orderVersion, all.orderVersion);
+    assert.equal((await ok(f.owner, `${f.tasks}?assignee=unassigned&priority=urgent`)).items[0].id, a.id);
+    assert.equal((await ok(f.owner, `${f.tasks}?status=done`)).items[0].id, a.id);
+    assert.deepEqual((await ok(f.owner, `${f.tasks}?assignee=${member.principalId}&status=backlog&priority=urgent`)).items.map(row => row.id), [b.id]);
+    await ok(f.owner, `${f.root}/members/${member.principalId}`, { version: 1, state: 'revoked' });
+    const historical = await ok(f.owner, `${f.tasks}?assignee=${member.principalId}`); assert.equal(historical.total, 1); assert.equal(historical.items[0].assignee.active, false);
+    assert.equal(historical.selectedAssignee.principalId, member.principalId); assert.equal(historical.selectedAssignee.active, false);
+    const noRows = await ok(f.owner, `${f.tasks}?assignee=${member.principalId}&priority=low`); assert.equal(noRows.total, 0); assert.equal(noRows.selectedAssignee.name, historical.selectedAssignee.name);
+    const foreign = await fixture(); assert.equal((await ok(f.owner, `${f.tasks}?assignee=${foreign.owner.principalId}`)).selectedAssignee, null);
+    const unrelatedInactive = await join(f); await ok(f.owner, `${f.root}/members/${unrelatedInactive.principalId}`, { version: 1, state: 'revoked' });
+    assert.equal((await ok(f.owner, `${f.tasks}?assignee=${unrelatedInactive.principalId}`)).selectedAssignee, null);
+    const moved = await ok(f.owner, `${f.tasks}/${c.id}/move`, { expectedVersion: c.version, expectedOrderVersion: all.orderVersion, status: 'done', beforeTaskId: a.id });
+    assert.equal(moved.status, 'done'); assert.equal(moved.version, 2); assert.ok(moved.orderVersion > all.orderVersion);
+    assert.deepEqual((await ok(f.owner, f.tasks)).items.map(row => row.id), [b.id, c.id, a.id]);
+    assert.deepEqual((await ok(f.owner, `${f.tasks}?status=done`)).items.map(row => row.id), [c.id, a.id]);
+    const same = await ok(f.owner, `${f.tasks}/${c.id}/move`, { expectedVersion: moved.version, expectedOrderVersion: moved.orderVersion, status: 'done', beforeTaskId: a.id }); assert.equal(same.version, 3);
+    assert.equal((await ok(f.owner, f.p)).version, f.project.version);
+    const access = await ok(f.owner, `${f.p}/access/${member.principalId}`, { expectedVersion: f.project.version, state: 'revoked' }); assert.equal(access.version, f.project.version + 1);
+    const edit = await ok(f.owner, f.p, { expectedVersion: access.version, name: 'Changed', description: '' }); assert.equal(edit.version, access.version + 1);
+    for (const query of ['status=custom', 'status=todo&status=done', 'assignee=bad%20id', 'priority=none&priority=high', 'labels=x', 'sprint=x']) assert.equal((await request(f.owner, `${f.tasks}?${query}`)).status, 400);
+    assert.ok(!('rank' in moved));
+  });
+  await t.test('T08 scoped anchors preserve hidden relative order, full-column append and archive restore; invalid anchors never leak', async () => {
+    const f = await fixture(); const foreign = await fixture(); const tasks = [];
+    for (const [title, priority] of [['first', 'urgent'], ['hidden', 'low'], ['anchor', 'urgent'], ['source', 'urgent']]) tasks.push(await ok(f.owner, f.tasks, { title, priority }));
+    const [a, hidden, anchor, source] = tasks; const current = await ok(f.owner, `${f.tasks}/${source.id}`);
+    const moved = await ok(f.owner, `${f.tasks}/${source.id}/move`, { expectedVersion: source.version, expectedOrderVersion: current.orderVersion, status: 'backlog', beforeTaskId: anchor.id });
+    assert.deepEqual((await ok(f.owner, f.tasks)).items.map(row => row.id), [a.id, hidden.id, source.id, anchor.id]);
+    assert.deepEqual((await ok(f.owner, `${f.tasks}?priority=urgent`)).items.map(row => row.id), [a.id, source.id, anchor.id]);
+    const appended = await ok(f.owner, `${f.tasks}/${source.id}/move`, { expectedVersion: moved.version, expectedOrderVersion: moved.orderVersion, status: 'backlog', beforeTaskId: null });
+    const archived = await ok(f.owner, `${f.tasks}/${anchor.id}/archive`, { expectedVersion: anchor.version });
+    for (const beforeTaskId of [source.id, anchor.id, randomUUID(), (await ok(foreign.owner, foreign.tasks, { title: 'Foreign' })).id]) {
+      const row = await ok(f.owner, `${f.tasks}/${source.id}`);
+      const denied = await request(f.owner, `${f.tasks}/${source.id}/move`, { expectedVersion: row.version, expectedOrderVersion: row.orderVersion, status: 'backlog', beforeTaskId });
+      assert.equal(denied.status, 400); assert.equal(denied.data.current, undefined);
+    }
+    await ok(f.owner, `${f.tasks}/${anchor.id}/restore`, { expectedVersion: archived.version });
+    assert.deepEqual((await ok(f.owner, f.tasks)).items.map(row => row.id), [a.id, hidden.id, anchor.id, source.id]);
+    const latest = await ok(f.owner, `${f.tasks}/${source.id}`);
+    assert.equal((await request(f.owner, `${f.tasks}/${source.id}/move`, { expectedVersion: appended.version, expectedOrderVersion: latest.orderVersion, status: 'done', beforeTaskId: a.id })).status, 400);
+    const project = await ok(f.owner, `${f.p}/archive`, { expectedVersion: f.project.version });
+    assert.equal((await request(f.owner, `${f.tasks}/${source.id}/move`, { expectedVersion: latest.version, expectedOrderVersion: latest.orderVersion, status: 'todo', beforeTaskId: null })).status, 409);
+    await ok(f.owner, `${f.p}/restore`, { expectedVersion: project.version });
+  });
+  await t.test('T08 within/cross-column concurrent moves, edits, insert and archive reject stale versions/revisions with atomic replay', async () => {
+    const f = await fixture(); const a = await ok(f.owner, f.tasks, { title: 'A' }); const b = await ok(f.owner, f.tasks, { title: 'B' });
+    const page = await ok(f.owner, f.tasks); const before = await counts();
+    const command = row => ({ expectedVersion: row.version, expectedOrderVersion: page.orderVersion, status: 'todo', beforeTaskId: null });
+    const races = await Promise.all([request(f.owner, `${f.tasks}/${a.id}/move`, command(a)), request(f.owner, `${f.tasks}/${b.id}/move`, command(b))]);
+    assert.deepEqual(races.map(result => result.status).sort(), [201, 409]); assert.equal(races.find(result => result.status === 409).data.code, 'order-conflict');
+    const after = await counts(); assert.deepEqual(after.map((n, i) => n - before[i]), [0, 0, 1, 1, 1]);
+    const target = await ok(f.owner, `${f.tasks}/${a.id}`); const key = randomUUID(); const input = { expectedVersion: target.version, expectedOrderVersion: target.orderVersion, status: 'done', beforeTaskId: null };
+    const first = await ok(f.owner, `${f.tasks}/${a.id}/move`, input, key); const firstCounts = await counts();
+    const replay = await ok(f.owner, `${f.tasks}/${a.id}/move`, input, key); assert.equal(replay.version, first.version); assert.deepEqual(await counts(), firstCounts);
+    assert.equal((await request(f.owner, `${f.tasks}/${a.id}/move`, { ...input, status: 'canceled' }, key)).status, 409);
+    for (const mutation of [async row => ok(f.owner, `${f.tasks}/${row.id}`, { expectedVersion: row.version, title: 'Concurrent title' }), async () => ok(f.owner, f.tasks, { title: 'Insert' }), async () => { const row = await ok(f.owner, `${f.tasks}/${b.id}`); return ok(f.owner, `${f.tasks}/${b.id}/archive`, { expectedVersion: row.version }); }]) {
+      const row = await ok(f.owner, `${f.tasks}/${a.id}`); await mutation(row);
+      const stale = await request(f.owner, `${f.tasks}/${a.id}/move`, { expectedVersion: row.version, expectedOrderVersion: row.orderVersion, status: 'backlog', beforeTaskId: null }); assert.equal(stale.status, 409);
+    }
+    const latest = await ok(f.owner, `${f.tasks}/${a.id}`);
+    const sameTask = await Promise.all([request(f.owner, `${f.tasks}/${a.id}/move`, { expectedVersion: latest.version, expectedOrderVersion: latest.orderVersion, status: 'todo', beforeTaskId: null }), request(f.owner, `${f.tasks}/${a.id}/move`, { expectedVersion: latest.version, expectedOrderVersion: latest.orderVersion, status: 'done', beforeTaskId: null })]);
+    assert.deepEqual(sameTask.map(row => row.status).sort(), [201, 409]);
+    const c = await ok(f.owner, f.tasks, { title: 'C' }); const d = await ok(f.owner, f.tasks, { title: 'D' }); const withinPage = await ok(f.owner, f.tasks);
+    const within = await Promise.all([request(f.owner, `${f.tasks}/${c.id}/move`, { expectedVersion: c.version, expectedOrderVersion: withinPage.orderVersion, status: 'backlog', beforeTaskId: null }), request(f.owner, `${f.tasks}/${d.id}/move`, { expectedVersion: d.version, expectedOrderVersion: withinPage.orderVersion, status: 'backlog', beforeTaskId: c.id })]);
+    assert.deepEqual(within.map(row => row.status).sort(), [201, 409]);
+  });
+  await t.test('T08 midpoint exhaustion compacts transactionally and every deferred failure rolls back order, versions, revision, event and receipt', async () => {
+    const f = await fixture(); const a = await ok(f.owner, f.tasks, { title: 'A' }); const b = await ok(f.owner, f.tasks, { title: 'B' }); const source = await ok(f.owner, f.tasks, { title: 'Source', status: 'todo' });
+    async function compactFixture() { await pool.query('UPDATE task SET rank=CASE WHEN id=$1 THEN 1 ELSE 2 END WHERE id=ANY($2::text[])', [a.id, [a.id, b.id]]); }
+    await compactFixture();
+    const snapshot = async () => (await pool.query('SELECT jsonb_build_object(\'project\',(SELECT to_jsonb(p) FROM project p WHERE id=$1),\'tasks\',(SELECT jsonb_agg(to_jsonb(t) ORDER BY id) FROM task t WHERE "projectId"=$1)) AS data', [f.project.id])).rows[0].data;
+    for (const table of ['task', 'activity_event', 'outbox_event', 'project_task_operation']) {
+      const old = await snapshot(); const events = await counts(); const row = await ok(f.owner, `${f.tasks}/${source.id}`); const key = randomUUID();
+      await pool.query(`CREATE FUNCTION fail_t08_write() RETURNS trigger LANGUAGE plpgsql AS 'BEGIN RAISE EXCEPTION ''forced rollback'' USING ERRCODE=''23514''; END'; CREATE CONSTRAINT TRIGGER fail_t08_write AFTER ${table === 'task' ? 'UPDATE' : 'INSERT'} ON ${table} DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION fail_t08_write()`);
+      try { assert.equal((await request(f.owner, `${f.tasks}/${source.id}/move`, { expectedVersion: row.version, expectedOrderVersion: row.orderVersion, status: 'backlog', beforeTaskId: b.id }, key)).status, 400); }
+      finally { await pool.query(`DROP TRIGGER fail_t08_write ON ${table}; DROP FUNCTION fail_t08_write()`); }
+      assert.deepEqual(await snapshot(), old); assert.deepEqual(await counts(), events);
+    }
+    const row = await ok(f.owner, `${f.tasks}/${source.id}`); const before = await counts(); const moved = await ok(f.owner, `${f.tasks}/${source.id}/move`, { expectedVersion: row.version, expectedOrderVersion: row.orderVersion, status: 'backlog', beforeTaskId: b.id });
+    assert.deepEqual((await ok(f.owner, f.tasks)).items.map(row => row.id), [a.id, source.id, b.id]);
+    assert.ok((await ok(f.owner, `${f.tasks}/${a.id}`)).version > a.version); assert.ok(moved.orderVersion > row.orderVersion);
+    assert.deepEqual((await counts()).map((n, i) => n - before[i]), [0, 0, 1, 1, 1]); assert.equal((await ok(f.owner, f.p)).version, f.project.version);
+  });
+  await t.test('T08 real aborted HTTP move can commit and original-key retry resolves unknown outcome without another effect', async () => {
+    const f = await fixture(); const source = await ok(f.owner, f.tasks, { title: 'Unknown commit' }); const before = await counts(); const key = randomUUID();
+    const payload = { expectedVersion: source.version, expectedOrderVersion: source.orderVersion, status: 'done', beforeTaskId: null };
+    await pool.query(`CREATE FUNCTION delay_t08_move() RETURNS trigger LANGUAGE plpgsql AS 'BEGIN IF NEW.action=''move-task'' THEN PERFORM pg_sleep(0.3); END IF; RETURN NEW; END'; CREATE TRIGGER delay_t08_move AFTER INSERT ON activity_event FOR EACH ROW EXECUTE FUNCTION delay_t08_move()`);
+    const abort = new AbortController(); let pending;
+    try {
+      pending = fetch(`${url}/api/v1/${f.tasks}/${source.id}/move`, { method: 'POST', signal: abort.signal, headers: { cookie: f.owner.cookie, origin: identity.config.origin, 'content-type': 'application/json', 'idempotency-key': key }, body: JSON.stringify(payload) });
+      // Attach rejection handling before deliberately aborting the actual socket.
+      const rejected = assert.rejects(pending);
+      let sleeping = false;
+      for (let attempt = 0; attempt < 40; attempt++) { if (Number((await pool.query("SELECT count(*) AS count FROM pg_stat_activity WHERE wait_event='PgSleep'")).rows[0].count) > 0) { sleeping = true; break; } await delay(5); }
+      assert.equal(sleeping, true); abort.abort(); await rejected;
+    } finally { abort.abort(); await pool.query('DROP TRIGGER delay_t08_move ON activity_event; DROP FUNCTION delay_t08_move()'); }
+    const replay = await ok(f.owner, `${f.tasks}/${source.id}/move`, payload, key); assert.equal(replay.status, 'done'); assert.equal(replay.version, source.version + 1);
+    assert.deepEqual((await counts()).map((n, i) => n - before[i]), [0, 0, 1, 1, 1]);
+  });
+  await t.test('T08 move/filter/page/replay obey current private visibility, human admin entitlement and grant ceilings', async () => {
+    const f = await fixture(); const member = await join(f); const viewer = await join(f, 'viewer');
+    const task = await ok(member, f.tasks, { title: 'Immutable creator' });
+    const adminContext = (await principals.webContext({ cookie: f.owner.cookie }, f.workspace.id)).context;
+    const agentId = await principals.registerAgent(adminContext, { name: 'Rank Agent', role: 'member', custodianPrincipalId: f.owner.principalId });
+    const grant = await principals.recordInternalGrant(adminContext, { subjectPrincipalId: agentId, mode: 'autonomous', allowedOperations: ['read', 'write'], expiresAt: new Date(Date.now() + 3600000) }); const context = await principals.internalGrantContext(grant, f.workspace.id);
+    const current = await ok(f.owner, `${f.tasks}/${task.id}`); const payload = { expectedVersion: current.version, expectedOrderVersion: current.orderVersion, status: 'done', beforeTaskId: null }; const key = randomUUID();
+    const moved = await service.moveTask(context, f.workspace.id, f.project.id, task.id, key, randomUUID(), payload); assert.equal(moved.creator.principalId, member.principalId);
+    const event = await prisma.activityEvent.findFirstOrThrow({ where: { taskId: task.id, action: 'move-task' } }); assert.equal(event.actorPrincipalId, agentId); assert.equal(event.executionMode, 'autonomous');
+    await ok(f.owner, `${f.p}/visibility`, { expectedVersion: f.project.version, visibility: 'private' });
+    assert.equal((await request(member, f.tasks + '?priority=none')).status, 403); assert.equal((await request(member, `${f.tasks}?cursor=foreign`)).status, 403);
+    assert.equal((await ok(f.owner, f.tasks)).total, 1); await assert.rejects(service.moveTask(context, f.workspace.id, f.project.id, task.id, key, randomUUID(), payload), status(403));
+    assert.equal((await request(viewer, `${f.tasks}/${task.id}/move`, payload)).status, 403);
+    const project = await ok(f.owner, f.p); await ok(f.owner, `${f.p}/access/${agentId}`, { expectedVersion: project.version, state: 'active' });
+    assert.equal((await service.moveTask(context, f.workspace.id, f.project.id, task.id, key, randomUUID(), payload)).version, moved.version);
+    await principals.revokeGrant(adminContext, grant); await assert.rejects(service.tasks(context, f.workspace.id, f.project.id, 'active', undefined, { status: 'done' }), status(401));
+    await assert.rejects(service.moveTask(context, f.workspace.id, f.project.id, task.id, key, randomUUID(), payload), status(401));
+    assert.equal((await ok(f.owner, `${f.tasks}/${task.id}`)).creator.principalId, member.principalId);
+  });
+  await t.test('T08 cursor binds filters, archive mode and scope; status edits/archive/restore/create invalidate prior pages', async () => {
+    const f = await fixture(); const other = await fixture(); const context = (await principals.webContext({ cookie: f.owner.cookie }, f.workspace.id)).context;
+    for (let n = 0; n < 102; n++) await service.createTask(context, f.workspace.id, f.project.id, randomUUID(), randomUUID(), { title: `Ordered ${n}`, status: 'todo', priority: 'urgent' });
+    const query = '?status=todo&priority=urgent'; const first = await ok(f.owner, f.tasks + query); assert.equal(first.items.length, 100); assert.equal(first.total, 102);
+    const tail = await ok(f.owner, f.tasks + query + `&cursor=${first.nextCursor}`); assert.equal(tail.items.length, 2); assert.equal(tail.orderVersion, first.orderVersion);
+    for (const path of [`${f.tasks}?cursor=${first.nextCursor}`, `${f.tasks}?status=todo&priority=low&cursor=${first.nextCursor}`, `${f.tasks}?view=archived&status=todo&priority=urgent&cursor=${first.nextCursor}`]) assert.equal((await request(f.owner, path)).status, 400);
+    const decoded = JSON.parse(Buffer.from(first.nextCursor, 'base64url').toString());
+    for (const patch of [{ anchor: randomUUID() }, { anchor: other.project.id }, { revision: 0 }, { w: other.workspace.id }]) {
+      const cursor = Buffer.from(JSON.stringify({ ...decoded, ...patch })).toString('base64url'); assert.equal((await request(f.owner, f.tasks + query + `&cursor=${cursor}`)).status, 400);
+    }
+    const source = first.items[0]; const originalProject = await ok(f.owner, f.p);
+    let page = first;
+    const changed = await ok(f.owner, `${f.tasks}/${source.id}`, { expectedVersion: source.version, status: 'done' });
+    assert.equal((await request(f.owner, f.tasks + query + `&cursor=${page.nextCursor}`)).data.code, 'page-changed');
+    const done = await ok(f.owner, `${f.tasks}?status=done`); assert.equal(done.items[0].id, source.id);
+    page = await ok(f.owner, f.tasks + query); const archived = await ok(f.owner, `${f.tasks}/${source.id}/archive`, { expectedVersion: changed.version });
+    assert.equal((await request(f.owner, f.tasks + query + `&cursor=${page.nextCursor}`)).status, 409);
+    page = await ok(f.owner, f.tasks + query); await ok(f.owner, `${f.tasks}/${source.id}/restore`, { expectedVersion: archived.version });
+    assert.equal((await request(f.owner, f.tasks + query + `&cursor=${page.nextCursor}`)).status, 409);
+    page = await ok(f.owner, f.tasks + query); await ok(f.owner, f.tasks, { title: 'Appended' });
+    assert.equal((await request(f.owner, f.tasks + query + `&cursor=${page.nextCursor}`)).status, 409);
+    assert.equal((await ok(f.owner, f.p)).version, originalProject.version);
+  });
 
   await t.test('actual additive paging migration backfills existing projects deterministically and retains unique immutable allocation', async () => {
     const schema = `t06_paging_${randomUUID().replaceAll('-', '')}`; const connection = await pool.connect();
@@ -118,8 +281,10 @@ test('T06 real PostgreSQL and HTTP project/task vertical', async t => {
     for (let n = 0; n < 102; n++) await service.createTask(context, f.workspace.id, f.project.id, randomUUID(), randomUUID(), { title: `Paged task ${n}` });
     const tasks = await ok(f.owner, f.tasks); assert.equal(tasks.items.length, 100); assert.equal(tasks.total, 102);
     const lateTask = await prisma.task.create({ data: { id: '00000000-0000-4000-8000-000000000001', workspaceId: f.workspace.id, projectId: f.project.id, number: 1, title: 'Late task', createdByPrincipalId: f.owner.principalId, creationMode: 'human', creationSource: 'web' } });
-    const tail = await ok(f.owner, `${f.tasks}?cursor=${tasks.nextCursor}`); assert.equal(tail.items.length, 3); assert.equal(tail.nextCursor, null);
-    assert.equal(new Set([...tasks.items, ...tail.items].map(row => row.id)).size, 103); assert.ok(tail.items.some(row => row.id === lateTask.id));
+    const changed = await request(f.owner, `${f.tasks}?cursor=${tasks.nextCursor}`); assert.equal(changed.status, 409); assert.equal(changed.data.code, 'page-changed');
+    const refreshed = await ok(f.owner, f.tasks);
+    const tail = await ok(f.owner, `${f.tasks}?cursor=${refreshed.nextCursor}`); assert.equal(tail.items.length, 3); assert.equal(tail.nextCursor, null);
+    assert.equal(new Set([...refreshed.items, ...tail.items].map(row => row.id)).size, 103); assert.ok(tail.items.some(row => row.id === lateTask.id));
     await ok(f.owner, `${f.tasks}/${tail.items[0].id}/archive`, { expectedVersion: 1 });
     assert.equal((await ok(f.owner, f.tasks)).total, 102); assert.equal((await ok(f.owner, `${f.tasks}?view=archived`)).total, 1);
     assert.equal((await ok(foreign.owner, foreign.path)).total, 1); assert.equal((await ok(foreign.owner, foreign.tasks)).total, 0);

@@ -181,6 +181,7 @@ model Project {
   description String @default("")
   visibility String @default("workspace")
   nextTaskNumber Int @default(1)
+  taskRevision Int @default(1)
   version Int @default(1)
   archivedAt DateTime?
   createdByPrincipalId String
@@ -221,6 +222,7 @@ model Task {
   type String @default("task")
   priority String @default("none")
   status String @default("backlog")
+  rank BigInt @default(0)
   assigneePrincipalId String?
   dueDate DateTime? @db.Date
   version Int @default(1)
@@ -233,6 +235,7 @@ model Task {
   updatedAt DateTime @default(now())
   @@unique([workspaceId, projectId, number])
   @@unique([workspaceId, projectId, id])
+  @@unique([workspaceId, projectId, status, rank], map: "task_scope_status_rank")
   @@map("task")
 }
 

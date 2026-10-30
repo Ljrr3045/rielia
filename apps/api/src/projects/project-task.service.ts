@@ -1,15 +1,10 @@
 import { BadRequestException, ConflictException, ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { createHash, randomUUID } from 'node:crypto';
-import { projectURL, taskURL, taskStatuses, taskTypes, taskPriorities, type ArchiveView, type DomainPage, type DomainPerson, type ExecutionContextResponse, type Project, type ProjectTaskResult, type Task, type ProjectAccessPage, type ProjectAssigneePage, type MembershipRole, type ProjectAccessReview } from '@rielia/contracts';
+import { isTaskFilters, projectURL, taskURL, taskStatuses, taskTypes, taskPriorities, type TaskFilters, type TaskStatus, type TaskPage, type TaskColumnCounts, type ArchiveView, type DomainPage, type DomainPerson, type ExecutionContextResponse, type Project, type ProjectTaskResult, type Task, type ProjectAccessPage, type ProjectAssigneePage, type MembershipRole, type ProjectAccessReview } from '@rielia/contracts';
 import type { Prisma, Project as ProjectRow, Task as TaskRow } from '../generated/prisma/client.js';
 import { PrincipalService, type Transaction, type VerifiedExecution } from '../principals/principal.service.js';
 
 const identifier = (value: unknown): value is string => typeof value === 'string' && /^[A-Za-z0-9_-]{1,128}$/.test(value);
-function pageCursor(value: string | undefined): number | undefined {
-  if (value === undefined) return undefined;
-  if (!/^[1-9][0-9]{0,9}$/.test(value) || Number(value) > 2147483647) throw new BadRequestException('Invalid page cursor.');
-  return Number(value);
-}
 function object(value: unknown, allowed: string[], required: string[] = []): Record<string, unknown> {
   if (!value || typeof value !== 'object' || Array.isArray(value) || Object.keys(value).some(key => !allowed.includes(key))
     || required.some(key => !(key in value))) throw new BadRequestException('Invalid project/task request.');
@@ -104,7 +99,7 @@ export class ProjectTaskService {
     return { id: row.id, workspaceId: row.workspaceId, projectId: row.projectId, projectKey: project.key, number: row.number, key: `${project.key}-${row.number}`,
       title: row.title, description: row.description, type: row.type as Task['type'], priority: row.priority as Task['priority'], status: row.status as Task['status'],
       assigneePrincipalId: row.assigneePrincipalId, assignee: row.assigneePrincipalId ? { ...people.get(row.assigneePrincipalId)!, active: eligible.has(row.assigneePrincipalId) } : null,
-      dueDate: row.dueDate?.toISOString().slice(0, 10) ?? null, version: row.version, archivedAt: iso(row.archivedAt), projectArchivedAt: iso(project.archivedAt),
+      dueDate: row.dueDate?.toISOString().slice(0, 10) ?? null, version: row.version, orderVersion: project.taskRevision, archivedAt: iso(row.archivedAt), projectArchivedAt: iso(project.archivedAt),
       createdAt: row.createdAt.toISOString(), updatedAt: row.updatedAt.toISOString(), creator: people.get(row.createdByPrincipalId)!, provenance: provenance(row),
       capabilities: { canEdit: canWrite && active, canArchive: canWrite && active, canRestore: canWrite && !project.archivedAt && !!row.archivedAt }, url: taskURL(row.workspaceId, row.projectId, row.id) };
   }
@@ -115,7 +110,9 @@ export class ProjectTaskService {
     return { people, eligible };
   }
   private async taskView(tx: Transaction, row: TaskRow, project: ProjectRow, canWrite: boolean) {
-    const { people, eligible } = await this.taskPeople(tx, project, [row]); return this.taskDto(row, project, people, canWrite, eligible);
+    // Mutation triggers may have advanced the aggregate since project was read.
+    const current = await tx.project.findUniqueOrThrow({ where: { workspaceId_id: { workspaceId: project.workspaceId, id: project.id } } });
+    const { people, eligible } = await this.taskPeople(tx, current, [row]); return this.taskDto(row, current, people, canWrite, eligible);
   }
   private conflict(current: ProjectTaskResult, version: number) {
     if (version !== current.version) throw new ConflictException({ code: 'version-conflict', message: 'Record changed. Compare the current record before saving again.', current });
@@ -140,18 +137,78 @@ export class ProjectTaskService {
   project(context: VerifiedExecution, workspaceId: string, projectId: string) {
     return this.principals.domainOperation(context, workspaceId, 'read', async (tx, actor, canWrite) => this.projectView(tx, await this.projectRow(tx, workspaceId, projectId, actor), canWrite, actor));
   }
-  tasks(context: VerifiedExecution, workspaceId: string, projectId: string, view: ArchiveView = 'active', cursor?: string) {
-    const after = pageCursor(cursor);
+  tasks(context: VerifiedExecution, workspaceId: string, projectId: string, view: ArchiveView = 'active', cursor?: string, filters: TaskFilters = {}): Promise<TaskPage> {
+    if (!isTaskFilters(filters)) throw new BadRequestException('Invalid task filters.');
+    const normalized = canonical(filters);
     return this.principals.domainOperation(context, workspaceId, 'read', async (tx, actor, canWrite) => {
       const project = await this.projectRow(tx, workspaceId, projectId, actor);
-      const where = { workspaceId, projectId, archivedAt: view === 'active' ? null : { not: null } };
-      const rows = await tx.task.findMany({ where: { ...where, ...(after === undefined ? {} : { number: { gt: after } }) }, orderBy: { number: 'asc' }, take: 101 });
+      const where: Prisma.TaskWhereInput = { workspaceId, projectId, archivedAt: view === 'active' ? null : { not: null },
+        ...(filters.status ? { status: filters.status } : {}), ...(filters.priority ? { priority: filters.priority } : {}),
+        ...(filters.assignee ? { assigneePrincipalId: filters.assignee === 'unassigned' ? null : filters.assignee } : {}) };
+      let anchor: TaskRow | null = null;
+      if (cursor !== undefined) {
+        let decoded: Record<string, unknown>;
+        try {
+          if (!/^[A-Za-z0-9_-]{1,2048}$/.test(cursor)) throw new Error();
+          decoded = object(JSON.parse(Buffer.from(cursor, 'base64url').toString('utf8')), ['v', 'w', 'p', 'view', 'filters', 'revision', 'anchor'], ['v', 'w', 'p', 'view', 'filters', 'revision', 'anchor']);
+          if (decoded['v'] !== 1 || decoded['w'] !== workspaceId || decoded['p'] !== projectId || decoded['view'] !== view || JSON.stringify(canonical(decoded['filters'])) !== JSON.stringify(normalized)
+            || !identifier(decoded['anchor']) || !Number.isSafeInteger(decoded['revision']) || Number(decoded['revision']) < 1) throw new Error();
+        } catch { throw new BadRequestException('Invalid page cursor.'); }
+        if (decoded['revision'] !== project.taskRevision) throw new ConflictException({ code: 'page-changed', message: 'Task order changed. Refresh the collection.' });
+        anchor = await tx.task.findFirst({ where: { ...where, id: decoded['anchor'] as string } });
+        if (!anchor) throw new BadRequestException('Invalid page cursor.');
+      }
+      // At most 101 records total, using the same per-status order in both views.
+      const rows: TaskRow[] = [];
+      for (const status of taskStatuses) {
+        if (filters.status && status !== filters.status) continue;
+        if (anchor && taskStatuses.indexOf(status) < taskStatuses.indexOf(anchor.status as TaskStatus)) continue;
+        const sameColumn = anchor?.status === status;
+        rows.push(...await tx.task.findMany({ where: { ...where, status, ...(sameColumn ? { rank: { gt: anchor!.rank } } : {}) }, orderBy: [{ rank: 'asc' }, { number: 'asc' }], take: 101 - rows.length }));
+        if (rows.length === 101) break;
+      }
       const { people, eligible } = await this.taskPeople(tx, project, rows);
-      return page(rows.map(row => this.taskDto(row, project, people, canWrite, eligible)), await tx.task.count({ where }), row => String(row.number), canWrite && !project.archivedAt);
+      const counts = Object.fromEntries(taskStatuses.map(status => [status, 0])) as TaskColumnCounts;
+      for (const group of await tx.task.groupBy({ by: ['status'], where, _count: { _all: true } })) counts[group.status as TaskStatus] = group._count._all;
+      let selectedAssignee: DomainPerson | null = null;
+      if (filters.assignee && filters.assignee !== 'unassigned') {
+        const eligible = !!await tx.membership.findFirst({ where: { ...this.eligible(project), principalId: filters.assignee }, select: { principalId: true } });
+        // Eligibility and historical task authorship/assignment are separate.
+        // Reveal a noneligible identity only if it already appears as assignee
+        // in this authorized project, never by arbitrary workspace/foreign ID.
+        const historical = eligible || !!await tx.task.findFirst({ where: { workspaceId, projectId, assigneePrincipalId: filters.assignee }, select: { id: true } });
+        if (historical) {
+          const person = (await this.people(tx, workspaceId, [filters.assignee])).get(filters.assignee);
+          if (person) selectedAssignee = { ...person, active: eligible };
+        }
+      }
+      const items = rows.slice(0, 100).map(row => this.taskDto(row, project, people, canWrite, eligible));
+      return { items, total: Object.values(counts).reduce((sum, n) => sum + n, 0), orderVersion: project.taskRevision, columnCounts: counts, selectedAssignee,
+        capabilities: { canCreate: canWrite && !project.archivedAt }, nextCursor: rows.length > 100 ? Buffer.from(JSON.stringify({ v: 1, w: workspaceId, p: projectId, view, filters: normalized, revision: project.taskRevision, anchor: items[99]!.id })).toString('base64url') : null };
     });
   }
   task(context: VerifiedExecution, workspaceId: string, projectId: string, taskId: string) {
     return this.principals.domainOperation(context, workspaceId, 'read', async (tx, actor, canWrite) => { const project = await this.projectRow(tx, workspaceId, projectId, actor); return this.taskView(tx, await this.taskRow(tx, workspaceId, projectId, taskId), project, canWrite); });
+  }
+  private async rank(tx: Transaction, workspaceId: string, projectId: string, status: string, beforeTaskId: string | null, taskId: string) {
+    const rows = await tx.$queryRaw<Array<{ rank: bigint }>>`SELECT task_rank_before(${workspaceId},${projectId},${status},${beforeTaskId},${taskId}) AS rank`;
+    return rows[0]!.rank;
+  }
+  moveTask(context: VerifiedExecution, workspaceId: string, projectId: string, taskId: string, key: string, requestId: string, payload: unknown) {
+    const input = object(payload, ['expectedVersion', 'expectedOrderVersion', 'status', 'beforeTaskId'], ['expectedVersion', 'expectedOrderVersion', 'status', 'beforeTaskId']);
+    const version = expected(input['expectedVersion']); const orderVersion = expected(input['expectedOrderVersion']);
+    if (!taskStatuses.includes(input['status'] as TaskStatus) || (input['beforeTaskId'] !== null && !identifier(input['beforeTaskId']))) throw new BadRequestException('Invalid task move.');
+    const status = input['status'] as TaskStatus; const beforeTaskId = input['beforeTaskId'] as string | null;
+    return this.mutation(context, workspaceId, key, requestId, 'move-task', [projectId, taskId], { expectedVersion: version, expectedOrderVersion: orderVersion, status, beforeTaskId }, async (tx, actor) => {
+      const project = await this.projectRow(tx, workspaceId, projectId, actor); const row = await this.taskRow(tx, workspaceId, projectId, taskId); const current = await this.taskView(tx, row, project, true);
+      this.conflict(current, version);
+      if (project.archivedAt || row.archivedAt) this.archived(current);
+      if (project.taskRevision !== orderVersion) throw new ConflictException({ code: 'order-conflict', message: 'Task order changed. Refresh and choose a destination again.', current });
+      if (beforeTaskId !== null && (beforeTaskId === taskId || !await tx.task.findFirst({ where: { workspaceId, projectId, id: beforeTaskId, status, archivedAt: null }, select: { id: true } }))) throw new BadRequestException('Invalid move anchor.');
+      const rank = await this.rank(tx, workspaceId, projectId, status, beforeTaskId, taskId);
+      const updated = await tx.task.update({ where: { workspaceId_projectId_id: { workspaceId, projectId, id: taskId } }, data: { status, rank } });
+      return this.taskView(tx, updated, project, true);
+    });
   }
 
   private async assertAssignable(tx: Transaction, project: ProjectRow, principalId: string) {
@@ -245,7 +302,7 @@ export class ProjectTaskService {
       const activityId = randomUUID();
       await tx.activityEvent.create({ data: { id: activityId, workspaceId, projectId: 'projectId' in result ? result.projectId : result.id, taskId: 'projectId' in result ? result.id : null,
         actorPrincipalId: actor.actorPrincipalId, executionMode: actor.executionMode, source: actor.source, grantId: actor.grantId, requestId,
-        action, entityVersion: result.version, accessPrincipalId: action === 'change-access' ? target[1]! : null, changedFields: Object.keys(input as object).filter(field => field !== 'expectedVersion') } });
+        action, entityVersion: result.version, accessPrincipalId: action === 'change-access' ? target[1]! : null, changedFields: action === 'move-task' ? ['status', 'rank'] : Object.keys(input as object).filter(field => field !== 'expectedVersion') } });
       await tx.outboxEvent.create({ data: { id: randomUUID(), workspaceId, activityId, type: 'domain.activity', payload: { activityId } } });
       await tx.projectTaskOperation.create({ data: { ...scope, requestHash, response: result as unknown as Prisma.InputJsonValue } });
       return result;
@@ -292,7 +349,8 @@ export class ProjectTaskService {
       if (project.archivedAt || (action !== 'restore-task' && row.archivedAt)) this.archived(current);
       if (action === 'restore-task' && !row.archivedAt) throw new ConflictException({ code: 'archived', message: 'Task is already active.', current });
       if ('assigneePrincipalId' in fields && fields.assigneePrincipalId && fields.assigneePrincipalId !== row.assigneePrincipalId) await this.assertAssignable(tx, project, fields.assigneePrincipalId);
-      return this.taskView(tx, await tx.task.update({ where: { workspaceId_projectId_id: { workspaceId, projectId, id: taskId } }, data: fields }), project, true);
+      const position = 'status' in fields && fields.status !== row.status ? { rank: await this.rank(tx, workspaceId, projectId, fields.status!, null, taskId) } : {};
+      return this.taskView(tx, await tx.task.update({ where: { workspaceId_projectId_id: { workspaceId, projectId, id: taskId } }, data: { ...fields, ...position } }), project, true);
     });
   }
 }

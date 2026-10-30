@@ -6,6 +6,22 @@ This records repository changes. No application version has been released.
 
 ### Added
 
+- T08.0/B1b persistent list/Kanban logic on merged T07.1 [PR #18](https://github.com/Ljrr3045/rielia/pull/18)
+  (`ac3de535`), with both completed T07 worktrees removed. One PostgreSQL task
+  source supplies status-grouped list and five semantic status partitions,
+  status/assignee/unassigned/priority filters, bounded revision-bound pages/counts,
+  historical selected-filter names and atomic expected-version/order moves.
+  An additive migration preserves every earlier migration and adds gapped bigint
+  ranks with transactional compaction and a task revision separate from project
+  edit/access versions. Current T07 authorization, archives, immutable authorship,
+  activity/outbox/idempotency and original-key recovery remain enforced.
+  Hook-owned URLs, independent column errors, coherent totals, explicit move
+  eligibility and fresh-destination conflict recovery extend the existing shared
+  draft lifecycle. Real PG races/rollback/aborted HTTP/restart, focused tests and
+  populated real Next-proxy QA are included. [Contract, evidence and limits](docs/development/task-views.md).
+  No JSX/CSS, configurable workflows/labels/sprints/full US05, T09/T10/B2,
+  new credentials, real OAuth/staging/users or deployment is included.
+
 - T07.1/B1b private-project access presentation on merged T07.0 logic, under the
   2026-10-29 administrative-visibility policy. `/projects` now exposes create-time
   visibility when the server permits it, textual private/workspace disclosure, a

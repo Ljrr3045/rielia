@@ -1,4 +1,4 @@
-import { isPage, isRecord, isProject, isTask, isProjectAccessMember, isDomainPerson, type ArchiveView, type DomainPage, type Project, type ProjectCommand, type ProjectTaskResult, type Task, type ProjectAccessPage, type ProjectAssigneePage, type ProjectAccessMember, type ProjectAccessReview } from '@rielia/contracts';
+import { isPage, isRecord, isProject, isTask, isTaskPage, isTaskFilters, type TaskFilters, type TaskPage, isProjectAccessMember, isDomainPerson, type ArchiveView, type DomainPage, type Project, type ProjectCommand, type ProjectTaskResult, type Task, type ProjectAccessPage, type ProjectAssigneePage, type ProjectAccessMember, type ProjectAccessReview } from '@rielia/contracts';
 
 export class ProjectTaskFailure extends Error {
   readonly status: number; readonly code: string | null; readonly current: ProjectTaskResult | null; readonly requestId: string | null;
@@ -10,7 +10,7 @@ export class ProjectTaskFailure extends Error {
 export interface ProjectTaskTransport {
   projects(workspaceId: string, view: ArchiveView, signal: AbortSignal, cursor?: string): Promise<DomainPage<Project>>;
   project(workspaceId: string, projectId: string, signal: AbortSignal): Promise<Project>;
-  tasks(workspaceId: string, projectId: string, view: ArchiveView, signal: AbortSignal, cursor?: string): Promise<DomainPage<Task>>;
+  tasks(workspaceId: string, projectId: string, view: ArchiveView, signal: AbortSignal, cursor?: string, filters?: TaskFilters): Promise<TaskPage>;
   task(workspaceId: string, projectId: string, taskId: string, signal: AbortSignal): Promise<Task>;
   access(workspaceId: string, projectId: string, signal: AbortSignal, cursor?: string): Promise<ProjectAccessPage>;
   accessReview(workspaceId: string, projectId: string, principalId: string, signal: AbortSignal): Promise<ProjectAccessReview>;
@@ -46,7 +46,15 @@ export function createProjectTaskTransport(options: { baseURL?: string; timeout?
   return {
     projects: (w, view, signal, cursor) => collection(root(w), signal, (v): v is Project => isProject(v) && scoped(v, w), view, cursor),
     async project(w, p, signal) { const value = await request(projectPath(w, p), signal); if (!isProject(value) || !scoped(value, w, p)) throw new ProjectTaskFailure(502); return value; },
-    tasks: (w, p, view, signal, cursor) => collection(`${projectPath(w, p)}/tasks`, signal, (v): v is Task => isTask(v) && scoped(v, w, p), view, cursor),
+    async tasks(w, p, view, signal, cursor, filters = {}) {
+      if (!isTaskFilters(filters)) throw new ProjectTaskFailure(400);
+      const query = new URLSearchParams({ view, ...filters }); if (cursor) query.set('cursor', cursor);
+      const value = await request(`${projectPath(w, p)}/tasks?${query}`, signal);
+      if (!isTaskPage(value) || value.items.some(row => !scoped(row, w, p) || filters.status && row.status !== filters.status || filters.priority && row.priority !== filters.priority
+        || filters.assignee && row.assigneePrincipalId !== (filters.assignee === 'unassigned' ? null : filters.assignee))
+        || value.selectedAssignee !== null && value.selectedAssignee.principalId !== filters.assignee) throw new ProjectTaskFailure(502);
+      return value;
+    },
     async task(w, p, t, signal) { const value = await request(`${projectPath(w, p)}/tasks/${segment(t)}`, signal); if (!isTask(value) || !scoped(value, w, p, t)) throw new ProjectTaskFailure(502); return value; },
     async access(w, p, signal, cursor) {
       const value = await request(`${projectPath(w, p)}/access${cursor ? `?cursor=${segment(cursor)}` : ''}`, signal);
@@ -73,6 +81,7 @@ export function createProjectTaskTransport(options: { baseURL?: string; timeout?
         case 'archive-project': case 'restore-project': path += `/${segment(command.projectId)}/${command.type === 'archive-project' ? 'archive' : 'restore'}`; body = { expectedVersion: command.expectedVersion }; break;
         case 'create-task': path += `/${segment(command.projectId)}/tasks`; body = command.fields; break;
         case 'edit-task': path += `/${segment(command.projectId)}/tasks/${segment(command.taskId)}`; body = { ...command.fields, expectedVersion: command.expectedVersion }; break;
+        case 'move-task': path += `/${segment(command.projectId)}/tasks/${segment(command.taskId)}/move`; body = { expectedVersion: command.expectedVersion, expectedOrderVersion: command.expectedOrderVersion, status: command.status, beforeTaskId: command.beforeTaskId }; break;
         case 'archive-task': case 'restore-task': path += `/${segment(command.projectId)}/tasks/${segment(command.taskId)}/${command.type === 'archive-task' ? 'archive' : 'restore'}`; body = { expectedVersion: command.expectedVersion }; break;
       }
       let value: unknown;
