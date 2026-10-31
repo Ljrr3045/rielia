@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import type { MouseEvent as ReactMouseEvent } from 'react';
 import type { ProjectCommand, Task, TaskReference } from '@rielia/contracts';
 import { FeedbackPanel } from './feedback';
 import {
@@ -77,7 +76,6 @@ export function TaskRelations({
   const [selectedParentId, setSelectedParentId] = useState('');
   const [unlinkOpen, setUnlinkOpen] = useState(false);
   const selectRef = useRef<HTMLSelectElement>(null);
-  const linkOpenerRef = useRef<HTMLElement | null>(null);
   const setWanted = hook.setParentCandidatesWanted;
 
   useEffect(() => {
@@ -97,18 +95,13 @@ export function TaskRelations({
     void setWanted(false);
     if (!focus) return;
     requestAnimationFrame(() => {
-      const opener = linkOpenerRef.current;
-      if (opener !== null && opener.isConnected) {
-        opener.focus();
-        return;
-      }
-      document.getElementById('collab-relations-heading')?.focus();
+      const opener = document.querySelector<HTMLElement>('[data-collab-link-opener]');
+      (opener ?? document.getElementById('collab-relations-heading'))?.focus();
     });
   }
 
-  function openLink(event: ReactMouseEvent<HTMLButtonElement>) {
+  function openLink() {
     if (disabled || draftLocked) return;
-    linkOpenerRef.current = event.currentTarget;
     setLinkOpen(true);
     void setWanted(true);
   }
@@ -281,7 +274,7 @@ export function TaskRelations({
         <div className={styles.collabRelationActions}>
           {parent === null && relations.capabilities.canLink && !linkOpen && (
             <>
-              <button className={styles.ghostButton} disabled={disabled || draftLocked} onClick={openLink} type="button">
+              <button className={styles.ghostButton} data-collab-link-opener disabled={disabled || draftLocked} onClick={() => openLink()} type="button">
                 {copy.collaboration.linkToParent[lang]}
               </button>
               <span className={styles.collabHint}>{copy.collaboration.childCentricHint[lang]}</span>
@@ -290,7 +283,7 @@ export function TaskRelations({
           {parent !== null && (
             <>
               {!linkOpen && (
-                <button className={styles.ghostButton} disabled={disabled || draftLocked} onClick={openLink} type="button">
+                <button className={styles.ghostButton} data-collab-link-opener disabled={disabled || draftLocked} onClick={() => openLink()} type="button">
                   {copy.collaboration.changeParent[lang]}
                 </button>
               )}
