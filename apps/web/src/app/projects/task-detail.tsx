@@ -63,6 +63,7 @@ export function TaskDetail({
   overlay,
   modalOpen,
   actionsDisabled = false,
+  collaboration,
   feedback,
   description,
   onClose,
@@ -75,6 +76,7 @@ export function TaskDetail({
   overlay: boolean;
   modalOpen: boolean;
   actionsDisabled?: boolean;
+  collaboration?: ReactNode | undefined;
   feedback?: ReactNode | undefined;
   description?: ReactNode | undefined;
   onClose: () => void;
@@ -204,6 +206,8 @@ export function TaskDetail({
               <p className={styles.sectionHint}>{copy.task.creatorHint[lang]}</p>
             </div>
           </section>
+
+          {collaboration}
 
           {!task.capabilities.canEdit && !projectArchived && !taskArchived && (
             <div className={styles.viewerNotice}>

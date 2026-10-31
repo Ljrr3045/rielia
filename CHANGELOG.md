@@ -6,6 +6,29 @@ This records repository changes. No application version has been released.
 
 ### Added
 
+- T09.1/B1b task collaboration presentation on merged T09.0 logic
+  [PR #21](https://github.com/Ljrr3045/rielia/pull/21) (`76d7d31b`). The existing
+  task detail now presents one-level parent/child relations with child quick-add
+  and child-centric link/reparent/unlink, open-child close warnings with explicit
+  acknowledgment, complete checklist progress/add/edit/toggle/reorder/remove,
+  attributed Markdown comments with own-author versioned editing and edited
+  marker, and separate typed history. Shared staged collaboration drafts survive
+  navigation with Return/Discard, unknown-key retry and exact conflict review;
+  archived/viewer surfaces stay read-only. ES/EN, light/dark, 44 px targets,
+  focus restoration, safe Markdown React rendering and full-screen detail from
+  320 px are included. The separate real PG/Nest/Next functional validator passed
+  hierarchy, checklist, warnings, attribution, paging, recovery, auth and XSS
+  cases; the independent responsive/keyboard validator passed the reviewed
+  viewport and affected focus regressions. Final full `pnpm check`, audit
+  high/critical gate, handoff and whitespace pass; PR URL, CI/Kody state and
+  exact final head remain in the UI guide/external report.
+  [UI guide, evidence and limits](docs/development/task-collaboration-ui.md),
+  [PR #22](https://github.com/Ljrr3045/rielia/pull/22).
+  Presentation adds no hook/controller/contract or backend change; full
+  T09/P05/P14/P38, T10/T11/T12/B2, real OAuth/staging/users, physical-device/AT/
+  WCAG and deployment remain open. The inherited moderate dev-tooling minimatch
+  advisory is unchanged.
+
 - T09.0/B1b task collaboration logic on merged [PR #20](https://github.com/Ljrr3045/rielia/pull/20)
   (`a93cb85e`): same-project one-level parent links, child creation/link/reparent/
   unlink, explicit revision-bound parent-close warnings, bounded ordered
