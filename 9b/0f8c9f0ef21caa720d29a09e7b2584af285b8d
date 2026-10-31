@@ -1,0 +1,19 @@
+apps/web/src/app/projects/task-relations.tsx
+  s_e7129716d7db62::t_5579f6f09b363b 98-99,103,277,286
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9b0f8c9f0ef21caa720d29a09e7b2584af285b8d",
+  "prompts": {},
+  "sessions": {
+    "s_e7129716d7db62": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e6d24277effeyoXolmCksH349o",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
