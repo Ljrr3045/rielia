@@ -1,0 +1,23 @@
+docs/development/task-collaboration.md
+  s_eb28aa6b81240b::t_89c9b29d5528c6 173-175
+CHANGELOG.md
+  s_eb28aa6b81240b::t_89c9b29d5528c6 18-19
+docs/development/progress.md
+  s_eb28aa6b81240b::t_89c9b29d5528c6 43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "927a8ea2cd2d5decf725a6d9e7c595133e5b1409",
+  "prompts": {},
+  "sessions": {
+    "s_eb28aa6b81240b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a192db-72b9-76f3-8916-c609b68c76d1",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
