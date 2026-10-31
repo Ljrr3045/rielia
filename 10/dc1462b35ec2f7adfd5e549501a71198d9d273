@@ -1,0 +1,21 @@
+docs/development/progress.md
+  s_e7129716d7db62::t_127f3f755bd8b5 163-174,668-672,706
+docs/development/task-collaboration-ui.md
+  s_e7129716d7db62::t_d93ef5c7038fa2 160-168
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "10dc1462b35ec2f7adfd5e549501a71198d9d273",
+  "prompts": {},
+  "sessions": {
+    "s_e7129716d7db62": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e6d24277effeyoXolmCksH349o",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
