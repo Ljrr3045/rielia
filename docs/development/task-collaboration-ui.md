@@ -109,20 +109,53 @@ work. No new URL parameters or parallel history state were added.
 
 ## Validation status and limits
 
-Source checks completed before the validation handoff:
+Source checks at the initial presentation head `89144e1`:
 
-- `pnpm --filter @rielia/web typecheck` — passed.
+- `pnpm --filter @rielia/web typecheck` — passed before the live runtime started.
 - `pnpm lint` — passed with `--max-warnings=0`.
-- `pnpm --filter @rielia/web build` — passed.
+- `pnpm --filter @rielia/web build` — passed before the live runtime started.
 - `pnpm test:projects:logic` — 46/46 passed, including T09 transport, draft,
   close acknowledgment, comment/checklist conflict, candidate demand and
   Markdown safety regressions.
 - `python3 scripts/verify-handoff.py` — passed; `git diff --check` — clean.
 
-The separate Sol functional validator owns the single browser/runtime assertion
-pass against the frozen source. Full `pnpm check`, identity/runtime suites and
-the final PR evidence are recorded after that handoff. No screenshots or private
-runtime state are committed. No real provider/staging, real-user validation,
+The separate Sol functional validator used the single real PG/Nest/Next runtime
+against the frozen checkout. Its bounded cases passed hierarchy/parent/child
+create-link-unlink, checklist add/edit/toggle/reorder/remove, close-warning
+acknowledgment including changed revisions, parent archive/child independence,
+comment/checklist conflict review, lost-response original-key recovery, paging
+and attribution, independent section failure, auth loss, viewer/archive
+read-only and content-scoped hostile Markdown. A failed-checklist-read scenario
+first exposed a lost success notice; the presentation fix at `bfefde6` preserved
+the confirmed notice without a second mutation, and the focused success retest
+passed. Unrelated-task success suppression and no pre-confirmation success were
+also checked. The validator's detailed report and attempts remain outside the
+repository.
+
+The independent responsive/keyboard validator covered CSS viewports 1440, 1024,
+768, 390, 375 and 320, landscape 844×390, ES/EN and emulated light/dark. Its
+initial 28 layout records found no page/detail horizontal overflow, no unnamed
+visible controls, no effective targets below 44×44 CSS px and 16px
+inputs/textareas; native roles, relation/parent navigation, focus containment and
+safe emulated-touch picker disclosure passed. It found the nested picker Escape
+and edit-cancel focus defects, then passed the affected retests: nine focus cases
+on `9b0f8c9`, and the final four consumed-Escape/normal-Escape/Tab regressions on
+`c9d8f53`. The success-notice fix was reviewed on `bfefde6`. The initial content
+had inline Markdown/code and inert raw HTML text but no rendered PRE block, so no
+code-block scrolling claim is made.
+
+The final standard `pnpm check` after the validator stopped its runtime passes
+lint, Express-free backend closure, smoke-process cleanup, 7 identity-logic,
+16 workspace, 46 project/task (T09), 19 prototype, strict typechecks, production
+builds (`/projects` static), 17 local MCP subprocess/Inspector checks and HTTP
+smoke. `pnpm audit --audit-level=high` passes the high/critical gate; the inherited
+development-only `minimatch` moderate advisory remains as documented in PR #20.
+The handoff verifier passes 47 imported files, 30 assets and the updated local
+links; whitespace checks are clean. No workaround typecheck pass is claimed for
+the narrow fix heads; this is the standard post-runtime run.
+
+No physical-device, virtual-keyboard, real 200% browser zoom, screen-reader, AT
+or WCAG certification is claimed. No real provider/staging, real-user validation,
 full T09/P05/P14/P38, T10/T11/T12, B2 or deployment is claimed.
 
 ## T09.0 merge evidence
