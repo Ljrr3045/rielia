@@ -1,5 +1,6 @@
 /** Bounded project/task domain. No configurable workflow is implied. */
 import type { MembershipRole } from './index.js';
+import type { CreateTaskFields, TaskCollaborationCommand } from './task-collaboration.js';
 export type ProjectVisibility = 'workspace' | 'private';
 export interface ProjectCapabilities extends DomainCapabilities { canManageAccess: boolean; canChangeVisibility: boolean; canGrantAccess: boolean; canRevokeAccess: boolean }
 export interface ProjectAccessMember extends DomainPerson {
@@ -35,6 +36,7 @@ export interface Project {
 }
 export interface TaskFields { title: string; description: string; type: TaskType; priority: TaskPriority; status: TaskStatus; assigneePrincipalId: string | null; dueDate: string | null }
 export interface Task extends TaskFields {
+  parentTaskId: string | null;
   id: string; workspaceId: string; projectId: string; projectKey: string; number: number; key: string;
   version: number; orderVersion: number; archivedAt: string | null; projectArchivedAt: string | null; createdAt: string; updatedAt: string;
   creator: DomainPerson; assignee: DomainPerson | null; provenance: DomainProvenance; capabilities: DomainCapabilities; url: string;
@@ -43,14 +45,14 @@ export type ProjectTaskCommand =
   | { type: 'create-project'; workspaceId: string; name: string; key: string; description?: string; visibility?: ProjectVisibility }
   | { type: 'edit-project'; workspaceId: string; projectId: string; expectedVersion: number; name: string; description: string }
   | { type: 'archive-project' | 'restore-project'; workspaceId: string; projectId: string; expectedVersion: number }
-  | { type: 'create-task'; workspaceId: string; projectId: string; fields: Pick<TaskFields, 'title'> & Partial<Omit<TaskFields, 'title'>> }
-  | { type: 'edit-task'; workspaceId: string; projectId: string; taskId: string; expectedVersion: number; fields: Partial<TaskFields> }
+  | { type: 'create-task'; workspaceId: string; projectId: string; fields: CreateTaskFields }
+  | { type: 'edit-task'; workspaceId: string; projectId: string; taskId: string; expectedVersion: number; fields: Partial<TaskFields>; acknowledgedChildrenVersion?: number }
   | { type: 'archive-task' | 'restore-task'; workspaceId: string; projectId: string; taskId: string; expectedVersion: number };
-export interface ProjectMoveCommand { type: 'move-task'; workspaceId: string; projectId: string; taskId: string; expectedVersion: number; expectedOrderVersion: number; status: TaskStatus; beforeTaskId: string | null }
+export interface ProjectMoveCommand { type: 'move-task'; workspaceId: string; projectId: string; taskId: string; expectedVersion: number; expectedOrderVersion: number; status: TaskStatus; beforeTaskId: string | null; acknowledgedChildrenVersion?: number }
 export type ProjectPolicyCommand =
   | { type: 'change-visibility'; workspaceId: string; projectId: string; expectedVersion: number; visibility: ProjectVisibility }
   | { type: 'change-access'; workspaceId: string; projectId: string; expectedVersion: number; principalId: string; state: 'active' | 'revoked' };
-export type ProjectCommand = ProjectTaskCommand | ProjectPolicyCommand | ProjectMoveCommand;
+export type ProjectCommand = ProjectTaskCommand | ProjectPolicyCommand | ProjectMoveCommand | TaskCollaborationCommand;
 export type ProjectTaskResult = Project | Task;
 export type ArchiveView = 'active' | 'archived';
 export interface DomainPage<T> { items: T[]; total: number; nextCursor: string | null; capabilities: { canCreate: boolean; canCreatePrivate?: boolean } }
@@ -88,7 +90,7 @@ export function isProjectAccessMember(value: unknown): value is ProjectAccessMem
     && record(value['capabilities']) && typeof value['capabilities']['canGrant'] === 'boolean' && typeof value['capabilities']['canRevoke'] === 'boolean';
 }
 export function isTask(value: unknown): value is Task {
-  return record(value) && common(value) && positive(value['orderVersion']) && str(value['projectId']) && str(value['projectKey']) && positive(value['number']) && str(value['key'])
+  return record(value) && common(value) && (value['parentTaskId'] === null || str(value['parentTaskId'])) && positive(value['orderVersion']) && str(value['projectId']) && str(value['projectKey']) && positive(value['number']) && str(value['key'])
     && str(value['title']) && str(value['description']) && taskTypes.includes(value['type'] as TaskType) && taskPriorities.includes(value['priority'] as TaskPriority)
     && taskStatuses.includes(value['status'] as TaskStatus) && (value['assigneePrincipalId'] === null || str(value['assigneePrincipalId']))
     && (value['assignee'] === null || isDomainPerson(value['assignee'])) && (value['projectArchivedAt'] === null || date(value['projectArchivedAt']))

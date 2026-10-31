@@ -13,7 +13,7 @@ const project = (id = 'p', workspaceId = 'a', version = 1) => ({ id, workspaceId
   createdAt: '2026-01-01T00:00:00.000Z', updatedAt: '2026-01-01T00:00:00.000Z', creator, provenance: { actorPrincipalId: 'human', executionMode: 'human', source: 'web', grantId: null },
   capabilities: { canEdit: true, canArchive: true, canRestore: false, canManageAccess: false, canChangeVisibility: false, canGrantAccess: false, canRevokeAccess: false }, url: `/projects?workspace=${workspaceId}&project=${id}` });
 const task = (id = 't', projectId = 'p', workspaceId = 'a', version = 1) => ({ ...project(id, workspaceId, version), projectId, projectKey: 'RIE', key: 'RIE-1', number: 1,
-  title: 'Original', description: '', type: 'task', priority: 'none', status: 'backlog', assigneePrincipalId: null, assignee: null, dueDate: null, projectArchivedAt: null, orderVersion: 1 });
+  title: 'Original', description: '', type: 'task', priority: 'none', status: 'backlog', assigneePrincipalId: null, assignee: null, dueDate: null, projectArchivedAt: null, orderVersion: 1, parentTaskId: null });
 const draft = () => ({ type: 'edit-task', workspaceId: 'a', projectId: 'p', taskId: 't', expectedVersion: 1, fields: { title: 'Unsent draft' } });
 function deferred() { let resolve; let reject; const promise = new Promise((a, b) => { resolve = a; reject = b; }); return { promise, resolve, reject }; }
 function fixture(overrides = {}) {
@@ -311,4 +311,106 @@ test('content and policy pager failures coexist through independent retry in eit
     failPolicy = false; await f.controller.loadMore(collection); state = f.controller.getState(); assert.equal(state.pageError.collection, 'tasks'); assert.equal(state.policyPageErrors[collection], undefined); assert.equal(state.tasks.nextCursor, '1');
     failContent = false; await f.controller.loadMore('tasks'); state = f.controller.getState(); assert.equal(state.pageError, null); assert.deepEqual(state.tasks.items.map(row => row.id), ['t', 't2']); assert.equal(state.task.id, 't');
   }
+});
+
+const collaborationPage = (collection, t = 't', revision = 1) => ({ workspaceId: 'a', projectId: 'p', taskId: t, revision, items: [], total: 0, nextCursor: null,
+  ...(collection === 'relations' ? { parent: null, open: 0, archivedOpen: 0, capabilities: { canCreate: true, canLink: true, canUnlink: false } }
+    : collection === 'history' ? {} : { capabilities: { canCreate: true, canEdit: true, canSelect: true } }) });
+const collaborationDraft = () => ({ type: 'add-comment', workspaceId: 'a', projectId: 'p', taskId: 't', expectedVersion: 1, body: 'Unsent comment' });
+test('T09 collaboration drafts survive navigation, prevent replacement, and unknown outcomes retry original target/key', async () => {
+  let fail = true;
+  const f = fixture({ transport: { collaboration: async (w, p, t, collection) => ({ ...collaborationPage(collection, t), workspaceId: w, projectId: p }),
+    mutate: async (command, key) => { f.calls.push({ command, key }); if (fail) throw new Error('unknown'); return task('t', 'p', 'a', 2); } } });
+  await f.controller.openLocation('?workspace=a&project=p&task=t');
+  f.controller.stage({ type: 'create-task', workspaceId: 'a', projectId: 'p', fields: { title: 'Child', parentTaskId: 't', expectedParentVersion: 1 } }); await f.controller.refresh();
+  f.controller.stage({ type: 'create-task', workspaceId: 'a', projectId: 'p', fields: { title: 'Retained child draft', parentTaskId: 't', expectedParentVersion: 9 } }); assert.equal(f.controller.getState().draft.fields.expectedParentVersion, 1); f.controller.discardDraft();
+  f.controller.stage(collaborationDraft());
+  await f.controller.selectTask('other'); assert.equal(f.controller.getState().draft.body, 'Unsent comment'); assert.equal(f.controller.getState().draftGuard.canReturn, true);
+  f.controller.stage({ ...collaborationDraft(), taskId: 'other', body: 'Must not replace' }); assert.equal(f.controller.getState().draft.body, 'Unsent comment');
+  await f.controller.submit(); assert.equal(f.calls.length, 0); await f.controller.returnToDraft(); await f.controller.submit(); const original = f.calls[0];
+  assert.equal(f.controller.getState().draftGuard.kind, 'recovery'); await f.controller.selectTask('other'); await f.controller.retrySave(); assert.equal(f.calls.length, 1);
+  await f.controller.returnToDraft(); fail = false; await f.controller.retrySave(); assert.deepEqual(f.calls[1], original); assert.equal(f.controller.getState().draft, null); assert.equal(f.controller.getState().outcome, 'success');
+});
+test('T09 auxiliary failures and paging preserve confirmed content/success and independent errors; changed pages require Refresh', async () => {
+  let fail = true; let changed = false; const calls = [];
+  const f = fixture({ transport: { collaboration: async (w, p, t, collection, s, cursor) => {
+    calls.push({ collection, cursor }); if (collection === 'checklist' && fail) throw new ProjectTaskFailure(503, null, null, 'checklist-request');
+    if (cursor && changed) throw new ProjectTaskFailure(409, 'page-changed');
+    return { ...collaborationPage(collection, t), items: collection === 'comments' ? [{ id: cursor ? 'tail' : 'first' }] : [], total: collection === 'comments' ? 2 : 0, nextCursor: collection === 'comments' && !cursor ? 'cursor' : null };
+  } } });
+  await f.controller.openLocation('?workspace=a&project=p&task=t'); assert.equal(f.controller.getState().status, 'ready'); assert.equal(f.controller.getState().collaboration.checklist.status, 'error');
+  f.controller.stage(collaborationDraft()); await f.controller.submit(); assert.equal(f.controller.getState().outcome, 'success'); assert.ok(f.controller.getState().result);
+  fail = false; await f.controller.loadCollaborationMore('checklist'); assert.equal(f.controller.getState().collaboration.checklist.status, 'ready');
+  const before = f.controller.getState().collaboration.comments.data; changed = true; await f.controller.loadCollaborationMore('comments');
+  assert.equal(f.controller.getState().collaboration.comments.data, before); assert.equal(f.controller.getState().collaboration.comments.status, 'changed');
+  const count = calls.length; await f.controller.loadCollaborationMore('comments'); assert.equal(calls.length, count);
+});
+test('T09 collaboration authorization failure invalidates late siblings and different accounts clear private recovery', async () => {
+  const denied = deferred(); const late = deferred();
+  const f = fixture({ transport: { collaboration: async (w, p, t, collection) => collection === 'comments' ? denied.promise : late.promise } });
+  const loading = f.controller.openLocation('?workspace=a&project=p&task=t'); await new Promise(setImmediate); denied.reject(new ProjectTaskFailure(403)); await new Promise(setImmediate);
+  assert.equal(f.controller.getState().status, 'forbidden'); late.resolve(collaborationPage('history')); await loading;
+  assert.equal(f.controller.getState().collaboration.history.data, null); assert.equal(f.controller.getState().task, null);
+});
+test('T09 explicit close acknowledgment preserves intent, creates a fresh key and cannot generic-rebase a warning', async () => {
+  let warned = false; const calls = [];
+  const f = fixture({ transport: { mutate: async (command, key) => { calls.push({ command, key }); if (!warned) { warned = true; throw new ProjectTaskFailure(409, 'open-children', task('t', 'p', 'a', 2), null, null, { open: 2, archivedOpen: 1, childrenVersion: 7 }); } return { ...task('t', 'p', 'a', 3), status: 'done' }; } } });
+  await f.controller.openLocation('?workspace=a&project=p&task=t'); f.controller.stage({ ...draft(), fields: { status: 'done', title: 'Retained edit' } }); await f.controller.submit();
+  f.controller.rebaseDraft(); assert.equal(f.controller.getState().draft.expectedVersion, 1); assert.equal(f.controller.getState().closeWarning.open, 2);
+  f.controller.acknowledgeClose(); assert.equal(f.controller.getState().draft.acknowledgedChildrenVersion, 7); assert.equal(f.controller.getState().draft.expectedVersion, 2); assert.equal(calls.length, 1);
+  await f.controller.submit(); assert.notEqual(calls[0].key, calls[1].key); assert.equal(calls[1].command.fields.title, 'Retained edit'); assert.equal(calls[1].command.fields.status, 'done');
+});
+test('T09 own-comment conflict reload/rebase requires exact-target authoritative body and both versions', async () => {
+  const comment = { id: 'comment', body: 'Concurrent edit', version: 4, capabilities: { canEdit: true } };
+  const f = fixture({ transport: { mutate: async () => { throw new ProjectTaskFailure(409, 'comment-conflict'); }, commentReview: async () => ({ task: task('t', 'p', 'a', 9), comment }) } });
+  await f.controller.openLocation('?workspace=a&project=p&task=t'); f.controller.stage({ ...collaborationDraft(), type: 'edit-comment', commentId: 'comment', expectedCommentVersion: 1 });
+  await f.controller.submit(); f.controller.rebaseDraft(); assert.equal(f.controller.getState().draft.expectedCommentVersion, 1);
+  await f.controller.reloadConflict(); assert.equal(f.controller.getState().commentConflict.body, 'Concurrent edit'); f.controller.rebaseDraft();
+  assert.equal(f.controller.getState().draft.expectedCommentVersion, 4); assert.equal(f.controller.getState().draft.expectedVersion, 9); assert.equal(f.controller.getState().draft.body, 'Unsent comment');
+});
+test('T09 Markdown raw HTML/script/images and obfuscated unsafe URI schemes remain inert AST text', () => {
+  const malicious = '<script>alert(1)</script>\n<img src=x onerror=alert(1)>\n![image](https://evil.test/x)\n[x](javascript:alert) [x](JaVaScRiPt:alert) [x](data:text/html,x) [x](vbscript:x) [x](jav&#x61;script:x) [x](//evil.test/x)';
+  const blocks = parseSafeMarkdown(malicious); const serialized = JSON.stringify(blocks); assert.ok(serialized.includes('<script>')); assert.ok(serialized.includes('onerror'));
+  assert.ok(blocks.every(block => block.type !== 'html')); assert.equal(blocks.flatMap(block => block.content ?? []).filter(node => node.type === 'link').length, 0);
+  for (const value of ['javascript:alert(1)', 'data:text/html,x', '//evil.test', '/\\evil.test', 'java\tscript:x', 'https://user:password@evil.test']) assert.equal(safeMarkdownLink(value), null);
+});
+test('T09 checklist rebase requires current canonical item content at the matching task revision', async () => {
+  let revision = 8;
+  const f = fixture({ transport: { mutate: async () => { throw new ProjectTaskFailure(409, 'version-conflict', task('t', 'p', 'a', 9)); },
+    task: async () => task('t', 'p', 'a', 9), collaboration: async (w, p, t, collection) => ({ ...collaborationPage(collection, t, revision), items: collection === 'checklist' ? [{ id: 'item', text: 'Concurrent text', version: 2 }] : [] }) } });
+  await f.controller.openLocation('?workspace=a&project=p&task=t'); f.controller.stage({ type: 'edit-checklist-item', workspaceId: 'a', projectId: 'p', taskId: 't', itemId: 'item', expectedVersion: 1, text: 'Unsent text' });
+  await f.controller.submit(); f.controller.rebaseDraft(); assert.equal(f.controller.getState().draft.expectedVersion, 1);
+  await f.controller.reloadConflict(); assert.equal(f.controller.getState().checklistConflict, null); f.controller.rebaseDraft(); assert.equal(f.controller.getState().draft.expectedVersion, 1);
+  revision = 9; await f.controller.reloadConflict(); assert.equal(f.controller.getState().checklistConflict.items[0].text, 'Concurrent text'); f.controller.rebaseDraft(); assert.equal(f.controller.getState().draft.expectedVersion, 9); assert.equal(f.controller.getState().draft.text, 'Unsent text');
+});
+test('T09 parent candidates load only on demand, preserve wanted refresh and ignore closed/navigated/unauthorized late results', async () => {
+  const calls = []; let slow = null; let denied = false;
+  const f = fixture({ transport: { collaboration: async (w, p, t, collection) => {
+    calls.push({ t, collection }); if (collection === 'parent-candidates' && denied) throw new ProjectTaskFailure(403);
+    if (collection === 'parent-candidates' && slow) return slow.promise;
+    return collaborationPage(collection, t);
+  } } });
+  await f.controller.openLocation('?workspace=a&project=p&task=t'); assert.equal(calls.length, 4); assert.equal(f.controller.getState().collaboration['parent-candidates'].status, 'idle');
+  await f.controller.setParentCandidatesWanted(true); assert.equal(calls.at(-1).collection, 'parent-candidates'); assert.equal(f.controller.getState().collaboration['parent-candidates'].status, 'ready');
+  await f.controller.refresh(); assert.equal(f.controller.getState().parentCandidatesWanted, true); assert.equal(f.controller.getState().collaboration['parent-candidates'].status, 'ready');
+  await f.controller.setParentCandidatesWanted(false); assert.equal(f.controller.getState().collaboration['parent-candidates'].data, null);
+  slow = deferred(); const closing = f.controller.setParentCandidatesWanted(true); await f.controller.setParentCandidatesWanted(false); slow.resolve(collaborationPage('parent-candidates')); await closing; assert.equal(f.controller.getState().collaboration['parent-candidates'].data, null);
+  slow = deferred(); const navigating = f.controller.setParentCandidatesWanted(true); await f.controller.selectTask('other'); slow.resolve(collaborationPage('parent-candidates')); await navigating;
+  assert.equal(f.controller.getState().parentCandidatesWanted, false); assert.equal(f.controller.getState().collaboration['parent-candidates'].data, null);
+  slow = null; denied = true; await f.controller.setParentCandidatesWanted(true); assert.equal(f.controller.getState().status, 'forbidden'); assert.equal(f.controller.getState().parentCandidatesWanted, false); assert.equal(f.controller.getState().task, null);
+});
+test('T09 closing parent picker during pending save or task/session reload always clears demand before later load', async () => {
+  const saved = deferred(); const configuration = deferred(); let deferConfiguration = false; const calls = [];
+  const f = fixture({ transport: { collaboration: async (w, p, t, collection) => { calls.push(collection); return collaborationPage(collection, t); }, mutate: () => saved.promise } });
+  await f.controller.openLocation('?workspace=a&project=p&task=t'); await f.controller.setParentCandidatesWanted(true);
+  f.controller.stage(collaborationDraft()); const saving = f.controller.submit(); assert.equal(f.controller.getState().pending, 'add-comment');
+  await f.controller.setParentCandidatesWanted(false); assert.equal(f.controller.getState().parentCandidatesWanted, false); assert.equal(f.controller.getState().collaboration['parent-candidates'].data, null);
+  saved.resolve(task('t', 'p', 'a', 2)); await saving; assert.equal(calls.filter(value => value === 'parent-candidates').length, 1);
+  const g = fixture({ transport: { collaboration: async (w, p, t, collection) => { calls.push(collection); return collaborationPage(collection, t); } }, options: { identity: {
+    configuration: async () => deferConfiguration ? configuration.promise : { enabled: true, providers: [] }, session: async () => session,
+  } } });
+  await g.controller.openLocation('?workspace=a&project=p&task=t'); await g.controller.setParentCandidatesWanted(true); const count = calls.filter(value => value === 'parent-candidates').length;
+  deferConfiguration = true; const refreshing = g.controller.refresh(); assert.equal(g.controller.getState().task, null); assert.equal(g.controller.getState().session, null);
+  await g.controller.setParentCandidatesWanted(false); assert.equal(g.controller.getState().parentCandidatesWanted, false);
+  configuration.resolve({ enabled: true, providers: [] }); await refreshing; assert.equal(calls.filter(value => value === 'parent-candidates').length, count); assert.equal(g.controller.getState().collaboration['parent-candidates'].status, 'idle');
 });

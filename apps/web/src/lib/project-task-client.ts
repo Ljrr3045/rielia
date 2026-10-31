@@ -1,10 +1,12 @@
 import { isPage, isRecord, isProject, isTask, isTaskPage, isTaskFilters, type TaskFilters, type TaskPage, isProjectAccessMember, isDomainPerson, type ArchiveView, type DomainPage, type Project, type ProjectCommand, type ProjectTaskResult, type Task, type ProjectAccessPage, type ProjectAssigneePage, type ProjectAccessMember, type ProjectAccessReview } from '@rielia/contracts';
+import { isCollaborationPage, isTaskComment, isCloseWarning, isCollaborationCommand, type CloseWarning, type CollaborationCollection, type TaskCollaborationPages, type TaskCommentReview } from '@rielia/contracts';
 
 export class ProjectTaskFailure extends Error {
   readonly status: number; readonly code: string | null; readonly current: ProjectTaskResult | null; readonly requestId: string | null;
   readonly accessCurrent: ProjectAccessMember | null;
-  constructor(status: number, code: string | null = null, current: ProjectTaskResult | null = null, requestId: string | null = null, accessCurrent: ProjectAccessMember | null = null) {
-    super('Project/task request failed.'); this.status = status; this.code = code; this.current = current; this.requestId = requestId; this.accessCurrent = accessCurrent;
+  readonly closeWarning: CloseWarning | null;
+  constructor(status: number, code: string | null = null, current: ProjectTaskResult | null = null, requestId: string | null = null, accessCurrent: ProjectAccessMember | null = null, closeWarning: CloseWarning | null = null) {
+    super('Project/task request failed.'); this.status = status; this.code = code; this.current = current; this.requestId = requestId; this.accessCurrent = accessCurrent; this.closeWarning = closeWarning;
   }
 }
 export interface ProjectTaskTransport {
@@ -16,6 +18,8 @@ export interface ProjectTaskTransport {
   accessReview(workspaceId: string, projectId: string, principalId: string, signal: AbortSignal): Promise<ProjectAccessReview>;
   assignees(workspaceId: string, projectId: string, signal: AbortSignal, cursor?: string): Promise<ProjectAssigneePage>;
   mutate(command: ProjectCommand, key: string, signal: AbortSignal): Promise<ProjectTaskResult>;
+  collaboration<K extends CollaborationCollection>(workspaceId: string, projectId: string, taskId: string, collection: K, signal: AbortSignal, cursor?: string): Promise<TaskCollaborationPages[K]>;
+  commentReview(workspaceId: string, projectId: string, taskId: string, commentId: string, signal: AbortSignal): Promise<TaskCommentReview>;
 }
 const segment = encodeURIComponent;
 export function createProjectTaskTransport(options: { baseURL?: string; timeout?: number } = {}): ProjectTaskTransport {
@@ -29,7 +33,8 @@ export function createProjectTaskTransport(options: { baseURL?: string; timeout?
     try { value = await response.json(); } catch { throw new ProjectTaskFailure(response.ok ? 502 : response.status, null, null, response.headers.get('x-request-id')); }
     if (!response.ok) throw new ProjectTaskFailure(response.status, isRecord(value) && typeof value['code'] === 'string' ? value['code'] : null,
       isRecord(value) && (isTask(value['current']) || isProject(value['current'])) ? value['current'] : null, response.headers.get('x-request-id'),
-      isRecord(value) && isProjectAccessMember(value['accessCurrent']) ? value['accessCurrent'] : null);
+      isRecord(value) && isProjectAccessMember(value['accessCurrent']) ? value['accessCurrent'] : null,
+      isRecord(value) && isCloseWarning(value['closeWarning']) ? value['closeWarning'] : null);
     return value;
   }
   const root = (w: string) => `workspaces/${segment(w)}/projects`;
@@ -44,6 +49,16 @@ export function createProjectTaskTransport(options: { baseURL?: string; timeout?
     return value as unknown as DomainPage<T>;
   }
   return {
+    async collaboration(w, p, t, collection, signal, cursor) {
+      const value = await request(`${projectPath(w, p)}/tasks/${segment(t)}/${collection}${cursor ? `?cursor=${segment(cursor)}` : ''}`, signal);
+      if (!isCollaborationPage(value, collection) || value.workspaceId !== w || value.projectId !== p || value.taskId !== t) throw new ProjectTaskFailure(502);
+      return value;
+    },
+    async commentReview(w, p, t, commentId, signal) {
+      const value = await request(`${projectPath(w, p)}/tasks/${segment(t)}/comments/${segment(commentId)}`, signal);
+      if (!isRecord(value) || !isTask(value['task']) || !scoped(value['task'], w, p, t) || !isTaskComment(value['comment']) || value['comment'].id !== commentId) throw new ProjectTaskFailure(502);
+      return value as unknown as TaskCommentReview;
+    },
     projects: (w, view, signal, cursor) => collection(root(w), signal, (v): v is Project => isProject(v) && scoped(v, w), view, cursor),
     async project(w, p, signal) { const value = await request(projectPath(w, p), signal); if (!isProject(value) || !scoped(value, w, p)) throw new ProjectTaskFailure(502); return value; },
     async tasks(w, p, view, signal, cursor, filters = {}) {
@@ -80,8 +95,15 @@ export function createProjectTaskTransport(options: { baseURL?: string; timeout?
         case 'edit-project': path += `/${segment(command.projectId)}`; body = { expectedVersion: command.expectedVersion, name: command.name, description: command.description }; break;
         case 'archive-project': case 'restore-project': path += `/${segment(command.projectId)}/${command.type === 'archive-project' ? 'archive' : 'restore'}`; body = { expectedVersion: command.expectedVersion }; break;
         case 'create-task': path += `/${segment(command.projectId)}/tasks`; body = command.fields; break;
-        case 'edit-task': path += `/${segment(command.projectId)}/tasks/${segment(command.taskId)}`; body = { ...command.fields, expectedVersion: command.expectedVersion }; break;
-        case 'move-task': path += `/${segment(command.projectId)}/tasks/${segment(command.taskId)}/move`; body = { expectedVersion: command.expectedVersion, expectedOrderVersion: command.expectedOrderVersion, status: command.status, beforeTaskId: command.beforeTaskId }; break;
+        case 'edit-task': path += `/${segment(command.projectId)}/tasks/${segment(command.taskId)}`; body = { ...command.fields, expectedVersion: command.expectedVersion, ...(command.acknowledgedChildrenVersion ? { acknowledgedChildrenVersion: command.acknowledgedChildrenVersion } : {}) }; break;
+        case 'move-task': path += `/${segment(command.projectId)}/tasks/${segment(command.taskId)}/move`; body = { expectedVersion: command.expectedVersion, expectedOrderVersion: command.expectedOrderVersion, status: command.status, beforeTaskId: command.beforeTaskId, ...(command.acknowledgedChildrenVersion ? { acknowledgedChildrenVersion: command.acknowledgedChildrenVersion } : {}) }; break;
+        case 'set-task-parent': path += `/${segment(command.projectId)}/tasks/${segment(command.taskId)}/parent`; body = { expectedVersion: command.expectedVersion, parentTaskId: command.parentTaskId, ...(command.expectedParentVersion ? { expectedParentVersion: command.expectedParentVersion } : {}) }; break;
+        case 'add-checklist-item': path += `/${segment(command.projectId)}/tasks/${segment(command.taskId)}/checklist`; body = { expectedVersion: command.expectedVersion, text: command.text, beforeItemId: command.beforeItemId }; break;
+        case 'edit-checklist-item': path += `/${segment(command.projectId)}/tasks/${segment(command.taskId)}/checklist/${segment(command.itemId)}`; body = { expectedVersion: command.expectedVersion, ...('text' in command ? { text: command.text } : {}), ...('completed' in command ? { completed: command.completed } : {}) }; break;
+        case 'move-checklist-item': path += `/${segment(command.projectId)}/tasks/${segment(command.taskId)}/checklist/${segment(command.itemId)}/move`; body = { expectedVersion: command.expectedVersion, beforeItemId: command.beforeItemId }; break;
+        case 'remove-checklist-item': path += `/${segment(command.projectId)}/tasks/${segment(command.taskId)}/checklist/${segment(command.itemId)}/remove`; body = { expectedVersion: command.expectedVersion }; break;
+        case 'add-comment': path += `/${segment(command.projectId)}/tasks/${segment(command.taskId)}/comments`; body = { expectedVersion: command.expectedVersion, body: command.body }; break;
+        case 'edit-comment': path += `/${segment(command.projectId)}/tasks/${segment(command.taskId)}/comments/${segment(command.commentId)}`; body = { expectedVersion: command.expectedVersion, expectedCommentVersion: command.expectedCommentVersion, body: command.body }; break;
         case 'archive-task': case 'restore-task': path += `/${segment(command.projectId)}/tasks/${segment(command.taskId)}/${command.type === 'archive-task' ? 'archive' : 'restore'}`; body = { expectedVersion: command.expectedVersion }; break;
       }
       let value: unknown;
@@ -94,7 +116,7 @@ export function createProjectTaskTransport(options: { baseURL?: string; timeout?
         if (error instanceof ProjectTaskFailure && error.accessCurrent && (command.type !== 'change-access' || error.accessCurrent.principalId !== command.principalId)) throw new ProjectTaskFailure(error.status, error.code, error.current, error.requestId);
         throw error;
       }
-      const taskCommand = command.type.endsWith('task');
+      const taskCommand = command.type.endsWith('task') || isCollaborationCommand(command);
       if (!(taskCommand ? isTask(value) : isProject(value)) || !scoped(value as ProjectTaskResult, command.workspaceId,
         'projectId' in command ? command.projectId : undefined, 'taskId' in command ? command.taskId : undefined)) throw new ProjectTaskFailure(502);
       return value as ProjectTaskResult;
