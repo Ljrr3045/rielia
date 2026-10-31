@@ -1,0 +1,21 @@
+apps/web/src/app/projects/strings.ts
+  s_e7129716d7db62::t_20296dc07dfbf3 749-753
+apps/web/src/app/projects/task-collaboration.tsx
+  s_e7129716d7db62::t_41263420cda4f7 139,141-157,353
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d98fdbbb8dc09875859ba459549448c4fef73c4b",
+  "prompts": {},
+  "sessions": {
+    "s_e7129716d7db62": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e6d24277effeyoXolmCksH349o",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
