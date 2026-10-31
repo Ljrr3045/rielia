@@ -1,0 +1,23 @@
+docs/development/task-views-ui.md
+  s_c1b98b0bbd0622::t_8e7b78add1489e 234-242
+CHANGELOG.md
+  s_c1b98b0bbd0622::t_8a1602aa0f11d6 25-27
+docs/development/progress.md
+  s_c1b98b0bbd0622::t_ea9ae42b9a3303 40-41,178-182,655
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a46a5e47100048d974658fcf1d0a6485f18bfd2c",
+  "prompts": {},
+  "sessions": {
+    "s_c1b98b0bbd0622": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e720c7e04ffeP9oo3TbU21PF87",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
