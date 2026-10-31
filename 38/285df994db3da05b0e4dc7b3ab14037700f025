@@ -1,0 +1,19 @@
+apps/web/src/app/projects/task-collaboration.tsx
+  s_e7129716d7db62::t_4e6fe1dcbd3d54 353
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "38285df994db3da05b0e4dc7b3ab14037700f025",
+  "prompts": {},
+  "sessions": {
+    "s_e7129716d7db62": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e6d24277effeyoXolmCksH349o",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
