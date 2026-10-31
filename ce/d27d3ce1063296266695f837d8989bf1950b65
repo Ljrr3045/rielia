@@ -1,0 +1,118 @@
+apps/api/src/projects/project-task-http.ts
+  s_eb28aa6b81240b::t_71449d5195e1d2 1-37
+apps/web/src/lib/use-project-tasks.ts
+  s_eb28aa6b81240b::t_600f73654811e4 3,5,34-36,45
+scripts/project-task-logic.test.mjs
+  s_eb28aa6b81240b::t_571d7beff7a012 377-385
+  s_eb28aa6b81240b::t_e6bd6c4dbd829f 315-323,328-376
+  s_eb28aa6b81240b::t_7b973b69cb59e9 324-327
+  s_eb28aa6b81240b::t_cb097e014204de 16
+scripts/test-identity.mjs
+  s_eb28aa6b81240b::t_c55186893116f7 86
+  s_eb28aa6b81240b::t_76c0d40340220e 87-88
+apps/web/src/lib/project-task-proxy.ts
+  s_eb28aa6b81240b::t_cc33f446e799db 10,12-14,18,23
+  s_eb28aa6b81240b::t_181e99de6269eb 11,17
+docs/development/task-collaboration.md
+  s_eb28aa6b81240b::t_33f0583826ff01 1-128,130-179
+  s_eb28aa6b81240b::t_8197aaf499c76d 129
+CHANGELOG.md
+  s_eb28aa6b81240b::t_d1f78708ff8680 9-22
+docs/development/progress.md
+  s_eb28aa6b81240b::t_5fc1b4699c519f 44
+  s_eb28aa6b81240b::t_2cd8a7065c2fa2 3,10-11,18-21,39-43,45-47
+packages/contracts/src/project-tasks.ts
+  s_eb28aa6b81240b::t_58d1e86d5102f3 3,39,48-49,51,55,93
+apps/api/test/project-task-persistence.mjs
+  s_eb28aa6b81240b::t_76c0d40340220e 20-21
+apps/api/test/task-collaboration.test.mjs
+  s_eb28aa6b81240b::t_7297b5226854af 161-162
+  s_eb28aa6b81240b::t_76c0d40340220e 1-4,6-29,31-43,57-154,156,160,163,166-191
+  s_eb28aa6b81240b::t_884ec95121d5b7 5,44-56,155,157-159,164-165
+  s_eb28aa6b81240b::t_38e001f8b98b17 30
+CONTRIBUTING.md
+  s_eb28aa6b81240b::t_d1f78708ff8680 97-104
+apps/api/prisma/schema.prisma
+  s_eb28aa6b81240b::t_adfe37dcc30eb7 226,256,263-294
+  s_b8020eceba4182::t_421acfc457d3b0 295
+packages/contracts/src/index.ts
+  s_eb28aa6b81240b::t_6990fc5999608f 3
+scripts/project-task-client.test.mjs
+  s_eb28aa6b81240b::t_e6bd6c4dbd829f 92-106
+  s_eb28aa6b81240b::t_cb097e014204de 9
+apps/api/prisma/migrations/20261031170000_task_collaboration/migration.sql
+  s_eb28aa6b81240b::t_20923f33a50494 53
+  s_eb28aa6b81240b::t_adfe37dcc30eb7 1-52,54-87,89-90
+  s_eb28aa6b81240b::t_ba1cc7be4c1f3c 88
+apps/web/src/lib/project-task-client.ts
+  s_eb28aa6b81240b::t_089280ee01dbc6 2,7-9,21-22,36-37,52-61,98-106,119
+apps/web/src/lib/project-task-controller.ts
+  s_eb28aa6b81240b::t_181e99de6269eb 151
+  s_eb28aa6b81240b::t_571d7beff7a012 5,15,34,232,278,348-349,354,401
+  s_eb28aa6b81240b::t_7b973b69cb59e9 230
+  s_eb28aa6b81240b::t_cc33f446e799db 6,140-150,152-159,173,187,226-229,328-332,347,350,358-364
+  s_eb28aa6b81240b::t_d1c4910f91ec0c 14,61,81-85,221-223
+  s_eb28aa6b81240b::t_76cc775e094ab9 323-327
+packages/contracts/src/task-collaboration.ts
+  s_eb28aa6b81240b::t_0e56080318253d 79
+  s_eb28aa6b81240b::t_181e99de6269eb 3,11-12,14,27,69,75,78
+  s_eb28aa6b81240b::t_dbc1c833723fc4 1,16
+  s_eb28aa6b81240b::t_ba1cc7be4c1f3c 17,38,41
+  s_eb28aa6b81240b::t_33f0583826ff01 23,56
+  s_eb28aa6b81240b::t_58d1e86d5102f3 2,4-10,13,15,18-22,24-26,28-37,39-40,42-55,57-66,71-74,76-77,80,82-87
+  s_eb28aa6b81240b::t_089280ee01dbc6 67-68,70,81
+apps/api/src/projects/task-collaboration.controller.ts
+  s_eb28aa6b81240b::t_181e99de6269eb 19
+  s_eb28aa6b81240b::t_cb0e5556bd6685 1-18,20-33
+apps/api/src/projects/project-task.controller.ts
+  s_eb28aa6b81240b::t_71449d5195e1d2 1,4,8,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45
+apps/api/src/projects/project-task.service.ts
+  s_eb28aa6b81240b::t_6990fc5999608f 8,13,17,102,193-195,197-198,201-227,233,237-238,243,340-345,347,351,379-383,387,393-395,398,403
+  s_eb28aa6b81240b::t_089280ee01dbc6 196,199-200
+  s_eb28aa6b81240b::t_51b0fee6cbc666 11
+  s_eb28aa6b81240b::t_cc33f446e799db 338,388
+  s_eb28aa6b81240b::t_ba1cc7be4c1f3c 346
+apps/api/src/app.module.ts
+  s_eb28aa6b81240b::t_cb0e5556bd6685 13-15,17
+apps/web/src/lib/task-collaboration-state.ts
+  s_eb28aa6b81240b::t_181e99de6269eb 6
+  s_eb28aa6b81240b::t_cc33f446e799db 1-5,7
+scripts/test-runtime.mjs
+  s_eb28aa6b81240b::t_44efe141c8ab03 182
+apps/api/test/project-task-qa.mjs
+  s_eb28aa6b81240b::t_5bab35687a2630 88-117,177-186,188-195
+  s_eb28aa6b81240b::t_d1f78708ff8680 187
+apps/api/src/projects/task-collaboration.service.ts
+  s_eb28aa6b81240b::t_181e99de6269eb 34,39,43,46-52,69-71
+  s_eb28aa6b81240b::t_44efe141c8ab03 44-45,63
+  s_eb28aa6b81240b::t_ba1cc7be4c1f3c 1-2,5-33,35-36,38,40-42,53-62,64-68,72-76,78-84,86,88-93,95-96,98-100,102-119,121-129,131-151
+  s_eb28aa6b81240b::t_39fbf7a22cbb36 37,94
+  s_eb28aa6b81240b::t_cc33f446e799db 120,130
+  s_eb28aa6b81240b::t_51b0fee6cbc666 3,101
+  s_eb28aa6b81240b::t_20923f33a50494 77,85,87
+  s_eb28aa6b81240b::t_089280ee01dbc6 4,97
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ced27d3ce1063296266695f837d8989bf1950b65",
+  "prompts": {},
+  "sessions": {
+    "s_b8020eceba4182": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a17016-ab9e-7501-b8a7-f63987eb61f7",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    },
+    "s_eb28aa6b81240b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a192db-72b9-76f3-8916-c609b68c76d1",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
