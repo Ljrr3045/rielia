@@ -2551,6 +2551,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
                     actionsDisabled={blocked || policyDraft !== null || moveDraft !== null || collaborationDraft !== null}
                     collaboration={(
                       <TaskCollaboration
+                        collaborationSource={lastOutcomeSourceRef.current === 'collaboration'}
                         hook={projectTasks}
                         onDiscard={discardCollaboration}
                         onReloadConflict={reloadCollaborationConflict}

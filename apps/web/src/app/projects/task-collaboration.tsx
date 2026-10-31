@@ -42,6 +42,7 @@ export function TaskCollaboration({
   onRetry,
   onStage,
   onSubmit,
+  collaborationSource,
   projectArchived,
   task,
 }: {
@@ -51,12 +52,12 @@ export function TaskCollaboration({
   onRetry: () => void;
   onStage: (command: ProjectCommand) => void;
   onSubmit: () => void;
+  collaborationSource: boolean;
   projectArchived: boolean;
   task: Task;
 }) {
   const lang = useLocale();
   const [successKind, setSuccessKind] = useState<SuccessKind>(null);
-  const [submitted, setSubmitted] = useState(false);
   const conflictRef = useRef<HTMLDivElement>(null);
   const draft = hook.collaborationDraft;
   const anyChildDraft = hook.draft?.type === 'create-task' && hook.draft.fields.parentTaskId !== undefined
@@ -73,15 +74,17 @@ export function TaskCollaboration({
   const canReturnToDraft = hook.draftGuard.canReturn || childTargetMismatch;
   const checklistDraft = draft?.type.includes('checklist') ? draft : null;
   const closeWarning = hook.closeWarning;
+  const successResult = collaborationSource
+    && hook.outcome === 'success'
+    && hook.result !== null
+    && 'title' in hook.result
+    && (hook.result.id === task.id || hook.result.parentTaskId === task.id)
+    ? hook.result
+    : null;
 
   useEffect(() => {
     setSuccessKind(null);
-    setSubmitted(false);
   }, [task.id]);
-
-  useEffect(() => {
-    if (hook.outcome !== null && hook.outcome !== 'success') setSubmitted(false);
-  }, [hook.outcome]);
 
   useEffect(() => {
     if (hook.outcome === 'conflict' && conflictRef.current !== null) {
@@ -91,7 +94,6 @@ export function TaskCollaboration({
 
   function submitWithSuccess() {
     setSuccessKind(kindForCommand(hook.collaborationDraft) ?? (hook.draft?.type === 'create-task' ? 'child' : null));
-    setSubmitted(true);
     onSubmit();
   }
 
@@ -256,7 +258,7 @@ export function TaskCollaboration({
         <FeedbackPanel
           actions={(
             <>
-              <button className={styles.secondary} disabled={hook.mutationPending !== null} onClick={() => { setSubmitted(true); onRetry(); }} type="button">
+              <button className={styles.secondary} disabled={hook.mutationPending !== null} onClick={onRetry} type="button">
                 {copy.collaboration.retry[lang]}
               </button>
               {canReturnToDraft && (
@@ -310,14 +312,13 @@ export function TaskCollaboration({
         />
       )}
 
-      {hook.outcome === 'success' && submitted && (
+      {successResult !== null && (
         <FeedbackPanel
           actions={(
             <button
               className={styles.secondary}
               onClick={() => {
                 setSuccessKind(null);
-                setSubmitted(false);
                 hook.dismissOutcome();
               }}
               type="button"
@@ -326,7 +327,7 @@ export function TaskCollaboration({
             </button>
           )}
           autoFocus
-          target={`${task.key} · ${task.title}`}
+          target={`${successResult.key} · ${successResult.title}`}
           title={successCopy(successKind)}
           tone="success"
         />
