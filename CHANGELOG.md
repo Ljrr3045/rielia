@@ -22,8 +22,9 @@ This records repository changes. No application version has been released.
   defects; full `pnpm check`, audit high/critical gate, handoff and whitespace
   checks pass. One moderate dev-tooling `minimatch` advisory remains documented
   in the UI guide; no production runtime path.
-  [UI guide, evidence and limits](docs/development/task-views-ui.md). Exact
-  PR/CI/Kody state remains on the PR. No full T08/US05/P07, labels/sprints,
+  [UI guide, evidence and limits](docs/development/task-views-ui.md),
+  [PR #20](https://github.com/Ljrr3045/rielia/pull/20). Exact final
+  head/CI/Kody state remains on the PR. No full T08/US05/P07, labels/sprints,
   T09/T10/B2, credentials, real OAuth/staging, deployment or real-user
   acceptance is claimed.
 

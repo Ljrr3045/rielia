@@ -231,3 +231,12 @@ These remain backlog items, not work performed by this presentation PR.
 - No backend/controller/contract/test-harness source is changed by this PR.
 - Final CI/Kody state is recorded on the PR; a prior-head review never approves
   a changed head.
+
+## PR evidence
+
+- UI PR: [#20](https://github.com/Ljrr3045/rielia/pull/20), English non-draft,
+  targeting `dev` from `feat/t08-task-views-ui`, source commit
+  `54828fa3a98232445e564c6bc96211e8bee8d412`.
+- Final docs/bookkeeping head, CI and coordinator-triggered Kody state are live
+  in GitHub and the external delivery report. The coordinator alone triggers
+  Kody and merges.

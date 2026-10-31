@@ -37,7 +37,8 @@ implementation, without completing tickets or weakening automated checks/launch 
 | Base | `origin/dev` at merged T08.0 [PR #19](https://github.com/Ljrr3045/rielia/pull/19), `f8895709f881df18a4d2d4a33483dab5add0e51e`; T08.0 terminal/worktree settled and removed by the coordinator |
 | Branch | `feat/t08-task-views-ui`, one English non-draft presentation/docs PR to `dev` |
 | Worktree | Isolated `feat-t08-task-views-ui`; effective OpenCode Go `opencode-go/deepseek-v4.1-flash` variant `max` verified; no helpers; logic/contracts/backend/hooks/tests remain Sol-owned |
-| Current PR | Presentation/docs PR pending final repository checks and exact ready head after the Sol validator returns the shared runtime |
+| Current PR | [#20](https://github.com/Ljrr3045/rielia/pull/20), English non-draft presentation/docs PR to `dev`; local checks pass, exact final head/CI/coordinator-triggered Kody state live in GitHub and the external report |
+| T08.1 presentation PR | [#20](https://github.com/Ljrr3045/rielia/pull/20) from `feat/t08-task-views-ui`; source commit `54828fa3a98232445e564c6bc96211e8bee8d412`; final docs/bookkeeping head and review/CI state live in GitHub/external report |
 | T08.0 logic PR | [#19](https://github.com/Ljrr3045/rielia/pull/19) merged 2026-10-30T18:31:57Z as `f8895709f881df18a4d2d4a33483dab5add0e51e`; reviewed source `b2dbc55e9ad1383612e16d1ccaed79f5336ec7a4`, CI run 41106175856 / exact-head check 124237103945, Kody check 124240156276 and approval 5716919765; logic terminal/worktree settlement confirmed and external report preserved |
 | T07.1 presentation PR | [#18](https://github.com/Ljrr3045/rielia/pull/18) merged as `ac3de5351e49b8b60bf3b2bbb55b8d695899f68d`; final review/CI evidence remains in GitHub and the external report; its completed worktree is absent from Orca inventory |
 | T07.0 logic PR | [#17](https://github.com/Ljrr3045/rielia/pull/17) merged 2026-10-29T16:51:39Z as `c72831c1be4ca2332a6162adc2af85d529b441b8`; final reviewed head `bf9e6fcf`, CI SUCCESS and Kody approval `5701623155`; coordinator verified clean settlement, preserved the external logic report and removed its worktree |
@@ -174,8 +175,11 @@ subprocess/Inspector checks and HTTP smoke. `pnpm audit --audit-level=high`
 passes the high/critical gate; one moderate dev-tooling `minimatch` advisory
 (GHSA-g3hv-75wg-m249 via typescript-eslint/eslint) remains, with no production
 runtime path. Handoff integrity passes 47 imported files, 30 assets and 434
-local links; whitespace checks pass. Exact PR/CI/Kody evidence follows PR
-creation. No full T08/US05/P07, T09/T10/B2, real-user, staging/OAuth,
+local links; whitespace checks pass. The UI PR is
+[#20](https://github.com/Ljrr3045/rielia/pull/20) from
+`feat/t08-task-views-ui`; source commit `54828fa`, with exact final
+head/CI/Kody state in GitHub and the external report. No full T08/US05/P07,
+T09/T10/B2, real-user, staging/OAuth,
 deployment, physical-device, AT/WCAG or 200%-zoom certification is claimed; the
 English subtree is `lang=en` while the document shell remains `es`, and the
 delayed-different-row remount may end on BODY without restoring the other row.
@@ -648,7 +652,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T05 | B1a | Auth, workspaces, principal memberships | T04, T35 | T05.0 logic merged in PR #13; T05.1 [presentation](workspace-ui.md) merged in PR #14. Full T05/T07/T35 acceptance remains open |
 | T06 | B1a | Projects/tasks, versions, idempotency, atomic activity/outbox | T05 | Bounded T06.0 real backend/client logic merged in [PR #15](https://github.com/Ljrr3045/rielia/pull/15); T06.1 [presentation](project-task-ui.md) delivered in the UI PR against disposable real PG/Nest/Next QA. Full ticket (all version/activity/outbox slices, collaboration) remains open |
 | T07 | B1b | Invitations, revocation, roles/private projects | T06 | Invitation/role subset remains in T05.0; bounded [T07.0 privacy/access logic](project-access.md) merged in PR #17 and [T07.1 presentation](project-access-ui.md) delivered in the UI PR. Full T07 acceptance remains open |
-| T08 | B1b | List/Kanban, filters, ranking | T06 | [T08.0 logic](task-views.md) merged in PR #19 at `f8895709`; [T08.1 presentation](task-views-ui.md) in the current PR after final checks. Configurable workflows/labels/sprints and full US05/T08 remain open |
+| T08 | B1b | List/Kanban, filters, ranking | T06 | [T08.0 logic](task-views.md) merged in PR #19 at `f8895709`; [T08.1 presentation](task-views-ui.md) in [PR #20](https://github.com/Ljrr3045/rielia/pull/20). Configurable workflows/labels/sprints and full US05/T08 remain open |
 | T09 | B1b | Subtasks, checklists, comments, history | T06 | Not started |
 | T10 | B1b | Search, My tasks, responsive layout, SSE | T07–T09 | Not started |
 | T11 | B1c | Sprint lifecycle and scope history | T08–T09 | Not started |
