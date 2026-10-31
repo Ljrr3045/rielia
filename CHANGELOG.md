@@ -15,7 +15,8 @@ This records repository changes. No application version has been released.
   flat list/board ordering and same-key unknown recovery are preserved. Shared
   frontend section/draft/conflict/paging contracts include authorized parent
   candidates, canonical checklist movement and recent comment/edit visibility.
-  [Contract, evidence and limits](docs/development/task-collaboration.md).
+  [Contract, evidence and limits](docs/development/task-collaboration.md),
+  [PR #21](https://github.com/Ljrr3045/rielia/pull/21).
   Presentation, full T09/P05/P14/P38, T10/T11/T12/B2, real OAuth/staging/users
   and deployment remain separate; the inherited moderate dev-tooling minimatch
   advisory remains documented, with no dependency change.

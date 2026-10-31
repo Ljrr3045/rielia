@@ -170,7 +170,9 @@ acknowledgment/child visibility and viewer denial. Private state contains only
 fictional sessions and is never report material; SIGTERM/SIGINT cleans owned
 servers, labelled database/volume and state. It is excluded from production images.
 
-Command outcomes and PR evidence are recorded in [progress](progress.md). The
+Command outcomes and [PR #21](https://github.com/Ljrr3045/rielia/pull/21)
+evidence are recorded in [progress](progress.md); exact-head CI and root-triggered
+Kody remain required before coordinator merge. The
 existing moderate development-only minimatch advisory
 [GHSA-g3hv-75wg-m249](https://github.com/advisories/GHSA-g3hv-75wg-m249)
 remains; the high/critical audit gate passes, with no dependency change here.
