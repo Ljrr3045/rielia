@@ -312,6 +312,7 @@ export function useFocusTrap<T extends HTMLElement>(ref: RefObject<T | null>, ac
 
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
+        if (event.defaultPrevented) return;
         const escape = escapeRef.current;
         if (escape !== undefined) {
           event.preventDefault();
