@@ -6,6 +6,27 @@ This records repository changes. No application version has been released.
 
 ### Added
 
+- T08.1/B1b task views presentation on merged T08.0 logic
+  [PR #19](https://github.com/Ljrr3045/rielia/pull/19) (`f8895709`). `/projects`
+  adds a compact list/board switch and status/assignee (including unassigned)/
+  priority filters, status-grouped rows, five 272 px board columns with
+  authoritative counts and bounded vertical scrolling, column quick capture,
+  native status movement and precise before-task/end-of-column menus, outer
+  keyboard board navigation, persisted order, URL/detail context, move-conflict
+  fresh-destination recovery, mobile default list and selected-column board at
+  320 px, compact project Options administration, and read-only archived/viewer
+  surfaces. ES/EN, light/dark, 44 px targets, focus/menu keyboard behavior and
+  no inner horizontal overflow are included. Independent real PG/Nest/Next
+  validation recorded 19 passing cases and fixed the reproduced pre-canonical
+  focus, delayed different-row focus-intent and mobile list-menu overflow
+  defects; full `pnpm check`, audit high/critical gate, handoff and whitespace
+  checks pass. One moderate dev-tooling `minimatch` advisory remains documented
+  in the UI guide; no production runtime path.
+  [UI guide, evidence and limits](docs/development/task-views-ui.md). Exact
+  PR/CI/Kody state remains on the PR. No full T08/US05/P07, labels/sprints,
+  T09/T10/B2, credentials, real OAuth/staging, deployment or real-user
+  acceptance is claimed.
+
 - T08.0/B1b persistent list/Kanban logic on merged T07.1 [PR #18](https://github.com/Ljrr3045/rielia/pull/18)
   (`ac3de535`), with both completed T07 worktrees removed. One PostgreSQL task
   source supplies status-grouped list and five semantic status partitions,

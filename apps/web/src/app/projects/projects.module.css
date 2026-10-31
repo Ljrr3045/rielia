@@ -2422,3 +2422,738 @@
     width: 100%;
   }
 }
+
+/* T08 task views: view/filter bar, grouped list, board and move controls. */
+
+.taskRow {
+  position: relative;
+}
+
+@media (min-width: 48rem) {
+  .taskRow {
+    grid-template-columns: 11rem minmax(0, 1fr) auto;
+  }
+}
+
+.taskViewBar {
+  margin: 0.35rem 0 0.7rem;
+  min-width: 0;
+}
+
+.taskViewBarTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.45rem 0.7rem;
+  min-width: 0;
+}
+
+.viewSwitch {
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 0.15rem;
+  padding: 0.15rem;
+  border: 1px solid var(--divider);
+  border-radius: 0.55rem;
+  background: var(--surface);
+}
+
+.viewSegment {
+  min-height: 2.5rem;
+  padding: 0 0.75rem;
+  border: 0;
+  border-radius: 0.4rem;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 650;
+}
+
+.viewSegment:hover {
+  color: var(--text-primary);
+}
+
+.viewSegmentActive {
+  background: var(--pj-brand-soft);
+  color: var(--pj-brand-ink);
+}
+
+.filterRow {
+  display: flex;
+  flex: 1 1 28rem;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.4rem 0.55rem;
+  min-width: 0;
+}
+
+.filterField {
+  display: grid;
+  flex: 1 1 8.5rem;
+  gap: 0.2rem;
+  min-width: 0;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+.filterField select {
+  min-height: 2.75rem;
+  font-size: 0.875rem;
+}
+
+.filterHint {
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+
+.filterError {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.2rem 0.4rem;
+  color: var(--pj-danger-ink);
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.linkButton {
+  min-height: 2.75rem;
+  padding: 0 0.25rem;
+  border: 0;
+  background: transparent;
+  color: var(--brand-action);
+  font-size: 0.78rem;
+  font-weight: 650;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.clearFilters {
+  min-height: 2.75rem;
+  padding: 0 0.65rem;
+  border: 1px solid var(--control-border);
+  border-radius: 0.45rem;
+  background: var(--surface);
+  color: var(--text-primary);
+  font-size: 0.8rem;
+  font-weight: 650;
+}
+
+.filterPanel {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 0.55rem;
+  padding: 0.65rem;
+  border: 1px solid var(--divider);
+  border-radius: 0.65rem;
+  background: var(--pj-surface-4);
+}
+
+.filterPanelGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.5rem;
+}
+
+.taskViewSummary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.15rem 0.45rem;
+  min-height: 1.35rem;
+  margin-top: 0.35rem;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+
+.taskGroup {
+  min-width: 0;
+  margin-top: 0.7rem;
+}
+
+.taskGroup:first-of-type {
+  margin-top: 0.35rem;
+}
+
+.taskGroupHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.6rem;
+  margin-bottom: 0.3rem;
+}
+
+.taskGroupTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+  font-size: 0.92rem;
+  line-height: 1.3;
+}
+
+.taskGroupCount {
+  display: inline-flex;
+  min-width: 1.5rem;
+  justify-content: center;
+  padding: 0.04rem 0.35rem;
+  border-radius: 999px;
+  background: var(--pj-surface-2);
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.taskGroupShowing {
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+}
+
+.moveControls {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.moveControlsCard {
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.app .moveStatusSelect {
+  flex: 1 1 6rem;
+  width: auto;
+  min-width: 0;
+  min-height: 2.75rem;
+  padding: 0.35rem 0.45rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.moveMenu {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.moveMenuSummary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  min-height: 2.75rem;
+  padding: 0 0.5rem;
+  border: 1px solid var(--control-border);
+  border-radius: 0.45rem;
+  background: var(--surface);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 650;
+  list-style: none;
+}
+
+.moveMenuSummary::-webkit-details-marker {
+  display: none;
+}
+
+.moveMenuPanel {
+  display: grid;
+  gap: 0.15rem;
+  margin-top: 0.3rem;
+  padding: 0.25rem;
+  border: 1px solid var(--divider);
+  border-radius: 0.5rem;
+  background: var(--surface);
+  box-shadow: var(--pj-shadow);
+}
+
+.taskRow .moveMenuPanel {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 0.25rem);
+  z-index: 30;
+  width: min(22rem, 80vw);
+}
+
+.boardCard .moveMenu {
+  min-width: 0;
+}
+
+.boardCard .moveMenu[open] {
+  flex: 1 1 100%;
+}
+
+.boardCard .moveMenu[open] .moveMenuSummary {
+  width: 100%;
+  justify-content: space-between;
+}
+
+.boardCard .moveMenuPanel {
+  position: static;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-shadow: none;
+}
+
+.boardCard .moveMenuItem {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.moveMenuItem {
+  min-height: 2.75rem;
+  padding: 0.5rem 0.6rem;
+  border: 0;
+  border-radius: 0.35rem;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 0.8rem;
+  font-weight: 550;
+  line-height: 1.35;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.moveMenuItem:hover {
+  background: var(--pj-surface-2);
+}
+
+.movePending {
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.board {
+  display: grid;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+.boardColumnSelector {
+  display: grid;
+  gap: 0.2rem;
+  max-width: 100%;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+.boardColumnSelector select {
+  min-height: 2.75rem;
+}
+
+.boardFrame {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  min-width: 0;
+  max-width: 100%;
+  padding-bottom: 0.35rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+
+.boardFrameNarrow {
+  display: block;
+  overflow: visible;
+  padding-bottom: 0;
+}
+
+.boardColumn {
+  display: flex;
+  flex: 0 0 17rem;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+  padding: 0.6rem;
+  border: 1px solid var(--divider);
+  border-radius: 0.75rem;
+  background: var(--surface);
+}
+
+.boardColumnNarrow {
+  width: 100%;
+  max-width: none;
+  flex: 1 1 auto;
+}
+
+.boardColumnDragOver {
+  border-color: var(--brand-action);
+  box-shadow: inset 0 0 0 2px var(--brand-action);
+}
+
+.boardColumnHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.boardColumnTitle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+  font-size: 0.9rem;
+  line-height: 1.3;
+}
+
+.boardColumnCount {
+  display: inline-flex;
+  min-width: 1.5rem;
+  justify-content: center;
+  padding: 0.03rem 0.35rem;
+  border-radius: 999px;
+  background: var(--pj-surface-2);
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.boardColumnSkeleton {
+  display: grid;
+  gap: 0.4rem;
+  padding: 0.2rem 0;
+}
+
+.boardColumnSkeleton > div {
+  height: 3.5rem;
+  border-radius: 0.5rem;
+  background: linear-gradient(90deg, var(--pj-surface-2), var(--pj-surface-4), var(--pj-surface-2));
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+.boardColumnEmpty {
+  display: grid;
+  gap: 0.4rem;
+  padding: 0.75rem 0.25rem;
+  color: var(--text-secondary);
+  font-size: 0.84rem;
+}
+
+.columnError {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.55rem;
+  border: 1px solid var(--pj-warning-ink);
+  border-radius: 0.5rem;
+  background: var(--pj-warning-soft);
+  color: var(--pj-warning-ink);
+  font-size: 0.78rem;
+}
+
+.boardCapture {
+  display: grid;
+  gap: 0.4rem;
+  padding: 0.5rem;
+  border: 1px solid var(--divider);
+  border-radius: 0.5rem;
+  background: var(--pj-surface-4);
+}
+
+.boardCapture input {
+  min-height: 2.75rem;
+  font-size: 1rem;
+}
+
+.boardCaptureActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.boardCards {
+  display: grid;
+  gap: 0.45rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.boardCard {
+  position: relative;
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+  padding: 0.55rem 0.6rem;
+  border: 1px solid var(--divider);
+  border-radius: 0.6rem;
+  background: var(--surface);
+}
+
+.boardCard:hover {
+  border-color: var(--control-border);
+}
+
+.boardCardDragging {
+  opacity: 0.55;
+}
+
+.boardCardDropBefore::before {
+  position: absolute;
+  top: -0.3rem;
+  right: 0.35rem;
+  left: 0.35rem;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--brand-action);
+  content: "";
+}
+
+.boardCardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.boardCardTitle {
+  min-width: 0;
+  font-size: 0.92rem;
+  line-height: 1.35;
+}
+
+.app .cardTitleButton {
+  display: block;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: inherit;
+  font-weight: 650;
+  line-height: inherit;
+  text-align: left;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.app .cardTitleButton:hover {
+  color: var(--brand-action);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.boardCardMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.2rem 0.55rem;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  min-width: 0;
+}
+
+.boardCardFooter {
+  padding-top: 0.3rem;
+  border-top: 1px solid var(--divider);
+}
+
+.boardColumnFooter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.35rem;
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+}
+
+@media (min-width: 48rem) {
+  .filterPanelGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 47.9375rem) {
+  .taskViewBarTop {
+    align-items: stretch;
+  }
+
+  .viewSwitch {
+    flex: 1 1 100%;
+    justify-content: stretch;
+  }
+
+  .viewSegment {
+    flex: 1 1 50%;
+  }
+
+  .filterField {
+    flex-basis: 100%;
+  }
+
+  .taskStatusCell {
+    width: 100%;
+  }
+
+  .moveControls,
+  .taskRow .moveControls {
+    width: 100%;
+  }
+
+  .taskRow .moveControls {
+    flex-wrap: wrap;
+  }
+
+  .moveStatusSelect {
+    flex: 1 1 auto;
+  }
+
+  .taskRow .moveMenu {
+    min-width: 0;
+  }
+
+  .taskRow .moveMenu[open] {
+    flex: 1 1 100%;
+  }
+
+  .taskRow .moveMenu[open] .moveMenuSummary {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .taskRow .moveMenuPanel {
+    position: static;
+    top: auto;
+    left: auto;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-shadow: none;
+  }
+
+  .taskRow .moveMenuItem {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boardColumnSkeleton > div {
+    animation: none;
+  }
+}
+
+/* Mobile project actions and bounded desktop board navigation. */
+
+.pageActionsCompact {
+  width: auto;
+  margin-left: auto;
+}
+
+.projectOptions {
+  position: relative;
+}
+
+.projectOptionsSummary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  min-height: 2.75rem;
+  padding: 0 0.7rem;
+  border: 1px solid var(--control-border);
+  border-radius: 0.5rem;
+  background: var(--surface);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 650;
+  list-style: none;
+}
+
+.projectOptionsSummary::-webkit-details-marker {
+  display: none;
+}
+
+.projectOptionsMenu {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  right: 0;
+  z-index: 45;
+  display: grid;
+  gap: 0.2rem;
+  min-width: min(16rem, calc(100vw - 2rem));
+  padding: 0.3rem;
+  border: 1px solid var(--divider);
+  border-radius: 0.55rem;
+  background: var(--surface);
+  box-shadow: var(--pj-shadow);
+}
+
+.projectMenuItem {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 2.75rem;
+  padding: 0.55rem 0.65rem;
+  border: 0;
+  border-radius: 0.4rem;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: left;
+}
+
+.projectMenuItem:hover {
+  background: var(--pj-surface-2);
+}
+
+.boardHint {
+  margin: -0.15rem 0 0;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+}
+
+.boardFrame:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+@media (min-width: 48rem) {
+  .boardColumn {
+    max-height: min(38rem, calc(100dvh - 22rem));
+  }
+
+  .boardCards {
+    flex: 1 1 auto;
+    min-height: 0;
+    padding-right: 0.2rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    scrollbar-width: thin;
+  }
+}
+
+.boardFrameNarrow .boardColumn {
+  max-height: none;
+}
+
+.boardFrameNarrow .boardCards {
+  overflow: visible;
+  max-height: none;
+  padding-right: 0;
+}
+
+@media (max-width: 30rem) {
+  .breadcrumb,
+  .projectLede {
+    display: none;
+  }
+}

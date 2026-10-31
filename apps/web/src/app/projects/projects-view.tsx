@@ -6,16 +6,20 @@ import type { MouseEvent as ReactMouseEvent, ReactNode } from 'react';
 import {
   isProject,
   isTask,
+  taskStatuses,
   type DomainPerson,
   type Project,
   type ProjectAccessMember,
+  type ProjectMoveCommand,
   type ProjectPolicyCommand,
   type ProjectTaskCommand,
   type ProjectTaskResult,
   type ProjectVisibility,
   type Task,
   type TaskFields,
+  type TaskStatus,
 } from '@rielia/contracts';
+import type { MoveEligibility } from '../../lib/project-task-controller';
 import { useProjectTasks } from '../../lib/use-project-tasks';
 import { ConflictPanel, FeedbackPanel, type ConflictFieldView } from './feedback';
 import { ProjectAccessPanel, projectPolicyConflictFields } from './project-access';
@@ -26,6 +30,7 @@ import {
   EmptyState,
   IconAlert,
   IconArchive,
+  IconChevron,
   IconClose,
   IconMenu,
   IconPlus,
@@ -41,12 +46,15 @@ import {
   useBodyScrollLock,
   useFocusTrap,
   useIsDetailOverlay,
+  useIsNarrow,
   useIsSidebarDrawer,
 } from './project-ui';
+import { TaskBoard } from './task-board';
 import { TaskCaptureForm, TaskEditForm } from './task-forms';
 import { TaskDetail } from './task-detail';
 import { TaskDescription } from './task-description';
 import { TaskList } from './task-list';
+import { TaskViewBar } from './task-view-bar';
 import {
   copy,
   formatDateOnly,
@@ -157,10 +165,13 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   const projectTasks = useProjectTasks();
   const {
     status, workspaces, workspace, projects, project, tasks, task,
+    taskView, taskColumns, taskColumnErrors, taskColumnsChanged, taskSummary, selectedTaskAssignee, taskFilterAssigneeStatus,
     selection, views, draft, pending, outcome, retryTarget, conflict, result, pageError,
+    moveDraft, movePending, moveRetryTarget, moveNeedsDestination,
     projectAccess, assignees, policyPageErrors, accessConflict,
     policyDraft, policyPending, policyRetryTarget,
-    refresh, selectWorkspace, selectProject, selectTask, setView, loadMore,
+    refresh, selectWorkspace, selectProject, selectTask, setView,
+    setTaskLayout, setTaskFilters, setTaskColumn, loadMore, loadTaskColumn, stageMove,
     stage, submit, retrySave, discardDraft, returnToDraft, reloadConflict, rebaseDraft, dismissOutcome, dismissPageError,
   } = projectTasks;
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -168,6 +179,12 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   const [projectValue, setProjectValue] = useState<ProjectFormValue>(emptyProject);
   const [taskValue, setTaskValue] = useState<TaskFields>(emptyTask);
   const [captureTitle, setCaptureTitle] = useState('');
+  const [captureStatus, setCaptureStatus] = useState<TaskStatus>('backlog');
+  const [columnCaptureOpen, setColumnCaptureOpen] = useState(false);
+  const [moveNotice, setMoveNotice] = useState<{ reason: Exclude<MoveEligibility, 'ready'>; taskId: string } | null>(null);
+  const [moveFocusId, setMoveFocusId] = useState<string | null>(null);
+  const moveFocusCancelledRef = useRef(false);
+  const [createFocusId, setCreateFocusId] = useState<string | null>(null);
   const [resumeDraftOnReady, setResumeDraftOnReady] = useState(false);
   const [resumeAccessOnReady, setResumeAccessOnReady] = useState(false);
   const captureRef = useRef<HTMLInputElement>(null);
@@ -179,33 +196,133 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   const lastCommandRef = useRef<ProjectTaskCommand | null>(null);
   const lastPolicyCommandRef = useRef<ProjectPolicyCommand | null>(null);
   const lastPolicyMemberRef = useRef<ProjectAccessMember | null>(null);
-  const lastOutcomeSourceRef = useRef<'content' | 'policy'>('content');
+  const lastOutcomeSourceRef = useRef<'content' | 'policy' | 'move'>('content');
   const hadDetailRef = useRef(false);
   const dismissFocusPendingRef = useRef(false);
 
   const sidebarDrawer = useIsSidebarDrawer();
   const detailOverlay = useIsDetailOverlay();
+  const narrow = useIsNarrow();
   const detailOpen = task !== null && selection.taskId !== null;
   const overlayOpen = detailOverlay && detailOpen;
   const contentBlocked = pending !== null || retryTarget !== null;
   const policyBlocked = policyPending !== null || policyRetryTarget !== null;
-  const blocked = contentBlocked || policyBlocked;
-  const anyPending = pending !== null || policyPending !== null;
+  const moveBlocked = movePending !== null || moveRetryTarget !== null;
+  const blocked = contentBlocked || policyBlocked || moveBlocked;
+  const anyPending = pending !== null || policyPending !== null || movePending !== null;
+  const anyDraft = draft !== null || moveDraft !== null || policyDraft !== null;
   const activeProjectId = project?.id ?? selection.projectId;
   const projectArchived = project?.archivedAt != null;
   const canCreateProject = projects?.capabilities.canCreate === true && views.projects === 'active';
   const canCreatePrivate = projects?.capabilities.canCreatePrivate === true;
-  const canCapture = tasks?.capabilities.canCreate === true
+  const canCapture = taskSummary.canCreate
     && project !== null
     && !projectArchived
     && project.capabilities.canEdit
     && views.tasks === 'active'
-    && !policyBlocked
-    && policyDraft === null;
+    && !blocked
+    && policyDraft === null
+    && moveDraft === null
+    && (draft === null || draft.type === 'create-task');
+  const readOnlyTasks = views.tasks === 'archived' || projectArchived || project?.capabilities.canEdit !== true;
+  const filtersActive = Object.keys(taskView.filters).length > 0;
+  const taskPageChanged = pageError?.collection === 'tasks' && pageError.reason === 'changed';
+  const taskPagePartial = pageError?.collection === 'tasks' && pageError.reason !== 'changed';
+  const pendingTaskId = movePending !== null ? (moveDraft?.taskId ?? moveRetryTarget?.taskId ?? null) : null;
+  const moveSource = lastOutcomeSourceRef.current === 'move';
+  const moveCommand: ProjectMoveCommand | null = moveDraft ?? moveRetryTarget;
+  const moveTaskId = moveCommand?.taskId
+    ?? (moveSource && result !== null && isTaskResult(result) ? result.id : null)
+    ?? (moveNeedsDestination && conflict !== null && isTask(conflict) ? conflict.id : null);
+  const moveRetryMatches = moveRetryTarget === null
+    ? true
+    : moveRetryTarget.workspaceId === selection.workspaceId
+      && moveRetryTarget.projectId === selection.projectId
+      && (selection.taskId === null || selection.taskId === moveRetryTarget.taskId);
+  const moveDraftMatches = moveDraft === null
+    ? true
+    : moveDraft.workspaceId === selection.workspaceId
+      && moveDraft.projectId === selection.projectId
+      && (selection.taskId === null || selection.taskId === moveDraft.taskId);
+
+  function findTaskById(taskId: string): Task | null {
+    if (task?.id === taskId) return task;
+    const listed = tasks?.items.find(item => item.id === taskId);
+    if (listed !== undefined) return listed;
+    for (const page of Object.values(taskColumns)) {
+      const found = page?.items.find(item => item.id === taskId);
+      if (found !== undefined) return found;
+    }
+    if (conflict !== null && isTask(conflict) && conflict.id === taskId) return conflict;
+    if (result !== null && isTaskResult(result) && result.id === taskId) return result;
+    return null;
+  }
+
+  function taskStatusInDom(taskId: string): TaskStatus | null {
+    const row = [...document.querySelectorAll<HTMLElement>('[data-task-id]')]
+      .find(element => element.dataset.taskId === taskId);
+    if (row === undefined) return null;
+    const selected = row.querySelector<HTMLSelectElement>('select')?.value;
+    if (selected !== undefined && taskStatuses.includes(selected as TaskStatus)) return selected as TaskStatus;
+    const marker = row.closest('section')?.querySelector<HTMLElement>('[data-column-heading], [data-task-group]');
+    const value = marker?.dataset.columnHeading ?? marker?.dataset.taskGroup;
+    return value !== undefined && taskStatuses.includes(value as TaskStatus) ? value as TaskStatus : null;
+  }
+
+  function taskRowIsCanonical(taskId: string, status: TaskStatus, orderVersion: number): boolean {
+    if (taskStatusInDom(taskId) !== status) return false;
+    const pageVersion = taskView.layout === 'board' ? taskColumns[status]?.orderVersion : tasks?.orderVersion;
+    return pageVersion !== undefined && pageVersion >= orderVersion;
+  }
+
+  function shouldRestoreMoveFocus(taskId: string): boolean {
+    if (moveFocusCancelledRef.current) return false;
+    const active = document.activeElement;
+    if (active === null || active === document.body) return true;
+    if (!(active instanceof HTMLElement)) return false;
+    return active.closest<HTMLElement>('[data-task-id]')?.dataset.taskId === taskId;
+  }
+
+  function focusTask(taskId: string): boolean {
+    const row = [...document.querySelectorAll<HTMLElement>('[data-task-id]')]
+      .find(element => element.dataset.taskId === taskId);
+    const link = row?.querySelector<HTMLElement>('[data-task-open]');
+    if (link === null || link === undefined) return false;
+    link.focus();
+    return true;
+  }
+
+  function focusMoveControl(taskId: string): boolean {
+    const row = [...document.querySelectorAll<HTMLElement>('[data-task-id]')]
+      .find(element => element.dataset.taskId === taskId);
+    const control = row?.querySelector<HTMLSelectElement>('select');
+    if (control === null || control === undefined) return false;
+    control.focus();
+    return true;
+  }
+
+  function focusViewBar() {
+    document.querySelector<HTMLElement>('[data-task-view-bar]')?.focus();
+  }
+
+  function canMoveTask(target: Task): boolean {
+    return views.tasks === 'active'
+      && !projectArchived
+      && target.archivedAt === null
+      && target.capabilities.canEdit
+      && !blocked
+      && draft === null
+      && moveDraft === null
+      && policyDraft === null
+      && !taskColumnsChanged
+      && !taskPageChanged
+      && taskColumnErrors[target.status] === undefined;
+  }
   const canEditProject = project?.capabilities.canEdit === true && !projectArchived;
   const canArchiveProject = project?.capabilities.canArchive === true && !projectArchived;
   const canRestoreProject = project?.capabilities.canRestore === true && projectArchived;
   const canManageAccess = project?.capabilities.canManageAccess === true;
+  const hasProjectActions = canManageAccess || canEditProject || canArchiveProject || canRestoreProject;
 
   const assigneeOptions: readonly DomainPerson[] = (() => {
     const list: DomainPerson[] = [];
@@ -273,7 +390,10 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
 
   useEffect(() => {
     if (outcome === 'success' && form !== null && form.kind !== 'project-access') setForm(null);
-    if (outcome === 'success') setCaptureTitle('');
+    if (outcome === 'success') {
+      setCaptureTitle('');
+      setColumnCaptureOpen(false);
+    }
   }, [outcome, form]);
 
   useEffect(() => {
@@ -284,12 +404,109 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
     if (form !== null) return;
     if (draft?.type === 'create-task' && draft.projectId === selection.projectId) {
       setCaptureTitle(draft.fields.title);
+      setCaptureStatus(draft.fields.status ?? 'backlog');
+      if (taskView.layout === 'board') setColumnCaptureOpen(true);
+      return;
+    }
+    if (draft !== null && draft.type !== 'create-task') {
+      setCaptureTitle('');
+      setColumnCaptureOpen(false);
       return;
     }
     if (draft === null || draft.type !== 'create-task' || draft.projectId !== selection.projectId) {
       setCaptureTitle('');
+      if (taskView.layout === 'list') {
+        setCaptureStatus(taskView.filters.status ?? 'backlog');
+        setColumnCaptureOpen(false);
+      }
     }
-  }, [draft, form, selection.projectId]);
+  }, [draft, form, selection.projectId, taskView.layout, taskView.filters.status]);
+
+  useEffect(() => {
+    if (taskView.layout === 'list') setColumnCaptureOpen(false);
+  }, [taskView.layout]);
+
+  useEffect(() => {
+    if (moveDraft !== null || movePending !== null || moveRetryTarget !== null) setMoveNotice(null);
+  }, [moveDraft, movePending, moveRetryTarget]);
+
+  useEffect(() => {
+    if (moveFocusId === null) return;
+    function onFocusIn(event: FocusEvent) {
+      const target = event.target;
+      if (!(target instanceof HTMLElement)) return;
+      if (target === document.body || target === document.documentElement) return;
+      const row = target.closest<HTMLElement>('[data-task-id]');
+      moveFocusCancelledRef.current = row?.dataset.taskId !== moveFocusId;
+    }
+    document.addEventListener('focusin', onFocusIn);
+    return () => document.removeEventListener('focusin', onFocusIn);
+  }, [moveFocusId]);
+
+  useEffect(() => {
+    if (outcome !== 'success' || moveFocusId === null || result === null || !isTaskResult(result) || result.id !== moveFocusId) return;
+    const taskId = moveFocusId;
+    const status = result.status;
+    const orderVersion = result.orderVersion;
+    if (!shouldRestoreMoveFocus(taskId)) {
+      setMoveFocusId(null);
+      return;
+    }
+    if (taskRowIsCanonical(taskId, status, orderVersion) && focusTask(taskId)) {
+      setMoveFocusId(null);
+      return;
+    }
+    const timer = window.setTimeout(() => {
+      if (!shouldRestoreMoveFocus(taskId)) {
+        setMoveFocusId(null);
+        return;
+      }
+      if (taskRowIsCanonical(taskId, status, orderVersion) && focusTask(taskId)) {
+        setMoveFocusId(null);
+        return;
+      }
+      const heading = [...document.querySelectorAll<HTMLElement>('[data-column-heading]')]
+        .find(element => element.dataset.columnHeading === status);
+      if (heading !== undefined) heading.focus();
+      else focusViewBar();
+      setMoveFocusId(null);
+    }, 4000);
+    return () => window.clearTimeout(timer);
+  }, [outcome, result, moveFocusId, taskColumns, tasks, taskView.layout]);
+
+  useEffect(() => {
+    if (moveFocusId !== null && outcome !== null && outcome !== 'success') setMoveFocusId(null);
+  }, [outcome, moveFocusId]);
+
+  useEffect(() => {
+    if (outcome !== 'success' || result === null || !isTaskResult(result)) return;
+    if (lastCommandRef.current?.type !== 'create-task') return;
+    setCreateFocusId(result.id);
+  }, [outcome, result]);
+
+  useEffect(() => {
+    if (createFocusId === null) return;
+    if (focusTask(createFocusId)) {
+      setCreateFocusId(null);
+      return;
+    }
+    const timer = window.setTimeout(() => {
+      if (focusTask(createFocusId)) {
+        setCreateFocusId(null);
+        return;
+      }
+      const created = tasks?.items.find(item => item.id === createFocusId)
+        ?? Object.values(taskColumns).flatMap(page => page?.items ?? []).find(item => item.id === createFocusId);
+      const heading = created === undefined
+        ? undefined
+        : [...document.querySelectorAll<HTMLElement>('[data-column-heading]')]
+          .find(element => element.dataset.columnHeading === created.status);
+      if (heading !== undefined) heading.focus();
+      else focusViewBar();
+      setCreateFocusId(null);
+    }, 1500);
+    return () => window.clearTimeout(timer);
+  }, [createFocusId, taskColumns, tasks, taskView.layout]);
 
   useEffect(() => {
     if (!resumeDraftOnReady || !draft) return;
@@ -376,8 +593,15 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
     setForm(null);
   }
 
+  function closeProjectOptions(event: ReactMouseEvent<HTMLElement>) {
+    const details = event.currentTarget.closest('details');
+    const summary = details?.querySelector<HTMLElement>('summary');
+    details?.removeAttribute('open');
+    summary?.focus();
+  }
+
   function openProjectCreate(opener?: HTMLElement) {
-    if (!workspace || !canCreateProject || blocked || policyDraft !== null) return;
+    if (!workspace || !canCreateProject || blocked || policyDraft !== null || moveDraft !== null) return;
     if (draft !== null && draft.type !== 'create-project') return;
     rememberOpener(opener);
     const value = draft?.type === 'create-project'
@@ -389,7 +613,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   }
 
   function openProjectSettings(opener?: HTMLElement) {
-    if (!project || !canEditProject || blocked || policyDraft !== null) return;
+    if (!project || !canEditProject || blocked || policyDraft !== null || moveDraft !== null) return;
     if (draft !== null && !(draft.type === 'edit-project' && draft.projectId === project.id)) return;
     rememberOpener(opener);
     const value = draft?.type === 'edit-project'
@@ -401,14 +625,14 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   }
 
   function openProjectAccess(opener?: HTMLElement) {
-    if (!project || !canManageAccess || blocked || draft !== null) return;
+    if (!project || !canManageAccess || blocked || draft !== null || moveDraft !== null || policyDraft !== null) return;
     rememberOpener(opener);
     setForm({ kind: 'project-access', workspaceId: project.workspaceId, projectId: project.id });
     dismissOutcome();
   }
 
   function openTaskEdit(opener?: HTMLElement) {
-    if (!task || blocked || policyDraft !== null || !task.capabilities.canEdit || task.archivedAt !== null || projectArchived) return;
+    if (!task || blocked || policyDraft !== null || moveDraft !== null || !task.capabilities.canEdit || task.archivedAt !== null || projectArchived) return;
     if (draft !== null && !(draft.type === 'edit-task' && draft.taskId === task.id)) return;
     rememberOpener(opener);
     const value = draft?.type === 'edit-task'
@@ -420,7 +644,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   }
 
   function requestProjectArchive(restore: boolean, opener?: HTMLElement) {
-    if (!project || blocked || draft !== null || policyDraft !== null) return;
+    if (!project || blocked || draft !== null || policyDraft !== null || moveDraft !== null) return;
     if (restore ? !canRestoreProject : !canArchiveProject) return;
     rememberOpener(opener);
     setForm({
@@ -433,7 +657,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   }
 
   async function requestTaskArchive(restore: boolean, target: Task | null = task, opener?: HTMLElement) {
-    if (!target || blocked || draft !== null || policyDraft !== null) return;
+    if (!target || blocked || draft !== null || policyDraft !== null || moveDraft !== null) return;
     if (restore ? !target.capabilities.canRestore : !target.capabilities.canArchive) return;
     rememberOpener(opener);
     if (selection.taskId !== target.id) await selectTask(target.id);
@@ -486,10 +710,123 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
     });
   }
 
+  function captureTargetStatus(): TaskStatus {
+    if (draft?.type === 'create-task' && draft.projectId === project?.id) return draft.fields.status ?? captureStatus;
+    return taskView.layout === 'list' ? (taskView.filters.status ?? 'backlog') : captureStatus;
+  }
+
   function stageCapture(title: string) {
     setCaptureTitle(title);
     if (!canCapture || !project || blocked) return;
-    stage({ type: 'create-task', workspaceId: project.workspaceId, projectId: project.id, fields: { title } });
+    stage({ type: 'create-task', workspaceId: project.workspaceId, projectId: project.id, fields: { title, status: captureTargetStatus() } });
+  }
+
+  function beginColumnCapture(status: TaskStatus) {
+    if (!canCapture || blocked || draft !== null) return;
+    setCaptureStatus(status);
+    setCaptureTitle('');
+    setColumnCaptureOpen(true);
+  }
+
+  function cancelColumnCapture() {
+    if (draft?.type === 'create-task') discardDraft();
+    setColumnCaptureOpen(false);
+    setCaptureTitle('');
+    requestAnimationFrame(() => {
+      const heading = [...document.querySelectorAll<HTMLElement>('[data-column-heading]')]
+        .find(element => element.dataset.columnHeading === captureStatus);
+      if (heading !== undefined) heading.focus();
+      else focusViewBar();
+    });
+  }
+
+  function submitColumnCapture() {
+    submitCapture();
+  }
+
+  function performMove(target: Task, status: TaskStatus, beforeTaskId: string | null = null) {
+    if (!canMoveTask(target)) return;
+    lastOutcomeSourceRef.current = 'move';
+    setMoveNotice(null);
+    moveFocusCancelledRef.current = false;
+    setMoveFocusId(target.id);
+    const reason = stageMove(target.id, status, beforeTaskId);
+    if (reason !== 'ready') {
+      setMoveFocusId(null);
+      setMoveNotice({ reason, taskId: target.id });
+      return;
+    }
+    void submit();
+  }
+
+  function performMoveBefore(target: Task, status: TaskStatus, beforeTaskId: string) {
+    performMove(target, status, beforeTaskId);
+  }
+
+  function performMoveEnd(target: Task, status: TaskStatus) {
+    performMove(target, status, null);
+  }
+
+  function moveCommandLabel(command: ProjectMoveCommand): string {
+    const target = findTaskById(command.taskId);
+    const taskLabel = target === null ? copy.move.selectedTask[lang] : `${target.key} · ${target.title}`;
+    const placement = command.beforeTaskId === null ? copy.move.placementEnd[lang] : copy.move.placementBefore[lang];
+    return `${taskLabel} → ${statusName(command.status)[lang]} · ${placement}`;
+  }
+
+  function moveConflictTarget(command: ProjectMoveCommand): string {
+    const requested = `${copy.move.requestedTarget[lang]}: ${statusName(command.status)[lang]} · ${command.beforeTaskId === null ? copy.move.placementEnd[lang] : copy.move.placementBefore[lang]}`;
+    if (conflict !== null && isTask(conflict)) {
+      return `${requested} · ${copy.move.currentTarget[lang]}: ${conflict.key} · ${statusName(conflict.status)[lang]}`;
+    }
+    return requested;
+  }
+
+  function discardMove(focus: 'task' | 'view' = 'task') {
+    const taskId = moveCommand?.taskId ?? moveFocusId;
+    discardDraft();
+    setMoveNotice(null);
+    setMoveFocusId(null);
+    if (focus === 'view') {
+      void refresh();
+      requestAnimationFrame(focusViewBar);
+      return;
+    }
+    requestAnimationFrame(() => {
+      if (taskId !== null && focusMoveControl(taskId)) return;
+      focusViewBar();
+    });
+  }
+
+  function refreshMove() {
+    discardMove('view');
+  }
+
+  function retryMove() {
+    lastOutcomeSourceRef.current = 'move';
+    void retrySave();
+  }
+
+  function returnMove() {
+    lastOutcomeSourceRef.current = 'move';
+    void returnToDraft();
+  }
+
+  function resumeMove() {
+    lastOutcomeSourceRef.current = 'move';
+    if (moveDraft !== null) setMoveFocusId(moveDraft.taskId);
+    void submit();
+  }
+
+  function closeCurrentTaskForMove() {
+    const taskId = moveNotice?.taskId ?? null;
+    setMoveNotice(null);
+    void selectTask(null).then(() => {
+      requestAnimationFrame(() => {
+        if (taskId !== null && focusMoveControl(taskId)) return;
+        focusViewBar();
+      });
+    });
   }
 
   function submitProjectForm() {
@@ -549,7 +886,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
       type: 'create-task',
       workspaceId: project.workspaceId,
       projectId: project.id,
-      fields: { title },
+      fields: { title, status: captureTargetStatus() },
     };
     lastOutcomeSourceRef.current = 'content';
     stage(command);
@@ -584,7 +921,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   }
 
   function stageVisibilityChange(visibility: ProjectVisibility) {
-    if (!project || !canManageAccess || blocked || policyDraft !== null) return;
+    if (!project || !canManageAccess || blocked || policyDraft !== null || moveDraft !== null) return;
     const command: ProjectPolicyCommand = {
       type: 'change-visibility',
       workspaceId: project.workspaceId,
@@ -598,7 +935,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   }
 
   function reviewAccess(member: ProjectAccessMember, state: 'active' | 'revoked') {
-    if (!project || !canManageAccess || blocked || policyDraft !== null) return;
+    if (!project || !canManageAccess || blocked || policyDraft !== null || moveDraft !== null) return;
     const command: ProjectPolicyCommand = {
       type: 'change-access',
       workspaceId: project.workspaceId,
@@ -614,7 +951,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   }
 
   function submitPolicy() {
-    if (policyDraft === null || blocked) return;
+    if (policyDraft === null || blocked || moveDraft !== null) return;
     lastOutcomeSourceRef.current = 'policy';
     void submit();
   }
@@ -654,6 +991,9 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
     discardDraft();
     setForm(null);
     setCaptureTitle('');
+    setColumnCaptureOpen(false);
+    setMoveNotice(null);
+    setMoveFocusId(null);
     setResumeDraftOnReady(false);
     setResumeAccessOnReady(false);
   }
@@ -789,7 +1129,11 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
     && draft.projectId === selection.projectId
     && views.tasks === 'active'
     && canCapture
-    && form === null;
+    && form === null
+    && (taskView.layout === 'list'
+      || (columnCaptureOpen
+        && captureStatus === (draft.fields.status ?? 'backlog')
+        && (taskView.filters.status === undefined || taskView.filters.status === captureStatus)));
   const showDraftBanner = draft !== null && form === null && retryTarget === null && !draftVisibleInCapture;
   const taskFeedbackId = outcome === 'success' && result !== null && isTaskResult(result)
     ? result.id
@@ -803,10 +1147,11 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
             ? lastCommandRef.current.taskId
             : null;
   const feedbackInDetail = task !== null && taskFeedbackId === task.id;
+  const moveFeedbackInDetail = task !== null && moveTaskId === task.id;
   const feedbackInForm = form !== null;
 
   const feedbackNode: ReactNode = (() => {
-    if (policySource && outcome !== null) return null;
+    if ((policySource || moveSource) && outcome !== null) return null;
     if (pending !== null) {
       const command = draft ?? lastCommandRef.current;
       return (
@@ -984,6 +1329,226 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
     }
     return null;
   })();
+
+  const moveNoticeNode: ReactNode = moveNotice === null
+    ? null
+    : (
+      <FeedbackPanel
+        actions={(
+          <>
+            {moveNotice.reason === 'different-detail' && (
+              <button className={styles.secondary} onClick={closeCurrentTaskForMove} type="button">
+                {copy.move.closeCurrentTask[lang]}
+              </button>
+            )}
+            {(moveNotice.reason === 'changed' || moveNotice.reason === 'unavailable') && (
+              <button className={styles.secondary} onClick={() => { setMoveNotice(null); void refresh(); requestAnimationFrame(focusViewBar); }} type="button">
+                {copy.common.refresh[lang]}
+              </button>
+            )}
+            <button className={styles.ghostButton} onClick={() => setMoveNotice(null)} type="button">
+              {copy.common.dismiss[lang]}
+            </button>
+          </>
+        )}
+        autoFocus
+        body={copy.move.blockedReasons[moveNotice.reason]}
+        target={findTaskById(moveNotice.taskId)?.key ?? copy.move.selectedTask[lang]}
+        title={copy.move.blockedTitle}
+        tone="warning"
+      />
+    );
+
+  const moveFeedbackNode: ReactNode = (() => {
+    if (movePending !== null) {
+      return (
+        <FeedbackPanel
+          busy
+          target={moveCommand === null ? null : moveCommandLabel(moveCommand)}
+          title={copy.move.pendingTitle}
+          tone="info"
+        />
+      );
+    }
+    if (moveSource && outcome === 'success' && result !== null && isTaskResult(result)) {
+      return (
+        <FeedbackPanel
+          actions={(
+            <button className={styles.secondary} onClick={dismissOutcome} type="button">
+              {copy.common.dismiss[lang]}
+            </button>
+          )}
+          target={resultLabel(result)}
+          title={copy.move.successTitle}
+          tone="success"
+        />
+      );
+    }
+    if (moveNeedsDestination && moveDraft !== null) {
+      return (
+        <FeedbackPanel
+          actions={(
+            <>
+              <button className={styles.secondary} onClick={() => discardMove()} type="button">
+                {copy.move.discard[lang]}
+              </button>
+              <button className={styles.ghostButton} onClick={refreshMove} type="button">
+                {copy.common.refresh[lang]}
+              </button>
+            </>
+          )}
+          autoFocus
+          body={copy.move.conflictBody}
+          target={moveConflictTarget(moveDraft)}
+          title={copy.move.conflictTitle}
+          tone="warning"
+        />
+      );
+    }
+    if (moveDraft !== null && outcome === 'invalid') {
+      return (
+        <FeedbackPanel
+          actions={(
+            <>
+              <button className={styles.secondary} onClick={() => discardMove()} type="button">
+                {copy.move.discard[lang]}
+              </button>
+              <button className={styles.ghostButton} onClick={refreshMove} type="button">
+                {copy.common.refresh[lang]}
+              </button>
+            </>
+          )}
+          autoFocus
+          body={copy.move.invalidBody}
+          target={moveCommandLabel(moveDraft)}
+          title={copy.move.invalidTitle}
+          tone="warning"
+        />
+      );
+    }
+    if (moveRetryTarget !== null && outcome === 'error') {
+      return (
+        <FeedbackPanel
+          actions={(
+            <>
+              {moveRetryMatches
+                ? (
+                  <button className={styles.primary} onClick={retryMove} type="button">
+                    {copy.feedback.retrySame[lang]}
+                  </button>
+                )
+                : (
+                  <button className={styles.primary} onClick={returnMove} type="button">
+                    {copy.move.returnToMove[lang]}
+                  </button>
+                )}
+              <button className={styles.ghostButton} onClick={() => discardMove()} type="button">
+                {copy.move.discard[lang]}
+              </button>
+            </>
+          )}
+          autoFocus
+          body={copy.move.unknownBody}
+          target={moveCommandLabel(moveRetryTarget)}
+          title={copy.move.unknownTitle}
+          tone="warning"
+        />
+      );
+    }
+    if (outcome === 'forbidden' && (moveSource || moveDraft !== null)) {
+      return (
+        <FeedbackPanel
+          actions={(
+            <>
+              <button className={styles.secondary} onClick={dismissOutcome} type="button">
+                {copy.common.close[lang]}
+              </button>
+              {moveDraft !== null && (
+                <button className={styles.ghostButton} onClick={() => discardMove()} type="button">
+                  {copy.move.discard[lang]}
+                </button>
+              )}
+            </>
+          )}
+          autoFocus
+          body={copy.move.forbiddenBody}
+          target={moveCommand === null ? null : moveCommandLabel(moveCommand)}
+          title={copy.move.forbiddenTitle}
+          tone="danger"
+        />
+      );
+    }
+    if (moveSource && outcome === 'error') {
+      return (
+        <FeedbackPanel
+          actions={(
+            <>
+              <button className={styles.secondary} onClick={dismissOutcome} type="button">
+                {copy.common.dismiss[lang]}
+              </button>
+              {moveDraft !== null && (
+                <button className={styles.ghostButton} onClick={() => discardMove()} type="button">
+                  {copy.move.discard[lang]}
+                </button>
+              )}
+            </>
+          )}
+          autoFocus
+          body={copy.move.errorBody}
+          title={copy.move.errorTitle}
+          tone="danger"
+        />
+      );
+    }
+    if (moveDraft !== null && outcome === null && movePending === null && moveRetryTarget === null) {
+      return (
+        <FeedbackPanel
+          actions={(
+            <>
+              <button className={styles.secondary} onClick={moveDraftMatches ? resumeMove : returnMove} type="button">
+                {moveDraftMatches ? copy.feedback.draftReturn[lang] : copy.move.returnToMove[lang]}
+              </button>
+              <button className={styles.ghostButton} onClick={() => discardMove()} type="button">
+                {copy.move.discard[lang]}
+              </button>
+            </>
+          )}
+          body={copy.move.draftBody}
+          target={moveCommandLabel(moveDraft)}
+          title={copy.move.draftTitle}
+          tone={moveDraftMatches ? 'info' : 'warning'}
+        />
+      );
+    }
+    return null;
+  })();
+
+  const taskPageErrorBlock: ReactNode = pageError?.collection !== 'tasks'
+    ? null
+    : (
+      <FeedbackPanel
+        actions={pageError.reason === 'changed'
+          ? (
+            <button className={styles.secondary} disabled={blocked} onClick={() => { void refresh(); }} type="button">
+              {copy.common.refresh[lang]}
+            </button>
+          )
+          : (
+            <>
+              <button className={styles.secondary} disabled={blocked} onClick={() => { void loadMore('tasks'); }} type="button">
+                {copy.feedback.pageErrorRetry[lang]}
+              </button>
+              <button className={styles.ghostButton} onClick={dismissPageError} type="button">
+                {copy.common.dismiss[lang]}
+              </button>
+            </>
+          )}
+        body={pageError.reason === 'changed' ? copy.taskView.listChangedBody : copy.feedback.pageErrorBody}
+        target={copy.feedback.pageErrorTargets.tasks[lang]}
+        title={pageError.reason === 'changed' ? copy.taskView.listChangedTitle : copy.feedback.pageErrorTitle}
+        tone="warning"
+      />
+    );
 
   const policyFeedbackNode: ReactNode = (() => {
     if (policyPending !== null) {
@@ -1255,6 +1820,8 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
 
   const recoveryBlock = (
     <>
+      {moveNoticeNode}
+      {moveFeedbackInDetail ? null : moveFeedbackNode}
       {draftInDetail ? null : draftBanner}
       {policyDraftBanner}
       {feedbackInDetail ? null : feedbackNode}
@@ -1304,6 +1871,70 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   function toggleTasksView() {
     if (anyPending) return;
     void setView('tasks', views.tasks === 'active' ? 'archived' : 'active');
+  }
+
+  function renderProjectActions(compact: boolean) {
+    const base = compact ? styles.projectMenuItem : styles.secondary;
+    return (
+      <>
+        {canManageAccess && (
+          <button
+            className={base}
+            disabled={blocked || anyDraft}
+            onClick={event => {
+              if (compact) closeProjectOptions(event);
+              openProjectAccess(event.currentTarget);
+            }}
+            type="button"
+          >
+            <IconUsers size={16} />
+            {copy.access.button[lang]}
+          </button>
+        )}
+        {canEditProject && (
+          <button
+            className={base}
+            disabled={blocked || anyDraft}
+            onClick={event => {
+              if (compact) closeProjectOptions(event);
+              openProjectSettings(event.currentTarget);
+            }}
+            type="button"
+          >
+            <IconSettings size={16} />
+            {copy.project.settingsTitle[lang]}
+          </button>
+        )}
+        {canArchiveProject && (
+          <button
+            className={base}
+            disabled={blocked || anyDraft}
+            onClick={event => {
+              if (compact) closeProjectOptions(event);
+              requestProjectArchive(false, event.currentTarget);
+            }}
+            type="button"
+          >
+            <IconArchive size={16} />
+            {copy.project.archive[lang]}
+          </button>
+        )}
+        {canRestoreProject && (
+          <button
+            className={compact ? styles.projectMenuItem : styles.primary}
+            disabled={blocked || anyDraft}
+            onClick={event => {
+              if (compact) closeProjectOptions(event);
+              requestProjectArchive(true, event.currentTarget);
+            }}
+            type="button"
+          >
+            <IconRestore size={16} />
+            {copy.project.restore[lang]}
+          </button>
+        )}
+      </>
+    );
   }
 
   function renderWorkspaceOptions() {
@@ -1450,7 +2081,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
             {canCreateProject && (
               <button
                 className={styles.navCreateLink}
-                disabled={blocked || policyDraft !== null || (draft !== null && draft.type !== 'create-project')}
+                disabled={blocked || policyDraft !== null || moveDraft !== null || (draft !== null && draft.type !== 'create-project')}
                 onClick={event => openProjectCreate(event.currentTarget)}
                 type="button"
               >
@@ -1481,7 +2112,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
               <button
                 aria-label={copy.project.newProject[lang]}
                 className={styles.mobileMenuButton}
-                disabled={!canCreateProject || blocked || policyDraft !== null || (draft !== null && draft.type !== 'create-project')}
+                disabled={!canCreateProject || blocked || policyDraft !== null || moveDraft !== null || (draft !== null && draft.type !== 'create-project')}
                 onClick={event => openProjectCreate(event.currentTarget)}
                 type="button"
               >
@@ -1523,11 +2154,11 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
                   </button>
                 </>
               )}
-              body={draft !== null ? copy.status.signInReturnMemory : copy.status.signedOutBody}
+              body={draft !== null || moveDraft !== null || moveRetryTarget !== null ? copy.status.signInReturnMemory : copy.status.signedOutBody}
               icon={<IconAlert size={22} />}
               title={copy.status.signedOutTitle}
             >
-              {draft !== null && <p className={styles.stateHint}>{copy.status.memoryKept[lang]}</p>}
+              {(draft !== null || moveDraft !== null || moveRetryTarget !== null) && <p className={styles.stateHint}>{copy.status.memoryKept[lang]}</p>}
             </StateCard>
           )}
 
@@ -1595,7 +2226,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
                 actions={isArchivedProjects
                   ? <button className={styles.secondary} disabled={anyPending} onClick={toggleProjectsView} type="button">{copy.project.viewActive[lang]}</button>
                   : canCreateProject
-                    ? <button className={styles.primary} disabled={blocked || policyDraft !== null} onClick={event => openProjectCreate(event.currentTarget)} type="button">{copy.project.createFirst[lang]}</button>
+                    ? <button className={styles.primary} disabled={blocked || anyDraft} onClick={event => openProjectCreate(event.currentTarget)} type="button">{copy.project.createFirst[lang]}</button>
                     : undefined}
                 body={isArchivedProjects
                   ? copy.status.emptyArchivedProjectsBody
@@ -1624,7 +2255,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
                         <span className={styles.titleKey}>{project.key}</span>
                         {projectArchived && <Badge tone="archived">{copy.project.archivedBadge[lang]}</Badge>}
                       </div>
-                      {project.description.length > 0 && <p className={styles.lede}>{project.description}</p>}
+                      {project.description.length > 0 && <p className={cx(styles.lede, styles.projectLede)}>{project.description}</p>}
                       <div className={styles.metaLine}>
                         <span className={styles.visibilityLine}>
                           <Badge tone={project.visibility === 'private' ? 'warning' : 'neutral'}>
@@ -1634,51 +2265,62 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
                             ? null
                             : <span>{canManageAccess ? copy.project.visibilityAutoAccess[lang] : copy.project.visibilityGranted[lang]}</span>}
                         </span>
-                        {tasks !== null && <span>{projectTaskCount(tasks.total, lang)}</span>}
+                        <span>
+                          {taskSummary.status === 'ready' && taskSummary.total !== null
+                            ? projectTaskCount(taskSummary.total, lang)
+                            : taskSummary.status === 'loading'
+                              ? copy.common.loading[lang]
+                              : taskSummary.status === 'changed'
+                                ? copy.taskView.countChanged[lang]
+                                : copy.taskView.countPartial[lang]}
+                        </span>
                         <span>
                           {copy.task.creatorLabel[lang]}: {project.creator.name}
                           {project.creator.kind === 'agent' && <Badge tone="brand">{copy.task.agentBadge[lang]}</Badge>}
                         </span>
                       </div>
                     </div>
-                    <div className={styles.pageActions}>
-                      {canManageAccess && (
-                        <button
-                          className={styles.secondary}
-                          disabled={blocked || draft !== null}
-                          onClick={event => openProjectAccess(event.currentTarget)}
-                          type="button"
-                        >
-                          <IconUsers size={16} />
-                          {copy.access.button[lang]}
-                        </button>
-                      )}
-                      {canEditProject && (
-                        <button className={styles.secondary} disabled={blocked || draft !== null || policyDraft !== null} onClick={event => openProjectSettings(event.currentTarget)} type="button">
-                          <IconSettings size={16} />
-                          {copy.project.settingsTitle[lang]}
-                        </button>
-                      )}
-                      {canArchiveProject && (
-                        <button className={styles.secondary} disabled={blocked || draft !== null || policyDraft !== null} onClick={event => requestProjectArchive(false, event.currentTarget)} type="button">
-                          <IconArchive size={16} />
-                          {copy.project.archive[lang]}
-                        </button>
-                      )}
-                      {canRestoreProject && (
-                        <button className={styles.primary} disabled={blocked || draft !== null || policyDraft !== null} onClick={event => requestProjectArchive(true, event.currentTarget)} type="button">
-                          <IconRestore size={16} />
-                          {copy.project.restore[lang]}
-                        </button>
-                      )}
-                    </div>
+                    {hasProjectActions && (
+                      <div className={cx(styles.pageActions, narrow && styles.pageActionsCompact)}>
+                        {narrow
+                          ? (
+                            <details
+                              className={styles.projectOptions}
+                              onKeyDown={event => {
+                                if (event.key !== 'Escape') return;
+                                event.currentTarget.removeAttribute('open');
+                                event.currentTarget.querySelector<HTMLElement>('summary')?.focus();
+                              }}
+                            >
+                              <summary
+                                aria-label={copy.project.optionsMenu[lang]}
+                                className={styles.projectOptionsSummary}
+                                onClick={event => event.currentTarget.focus()}
+                                onKeyDown={event => {
+                                  if (event.key !== 'Enter' && event.key !== ' ') return;
+                                  event.preventDefault();
+                                  const details = event.currentTarget.closest('details');
+                                  if (details !== null) details.open = !details.open;
+                                }}
+                              >
+                                {copy.project.options[lang]}
+                                <IconChevron size={16} />
+                              </summary>
+                              <div className={styles.projectOptionsMenu}>
+                                {renderProjectActions(true)}
+                              </div>
+                            </details>
+                          )
+                          : renderProjectActions(false)}
+                      </div>
+                    )}
                   </div>
                 </header>
 
                 {projectArchived && (
                   <FeedbackPanel
                     actions={canRestoreProject
-                      ? <button className={styles.primary} disabled={blocked || draft !== null || policyDraft !== null} onClick={event => requestProjectArchive(true, event.currentTarget)} type="button">{copy.project.restore[lang]}</button>
+                      ? <button className={styles.primary} disabled={blocked || anyDraft} onClick={event => requestProjectArchive(true, event.currentTarget)} type="button">{copy.project.restore[lang]}</button>
                       : undefined}
                     body={copy.project.archivedNotice}
                     title={copy.project.archivedBadge}
@@ -1690,28 +2332,29 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
                   <FeedbackPanel body={copy.task.viewerBody} title={copy.task.viewerTitle} tone="info" />
                 )}
 
-                <div className={styles.toolbar}>
-                  <div className={styles.toolbarCount}>
-                    <IconTask size={16} />
-                    <span>
-                      {isArchivedTasks
-                        ? copy.project.archivedTaskCount[lang](tasks?.total ?? 0)
-                        : copy.project.taskCount[lang](tasks?.total ?? 0)}
-                    </span>
-                  </div>
-                  <div className={styles.toolbarActions}>
-                    <button className={styles.secondary} disabled={anyPending} onClick={toggleTasksView} type="button">
-                      <IconArchive size={16} />
-                      {isArchivedTasks ? copy.task.viewActive[lang] : copy.task.viewArchived[lang]}
-                    </button>
-                  </div>
-                </div>
+                <TaskViewBar
+                  assigneeError={policyPageErrors.assignees !== undefined}
+                  assigneeLoading={assignees === null && policyPageErrors.assignees === undefined}
+                  assigneeStatus={taskFilterAssigneeStatus}
+                  assignees={assignees}
+                  assigneesNext={assignees !== null && assignees.nextCursor !== null}
+                  disabled={anyPending}
+                  onFilters={filters => { void setTaskFilters(filters); }}
+                  onLayout={layout => { void setTaskLayout(layout); }}
+                  onLoadMoreAssignees={() => { void loadMore('assignees'); }}
+                  onRefresh={() => { void refresh(); }}
+                  onToggleArchive={toggleTasksView}
+                  selectedTaskAssignee={selectedTaskAssignee}
+                  taskSummary={taskSummary}
+                  taskView={taskView}
+                  viewsTasks={views.tasks}
+                />
 
                 {!feedbackInForm && recoveryBlock}
 
-                {canCapture && (draft === null || draft.type === 'create-task' && draft.projectId === project.id) && (
+                {taskView.layout === 'list' && canCapture && (draft === null || draft.type === 'create-task' && draft.projectId === project.id) && (
                   <TaskCaptureForm
-                    disabled={retryTarget !== null}
+                    disabled={!canCapture}
                     inputRef={captureRef}
                     onChange={stageCapture}
                     onSubmit={submitCapture}
@@ -1720,32 +2363,76 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
                   />
                 )}
 
-                {tasks !== null && (
+                {taskView.layout === 'list' && tasks !== null && (
                   <TaskList
                     archivedView={isArchivedTasks}
                     canCreate={canCapture}
+                    canMove={canMoveTask}
+                    changed={taskPageChanged}
+                    columnCounts={tasks.columnCounts}
+                    filtersActive={filtersActive}
                     hasMore={tasks.nextCursor !== null}
+                    onClearFilters={() => { void setTaskFilters({}); }}
                     onCreate={() => captureRef.current?.focus()}
                     onLoadMore={() => { void loadMore('tasks'); }}
+                    onMove={(target, status) => performMove(target, status, null)}
+                    onMoveBefore={(target, beforeTaskId) => performMoveBefore(target, target.status, beforeTaskId)}
+                    onMoveEnd={target => performMoveEnd(target, target.status)}
                     onOpen={selectTaskFromList}
-                    onRestore={(task, opener) => requestTaskArchive(true, task, opener)}
-                    pending={blocked || policyDraft !== null}
+                    onRestore={(target, opener) => requestTaskArchive(true, target, opener)}
+                    partial={taskPagePartial}
+                    pending={blocked || anyDraft}
+                    pendingTaskId={pendingTaskId}
+                    readOnly={readOnlyTasks}
                     tasks={taskList}
+                    total={taskSummary.status === 'ready' ? taskSummary.total : null}
                   />
                 )}
-                {pageError?.collection === 'tasks' && pageErrorBlock}
+
+                {taskView.layout === 'board' && (
+                  <TaskBoard
+                    canCreate={canCapture && draft === null}
+                    canMove={canMoveTask}
+                    capture={columnCaptureOpen && (taskView.filters.status === undefined || taskView.filters.status === captureStatus)
+                      ? { status: captureStatus, title: captureTitle }
+                      : null}
+                    capturePending={pending === 'create-task'}
+                    filtersActive={filtersActive}
+                    onBeginCapture={beginColumnCapture}
+                    onCancelCapture={cancelColumnCapture}
+                    onCaptureChange={stageCapture}
+                    onClearFilters={() => { void setTaskFilters({}); }}
+                    onLoadColumn={status => { void loadTaskColumn(status); }}
+                    onMove={performMove}
+                    onMoveBefore={performMoveBefore}
+                    onMoveEnd={performMoveEnd}
+                    onOpenTask={selectTaskFromList}
+                    onRefresh={() => { void refresh(); }}
+                    onSetColumn={status => { void setTaskColumn(status); }}
+                    onSubmitCapture={submitColumnCapture}
+                    pendingTaskId={pendingTaskId}
+                    readOnly={readOnlyTasks}
+                    taskColumnErrors={taskColumnErrors}
+                    taskColumns={taskColumns}
+                    taskColumnsChanged={taskColumnsChanged}
+                    taskView={taskView}
+                  />
+                )}
+
+                {taskView.layout === 'list' && taskPageErrorBlock}
               </section>
 
               {task !== null && (
                 <div>
                   <TaskDetail
-                    actionsDisabled={blocked || policyDraft !== null}
+                    actionsDisabled={blocked || policyDraft !== null || moveDraft !== null}
                     description={task.description.length > 0 ? <TaskDescription source={task.description} /> : undefined}
-                    feedback={form === null && (feedbackInDetail || draftInDetail)
+                    feedback={form === null && (feedbackInDetail || draftInDetail || moveFeedbackInDetail)
                       ? (
                         <>
                           {draftInDetail ? draftBanner : null}
                           {feedbackInDetail ? feedbackNode : null}
+                          {moveFeedbackInDetail ? moveFeedbackNode : null}
                         </>
                       )
                       : undefined}

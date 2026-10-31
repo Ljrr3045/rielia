@@ -13,10 +13,11 @@ merged T05.1 presentation. T06.0 adds bounded persisted project/task backend and
 frontend logic, and merged T06.1 adds its presentation. T07.0 adds bounded private
 project/access logic under the ratified administrative visibility policy; T07.1
 adds its presentation on that logic. T08.0 adds persistent status ordering,
-allowlisted task filters and versioned list/Kanban query/move logic without presentation.
-Invitations/guests, full T06/P05/T07/T08/US05,
-collaboration and integration scope remain open. It has no deployed task product, deployment or
-software release. The coordinator owns integration and status across workers.
+allowlisted task filters and versioned list/Kanban query/move logic; T08.1 adds
+its list/board presentation on that merged logic. Invitations/guests, full
+T06/P05/T07/T08/US05, collaboration and integration scope remain open. It has no
+deployed task product, deployment or software release. The coordinator owns
+integration and status across workers.
 
 The user's [2026-10-27 stack and sequencing decision](stack-validation-decisions.md)
 approves the current stack except Express. The [authorized migration](nest-http-adapter.md)
@@ -32,11 +33,12 @@ implementation, without completing tickets or weakening automated checks/launch 
 
 | Field | Evidence/state |
 | --- | --- |
-| Scope | T08.0/B1b existing-field list/Kanban logic for P05/P08/P14/P33/P38, US04/US05/US08/US12/US24–US25 and UX01/02/03/05/06/07/09/11. Persisted status-grouped order, status/assignee/unassigned/priority filters, bounded revision-bound pages/counts, atomic versioned moves, safe historical filter labels and canonical URL/draft recovery. P07 configurable workflows, labels/sprints/full US05, presentation, T09/T10/B2, new credentials, real OAuth/staging/users and deployment remain excluded |
-| Base | `origin/dev` at merged [PR #18](https://github.com/Ljrr3045/rielia/pull/18), `ac3de5351e49b8b60bf3b2bbb55b8d695899f68d`; Orca inventory confirms both completed T07 worktrees removed |
-| Branch | `feat/t08-task-views-logic`, one English non-draft logic/docs PR to `dev` |
-| Worktree | Isolated `feat-t08-task-views-logic`; effective Orca terminal preview verifies Codex `gpt-6.1-sol` `xhigh`; no helpers; UI remains separately owned |
-| Current PR | [#19](https://github.com/Ljrr3045/rielia/pull/19), English non-draft logic/docs PR to `dev`; local checks passed, exact-head CI and coordinator-triggered Kody evidence pending |
+| Scope | T08.1/B1b existing-field list/Kanban presentation for P05/P07 existing statuses/P08/P14/P33/P38, US04/US05/US08/US12/US24–US25 and UXR01/02/03/04/06 with UX01/02/03/05/06/07/09/11. Status-grouped list, five-column board, supported filters, compact capture, accessible/versioned moves, persisted order, URL/detail context, mobile selected column, read-only archived/viewer states. P07 configurable workflows, labels/sprints/full US05, T09/T10/B2, new credentials, real OAuth/staging/users and deployment remain excluded |
+| Base | `origin/dev` at merged T08.0 [PR #19](https://github.com/Ljrr3045/rielia/pull/19), `f8895709f881df18a4d2d4a33483dab5add0e51e`; T08.0 terminal/worktree settled and removed by the coordinator |
+| Branch | `feat/t08-task-views-ui`, one English non-draft presentation/docs PR to `dev` |
+| Worktree | Isolated `feat-t08-task-views-ui`; effective OpenCode Go `opencode-go/deepseek-v4.1-flash` variant `max` verified; no helpers; logic/contracts/backend/hooks/tests remain Sol-owned |
+| Current PR | Presentation/docs PR pending final repository checks and exact ready head after the Sol validator returns the shared runtime |
+| T08.0 logic PR | [#19](https://github.com/Ljrr3045/rielia/pull/19) merged 2026-10-30T18:31:57Z as `f8895709f881df18a4d2d4a33483dab5add0e51e`; reviewed source `b2dbc55e9ad1383612e16d1ccaed79f5336ec7a4`, CI run 41106175856 / exact-head check 124237103945, Kody check 124240156276 and approval 5716919765; logic terminal/worktree settlement confirmed and external report preserved |
 | T07.1 presentation PR | [#18](https://github.com/Ljrr3045/rielia/pull/18) merged as `ac3de5351e49b8b60bf3b2bbb55b8d695899f68d`; final review/CI evidence remains in GitHub and the external report; its completed worktree is absent from Orca inventory |
 | T07.0 logic PR | [#17](https://github.com/Ljrr3045/rielia/pull/17) merged 2026-10-29T16:51:39Z as `c72831c1be4ca2332a6162adc2af85d529b441b8`; final reviewed head `bf9e6fcf`, CI SUCCESS and Kody approval `5701623155`; coordinator verified clean settlement, preserved the external logic report and removed its worktree |
 | T06.1 presentation PR | [#16](https://github.com/Ljrr3045/rielia/pull/16) merged as `545473c3d381a7a532e8f5b9ad77f30d6b5a70bc`; prior final review/CI evidence remains in GitHub and its external delivery report; both T06 worktrees removed |
@@ -111,10 +113,72 @@ Next-dev route-type collision were corrected; generated Next instructions/types
 are excluded from this scoped PR. No JSX/CSS, screen-reader/physical-touch,
 real OAuth/staging/user or scale certification is claimed. Full T08/US05 remains
 open for separate presentation and absent configurable workflows/labels/sprints.
-Implementation is in [PR #19](https://github.com/Ljrr3045/rielia/pull/19); current
-head, CI, root trigger and all three review surfaces remain the live evidence
-before coordinator merge. Final settlement is preserved externally without
-source pushes solely for review bookkeeping.
+PR #19 merged on 2026-10-30T18:31:57Z as
+`f8895709f881df18a4d2d4a33483dab5add0e51e`; reviewed source
+`b2dbc55e9ad1383612e16d1ccaed79f5336ec7a4`, CI run 41106175856 / exact-head
+check 124237103945, Kody check 124240156276 and approval 5716919765. The
+coordinator confirmed the logic terminal/worktree were settled and removed and
+the external report preserved. The merged PR records two accepted operational
+limits: the additive migration is offline/local and atomic (ACCESS EXCLUSIVE
+locks; quiesce a live app; no online/zero-downtime or split-install guarantee),
+and an unfiltered list can perform up to five ordered per-status reads (101
+rows) pending future profiling/coalescing that preserves semantic status order
+and keyset predicates. No throughput or cross-request policy-cache claim is
+made.
+
+## T08.1 task views presentation
+
+The [T08 UI guide](task-views-ui.md) records the presentation on merged T08.0
+logic. `/projects` now provides a status-grouped list and five-column board from
+one `useProjectTasks` source, supported status/assignee (including unassigned)/
+priority filters, authoritative per-column counts, column quick capture, native
+status movement, precise before-task/end-of-column menus, outer keyboard board
+navigation and persisted order. The list and board preserve the T06/T07 project
+shell, detail URL/focus, private access, archive restrictions, historical
+authorship/assignee labels and the single canonical pending/draft/retry/conflict
+lifecycle. Move conflicts require Discard + Refresh + a fresh destination; no
+version-only or former-anchor rebase is exposed.
+
+Mobile defaults to list; board uses one selected column at 320 px with a native
+column selector. Project administration is collapsed into an accessible
+`Options` disclosure (Access/settings/archive), the view bar uses a short archive
+label, and the initial 320×740 viewport shows the first board column heading or
+the list capture. Board columns are 272 px wide, contain localized status/Move
+controls without inner horizontal overflow, scroll vertically inside a bounded
+height and use only the outer board horizontal scroll. The outer frame is a
+keyboard region with Arrow/Home/End support; the canceled column is reachable
+and 1440/1024 geometry was measured. ES/EN localized subtrees set `lang`
+correctly; light/dark, keyboard menus, Escape/focus return, reduced-motion CSS
+and 44 px targets are included.
+
+Independent Codex validation (`ctx_603bf34ae047`, task `task_74a22b577a49`)
+recorded 19 passing latest cases and no unresolved observed defect. It
+reproduced and the UI owner fixed three presentation-only defects: pre-canonical
+move focus now waits for target status plus page order version; delayed
+different-row focus intent is cancelled through a focusin ref (remount may end
+on BODY without stealing to the moved task); and the 320px list Move menu now
+flows full-width instead of overflowing. Passing evidence includes exact native
+keyboard reorder/persistence, same/cross-column canonical order, committed-
+response-loss original-key/payload replay (task version 2, order revision 120,
+one row), conflict + fresh canceled destination, filtered/selected-detail
+retention, coherent focus, independent column/mixed recovery, named fallback,
+100+14 paging without duplicates, en/es localized subtree, menu/card containment
+with native Tab/Escape, mobile touch End, native desktop drag and 320/390 menu
+reachability. External validator scripts/screenshots/private state remain outside
+the repository.
+
+Final frozen install and full `pnpm check` pass lint, Express-free closure,
+process cleanup, 7 identity, 16 workspace, 36 project/task, 19 prototype,
+strict typechecks, production builds (`/projects` static), 17 MCP
+subprocess/Inspector checks and HTTP smoke. `pnpm audit --audit-level=high`
+passes the high/critical gate; one moderate dev-tooling `minimatch` advisory
+(GHSA-g3hv-75wg-m249 via typescript-eslint/eslint) remains, with no production
+runtime path. Handoff integrity passes 47 imported files, 30 assets and 434
+local links; whitespace checks pass. Exact PR/CI/Kody evidence follows PR
+creation. No full T08/US05/P07, T09/T10/B2, real-user, staging/OAuth,
+deployment, physical-device, AT/WCAG or 200%-zoom certification is claimed; the
+English subtree is `lang=en` while the document shell remains `es`, and the
+delayed-different-row remount may end on BODY without restoring the other row.
 
 ## T07.0 project privacy and explicit access
 
@@ -548,9 +612,9 @@ the following records preserve the original first-wave scope and acceptance:
    open. PR #9 is merged; see [runtime scope and evidence](local-runtime.md). This is a preparatory
    split of the B1 T04 ticket, without business effects, deployment or full acceptance.
 
-Current bounded product step: **T07.1** private-project access presentation,
-following the merged T07.0 logic and T06 presentation under the user's sequencing
-override. Invitations/guests, full T06/T07/T35, collaboration and
+Current bounded product step: **T08.1** list/Kanban task-view presentation,
+following the merged T08.0 logic under the user's sequencing override.
+Invitations/guests, full T06/T07/T08/T35/US05, collaboration and
 MCP/history/export integration remain incomplete.
 
 Convergence: T02 + T03 → T04 → **T35** → T05 → T06. The principal/authorship model
@@ -584,7 +648,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T05 | B1a | Auth, workspaces, principal memberships | T04, T35 | T05.0 logic merged in PR #13; T05.1 [presentation](workspace-ui.md) merged in PR #14. Full T05/T07/T35 acceptance remains open |
 | T06 | B1a | Projects/tasks, versions, idempotency, atomic activity/outbox | T05 | Bounded T06.0 real backend/client logic merged in [PR #15](https://github.com/Ljrr3045/rielia/pull/15); T06.1 [presentation](project-task-ui.md) delivered in the UI PR against disposable real PG/Nest/Next QA. Full ticket (all version/activity/outbox slices, collaboration) remains open |
 | T07 | B1b | Invitations, revocation, roles/private projects | T06 | Invitation/role subset remains in T05.0; bounded [T07.0 privacy/access logic](project-access.md) merged in PR #17 and [T07.1 presentation](project-access-ui.md) delivered in the UI PR. Full T07 acceptance remains open |
-| T08 | B1b | List/Kanban, filters, ranking | T06 | Bounded [T08.0 logic](task-views.md) implemented and locally validated; presentation/review/merge pending, configurable workflows/labels/sprints and full US05/T08 remain open |
+| T08 | B1b | List/Kanban, filters, ranking | T06 | [T08.0 logic](task-views.md) merged in PR #19 at `f8895709`; [T08.1 presentation](task-views-ui.md) in the current PR after final checks. Configurable workflows/labels/sprints and full US05/T08 remain open |
 | T09 | B1b | Subtasks, checklists, comments, history | T06 | Not started |
 | T10 | B1b | Search, My tasks, responsive layout, SSE | T07–T09 | Not started |
 | T11 | B1c | Sprint lifecycle and scope history | T08–T09 | Not started |
