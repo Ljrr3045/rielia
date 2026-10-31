@@ -83,6 +83,9 @@ try {
   const domain = await command('Identity integration suite', process.execPath,
     ['--test', '--test-reporter=spec', 'apps/api/test/project-tasks.test.mjs'], { env, signal: abort.signal });
   process.stdout.write(domain.stdout);
+  const collaboration = await command('Identity integration suite', process.execPath,
+    ['--test', '--test-reporter=spec', 'apps/api/test/task-collaboration.test.mjs'], { env, signal: abort.signal });
+  process.stdout.write(collaboration.stdout);
   const witness = join(directory, 'domain-persistence.json');
   await command('Domain persistence snapshot', process.execPath, ['apps/api/test/project-task-persistence.mjs', 'snapshot', witness], { env, signal: abort.signal });
   await command('Task-owned PostgreSQL restart', 'docker', ['restart', '--time', '10', name], { signal: abort.signal });

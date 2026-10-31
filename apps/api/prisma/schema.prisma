@@ -223,6 +223,7 @@ model Task {
   priority String @default("none")
   status String @default("backlog")
   rank BigInt @default(0)
+  parentTaskId String?
   assigneePrincipalId String?
   dueDate DateTime? @db.Date
   version Int @default(1)
@@ -252,10 +253,44 @@ model ActivityEvent {
   action String
   entityVersion Int
   changedFields String[]
+  changes Json?
   accessPrincipalId String?
   createdAt DateTime @default(now())
   @@unique([workspaceId, id])
   @@map("activity_event")
+}
+
+model ChecklistItem {
+  id String @id
+  workspaceId String
+  projectId String
+  taskId String
+  text String
+  position Int
+  completed Boolean @default(false)
+  version Int @default(1)
+  removedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  @@unique([workspaceId, projectId, taskId, id])
+  @@map("checklist_item")
+}
+
+model TaskComment {
+  id String @id
+  workspaceId String
+  projectId String
+  taskId String
+  body String
+  version Int @default(1)
+  authorPrincipalId String
+  creationMode String
+  creationSource String
+  creationGrantId String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  @@unique([workspaceId, projectId, taskId, id])
+  @@map("task_comment")
 }
 
 model OutboxEvent {

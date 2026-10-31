@@ -5,16 +5,16 @@ import type { Prisma, Project as ProjectRow, Task as TaskRow } from '../generate
 import { PrincipalService, type Transaction, type VerifiedExecution } from '../principals/principal.service.js';
 
 const identifier = (value: unknown): value is string => typeof value === 'string' && /^[A-Za-z0-9_-]{1,128}$/.test(value);
-function object(value: unknown, allowed: string[], required: string[] = []): Record<string, unknown> {
+export function object(value: unknown, allowed: string[], required: string[] = []): Record<string, unknown> {
   if (!value || typeof value !== 'object' || Array.isArray(value) || Object.keys(value).some(key => !allowed.includes(key))
     || required.some(key => !(key in value))) throw new BadRequestException('Invalid project/task request.');
-  return value as Record<string, unknown>;
+  return { ...value as Record<string, unknown> };
 }
-function text(value: unknown, limit: number, required = false): string {
+export function text(value: unknown, limit: number, required = false): string {
   if (typeof value !== 'string' || value.includes('\0') || value.length > limit || (required && (!value.trim() || /[\r\n\t]/.test(value)))) throw new BadRequestException('Invalid text.');
   return required ? value.trim() : value;
 }
-function expected(value: unknown): number {
+export function expected(value: unknown): number {
   if (!Number.isSafeInteger(value) || Number(value) < 1) throw new BadRequestException('A positive expectedVersion is required.');
   return Number(value);
 }
@@ -99,7 +99,7 @@ export class ProjectTaskService {
     return { id: row.id, workspaceId: row.workspaceId, projectId: row.projectId, projectKey: project.key, number: row.number, key: `${project.key}-${row.number}`,
       title: row.title, description: row.description, type: row.type as Task['type'], priority: row.priority as Task['priority'], status: row.status as Task['status'],
       assigneePrincipalId: row.assigneePrincipalId, assignee: row.assigneePrincipalId ? { ...people.get(row.assigneePrincipalId)!, active: eligible.has(row.assigneePrincipalId) } : null,
-      dueDate: row.dueDate?.toISOString().slice(0, 10) ?? null, version: row.version, orderVersion: project.taskRevision, archivedAt: iso(row.archivedAt), projectArchivedAt: iso(project.archivedAt),
+      parentTaskId: row.parentTaskId, dueDate: row.dueDate?.toISOString().slice(0, 10) ?? null, version: row.version, orderVersion: project.taskRevision, archivedAt: iso(row.archivedAt), projectArchivedAt: iso(project.archivedAt),
       createdAt: row.createdAt.toISOString(), updatedAt: row.updatedAt.toISOString(), creator: people.get(row.createdByPrincipalId)!, provenance: provenance(row),
       capabilities: { canEdit: canWrite && active, canArchive: canWrite && active, canRestore: canWrite && !project.archivedAt && !!row.archivedAt }, url: taskURL(row.workspaceId, row.projectId, row.id) };
   }
@@ -190,20 +190,57 @@ export class ProjectTaskService {
   task(context: VerifiedExecution, workspaceId: string, projectId: string, taskId: string) {
     return this.principals.domainOperation(context, workspaceId, 'read', async (tx, actor, canWrite) => { const project = await this.projectRow(tx, workspaceId, projectId, actor); return this.taskView(tx, await this.taskRow(tx, workspaceId, projectId, taskId), project, canWrite); });
   }
+  /** Internal composition seam: collaborators share current project policy and
+   * the same fenced transaction, never reuse a DTO as authority. */
+  collaborationRead<T>(context: VerifiedExecution, workspaceId: string, projectId: string, taskId: string,
+    work: (tx: Transaction, actor: ExecutionContextResponse, canWrite: boolean, project: ProjectRow, task: TaskRow, view: () => Promise<Task>) => Promise<T>) {
+    return this.principals.domainOperation(context, workspaceId, 'read', async (tx, actor, canWrite) => {
+      const project = await this.projectRow(tx, workspaceId, projectId, actor);
+      const task = await this.taskRow(tx, workspaceId, projectId, taskId);
+      return work(tx, actor, canWrite, project, task, () => this.taskView(tx, task, project, canWrite));
+    });
+  }
+  collaborationMutation(context: VerifiedExecution, workspaceId: string, projectId: string, taskId: string, key: string, requestId: string, action: string, input: Record<string, unknown>,
+    work: (tx: Transaction, actor: ExecutionContextResponse, project: ProjectRow, task: TaskRow) => Promise<void>) {
+    return this.mutation(context, workspaceId, key, requestId, action, [projectId, taskId], input, async (tx, actor) => {
+      const project = await this.projectRow(tx, workspaceId, projectId, actor); const row = await this.taskRow(tx, workspaceId, projectId, taskId);
+      const current = await this.taskView(tx, row, project, true); this.conflict(current, expected(input['expectedVersion']));
+      if (project.archivedAt || row.archivedAt) this.archived(current);
+      await work(tx, actor, project, row);
+      // One aggregate version covers checklist, comments and relationship edits.
+      const updated = await tx.task.update({ where: { workspaceId_projectId_id: { workspaceId, projectId, id: taskId } }, data: { version: { increment: 1 } } });
+      return this.taskView(tx, updated, project, true);
+    });
+  }
+  async assertParent(tx: Transaction, workspaceId: string, projectId: string, parentTaskId: string, version: number, taskId?: string) {
+    const parent = await tx.task.findFirst({ where: { workspaceId, projectId, id: parentTaskId, archivedAt: null, parentTaskId: null } });
+    if (!parent || parentTaskId === taskId) throw new BadRequestException('Invalid parent task.');
+    if (parent.version !== version) throw new ConflictException({ code: 'parent-changed', message: 'Parent changed. Refresh and choose the parent again.' });
+    if (taskId && await tx.task.count({ where: { workspaceId, projectId, parentTaskId: taskId } })) throw new BadRequestException('A parent cannot become a child.');
+  }
+  private async closing(tx: Transaction, row: TaskRow, project: ProjectRow, current: Task, status: string | undefined, acknowledgment: number | undefined) {
+    if (!status || status === row.status || !['done', 'canceled'].includes(status)) return;
+    const where = { workspaceId: row.workspaceId, projectId: row.projectId, parentTaskId: row.id, status: { notIn: ['done', 'canceled'] } };
+    const open = await tx.task.count({ where });
+    if (open && acknowledgment !== project.taskRevision) throw new ConflictException({ code: 'open-children', message: 'Open children remain unchanged. Review them before closing the parent.', current,
+      closeWarning: { open, archivedOpen: await tx.task.count({ where: { ...where, archivedAt: { not: null } } }), childrenVersion: project.taskRevision } });
+  }
   private async rank(tx: Transaction, workspaceId: string, projectId: string, status: string, beforeTaskId: string | null, taskId: string) {
     const rows = await tx.$queryRaw<Array<{ rank: bigint }>>`SELECT task_rank_before(${workspaceId},${projectId},${status},${beforeTaskId},${taskId}) AS rank`;
     return rows[0]!.rank;
   }
   moveTask(context: VerifiedExecution, workspaceId: string, projectId: string, taskId: string, key: string, requestId: string, payload: unknown) {
-    const input = object(payload, ['expectedVersion', 'expectedOrderVersion', 'status', 'beforeTaskId'], ['expectedVersion', 'expectedOrderVersion', 'status', 'beforeTaskId']);
+    const input = object(payload, ['expectedVersion', 'expectedOrderVersion', 'status', 'beforeTaskId', 'acknowledgedChildrenVersion'], ['expectedVersion', 'expectedOrderVersion', 'status', 'beforeTaskId']);
     const version = expected(input['expectedVersion']); const orderVersion = expected(input['expectedOrderVersion']);
     if (!taskStatuses.includes(input['status'] as TaskStatus) || (input['beforeTaskId'] !== null && !identifier(input['beforeTaskId']))) throw new BadRequestException('Invalid task move.');
     const status = input['status'] as TaskStatus; const beforeTaskId = input['beforeTaskId'] as string | null;
-    return this.mutation(context, workspaceId, key, requestId, 'move-task', [projectId, taskId], { expectedVersion: version, expectedOrderVersion: orderVersion, status, beforeTaskId }, async (tx, actor) => {
+    const acknowledgment = 'acknowledgedChildrenVersion' in input ? expected(input['acknowledgedChildrenVersion']) : undefined;
+    return this.mutation(context, workspaceId, key, requestId, 'move-task', [projectId, taskId], { expectedVersion: version, expectedOrderVersion: orderVersion, status, beforeTaskId, ...(acknowledgment ? { acknowledgedChildrenVersion: acknowledgment } : {}) }, async (tx, actor) => {
       const project = await this.projectRow(tx, workspaceId, projectId, actor); const row = await this.taskRow(tx, workspaceId, projectId, taskId); const current = await this.taskView(tx, row, project, true);
       this.conflict(current, version);
       if (project.archivedAt || row.archivedAt) this.archived(current);
       if (project.taskRevision !== orderVersion) throw new ConflictException({ code: 'order-conflict', message: 'Task order changed. Refresh and choose a destination again.', current });
+      await this.closing(tx, row, project, current, status, acknowledgment);
       if (beforeTaskId !== null && (beforeTaskId === taskId || !await tx.task.findFirst({ where: { workspaceId, projectId, id: beforeTaskId, status, archivedAt: null }, select: { id: true } }))) throw new BadRequestException('Invalid move anchor.');
       const rank = await this.rank(tx, workspaceId, projectId, status, beforeTaskId, taskId);
       const updated = await tx.task.update({ where: { workspaceId_projectId_id: { workspaceId, projectId, id: taskId } }, data: { status, rank } });
@@ -298,11 +335,20 @@ export class ProjectTaskService {
         if ('projectId' in saved) return this.taskView(tx, await this.taskRow(tx, workspaceId, saved.projectId, saved.id), await this.projectRow(tx, workspaceId, saved.projectId, actor), true);
         return this.projectView(tx, await this.projectRow(tx, workspaceId, saved.id, actor), true, actor);
       }
+      const before = target[1] && action !== 'change-access' ? await tx.task.findFirst({ where: { workspaceId, projectId: target[0]!, id: target[1] } }) : null;
       const result = await work(tx, actor);
+      // Only bounded categorical/date snapshots. Never store user text, related
+      // entity contents, credential information or arbitrary input metadata.
+      const changes = before && 'projectId' in result ? (['status', 'type', 'priority', 'dueDate'] as const).flatMap(field => {
+        const old = field === 'dueDate' ? before.dueDate?.toISOString().slice(0, 10) ?? null : before[field];
+        return old === result[field] ? [] : [{ field, before: old, after: result[field] }];
+      }) : [];
+      const changedFields = action.includes('checklist') ? ['checklist'] : action.endsWith('comment') ? ['comment'] : action === 'set-task-parent' ? ['parentTaskId'] : action === 'move-task' ? ['status', 'rank']
+        : Object.keys(input as object).filter(field => !['expectedVersion', 'expectedParentVersion', 'acknowledgedChildrenVersion'].includes(field));
       const activityId = randomUUID();
       await tx.activityEvent.create({ data: { id: activityId, workspaceId, projectId: 'projectId' in result ? result.projectId : result.id, taskId: 'projectId' in result ? result.id : null,
         actorPrincipalId: actor.actorPrincipalId, executionMode: actor.executionMode, source: actor.source, grantId: actor.grantId, requestId,
-        action, entityVersion: result.version, accessPrincipalId: action === 'change-access' ? target[1]! : null, changedFields: action === 'move-task' ? ['status', 'rank'] : Object.keys(input as object).filter(field => field !== 'expectedVersion') } });
+        action, entityVersion: result.version, accessPrincipalId: action === 'change-access' ? target[1]! : null, changedFields, changes } });
       await tx.outboxEvent.create({ data: { id: randomUUID(), workspaceId, activityId, type: 'domain.activity', payload: { activityId } } });
       await tx.projectTaskOperation.create({ data: { ...scope, requestHash, response: result as unknown as Prisma.InputJsonValue } });
       return result;
@@ -330,25 +376,31 @@ export class ProjectTaskService {
     });
   }
   createTask(context: VerifiedExecution, workspaceId: string, projectId: string, key: string, requestId: string, payload: unknown) {
-    const input = object(payload, taskProperties, ['title']); const fields = taskFields(input, true);
-    return this.mutation(context, workspaceId, key, requestId, 'create-task', [projectId], fields, async (tx, actor) => {
+    const input = object(payload, [...taskProperties, 'parentTaskId', 'expectedParentVersion'], ['title']); const fields = taskFields(input, true);
+    const parentTaskId = input['parentTaskId'];
+    if (parentTaskId !== undefined && !identifier(parentTaskId) || parentTaskId === undefined && 'expectedParentVersion' in input) throw new BadRequestException('Invalid parent task.');
+    const parentVersion = parentTaskId === undefined ? undefined : expected(input['expectedParentVersion']);
+    return this.mutation(context, workspaceId, key, requestId, 'create-task', [projectId], { ...fields, ...(parentTaskId ? { parentTaskId, expectedParentVersion: parentVersion } : {}) }, async (tx, actor) => {
       const project = await this.projectRow(tx, workspaceId, projectId, actor);
       if (project.archivedAt) this.archived(await this.projectView(tx, project, true, actor));
       if (fields.assigneePrincipalId) await this.assertAssignable(tx, project, fields.assigneePrincipalId);
-      const row = await tx.task.create({ data: { id: randomUUID(), workspaceId, projectId, number: 1, ...fields, title: fields.title!, ...attribution(actor) } });
+      if (parentTaskId) await this.assertParent(tx, workspaceId, projectId, parentTaskId as string, parentVersion!);
+      const row = await tx.task.create({ data: { id: randomUUID(), workspaceId, projectId, number: 1, ...fields, ...(parentTaskId ? { parentTaskId: parentTaskId as string } : {}), title: fields.title!, ...attribution(actor) } });
       return this.taskView(tx, row, project, true);
     });
   }
   changeTask(context: VerifiedExecution, workspaceId: string, projectId: string, taskId: string, key: string, requestId: string, action: 'edit-task' | 'archive-task' | 'restore-task', payload: unknown) {
-    const input = object(payload, action === 'edit-task' ? ['expectedVersion', ...taskProperties] : ['expectedVersion'], ['expectedVersion']); const version = expected(input['expectedVersion']);
-    const properties = Object.fromEntries(Object.entries(input).filter(([field]) => field !== 'expectedVersion'));
+    const input = object(payload, action === 'edit-task' ? ['expectedVersion', 'acknowledgedChildrenVersion', ...taskProperties] : ['expectedVersion'], ['expectedVersion']); const version = expected(input['expectedVersion']);
+    const acknowledgment = 'acknowledgedChildrenVersion' in input ? expected(input['acknowledgedChildrenVersion']) : undefined;
+    const properties = Object.fromEntries(Object.entries(input).filter(([field]) => !['expectedVersion', 'acknowledgedChildrenVersion'].includes(field)));
     const fields = action === 'edit-task' ? taskFields(properties, false) : { archivedAt: action === 'archive-task' ? new Date() : null };
     if (action === 'edit-task' && !Object.keys(fields).length) throw new BadRequestException('A task change is required.');
-    return this.mutation(context, workspaceId, key, requestId, action, [projectId, taskId], action === 'edit-task' ? { expectedVersion: version, ...fields } : { expectedVersion: version }, async (tx, actor) => {
+    return this.mutation(context, workspaceId, key, requestId, action, [projectId, taskId], action === 'edit-task' ? { expectedVersion: version, ...fields, ...(acknowledgment ? { acknowledgedChildrenVersion: acknowledgment } : {}) } : { expectedVersion: version }, async (tx, actor) => {
       const project = await this.projectRow(tx, workspaceId, projectId, actor); const row = await this.taskRow(tx, workspaceId, projectId, taskId); const current = await this.taskView(tx, row, project, true); this.conflict(current, version);
       if (project.archivedAt || (action !== 'restore-task' && row.archivedAt)) this.archived(current);
       if (action === 'restore-task' && !row.archivedAt) throw new ConflictException({ code: 'archived', message: 'Task is already active.', current });
       if ('assigneePrincipalId' in fields && fields.assigneePrincipalId && fields.assigneePrincipalId !== row.assigneePrincipalId) await this.assertAssignable(tx, project, fields.assigneePrincipalId);
+      await this.closing(tx, row, project, current, 'status' in fields ? fields.status : undefined, acknowledgment);
       const position = 'status' in fields && fields.status !== row.status ? { rank: await this.rank(tx, workspaceId, projectId, fields.status!, null, taskId) } : {};
       return this.taskView(tx, await tx.task.update({ where: { workspaceId_projectId_id: { workspaceId, projectId, id: taskId } }, data: { ...fields, ...position } }), project, true);
     });

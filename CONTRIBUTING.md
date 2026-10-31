@@ -94,6 +94,14 @@ affected source section. Never modify a baseline just to make a hash check pass.
 
 ## Validate and record evidence
 
+The [T09.0 task-collaboration guide](docs/development/task-collaboration.md)
+records hierarchy, checklist, own-author comments, safe history and the shared
+frontend recovery contract. Its focused checks run in `pnpm test:projects:logic`
+and `pnpm check`; real migration/SQL/security/paging/race/rollback/unknown-outcome
+checks and the eight-table restart witness run in `pnpm test:identity`. The
+test-only QA fixture has `--collaboration --large-collaboration --smoke` for
+real PG/Nest/Next proxy checks. UI presentation remains separately owned.
+
 The [T06.0 project/task guide](docs/development/project-task-flows.md) records
 the bounded real-data domain and frontend recovery contracts, additive migration,
 archive decisions and test-only local real PG/Nest/Next QA harness.

@@ -6,7 +6,7 @@ const creator = { principalId: 'human', name: 'Human', kind: 'human', active: tr
 const project = { id: 'p', workspaceId: 'w', key: 'RIE', name: 'Project', description: '', visibility: 'workspace', version: 1, archivedAt: null, createdAt: '2026-01-01T00:00:00.000Z', updatedAt: '2026-01-01T00:00:00.000Z', creator,
   provenance: { actorPrincipalId: 'human', executionMode: 'human', source: 'web', grantId: null }, capabilities: { canEdit: true, canArchive: true, canRestore: false, canManageAccess: false, canChangeVisibility: false, canGrantAccess: false, canRevokeAccess: false }, url: '/projects?workspace=w&project=p' };
 const page = items => ({ items, total: items.length, nextCursor: null, capabilities: { canCreate: true } });
-const task = { ...project, id: 't', projectId: 'p', projectKey: 'RIE', key: 'RIE-1', number: 1, title: 'Title', type: 'task', priority: 'none', status: 'backlog', assigneePrincipalId: null, assignee: null, dueDate: null, projectArchivedAt: null, orderVersion: 1 };
+const task = { ...project, id: 't', projectId: 'p', projectKey: 'RIE', key: 'RIE-1', number: 1, title: 'Title', type: 'task', priority: 'none', status: 'backlog', assigneePrincipalId: null, assignee: null, dueDate: null, projectArchivedAt: null, orderVersion: 1, parentTaskId: null };
 const signal = () => new AbortController().signal;
 test('T08 transport validates scoped revision pages and exact move payload; proxy rejects unsupported/repeated filters', async t => {
   const original = globalThis.fetch; t.after(() => { globalThis.fetch = original; }); const calls = [];
@@ -88,4 +88,19 @@ test('privacy proxy allowlist admits only the exact new route and method combina
   assert.equal(calls, 5);
   for (const [suffix, method] of [['/visibility', 'GET'], ['/access', 'POST'], ['/assignees', 'POST'], ['/access/human/restore', 'POST'], ['/assignees/human', 'GET'], ['/access', 'DELETE']]) assert.equal((await proxyProjectTask(new Request(root + suffix, { method }))).status, 400);
   assert.equal(calls, 5);
+});
+test('T09 collaboration transport scopes pages/reviews, exact payloads and closure warnings; proxy rejects method/query escapes', async t => {
+  const original = globalThis.fetch; t.after(() => { globalThis.fetch = original; }); const calls = []; let value = { workspaceId: 'w', projectId: 'p', taskId: 't', revision: 1, items: [], total: 0, nextCursor: null, capabilities: { canCreate: true } };
+  globalThis.fetch = async (url, init) => { calls.push({ url: String(url), init }); return Response.json(value); };
+  const api = createProjectTaskTransport(); await api.collaboration('w', 'p', 't', 'comments', signal());
+  value = { ...value, taskId: 'foreign' }; await assert.rejects(api.collaboration('w', 'p', 't', 'comments', signal()), error => error.status === 502);
+  value = task; const edit = { type: 'edit-comment', workspaceId: 'w', projectId: 'p', taskId: 't', expectedVersion: 7, commentId: 'c', expectedCommentVersion: 3, body: 'Original draft' };
+  await api.mutate(edit, 'original-key', signal()); assert.ok(calls.at(-1).url.endsWith('/tasks/t/comments/c')); assert.deepEqual(JSON.parse(calls.at(-1).init.body), { expectedVersion: 7, expectedCommentVersion: 3, body: 'Original draft' });
+  await api.mutate({ type: 'edit-task', workspaceId: 'w', projectId: 'p', taskId: 't', expectedVersion: 7, fields: { status: 'done' }, acknowledgedChildrenVersion: 9 }, 'close-key', signal()); assert.equal(JSON.parse(calls.at(-1).init.body).acknowledgedChildrenVersion, 9);
+  globalThis.fetch = async () => Response.json({ code: 'open-children', current: task, closeWarning: { open: 1, archivedOpen: 0, childrenVersion: 9 } }, { status: 409 });
+  await assert.rejects(api.mutate(edit, 'key', signal()), error => error.closeWarning?.childrenVersion === 9);
+  globalThis.fetch = async () => { calls.push({}); return Response.json({}); }; const root = 'https://app.example.test/api/v1/workspaces/w/projects/p/tasks/t';
+  for (const suffix of ['relations', 'parent-candidates', 'checklist', 'comments', 'history', 'comments/c']) assert.equal((await proxyProjectTask(new Request(`${root}/${suffix}`))).status, 200);
+  for (const suffix of ['parent', 'checklist', 'checklist/i', 'checklist/i/move', 'checklist/i/remove', 'comments', 'comments/c']) assert.equal((await proxyProjectTask(new Request(`${root}/${suffix}`, { method: 'POST', body: '{}' }))).status, 200);
+  for (const [suffix, method] of [['history', 'POST'], ['parent', 'GET'], ['comments/c/remove', 'POST'], ['checklist/i', 'DELETE'], ['comments?cursor=x&cursor=y', 'GET'], ['history?view=active', 'GET']]) assert.equal((await proxyProjectTask(new Request(`${root}/${suffix}`, { method }))).status, 400);
 });

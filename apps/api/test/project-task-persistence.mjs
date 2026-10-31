@@ -17,6 +17,8 @@ async function snapshot() {
     'projects',(SELECT jsonb_agg(to_jsonb(p) ORDER BY id) FROM project p),
     'tasks',(SELECT jsonb_agg(to_jsonb(t) ORDER BY id) FROM task t),
     'access',(SELECT jsonb_agg(to_jsonb(a) ORDER BY "workspaceId","projectId","principalId") FROM project_access a),
+    'checklist',(SELECT jsonb_agg(to_jsonb(c) ORDER BY id) FROM checklist_item c),
+    'comments',(SELECT jsonb_agg(to_jsonb(c) ORDER BY id) FROM task_comment c),
     'activity',(SELECT jsonb_agg(to_jsonb(a) ORDER BY id) FROM activity_event a),
     'outbox',(SELECT jsonb_agg(to_jsonb(o) ORDER BY id) FROM outbox_event o),
     'receipts',(SELECT jsonb_agg(to_jsonb(r) ORDER BY "workspaceId","actorPrincipalId","executionScope",key) FROM project_task_operation r)) AS data`);
