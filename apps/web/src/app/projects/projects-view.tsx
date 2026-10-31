@@ -10,6 +10,7 @@ import {
   type DomainPerson,
   type Project,
   type ProjectAccessMember,
+  type ProjectCommand,
   type ProjectMoveCommand,
   type ProjectPolicyCommand,
   type ProjectTaskCommand,
@@ -52,6 +53,7 @@ import {
 import { TaskBoard } from './task-board';
 import { TaskCaptureForm, TaskEditForm } from './task-forms';
 import { TaskDetail } from './task-detail';
+import { TaskCollaboration } from './task-collaboration';
 import { TaskDescription } from './task-description';
 import { TaskList } from './task-list';
 import { TaskViewBar } from './task-view-bar';
@@ -170,9 +172,11 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
     moveDraft, movePending, moveRetryTarget, moveNeedsDestination,
     projectAccess, assignees, policyPageErrors, accessConflict,
     policyDraft, policyPending, policyRetryTarget,
+    closeWarning, draftGuard, mutationPending, collaborationDraft, collaborationRetryTarget,
     refresh, selectWorkspace, selectProject, selectTask, setView,
     setTaskLayout, setTaskFilters, setTaskColumn, loadMore, loadTaskColumn, stageMove,
     stage, submit, retrySave, discardDraft, returnToDraft, reloadConflict, rebaseDraft, dismissOutcome, dismissPageError,
+    setParentCandidatesWanted, acknowledgeClose,
   } = projectTasks;
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [form, setForm] = useState<FormState | null>(null);
@@ -196,7 +200,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   const lastCommandRef = useRef<ProjectTaskCommand | null>(null);
   const lastPolicyCommandRef = useRef<ProjectPolicyCommand | null>(null);
   const lastPolicyMemberRef = useRef<ProjectAccessMember | null>(null);
-  const lastOutcomeSourceRef = useRef<'content' | 'policy' | 'move'>('content');
+  const lastOutcomeSourceRef = useRef<'content' | 'policy' | 'move' | 'collaboration'>('content');
   const hadDetailRef = useRef(false);
   const dismissFocusPendingRef = useRef(false);
 
@@ -208,9 +212,9 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   const contentBlocked = pending !== null || retryTarget !== null;
   const policyBlocked = policyPending !== null || policyRetryTarget !== null;
   const moveBlocked = movePending !== null || moveRetryTarget !== null;
-  const blocked = contentBlocked || policyBlocked || moveBlocked;
-  const anyPending = pending !== null || policyPending !== null || movePending !== null;
-  const anyDraft = draft !== null || moveDraft !== null || policyDraft !== null;
+  const blocked = contentBlocked || policyBlocked || moveBlocked || mutationPending !== null;
+  const anyPending = mutationPending !== null;
+  const anyDraft = draft !== null || moveDraft !== null || policyDraft !== null || collaborationDraft !== null;
   const activeProjectId = project?.id ?? selection.projectId;
   const projectArchived = project?.archivedAt != null;
   const canCreateProject = projects?.capabilities.canCreate === true && views.projects === 'active';
@@ -223,6 +227,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
     && !blocked
     && policyDraft === null
     && moveDraft === null
+    && collaborationDraft === null
     && (draft === null || draft.type === 'create-task');
   const readOnlyTasks = views.tasks === 'archived' || projectArchived || project?.capabilities.canEdit !== true;
   const filtersActive = Object.keys(taskView.filters).length > 0;
@@ -314,6 +319,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
       && draft === null
       && moveDraft === null
       && policyDraft === null
+      && collaborationDraft === null
       && !taskColumnsChanged
       && !taskPageChanged
       && taskColumnErrors[target.status] === undefined;
@@ -601,7 +607,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   }
 
   function openProjectCreate(opener?: HTMLElement) {
-    if (!workspace || !canCreateProject || blocked || policyDraft !== null || moveDraft !== null) return;
+    if (!workspace || !canCreateProject || blocked || policyDraft !== null || moveDraft !== null || collaborationDraft !== null) return;
     if (draft !== null && draft.type !== 'create-project') return;
     rememberOpener(opener);
     const value = draft?.type === 'create-project'
@@ -613,7 +619,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   }
 
   function openProjectSettings(opener?: HTMLElement) {
-    if (!project || !canEditProject || blocked || policyDraft !== null || moveDraft !== null) return;
+    if (!project || !canEditProject || blocked || policyDraft !== null || moveDraft !== null || collaborationDraft !== null) return;
     if (draft !== null && !(draft.type === 'edit-project' && draft.projectId === project.id)) return;
     rememberOpener(opener);
     const value = draft?.type === 'edit-project'
@@ -625,14 +631,14 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   }
 
   function openProjectAccess(opener?: HTMLElement) {
-    if (!project || !canManageAccess || blocked || draft !== null || moveDraft !== null || policyDraft !== null) return;
+    if (!project || !canManageAccess || blocked || draft !== null || moveDraft !== null || policyDraft !== null || collaborationDraft !== null) return;
     rememberOpener(opener);
     setForm({ kind: 'project-access', workspaceId: project.workspaceId, projectId: project.id });
     dismissOutcome();
   }
 
   function openTaskEdit(opener?: HTMLElement) {
-    if (!task || blocked || policyDraft !== null || moveDraft !== null || !task.capabilities.canEdit || task.archivedAt !== null || projectArchived) return;
+    if (!task || blocked || policyDraft !== null || moveDraft !== null || collaborationDraft !== null || !task.capabilities.canEdit || task.archivedAt !== null || projectArchived) return;
     if (draft !== null && !(draft.type === 'edit-task' && draft.taskId === task.id)) return;
     rememberOpener(opener);
     const value = draft?.type === 'edit-task'
@@ -644,7 +650,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   }
 
   function requestProjectArchive(restore: boolean, opener?: HTMLElement) {
-    if (!project || blocked || draft !== null || policyDraft !== null || moveDraft !== null) return;
+    if (!project || blocked || draft !== null || policyDraft !== null || moveDraft !== null || collaborationDraft !== null) return;
     if (restore ? !canRestoreProject : !canArchiveProject) return;
     rememberOpener(opener);
     setForm({
@@ -657,7 +663,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   }
 
   async function requestTaskArchive(restore: boolean, target: Task | null = task, opener?: HTMLElement) {
-    if (!target || blocked || draft !== null || policyDraft !== null || moveDraft !== null) return;
+    if (!target || blocked || draft !== null || policyDraft !== null || moveDraft !== null || collaborationDraft !== null) return;
     if (restore ? !target.capabilities.canRestore : !target.capabilities.canArchive) return;
     rememberOpener(opener);
     if (selection.taskId !== target.id) await selectTask(target.id);
@@ -722,7 +728,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   }
 
   function beginColumnCapture(status: TaskStatus) {
-    if (!canCapture || blocked || draft !== null) return;
+    if (!canCapture || blocked || draft !== null || collaborationDraft !== null) return;
     setCaptureStatus(status);
     setCaptureTitle('');
     setColumnCaptureOpen(true);
@@ -892,6 +898,44 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
     stage(command);
     lastCommandRef.current = command;
     void submit();
+  }
+
+  function stageCollaboration(command: ProjectCommand) {
+    lastOutcomeSourceRef.current = 'collaboration';
+    stage(command);
+  }
+
+  function submitCollaboration() {
+    lastOutcomeSourceRef.current = 'collaboration';
+    void submit();
+  }
+
+  function retryCollaboration() {
+    lastOutcomeSourceRef.current = 'collaboration';
+    void retrySave();
+  }
+
+  function reloadCollaborationConflict() {
+    lastOutcomeSourceRef.current = 'collaboration';
+    void reloadConflict();
+  }
+
+  function discardCollaboration() {
+    lastOutcomeSourceRef.current = 'collaboration';
+    discardDraft();
+  }
+
+  function collabCommandLabel(command: ProjectCommand | null): string | null {
+    if (command === null) return null;
+    const action = copy.collaboration.activityActions[command.type];
+    const label = action === undefined ? command.type : action[lang];
+    if ('taskId' in command) {
+      const target = task?.id === command.taskId
+        ? task
+        : tasks?.items.find(item => item.id === command.taskId);
+      return `${copy.feedback.targetTask[lang]}: ${target?.key ?? command.taskId} · ${label}`;
+    }
+    return label;
   }
 
   function confirmLifecycle() {
@@ -1152,6 +1196,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
 
   const feedbackNode: ReactNode = (() => {
     if ((policySource || moveSource) && outcome !== null) return null;
+    if (closeWarning !== null || lastOutcomeSourceRef.current === 'collaboration') return null;
     if (pending !== null) {
       const command = draft ?? lastCommandRef.current;
       return (
@@ -1360,6 +1405,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
     );
 
   const moveFeedbackNode: ReactNode = (() => {
+    if (closeWarning !== null) return null;
     if (movePending !== null) {
       return (
         <FeedbackPanel
@@ -1522,6 +1568,45 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
     }
     return null;
   })();
+
+  const closeWarningNode: ReactNode = closeWarning === null
+    ? null
+    : (
+      <FeedbackPanel
+        actions={(
+          <>
+            <button
+              className={styles.primary}
+              disabled={mutationPending !== null}
+              onClick={() => {
+                lastOutcomeSourceRef.current = moveDraft !== null ? 'move' : 'content';
+                acknowledgeClose();
+                void submit();
+              }}
+              type="button"
+            >
+              {copy.collaboration.closeWarningConfirm[lang]}
+            </button>
+            <button className={styles.ghostButton} disabled={mutationPending !== null} onClick={discardCurrentDraft} type="button">
+              {copy.collaboration.closeWarningCancel[lang]}
+            </button>
+          </>
+        )}
+        autoFocus
+        body={{
+          es: copy.collaboration.closeWarningBody.es(closeWarning.open, closeWarning.archivedOpen),
+          en: copy.collaboration.closeWarningBody.en(closeWarning.open, closeWarning.archivedOpen),
+        }}
+        target={(() => {
+          const target = conflict !== null && isTask(conflict) ? conflict : task;
+          const status = draft !== null && draft.type === 'edit-task' ? draft.fields.status ?? null : moveDraft?.status ?? null;
+          if (target === null) return null;
+          return `${target.key} · ${status === null ? copy.common.task[lang] : statusName(status)[lang]}`;
+        })()}
+        title={copy.collaboration.closeWarningTitle}
+        tone="warning"
+      />
+    );
 
   const taskPageErrorBlock: ReactNode = pageError?.collection !== 'tasks'
     ? null
@@ -1818,8 +1903,46 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   const draftInDetail = task !== null && draftBanner !== null
     && (detailOverlay || draft?.type === 'edit-task' && draft.taskId === task.id);
 
+  const collabGlobalChild = draft?.type === 'create-task' && draft.fields.parentTaskId !== undefined ? draft : null;
+  const collabGlobalChildRetry = retryTarget?.type === 'create-task' && retryTarget.fields.parentTaskId !== undefined ? retryTarget : null;
+  const collabGlobalCommand = collaborationRetryTarget ?? collabGlobalChildRetry ?? collaborationDraft ?? collabGlobalChild;
+  const collabGlobalParentId = collabGlobalChild?.fields.parentTaskId ?? collabGlobalChildRetry?.fields.parentTaskId ?? null;
+  const collabGlobalBanner = collabGlobalCommand !== null && task === null
+    ? (
+      <FeedbackPanel
+        actions={(
+          <>
+            {(draftGuard.canReturn || collabGlobalParentId !== null) && (
+              <button
+                className={styles.secondary}
+                onClick={() => {
+                  if (collabGlobalParentId !== null) void selectTask(collabGlobalParentId);
+                  else void returnToDraft();
+                }}
+                type="button"
+              >
+                {copy.collaboration.draftReturn[lang]}
+              </button>
+            )}
+            {draftGuard.canDiscard && (
+              <button className={styles.ghostButton} onClick={discardCollaboration} type="button">
+                {copy.collaboration.draftDiscard[lang]}
+              </button>
+            )}
+          </>
+        )}
+        body={copy.collaboration.draftBody}
+        target={collabCommandLabel(collabGlobalCommand)}
+        title={copy.collaboration.draftTitle}
+        tone="warning"
+      />
+    )
+    : null;
+
   const recoveryBlock = (
     <>
+      {task === null ? closeWarningNode : null}
+      {collabGlobalBanner}
       {moveNoticeNode}
       {moveFeedbackInDetail ? null : moveFeedbackNode}
       {draftInDetail ? null : draftBanner}
@@ -2425,11 +2548,24 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
               {task !== null && (
                 <div>
                   <TaskDetail
-                    actionsDisabled={blocked || policyDraft !== null || moveDraft !== null}
+                    actionsDisabled={blocked || policyDraft !== null || moveDraft !== null || collaborationDraft !== null}
+                    collaboration={(
+                      <TaskCollaboration
+                        hook={projectTasks}
+                        onDiscard={discardCollaboration}
+                        onReloadConflict={reloadCollaborationConflict}
+                        onRetry={retryCollaboration}
+                        onStage={stageCollaboration}
+                        onSubmit={submitCollaboration}
+                        projectArchived={projectArchived}
+                        task={task}
+                      />
+                    )}
                     description={task.description.length > 0 ? <TaskDescription source={task.description} /> : undefined}
-                    feedback={form === null && (feedbackInDetail || draftInDetail || moveFeedbackInDetail)
+                    feedback={form === null && (feedbackInDetail || draftInDetail || moveFeedbackInDetail || closeWarningNode !== null)
                       ? (
                         <>
+                          {closeWarningNode}
                           {draftInDetail ? draftBanner : null}
                           {feedbackInDetail ? feedbackNode : null}
                           {moveFeedbackInDetail ? moveFeedbackNode : null}
@@ -2437,7 +2573,10 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
                       )
                       : undefined}
                     onArchive={opener => requestTaskArchive(false, task, opener)}
-                    onClose={() => { void selectTask(null); }}
+                    onClose={() => {
+                      void setParentCandidatesWanted(false);
+                      void selectTask(null);
+                    }}
                     onEdit={openTaskEdit}
                     onRestore={opener => requestTaskArchive(true, task, opener)}
                     modalOpen={form !== null}
@@ -2467,6 +2606,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
           title={modalTitle(form)}
           wide={form.kind === 'project-access'}
         >
+          {closeWarningNode}
           {form.kind === 'project-access'
             ? (project === null || outcome === 'forbidden' ? policyFeedbackNode : null)
             : feedbackNode}

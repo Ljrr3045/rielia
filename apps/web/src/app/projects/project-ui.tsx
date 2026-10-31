@@ -468,3 +468,20 @@ export function IconAlert({ size = 20 }: { size?: number }) {
 export function IconChevron({ size = 20 }: { size?: number }) {
   return <IconBase size={size}><path d="m8 10 4 4 4-4" /></IconBase>;
 }
+
+export function IconArrowUp({ size = 20 }: { size?: number }) {
+  return <IconBase size={size}><path d="M12 19V5M6 11l6-6 6 6" /></IconBase>;
+}
+
+export function IconArrowDown({ size = 20 }: { size?: number }) {
+  return <IconBase size={size}><path d="M12 5v14M18 13l-6 6-6-6" /></IconBase>;
+}
+
+export function IconEdit({ size = 20 }: { size?: number }) {
+  return (
+    <IconBase size={size}>
+      <path d="M4 20h4l10.5-10.5a2.1 2.1 0 0 0-3-3L5 17v3" />
+      <path d="m13.5 6.5 3 3" />
+    </IconBase>
+  );
+}
