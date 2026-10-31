@@ -746,6 +746,11 @@ export const copy = {
       es: 'La tarea o el padre cambió. Descarta este intento, actualiza y elige un destino de nuevo.',
       en: 'The task or parent changed. Discard this attempt, refresh, and choose a destination again.',
     },
+    conflictChildBody: {
+      es: 'La tarea principal cambió antes de crear la subtarea. El borrador se conserva hasta que lo descartes; actualiza y crea una subtarea nueva con la versión actual.',
+      en: 'The parent task changed before the subtask was created. The draft is kept until you discard it; refresh and create a new subtask against the current version.',
+    },
+    conflictChildTarget: { es: 'Subtarea pendiente', en: 'Pending subtask' },
     conflictChecklistBody: {
       es: 'La lista cambió. Revisa el texto y el estado actuales antes de volver a guardar.',
       en: 'The checklist changed. Review the current text and state before saving again.',

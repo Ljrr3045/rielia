@@ -136,8 +136,25 @@ export function TaskCollaboration({
   }
 
   function conflictBody() {
-    const activeDraft = draft;
+    const activeDraft = draft ?? anyChildDraft;
     if (activeDraft === null) return null;
+    if (activeDraft.type === 'create-task') {
+      return (
+        <div className={styles.collabConflict} ref={conflictRef} tabIndex={-1}>
+          <p className={styles.feedbackTitle}>{copy.collaboration.conflictTitle[lang]}</p>
+          <p className={styles.feedbackBody}>{copy.collaboration.conflictChildBody[lang]}</p>
+          <p className={styles.feedbackTarget}>
+            {copy.collaboration.conflictChildTarget[lang]}: {activeDraft.fields.title}
+          </p>
+          <p className={styles.collabHint}>{draftLabel(activeDraft, hook, lang)}</p>
+          <div className={styles.collabRowActions}>
+            <button className={styles.ghostButton} onClick={discardAndRefresh} type="button">
+              {copy.collaboration.conflictDiscard[lang]}
+            </button>
+          </div>
+        </div>
+      );
+    }
     if (activeDraft.type === 'edit-comment') {
       if (hook.commentConflict === null) {
         return (
@@ -333,7 +350,7 @@ export function TaskCollaboration({
         />
       )}
 
-      {hook.outcome === 'conflict' && !closeWarning && draft !== null && conflictBody()}
+      {hook.outcome === 'conflict' && !closeWarning && activeDraft !== null && conflictBody()}
 
       {hook.outcome === 'error' && retry === null && activeDraft !== null && (
         <FeedbackPanel
