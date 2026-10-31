@@ -1,0 +1,22 @@
+apps/web/src/app/projects/task-collaboration.tsx
+  s_e7129716d7db62::t_4f3d9ba0d08be5 55,77-83
+  s_e7129716d7db62::t_8c357250f1a6aa 45,261,315,330
+apps/web/src/app/projects/projects-view.tsx
+  s_e7129716d7db62::t_bf2f43a1ef5b57 2554
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "bfefde6a72431e8190b2829c9fd29b2a2f4b8c1b",
+  "prompts": {},
+  "sessions": {
+    "s_e7129716d7db62": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e6d24277effeyoXolmCksH349o",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
