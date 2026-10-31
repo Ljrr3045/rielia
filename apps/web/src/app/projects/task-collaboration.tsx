@@ -350,7 +350,7 @@ export function TaskCollaboration({
         />
       )}
 
-      {hook.outcome === 'conflict' && !closeWarning && activeDraft !== null && conflictBody()}
+      {hook.outcome === 'conflict' && !closeWarning && !offTarget && activeDraft !== null && conflictBody()}
 
       {hook.outcome === 'error' && retry === null && activeDraft !== null && (
         <FeedbackPanel
