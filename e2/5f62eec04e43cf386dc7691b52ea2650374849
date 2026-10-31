@@ -1,0 +1,34 @@
+apps/web/src/lib/project-task-controller.ts
+  s_eb28aa6b81240b::t_9584156c1ffdb7 200
+  s_eb28aa6b81240b::t_3d94fff14c901d 14,35,95-96,144,189,194,203,215,361-367
+CHANGELOG.md
+  s_eb28aa6b81240b::t_01189b903729ee 17-19
+docs/development/task-collaboration.md
+  s_eb28aa6b81240b::t_01189b903729ee 52-59,67,136,145-146,192-210
+apps/web/src/lib/use-project-tasks.ts
+  s_eb28aa6b81240b::t_3d94fff14c901d 46
+scripts/project-task-logic.test.mjs
+  s_eb28aa6b81240b::t_9584156c1ffdb7 386-401
+docs/development/progress.md
+  s_eb28aa6b81240b::t_80d7f2d557baba 44
+apps/api/prisma/migrations/20261031170000_task_collaboration/migration.sql
+  s_eb28aa6b81240b::t_3d94fff14c901d 8-9,11,13-16,21-24
+apps/api/test/task-collaboration.test.mjs
+  s_eb28aa6b81240b::t_9584156c1ffdb7 74-97
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e25f62eec04e43cf386dc7691b52ea2650374849",
+  "prompts": {},
+  "sessions": {
+    "s_eb28aa6b81240b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a192db-72b9-76f3-8916-c609b68c76d1",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
