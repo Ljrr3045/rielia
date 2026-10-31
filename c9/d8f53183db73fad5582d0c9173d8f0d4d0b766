@@ -1,0 +1,19 @@
+apps/web/src/app/projects/project-ui.tsx
+  s_e7129716d7db62::t_76722dfd5f36f0 315
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c9d8f53183db73fad5582d0c9173d8f0d4d0b766",
+  "prompts": {},
+  "sessions": {
+    "s_e7129716d7db62": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e6d24277effeyoXolmCksH349o",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
