@@ -1,8 +1,8 @@
 'use client';
 import { useEffect, useState, useSyncExternalStore } from 'react';
-import type { ProjectCommand, ProjectPolicyCommand, ProjectTaskCommand } from '@rielia/contracts';
+import { isCollaborationCommand, type ProjectCommand, type ProjectPolicyCommand, type ProjectTaskCommand } from '@rielia/contracts';
 const policy = (command: ProjectCommand | null): command is ProjectPolicyCommand => command?.type === 'change-visibility' || command?.type === 'change-access';
-function contentPending(value: ProjectCommand['type'] | null): ProjectTaskCommand['type'] | null { return value === 'change-visibility' || value === 'change-access' || value === 'move-task' ? null : value; }
+function contentPending(value: ProjectCommand['type'] | null): ProjectTaskCommand['type'] | null { return value === null || value === 'change-visibility' || value === 'change-access' || value === 'move-task' || isCollaborationCommand({ type: value }) ? null : value as ProjectTaskCommand['type']; }
 import { createIdentityTransport } from './identity-client';
 import { createWorkspaceTransport } from './workspace-client';
 import { createProjectTaskTransport } from './project-task-client';
@@ -31,7 +31,9 @@ export function useProjectTasks() {
   }, [controller, state.session]);
   // Preserve the existing content-form contract; policy drafts use the same
   // controller/key lifecycle and are exposed separately for the privacy panel.
-  return { ...state, draft: policy(state.draft) || state.draft?.type === 'move-task' ? null : state.draft, pending: contentPending(state.pending), retryTarget: policy(state.retryTarget) || state.retryTarget?.type === 'move-task' ? null : state.retryTarget,
+  return { ...state, mutationPending: state.pending, draft: policy(state.draft) || state.draft?.type === 'move-task' || isCollaborationCommand(state.draft) ? null : state.draft, pending: contentPending(state.pending), retryTarget: policy(state.retryTarget) || state.retryTarget?.type === 'move-task' || isCollaborationCommand(state.retryTarget) ? null : state.retryTarget,
+    collaborationDraft: isCollaborationCommand(state.draft) ? state.draft : null, collaborationPending: state.pending && isCollaborationCommand({ type: state.pending }) ? state.pending : null,
+    collaborationRetryTarget: isCollaborationCommand(state.retryTarget) ? state.retryTarget : null,
     moveDraft: state.draft?.type === 'move-task' ? state.draft : null, movePending: state.pending === 'move-task' ? state.pending : null, moveRetryTarget: state.retryTarget?.type === 'move-task' ? state.retryTarget : null,
     policyDraft: policy(state.draft) ? state.draft : null, policyPending: state.pending === 'change-access' || state.pending === 'change-visibility' ? state.pending : null,
     policyRetryTarget: policy(state.retryTarget) ? state.retryTarget : null,
@@ -40,6 +42,7 @@ export function useProjectTasks() {
     refresh: controller.refresh, selectWorkspace: controller.selectWorkspace, selectProject: controller.selectProject, selectTask: controller.selectTask,
     setView: controller.setView, setTaskLayout: controller.setTaskLayout, setTaskFilters: controller.setTaskFilters, setTaskColumn: controller.setTaskColumn,
     loadMore: controller.loadMore, loadTaskColumn: controller.loadTaskColumn, stageMove: controller.stageMove, moveEligibility: controller.moveEligibility, stage: controller.stage, submit: controller.submit, retrySave: controller.retrySave, discardDraft: controller.discardDraft,
+    loadCollaborationMore: controller.loadCollaborationMore, acknowledgeClose: controller.acknowledgeClose,
     cancelPending: controller.cancelPending, returnToDraft: controller.returnToDraft, reloadConflict: controller.reloadConflict, rebaseDraft: controller.rebaseDraft,
     dismissOutcome: controller.dismissOutcome, dismissPageError: controller.dismissPageError };
 }

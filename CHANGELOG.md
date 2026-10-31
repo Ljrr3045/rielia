@@ -6,6 +6,20 @@ This records repository changes. No application version has been released.
 
 ### Added
 
+- T09.0/B1b task collaboration logic on merged [PR #20](https://github.com/Ljrr3045/rielia/pull/20)
+  (`a93cb85e`): same-project one-level parent links, child creation/link/reparent/
+  unlink, explicit revision-bound parent-close warnings, bounded ordered
+  checklists with retained removal, Markdown comments with immutable authors and
+  own-author versioned editing, and safe typed paged task history. Atomic
+  current-authority receipts/outbox, private-project policy, archive boundaries,
+  flat list/board ordering and same-key unknown recovery are preserved. Shared
+  frontend section/draft/conflict/paging contracts include authorized parent
+  candidates, canonical checklist movement and recent comment/edit visibility.
+  [Contract, evidence and limits](docs/development/task-collaboration.md).
+  Presentation, full T09/P05/P14/P38, T10/T11/T12/B2, real OAuth/staging/users
+  and deployment remain separate; the inherited moderate dev-tooling minimatch
+  advisory remains documented, with no dependency change.
+
 - T08.1/B1b task views presentation on merged T08.0 logic
   [PR #19](https://github.com/Ljrr3045/rielia/pull/19) (`f8895709`). `/projects`
   adds a compact list/board switch and status/assignee (including unassigned)/

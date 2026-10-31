@@ -85,6 +85,36 @@ try {
     }
   }
   let taskViewFixtures = null;
+  let collaborationFixtures = null;
+  if (process.argv.includes('--collaboration')) {
+    const { TaskCollaborationService } = await import('../dist/projects/task-collaboration.service.js'); const collaboration = app.get(TaskCollaborationService);
+    const child = await domain.createTask(context, workspaceId, project.id, randomUUID(), randomUUID(), { title: 'QA open child remains visible after parent close', parentTaskId: task.id, expectedParentVersion: task.version });
+    const archived = await domain.createTask(context, workspaceId, project.id, randomUUID(), randomUUID(), { title: 'QA archived open child', parentTaskId: task.id, expectedParentVersion: task.version });
+    await domain.changeTask(context, workspaceId, project.id, archived.id, randomUUID(), randomUUID(), 'archive-task', { expectedVersion: archived.version });
+    const leaf = await domain.createTask(context, workspaceId, project.id, randomUUID(), randomUUID(), { title: 'QA link or reparent this leaf' });
+    async function write(execution, action, fields, itemId) {
+      const current = await domain.task(execution, workspaceId, project.id, task.id);
+      return collaboration.mutate(execution, workspaceId, project.id, task.id, randomUUID(), randomUUID(), action, { expectedVersion: current.version, ...fields }, itemId);
+    }
+    for (const text of ['Review keyboard behavior', 'Check safe Markdown and immutable author', 'Keep child work visible']) await write(context, 'add-checklist-item', { text, beforeItemId: null });
+    const checklist = await collaboration.page(context, workspaceId, project.id, task.id, 'checklist'); await write(context, 'edit-checklist-item', { completed: true }, checklist.items[0].id);
+    await write(context, 'add-comment', { body: '# QA evidence\n\n**Safe Markdown** and [documentation](https://example.test).\n\n<script>alert(1)</script> [unsafe](javascript:alert)\n\n```\n<img src=x onerror=alert(1)>\n```' });
+    const comment = (await collaboration.page(context, workspaceId, project.id, task.id, 'comments')).items[0];
+    await write(context, 'edit-comment', { body: comment.body + '\n\nEdited by its original author.', expectedCommentVersion: comment.version }, comment.id);
+    const memberContext = (await principals.webContext({ cookie: member.cookie }, workspaceId)).context; await write(memberContext, 'add-comment', { body: 'QA collaborator comment; owner cannot edit this author.' });
+    for (const [subjectPrincipalId, mode] of [[owner.principalId, 'delegated'], [agentId, 'autonomous']]) {
+      const grant = await principals.recordInternalGrant(context, { subjectPrincipalId, mode, allowedOperations: ['read', 'write'], expiresAt: new Date(Date.now() + 3600000) });
+      await write(await principals.internalGrantContext(grant, workspaceId), 'add-comment', { body: `QA ${mode} authorship` });
+    }
+    if (process.argv.includes('--large-collaboration')) {
+      for (let n = 0; n < 101; n++) {
+        await domain.createTask(context, workspaceId, project.id, randomUUID(), randomUUID(), { title: `QA child ${n + 1}`, parentTaskId: task.id, expectedParentVersion: (await domain.task(context, workspaceId, project.id, task.id)).version });
+        await domain.createTask(context, workspaceId, project.id, randomUUID(), randomUUID(), { title: `QA parent candidate ${n + 1}` });
+        await write(context, 'add-comment', { body: `QA paged comment ${n + 1}` });
+      }
+    }
+    collaborationFixtures = { parentTaskId: task.id, childTaskId: child.id, archivedOpenChildId: archived.id, leafTaskId: leaf.id, ownCommentId: comment.id, parentURL: `${origin}${task.url}`, leafURL: `${origin}${leaf.url}` };
+  }
   if (process.argv.includes('--task-views')) {
     const rows = [];
     for (let n = 0; n < 114; n++) rows.push(await domain.createTask(context, workspaceId, project.id, randomUUID(), randomUUID(), {
@@ -144,7 +174,25 @@ try {
     const stale = await fetch(`${path}?status=backlog&cursor=${first.nextCursor}`, { headers: { cookie: owner.cookie } });
     if (stale.status !== 409 || (await stale.json()).code !== 'page-changed') throw new Error('QA changed-page probe failed.');
   }
-  await writeFile(outputPath, JSON.stringify({ pid: process.pid, origin, apiURL, fixtureURLs, container: name, volume, workspaceId, otherWorkspaceId, projectId: project.id, taskId: task.id, agentId, owner, admin, member, viewer, unavailable, outsider, privateProjectId: privateProject.id, historicalTaskId: historicalTask.id, largeMembers: process.argv.includes('--large-members'), taskViewFixtures,
+  if (collaborationFixtures) {
+    phase = 'collaboration Next proxy'; const path = `${origin}/api/v1/workspaces/${workspaceId}/projects/${project.id}/tasks/${task.id}`;
+    const read = async suffix => { const response = await fetch(path + suffix, { headers: { cookie: owner.cookie } }); if (response.status !== 200) throw new Error('QA collaboration read failed.'); return response.json(); };
+    for (const collection of ['relations', 'parent-candidates', 'checklist', 'comments', 'history']) await read(`/${collection}`);
+    const current = await read(''); const key = randomUUID();
+    const post = async (suffix, payload, subject = owner, requestKey = randomUUID()) => {
+      const response = await fetch(path + suffix, { method: 'POST', headers: { cookie: subject.cookie, origin, 'content-type': 'application/json', 'idempotency-key': requestKey }, body: JSON.stringify(payload) }); return { status: response.status, data: await response.json() };
+    };
+    const input = { expectedVersion: current.version, body: 'Real Next proxy duplicate-free comment' }; const saved = await post('/comments', input, owner, key); const replay = await post('/comments', input, owner, key);
+    if (saved.status !== 201 || replay.status !== 201 || saved.data.version !== replay.data.version) throw new Error('QA collaboration replay failed.');
+    if ((await read('/comments')).items[0]?.body !== input.body) throw new Error('QA recent comment discovery failed.');
+    const warning = await post('', { expectedVersion: saved.data.version, status: 'done' });
+    if (warning.status !== 409 || warning.data.code !== 'open-children' || warning.data.closeWarning.open < 2) throw new Error('QA parent-close warning failed.');
+    const closed = await post('', { expectedVersion: saved.data.version, status: 'done', acknowledgedChildrenVersion: warning.data.closeWarning.childrenVersion });
+    if (closed.status !== 201 || !(await read('/relations')).items.some(row => row.id === collaborationFixtures.childTaskId)) throw new Error('QA child visibility failed.');
+    if ((await post('/comments', { expectedVersion: closed.data.version, body: 'Viewer denied' }, viewer)).status !== 403) throw new Error('QA viewer collaboration denial failed.');
+    const reopened = await post('', { expectedVersion: closed.data.version, status: 'backlog' }); if (reopened.status !== 201) throw new Error('QA parent reopen failed.');
+  }
+  await writeFile(outputPath, JSON.stringify({ pid: process.pid, origin, apiURL, fixtureURLs, container: name, volume, workspaceId, otherWorkspaceId, projectId: project.id, taskId: task.id, agentId, owner, admin, member, viewer, unavailable, outsider, privateProjectId: privateProject.id, historicalTaskId: historicalTask.id, largeMembers: process.argv.includes('--large-members'), taskViewFixtures, collaborationFixtures,
     projectURL: `${origin}${project.url}`, taskURL: `${origin}${task.url}`, privateProjectURL: `${origin}${privateProject.url}`, historicalTaskURL: `${origin}${historicalTask.url}` }, null, 2), { mode: 0o600 });
   console.log(`Real PG/Nest/Next QA ready at ${origin}; private session/state file: ${outputPath}. SIGTERM/SIGINT cleans owned servers, container, volume and state file.`);
   if (process.argv.includes('--smoke')) resolveStop();

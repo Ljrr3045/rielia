@@ -1,5 +1,6 @@
 /** Process liveness only. This says nothing about DB, auth, or product readiness. */
 export * from './project-tasks.js';
+export * from './task-collaboration.js';
 export interface HealthResponse {
   status: 'ok';
   service: 'rielia-api';

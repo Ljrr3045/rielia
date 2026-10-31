@@ -1,78 +1,46 @@
-import { BadRequestException, Controller, ForbiddenException, Get, Inject, Param, Post, Req, Res } from '@nestjs/common';
+import { Controller, Get, Inject, Param, Post, Req, Res } from '@nestjs/common';
 import type { NodeRequest, NodeResponse } from '@nestjs/platform-node';
-import { randomUUID } from 'node:crypto';
-import { isTaskFilters, type ArchiveView, type TaskFilters } from '@rielia/contracts';
-import { IdentityService } from '../identity/identity.service.js';
-import { PrincipalService, type VerifiedExecution } from '../principals/principal.service.js';
 import { ProjectTaskService } from './project-task.service.js';
+import { ProjectTaskHttp } from './project-task-http.js';
 
 @Controller('workspaces/:workspaceId/projects')
 export class ProjectTaskController {
-  constructor(@Inject(ProjectTaskService) private readonly domain: ProjectTaskService, @Inject(PrincipalService) private readonly principals: PrincipalService,
-    @Inject(IdentityService) private readonly identity: IdentityService) {}
-
-  private async respond<T>(req: NodeRequest, res: NodeResponse, workspaceId: string, list: boolean | 'cursor' | 'tasks',
-    work: (context: VerifiedExecution, requestId: string, view: ArchiveView, cursor?: string, filters?: TaskFilters) => Promise<T>) {
-    res.setHeader('Cache-Control', 'no-store');
-    const existing = res.getHeader('X-Request-Id'); const requestId = typeof existing === 'string' ? existing : randomUUID(); res.setHeader('X-Request-Id', requestId);
-    const forbidden = new Set(['actorprincipalid', 'authorprincipalid', 'subjectprincipalid', 'principalid', 'principalkind', 'executionmode', 'mode', 'source', 'grantid', 'connectionid']);
-    if (Object.keys(req.headers).some(key => forbidden.has(key.replace(/^x-(?:rielia-)?/, '').replaceAll('-', '')))) throw new BadRequestException('Execution identity is resolved by the server.');
-    if (Object.values(req.params ?? {}).some(value => typeof value !== 'string' || !/^[A-Za-z0-9_-]{1,128}$/.test(value))) throw new BadRequestException('Invalid resource identifier.');
-    const query = req.query ?? {};
-    const filters = Object.fromEntries(['status', 'assignee', 'priority'].filter(key => key in query).map(key => [key, query[key]]));
-    if (Object.keys(query).some(key => !list || !(list === 'cursor' ? ['cursor'] : list === 'tasks' ? ['view', 'cursor', 'status', 'assignee', 'priority'] : ['view', 'cursor']).includes(key))
-      || (query['view'] !== undefined && !['active', 'archived'].includes(String(query['view'])))
-      || (query['view'] !== undefined && typeof query['view'] !== 'string')
-      || (query['cursor'] !== undefined && (typeof query['cursor'] !== 'string' || !(list === 'tasks' ? /^[A-Za-z0-9_-]{1,2048}$/ : /^[A-Za-z0-9_-]{1,128}$/).test(query['cursor'])))
-      || !isTaskFilters(filters)) throw new BadRequestException('Invalid project/task query.');
-    if (req.method === 'GET') {
-      if (req.headers['transfer-encoding'] !== undefined || (req.headers['content-length'] !== undefined && req.headers['content-length'] !== '0')) throw new BadRequestException('Read requests have no payload.');
-    } else {
-      if (req.headers.origin !== this.identity.config.origin || (req.headers['sec-fetch-site'] && !['same-origin', 'none'].includes(String(req.headers['sec-fetch-site'])))) throw new ForbiddenException('Untrusted request origin.');
-      if (req.headers['content-type']?.split(';')[0]?.trim().toLowerCase() !== 'application/json') throw new BadRequestException('JSON is required.');
-      if (typeof req.headers['idempotency-key'] !== 'string') throw new BadRequestException('Idempotency-Key is required.');
-    }
-    const verified = await this.principals.webContext(req.headers, workspaceId);
-    const data = await work(verified.context, requestId, query['view'] as ArchiveView ?? 'active', query['cursor'] as string | undefined, filters);
-    for (const cookie of verified.headers.getSetCookie()) res.append('Set-Cookie', cookie);
-    res.json(data);
-  }
+  constructor(@Inject(ProjectTaskService) private readonly domain: ProjectTaskService, @Inject(ProjectTaskHttp) private readonly http: ProjectTaskHttp) {}
   private key(req: NodeRequest) { return req.headers['idempotency-key'] as string; }
-
   @Get()
-  projects(@Param('workspaceId') w: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.respond(req, res, w, true, (c, _id, view, cursor) => this.domain.projects(c, w, view, cursor)); }
+  projects(@Param('workspaceId') w: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.http.respond(req, res, w, true, (c, _id, view, cursor) => this.domain.projects(c, w, view, cursor)); }
   @Post()
-  createProject(@Param('workspaceId') w: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.respond(req, res, w, false, (c, id) => this.domain.createProject(c, w, this.key(req), id, req.body)); }
+  createProject(@Param('workspaceId') w: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.http.respond(req, res, w, false, (c, id) => this.domain.createProject(c, w, this.key(req), id, req.body)); }
   @Get(':projectId')
-  project(@Param('workspaceId') w: string, @Param('projectId') p: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.respond(req, res, w, false, c => this.domain.project(c, w, p)); }
+  project(@Param('workspaceId') w: string, @Param('projectId') p: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.http.respond(req, res, w, false, c => this.domain.project(c, w, p)); }
   @Post(':projectId')
-  editProject(@Param('workspaceId') w: string, @Param('projectId') p: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.respond(req, res, w, false, (c, id) => this.domain.changeProject(c, w, p, this.key(req), id, 'edit-project', req.body)); }
+  editProject(@Param('workspaceId') w: string, @Param('projectId') p: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.http.respond(req, res, w, false, (c, id) => this.domain.changeProject(c, w, p, this.key(req), id, 'edit-project', req.body)); }
   @Post(':projectId/archive')
-  archiveProject(@Param('workspaceId') w: string, @Param('projectId') p: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.respond(req, res, w, false, (c, id) => this.domain.changeProject(c, w, p, this.key(req), id, 'archive-project', req.body)); }
+  archiveProject(@Param('workspaceId') w: string, @Param('projectId') p: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.http.respond(req, res, w, false, (c, id) => this.domain.changeProject(c, w, p, this.key(req), id, 'archive-project', req.body)); }
   @Post(':projectId/restore')
-  restoreProject(@Param('workspaceId') w: string, @Param('projectId') p: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.respond(req, res, w, false, (c, id) => this.domain.changeProject(c, w, p, this.key(req), id, 'restore-project', req.body)); }
+  restoreProject(@Param('workspaceId') w: string, @Param('projectId') p: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.http.respond(req, res, w, false, (c, id) => this.domain.changeProject(c, w, p, this.key(req), id, 'restore-project', req.body)); }
   @Post(':projectId/visibility')
-  visibility(@Param('workspaceId') w: string, @Param('projectId') p: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.respond(req, res, w, false, (c, id) => this.domain.changeVisibility(c, w, p, this.key(req), id, req.body)); }
+  visibility(@Param('workspaceId') w: string, @Param('projectId') p: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.http.respond(req, res, w, false, (c, id) => this.domain.changeVisibility(c, w, p, this.key(req), id, req.body)); }
   @Get(':projectId/access')
-  access(@Param('workspaceId') w: string, @Param('projectId') p: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.respond(req, res, w, 'cursor', (c, _id, _view, cursor) => this.domain.access(c, w, p, cursor)); }
+  access(@Param('workspaceId') w: string, @Param('projectId') p: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.http.respond(req, res, w, 'cursor', (c, _id, _view, cursor) => this.domain.access(c, w, p, cursor)); }
   @Post(':projectId/access/:principalId')
-  changeAccess(@Param('workspaceId') w: string, @Param('projectId') p: string, @Param('principalId') principalId: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.respond(req, res, w, false, (c, id) => this.domain.changeAccess(c, w, p, principalId, this.key(req), id, req.body)); }
+  changeAccess(@Param('workspaceId') w: string, @Param('projectId') p: string, @Param('principalId') principalId: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.http.respond(req, res, w, false, (c, id) => this.domain.changeAccess(c, w, p, principalId, this.key(req), id, req.body)); }
   @Get(':projectId/access/:principalId')
-  accessReview(@Param('workspaceId') w: string, @Param('projectId') p: string, @Param('principalId') principalId: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.respond(req, res, w, false, c => this.domain.accessReview(c, w, p, principalId)); }
+  accessReview(@Param('workspaceId') w: string, @Param('projectId') p: string, @Param('principalId') principalId: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.http.respond(req, res, w, false, c => this.domain.accessReview(c, w, p, principalId)); }
   @Get(':projectId/assignees')
-  assignees(@Param('workspaceId') w: string, @Param('projectId') p: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.respond(req, res, w, 'cursor', (c, _id, _view, cursor) => this.domain.assignees(c, w, p, cursor)); }
+  assignees(@Param('workspaceId') w: string, @Param('projectId') p: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.http.respond(req, res, w, 'cursor', (c, _id, _view, cursor) => this.domain.assignees(c, w, p, cursor)); }
   @Get(':projectId/tasks')
-  tasks(@Param('workspaceId') w: string, @Param('projectId') p: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.respond(req, res, w, 'tasks', (c, _id, view, cursor, filters) => this.domain.tasks(c, w, p, view, cursor, filters)); }
+  tasks(@Param('workspaceId') w: string, @Param('projectId') p: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.http.respond(req, res, w, 'tasks', (c, _id, view, cursor, filters) => this.domain.tasks(c, w, p, view, cursor, filters)); }
   @Post(':projectId/tasks')
-  createTask(@Param('workspaceId') w: string, @Param('projectId') p: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.respond(req, res, w, false, (c, id) => this.domain.createTask(c, w, p, this.key(req), id, req.body)); }
+  createTask(@Param('workspaceId') w: string, @Param('projectId') p: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.http.respond(req, res, w, false, (c, id) => this.domain.createTask(c, w, p, this.key(req), id, req.body)); }
   @Get(':projectId/tasks/:taskId')
-  task(@Param('workspaceId') w: string, @Param('projectId') p: string, @Param('taskId') task: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.respond(req, res, w, false, c => this.domain.task(c, w, p, task)); }
+  task(@Param('workspaceId') w: string, @Param('projectId') p: string, @Param('taskId') task: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.http.respond(req, res, w, false, c => this.domain.task(c, w, p, task)); }
   @Post(':projectId/tasks/:taskId')
-  editTask(@Param('workspaceId') w: string, @Param('projectId') p: string, @Param('taskId') task: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.respond(req, res, w, false, (c, id) => this.domain.changeTask(c, w, p, task, this.key(req), id, 'edit-task', req.body)); }
+  editTask(@Param('workspaceId') w: string, @Param('projectId') p: string, @Param('taskId') task: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.http.respond(req, res, w, false, (c, id) => this.domain.changeTask(c, w, p, task, this.key(req), id, 'edit-task', req.body)); }
   @Post(':projectId/tasks/:taskId/move')
-  moveTask(@Param('workspaceId') w: string, @Param('projectId') p: string, @Param('taskId') task: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.respond(req, res, w, false, (c, id) => this.domain.moveTask(c, w, p, task, this.key(req), id, req.body)); }
+  moveTask(@Param('workspaceId') w: string, @Param('projectId') p: string, @Param('taskId') task: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.http.respond(req, res, w, false, (c, id) => this.domain.moveTask(c, w, p, task, this.key(req), id, req.body)); }
   @Post(':projectId/tasks/:taskId/archive')
-  archiveTask(@Param('workspaceId') w: string, @Param('projectId') p: string, @Param('taskId') task: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.respond(req, res, w, false, (c, id) => this.domain.changeTask(c, w, p, task, this.key(req), id, 'archive-task', req.body)); }
+  archiveTask(@Param('workspaceId') w: string, @Param('projectId') p: string, @Param('taskId') task: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.http.respond(req, res, w, false, (c, id) => this.domain.changeTask(c, w, p, task, this.key(req), id, 'archive-task', req.body)); }
   @Post(':projectId/tasks/:taskId/restore')
-  restoreTask(@Param('workspaceId') w: string, @Param('projectId') p: string, @Param('taskId') task: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.respond(req, res, w, false, (c, id) => this.domain.changeTask(c, w, p, task, this.key(req), id, 'restore-task', req.body)); }
+  restoreTask(@Param('workspaceId') w: string, @Param('projectId') p: string, @Param('taskId') task: string, @Req() req: NodeRequest, @Res() res: NodeResponse) { return this.http.respond(req, res, w, false, (c, id) => this.domain.changeTask(c, w, p, task, this.key(req), id, 'restore-task', req.body)); }
 }
