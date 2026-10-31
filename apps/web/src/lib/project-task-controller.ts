@@ -359,8 +359,8 @@ export function createProjectTaskController(options: {
     refresh, stage, stageMove, moveEligibility: (taskId: string, status: TaskStatus, beforeTaskId: string | null) => moveEvidence(taskId, status, beforeTaskId).eligibility, submit, retrySave, loadMore, loadTaskColumn, reloadConflict, rebaseDraft,
     loadCollaborationMore: (collection: CollaborationCollection) => !state.pending && fresh() ? fetchCollaboration(collection, { generation, signal: abort.signal }, true) : Promise.resolve(),
     async setParentCandidatesWanted(wanted: boolean) {
-      if (state.pending || !fresh() || !state.task) return;
       if (!wanted) { publish({ ...state, parentCandidatesWanted: false, collaboration: { ...state.collaboration, 'parent-candidates': emptyCollaboration()['parent-candidates'] } }); return; }
+      if (state.pending || !fresh() || !state.task) return;
       publish({ ...state, parentCandidatesWanted: true });
       const slot = state.collaboration['parent-candidates'];
       if (slot.status !== 'loading' && slot.status !== 'ready' && slot.status !== 'changed') await fetchCollaboration('parent-candidates', { generation, signal: abort.signal });

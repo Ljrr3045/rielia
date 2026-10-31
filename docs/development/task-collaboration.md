@@ -133,7 +133,7 @@ Types/validators are exported from `@rielia/contracts` in
 | Checklist placement | Item `moveUpBeforeItemId` / `moveDownBeforeItemId` are canonical anchors; null is end only when the corresponding move capability is true |
 | Commands | `create-task` with parent fields; `TaskCollaborationCommand` includes set-parent, checklist add/edit/move/remove, comment add/edit. Capture Task.version and comment.version where required |
 | Shared draft/key lifecycle | `stage`, `submit`, `retrySave`, `returnToDraft`, `discardDraft`, `cancelPending`; `collaborationDraft/Pending/RetryTarget` are projections of the same single command/key slot used by content/policy/moves |
-| Candidate picker demand | `parentCandidatesWanted`, `setParentCandidatesWanted(true)` opens/loads first page; false closes/clears and invalidates late responses. Same-task refresh/save preserves explicit demand; navigation/account/auth clears it. The other four inline sections load together |
+| Candidate picker demand | `parentCandidatesWanted`, `setParentCandidatesWanted(true)` opens/loads first page; false always closes/clears and invalidates late responses, including during save/reload. Same-task refresh/save preserves explicit demand; navigation/account/auth clears it. The other four inline sections load together |
 | Whole-flow guard | `mutationPending`; `draftGuard:{kind:'none'|'draft'|'pending'|'recovery',atTarget,canReturn,canDiscard,canStageNew}`; unsent collaboration drafts cannot be replaced by another target/form without explicit discard |
 | Conflict | `outcome`, `conflict:Task`, `commentConflict` and `checklistConflict`; `reloadConflict` fetches exact comment or complete checklist content at the matching task revision before rebase; `rebaseDraft` explicitly adopts both current versions after review. Parent/move destinations require refreshed deliberate selection |
 | Parent warning | `closeWarning` plus retained content `draft` or `moveDraft`; `acknowledgeClose()` stages reviewed acknowledgment and preserves intent; subsequent `submit()` uses a fresh key. Generic rebase cannot bypass a warning |
@@ -208,3 +208,10 @@ candidates are picker-only and now load on explicit demand, with scope/auth
 clearing and stale-response invalidation. Focused regression asserts no initial
 candidate request, wanted refresh, closure, navigation and auth-denial behavior.
 Changed source requires fresh exact-head CI and coordinator-triggered Kody.
+
+The later [picker-close finding](https://github.com/Ljrr3045/rielia/pull/21#discussion_r4432656992)
+was valid: the opening/fetch preconditions also blocked a local close while a
+mutation or reload was pending. Clearing demand/data now runs unconditionally
+before the network guards. Focused regression closes during a pending save and
+a refresh with null task/session, then proves the later load requests no candidates.
+No backend/schema/API change or broader optimization is involved.

@@ -399,3 +399,18 @@ test('T09 parent candidates load only on demand, preserve wanted refresh and ign
   assert.equal(f.controller.getState().parentCandidatesWanted, false); assert.equal(f.controller.getState().collaboration['parent-candidates'].data, null);
   slow = null; denied = true; await f.controller.setParentCandidatesWanted(true); assert.equal(f.controller.getState().status, 'forbidden'); assert.equal(f.controller.getState().parentCandidatesWanted, false); assert.equal(f.controller.getState().task, null);
 });
+test('T09 closing parent picker during pending save or task/session reload always clears demand before later load', async () => {
+  const saved = deferred(); const configuration = deferred(); let deferConfiguration = false; const calls = [];
+  const f = fixture({ transport: { collaboration: async (w, p, t, collection) => { calls.push(collection); return collaborationPage(collection, t); }, mutate: () => saved.promise } });
+  await f.controller.openLocation('?workspace=a&project=p&task=t'); await f.controller.setParentCandidatesWanted(true);
+  f.controller.stage(collaborationDraft()); const saving = f.controller.submit(); assert.equal(f.controller.getState().pending, 'add-comment');
+  await f.controller.setParentCandidatesWanted(false); assert.equal(f.controller.getState().parentCandidatesWanted, false); assert.equal(f.controller.getState().collaboration['parent-candidates'].data, null);
+  saved.resolve(task('t', 'p', 'a', 2)); await saving; assert.equal(calls.filter(value => value === 'parent-candidates').length, 1);
+  const g = fixture({ transport: { collaboration: async (w, p, t, collection) => { calls.push(collection); return collaborationPage(collection, t); } }, options: { identity: {
+    configuration: async () => deferConfiguration ? configuration.promise : { enabled: true, providers: [] }, session: async () => session,
+  } } });
+  await g.controller.openLocation('?workspace=a&project=p&task=t'); await g.controller.setParentCandidatesWanted(true); const count = calls.filter(value => value === 'parent-candidates').length;
+  deferConfiguration = true; const refreshing = g.controller.refresh(); assert.equal(g.controller.getState().task, null); assert.equal(g.controller.getState().session, null);
+  await g.controller.setParentCandidatesWanted(false); assert.equal(g.controller.getState().parentCandidatesWanted, false);
+  configuration.resolve({ enabled: true, providers: [] }); await refreshing; assert.equal(calls.filter(value => value === 'parent-candidates').length, count); assert.equal(g.controller.getState().collaboration['parent-candidates'].status, 'idle');
+});
