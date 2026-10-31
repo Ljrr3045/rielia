@@ -1,0 +1,25 @@
+docs/development/task-collaboration.md
+  s_eb28aa6b81240b::t_784a1e98ee5b0e 136,211-217
+docs/development/progress.md
+  s_eb28aa6b81240b::t_409b183523b08d 44
+scripts/project-task-logic.test.mjs
+  s_eb28aa6b81240b::t_617e323834089f 402-416
+apps/web/src/lib/project-task-controller.ts
+  s_eb28aa6b81240b::t_617e323834089f 363
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0e4784c3d41ddd095c69f61b49489e9a78065347",
+  "prompts": {},
+  "sessions": {
+    "s_eb28aa6b81240b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a192db-72b9-76f3-8916-c609b68c76d1",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
