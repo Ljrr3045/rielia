@@ -160,13 +160,18 @@ the UI fixed both and focused retests passed on the final presentation source.
 The independent responsive/keyboard validator passed CSS viewport, native role,
 relation navigation and emulated-touch checks, found nested picker Escape and
 edit-cancel focus defects, and passed the affected retests on the corrected
-source. No actual PRE block, real 200% zoom, physical device, screen-reader/AT or
-WCAG certification is claimed; private reports and attempts stay outside the
-repository.
+source. Later review found and the UI fixed two recovery-presentation gaps:
+child quick-add 409 now uses the child draft conflict branch with retained
+title/parent and explicit Discard + Refresh (retested at 390/1440), and an
+off-target child conflict now suppresses the at-target panel in favor of the
+single Return banner (retested at 390 on the final head). No actual PRE block,
+real 200% zoom, physical device, screen-reader/AT or WCAG certification is
+claimed; private reports and attempts stay outside the repository.
 
-Final standard `pnpm check`, PR URL/CI/Kody evidence and exact head are recorded
-in GitHub and the external delivery report. The presentation PR is
-[#22](https://github.com/Ljrr3045/rielia/pull/22). No full T09/P05/P14/P38,
+Final standard `pnpm check`, audit/handoff/whitespace and the presentation PR
+[#22](https://github.com/Ljrr3045/rielia/pull/22) are recorded here; exact
+current-head CI/Kody and merge evidence live in GitHub and the external final
+report. No full T09/P05/P14/P38,
 T10/T11/T12/B2, credentials, staging/OAuth, real-user or deployment acceptance is
 claimed.
 
@@ -660,10 +665,11 @@ the following records preserve the original first-wave scope and acceptance:
    split of the B1 T04 ticket, without business effects, deployment or full acceptance.
 
 Current bounded product step: **T09.1** task-collaboration presentation on the
-merged T09.0 logic under the user's sequencing override; the local presentation
-and both validator passes are complete, with final standard checks and PR
-bookkeeping pending. Invitations/guests, full T06/T07/T08/T09/T35/US05 and
-MCP/history/export integration remain incomplete.
+merged T09.0 logic under the user's sequencing override; delivered in
+[PR #22](https://github.com/Ljrr3045/rielia/pull/22) with standard checks and
+targeted functional/responsive QA passed. Exact current-head CI/Kody and merge
+evidence live in GitHub and the external final report. Invitations/guests, full
+T06/T07/T08/T09/T35/US05 and MCP/history/export integration remain incomplete.
 
 Convergence: T02 + T03 → T04 → **T35** → T05 → T06. The principal/authorship model
 must precede workspaces/tasks/credentials despite T35's number. T01 supplies UI
@@ -697,7 +703,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T06 | B1a | Projects/tasks, versions, idempotency, atomic activity/outbox | T05 | Bounded T06.0 real backend/client logic merged in [PR #15](https://github.com/Ljrr3045/rielia/pull/15); T06.1 [presentation](project-task-ui.md) delivered in the UI PR against disposable real PG/Nest/Next QA. Full ticket (all version/activity/outbox slices, collaboration) remains open |
 | T07 | B1b | Invitations, revocation, roles/private projects | T06 | Invitation/role subset remains in T05.0; bounded [T07.0 privacy/access logic](project-access.md) merged in PR #17 and [T07.1 presentation](project-access-ui.md) delivered in the UI PR. Full T07 acceptance remains open |
 | T08 | B1b | List/Kanban, filters, ranking | T06 | [T08.0 logic](task-views.md) merged in PR #19 at `f8895709`; [T08.1 presentation](task-views-ui.md) in [PR #20](https://github.com/Ljrr3045/rielia/pull/20). Configurable workflows/labels/sprints and full US05/T08 remain open |
-| T09 | B1b | Subtasks, checklists, comments, history | T06 | T09.0 bounded collaboration logic merged in [PR #21](https://github.com/Ljrr3045/rielia/pull/21) at `76d7d31b`; T09.1 [presentation](task-collaboration-ui.md) implemented locally with functional/responsive validator passes, final standard checks and PR pending. Full T09/P05/P14/P38, credentials and real-user/staging acceptance remain open |
+| T09 | B1b | Subtasks, checklists, comments, history | T06 | T09.0 bounded collaboration logic merged in [PR #21](https://github.com/Ljrr3045/rielia/pull/21) at `76d7d31b`; T09.1 [presentation](task-collaboration-ui.md) delivered in [PR #22](https://github.com/Ljrr3045/rielia/pull/22) with standard checks and targeted functional/responsive QA passed. Exact current-head CI/Kody/merge evidence remains in GitHub/external final report. Full T09/P05/P14/P38, credentials and real-user/staging acceptance remain open |
 | T10 | B1b | Search, My tasks, responsive layout, SSE | T07–T09 | Not started |
 | T11 | B1c | Sprint lifecycle and scope history | T08–T09 | Not started |
 | T12 | B1c | Personal/service credentials, explicit-subject grants | T07, T35 | Not started |

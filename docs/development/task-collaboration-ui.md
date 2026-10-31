@@ -157,6 +157,15 @@ The handoff verifier passes 47 imported files, 30 assets and the updated local
 links; whitespace checks are clean. No workaround typecheck pass is claimed for
 the narrow fix heads; this is the standard post-runtime run.
 
+Review fixes after the first presentation head: a child quick-add 409 now renders
+the child conflict branch with retained title/parent context and explicit
+Discard + Refresh only (no automatic rebase/new key/retry), retested at 390/1440
+on `d98fdbb`; and the conflict panel now requires `!offTarget` so a switched-task
+child conflict shows only the single Return banner, retested at 390 on
+`38285df`. Both review findings were replied to with the focused evidence. Exact
+current-head CI/Kody and merge state live in GitHub and the external report;
+there is no claim that merge has completed.
+
 No physical-device, virtual-keyboard, real 200% browser zoom, screen-reader, AT
 or WCAG certification is claimed. No real provider/staging, real-user validation,
 full T09/P05/P14/P38, T10/T11/T12, B2 or deployment is claimed.
