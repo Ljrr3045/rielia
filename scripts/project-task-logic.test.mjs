@@ -383,3 +383,19 @@ test('T09 checklist rebase requires current canonical item content at the matchi
   await f.controller.reloadConflict(); assert.equal(f.controller.getState().checklistConflict, null); f.controller.rebaseDraft(); assert.equal(f.controller.getState().draft.expectedVersion, 1);
   revision = 9; await f.controller.reloadConflict(); assert.equal(f.controller.getState().checklistConflict.items[0].text, 'Concurrent text'); f.controller.rebaseDraft(); assert.equal(f.controller.getState().draft.expectedVersion, 9); assert.equal(f.controller.getState().draft.text, 'Unsent text');
 });
+test('T09 parent candidates load only on demand, preserve wanted refresh and ignore closed/navigated/unauthorized late results', async () => {
+  const calls = []; let slow = null; let denied = false;
+  const f = fixture({ transport: { collaboration: async (w, p, t, collection) => {
+    calls.push({ t, collection }); if (collection === 'parent-candidates' && denied) throw new ProjectTaskFailure(403);
+    if (collection === 'parent-candidates' && slow) return slow.promise;
+    return collaborationPage(collection, t);
+  } } });
+  await f.controller.openLocation('?workspace=a&project=p&task=t'); assert.equal(calls.length, 4); assert.equal(f.controller.getState().collaboration['parent-candidates'].status, 'idle');
+  await f.controller.setParentCandidatesWanted(true); assert.equal(calls.at(-1).collection, 'parent-candidates'); assert.equal(f.controller.getState().collaboration['parent-candidates'].status, 'ready');
+  await f.controller.refresh(); assert.equal(f.controller.getState().parentCandidatesWanted, true); assert.equal(f.controller.getState().collaboration['parent-candidates'].status, 'ready');
+  await f.controller.setParentCandidatesWanted(false); assert.equal(f.controller.getState().collaboration['parent-candidates'].data, null);
+  slow = deferred(); const closing = f.controller.setParentCandidatesWanted(true); await f.controller.setParentCandidatesWanted(false); slow.resolve(collaborationPage('parent-candidates')); await closing; assert.equal(f.controller.getState().collaboration['parent-candidates'].data, null);
+  slow = deferred(); const navigating = f.controller.setParentCandidatesWanted(true); await f.controller.selectTask('other'); slow.resolve(collaborationPage('parent-candidates')); await navigating;
+  assert.equal(f.controller.getState().parentCandidatesWanted, false); assert.equal(f.controller.getState().collaboration['parent-candidates'].data, null);
+  slow = null; denied = true; await f.controller.setParentCandidatesWanted(true); assert.equal(f.controller.getState().status, 'forbidden'); assert.equal(f.controller.getState().parentCandidatesWanted, false); assert.equal(f.controller.getState().task, null);
+});

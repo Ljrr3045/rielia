@@ -43,6 +43,7 @@ export function useProjectTasks() {
     setView: controller.setView, setTaskLayout: controller.setTaskLayout, setTaskFilters: controller.setTaskFilters, setTaskColumn: controller.setTaskColumn,
     loadMore: controller.loadMore, loadTaskColumn: controller.loadTaskColumn, stageMove: controller.stageMove, moveEligibility: controller.moveEligibility, stage: controller.stage, submit: controller.submit, retrySave: controller.retrySave, discardDraft: controller.discardDraft,
     loadCollaborationMore: controller.loadCollaborationMore, acknowledgeClose: controller.acknowledgeClose,
+    setParentCandidatesWanted: controller.setParentCandidatesWanted,
     cancelPending: controller.cancelPending, returnToDraft: controller.returnToDraft, reloadConflict: controller.reloadConflict, rebaseDraft: controller.rebaseDraft,
     dismissOutcome: controller.dismissOutcome, dismissPageError: controller.dismissPageError };
 }

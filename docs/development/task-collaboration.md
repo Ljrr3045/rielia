@@ -49,6 +49,14 @@ immutable, comments cannot be deleted, and removed checklist items stay retained
 The existing explicit one-shot alone migrates; API/diagnostic worker cannot.
 No dependency or runtime adapter changes are introduced.
 
+Hierarchy constraint triggers enqueue only a parent-bearing insert or an actual
+parent-link change. At commit they reload the final row and inspect its parent
+and direct children through scoped indexes; rank/content-only updates enqueue
+no hierarchy checks. This preserves multi-update final-state correctness without
+per-row project scans during compaction. PostgreSQL requires constraint triggers
+to be [AFTER ROW](https://www.postgresql.org/docs/18/sql-createtrigger.html);
+`WHEN` is evaluated before enqueueing, independently of deferred execution.
+
 The existing exclusive transaction fence rechecks principal/session/grant,
 membership, private-project entitlement, archive state and expected versions.
 Task/checklist/comment changes, task version, project task revision, immutable
@@ -56,7 +64,7 @@ activity, minimal outbox and successful receipt commit together. Original-key
 replay checks current authority and returns the current Task without another
 effect. A version is monotonic, not an exact increment promise: relationship
 composition and existing rank compaction can advance it more than once. The
-conservative global fence and hierarchy scans make no throughput/scale claim.
+conservative global fence makes no throughput/scale claim.
 
 ## HTTP and public data
 
@@ -125,6 +133,7 @@ Types/validators are exported from `@rielia/contracts` in
 | Checklist placement | Item `moveUpBeforeItemId` / `moveDownBeforeItemId` are canonical anchors; null is end only when the corresponding move capability is true |
 | Commands | `create-task` with parent fields; `TaskCollaborationCommand` includes set-parent, checklist add/edit/move/remove, comment add/edit. Capture Task.version and comment.version where required |
 | Shared draft/key lifecycle | `stage`, `submit`, `retrySave`, `returnToDraft`, `discardDraft`, `cancelPending`; `collaborationDraft/Pending/RetryTarget` are projections of the same single command/key slot used by content/policy/moves |
+| Candidate picker demand | `parentCandidatesWanted`, `setParentCandidatesWanted(true)` opens/loads first page; false closes/clears and invalidates late responses. Same-task refresh/save preserves explicit demand; navigation/account/auth clears it. The other four inline sections load together |
 | Whole-flow guard | `mutationPending`; `draftGuard:{kind:'none'|'draft'|'pending'|'recovery',atTarget,canReturn,canDiscard,canStageNew}`; unsent collaboration drafts cannot be replaced by another target/form without explicit discard |
 | Conflict | `outcome`, `conflict:Task`, `commentConflict` and `checklistConflict`; `reloadConflict` fetches exact comment or complete checklist content at the matching task revision before rebase; `rebaseDraft` explicitly adopts both current versions after review. Parent/move destinations require refreshed deliberate selection |
 | Parent warning | `closeWarning` plus retained content `draft` or `moveDraft`; `acknowledgeClose()` stages reviewed acknowledgment and preserves intent; subsequent `submit()` uses a fresh key. Generic rebase cannot bypass a warning |
@@ -133,7 +142,8 @@ Types/validators are exported from `@rielia/contracts` in
 An absent page is not zero rows. Auxiliary failures preserve readable detail,
 confirmed mutation success and other section/policy/content errors. A changed or
 mixed detail/page revision disables use of that stale section until Refresh.
-No optimistic order or fake comment row is committed. Success remains confirmed
+Parent candidates stay `idle` until requested by the picker; `loadCollaborationMore`
+pages/retries them only while wanted. No optimistic order or fake comment row is committed. Success remains confirmed
 if a follow-up read fails; retrying data never resubmits a mutation. Navigation
 retains memory-only drafts and original-key unknown recovery; Return is explicit.
 401/403 clears private pages/result/conflict and invalidates late siblings.
@@ -179,3 +189,22 @@ remains; the high/critical audit gate passes, with no dependency change here.
 No UI/browser accessibility certification, real OAuth/staging/users, T10 search/
 SSE, T11 sprints, T12 credentials/MCP catalog, B2 mentions/notifications/attachments,
 deployment or full T09/P05/P14/P38/public-launch completion is claimed.
+
+
+## PR #21 review dispositions
+
+The [hierarchy performance finding](https://github.com/Ljrr3045/rielia/pull/21#discussion_r4432604965)
+was valid. Indexed final-row/parent/direct-child checks and parent-change-only
+enqueueing replace repeated full-project scans. Actual PostgreSQL regression
+forces rank compaction over parent/child rows while a deliberately failing
+hierarchy function proves no rank-only invocation; it also verifies transient
+invalid/final valid multi-update transactions and invalid final-state rollback.
+The suggested statement-level constraint trigger is unsupported by PostgreSQL.
+
+The [eager collection finding](https://github.com/Ljrr3045/rielia/pull/21#discussion_r4432605125)
+is partially applicable: the approved detail renders relations/checklist/comments/
+history together, so those four bounded independent reads remain. Parent
+candidates are picker-only and now load on explicit demand, with scope/auth
+clearing and stale-response invalidation. Focused regression asserts no initial
+candidate request, wanted refresh, closure, navigation and auth-denial behavior.
+Changed source requires fresh exact-head CI and coordinator-triggered Kody.

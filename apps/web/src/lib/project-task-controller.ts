@@ -11,6 +11,7 @@ interface PolicyPageFailure { requestId: string | null; reason?: 'changed' }
 export type MoveEligibility = 'ready' | 'pending' | 'recovery' | 'draft' | 'changed' | 'unavailable' | 'forbidden' | 'invalid-destination' | 'different-detail';
 export interface TaskSummary { status: 'loading' | 'ready' | 'partial' | 'changed'; total: number | null; orderVersion: number | null; canCreate: boolean }
 export interface ProjectTaskState {
+  parentCandidatesWanted: boolean;
   draftGuard: { kind: 'none' | 'draft' | 'pending' | 'recovery'; atTarget: boolean; canReturn: boolean; canDiscard: boolean; canStageNew: boolean };
   collaboration: CollaborationState; closeWarning: CloseWarning | null; commentConflict: TaskComment | null; checklistConflict: TaskChecklist | null;
   status: 'loading' | 'disabled' | 'signed-out' | 'ready' | 'empty' | 'forbidden' | 'error';
@@ -31,7 +32,7 @@ export interface ProjectTaskState {
   pageError: { collection: 'workspaces' | 'members' | 'projects' | 'tasks' | 'projectAccess' | 'assignees'; requestId: string | null; reason?: 'changed' } | null;
 }
 const selectionEmpty: ProjectTaskSelection = { workspaceId: null, projectId: null, taskId: null };
-const cleared = { collaboration: emptyCollaboration(), closeWarning: null, commentConflict: null, checklistConflict: null, taskColumns: {}, taskColumnErrors: {}, taskColumnsChanged: false, policyPageErrors: {}, accessConflict: null, projectAccess: null, assignees: null, workspace: null, members: null, projects: null, project: null, tasks: null, task: null, pageError: null };
+const cleared = { parentCandidatesWanted: false, collaboration: emptyCollaboration(), closeWarning: null, commentConflict: null, checklistConflict: null, taskColumns: {}, taskColumnErrors: {}, taskColumnsChanged: false, policyPageErrors: {}, accessConflict: null, projectAccess: null, assignees: null, workspace: null, members: null, projects: null, project: null, tasks: null, task: null, pageError: null };
 const id = (value: unknown): value is string => typeof value === 'string' && /^[A-Za-z0-9_-]{1,128}$/.test(value);
 function urlFor(s: ProjectTaskSelection, views: ProjectTaskState['views'], taskView: TaskView): string {
   const path = !s.workspaceId ? '/projects' : !s.projectId ? `/projects?workspace=${encodeURIComponent(s.workspaceId)}`
@@ -91,7 +92,8 @@ export function createProjectTaskController(options: {
   const current = (request: { generation: number }) => generation === request.generation;
   const fresh = () => state.session !== null && Date.parse(state.session.session.expiresAt) > Date.now();
   function select(selection: ProjectTaskSelection, navigate = true) {
-    const url = urlFor(selection, state.views, state.taskView); publish({ ...state, selection: { ...selection }, url });
+    const sameScope = selection.workspaceId === state.selection.workspaceId && selection.projectId === state.selection.projectId && selection.taskId === state.selection.taskId;
+    const url = urlFor(selection, state.views, state.taskView); publish({ ...state, selection: { ...selection }, url, parentCandidatesWanted: sameScope && state.parentCandidatesWanted });
     if (navigate) options.navigate?.(url);
   }
   function expire() { begin(); publish({ ...state, ...cleared, status: 'signed-out', session: null, workspaces: null, pending: null, retryTarget: retry ? structuredClone(retry.command) : null, result: null, conflict: null }); }
@@ -139,7 +141,7 @@ export function createProjectTaskController(options: {
   }
   async function fetchCollaboration(collection: CollaborationCollection, request: { generation: number; signal: AbortSignal }, append = false) {
     const { workspaceId: w, projectId: p, taskId: t } = state.selection;
-    if (!w || !p || !t) return;
+    if (!w || !p || !t || collection === 'parent-candidates' && !state.parentCandidatesWanted) return;
     const previous = state.collaboration[collection];
     if (append && (previous.status === 'loading' || previous.status === 'changed' || previous.data && !previous.data.nextCursor)) return;
     const loading = { ...previous, status: 'loading' as const, requestId: null };
@@ -184,21 +186,21 @@ export function createProjectTaskController(options: {
       }
     }
     await Promise.all([project.capabilities.canManageAccess ? auxiliary('projectAccess') : Promise.resolve(), auxiliary('assignees'),
-      ...(task ? collaborationCollections.map(collection => fetchCollaboration(collection, request)) : []),
+      ...(task ? collaborationCollections.filter(collection => collection !== 'parent-candidates' || state.parentCandidatesWanted).map(collection => fetchCollaboration(collection, request)) : []),
       ...(state.taskView.layout === 'board' ? taskStatuses.map(status => fetchTaskColumn(status, request)) : [])]);
   }
   async function refresh(): Promise<void> {
     if (state.pending) return;
-    const request = begin(); publish({ ...state, ...cleared, status: 'loading', session: null, workspaces: null });
+    const request = begin(); publish({ ...state, ...cleared, parentCandidatesWanted: state.parentCandidatesWanted, status: 'loading', session: null, workspaces: null });
     try {
       const config = parseIdentityConfiguration(await options.identity.configuration());
       const session = config.enabled ? parseIdentitySession(await options.identity.session()) : null;
       if (!current(request)) return;
       if (!config.enabled || !session || Date.parse(session.session.expiresAt) <= Date.now()) {
-        publish({ ...state, status: config.enabled ? 'signed-out' : 'disabled', session: null, result: null, conflict: null }); return;
+        publish({ ...state, parentCandidatesWanted: false, status: config.enabled ? 'signed-out' : 'disabled', session: null, result: null, conflict: null }); return;
       }
       if (owner !== null && owner !== session.user.id) {
-        retry = null; publish({ ...state, selection: { ...selectionEmpty }, taskView: { layout: 'list', filters: {}, column: 'backlog' }, url: '/projects', draft: null, retryTarget: null, outcome: null, result: null, conflict: null, accessConflict: null, requestId: null });
+        retry = null; publish({ ...state, parentCandidatesWanted: false, selection: { ...selectionEmpty }, taskView: { layout: 'list', filters: {}, column: 'backlog' }, url: '/projects', draft: null, retryTarget: null, outcome: null, result: null, conflict: null, accessConflict: null, requestId: null });
       }
       owner = session.user.id; publish({ ...state, session });
       const workspaces = await options.workspaces.workspaces(request.signal);
@@ -210,7 +212,7 @@ export function createProjectTaskController(options: {
   }
   async function changeSelection(selection: ProjectTaskSelection) {
     const request = begin(); select(selection);
-    publish({ ...state, ...cleared, status: 'loading', pending: null, retryTarget: retry ? structuredClone(retry.command) : null });
+    publish({ ...state, ...cleared, parentCandidatesWanted: state.parentCandidatesWanted, status: 'loading', pending: null, retryTarget: retry ? structuredClone(retry.command) : null });
     if (!fresh()) { await refresh(); return; }
     try { await load(request); } catch (error) { if (current(request)) readFailure(error); }
   }
@@ -356,6 +358,13 @@ export function createProjectTaskController(options: {
   return { getState: () => state, subscribe(listener: () => void) { listeners.add(listener); return () => { listeners.delete(listener); }; },
     refresh, stage, stageMove, moveEligibility: (taskId: string, status: TaskStatus, beforeTaskId: string | null) => moveEvidence(taskId, status, beforeTaskId).eligibility, submit, retrySave, loadMore, loadTaskColumn, reloadConflict, rebaseDraft,
     loadCollaborationMore: (collection: CollaborationCollection) => !state.pending && fresh() ? fetchCollaboration(collection, { generation, signal: abort.signal }, true) : Promise.resolve(),
+    async setParentCandidatesWanted(wanted: boolean) {
+      if (state.pending || !fresh() || !state.task) return;
+      if (!wanted) { publish({ ...state, parentCandidatesWanted: false, collaboration: { ...state.collaboration, 'parent-candidates': emptyCollaboration()['parent-candidates'] } }); return; }
+      publish({ ...state, parentCandidatesWanted: true });
+      const slot = state.collaboration['parent-candidates'];
+      if (slot.status !== 'loading' && slot.status !== 'ready' && slot.status !== 'changed') await fetchCollaboration('parent-candidates', { generation, signal: abort.signal });
+    },
     acknowledgeClose() {
       const { draft, conflict, closeWarning } = state;
       if (!draft || !conflict || !('projectId' in conflict) || !closeWarning || retry || state.pending || !['edit-task', 'move-task'].includes(draft.type)) return;

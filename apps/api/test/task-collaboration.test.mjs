@@ -71,6 +71,30 @@ test('T09 real PostgreSQL/NodeAdapter collaboration, security and atomic recover
     assert.deepEqual(race.map(row => row.status).sort(), [201, 400]);
     const stored = await db.task.findMany({ where: { id: { in: [a.id, b.id] } } }); assert.equal(stored.filter(row => row.parentTaskId).length, 1);
   });
+  await t.test('hierarchy checks skip real rank compaction and inspect final transaction rows for indexed relationship changes', async () => {
+    const f = await fixture(); const child = await ok(f.owner, f.tasks, { title: 'Child', parentTaskId: f.task.id, expectedParentVersion: f.task.version }); const moving = await ok(f.owner, f.tasks, { title: 'Moving root', status: 'todo' });
+    await pool.query('UPDATE task SET rank=CASE WHEN id=$1 THEN 1 ELSE 2 END WHERE id=ANY($2::text[])', [f.task.id, [f.task.id, child.id]]);
+    const original = (await pool.query("SELECT pg_get_functiondef('check_task_hierarchy()'::regprocedure) AS definition")).rows[0].definition;
+    await pool.query(`CREATE OR REPLACE FUNCTION check_task_hierarchy() RETURNS trigger LANGUAGE plpgsql AS 'BEGIN RAISE EXCEPTION ''hierarchy check invoked'' USING ERRCODE=''23514''; END'`);
+    try {
+      const current = await ok(f.owner, `${f.tasks}/${moving.id}`);
+      const moved = await ok(f.owner, `${f.tasks}/${moving.id}/move`, { expectedVersion: current.version, expectedOrderVersion: current.orderVersion, status: 'backlog', beforeTaskId: child.id });
+      assert.equal(moved.status, 'backlog'); assert.ok((await ok(f.owner, f.detail)).version > f.task.version);
+      await pool.query('UPDATE task SET title=title,"parentTaskId"="parentTaskId" WHERE id=$1', [child.id]);
+      await assert.rejects(pool.query('UPDATE task SET "parentTaskId"=$1 WHERE id=$2', [f.task.id, moving.id]), /hierarchy check invoked/);
+    } finally { await pool.query(original); }
+    const connection = await pool.connect();
+    try {
+      await connection.query('BEGIN');
+      // Temporarily grandchild-shaped, but final state has just one level.
+      await connection.query('UPDATE task SET "parentTaskId"=$1 WHERE id=$2', [moving.id, f.task.id]);
+      await connection.query('UPDATE task SET "parentTaskId"=NULL WHERE id=$1', [child.id]); await connection.query('COMMIT');
+      assert.equal((await ok(f.owner, f.detail)).parentTaskId, moving.id);
+      await connection.query('BEGIN'); await connection.query('UPDATE task SET "parentTaskId"=$1 WHERE id=$2', [f.task.id, child.id]);
+      await assert.rejects(connection.query('COMMIT'), /one level/); await connection.query('ROLLBACK');
+      assert.equal((await ok(f.owner, `${f.tasks}/${child.id}`)).parentTaskId, null);
+    } finally { await connection.query('ROLLBACK'); connection.release(); }
+  });
   await t.test('both close paths warn, stale child acknowledgments fail, and parent close/archive never hides or changes children', async () => {
     const f = await fixture(); const child = await ok(f.owner, f.tasks, { title: 'Open child', parentTaskId: f.task.id, expectedParentVersion: 1 });
     const before = await counts(); const initial = await ok(f.owner, f.detail);

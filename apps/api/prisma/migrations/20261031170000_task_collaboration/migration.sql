@@ -5,16 +5,23 @@ ALTER TABLE task ADD CONSTRAINT task_parent_scope FOREIGN KEY ("workspaceId","pr
 ALTER TABLE task ADD CONSTRAINT task_not_self_parent CHECK (id IS DISTINCT FROM "parentTaskId");
 CREATE INDEX task_parent ON task("workspaceId","projectId","parentTaskId",number);
 -- The existing statement fence serializes both ordinary DML and service writes.
--- Check final hierarchy at commit too, including transactions changing both ends.
+-- Check final hierarchy at commit, using indexed row/parent/child lookups.
+-- WHEN is evaluated immediately, so content/rank-only writes enqueue no check.
 CREATE FUNCTION check_task_hierarchy() RETURNS trigger LANGUAGE plpgsql AS $$
+DECLARE final_parent text;
 BEGIN
-  IF EXISTS (SELECT 1 FROM task child JOIN task parent ON parent.id=child."parentTaskId" AND parent."workspaceId"=child."workspaceId" AND parent."projectId"=child."projectId"
-    WHERE child."workspaceId"=NEW."workspaceId" AND child."projectId"=NEW."projectId" AND parent."parentTaskId" IS NOT NULL) THEN
+  SELECT "parentTaskId" INTO final_parent FROM task WHERE "workspaceId"=NEW."workspaceId" AND "projectId"=NEW."projectId" AND id=NEW.id;
+  IF final_parent IS NOT NULL AND (EXISTS
+    (SELECT 1 FROM task WHERE "workspaceId"=NEW."workspaceId" AND "projectId"=NEW."projectId" AND id=final_parent AND "parentTaskId" IS NOT NULL)
+    OR EXISTS (SELECT 1 FROM task WHERE "workspaceId"=NEW."workspaceId" AND "projectId"=NEW."projectId" AND "parentTaskId"=NEW.id)) THEN
     RAISE EXCEPTION 'Task hierarchy permits one level only' USING ERRCODE='23514';
   END IF;
   RETURN NEW;
 END $$;
-CREATE CONSTRAINT TRIGGER task_hierarchy AFTER INSERT OR UPDATE ON task DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION check_task_hierarchy();
+CREATE CONSTRAINT TRIGGER task_hierarchy_insert AFTER INSERT ON task DEFERRABLE INITIALLY DEFERRED FOR EACH ROW
+  WHEN (NEW."parentTaskId" IS NOT NULL) EXECUTE FUNCTION check_task_hierarchy();
+CREATE CONSTRAINT TRIGGER task_hierarchy_update AFTER UPDATE ON task DEFERRABLE INITIALLY DEFERRED FOR EACH ROW
+  WHEN (OLD."parentTaskId" IS DISTINCT FROM NEW."parentTaskId") EXECUTE FUNCTION check_task_hierarchy();
 CREATE FUNCTION guard_parent_change() RETURNS trigger LANGUAGE plpgsql AS $$
 BEGIN
   IF TG_OP='INSERT' OR NEW."parentTaskId" IS DISTINCT FROM OLD."parentTaskId" THEN

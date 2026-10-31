@@ -14,7 +14,9 @@ This records repository changes. No application version has been released.
   current-authority receipts/outbox, private-project policy, archive boundaries,
   flat list/board ordering and same-key unknown recovery are preserved. Shared
   frontend section/draft/conflict/paging contracts include authorized parent
-  candidates, canonical checklist movement and recent comment/edit visibility.
+  candidates loaded on demand, canonical checklist movement and recent comment/edit
+  visibility. Hierarchy validation uses indexed final relationships and skips
+  rank/content-only updates.
   [Contract, evidence and limits](docs/development/task-collaboration.md),
   [PR #21](https://github.com/Ljrr3045/rielia/pull/21).
   Presentation, full T09/P05/P14/P38, T10/T11/T12/B2, real OAuth/staging/users
