@@ -1,0 +1,33 @@
+apps/web/src/app/projects/task-checklist.tsx
+  s_e7129716d7db62::t_549f6607e58080 125-132,235,246,282
+  s_e7129716d7db62::t_33334474e4a473 136,158
+apps/web/src/app/projects/task-relations.tsx
+  s_e7129716d7db62::t_107b23241de42c 80,94,98-106,109,111,129,173,198
+  s_e7129716d7db62::t_5d1f3741891145 4,313,325,391
+apps/web/src/app/projects/task-collaboration.tsx
+  s_e7129716d7db62::t_cf67395d9c9bb6 274,298,307,345
+  s_e7129716d7db62::t_e7826d1683678b 406-422,426-427
+apps/web/src/app/projects/task-comments.tsx
+  s_e7129716d7db62::t_c17b9874f3cc81 96,120
+  s_e7129716d7db62::t_af58ce15ff7204 85-92,215,248
+apps/web/src/app/projects/strings.ts
+  s_e7129716d7db62::t_a37916d1d3e8a1 610-611,623-624
+apps/web/src/app/projects/projects-view.tsx
+  s_e7129716d7db62::t_98750b75533aef 936
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e8dfa60c793cb59666281c3ec9fcfdfcf46d7f3c",
+  "prompts": {},
+  "sessions": {
+    "s_e7129716d7db62": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e6d24277effeyoXolmCksH349o",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
