@@ -22,7 +22,8 @@ This records repository changes. No application version has been released.
   viewport and affected focus regressions. Final full `pnpm check`, audit
   high/critical gate, handoff and whitespace pass; PR URL, CI/Kody state and
   exact final head remain in the UI guide/external report.
-  [UI guide, evidence and limits](docs/development/task-collaboration-ui.md).
+  [UI guide, evidence and limits](docs/development/task-collaboration-ui.md),
+  [PR #22](https://github.com/Ljrr3045/rielia/pull/22).
   Presentation adds no hook/controller/contract or backend change; full
   T09/P05/P14/P38, T10/T11/T12/B2, real OAuth/staging/users, physical-device/AT/
   WCAG and deployment remain open. The inherited moderate dev-tooling minimatch

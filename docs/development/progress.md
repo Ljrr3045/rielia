@@ -41,9 +41,9 @@ implementation, without completing tickets or weakening automated checks/launch 
 | Base | `origin/dev` merged T08.1 [PR #20](https://github.com/Ljrr3045/rielia/pull/20), `a93cb85e1e4a4175b1ea7a93ca89d922032fa3fa`; both completed T08 worktrees removed by coordinator |
 | Branch | `feat/t09-task-collaboration-logic`, one English non-draft logic/docs PR to `dev` |
 | Worktree | Isolated `feat-t09-task-collaboration-logic`; effective Codex `gpt-6.1-sol` effort `xhigh` verified through Orca terminal footer before development; no helpers |
-| Current PR | T09.0 logic [#21](https://github.com/Ljrr3045/rielia/pull/21) merged 2026-10-31T17:52:53Z as `76d7d31bce1e61e46dcab632fb5b53e50d564ce2`; T09.1 presentation PR pending its final docs/bookkeeping head |
+| Current PR | T09.0 logic [#21](https://github.com/Ljrr3045/rielia/pull/21) merged 2026-10-31T17:52:53Z as `76d7d31bce1e61e46dcab632fb5b53e50d564ce2`; T09.1 presentation [#22](https://github.com/Ljrr3045/rielia/pull/22) targets `dev`, with exact final head/CI/Kody state in GitHub/external report |
 | T09 evidence | Frozen install, full `pnpm check`, 46 focused project/client/proxy/XSS checks, real PG migration/permission/race/rollback/aborted-HTTP tests and eight-table PostgreSQL-restart witness pass. Actual archived-row migration preservation, >100 paging and new/edited-comment discovery, final-migration Docker runtime, expanded real Next proxy QA, audit high/critical gate, handoff and whitespace pass. PR #21 reviewed head `0e4784c3d41ddd095c69f61b49489e9a78065347`; root Kody trigger `6546958383`, final Kody check `124610642083` SUCCESS/no-issues comment `6546960524`, CI `41226123949` / check `124610518385` SUCCESS. Logic worktree removed by coordinator |
-| T09.1 presentation | [Task collaboration UI](task-collaboration-ui.md) implemented locally on merged T09.0; source head `bfefde6a72431e8190b2829c9fd29b2a2f4b8c1b` before final bookkeeping. Functional and responsive validators passed their bounded cases; final standard `pnpm check`, audit high/critical gate, handoff and whitespace pass. PR URL/CI/Kody evidence and exact head remain pending. No full T09/P05/P14/P38, real-user/AT/WCAG, staging or deployment claim |
+| T09.1 presentation | [Task collaboration UI](task-collaboration-ui.md) implemented locally on merged T09.0; presentation PR [#22](https://github.com/Ljrr3045/rielia/pull/22). Functional and responsive validators passed their bounded cases; final standard `pnpm check`, audit high/critical gate, handoff and whitespace pass. Exact final head/CI/Kody evidence remains in GitHub/external report. No full T09/P05/P14/P38, real-user/AT/WCAG, staging or deployment claim |
 | T09 contract | [Task collaboration](task-collaboration.md): archived children remain independent, removal retains checklist rows, comments editable only by current authorized original author, latest-update-first comments and newest-event-first history; no fabricated legacy before/after values or raw JSON |
 | Audit | `pnpm audit --audit-level=high` passes with 0 high/critical; inherited development-only minimatch 10.2.6 moderate GHSA-g3hv-75wg-m249 remains as already documented in PR #20; no dependency/lockfile changes |
 | T08.1 presentation PR | [#20](https://github.com/Ljrr3045/rielia/pull/20) merged as `a93cb85e1e4a4175b1ea7a93ca89d922032fa3fa`; reviewed `a46a5e47`, Kody approval `5723763333` / check `124591980449`, CI check `124590250125`; both completed worktrees removed |
@@ -164,11 +164,11 @@ source. No actual PRE block, real 200% zoom, physical device, screen-reader/AT o
 WCAG certification is claimed; private reports and attempts stay outside the
 repository.
 
-Final standard `pnpm check`, PR URL/CI/Kody evidence and exact head are pending
-the validator runtime handback and coordinator review. The presentation PR is
-pending; see the external delivery report and GitHub for final state. No full
-T09/P05/P14/P38, T10/T11/T12/B2, credentials, staging/OAuth, real-user or
-deployment acceptance is claimed.
+Final standard `pnpm check`, PR URL/CI/Kody evidence and exact head are recorded
+in GitHub and the external delivery report. The presentation PR is
+[#22](https://github.com/Ljrr3045/rielia/pull/22). No full T09/P05/P14/P38,
+T10/T11/T12/B2, credentials, staging/OAuth, real-user or deployment acceptance is
+claimed.
 
 ## T08.1 task views presentation
 

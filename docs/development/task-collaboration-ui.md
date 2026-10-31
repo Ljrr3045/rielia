@@ -2,7 +2,10 @@
 
 Status: bounded presentation on the merged T09.0 collaboration logic
 ([PR #21](https://github.com/Ljrr3045/rielia/pull/21), merge
-`76d7d31bce1e61e46dcab632fb5b53e50d564ce2`). It implements the presentation
+`76d7d31bce1e61e46dcab632fb5b53e50d564ce2`). Presentation PR
+[#22](https://github.com/Ljrr3045/rielia/pull/22) targets `dev`; exact final
+head/CI/Kody state remains on the PR and in the external delivery report. It
+implements the presentation
 portion of P05/P06/P10/P14/P33/P38; supports US07/US08/US11/US12/US24–US25; and
 uses UXR01/UXR02/UXR03/UXR04/UXR06 with UX01/UX02/UX03/UX05/UX06/UX07/UX09/
 UX11. It does not complete full T09, T10/T11/T12, B2 mentions/notifications/
