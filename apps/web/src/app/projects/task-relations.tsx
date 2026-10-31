@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import type { MouseEvent as ReactMouseEvent } from 'react';
 import type { ProjectCommand, Task, TaskReference } from '@rielia/contracts';
 import { FeedbackPanel } from './feedback';
 import {
@@ -76,6 +77,7 @@ export function TaskRelations({
   const [selectedParentId, setSelectedParentId] = useState('');
   const [unlinkOpen, setUnlinkOpen] = useState(false);
   const selectRef = useRef<HTMLSelectElement>(null);
+  const linkOpenerRef = useRef<HTMLElement | null>(null);
   const setWanted = hook.setParentCandidatesWanted;
 
   useEffect(() => {
@@ -89,14 +91,24 @@ export function TaskRelations({
     if (linkOpen && candidates.status === 'ready') selectRef.current?.focus();
   }, [linkOpen, candidates.status]);
 
-  function closeLink() {
+  function closeLink(focus = true) {
     setLinkOpen(false);
     setSelectedParentId('');
     void setWanted(false);
+    if (!focus) return;
+    requestAnimationFrame(() => {
+      const opener = linkOpenerRef.current;
+      if (opener !== null && opener.isConnected) {
+        opener.focus();
+        return;
+      }
+      document.getElementById('collab-relations-heading')?.focus();
+    });
   }
 
-  function openLink() {
+  function openLink(event: ReactMouseEvent<HTMLButtonElement>) {
     if (disabled || draftLocked) return;
+    linkOpenerRef.current = event.currentTarget;
     setLinkOpen(true);
     void setWanted(true);
   }
@@ -114,7 +126,7 @@ export function TaskRelations({
       parentTaskId: candidate.id,
       expectedParentVersion: candidate.version,
     });
-    closeLink();
+    closeLink(false);
     onSubmit();
   }
 
@@ -158,7 +170,7 @@ export function TaskRelations({
   if (relations === null) {
     return (
       <section aria-labelledby="collab-relations-heading" className={styles.collabSection}>
-        <h3 className={styles.detailSectionTitle} id="collab-relations-heading">{copy.collaboration.subtasks[lang]}</h3>
+        <h3 className={styles.detailSectionTitle} id="collab-relations-heading" tabIndex={-1}>{copy.collaboration.subtasks[lang]}</h3>
         {slot.status === 'error'
           ? (
             <FeedbackPanel
@@ -183,7 +195,7 @@ export function TaskRelations({
   return (
     <section aria-labelledby="collab-relations-heading" className={styles.collabSection}>
       <div className={styles.collabHeader}>
-        <h3 className={styles.detailSectionTitle} id="collab-relations-heading">
+        <h3 className={styles.detailSectionTitle} id="collab-relations-heading" tabIndex={-1}>
           {parent === null ? copy.collaboration.subtasks[lang] : copy.collaboration.parentTask[lang]}
         </h3>
         {parent === null && (
@@ -298,6 +310,7 @@ export function TaskRelations({
           onKeyDown={event => {
             if (event.key !== 'Escape') return;
             event.preventDefault();
+            event.stopPropagation();
             closeLink();
           }}
           role="group"
@@ -309,7 +322,7 @@ export function TaskRelations({
               aria-label={copy.collaboration.closeCandidatePicker[lang]}
               className={styles.iconButton}
               disabled={pending}
-              onClick={closeLink}
+              onClick={() => closeLink()}
               type="button"
             >
               <IconArrowLeft size={16} />
@@ -375,7 +388,7 @@ export function TaskRelations({
                 >
                   {pending ? copy.collaboration.linking[lang] : copy.collaboration.linkParentAction[lang]}
                 </button>
-                <button className={styles.ghostButton} disabled={pending} onClick={closeLink} type="button">
+                <button className={styles.ghostButton} disabled={pending} onClick={() => closeLink()} type="button">
                   {copy.common.cancel[lang]}
                 </button>
                 {candidates.data.nextCursor !== null && (

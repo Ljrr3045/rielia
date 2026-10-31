@@ -933,7 +933,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
       const target = task?.id === command.taskId
         ? task
         : tasks?.items.find(item => item.id === command.taskId);
-      return `${copy.feedback.targetTask[lang]}: ${target?.key ?? command.taskId} · ${label}`;
+      return target === undefined || target === null ? label : `${copy.feedback.targetTask[lang]}: ${target.key} · ${label}`;
     }
     return label;
   }

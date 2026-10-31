@@ -82,10 +82,18 @@ export function TaskComments({
     });
   }
 
+  function cancelEdit(commentId: string) {
+    onDiscard();
+    requestAnimationFrame(() => {
+      const opener = document.querySelector<HTMLElement>(`[data-comment-edit="${commentId}"]`);
+      (opener ?? document.getElementById('collab-comments-heading'))?.focus();
+    });
+  }
+
   if (data === null) {
     return (
       <section aria-labelledby="collab-comments-heading" className={styles.collabSection}>
-        <h3 className={styles.detailSectionTitle} id="collab-comments-heading">{copy.collaboration.comments[lang]}</h3>
+        <h3 className={styles.detailSectionTitle} id="collab-comments-heading" tabIndex={-1}>{copy.collaboration.comments[lang]}</h3>
         {slot.status === 'error'
           ? (
             <FeedbackPanel
@@ -109,7 +117,7 @@ export function TaskComments({
   return (
     <section aria-labelledby="collab-comments-heading" className={styles.collabSection}>
       <div className={styles.collabHeader}>
-        <h3 className={styles.detailSectionTitle} id="collab-comments-heading">{copy.collaboration.comments[lang]}</h3>
+        <h3 className={styles.detailSectionTitle} id="collab-comments-heading" tabIndex={-1}>{copy.collaboration.comments[lang]}</h3>
         <span className={styles.collabCount}>{copy.collaboration.commentsCount[lang](data.total)}</span>
       </div>
       <p className={styles.collabHint}>{copy.collaboration.commentsHint[lang]}</p>
@@ -204,6 +212,7 @@ export function TaskComments({
                       <button
                         aria-label={`${copy.collaboration.editComment[lang]}: ${comment.author.name}`}
                         className={styles.ghostButton}
+                        data-comment-edit={comment.id}
                         disabled={disabled || addDraft !== null || editDraft !== null}
                         onClick={() => startEdit(comment.id, comment.body)}
                         type="button"
@@ -236,7 +245,7 @@ export function TaskComments({
                           <button className={styles.primary} disabled={pending || (editDraft?.body ?? '').trim().length === 0} type="submit">
                             {copy.collaboration.saveComment[lang]}
                           </button>
-                          <button className={styles.ghostButton} disabled={pending} onClick={onDiscard} type="button">
+                          <button className={styles.ghostButton} disabled={pending} onClick={() => cancelEdit(comment.id)} type="button">
                             {copy.collaboration.cancelComment[lang]}
                           </button>
                         </div>

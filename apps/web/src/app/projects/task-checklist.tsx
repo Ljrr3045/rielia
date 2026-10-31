@@ -122,10 +122,18 @@ export function TaskChecklist({
     onSubmit();
   }
 
+  function cancelEdit(itemId: string) {
+    onDiscard();
+    requestAnimationFrame(() => {
+      const opener = document.querySelector<HTMLElement>(`[data-checklist-edit="${itemId}"]`);
+      (opener ?? document.getElementById('collab-checklist-heading'))?.focus();
+    });
+  }
+
   if (data === null) {
     return (
       <section aria-labelledby="collab-checklist-heading" className={styles.collabSection}>
-        <h3 className={styles.detailSectionTitle} id="collab-checklist-heading">{copy.collaboration.checklist[lang]}</h3>
+        <h3 className={styles.detailSectionTitle} id="collab-checklist-heading" tabIndex={-1}>{copy.collaboration.checklist[lang]}</h3>
         {slot.status === 'error'
           ? (
             <FeedbackPanel
@@ -147,7 +155,7 @@ export function TaskChecklist({
   return (
     <section aria-labelledby="collab-checklist-heading" className={styles.collabSection}>
       <div className={styles.collabHeader}>
-        <h3 className={styles.detailSectionTitle} id="collab-checklist-heading">{copy.collaboration.checklist[lang]}</h3>
+        <h3 className={styles.detailSectionTitle} id="collab-checklist-heading" tabIndex={-1}>{copy.collaboration.checklist[lang]}</h3>
         {total > 0 && <span className={styles.collabCount}>{copy.collaboration.checklistProgress[lang](completed, total)}</span>}
       </div>
 
@@ -224,6 +232,7 @@ export function TaskChecklist({
                       >
                         <label className={styles.srOnly} htmlFor={`checklist-edit-${item.id}`}>{copy.collaboration.checklistEdit[lang]}</label>
                         <input
+                          autoFocus
                           disabled={disabled}
                           id={`checklist-edit-${item.id}`}
                           maxLength={500}
@@ -234,7 +243,7 @@ export function TaskChecklist({
                           <button className={styles.secondary} disabled={pending || (editDraft?.text ?? '').trim().length === 0} type="submit">
                             {copy.collaboration.checklistSave[lang]}
                           </button>
-                          <button className={styles.ghostButton} disabled={pending} onClick={onDiscard} type="button">
+                          <button className={styles.ghostButton} disabled={pending} onClick={() => cancelEdit(item.id)} type="button">
                             {copy.collaboration.checklistCancel[lang]}
                           </button>
                         </div>
@@ -270,6 +279,7 @@ export function TaskChecklist({
                       <button
                         aria-label={`${copy.collaboration.checklistEdit[lang]}: ${item.text}`}
                         className={styles.iconButton}
+                        data-checklist-edit={item.id}
                         disabled={itemDisabled || pending}
                         onClick={() => stageEdit(item.id, item.text)}
                         type="button"

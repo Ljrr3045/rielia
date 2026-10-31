@@ -271,7 +271,7 @@ export function TaskCollaboration({
           )}
           autoFocus
           body={copy.collaboration.unknownBody}
-          target={draftLabel(activeDraft, task, lang)}
+          target={draftLabel(activeDraft, hook, lang)}
           title={copy.collaboration.unknownTitle}
           tone="warning"
         />
@@ -295,7 +295,7 @@ export function TaskCollaboration({
           )}
           autoFocus
           body={copy.collaboration.draftBody}
-          target={draftLabel(activeDraft, task, lang)}
+          target={draftLabel(activeDraft, hook, lang)}
           title={copy.collaboration.draftTitle}
           tone="warning"
         />
@@ -304,7 +304,7 @@ export function TaskCollaboration({
       {hook.collaborationPending !== null && draft !== null && !offTarget && (
         <FeedbackPanel
           busy
-          target={draftLabel(activeDraft, task, lang)}
+          target={draftLabel(activeDraft, hook, lang)}
           title={copy.collaboration.pendingTitle}
           tone="info"
         />
@@ -342,7 +342,7 @@ export function TaskCollaboration({
             </button>
           )}
           body={copy.collaboration.unknownBody}
-          target={draftLabel(activeDraft, task, lang)}
+          target={draftLabel(activeDraft, hook, lang)}
           title={copy.collaboration.unknownTitle}
           tone="danger"
         />
@@ -403,9 +403,26 @@ export function TaskCollaboration({
   );
 }
 
-function draftLabel(command: ProjectCommand | null, task: Task, lang: 'es' | 'en'): string | null {
+function taskKeyForCommand(command: ProjectCommand, hook: ProjectTasksHook): string | null {
+  const targetId = 'taskId' in command
+    ? command.taskId
+    : command.type === 'create-task' && command.fields.parentTaskId !== undefined
+      ? command.fields.parentTaskId
+      : null;
+  if (targetId === null) return null;
+  if (hook.task?.id === targetId) return hook.task.key;
+  const pages = [hook.tasks, ...Object.values(hook.taskColumns)];
+  for (const page of pages) {
+    const found = page?.items.find(item => item.id === targetId);
+    if (found !== undefined) return found.key;
+  }
+  return null;
+}
+
+function draftLabel(command: ProjectCommand | null, hook: ProjectTasksHook, lang: 'es' | 'en'): string | null {
   if (command === null) return null;
   const action = copy.collaboration.activityActions[command.type];
   const label = action === undefined ? command.type : action[lang];
-  return `${task.key} · ${label}`;
+  const key = taskKeyForCommand(command, hook);
+  return key === null ? label : `${key} · ${label}`;
 }

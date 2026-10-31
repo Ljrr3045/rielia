@@ -607,8 +607,8 @@ export const copy = {
     checklistItemLabel: { es: 'Elemento de la lista', en: 'Checklist item' },
     comments: { es: 'Comentarios', en: 'Comments' },
     commentsHint: {
-      es: 'El autor y la fecha no se pueden editar. Solo puedes editar tus propios comentarios; el texto se muestra como Markdown seguro.',
-      en: 'Author and date cannot be edited. You can edit only your own comments; text is shown as safe Markdown.',
+      es: 'El autor y la fecha no se pueden editar. Solo puedes editar tus propios comentarios. El texto admite Markdown.',
+      en: 'Author and date cannot be edited. You can edit only your own comments. Text supports Markdown.',
     },
     commentPlaceholder: { es: 'Escribe un comentario…', en: 'Write a comment…' },
     commentAdd: { es: 'Comentar', en: 'Comment' },
@@ -620,8 +620,8 @@ export const copy = {
       en: 'Share context or progress. A comment keeps its original author and provenance.',
     },
     commentsMostRecent: {
-      es: 'Los comentarios editados o nuevos aparecen primero. “Cargar anteriores” sigue el orden del servidor.',
-      en: 'New or edited comments appear first. “Load older” follows server order.',
+      es: 'Los comentarios nuevos o editados recientemente aparecen primero. “Cargar anteriores” muestra los comentarios anteriores.',
+      en: 'New or recently edited comments appear first. “Load older” shows earlier comments.',
     },
     loadOlderComments: { es: 'Cargar comentarios anteriores', en: 'Load older comments' },
     commentsCount: {
