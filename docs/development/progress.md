@@ -9,8 +9,10 @@ and T04.0's opt-in preparatory local Docker runtime/diagnostic worker. T35.0 now
 adds bounded principal/minimal workspace/membership foundations and verified
 execution. T06 adds actual task attribution; T09.0 adds bounded collaboration logic
 and T09.1 adds its presentation. T10.0 adds bounded workspace search,
-current-assignee My tasks and session invalidation logic; export and T10
-presentation remain separate.
+current-assignee My tasks and session invalidation logic. The T10.1 presentation
+candidate consumes that merged logic through explicit My tasks/Search entries,
+project-grouped results, live-status feedback and workspace-draft protection;
+export remains separate.
 T05.0 adds actual workspace/membership/invitation backend and frontend logic with
 merged T05.1 presentation. T06.0 adds bounded persisted project/task backend and
 frontend logic, and merged T06.1 adds its presentation. T07.0 adds bounded private
@@ -39,12 +41,13 @@ implementation, without completing tickets or weakening automated checks/launch 
 
 | Field | Evidence/state |
 | --- | --- |
-| Scope | T10.0/B1b workspace-authorized ID/title search, current-principal-assignee My tasks, existing filters, bounded revision paging, session SSE and typed navigation/recovery contracts. P02/P03/P05/P08/P10/P11/P14/P33/P38; US02/03/05/08/12/25; UX01/03/05/06/07/09/11 and UXR01/03. No JSX/CSS/copy, labels/sprints, exports, business worker, credentials, real OAuth/staging/users or deployment; no full ticket completion |
-| Base | `origin/dev`, T09.1 [PR #22](https://github.com/Ljrr3045/rielia/pull/22), verified merged 2026-10-31T20:10:22Z as `8d51135af5260bdb8773863a4a7fb8ff6a966f8e` |
-| Branch | `feat/t10-search-my-tasks-sse-logic`, one English non-draft logic/docs PR to `dev` |
-| Worktree | Isolated `feat-t10-search-my-tasks-sse-logic`; effective Codex `gpt-6.1-sol` effort `xhigh` verified through Orca terminal footer before edits; no helpers or shared checkout |
-| Current PR | T10.0 logic [PR #23](https://github.com/Ljrr3045/rielia/pull/23), non-draft to `dev`; exact ready-head CI and coordinator-triggered Kody are required before merge. T09.0 [#21](https://github.com/Ljrr3045/rielia/pull/21) and T09.1 [#22](https://github.com/Ljrr3045/rielia/pull/22) are merged; PR #22 final source `10dc1462b35ec2f7adfd5e549501a71198d9d273` |
-| T10 evidence | [Discovery/SSE contract](task-discovery.md): 61 focused client/proxy/state checks; full standard check; real PostgreSQL search/authority/rollback/commit-order/replay/revocation plus eight-table restart witness; real Nest→Next 105-row search and two-session streaming QA; Docker runtime smoke; audit high/critical, handoff and whitespace pass. Independent denial/deferral/page-two return findings fixed with regressions; Kody hydration and SSE metadata findings addressed by one bounded shared hydration and id/version-only polling, with 12 T10 PG tests. New-head CI/Kody remain required |
+| Scope | T10.1/B1b presentation on merged T10.0 logic: explicit workspace **My tasks** (`taskScope=mine`, current assignee) and ID/title **Search tasks** (`taskScope=search`), project-grouped results with project name/key, status/priority/project/archive filters, canonical totals/paging and bound, loading/empty/error/changed states, visible live/pending/reconnecting/offline feedback, context-preserving detail navigation, existing draft/retry/conflict recovery and a workspace-navigation Stay/Discard guard. P11/P02/P33/P38; US02/05/08/12/25; UXR01/03; UX01/03/05/06/07/09/11. No JSX logic/hooks/controllers/proxies/session policy/functional tests, labels/sprints, exports, coediting, credentials, staging or deployment |
+| Base | `origin/dev`, T10.0 [PR #23](https://github.com/Ljrr3045/rielia/pull/23), verified merged as `6bde444cd4e69115bc7004cf8d58c229ee7c55a7` |
+| Branch | `feat/t10-search-my-tasks-ui`, one English non-draft presentation/docs PR to `dev` |
+| Worktree | Isolated `feat-t10-search-my-tasks-ui`; OpenCode Go `opencode-go/deepseek-v4.1-flash` variant `max` verified by the coordinator's terminal footer; no helpers or shared checkout |
+| Current PR | T10.1 presentation [PR #24](https://github.com/Ljrr3045/rielia/pull/24), non-draft to `dev`; exact-head CI and coordinator-triggered Kody remain required. T10.0 logic [PR #23](https://github.com/Ljrr3045/rielia/pull/23) is merged as `6bde444cd4e69115bc7004cf8d58c229ee7c55a7` |
+| T10.1 evidence | [Search and My tasks UI guide](task-discovery-ui.md), [PR #24](https://github.com/Ljrr3045/rielia/pull/24): combined source `29601ac17965f7038c397e95fa8773eb9fdd4798` (presentation corrections plus two exact root-reviewed SOL controller/test commits). Full `pnpm check`, 63 focused project/client/proxy/controller checks including T10, web typecheck, targeted ESLint and production build pass; independent responsive seven-width/recovery and final functional/mobile-return evidence accepted. Audit/handoff/whitespace pass; exact PR head/CI/Kody state is recorded in GitHub and the external report |
+| T10 evidence | [Discovery/SSE contract](task-discovery.md): 61 focused client/proxy/state checks; full standard check; real PostgreSQL search/authority/rollback/commit-order/replay/revocation plus eight-table restart witness; real Nest→Next 105-row search and two-session streaming QA; Docker runtime smoke; audit high/critical, handoff and whitespace pass. Independent denial/deferral/page-two return findings fixed with regressions; Kody hydration and SSE metadata findings addressed by one bounded shared hydration and id/version-only polling, with 12 T10 PG tests. T10.0 [PR #23](https://github.com/Ljrr3045/rielia/pull/23) merged as `6bde444cd4e69115bc7004cf8d58c229ee7c55a7` |
 | T09 evidence | Frozen install, full `pnpm check`, 46 focused project/client/proxy/XSS checks, real PG migration/permission/race/rollback/aborted-HTTP tests and eight-table PostgreSQL-restart witness pass. Actual archived-row migration preservation, >100 paging and new/edited-comment discovery, final-migration Docker runtime, expanded real Next proxy QA, audit high/critical gate, handoff and whitespace pass. PR #21 reviewed head `0e4784c3d41ddd095c69f61b49489e9a78065347`; root Kody trigger `6546958383`, final Kody check `124610642083` SUCCESS/no-issues comment `6546960524`, CI `41226123949` / check `124610518385` SUCCESS. Logic worktree removed by coordinator |
 | T09.1 presentation | [Task collaboration UI](task-collaboration-ui.md), [PR #22](https://github.com/Ljrr3045/rielia/pull/22), verified merged 2026-10-31T20:10:22Z as `8d51135af5260bdb8773863a4a7fb8ff6a966f8e`. Functional/responsive validators and final standard checks passed their documented bounded cases; historical CI/Kody evidence remains on the PR/external report. No full T09/P05/P14/P38, real-user/AT/WCAG, staging or deployment claim |
 | T09 contract | [Task collaboration](task-collaboration.md): archived children remain independent, removal retains checklist rows, comments editable only by current authorized original author, latest-update-first comments and newest-event-first history; no fabricated legacy before/after values or raw JSON |
@@ -178,6 +181,57 @@ historical CI/Kody evidence remains in GitHub and the external final report. No
 full T09/P05/P14/P38,
 T10/T11/T12/B2, credentials, staging/OAuth, real-user or deployment acceptance is
 claimed.
+
+## T10.1/B1b search and My tasks presentation
+
+The [T10 UI guide](task-discovery-ui.md) records the bounded presentation on
+merged T10.0 logic `6bde444cd4e69115bc7004cf8d58c229ee7c55a7`. `/projects` now
+offers explicit **My tasks** (`taskScope=mine`) and **Search tasks**
+(`taskScope=search`) entries without changing the bare project-route default.
+Discovery results are grouped by project with visible project name/key and task
+key, title, type, status, priority, due date, human/Agent assignee and archive
+state. Search accepts a literal ID, project key/number or title fragment (100
+UTF-16 units maximum); status/priority/project/archive filters, canonical totals
+and next cursors, loaded/total summaries, a 1,000-row context limit and
+loading/empty/error/changed states are presented from the merged hook.
+
+Rows open the existing URL-addressable detail through `openDiscoveryTask` and
+return through `returnToDiscovery`, preserving scope/query/filters across Back
+and reload and restoring focus only after an actual detail return. Discovery and
+legacy project/detail rendering are mutually exclusive, so an open discovery
+detail cannot mount a second detail or focus trap. The existing
+draft/retry/conflict/close-warning/policy/collaboration panels remain in the
+discovery route. A workspace change with local unsaved or recovery state opens an
+explicit Stay/Discard dialog in place of an open form, preserving retained form
+state with one focus trap; Discard is disabled while a save is pending and
+explains that it removes local state but cannot undo a server write. Live status
+distinguishes connected, pending refresh, deferred refresh, reconnecting and
+offline states; a live connection is never described as already up to date.
+
+The project-filter criterion is included in the active-filter count and the
+explicit all-filter clear; the query stays separately clearable. An assignee
+criterion inherited from the URL or project scope is shown as a clearable selected
+value without inventing a workspace-wide people catalog. Discovery does not
+invent an assignee catalog: the approved full selector remains in the project
+view. The development home task-work entry and the primary styled sidebar My tasks
+entry use the explicit My tasks URL, preserving the selected workspace where
+available. A visible "Choose a project to create a task" disclosure lists editable
+non-archived visible projects and routes to that project's existing quick capture,
+without cross-project creation or auto-assignment.
+
+Committed combined source `29601ac17965f7038c397e95fa8773eb9fdd4798` passes
+`pnpm check`, 63 focused project/client/proxy/controller checks including T10,
+web typecheck, targeted ESLint and production build. The two exact accepted
+SOL controller/test commits (`f1435b17` guarded-history URL repair and `f67fc41b`
+session-replacement URL clearing) are included and documented as logic-owned, not
+UI-authored. Independent responsive validation accepted the seven-width matrix,
+44 px targets, single detail/focus, guard/Stay/Escape and long-feedback fixes; the
+final functional report and mobile-return results accept persisted comment/
+checklist, no auto-assignment, accessible H1 fallback after reload and exact row
+focus after in-session reopen/Escape. Audit/handoff/whitespace and PR/CI/Kody
+evidence are recorded in the final delivery pass. No full T10/P11/US05,
+labels/sprints, exports, coediting, real OAuth/staging/users, physical-device/
+AT/WCAG or deployment acceptance is claimed.
 
 ## T08.1 task views presentation
 
@@ -668,12 +722,15 @@ the following records preserve the original first-wave scope and acceptance:
    open. PR #9 is merged; see [runtime scope and evidence](local-runtime.md). This is a preparatory
    split of the B1 T04 ticket, without business effects, deployment or full acceptance.
 
-Current bounded product step: **T09.1** task-collaboration presentation on the
-merged T09.0 logic under the user's sequencing override; delivered in
-[PR #22](https://github.com/Ljrr3045/rielia/pull/22) with standard checks and
-targeted functional/responsive QA passed. Exact current-head CI/Kody and merge
-evidence live in GitHub and the external final report. Invitations/guests, full
-T06/T07/T08/T09/T35/US05 and MCP/history/export integration remain incomplete.
+Current bounded product step: **T10.1** My tasks/search presentation on the merged
+T10.0 logic. T10.0 is merged in
+[PR #23](https://github.com/Ljrr3045/rielia/pull/23) at `6bde444c`; the T10.1
+presentation candidate `c1a2a1d` is in independent functional/responsive
+validation with its PR pending. The bounded slice covers workspace-authorized
+ID/title search, current-assignee My tasks, existing filters, SSE status feedback
+and context-preserving detail/recovery presentation. Invitations/guests, full
+T06/T07/T08/T09/T10/T35, labels/sprints, exports, coediting, MCP/history
+integration, real-user/staging and deployment remain incomplete.
 
 Convergence: T02 + T03 → T04 → **T35** → T05 → T06. The principal/authorship model
 must precede workspaces/tasks/credentials despite T35's number. T01 supplies UI
@@ -708,7 +765,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T07 | B1b | Invitations, revocation, roles/private projects | T06 | Invitation/role subset remains in T05.0; bounded [T07.0 privacy/access logic](project-access.md) merged in PR #17 and [T07.1 presentation](project-access-ui.md) delivered in the UI PR. Full T07 acceptance remains open |
 | T08 | B1b | List/Kanban, filters, ranking | T06 | [T08.0 logic](task-views.md) merged in PR #19 at `f8895709`; [T08.1 presentation](task-views-ui.md) in [PR #20](https://github.com/Ljrr3045/rielia/pull/20). Configurable workflows/labels/sprints and full US05/T08 remain open |
 | T09 | B1b | Subtasks, checklists, comments, history | T06 | T09.0 bounded collaboration logic merged in [PR #21](https://github.com/Ljrr3045/rielia/pull/21) at `76d7d31b`; T09.1 [presentation](task-collaboration-ui.md) delivered in [PR #22](https://github.com/Ljrr3045/rielia/pull/22) with standard checks and targeted functional/responsive QA passed. Exact current-head CI/Kody/merge evidence remains in GitHub/external final report. Full T09/P05/P14/P38, credentials and real-user/staging acceptance remain open |
-| T10 | B1b | Search, My tasks, responsive layout, SSE | T07–T09 | Not started |
+| T10 | B1b | Search, My tasks, responsive layout, SSE | T07–T09 | T10.0 bounded logic merged in [PR #23](https://github.com/Ljrr3045/rielia/pull/23) at `6bde444c`; T10.1 [presentation](task-discovery-ui.md) PR [#24](https://github.com/Ljrr3045/rielia/pull/24) includes exact root-reviewed SOL controller/test URL corrections and has accepted functional/responsive evidence. Full T10/P11/US05, labels/sprints, exports, coediting, credentials, real-user/staging and deployment remain open |
 | T11 | B1c | Sprint lifecycle and scope history | T08–T09 | Not started |
 | T12 | B1c | Personal/service credentials, explicit-subject grants | T07, T35 | Not started |
 | T13 | B1c | Local MCP catalog/client/guide | T03, T11–T12 | Not started |

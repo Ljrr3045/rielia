@@ -6,6 +6,41 @@ This records repository changes. No application version has been released.
 
 ### Added
 
+- T10.1/B1b search and My tasks presentation on merged T10.0 logic
+  [PR #23](https://github.com/Ljrr3045/rielia/pull/23) (`6bde444c`). `/projects`
+  gains explicit workspace My tasks (`taskScope=mine`, current assignee) and
+  literal ID/key-number/title Search entries without changing the bare
+  project-route default. Discovery results group readable tasks by project with
+  project name/key, task key/title/type/status/priority/due/assignee, canonical
+  totals and next cursors, bounded paging with a 1,000-row context limit, and
+  loading/empty/error/changed states. Rows preserve scope/query/filter context
+  through the existing URL-addressable detail and Back, restoring focus only
+  after a real detail return. Discovery and legacy project/detail rendering are
+  mutually exclusive. Existing draft/retry/conflict recovery remains, a
+  workspace-navigation Stay/Discard guard protects local work in place of an open
+  form, and live status distinguishes connected, pending/deferred refresh,
+  reconnecting and offline. Discovery exposes status/priority/project/archive
+  filters with combined count/clear; the full authorized assignee selector stays
+  in project view and an inherited assignee is shown only as a clearable value.
+  The primary home/sidebar My tasks entry uses the explicit scope URL, and a
+  visible choose-project disclosure routes to editable projects' existing quick
+  capture without cross-project creation or auto-assignment. The discovery result
+  title is a full-width 44 px native link and mobile feedback/modal actions wrap
+  within a constrained dialog. Two exact root-reviewed SOL controller/test
+  commits are included as logic-owned navigation URL corrections: guarded-history
+  Discard restores the requested workspace URL before reads, and a replaced human
+  session clears the stale task/query URL. Combined source `29601ac` passes full
+  `pnpm check`, 63 focused project/client/proxy/controller checks including T10,
+  production build, accepted seven-width responsive evidence and the precise
+  shell-dismissal disposition (no demonstrated private-field leak); the final
+  functional/mobile-return report accepts persisted comment/checklist, no
+  auto-assignment, accessible H1 fallback after reload and exact row focus after
+  in-session reopen/Escape. PR/review evidence is recorded on
+  [PR #24](https://github.com/Ljrr3045/rielia/pull/24).
+  [UI guide](docs/development/task-discovery-ui.md). No full T10/P11/US05,
+  labels/sprints, exports, coediting, real OAuth/staging/users,
+  physical-device/AT/WCAG or deployment acceptance is claimed.
+
 - T10.0/B1b workspace-authorized ID/title search and current-principal-assignee
   My tasks across readable projects, with existing filters, bounded revision
   pages/counts and context-preserving detail navigation. Session-authenticated

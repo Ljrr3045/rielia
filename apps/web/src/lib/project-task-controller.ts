@@ -249,16 +249,19 @@ export function createProjectTaskController(options: {
       if (!config.enabled || !session || Date.parse(session.session.expiresAt) <= Date.now()) {
         publish({ ...state, parentCandidatesWanted: false, status: config.enabled ? 'signed-out' : 'disabled', session: null, result: null, conflict: null }); return;
       }
-      if (owner !== null && (owner !== session.user.id || sessionId !== session.session.id)) {
+      const sessionChanged = owner !== null && (owner !== session.user.id || sessionId !== session.session.id);
+      if (sessionChanged) {
         discoveryContext = null;
         workspaceNavigation = null;
         retry = null; publish({ ...state, workspaceNavigation: null, discovery: discoveryEmpty, searchQuery: '', discoveryProjectId: null, parentCandidatesWanted: false, selection: { ...selectionEmpty }, taskView: { layout: 'list', filters: {}, column: 'backlog' }, url: '/projects', draft: null, retryTarget: null, outcome: null, result: null, conflict: null, accessConflict: null, requestId: null });
+        options.navigate?.(state.url, true);
       }
       owner = session.user.id; sessionId = session.session.id; publish({ ...state, session });
       const workspaces = await options.workspaces.workspaces(request.signal);
       if (!current(request)) return;
       publish({ ...state, workspaces });
       if (!state.selection.workspaceId) select({ workspaceId: workspaces.items[0]?.id ?? null, projectId: null, taskId: null }, false);
+      if (sessionChanged) options.navigate?.(state.url, true);
       await load(request);
     } catch (error) { if (current(request)) readFailure(error); }
   }
@@ -521,7 +524,7 @@ export function createProjectTaskController(options: {
       publish({ ...state, views: { ...state.views, [collection]: view } });
       await changeSelection(collection === 'projects' ? { ...state.selection, projectId: null, taskId: null } : { ...state.selection, taskId: null });
     },
-    async openLocation(search: string) {
+    async openLocation(search: string, restoreHistoryTarget = false) {
       disposed = false;
       const query = new URLSearchParams(search); const w = query.get('workspace'); const p = query.get('project'); const t = query.get('task');
       const projectsView = query.get('projectsView') ?? 'active'; const tasksView = query.get('tasksView') ?? 'active';
@@ -533,10 +536,14 @@ export function createProjectTaskController(options: {
         || !['list', 'board'].includes(layout) || !taskStatuses.includes(column as TaskStatus) || !isTaskFilters(filters)
         || !['project', 'mine', 'search'].includes(taskScope) || !isTaskSearch(searchQuery) || searchProject !== null && !id(searchProject) || taskScope === 'mine' && filters.assignee !== undefined
         || ['workspace', 'project', 'task', 'projectsView', 'tasksView', 'taskLayout', 'status', 'assignee', 'priority', 'column', 'taskScope', 'q', 'searchProject'].some(key => query.getAll(key).length > 1)) { begin(); publish({ ...state, ...cleared, discovery: discoveryEmpty, status: 'error' }); return; }
-      if (guardWorkspace(w, () => this.openLocation(search))) { options.navigate?.(state.url, true); return; }
+      if (guardWorkspace(w, () => this.openLocation(search, true))) { options.navigate?.(state.url, true); return; }
       if (state.selection.workspaceId !== null && state.selection.workspaceId !== w) { discoveryContext = null; retry = null; publish({ ...state, draft: null, retryTarget: null, conflict: null, result: null, outcome: null }); }
       begin(); publish({ ...state, taskScope: taskScope as TaskScope, searchQuery: searchQuery.trim(), discoveryProjectId: searchProject, views: { projects: projectsView as ArchiveView, tasks: tasksView as ArchiveView }, taskView: { layout: layout as TaskView['layout'], filters, column: column as TaskStatus } });
-      select({ workspaceId: w, projectId: p, taskId: t }, false); publish({ ...state, pending: null, retryTarget: retry ? structuredClone(retry.command) : null }); await refresh();
+      select({ workspaceId: w, projectId: p, taskId: t }, false);
+      // A guarded popstate restored the previous URL. Replace that entry with
+      // the accepted target before reads, including a denied destination.
+      if (restoreHistoryTarget) options.navigate?.(state.url, true);
+      publish({ ...state, pending: null, retryTarget: retry ? structuredClone(retry.command) : null }); await refresh();
     },
     async returnToDraft() {
       const command = retry?.command ?? state.draft; if (!command) return;

@@ -391,6 +391,15 @@ export function IconTask({ size = 20 }: { size?: number }) {
   );
 }
 
+export function IconSearch({ size = 20 }: { size?: number }) {
+  return (
+    <IconBase size={size}>
+      <circle cx="10.5" cy="10.5" r="6.5" />
+      <path d="m15.5 15.5 4.5 4.5" />
+    </IconBase>
+  );
+}
+
 export function IconUsers({ size = 20 }: { size?: number }) {
   return (
     <IconBase size={size}>

@@ -18,7 +18,7 @@ import {
   useFocusTrap,
   useLocale,
 } from './project-ui';
-import { copy, priorityName, statusName, typeName, type Lang } from './strings';
+import { copy, priorityName, statusName, typeName, type Bilingual, type Lang } from './strings';
 import styles from './projects.module.css';
 
 export function provenanceText(provenance: DomainProvenance, lang: Lang): string {
@@ -63,6 +63,7 @@ export function TaskDetail({
   overlay,
   modalOpen,
   actionsDisabled = false,
+  backLabel = copy.common.backToProject,
   collaboration,
   feedback,
   description,
@@ -76,6 +77,7 @@ export function TaskDetail({
   overlay: boolean;
   modalOpen: boolean;
   actionsDisabled?: boolean;
+  backLabel?: Bilingual;
   collaboration?: ReactNode | undefined;
   feedback?: ReactNode | undefined;
   description?: ReactNode | undefined;
@@ -119,7 +121,7 @@ export function TaskDetail({
       >
         <header className={styles.detailHeader}>
           <div className={styles.detailHeaderLeft}>
-            <button aria-label={copy.common.backToProject[lang]} className={styles.ghostButton} onClick={onClose} type="button">
+            <button aria-label={backLabel[lang]} className={styles.ghostButton} onClick={onClose} type="button">
               <IconArrowLeft size={18} />
               <span>{copy.common.back[lang]}</span>
             </button>

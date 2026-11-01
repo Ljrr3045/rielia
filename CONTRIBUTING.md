@@ -100,7 +100,9 @@ client/proxy/recovery checks run in `pnpm test:projects:logic` and `pnpm check`;
 real search/policy/migration/commit-order/replay/revocation and backpressure checks
 run in `pnpm test:identity`. The local QA fixture adds `--discovery` for populated
 search/My tasks and real Nest→Next two-session streaming, rollback, heartbeat,
-private-access removal and abort cleanup. Presentation remains separately owned.
+private-access removal and abort cleanup. The [T10.1 presentation guide](docs/development/task-discovery-ui.md)
+records the separately owned My tasks/search UI on that merged surface; presentation
+adds no hook/controller/proxy/session or functional-test source.
 
 The [T09.0 task-collaboration guide](docs/development/task-collaboration.md)
 records hierarchy, checklist, own-author comments, safe history and the shared
