@@ -99,6 +99,28 @@ test('T10 pending workspace guard cannot discard a live save and unknown recover
   late.reject(new Error('Unknown committed outcome')); await saving; assert.ok(f.controller.getState().retryTarget);
   await f.controller.resolveWorkspaceNavigation('discard'); assert.equal(f.controller.getState().selection.workspaceId, 'b'); assert.equal(f.controller.getState().retryTarget, null);
 });
+test('T10 guarded history discard restores the requested URL for drafts and unknown recovery, including denied destinations', async () => {
+  for (const unknown of [false, true]) for (const denied of [false, true]) {
+    let browserURL; const navigation = [];
+    const f = fixture({ options: { navigate: (url, replace) => { browserURL = url; navigation.push({ url, replace }); } },
+      transport: { mutate: async (command, key) => { f.calls.push({ command, key }); throw new Error('Unknown committed outcome'); },
+        discover: async (w, query) => { if (denied && w === 'b') throw new ProjectTaskFailure(403); return { workspaceId: w, principalId: 'human', query, revision: 'a'.repeat(64), items: [], total: 0, nextCursor: null }; } } });
+    await f.controller.openLocation('?workspace=a&project=p&task=t'); f.controller.stage(draft());
+    if (unknown) await f.controller.submit();
+    const destination = '?workspace=b&taskScope=search&q=foreign&priority=high';
+    browserURL = `/projects${destination}`; await f.controller.openLocation(destination);
+    assert.equal(browserURL, '/projects?workspace=a&project=p&task=t');
+    await f.controller.resolveWorkspaceNavigation('stay'); assert.equal(f.controller.getState().draft.fields.title, 'Unsent draft');
+    browserURL = `/projects${destination}`; await f.controller.openLocation(destination); await f.controller.resolveWorkspaceNavigation('discard');
+    assert.equal(f.controller.getState().selection.workspaceId, 'b');
+    assert.equal(browserURL, f.controller.getState().url, 'discard must replace the restored history URL with the requested workspace');
+    assert.equal(new URL(browserURL, 'https://app.test').searchParams.get('workspace'), 'b');
+    assert.equal(navigation.at(-1).replace, true); assert.equal(f.controller.getState().draft, null); assert.equal(f.controller.getState().retryTarget, null);
+    assert.equal(f.controller.getState().status, denied ? 'forbidden' : 'ready'); assert.equal(f.calls.length, unknown ? 1 : 0);
+    await f.controller.openLocation(new URL(browserURL, 'https://app.test').search); assert.equal(f.controller.getState().selection.workspaceId, 'b');
+    f.controller.dispose();
+  }
+});
 test('T10 mutation denial clears cross-project discovery before a late stream reset can arrive', async () => {
   const f = fixture({ transport: { discover: async (w, query) => ({ workspaceId: w, principalId: 'human', query, revision: 'a'.repeat(64), items: [{ ...task(), projectName: 'Private project' }], total: 1, nextCursor: null }), mutate: async () => { throw new ProjectTaskFailure(403); } } });
   await f.controller.openLocation('?workspace=a&project=p&task=t&taskScope=search'); assert.equal(f.controller.getState().discovery.page.items.length, 1);
