@@ -16,7 +16,8 @@ This records repository changes. No application version has been released.
   Stay/Discard and clears identity state on session replacement. No presentation
   files or dependencies changed. Focused client/proxy/state, real PostgreSQL/
   migration/race/security, real Nest→Next streaming, standard checks and Docker
-  runtime evidence are in the [T10 guide](docs/development/task-discovery.md).
+  runtime evidence are in the [T10 guide](docs/development/task-discovery.md) and
+  [PR #23](https://github.com/Ljrr3045/rielia/pull/23).
   Presentation, labels/sprints, exports, coediting, business workers, credentials,
   real OAuth/staging/users, deployment and full T10/public-launch acceptance remain
   separate. The inherited moderate development-only audit advisory is unchanged.

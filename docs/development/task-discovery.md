@@ -198,7 +198,10 @@ reruns passed. An intermediate suite-wiring typo was fixed before the passing
 expanded integration run. Independent read-only review found and the owner fixed
 mutation-denial discovery clearing, final-draft refresh deferral and page-two
 detail return. Each has a final-source focused regression. Final PR/CI and
-coordinator-only exact-head Kody evidence remain required before merge.
+coordinator-only exact-head Kody evidence remain required before merge of
+[PR #23](https://github.com/Ljrr3045/rielia/pull/23); current-head review settlement
+is recorded on that PR and in the external delivery report without a bookkeeping
+push that invalidates an already-reviewed source head.
 
 No mobile/browser presentation, physical touch, screen-reader/AT or WCAG
 certification is claimed by these logic tests; those belong to the following UI
