@@ -79,6 +79,13 @@ export class PrincipalService {
     this.evidence.set(context, evidence);
     return { context, headers: session.headers };
   }
+  /** Internal subscription binding; never serialized to a client or accepted as
+   * authentication. Every streamed batch still calls domainOperation. */
+  webSubscriptionKey(context: VerifiedExecution): string {
+    const evidence = this.evidence.get(context);
+    if (!evidence || !('sessionId' in evidence)) throw new UnauthorizedException('Web session is required.');
+    return `${evidence.workspaceId}:${evidence.userId}:${evidence.sessionId}`;
+  }
 
   /** Backend-only policy/transaction seam for the workspace owning service.
    * Cookie evidence is reloaded after acquiring the fence, including recipient

@@ -6,6 +6,24 @@ This records repository changes. No application version has been released.
 
 ### Added
 
+- T10.0/B1b workspace-authorized ID/title search and current-principal-assignee
+  My tasks across readable projects, with existing filters, bounded revision
+  pages/counts and context-preserving detail navigation. Session-authenticated
+  SSE reads only committed authorized outbox hints, with a fenced commit-order
+  sequence, bounded opaque resume/reset, heartbeat, revocation, cancellation and
+  single-replica limits. Page-scoped batched people/eligibility hydration and
+  id/version-only event projection preserve current authorization. Shared
+  frontend logic preserves draft/conflict/exact-key
+  recovery during background updates, guards workspace navigation with explicit
+  Stay/Discard and clears identity state on session replacement. No presentation
+  files or dependencies changed. Focused client/proxy/state, real PostgreSQL/
+  migration/race/security, real Nest→Next streaming, standard checks and Docker
+  runtime evidence are in the [T10 guide](docs/development/task-discovery.md) and
+  [PR #23](https://github.com/Ljrr3045/rielia/pull/23).
+  Presentation, labels/sprints, exports, coediting, business workers, credentials,
+  real OAuth/staging/users, deployment and full T10/public-launch acceptance remain
+  separate. The inherited moderate development-only audit advisory is unchanged.
+
 - T09.1/B1b task collaboration presentation on merged T09.0 logic
   [PR #21](https://github.com/Ljrr3045/rielia/pull/21) (`76d7d31b`). The existing
   task detail now presents one-level parent/child relations with child quick-add

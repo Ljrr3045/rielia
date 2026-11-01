@@ -14,6 +14,8 @@ import { setTimeout as delay } from 'node:timers/promises';
 import { makeSignature } from 'better-auth/crypto';
 import { taskStatuses, taskPriorities } from '@rielia/contracts';
 import { startProcess, stopProcess } from '../../../scripts/smoke-process.mjs';
+import assert from 'node:assert/strict';
+import { openEventStream } from './event-stream-client.mjs';
 
 const root = fileURLToPath(new URL('../../../', import.meta.url));
 const outputPath = resolve(process.argv[2] ?? join(tmpdir(), 'rielia-project-task-qa.json'));
@@ -86,6 +88,15 @@ try {
   }
   let taskViewFixtures = null;
   let collaborationFixtures = null;
+  let discoveryFixtures = null;
+  if (process.argv.includes('--discovery')) {
+    const rows = [];
+    for (let n = 0; n < 105; n++) rows.push(await domain.createTask(context, workspaceId, project.id, randomUUID(), randomUUID(), {
+      title: `QA discoverable task ${n + 1}`, status: taskStatuses[n % taskStatuses.length], priority: taskPriorities[n % taskPriorities.length],
+      assigneePrincipalId: n % 3 === 0 ? owner.principalId : n % 3 === 1 ? member.principalId : agentId,
+    }));
+    discoveryFixtures = { taskIds: rows.map(row => row.id), mineURL: `${origin}/projects?workspace=${workspaceId}&taskScope=mine`, searchURL: `${origin}/projects?workspace=${workspaceId}&taskScope=search&q=discoverable` };
+  }
   if (process.argv.includes('--collaboration')) {
     const { TaskCollaborationService } = await import('../dist/projects/task-collaboration.service.js'); const collaboration = app.get(TaskCollaborationService);
     const child = await domain.createTask(context, workspaceId, project.id, randomUUID(), randomUUID(), { title: 'QA open child remains visible after parent close', parentTaskId: task.id, expectedParentVersion: task.version });
@@ -174,6 +185,43 @@ try {
     const stale = await fetch(`${path}?status=backlog&cursor=${first.nextCursor}`, { headers: { cookie: owner.cookie } });
     if (stale.status !== 409 || (await stale.json()).code !== 'page-changed') throw new Error('QA changed-page probe failed.');
   }
+  if (discoveryFixtures) {
+    phase = 'T10 real Next discovery and streaming'; const rootURL = `${origin}/api/v1/workspaces/${workspaceId}`;
+    const read = async (path, person = owner) => { const response = await fetch(rootURL + path, { headers: { cookie: person.cookie } }); assert.equal(response.status, 200); return response.json(); };
+    const post = async (path, body, person = owner) => { const response = await fetch(rootURL + path, { method: 'POST', headers: { cookie: person.cookie, origin, 'content-type': 'application/json', 'idempotency-key': randomUUID() }, body: JSON.stringify(body) }); return { status: response.status, data: await response.json() }; };
+    const first = await read('/task-discovery?q=discoverable'); assert.equal(first.items.length, 100); const tail = await read(`/task-discovery?q=discoverable&cursor=${first.nextCursor}`); assert.equal(new Set([...first.items, ...tail.items].map(row => row.id)).size, 105);
+    const mine = await read('/task-discovery?scope=mine', member); assert.equal(mine.total, 35); assert.ok(mine.items.every(row => row.assigneePrincipalId === member.principalId));
+    assert.equal((await read(`/task-discovery?q=${historicalTask.id}`, unavailable)).total, 0);
+    const one = await openEventStream(origin, workspaceId, owner.cookie); const two = await openEventStream(origin, workspaceId, member.cookie);
+    let resume;
+    try {
+      resume = (await two.wait(row => row.id)).id; await one.wait(row => row.id);
+      const current = await read(`/projects/${project.id}/tasks/${task.id}`); const saved = await post(`/projects/${project.id}/tasks/${task.id}`, { expectedVersion: current.version, title: 'QA committed proxy invalidation' }, member); assert.equal(saved.status, 201);
+      for (const stream of [one, two]) await stream.wait(row => row.data.id === task.id && row.data.version === saved.data.version);
+      // The event really passes the proxy, and its JSON route immediately reads
+      // the persisted version instead of treating the hint as a task store.
+      assert.equal((await read(`/projects/${project.id}/tasks/${task.id}`)).version, saved.data.version);
+      const before = await prisma.outboxEvent.count();
+      await prisma.$executeRawUnsafe(`CREATE FUNCTION t10_qa_rollback() RETURNS trigger LANGUAGE plpgsql AS 'BEGIN RAISE EXCEPTION ''QA deferred rollback''; END'`);
+      await prisma.$executeRawUnsafe(`CREATE CONSTRAINT TRIGGER t10_qa_rollback AFTER INSERT ON task DEFERRABLE INITIALLY DEFERRED FOR EACH ROW WHEN (NEW.title='QA rollback stream witness') EXECUTE FUNCTION t10_qa_rollback()`);
+      try { assert.equal((await post(`/projects/${project.id}/tasks`, { title: 'QA rollback stream witness' })).status, 503); }
+      finally { await prisma.$executeRawUnsafe('DROP TRIGGER t10_qa_rollback ON task'); await prisma.$executeRawUnsafe('DROP FUNCTION t10_qa_rollback()'); }
+      assert.equal(await prisma.outboxEvent.count(), before);
+      // More than the JSON proxy deadline: heartbeat must remain unbuffered.
+      await two.wait(row => row.data.type === 'heartbeat', 18000);
+      let policy = await read(`/projects/${privateProject.id}`); const start = two.records.length;
+      const revoked = await post(`/projects/${privateProject.id}/access/${member.principalId}`, { expectedVersion: policy.version, state: 'revoked' }); assert.equal(revoked.status, 201); policy = revoked.data;
+      await two.wait(row => row.data.type === 'reset' && two.records.indexOf(row) >= start);
+      const hidden = await post(`/projects/${privateProject.id}/tasks`, { title: 'QA private post-revocation' }); assert.equal(hidden.status, 201); await delay(1200); assert.ok(two.records.slice(start).every(row => row.data.projectId !== privateProject.id));
+      assert.equal((await read(`/task-discovery?q=${hidden.data.id}`, member)).total, 0);
+      assert.equal((await post(`/projects/${privateProject.id}/access/${member.principalId}`, { expectedVersion: policy.version, state: 'active' })).status, 201);
+    } finally { await one.close(); await two.close(); }
+    const replay = await openEventStream(origin, workspaceId, member.cookie, resume); await replay.wait(row => row.id); await replay.close();
+    const fallback = await openEventStream(origin, workspaceId, owner.cookie, 'expired-or-foreign-handle'); assert.equal((await fallback.wait(row => row.id)).data.type, 'reset'); await fallback.close();
+    const { TaskEventsService } = await import('../dist/projects/task-events.service.js'); const eventService = app.get(TaskEventsService);
+    for (let n = 0; n < 100 && eventService.connections.size; n++) await delay(20); assert.equal(eventService.connections.size, 0);
+    console.log('T10 real Nest/Next proxy: search/mine paging, two-session committed invalidation, rollback silence, >15s heartbeat, private revocation, resume/reset and abort cleanup passed.');
+  }
   if (collaborationFixtures) {
     phase = 'collaboration Next proxy'; const path = `${origin}/api/v1/workspaces/${workspaceId}/projects/${project.id}/tasks/${task.id}`;
     const read = async suffix => { const response = await fetch(path + suffix, { headers: { cookie: owner.cookie } }); if (response.status !== 200) throw new Error('QA collaboration read failed.'); return response.json(); };
@@ -192,7 +240,7 @@ try {
     if ((await post('/comments', { expectedVersion: closed.data.version, body: 'Viewer denied' }, viewer)).status !== 403) throw new Error('QA viewer collaboration denial failed.');
     const reopened = await post('', { expectedVersion: closed.data.version, status: 'backlog' }); if (reopened.status !== 201) throw new Error('QA parent reopen failed.');
   }
-  await writeFile(outputPath, JSON.stringify({ pid: process.pid, origin, apiURL, fixtureURLs, container: name, volume, workspaceId, otherWorkspaceId, projectId: project.id, taskId: task.id, agentId, owner, admin, member, viewer, unavailable, outsider, privateProjectId: privateProject.id, historicalTaskId: historicalTask.id, largeMembers: process.argv.includes('--large-members'), taskViewFixtures, collaborationFixtures,
+  await writeFile(outputPath, JSON.stringify({ pid: process.pid, origin, apiURL, fixtureURLs, container: name, volume, workspaceId, otherWorkspaceId, projectId: project.id, taskId: task.id, agentId, owner, admin, member, viewer, unavailable, outsider, privateProjectId: privateProject.id, historicalTaskId: historicalTask.id, largeMembers: process.argv.includes('--large-members'), taskViewFixtures, collaborationFixtures, discoveryFixtures,
     projectURL: `${origin}${project.url}`, taskURL: `${origin}${task.url}`, privateProjectURL: `${origin}${privateProject.url}`, historicalTaskURL: `${origin}${historicalTask.url}` }, null, 2), { mode: 0o600 });
   console.log(`Real PG/Nest/Next QA ready at ${origin}; private session/state file: ${outputPath}. SIGTERM/SIGINT cleans owned servers, container, volume and state file.`);
   if (process.argv.includes('--smoke')) resolveStop();

@@ -3,6 +3,8 @@ import { createHash, randomUUID } from 'node:crypto';
 import { isTaskFilters, projectURL, taskURL, taskStatuses, taskTypes, taskPriorities, type TaskFilters, type TaskStatus, type TaskPage, type TaskColumnCounts, type ArchiveView, type DomainPage, type DomainPerson, type ExecutionContextResponse, type Project, type ProjectTaskResult, type Task, type ProjectAccessPage, type ProjectAssigneePage, type MembershipRole, type ProjectAccessReview } from '@rielia/contracts';
 import type { Prisma, Project as ProjectRow, Task as TaskRow } from '../generated/prisma/client.js';
 import { PrincipalService, type Transaction, type VerifiedExecution } from '../principals/principal.service.js';
+import type { TaskDiscoveryItem } from '@rielia/contracts';
+export type ReadableTaskProject = Pick<ProjectRow, 'id' | 'workspaceId' | 'key' | 'name' | 'version' | 'taskRevision' | 'visibility' | 'archivedAt'>;
 
 const identifier = (value: unknown): value is string => typeof value === 'string' && /^[A-Za-z0-9_-]{1,128}$/.test(value);
 export function object(value: unknown, allowed: string[], required: string[] = []): Record<string, unknown> {
@@ -64,13 +66,13 @@ function canonical(value: unknown): unknown {
 export class ProjectTaskService {
   constructor(@Inject(PrincipalService) private readonly principals: PrincipalService) {}
 
-  private administrator(actor: ExecutionContextResponse) { return actor.principalKind === 'human' && ['owner', 'admin'].includes(actor.role); }
+  private administrator(actor: Pick<ExecutionContextResponse, 'principalKind' | 'role'>) { return actor.principalKind === 'human' && ['owner', 'admin'].includes(actor.role); }
   private canManage(actor: ExecutionContextResponse) { return actor.executionMode === 'human' && this.administrator(actor); }
   private requireManagement(actor: ExecutionContextResponse) { if (!this.canManage(actor)) throw new ForbiddenException('Human project administration is required.'); }
   private readable(actor: ExecutionContextResponse): Prisma.ProjectWhereInput {
     return { workspaceId: actor.workspaceId, ...(this.administrator(actor) ? {} : { OR: [{ visibility: 'workspace' }, { accesses: { some: { principalId: actor.actorPrincipalId, state: 'active' } } }] }) };
   }
-  private eligible(project: ProjectRow): Prisma.MembershipWhereInput {
+  private eligible(project: ReadableTaskProject): Prisma.MembershipWhereInput {
     return { workspaceId: project.workspaceId, state: 'active', principal: { state: 'active', kind: { in: ['human', 'agent'] } },
       ...(project.visibility === 'workspace' ? {} : { OR: [
         { role: { in: ['owner', 'admin'] }, principal: { kind: 'human' } },
@@ -94,7 +96,7 @@ export class ProjectTaskService {
       archivedAt: iso(row.archivedAt), createdAt: row.createdAt.toISOString(), updatedAt: row.updatedAt.toISOString(), creator: people.get(row.createdByPrincipalId)!, provenance: provenance(row),
       capabilities: { canEdit: canWrite && !row.archivedAt, canArchive: canWrite && !row.archivedAt, canRestore: canWrite && !!row.archivedAt, canManageAccess: this.canManage(actor), canChangeVisibility: this.canManage(actor) && !row.archivedAt, canGrantAccess: this.canManage(actor) && !row.archivedAt, canRevokeAccess: this.canManage(actor) }, url: projectURL(row.workspaceId, row.id) };
   }
-  private taskDto(row: TaskRow, project: ProjectRow, people: Map<string, DomainPerson>, canWrite: boolean, eligible: Set<string>): Task {
+  private taskDto(row: TaskRow, project: ReadableTaskProject, people: Map<string, DomainPerson>, canWrite: boolean, eligible: Set<string>): Task {
     const active = !project.archivedAt && !row.archivedAt;
     return { id: row.id, workspaceId: row.workspaceId, projectId: row.projectId, projectKey: project.key, number: row.number, key: `${project.key}-${row.number}`,
       title: row.title, description: row.description, type: row.type as Task['type'], priority: row.priority as Task['priority'], status: row.status as Task['status'],
@@ -104,9 +106,30 @@ export class ProjectTaskService {
       capabilities: { canEdit: canWrite && active, canArchive: canWrite && active, canRestore: canWrite && !project.archivedAt && !!row.archivedAt }, url: taskURL(row.workspaceId, row.projectId, row.id) };
   }
   private async projectView(tx: Transaction, row: ProjectRow, canWrite: boolean, actor: ExecutionContextResponse) { return this.projectDto(row, await this.people(tx, row.workspaceId, [row.createdByPrincipalId]), canWrite, actor); }
-  private async taskPeople(tx: Transaction, project: ProjectRow, rows: TaskRow[]) {
-    const people = await this.people(tx, project.workspaceId, rows.flatMap(row => [row.createdByPrincipalId, ...(row.assigneePrincipalId ? [row.assigneePrincipalId] : [])]));
-    const eligible = new Set((await tx.membership.findMany({ where: { ...this.eligible(project), principalId: { in: rows.flatMap(row => row.assigneePrincipalId ? [row.assigneePrincipalId] : []) } }, select: { principalId: true } })).map(row => row.principalId));
+  private async taskPeople(tx: Transaction, project: ReadableTaskProject, rows: TaskRow[]) {
+    const result = await this.taskPeopleBatch(tx, [project], rows);
+    return { people: result.people, eligible: result.eligible.get(project.id) ?? new Set<string>() };
+  }
+  private async taskPeopleBatch(tx: Transaction, projects: ReadableTaskProject[], rows: TaskRow[]) {
+    const people = new Map<string, DomainPerson>(); const eligible = new Map<string, Set<string>>();
+    if (!rows.length) return { people, eligible };
+    const byProject = new Map(projects.map(project => [project.id, project]));
+    const members = await tx.membership.findMany({ where: { workspaceId: rows[0]!.workspaceId,
+      principalId: { in: [...new Set(rows.flatMap(row => [row.createdByPrincipalId, ...(row.assigneePrincipalId ? [row.assigneePrincipalId] : [])]))] } },
+      include: { principal: true, projectAccesses: { where: { projectId: { in: [...byProject.keys()] }, state: 'active' }, select: { projectId: true } } } });
+    const byMember = new Map(members.map(member => [member.principalId, member]));
+    for (const member of members) people.set(member.principalId, { principalId: member.principalId, name: member.principal.displayName,
+      kind: member.principal.kind as 'human' | 'agent', active: member.state === 'active' && member.principal.state === 'active' });
+    // Same backend assignment projection for detail/list/discovery; a historical
+    // assignee remains named without regaining current project eligibility.
+    for (const row of rows) {
+      if (!row.assigneePrincipalId) continue;
+      const member = byMember.get(row.assigneePrincipalId); const project = byProject.get(row.projectId)!;
+      if (!member || member.state !== 'active' || member.principal.state !== 'active' || !['human', 'agent'].includes(member.principal.kind)) continue;
+      if (project.visibility !== 'workspace' && !this.administrator({ principalKind: member.principal.kind as 'human' | 'agent', role: member.role as MembershipRole })
+        && !member.projectAccesses.some(access => access.projectId === project.id)) continue;
+      const group = eligible.get(project.id) ?? new Set<string>(); group.add(member.principalId); eligible.set(project.id, group);
+    }
     return { people, eligible };
   }
   private async taskView(tx: Transaction, row: TaskRow, project: ProjectRow, canWrite: boolean) {
@@ -136,6 +159,30 @@ export class ProjectTaskService {
   }
   project(context: VerifiedExecution, workspaceId: string, projectId: string) {
     return this.principals.domainOperation(context, workspaceId, 'read', async (tx, actor, canWrite) => this.projectView(tx, await this.projectRow(tx, workspaceId, projectId, actor), canWrite, actor));
+  }
+  /** Internal discovery composition; one current fenced authority snapshot,
+   * with the exact same readable-project predicate used by detail and writes. */
+  discoveryRead<T>(context: VerifiedExecution, workspaceId: string,
+    work: (tx: Transaction, actor: ExecutionContextResponse, canWrite: boolean, projects: ReadableTaskProject[]) => Promise<T>) {
+    return this.principals.domainOperation(context, workspaceId, 'read', async (tx, actor, canWrite) => work(tx, actor, canWrite,
+      await tx.project.findMany({ where: this.readable(actor), orderBy: { id: 'asc' }, select: { id: true, workspaceId: true, key: true, name: true, version: true, taskRevision: true, visibility: true, archivedAt: true } })));
+  }
+  /** Events need only current project IDs and policy versions; keep the same
+   * authorization predicate and one-second reevaluation without an access cache. */
+  eventsRead<T>(context: VerifiedExecution, workspaceId: string,
+    work: (tx: Transaction, actor: ExecutionContextResponse, canWrite: boolean, projects: Pick<ProjectRow, 'id' | 'version'>[]) => Promise<T>) {
+    return this.principals.domainOperation(context, workspaceId, 'read', async (tx, actor, canWrite) => work(tx, actor, canWrite,
+      await tx.project.findMany({ where: this.readable(actor), orderBy: { id: 'asc' }, select: { id: true, version: true } })));
+  }
+  async discoveryItems(tx: Transaction, rows: TaskRow[], projects: ReadableTaskProject[], canWrite: boolean): Promise<TaskDiscoveryItem[]> {
+    const byProject = new Map(projects.map(project => [project.id, project]));
+    const represented = [...new Set(rows.map(row => row.projectId))].map(id => byProject.get(id)!);
+    const { people, eligible } = await this.taskPeopleBatch(tx, represented, rows);
+    return rows.map(row => {
+      const project = byProject.get(row.projectId)!;
+      const item = Object.fromEntries(Object.entries(this.taskDto(row, project, people, canWrite, eligible.get(project.id) ?? new Set())).filter(([key]) => key !== 'description')) as Omit<Task, 'description'>;
+      return { ...item, projectName: project.name };
+    });
   }
   tasks(context: VerifiedExecution, workspaceId: string, projectId: string, view: ArchiveView = 'active', cursor?: string, filters: TaskFilters = {}): Promise<TaskPage> {
     if (!isTaskFilters(filters)) throw new BadRequestException('Invalid task filters.');

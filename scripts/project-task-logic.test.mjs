@@ -25,6 +25,116 @@ function fixture(overrides = {}) {
   return { controller, values, transport, workspaces, calls };
 }
 
+test('T10 discovery context/detail/Back and current filters share draft lifecycle without synthetic rows', async () => {
+  const queries = []; const f = fixture({ transport: { discover: async (w, query) => {
+    queries.push(query); const { description, ...row } = task('found', 'another', w); assert.equal(description, '');
+    return { workspaceId: w, principalId: 'human', query, revision: 'a'.repeat(64), items: [{ ...row, projectName: 'Another project' }], total: 1, nextCursor: null };
+  } } });
+  await f.controller.openLocation('?workspace=a&taskScope=search&q=Original&priority=high');
+  assert.equal(f.controller.getState().selection.projectId, null); assert.equal(f.controller.getState().discovery.status, 'ready');
+  const item = f.controller.getState().discovery.page.items[0]; await f.controller.openDiscoveryTask(item);
+  assert.equal(f.controller.getState().task.id, 'found'); assert.match(f.controller.getState().url, /taskScope=search/); assert.match(f.controller.getState().url, /q=Original/);
+  await f.controller.returnToDiscovery(); assert.equal(f.controller.getState().task, null); assert.equal(f.controller.getState().searchQuery, 'Original');
+  await f.controller.setTaskScope('mine'); assert.equal(queries.at(-1).scope, 'mine');
+  await f.controller.setTaskFilters({ assignee: 'other' }); assert.equal(f.controller.getState().taskView.filters.assignee, undefined);
+  const copy = fixture({ transport: f.transport }); await copy.controller.openLocation(new URL(f.controller.getState().url, 'https://app.test').search);
+  assert.equal(copy.controller.getState().taskScope, 'mine');
+  for (const query of ['taskScope=mine&assignee=other', 'taskScope=search&taskScope=mine', 'taskScope=search&q=x&q=y', 'taskScope=other', 'q=%00']) {
+    await copy.controller.openLocation(`?workspace=a&${query}`); assert.equal(copy.controller.getState().status, 'error'); assert.equal(copy.controller.getState().discovery.page, null);
+  }
+});
+test('T10 discovery paging preserves data on changed/error; stale workspace completions and drafts are cleared', async () => {
+  let revision = 'a'; let fail = false; const late = deferred(); let delayed = false;
+  const f = fixture({ transport: { discover: async (w, query, signal, cursor) => {
+    if (delayed && w === 'a') return late.promise; if (fail) throw new ProjectTaskFailure(503);
+    return { workspaceId: w, principalId: 'human', query, revision: revision.repeat(64), items: [], total: 101, nextCursor: cursor ? null : 'cursor' };
+  } } });
+  await f.controller.openLocation('?workspace=a&taskScope=search'); const old = f.controller.getState().discovery.page;
+  fail = true; await f.controller.loadDiscoveryMore(); assert.equal(f.controller.getState().discovery.page, old); assert.equal(f.controller.getState().discovery.status, 'error');
+  fail = false; revision = 'b'; await f.controller.loadDiscoveryMore(); assert.equal(f.controller.getState().discovery.page, old); assert.equal(f.controller.getState().discovery.status, 'changed');
+  f.controller.stage(draft()); delayed = true; const pending = f.controller.setSearchQuery('Unsent context'); await f.controller.selectWorkspace('b');
+  assert.equal(f.controller.getState().selection.workspaceId, 'a'); assert.equal(f.controller.getState().workspaceNavigation.workspaceId, 'b');
+  await f.controller.resolveWorkspaceNavigation('discard'); late.resolve({ ...old, items: [] }); await pending;
+  assert.equal(f.controller.getState().selection.workspaceId, 'b'); assert.equal(f.controller.getState().discovery.page.workspaceId, 'b'); assert.equal(f.controller.getState().draft, null); assert.equal(f.controller.getState().searchQuery, '');
+});
+test('T10 background/focus updates preserve captured edits/conflicts/keys and recheck access before deferral', async () => {
+  let version = 2; let denied = false; const calls = [];
+  const f = fixture({ transport: { task: async (w, p, t) => { if (denied) throw new ProjectTaskFailure(403); return task(t, p, w, version); },
+    mutate: async (command, key) => { calls.push({ command, key }); throw new Error('unknown outcome'); } } });
+  await f.controller.openLocation('?workspace=a&project=p&task=t'); f.controller.stage(draft()); const captured = f.controller.getState().draft;
+  await f.controller.backgroundRefresh(true); assert.equal(f.controller.getState().draft, captured); assert.equal(f.controller.getState().task.version, 2); assert.equal(f.controller.getState().refreshDeferred, true);
+  f.controller.setStreamStatus('live'); assert.equal(f.controller.getState().streamStatus, 'live'); assert.equal(f.controller.getState().refreshRequired, true);
+  await f.controller.submit(); const recovery = f.controller.getState().retryTarget; version = 9; await f.controller.backgroundRefresh();
+  assert.equal(f.controller.getState().retryTarget, recovery); await f.controller.retrySave(); assert.deepEqual(calls[0], calls[1]);
+  f.controller.discardDraft(); f.transport.mutate = async () => { throw new ProjectTaskFailure(409, 'version-conflict', task('t', 'p', 'a', 10)); };
+  f.controller.stage(draft()); await f.controller.submit(); const conflict = f.controller.getState().conflict; await f.controller.backgroundRefresh(true); assert.equal(f.controller.getState().conflict, conflict);
+  denied = true; await f.controller.backgroundRefresh(true); assert.equal(f.controller.getState().status, 'forbidden'); assert.equal(f.controller.getState().task, null); assert.equal(f.controller.getState().conflict, null);
+});
+test('T10 same-human new session clears private recovery and old in-flight mutation cannot return it', async () => {
+  const late = deferred(); const f = fixture({ transport: { mutate: async () => late.promise } });
+  await f.controller.openLocation('?workspace=a&project=p&task=t'); f.controller.stage(draft()); const saving = f.controller.submit();
+  f.values.session = { ...session, session: { ...session.session, id: 'new-session' } }; await f.controller.backgroundRefresh(true); late.resolve(task()); await saving;
+  assert.equal(f.controller.getState().draft, null); assert.equal(f.controller.getState().retryTarget, null); assert.equal(f.controller.getState().result, null); assert.equal(f.controller.getState().selection.taskId, null);
+});
+test('T10 dirty invalidation epoch and reset intent survive delayed background reads and draft deferral', async () => {
+  const late = deferred(); let delayRead = false; let reads = 0; let denied = false;
+  const f = fixture({ transport: { tasks: async (w, p) => { reads++; if (delayRead) { delayRead = false; return late.promise; } return page([{ ...task('t', p, w), title: reads > 2 ? 'Latest committed' : 'Old snapshot' }]); },
+    task: async (w, p, t) => { if (denied) throw new ProjectTaskFailure(403); return task(t, p, w); } } });
+  await f.controller.openLocation('?workspace=a&project=p&task=t'); delayRead = true; const refreshing = f.controller.backgroundRefresh();
+  await new Promise(setImmediate); await f.controller.backgroundRefresh(true); late.resolve(page([task()])); await refreshing;
+  assert.equal(f.controller.getState().refreshRequired, true); await new Promise(resolve => setTimeout(resolve, 160));
+  assert.equal(f.controller.getState().tasks.items[0].title, 'Latest committed'); assert.equal(f.controller.getState().refreshRequired, false);
+  f.controller.stage(draft()); const sessionRead = deferred(); const original = f.values.session; f.values.session = original;
+  // Delay session verification so a second reset arrives during draft deferral.
+  let block = true; const g = fixture({ options: { identity: { configuration: async () => ({ enabled: true, providers: [] }), session: async () => block ? original : sessionRead.promise } }, transport: f.transport });
+  await g.controller.openLocation('?workspace=a&project=p&task=t'); g.controller.stage(draft()); block = false;
+  const checking = g.controller.backgroundRefresh(); await g.controller.backgroundRefresh(true); denied = true; sessionRead.resolve(original); await checking;
+  await new Promise(resolve => setTimeout(resolve, 160)); assert.equal(g.controller.getState().status, 'forbidden'); assert.equal(g.controller.getState().task, null); assert.equal(g.controller.getState().draft.fields.title, 'Unsent draft');
+  f.controller.dispose(); g.controller.dispose();
+});
+test('T10 pending workspace guard cannot discard a live save and unknown recovery discard never resubmits', async () => {
+  const late = deferred(); const f = fixture({ transport: { mutate: async () => late.promise } });
+  await f.controller.openLocation('?workspace=a&project=p&task=t'); f.controller.stage(draft()); const saving = f.controller.submit(); await f.controller.selectWorkspace('b');
+  await f.controller.resolveWorkspaceNavigation('discard'); assert.equal(f.controller.getState().selection.workspaceId, 'a'); assert.ok(f.controller.getState().pending);
+  late.reject(new Error('Unknown committed outcome')); await saving; assert.ok(f.controller.getState().retryTarget);
+  await f.controller.resolveWorkspaceNavigation('discard'); assert.equal(f.controller.getState().selection.workspaceId, 'b'); assert.equal(f.controller.getState().retryTarget, null);
+});
+test('T10 mutation denial clears cross-project discovery before a late stream reset can arrive', async () => {
+  const f = fixture({ transport: { discover: async (w, query) => ({ workspaceId: w, principalId: 'human', query, revision: 'a'.repeat(64), items: [{ ...task(), projectName: 'Private project' }], total: 1, nextCursor: null }), mutate: async () => { throw new ProjectTaskFailure(403); } } });
+  await f.controller.openLocation('?workspace=a&project=p&task=t&taskScope=search'); assert.equal(f.controller.getState().discovery.page.items.length, 1);
+  f.controller.stage(draft()); await f.controller.submit(); assert.equal(f.controller.getState().status, 'forbidden'); assert.equal(f.controller.getState().discovery.page, null); assert.equal(f.controller.getState().task, null); assert.equal(f.controller.getState().result, null);
+});
+test('T10 final draft/recovery release services owed invalidation without another event', async () => {
+  let version = 1; let unknown = true;
+  const f = fixture({ transport: { task: async (w, p, t) => task(t, p, w, version), mutate: async () => { if (unknown) throw new Error('Unknown outcome'); return task('t', 'p', 'a', version); } } });
+  await f.controller.openLocation('?workspace=a&project=p&task=t'); f.controller.stage(draft()); version = 2; await f.controller.backgroundRefresh();
+  assert.equal(f.controller.getState().refreshDeferred, true); f.controller.discardDraft(); assert.equal(f.controller.getState().refreshDeferred, false);
+  await new Promise(resolve => setTimeout(resolve, 160)); assert.equal(f.controller.getState().task.version, 2); assert.equal(f.controller.getState().refreshRequired, false);
+  f.controller.stage(draft()); await f.controller.submit(); version = 3; await f.controller.backgroundRefresh(); assert.equal(f.controller.getState().refreshDeferred, true);
+  unknown = false; await f.controller.retrySave(); await new Promise(resolve => setTimeout(resolve, 160)); assert.equal(f.controller.getState().refreshRequired, false); assert.equal(f.controller.getState().task.version, 3); f.controller.dispose();
+});
+test('T10 page-two return and Back preserve bounded loaded context/focus only after current revision proof', async () => {
+  let revision = 'a'; let denied = false; let calls = 0;
+  const f = fixture({ transport: { discover: async (w, query, signal, cursor) => {
+    calls++; if (denied) throw new ProjectTaskFailure(403);
+    return { workspaceId: w, principalId: 'human', query, revision: revision.repeat(64), total: 101,
+      items: Array.from({ length: cursor ? 1 : 100 }, (_, n) => ({ ...task(cursor ? 'page-two' : `first-${n}`, 'p', w), projectName: 'Project' })), nextCursor: cursor ? null : 'next' };
+  } } });
+  await f.controller.openLocation('?workspace=a&taskScope=search&q=Original'); await f.controller.loadDiscoveryMore(); const before = f.controller.getState().discovery.page;
+  await f.controller.openDiscoveryTask(before.items[100]); assert.equal(f.controller.getState().task.id, 'page-two'); await f.controller.returnToDiscovery();
+  assert.deepEqual(f.controller.getState().discovery.page.items, before.items); assert.equal(f.controller.getState().discoveryFocusTaskId, 'page-two'); assert.ok(calls >= 4);
+  await f.controller.openLocation('?workspace=a&taskScope=search&q=Original&project=p&task=page-two'); await f.controller.openLocation('?workspace=a&taskScope=search&q=Original'); assert.equal(f.controller.getState().discovery.page.items.length, 101);
+  await f.controller.backgroundRefresh(true); assert.equal(f.controller.getState().discovery.page.items.length, 101);
+  revision = 'b'; await f.controller.backgroundRefresh(true); assert.equal(f.controller.getState().discovery.page.items.length, 100); assert.equal(f.controller.getState().discoveryFocusTaskId, null);
+  denied = true; await f.controller.backgroundRefresh(true); assert.equal(f.controller.getState().discovery.page, null); f.controller.dispose();
+});
+test('T10 disposal cancels queued background work and ignores a late auth probe', async () => {
+  const late = deferred(); let calls = 0; let block = false;
+  const f = fixture({ options: { identity: { configuration: async () => ({ enabled: true, providers: [] }), session: async () => { calls++; return block ? late.promise : session; } } } });
+  await f.controller.openLocation('?workspace=a&project=p&task=t'); block = true; const reading = f.controller.backgroundRefresh(); await f.controller.backgroundRefresh(true); f.controller.dispose(); const before = calls; late.resolve(session); await reading;
+  await new Promise(resolve => setTimeout(resolve, 160)); assert.equal(calls, before);
+});
+
 test('real-data controller distinguishes disabled/auth/empty/forbidden/error and server creation capabilities', async () => {
   const f = fixture({ values: { configuration: { enabled: false, providers: [] } } }); await f.controller.refresh(); assert.equal(f.controller.getState().status, 'disabled');
   f.values.configuration.enabled = true; f.values.session = null; await f.controller.refresh(); assert.equal(f.controller.getState().status, 'signed-out');
@@ -130,7 +240,10 @@ test('same form retains captured target/version/draft while refresh replaces cur
   f.transport.task = async () => task('t', 'p', 'a', 8); await f.controller.selectTask('t');
   f.controller.stage({ ...draft(), expectedVersion: 8, fields: { title: 'Continued' } });
   assert.equal(f.controller.getState().draft.expectedVersion, 1); assert.equal(f.controller.getState().draft.fields.title, 'Continued');
-  await f.controller.selectWorkspace('b'); assert.equal(f.controller.getState().draft.workspaceId, 'a'); await f.controller.submit(); assert.equal(f.calls.length, 0);
+  await f.controller.selectWorkspace('b'); assert.equal(f.controller.getState().draft.fields.title, 'Continued'); assert.equal(f.controller.getState().selection.workspaceId, 'a');
+  await f.controller.resolveWorkspaceNavigation('stay'); assert.equal(f.controller.getState().workspaceNavigation, null);
+  await f.controller.openLocation('?workspace=b'); assert.equal(f.controller.getState().workspaceNavigation.workspaceId, 'b');
+  await f.controller.resolveWorkspaceNavigation('discard'); assert.equal(f.controller.getState().draft, null); assert.equal(f.controller.getState().selection.workspaceId, 'b'); await f.controller.submit(); assert.equal(f.calls.length, 0);
 });
 test('saving task A from detail B is rejected until explicit return to captured target, including unknown retry', async () => {
   const f = fixture(); await f.controller.openLocation('?workspace=a&project=p&task=t'); f.controller.stage(draft());
@@ -157,8 +270,8 @@ test('unknown committed outcome keeps original key/target and blocks replacement
 });
 test('navigation/cancellation during save ignores late success and retains original recovery until explicit retry/discard', async () => {
   const pending = deferred(); const calls = []; const f = fixture({ transport: { mutate: async (command, key) => { calls.push({ command, key }); return calls.length === 1 ? pending.promise : task('t', 'p', 'a', 2); } } });
-  await f.controller.refresh(); await f.controller.selectTask("t"); f.controller.stage(draft()); const saving = f.controller.submit(); await f.controller.selectWorkspace('b'); pending.resolve(task()); await saving;
-  assert.equal(f.controller.getState().workspace.id, 'b'); assert.equal(f.controller.getState().result, null); assert.equal(f.controller.getState().retryTarget.workspaceId, 'a');
+  await f.controller.refresh(); await f.controller.selectTask("t"); f.controller.stage(draft()); const saving = f.controller.submit(); await f.controller.selectProject('other'); pending.resolve(task()); await saving;
+  assert.equal(f.controller.getState().selection.projectId, 'other'); assert.equal(f.controller.getState().result, null); assert.equal(f.controller.getState().retryTarget.workspaceId, 'a');
   await f.controller.retrySave(); assert.equal(calls.length, 1); await f.controller.returnToDraft(); await f.controller.retrySave(); assert.equal(calls[0].key, calls[1].key);
   f.transport.mutate = async () => { throw new Error(); }; f.controller.stage(draft()); await f.controller.submit(); f.controller.cancelPending();
   assert.ok(f.controller.getState().retryTarget); f.controller.discardDraft(); assert.equal(f.controller.getState().retryTarget, null); assert.equal(f.controller.getState().draft, null);
@@ -231,7 +344,7 @@ test('policy draft version and principal target are captured; unknown outcomes s
   f.controller.stage(command); await f.controller.refresh(); f.controller.stage({ ...command, expectedVersion: 8, state: 'revoked' }); assert.equal(f.controller.getState().draft.expectedVersion, 1);
   f.controller.stage({ ...command, principalId: 'different', expectedVersion: 8 }); assert.equal(f.controller.getState().draft.expectedVersion, 8);
   await f.controller.submit(); const captured = f.calls[0]; f.controller.stage(command); assert.equal(f.controller.getState().draft.principalId, 'different');
-  await f.controller.selectWorkspace('b'); await f.controller.retrySave(); assert.equal(f.calls.length, 1);
+  await f.controller.selectProject('other'); await f.controller.retrySave(); assert.equal(f.calls.length, 1);
   await f.controller.returnToDraft(); fail = false; await f.controller.retrySave(); assert.deepEqual(f.calls[1], captured); assert.equal(f.controller.getState().outcome, 'success');
 });
 test('stale access/assignee completion cannot replace a different workspace and their page denial clears server data', async () => {

@@ -241,6 +241,7 @@ model Task {
 }
 
 model ActivityEvent {
+  outbox OutboxEvent[]
   id String @id
   workspaceId String
   projectId String
@@ -295,11 +296,14 @@ model TaskComment {
 
 model OutboxEvent {
   id String @id
+  sequence BigInt @unique @default(0)
   workspaceId String
   activityId String @unique
+  activity ActivityEvent @relation(fields: [workspaceId, activityId], references: [workspaceId, id], onDelete: Restrict)
   type String
   payload Json
   createdAt DateTime @default(now())
+  @@index([workspaceId, sequence])
   @@map("outbox_event")
 }
 

@@ -8,22 +8,37 @@ import { createWorkspaceTransport } from './workspace-client';
 import { createProjectTaskTransport } from './project-task-client';
 import { createProjectTaskController } from './project-task-controller';
 import type { ProjectTaskState } from './project-task-controller';
+import { connectTaskEvents } from './task-events-client';
 function contentPageError(error: ProjectTaskState['pageError']): { collection: 'workspaces' | 'members' | 'projects' | 'tasks'; requestId: string | null; reason?: 'changed' } | null {
   if (!error || error.collection === 'projectAccess' || error.collection === 'assignees') return null;
   return { collection: error.collection, requestId: error.requestId, ...(error.reason ? { reason: error.reason } : {}) };
 }
 
 export function useProjectTasks() {
+  const [streamEpoch, setStreamEpoch] = useState(0);
   const [controller] = useState(() => createProjectTaskController({ identity: createIdentityTransport(), workspaces: createWorkspaceTransport(), transport: createProjectTaskTransport(),
-    navigate: url => { window.history.pushState(window.history.state, '', url); } }));
+    navigate: (url, replace) => { if (replace) window.history.replaceState(window.history.state, '', url); else window.history.pushState(window.history.state, '', url); } }));
   const state = useSyncExternalStore(controller.subscribe, controller.getState, controller.getState);
   useEffect(() => {
     void controller.openLocation(window.location.search);
     const location = () => { void controller.openLocation(window.location.search); };
-    const refresh = () => { if (document.visibilityState === 'visible') void controller.refresh(); };
-    window.addEventListener('popstate', location); window.addEventListener('pageshow', refresh); document.addEventListener('visibilitychange', refresh);
-    return () => { window.removeEventListener('popstate', location); window.removeEventListener('pageshow', refresh); document.removeEventListener('visibilitychange', refresh); controller.cancelPending(); };
+    const refresh = () => { if (document.visibilityState === 'visible') { void controller.backgroundRefresh(true); setStreamEpoch(value => value + 1); } };
+    const offline = () => controller.setStreamStatus('offline');
+    window.addEventListener('popstate', location); window.addEventListener('pageshow', refresh); window.addEventListener('focus', refresh); window.addEventListener('online', refresh); window.addEventListener('offline', offline); document.addEventListener('visibilitychange', refresh);
+    return () => { window.removeEventListener('popstate', location); window.removeEventListener('pageshow', refresh); window.removeEventListener('focus', refresh); window.removeEventListener('online', refresh); window.removeEventListener('offline', offline); document.removeEventListener('visibilitychange', refresh); controller.cancelPending(); controller.dispose(); };
   }, [controller]);
+  const workspaceId = state.selection.workspaceId; const userId = state.session?.user.id; const sessionId = state.session?.session.id;
+  const streamAllowed = !!workspaceId && !!sessionId && !['forbidden', 'signed-out', 'disabled', 'error'].includes(state.status);
+  useEffect(() => {
+    if (!streamAllowed || !workspaceId) return;
+    return connectTaskEvents({ workspaceId, onStatus: controller.setStreamStatus, onEvent: event => {
+      if (event.type === 'denied') controller.streamDenied(event.reason);
+      else if (event.type !== 'heartbeat') void controller.backgroundRefresh(event.type === 'reset');
+    } });
+  }, [controller, workspaceId, userId, sessionId, streamAllowed, streamEpoch]);
+  useEffect(() => {
+    if (state.refreshRequired && !state.refreshDeferred && state.status === 'ready') void controller.backgroundRefresh();
+  }, [controller, state.refreshRequired, state.refreshDeferred, state.status]);
   useEffect(() => {
     if (!state.session) return;
     const timer = window.setTimeout(() => { controller.cancelPending(); void controller.refresh(); }, Math.min(2147483647, Math.max(0, Date.parse(state.session.session.expiresAt) - Date.now())));
@@ -40,6 +55,9 @@ export function useProjectTasks() {
     pageError: contentPageError(state.pageError),
     policyPageError: state.pageError?.collection === 'projectAccess' || state.pageError?.collection === 'assignees' ? state.pageError : null,
     refresh: controller.refresh, selectWorkspace: controller.selectWorkspace, selectProject: controller.selectProject, selectTask: controller.selectTask,
+    setTaskScope: controller.setTaskScope, setSearchQuery: controller.setSearchQuery, setDiscoveryProject: controller.setDiscoveryProject,
+    loadDiscoveryMore: controller.loadDiscoveryMore, openDiscoveryTask: controller.openDiscoveryTask, returnToDiscovery: controller.returnToDiscovery,
+    resolveWorkspaceNavigation: controller.resolveWorkspaceNavigation,
     setView: controller.setView, setTaskLayout: controller.setTaskLayout, setTaskFilters: controller.setTaskFilters, setTaskColumn: controller.setTaskColumn,
     loadMore: controller.loadMore, loadTaskColumn: controller.loadTaskColumn, stageMove: controller.stageMove, moveEligibility: controller.moveEligibility, stage: controller.stage, submit: controller.submit, retrySave: controller.retrySave, discardDraft: controller.discardDraft,
     loadCollaborationMore: controller.loadCollaborationMore, acknowledgeClose: controller.acknowledgeClose,
