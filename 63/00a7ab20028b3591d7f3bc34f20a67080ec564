@@ -1,0 +1,28 @@
+docs/development/progress.md
+  s_37f6f126e69e73::t_b2366005c2d78c 49,222-232,766
+docs/development/task-discovery-ui.md
+  s_37f6f126e69e73::t_b840ba3ad35584 227-229
+  s_37f6f126e69e73::t_f375c7439ce024 8-27
+  s_37f6f126e69e73::t_937539219c1de1 230-236
+  s_37f6f126e69e73::t_1c9899d67e863a 58-62
+  s_37f6f126e69e73::t_df78f6033e4e2d 212-218
+  s_37f6f126e69e73::t_e8fe6d8f4e4d74 150-153,155-158,160,162,164-211,219-226,237-240
+CHANGELOG.md
+  s_37f6f126e69e73::t_1ec0e78598eab3 28-36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "6300a7ab20028b3591d7f3bc34f20a67080ec564",
+  "prompts": {},
+  "sessions": {
+    "s_37f6f126e69e73": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e670003e1ffe0hm07HLe8PdoMm",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
