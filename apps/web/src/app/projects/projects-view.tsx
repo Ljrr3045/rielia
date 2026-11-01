@@ -55,7 +55,7 @@ import {
 import { TaskBoard } from './task-board';
 import { TaskCaptureForm, TaskEditForm } from './task-forms';
 import { TaskDetail } from './task-detail';
-import { TaskDiscoveryBar, TaskDiscoveryList, LiveUpdateNotice } from './task-discovery';
+import { TaskCreateShortcut, TaskDiscoveryBar, TaskDiscoveryList, LiveUpdateNotice } from './task-discovery';
 import { TaskCollaboration } from './task-collaboration';
 import { TaskDescription } from './task-description';
 import { TaskList } from './task-list';
@@ -197,6 +197,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   const [createFocusId, setCreateFocusId] = useState<string | null>(null);
   const [resumeDraftOnReady, setResumeDraftOnReady] = useState(false);
   const [resumeAccessOnReady, setResumeAccessOnReady] = useState(false);
+  const [captureFocusProjectId, setCaptureFocusProjectId] = useState<string | null>(null);
   const captureRef = useRef<HTMLInputElement>(null);
   const projectHeadingRef = useRef<HTMLHeadingElement>(null);
   const discoveryHeadingRef = useRef<HTMLHeadingElement>(null);
@@ -566,6 +567,16 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
     modalOpenerRef.current = null;
     setForm({ kind: 'project-access', workspaceId: command.workspaceId, projectId: command.projectId });
   }, [resumeAccessOnReady, policyDraft, policyRetryTarget, status, selection.workspaceId, selection.projectId]);
+
+  useEffect(() => {
+    if (captureFocusProjectId === null || status !== 'ready' || selection.projectId !== captureFocusProjectId) return;
+    setCaptureFocusProjectId(null);
+    const frame = requestAnimationFrame(() => {
+      if (captureRef.current !== null) captureRef.current.focus();
+      else projectHeadingRef.current?.focus();
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [captureFocusProjectId, status, selection.projectId]);
 
   function resumeDraft(command: ProjectTaskCommand) {
     // Resumed forms must not reuse a previous modal opener. Never restore
@@ -2040,6 +2051,12 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
     if (discoveryProjectId !== null) void setDiscoveryProject(null);
   }
 
+  function chooseProjectForCapture(projectId: string) {
+    if (anyPending) return;
+    setCaptureFocusProjectId(projectId);
+    void selectProject(projectId);
+  }
+
   function resolveWorkspaceChoice(choice: 'stay' | 'discard') {
     if (choice === 'discard' && mutationPending !== null) return;
     void resolveWorkspaceNavigation(choice);
@@ -2205,7 +2222,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
 
       <header
         className={styles.topbar}
-        inert={overlayOpen || drawerOpen || form !== null ? true : undefined}
+        inert={overlayOpen || drawerOpen || form !== null || workspaceNavigation !== null ? true : undefined}
       >
         <Link className={styles.brand} href="/">
           <span aria-hidden="true" className={styles.brandMark} />
@@ -2250,7 +2267,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
           className={cx(styles.sidebar, drawerOpen && styles.open)}
           inert={sidebarDrawer
             ? (!drawerOpen ? true : undefined)
-            : (overlayOpen || form !== null ? true : undefined)}
+            : (overlayOpen || form !== null || workspaceNavigation !== null ? true : undefined)}
           ref={sidebarRef}
           tabIndex={-1}
         >
@@ -2275,7 +2292,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
                 <li>
                   <a
                     aria-current={taskScope === 'mine' ? 'page' : undefined}
-                    className={cx(styles.navItem, taskScope === 'mine' && styles.navItemActive)}
+                    className={cx(styles.navItem, styles.navItemPrimary, taskScope === 'mine' && styles.navItemActive)}
                     href={discoveryLink('mine')}
                     onClick={event => {
                       if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
@@ -2286,6 +2303,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
                     <span aria-hidden="true" className={styles.navItemIcon}><IconTask size={18} /></span>
                     <span className={styles.navItemMain}>
                       <span className={styles.navItemTitle}>{copy.discovery.myTasks[lang]}</span>
+                      <span className={styles.navItemMeta}>{copy.discovery.myTasksMeta[lang]}</span>
                     </span>
                   </a>
                 </li>
@@ -2390,7 +2408,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
           <button aria-label={copy.common.closeMenu[lang]} className={styles.sidebarBackdrop} onClick={closeDrawer} type="button" />
         )}
 
-        <main className={styles.main} id="projects-main" inert={drawerOpen || form !== null ? true : undefined} tabIndex={-1}>
+        <main className={styles.main} id="projects-main" inert={drawerOpen || form !== null || workspaceNavigation !== null ? true : undefined} tabIndex={-1}>
           <div className={styles.mobileHeader}>
             <button aria-label={copy.common.menu[lang]} className={styles.mobileMenuButton} onClick={openDrawer} type="button">
               <IconMenu size={20} />
@@ -2498,7 +2516,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
             />
           )}
 
-          {status === 'empty' && hasWorkspace && project === null && (
+          {status === 'empty' && hasWorkspace && taskScope === 'project' && project === null && (
             <section aria-labelledby="projects-empty-heading">
               <div className={styles.pageHeader}>
                 <div className={styles.titleBlock}>
@@ -2566,10 +2584,19 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
                   status={streamStatus}
                 />
 
+                {!isArchivedTasks && (
+                  <TaskCreateShortcut
+                    disabled={blocked || anyDraft}
+                    onChoose={chooseProjectForCapture}
+                    projects={projectList}
+                  />
+                )}
+
                 <TaskDiscoveryBar
                   archived={isArchivedTasks}
                   disabled={anyPending}
                   filters={taskView.filters}
+                  onClearFilters={clearDiscoveryFilters}
                   onFilters={filters => { if (!anyPending) void setTaskFilters(filters); }}
                   onProject={projectId => { if (!anyPending) void setDiscoveryProject(projectId); }}
                   onScope={changeDiscoveryScope}
@@ -2605,7 +2632,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
             </div>
           )}
 
-          {status === 'ready' && project !== null && (
+          {status === 'ready' && taskScope === 'project' && project !== null && (
             <div className={cx(styles.workLayout, detailOpen && styles.workLayoutOpen)}>
               <section className={styles.listColumn} inert={overlayOpen ? true : undefined}>
                 <header className={styles.mainHeader}>
@@ -2802,7 +2829,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
         </main>
       </div>
 
-      {form !== null && (
+      {form !== null && workspaceNavigation === null && (
         <ModalFrame
           busy={anyPending}
           eyebrow={form.kind === 'project-access'
@@ -2905,7 +2932,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
         </ModalFrame>
       )}
 
-      {workspaceNavigation !== null && form === null && (
+      {workspaceNavigation !== null && (
         <ModalFrame
           busy={mutationPending !== null}
           eyebrow={copy.common.workspace}

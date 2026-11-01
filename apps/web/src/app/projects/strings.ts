@@ -282,6 +282,17 @@ export const copy = {
       en: 'The 1,000 loaded-result limit was reached. Narrow the search or refresh to start again.',
     },
     loadMore: { es: 'Cargar más resultados', en: 'Load more results' },
+    createDisclosure: { es: 'Elegir proyecto para crear una tarea', en: 'Choose a project to create a task' },
+    createBody: {
+      es: 'La captura rápida necesita un proyecto visible con permiso de edición. Se abrirá la captura de ese proyecto y la tarea no se asignará automáticamente.',
+      en: 'Quick capture needs a visible project you can edit. It opens that project’s capture, and the task is not assigned automatically.',
+    },
+    createProjectLabel: { es: 'Proyecto para la nueva tarea', en: 'Project for the new task' },
+    createOpen: { es: 'Abrir captura', en: 'Open quick capture' },
+    createNoProjects: {
+      es: 'No hay proyectos editables visibles. Crea o abre uno desde la barra lateral.',
+      en: 'There are no visible editable projects. Create or open one from the sidebar.',
+    },
     backToMine: { es: 'Volver a Mis tareas', en: 'Back to My tasks' },
     backToSearch: { es: 'Volver a los resultados', en: 'Back to the search results' },
   },

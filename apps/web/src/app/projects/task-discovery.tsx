@@ -20,6 +20,8 @@ import {
   EmptyState,
   IconAlert,
   IconArchive,
+  IconChevron,
+  IconPlus,
   IconSearch,
   IconTask,
   PriorityMark,
@@ -45,6 +47,7 @@ export function TaskDiscoveryBar({
   onSearch,
   onFilters,
   onProject,
+  onClearFilters,
   onToggleArchive,
 }: {
   scope: 'mine' | 'search';
@@ -59,6 +62,7 @@ export function TaskDiscoveryBar({
   onSearch: (query: string) => void;
   onFilters: (filters: TaskFilters) => void;
   onProject: (projectId: string | null) => void;
+  onClearFilters: () => void;
   onToggleArchive: () => void;
 }) {
   const lang = useLocale();
@@ -73,6 +77,7 @@ export function TaskDiscoveryBar({
   const priorityId = useId();
   const projectFilterId = useId();
   const filtersActive = Object.keys(filters).length;
+  const filterCount = filtersActive + (projectId !== null ? 1 : 0);
   const selectedProjectMissing = projectId !== null && !projects.some(project => project.id === projectId);
 
   useEffect(() => {
@@ -174,8 +179,8 @@ export function TaskDiscoveryBar({
           </select>
         </label>
 
-        {includeClear && filtersActive > 0 && (
-          <button className={styles.clearFilters} disabled={disabled} onClick={() => onFilters({})} type="button">
+        {includeClear && filterCount > 0 && (
+          <button className={styles.clearFilters} disabled={disabled} onClick={onClearFilters} type="button">
             {copy.discovery.clearFilters[lang]}
           </button>
         )}
@@ -254,7 +259,7 @@ export function TaskDiscoveryBar({
             onClick={() => setFiltersOpen(open => !open)}
             type="button"
           >
-            {copy.discovery.filters[lang]} ({filtersActive})
+            {copy.discovery.filters[lang]} ({filterCount})
           </button>
         )
         : <div className={styles.filterRow}>{filterFields(true)}</div>}
@@ -262,8 +267,8 @@ export function TaskDiscoveryBar({
       {narrow && filtersOpen && (
         <div aria-label={copy.discovery.filterPanel[lang]} className={styles.filterPanel} id={panelId} role="group">
           <div className={styles.filterPanelGrid}>{filterFields(false)}</div>
-          {filtersActive > 0 && (
-            <button className={styles.clearFilters} disabled={disabled} onClick={() => onFilters({})} type="button">
+          {filterCount > 0 && (
+            <button className={styles.clearFilters} disabled={disabled} onClick={onClearFilters} type="button">
               {copy.discovery.clearFilters[lang]}
             </button>
           )}
@@ -273,8 +278,66 @@ export function TaskDiscoveryBar({
   );
 }
 
-export function TaskDiscoveryList({
-  discovery,
+export function TaskCreateShortcut({
+  projects,
+  disabled,
+  onChoose,
+}: {
+  projects: readonly Project[];
+  disabled: boolean;
+  onChoose: (projectId: string) => void;
+}) {
+  const lang = useLocale();
+  const eligible = projects.filter(project => project.archivedAt === null && project.capabilities.canEdit);
+  const [projectId, setProjectId] = useState(() => eligible[0]?.id ?? '');
+
+  useEffect(() => {
+    const options = projects.filter(project => project.archivedAt === null && project.capabilities.canEdit);
+    if (!options.some(project => project.id === projectId)) setProjectId(options[0]?.id ?? '');
+  }, [projects, projectId]);
+
+  if (eligible.length === 0) {
+    return <p className={styles.discoveryHint}>{copy.discovery.createNoProjects[lang]}</p>;
+  }
+
+  return (
+    <details className={styles.discoveryCreate}>
+      <summary className={styles.discoveryCreateSummary}>
+        <IconPlus size={16} />
+        <span>{copy.discovery.createDisclosure[lang]}</span>
+        <IconChevron size={16} />
+      </summary>
+      <form
+        className={styles.discoveryCreateBody}
+        onSubmit={event => {
+          event.preventDefault();
+          if (projectId.length > 0 && !disabled) onChoose(projectId);
+        }}
+      >
+        <p className={styles.discoveryHint}>{copy.discovery.createBody[lang]}</p>
+        <label className={styles.filterField}>
+          <span>{copy.discovery.createProjectLabel[lang]}</span>
+          <select
+            disabled={disabled}
+            onChange={event => setProjectId(event.currentTarget.value)}
+            value={projectId}
+          >
+            {eligible.map(project => (
+              <option key={project.id} value={project.id}>{project.name} · {project.key}</option>
+            ))}
+          </select>
+        </label>
+        <div className={styles.formActions}>
+          <button className={styles.primary} disabled={disabled || projectId.length === 0} type="submit">
+            {copy.discovery.createOpen[lang]}
+          </button>
+        </div>
+      </form>
+    </details>
+  );
+}
+
+export function TaskDiscoveryList({  discovery,
   scope,
   query,
   projectId,
@@ -369,11 +432,13 @@ export function TaskDiscoveryList({
         />
       );
     }
-    const empty = archived
-      ? { title: copy.discovery.emptyArchivedTitle, body: copy.discovery.emptyArchivedBody }
-      : scope === 'mine'
-        ? { title: copy.discovery.emptyMineTitle, body: copy.discovery.emptyMineBody }
-        : { title: copy.discovery.emptySearchTitle, body: copy.discovery.emptySearchBody };
+    const empty = hasQuery || filtered
+      ? { title: copy.discovery.noResultsTitle, body: copy.discovery.noResultsBody }
+      : archived
+        ? { title: copy.discovery.emptyArchivedTitle, body: copy.discovery.emptyArchivedBody }
+        : scope === 'mine'
+          ? { title: copy.discovery.emptyMineTitle, body: copy.discovery.emptyMineBody }
+          : { title: copy.discovery.emptySearchTitle, body: copy.discovery.emptySearchBody };
     return (
       <EmptyState
         actions={hasQuery
@@ -393,12 +458,12 @@ export function TaskDiscoveryList({
   if (discovery.status === 'loading' && page.items.length === 0) return loadingSkeleton();
 
   if (page.items.length === 0 && !failed && !changed) {
-    const empty = archived
-      ? { title: copy.discovery.emptyArchivedTitle, body: copy.discovery.emptyArchivedBody }
-      : scope === 'mine'
-        ? { title: copy.discovery.emptyMineTitle, body: copy.discovery.emptyMineBody }
-        : hasQuery || filtered
-          ? { title: copy.discovery.noResultsTitle, body: copy.discovery.noResultsBody }
+    const empty = hasQuery || filtered
+      ? { title: copy.discovery.noResultsTitle, body: copy.discovery.noResultsBody }
+      : archived
+        ? { title: copy.discovery.emptyArchivedTitle, body: copy.discovery.emptyArchivedBody }
+        : scope === 'mine'
+          ? { title: copy.discovery.emptyMineTitle, body: copy.discovery.emptyMineBody }
           : { title: copy.discovery.emptySearchTitle, body: copy.discovery.emptySearchBody };
     return (
       <EmptyState

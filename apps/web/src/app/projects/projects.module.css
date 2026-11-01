@@ -3758,3 +3758,64 @@
     width: 100%;
   }
 }
+
+/* T10 primary work entry and project-first quick-capture affordance. */
+
+.app a.navItemPrimary,
+.app a.navItemPrimary:hover {
+  background: var(--pj-brand-soft);
+  color: var(--pj-brand-ink);
+}
+
+.navItemPrimary .navItemIcon,
+.navItemPrimary .navItemMeta {
+  color: var(--pj-brand-ink);
+}
+
+.discoveryCreate {
+  margin: 0.25rem 0 0.65rem;
+  border: 1px solid var(--divider);
+  border-radius: 0.65rem;
+  background: var(--surface);
+}
+
+.discoveryCreateSummary {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 2.75rem;
+  padding: 0.55rem 0.7rem;
+  cursor: pointer;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  font-weight: 650;
+  list-style: none;
+}
+
+.discoveryCreateSummary::-webkit-details-marker {
+  display: none;
+}
+
+.discoveryCreateSummary > span {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.discoveryCreate[open] .discoveryCreateSummary {
+  border-bottom: 1px solid var(--divider);
+}
+
+.discoveryCreate[open] .discoveryCreateSummary > svg:last-child {
+  transform: rotate(180deg);
+}
+
+.discoveryCreateBody {
+  display: grid;
+  gap: 0.55rem;
+  padding: 0.7rem;
+}
+
+.discoveryCreateBody .filterField {
+  max-width: 22rem;
+}
