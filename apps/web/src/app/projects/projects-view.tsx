@@ -440,8 +440,10 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   }, [outcome, form]);
 
   useEffect(() => {
-    if (status === 'signed-out' && form !== null) setForm(null);
-  }, [status, form]);
+    if (status !== 'signed-out' && status !== 'forbidden') return;
+    if (form !== null) setForm(null);
+    if (workspaceNavigation !== null) void resolveWorkspaceNavigation('stay');
+  }, [status, form, workspaceNavigation, resolveWorkspaceNavigation]);
 
   useEffect(() => {
     if (form !== null) return;
