@@ -263,6 +263,9 @@ corrected candidate removes both and the final validator recheck covers them.
 
 ## PR evidence
 
-Presentation PR: to be opened as one English non-draft PR to `dev` from
-`feat/t10-search-my-tasks-ui` after independent validation. The coordinator
-alone posts the exact `@kody start-review` trigger for each ready head and merges.
+Presentation [PR #24](https://github.com/Ljrr3045/rielia/pull/24): one English
+non-draft PR to `dev` from `feat/t10-search-my-tasks-ui`, based on the combined
+source `29601ac` plus this documentation head. The coordinator alone posts the
+exact `@kody start-review` trigger for each ready head after CI and merges. Exact
+head, CI and Kody evidence live in GitHub and the external delivery report; a
+prior-head review never approves changed code.

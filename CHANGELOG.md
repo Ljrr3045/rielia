@@ -35,7 +35,8 @@ This records repository changes. No application version has been released.
   shell-dismissal disposition (no demonstrated private-field leak); the final
   functional/mobile-return report accepts persisted comment/checklist, no
   auto-assignment, accessible H1 fallback after reload and exact row focus after
-  in-session reopen/Escape. PR/review evidence is recorded on the PR.
+  in-session reopen/Escape. PR/review evidence is recorded on
+  [PR #24](https://github.com/Ljrr3045/rielia/pull/24).
   [UI guide](docs/development/task-discovery-ui.md). No full T10/P11/US05,
   labels/sprints, exports, coediting, real OAuth/staging/users,
   physical-device/AT/WCAG or deployment acceptance is claimed.
