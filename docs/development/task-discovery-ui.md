@@ -5,12 +5,26 @@ Status: bounded presentation on the merged T10.0 logic
 `6bde444cd4e69115bc7004cf8d58c229ee7c55a7`). It supports P11, P02, P33 and
 P38, US02/US05/US08/US12/US25, UXR01/UXR03 and UX01/UX03/UX05/UX06/UX07/UX09/
 UX11. It does not complete full T10/P11/US05, labels/sprints, exports,
-coediting, B2 views, real OAuth/staging/users or deployment.
+coediting, B2 views, real OAuth/staging/users or deployment. The delivery also
+carries two independently authored, root-reviewed SOL controller/test
+corrections for guarded-history URL restoration and session-replacement URL
+clearing; those are not UI-owned logic changes.
 
-All contracts, hooks, controllers, proxies, streams, session handling and
-functional-test source remain logic-owned. This delivery consumes the merged
-`useProjectTasks` surface and adds JSX, CSS, ES/EN copy and presentation
-composition only. It does not change the bare `/projects` default.
+The UI owns JSX, CSS, ES/EN copy, presentation composition and this evidence. All
+other contracts, hooks, controllers, proxies, streams, session handling and
+functional-test source remain logic-owned. The presentation consumes the merged
+`useProjectTasks` surface and adds no domain logic of its own. The two accepted
+SOL commits are included exactly as reviewed:
+
+- `f1435b172180a940f6f914b22549e593c24235bc` (cherry-picked as
+  `b4c6a42`) repairs the accepted guarded-history URL before destination reads,
+  with a controller regression for draft/unknown and allowed/denied targets;
+- `f67fc41bf986e829aa160bfa21aeb7cf73e71005` (cherry-picked as
+  `29601ac`) clears a stale task/query URL when the human session is replaced and
+  syncs the authorized default workspace, with a controller regression.
+
+No other logic/test source is changed. The presentation does not change the bare
+`/projects` default.
 
 ## Scope and paths
 
@@ -41,7 +55,11 @@ Key files:
 - `project-ui.tsx`, `strings.ts` and `projects.module.css` provide the search
   icon, ES/EN copy, shared semantic tokens and scoped responsive/theme styles.
 - `apps/web/src/app/page.tsx` updates the development home's task-work entry to
-  the explicit My tasks URL without changing auth/session or bare-path behavior.
+  the explicit My Tasks URL without changing auth/session or bare-path behavior.
+- `apps/web/src/lib/project-task-controller.ts` and
+  `scripts/project-task-logic.test.mjs` contain only the two accepted SOL-owned
+  navigation URL corrections and their regressions; the UI worker did not author
+  or rewrite them.
 
 Canonical route selectors are supplied and validated by the merged controller:
 `/projects?workspace=W&taskScope=mine|search&q=…&searchProject=…` plus the
@@ -129,57 +147,97 @@ does not parse selectors. The sidebar links explicitly request a scope; bare
 
 ## Validation evidence
 
-Committed presentation checkpoint:
-`c1a2a1d69288aa468851ebf2cda9a13bc9036de9` (correction series `c329d50` plus
-the 44 px result-target/heading correction). The source files are
+Committed combined source checkpoint:
+`29601ac17965f7038c397e95fa8773eb9fdd4798` (presentation series
+`c1a2a1d`, `7c59d29`, `81c2fe0`, `b6ad973`, `0f6cc64` plus the exact accepted
+SOL commits `f1435b17` and `f67fc41b`). Presentation files are
 `task-discovery.tsx`, `projects-view.tsx`, `task-detail.tsx`, `project-ui.tsx`,
-`strings.ts`, `projects.module.css` and the development home `page.tsx`.
-Earlier checkpoint `792414f0ea3b8d386780ab35a0c73c475c27d0b7` was the validators'
-initial fixture source; the corrections below replace it.
+`strings.ts`, `projects.module.css` and the development home `page.tsx`; the two
+SOL controller/test files are listed above. Earlier checkpoint
+`792414f0ea3b8d386780ab35a0c73c475c27d0b7` was the validators' initial fixture
+source and is superseded.
 
-Root review findings resolved in `c329d50`:
+Root review and independent-validator findings resolved:
 
-- discovery and legacy project/detail blocks are now mutually exclusive, including
+- Discovery and legacy project/detail blocks are mutually exclusive, including
   the empty project overview, so an open discovery detail cannot duplicate the
-  detail, dialog IDs or focus traps;
-- the workspace guard replaces an open form rather than being hidden behind it,
-  keeping one focus trap and retained form state with Stay/Discard behavior;
-- the project filter is counted and cleared with the explicit all-filter action,
-  and an inherited URL assignee is a visible clearable criterion;
-- filtered/query zero results always use the no-matching-results state, not the
-  true-empty scope copy;
-- the development home task-work link and primary sidebar My tasks entry use the
-  explicit My Tasks URL, preserving the selected workspace where available;
-- a visible choose-project-to-create disclosure routes through an editable,
-  non-archived visible project to the existing quick capture.
+  detail, dialog IDs or focus traps.
+- The workspace guard replaces an open form rather than hiding behind it: one
+  modal/focus trap is active, retained form values are not reset, Stay restores
+  the form, and Discard remains disabled while a mutation is pending.
+- The project filter is counted and cleared with the explicit all-filter action;
+  an inherited URL/project assignee is a visible clearable selected criterion with
+  no invented people source. Query text remains separately clearable.
+- Filtered/query zero results use the no-matching-results state; true-empty copy is
+  reserved for unfiltered scopes in mine/search/archived.
+- The development home task-work link and primary sidebar My Tasks entry use the
+  explicit My Tasks URL; selected workspace parameters are preserved where
+  available.
+- A visible choose-project-to-create disclosure lists visible, non-archived
+  projects whose returned capabilities allow editing and routes to that project's
+  existing quick capture. It does not create cross-project or auto-assign.
+- The discovery result title is a full-width native 44 px link without overlapping
+  metadata or a blanket row-click role; the results section has an explicit
+  heading.
+- The shared breadcrumb link now has a scoped 44 px hit area; the responsive
+  validator measured 44 px at 768, 844 landscape and 1024 with no overflow.
+- Feedback target text wraps long unbroken titles. The measured 608 CSS px pending
+  guard was constrained by a `minmax(0,1fr)` modal grid column and
+  `min-width:0`/`max-width:100%` modal variants; narrow modal actions stack
+  full-width. The targeted 320/390 recheck reported `failure=null` and the root
+  visually confirmed the corrected 390 guard.
+- On forbidden reauthorization, a stale empty edit/policy modal shell is dismissed
+  and any workspace guard is cleared without discarding controller recovery. The
+  precise functional disposition is: the old-source revocation removed private
+  rows, detail and textarea fields; only the empty Edit task modal shell persisted
+  (one dialog, zero cached fields). The fix is shell dismissal/focus, not a
+  demonstrated private-data leak.
+- The two accepted SOL controller fixes restore the requested workspace URL after
+  guarded history Discard (including denied destinations) and clear the old
+  task/query URL when a human session is replaced.
 
-Additional presentation correction in `c1a2a1d`:
+Validation evidence:
 
-- the discovery result title is a genuine full-width 44 px native link without
-  overlapping metadata or a blanket row-click role; the results section has an
-  explicit heading.
+- The focused `pnpm test:projects:logic` suite passes 63 project/client/proxy/
+  controller checks after the SOL cherry-picks, including T10 scope/search/detail/
+  Back, paging, draft, conflict, guarded-history and session-replacement cases.
+- Web typecheck, targeted ESLint and production web build pass on the presentation
+  corrections.
+- Independent responsive evidence: results/filter/single-detail/return/no-results
+  pass at 320, 375, 390, 768, 1024 and 1440 px plus 844×390 landscape; ES/EN
+  light/dark sampled; no page overflow; result target 44 px; query text 16 px;
+  overlay Tab/Escape pass. Page-two (105 rows) exact focus works via explicit
+  return and browser Back; a focus refresh retains an unsent query. The guard over
+  an edit presents one accessible trapped dialog; Stay preserves the exact draft
+  and Discard reaches the actual foreign-workspace denial. The final accepted
+  responsive report confirms the exact 320/390 guard width, fitting actions,
+  disabled pending Discard, long feedback at 267/337 px, native keyboard status
+  selection, Stay/Escape draft and Discard URL, exactly one active guard in the
+  CDP accessibility tree, and desktop smoke. Its final mobile evidence used UI
+  head `b4c6a42` with the live SOL `f67` source, which the combined `29601ac`
+  review contains.
+- Independent functional evidence: real two-session update without reload; dirty
+  input and captured conflict survive later writes; final blocker discard
+  refreshes canonical state; unknown-response commit followed by response loss
+  preserves the original retry key across events (two attempts, one persisted
+  version); deferred SQL rollback leaves no outbox/count/visible refresh change;
+  offline/online plus focus recovers; member suspension and actual session expiry
+  pass; the real authorization suite and a 1,001-row context cap pass. The SOL
+  session-replacement regression covers same/different human and ready/empty/
+  forbidden/unavailable targets without resubmitting. The final existing-390
+  functional regression/report was still pending when this guide was updated; the
+  combined standard check below passes.
+- `pnpm install --frozen-lockfile` and the combined `pnpm check` pass on
+  `29601ac`: lint, Express-free closure, process cleanup, identity/workspace/
+  project suites, 63 focused project/client/proxy/controller checks including T10,
+  prototype, strict types, production builds, 17 MCP/Inspector checks and HTTP
+  smoke. Audit high/critical, handoff integrity and whitespace are recorded in the
+  final delivery pass. Screenshots and private QA state remain outside the
+  repository.
 
-Local checks on the checkpoint:
-
-- `pnpm --filter @rielia/web typecheck` passes with the generated route types.
-- Targeted `pnpm exec eslint` passes with zero warnings.
-- `pnpm --filter @rielia/web build` passes; `/projects` remains a static page.
-- The existing `pnpm test:projects:logic` suite passes 61 focused project/client/
-  proxy/controller checks including T10 scope/search/detail/Back, paging, draft,
-  conflict, workspace guard and SSE cases. No functional test source is added.
-
-Initial independent responsive evidence on the earlier `792414f` candidate
-measured a 169.23×18 px result-title target and two visible duplicate detail
-dialogs at 390×844 EN dark touch, with no whole-page horizontal overflow. Those
-two observations correspond to the source corrections in `c329d50`/`c1a2a1d` and
-are awaiting the validator's recheck on the frozen candidate. Validator
-screenshots remain external to the repository.
-
-Independent functional and responsive validation is coordinated by the
-coordinator with separate SOL xhigh validators and isolated browser contexts.
-Their evidence and this PR's final standard checks, audit, handoff integrity and
-whitespace results are recorded below/on the PR when available. Screenshots and
-private QA state remain outside the repository.
+The earlier 390×844 EN dark touch initial capture measured a 169.23×18 px result
+title and two visible duplicate detail dialogs with no whole-page overflow; the
+corrected candidate removes both and the final validator recheck covers them.
 
 ## Limits and remaining work
 

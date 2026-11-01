@@ -25,10 +25,15 @@ This records repository changes. No application version has been released.
   The primary home/sidebar My tasks entry uses the explicit scope URL, and a
   visible choose-project disclosure routes to editable projects' existing quick
   capture without cross-project creation or auto-assignment. The discovery result
-  title is a full-width 44 px native link. Corrected checkpoint `c1a2a1d` passes
-  web typecheck, targeted ESLint, production web build and 61 focused project/
-  client/proxy/controller checks including T10; independent SOL validation, full
-  checks and PR/review evidence are pending.
+  title is a full-width 44 px native link and mobile feedback/modal actions wrap
+  within a constrained dialog. Two exact root-reviewed SOL controller/test
+  commits are included as logic-owned navigation URL corrections: guarded-history
+  Discard restores the requested workspace URL before reads, and a replaced human
+  session clears the stale task/query URL. Combined source `29601ac` passes full
+  `pnpm check`, 63 focused project/client/proxy/controller checks including T10,
+  production build, accepted seven-width responsive evidence and the precise
+  shell-dismissal disposition (no demonstrated private-field leak); final
+  functional 390 report and PR/review evidence are pending.
   [UI guide](docs/development/task-discovery-ui.md). No full T10/P11/US05,
   labels/sprints, exports, coediting, real OAuth/staging/users,
   physical-device/AT/WCAG or deployment acceptance is claimed.
