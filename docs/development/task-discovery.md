@@ -98,14 +98,20 @@ repeated and non-scalar values fail closed. Counts and cursor revision use only
 currently readable projects. Cursor scope includes principal/workspace/query;
 anchors must still belong to that same matching authorized collection. Any
 authorized task/policy revision change gives 409 `page-changed` on continuation.
-The backend resolves people and immutable authorship through the existing domain
-DTO policy; no raw outbox JSON, descriptions or foreign identity names are returned.
+The backend resolves people and immutable authorship through the shared detail/
+list/discovery DTO projection. Returned rows are indexed by project once; one
+bounded membership/active-access hydration covers only the page's represented
+projects and at most 200 creator/assignee identities. No per-project people query
+or repeated full-project/result scan remains. No raw outbox JSON, descriptions or
+foreign identity names are returned.
 
 `GET /api/v1/workspaces/:workspaceId/events` uses the existing web session,
 same-origin/Fetch-Site and no-body boundary. Cookies/renewal/request IDs and fixed
 API destination pass through Next; no forwarding identity is trusted. The API
 rechecks current session/principal/membership/readable projects under the shared
-policy fence every second, immediately before each batch. A read already holding
+policy fence every second, immediately before each batch. The dedicated event
+projection loads only authorized project IDs and policy versions, rather than
+discovery names, keys, task revisions or other content. A read already holding
 that fence can finish before a policy write commits. Project access-set/policy
 changes cause a generic reset; session/workspace denial sends a generic denial
 and closes. No instantaneous erasure of content already delivered is promised.
@@ -158,12 +164,16 @@ queued invalidation/reset, dirty edit/conflict/exact-key preservation, explicit
 workspace guard, session replacement, denial clearing, final-recovery refresh,
 SSE parsing/retry/late abort and JSON-body versus stream deadlines.
 
-`pnpm test:identity` passes all existing suites plus 11 T10 PostgreSQL/Nest checks:
+`pnpm test:identity` passes all existing suites plus 12 T10 PostgreSQL/Nest checks:
 legacy immutable outbox migration, exact ID/literal-title search, >100 query-bound
 pages, hidden-write revision isolation, human owner/admin/member/viewer and
 delegated/autonomous grant subjects, archives, deferred rollback silence, two
 sessions, delayed/locked commit order, replay/expiry/backlog reset, heartbeat,
 current private access/session/membership revocation, admission and backpressure.
+The query-shape regression proves one membership hydration for five projects,
+private historical assignee inactivity versus human owner/admin implicit access,
+and narrow id/version project reads plus current authorization on successive
+actual SSE ticks.
 The existing eight-table digest/count witness still passes an actual PostgreSQL
 container restart with the new sequence included in outbox rows.
 
@@ -207,3 +217,22 @@ No mobile/browser presentation, physical touch, screen-reader/AT or WCAG
 certification is claimed by these logic tests; those belong to the following UI
 delivery. Real OAuth/HTTPS/staging/users, multiple replicas, scale certification,
 coediting, credentials, sprints/labels, exports and deployment remain excluded.
+
+## PR #23 Kody dispositions
+
+[Discovery hydration](https://github.com/Ljrr3045/rielia/pull/23#discussion_r4437329828)
+was valid: a single project index and bounded shared people/eligibility batch now
+replace repeated row scans and per-project membership queries. The real-PG
+multi-project/private-historical-assignee regression verifies the changed query
+shape without weakening read/assignment policy or rewriting authorship.
+
+[SSE metadata reads](https://github.com/Ljrr3045/rielia/pull/23#discussion_r4437329994)
+were partially applicable. The event path now selects only id/version and keeps
+current session/principal/membership/private access reevaluation every second.
+Residual work remains O(currently readable IDs) per admitted connection, under
+the inherited shared policy fence; this explicitly bounded single-replica slice
+makes no scale acceptance claim. A time-only authority cache would weaken
+revocation, and broader revision-indexed caching is deferred. Actual successive-
+tick projection/current-authority checks, hidden-write silence and midstream
+revocation/privacy/session cases remain required. Changed source requires fresh
+exact-head CI and a new coordinator root Kody request.

@@ -38,7 +38,7 @@ export class TaskEventsService implements OnModuleDestroy {
       if (!response.write(`${token}event: update\ndata: ${JSON.stringify(data)}\n\n`)) close();
     };
     const poll = async (initial: boolean) => {
-      await this.tasks.discoveryRead(context, workspaceId, async (tx, actor, canWrite, projects) => {
+      await this.tasks.eventsRead(context, workspaceId, async (tx, actor, canWrite, projects) => {
         if (closed) return;
         const policy = createHash('sha256').update(JSON.stringify([actor.actorPrincipalId, actor.role, canWrite, projects.map(p => [p.id, p.version])])).digest('hex');
         const where = { workspaceId, type: 'domain.activity', activity: { projectId: { in: projects.map(p => p.id) } } };

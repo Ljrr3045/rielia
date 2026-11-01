@@ -90,6 +90,28 @@ test('T10 real PostgreSQL search, current policy and committed session SSE', asy
     const slow = new EventEmitter(); Object.assign(slow, { destroyed: false, headersSent: false, ended: false, writes: 0, setHeader() {}, flushHeaders() { this.headersSent = true; }, write() { this.writes++; return false; }, end() { this.ended = true; } });
     await events.serve(web, f.workspace.id, slow); assert.equal(slow.ended, true); assert.equal(slow.writes, 1); assert.equal(events.connections.size, 0);
   });
+  await t.test('multi-project hydration is one bounded membership batch and every SSE poll uses only current id/version metadata', async () => {
+    for (let n = 0; n < 5; n++) { const project = await ok(f.owner, `${f.root}/projects`, { key: `BAT${n}`, name: `Batched result ${n}` }); await ok(f.owner, `${f.root}/projects/${project.id}/tasks`, { title: 'Batched witness', assigneePrincipalId: member.principalId }); }
+    let policy = await ok(f.owner, `${f.root}/projects/${secret.id}`); policy = await ok(f.owner, `${f.root}/projects/${secret.id}/access/${member.principalId}`, { expectedVersion: policy.version, state: 'active' });
+    for (const person of [f.owner, admin, member]) await ok(f.owner, privateTasks, { title: 'BatchScoped private assignment', assigneePrincipalId: person.principalId });
+    await ok(f.owner, `${f.root}/projects/${secret.id}/access/${member.principalId}`, { expectedVersion: policy.version, state: 'revoked' });
+    let batches = 0; let authorizationReads = 0; const projections = [];
+    identity.runtime.prisma = db.$extends({ query: {
+      membership: { findMany({ args, query }) { batches++; assert.ok(args.where.principalId.in.length <= 200); return query(args); }, findUnique({ args, query }) { authorizationReads++; return query(args); } },
+      project: { findMany({ args, query }) { projections.push(args.select); return query(args); } },
+    } });
+    let stream;
+    try {
+      const result = await page(f, f.owner, 'q=Batched'); assert.equal(result.items.length, 5); assert.equal(new Set(result.items.map(row => row.projectId)).size, 5); assert.ok(result.items.every(row => row.assignee.active)); assert.equal(batches, 1);
+      const historical = await page(f, f.owner, 'q=BatchScoped'); assert.equal(batches, 2); assert.equal(historical.items.length, 3);
+      assert.equal(historical.items.find(row => row.assigneePrincipalId === member.principalId).assignee.active, false);
+      for (const person of [f.owner, admin]) assert.equal(historical.items.find(row => row.assigneePrincipalId === person.principalId).assignee.active, true);
+      assert.ok(historical.items.every(row => row.assignee.name && row.creator.principalId === f.owner.principalId));
+      projections.length = 0; authorizationReads = 0;
+      stream = await openEventStream(url, f.workspace.id, f.owner.cookie); await stream.wait(row => row.id); await delay(2200);
+      assert.ok(projections.length >= 3); assert.ok(projections.every(select => JSON.stringify(select) === JSON.stringify({ id: true, version: true }))); assert.ok(authorizationReads >= projections.length);
+    } finally { await stream?.close(); identity.runtime.prisma = db; }
+  });
   await t.test('two sessions receive only committed authorized hints, rollback has no event, and abort cleans subscriptions', async () => {
     const one = await openEventStream(url, f.workspace.id, f.owner.cookie); const two = await openEventStream(url, f.workspace.id, member.cookie);
     try { await one.wait(row => row.data.type === 'reset'); await two.wait(row => row.data.type === 'reset'); const count = two.records.length;

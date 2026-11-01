@@ -66,7 +66,7 @@ function canonical(value: unknown): unknown {
 export class ProjectTaskService {
   constructor(@Inject(PrincipalService) private readonly principals: PrincipalService) {}
 
-  private administrator(actor: ExecutionContextResponse) { return actor.principalKind === 'human' && ['owner', 'admin'].includes(actor.role); }
+  private administrator(actor: Pick<ExecutionContextResponse, 'principalKind' | 'role'>) { return actor.principalKind === 'human' && ['owner', 'admin'].includes(actor.role); }
   private canManage(actor: ExecutionContextResponse) { return actor.executionMode === 'human' && this.administrator(actor); }
   private requireManagement(actor: ExecutionContextResponse) { if (!this.canManage(actor)) throw new ForbiddenException('Human project administration is required.'); }
   private readable(actor: ExecutionContextResponse): Prisma.ProjectWhereInput {
@@ -107,8 +107,29 @@ export class ProjectTaskService {
   }
   private async projectView(tx: Transaction, row: ProjectRow, canWrite: boolean, actor: ExecutionContextResponse) { return this.projectDto(row, await this.people(tx, row.workspaceId, [row.createdByPrincipalId]), canWrite, actor); }
   private async taskPeople(tx: Transaction, project: ReadableTaskProject, rows: TaskRow[]) {
-    const people = await this.people(tx, project.workspaceId, rows.flatMap(row => [row.createdByPrincipalId, ...(row.assigneePrincipalId ? [row.assigneePrincipalId] : [])]));
-    const eligible = new Set((await tx.membership.findMany({ where: { ...this.eligible(project), principalId: { in: rows.flatMap(row => row.assigneePrincipalId ? [row.assigneePrincipalId] : []) } }, select: { principalId: true } })).map(row => row.principalId));
+    const result = await this.taskPeopleBatch(tx, [project], rows);
+    return { people: result.people, eligible: result.eligible.get(project.id) ?? new Set<string>() };
+  }
+  private async taskPeopleBatch(tx: Transaction, projects: ReadableTaskProject[], rows: TaskRow[]) {
+    const people = new Map<string, DomainPerson>(); const eligible = new Map<string, Set<string>>();
+    if (!rows.length) return { people, eligible };
+    const byProject = new Map(projects.map(project => [project.id, project]));
+    const members = await tx.membership.findMany({ where: { workspaceId: rows[0]!.workspaceId,
+      principalId: { in: [...new Set(rows.flatMap(row => [row.createdByPrincipalId, ...(row.assigneePrincipalId ? [row.assigneePrincipalId] : [])]))] } },
+      include: { principal: true, projectAccesses: { where: { projectId: { in: [...byProject.keys()] }, state: 'active' }, select: { projectId: true } } } });
+    const byMember = new Map(members.map(member => [member.principalId, member]));
+    for (const member of members) people.set(member.principalId, { principalId: member.principalId, name: member.principal.displayName,
+      kind: member.principal.kind as 'human' | 'agent', active: member.state === 'active' && member.principal.state === 'active' });
+    // Same backend assignment projection for detail/list/discovery; a historical
+    // assignee remains named without regaining current project eligibility.
+    for (const row of rows) {
+      if (!row.assigneePrincipalId) continue;
+      const member = byMember.get(row.assigneePrincipalId); const project = byProject.get(row.projectId)!;
+      if (!member || member.state !== 'active' || member.principal.state !== 'active' || !['human', 'agent'].includes(member.principal.kind)) continue;
+      if (project.visibility !== 'workspace' && !this.administrator({ principalKind: member.principal.kind as 'human' | 'agent', role: member.role as MembershipRole })
+        && !member.projectAccesses.some(access => access.projectId === project.id)) continue;
+      const group = eligible.get(project.id) ?? new Set<string>(); group.add(member.principalId); eligible.set(project.id, group);
+    }
     return { people, eligible };
   }
   private async taskView(tx: Transaction, row: TaskRow, project: ProjectRow, canWrite: boolean) {
@@ -146,17 +167,22 @@ export class ProjectTaskService {
     return this.principals.domainOperation(context, workspaceId, 'read', async (tx, actor, canWrite) => work(tx, actor, canWrite,
       await tx.project.findMany({ where: this.readable(actor), orderBy: { id: 'asc' }, select: { id: true, workspaceId: true, key: true, name: true, version: true, taskRevision: true, visibility: true, archivedAt: true } })));
   }
+  /** Events need only current project IDs and policy versions; keep the same
+   * authorization predicate and one-second reevaluation without an access cache. */
+  eventsRead<T>(context: VerifiedExecution, workspaceId: string,
+    work: (tx: Transaction, actor: ExecutionContextResponse, canWrite: boolean, projects: Pick<ProjectRow, 'id' | 'version'>[]) => Promise<T>) {
+    return this.principals.domainOperation(context, workspaceId, 'read', async (tx, actor, canWrite) => work(tx, actor, canWrite,
+      await tx.project.findMany({ where: this.readable(actor), orderBy: { id: 'asc' }, select: { id: true, version: true } })));
+  }
   async discoveryItems(tx: Transaction, rows: TaskRow[], projects: ReadableTaskProject[], canWrite: boolean): Promise<TaskDiscoveryItem[]> {
-    const results = new Map<string, TaskDiscoveryItem>();
-    for (const project of projects) {
-      const group = rows.filter(row => row.projectId === project.id); if (!group.length) continue;
-      const { people, eligible } = await this.taskPeople(tx, project, group);
-      for (const row of group) {
-        const item = Object.fromEntries(Object.entries(this.taskDto(row, project, people, canWrite, eligible)).filter(([key]) => key !== 'description')) as Omit<Task, 'description'>;
-        results.set(row.id, { ...item, projectName: project.name });
-      }
-    }
-    return rows.map(row => results.get(row.id)!);
+    const byProject = new Map(projects.map(project => [project.id, project]));
+    const represented = [...new Set(rows.map(row => row.projectId))].map(id => byProject.get(id)!);
+    const { people, eligible } = await this.taskPeopleBatch(tx, represented, rows);
+    return rows.map(row => {
+      const project = byProject.get(row.projectId)!;
+      const item = Object.fromEntries(Object.entries(this.taskDto(row, project, people, canWrite, eligible.get(project.id) ?? new Set())).filter(([key]) => key !== 'description')) as Omit<Task, 'description'>;
+      return { ...item, projectName: project.name };
+    });
   }
   tasks(context: VerifiedExecution, workspaceId: string, projectId: string, view: ArchiveView = 'active', cursor?: string, filters: TaskFilters = {}): Promise<TaskPage> {
     if (!isTaskFilters(filters)) throw new BadRequestException('Invalid task filters.');

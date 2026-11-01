@@ -11,7 +11,9 @@ This records repository changes. No application version has been released.
   pages/counts and context-preserving detail navigation. Session-authenticated
   SSE reads only committed authorized outbox hints, with a fenced commit-order
   sequence, bounded opaque resume/reset, heartbeat, revocation, cancellation and
-  single-replica limits. Shared frontend logic preserves draft/conflict/exact-key
+  single-replica limits. Page-scoped batched people/eligibility hydration and
+  id/version-only event projection preserve current authorization. Shared
+  frontend logic preserves draft/conflict/exact-key
   recovery during background updates, guards workspace navigation with explicit
   Stay/Discard and clears identity state on session replacement. No presentation
   files or dependencies changed. Focused client/proxy/state, real PostgreSQL/
