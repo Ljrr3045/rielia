@@ -94,6 +94,14 @@ affected source section. Never modify a baseline just to make a hash check pass.
 
 ## Validate and record evidence
 
+The [T10.0 discovery guide](docs/development/task-discovery.md) records search,
+strict-assignee My tasks, session SSE bounds and presentation integration. Focused
+client/proxy/recovery checks run in `pnpm test:projects:logic` and `pnpm check`;
+real search/policy/migration/commit-order/replay/revocation and backpressure checks
+run in `pnpm test:identity`. The local QA fixture adds `--discovery` for populated
+search/My tasks and real Nest→Next two-session streaming, rollback, heartbeat,
+private-access removal and abort cleanup. Presentation remains separately owned.
+
 The [T09.0 task-collaboration guide](docs/development/task-collaboration.md)
 records hierarchy, checklist, own-author comments, safe history and the shared
 frontend recovery contract. Its focused checks run in `pnpm test:projects:logic`

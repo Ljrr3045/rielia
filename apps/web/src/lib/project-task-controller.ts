@@ -4,6 +4,8 @@ import { WorkspaceFailure, type WorkspaceTransport } from './workspace-client.ts
 import { ProjectTaskFailure, type ProjectTaskTransport } from './project-task-client.ts';
 import { collaborationCollections, isCollaborationCommand, type CollaborationCollection, type CloseWarning, type TaskComment, type TaskChecklist } from '@rielia/contracts';
 import { emptyCollaboration, type CollaborationState } from './task-collaboration-state.ts';
+import { isTaskSearch, type TaskScope, type TaskDiscoveryItem, type TaskDiscoveryPage, type TaskDiscoveryQuery } from '@rielia/contracts';
+import type { TaskStreamStatus } from './task-events-client.ts';
 
 export interface ProjectTaskSelection { workspaceId: string | null; projectId: string | null; taskId: string | null }
 type PolicyCollection = 'projectAccess' | 'assignees';
@@ -11,6 +13,11 @@ interface PolicyPageFailure { requestId: string | null; reason?: 'changed' }
 export type MoveEligibility = 'ready' | 'pending' | 'recovery' | 'draft' | 'changed' | 'unavailable' | 'forbidden' | 'invalid-destination' | 'different-detail';
 export interface TaskSummary { status: 'loading' | 'ready' | 'partial' | 'changed'; total: number | null; orderVersion: number | null; canCreate: boolean }
 export interface ProjectTaskState {
+  workspaceNavigation: { workspaceId: string | null } | null;
+  taskScope: TaskScope; searchQuery: string; discoveryProjectId: string | null;
+  discovery: { status: 'idle' | 'loading' | 'ready' | 'empty' | 'error' | 'changed'; page: TaskDiscoveryPage | null; requestId: string | null };
+  streamStatus: TaskStreamStatus; refreshRequired: boolean; refreshDeferred: boolean;
+  discoveryFocusTaskId: string | null; discoveryContextLimitReached: boolean;
   parentCandidatesWanted: boolean;
   draftGuard: { kind: 'none' | 'draft' | 'pending' | 'recovery'; atTarget: boolean; canReturn: boolean; canDiscard: boolean; canStageNew: boolean };
   collaboration: CollaborationState; closeWarning: CloseWarning | null; commentConflict: TaskComment | null; checklistConflict: TaskChecklist | null;
@@ -32,9 +39,10 @@ export interface ProjectTaskState {
   pageError: { collection: 'workspaces' | 'members' | 'projects' | 'tasks' | 'projectAccess' | 'assignees'; requestId: string | null; reason?: 'changed' } | null;
 }
 const selectionEmpty: ProjectTaskSelection = { workspaceId: null, projectId: null, taskId: null };
-const cleared = { parentCandidatesWanted: false, collaboration: emptyCollaboration(), closeWarning: null, commentConflict: null, checklistConflict: null, taskColumns: {}, taskColumnErrors: {}, taskColumnsChanged: false, policyPageErrors: {}, accessConflict: null, projectAccess: null, assignees: null, workspace: null, members: null, projects: null, project: null, tasks: null, task: null, pageError: null };
+const discoveryEmpty: ProjectTaskState['discovery'] = { status: 'idle', page: null, requestId: null };
+const cleared = { discovery: discoveryEmpty, parentCandidatesWanted: false, collaboration: emptyCollaboration(), closeWarning: null, commentConflict: null, checklistConflict: null, taskColumns: {}, taskColumnErrors: {}, taskColumnsChanged: false, policyPageErrors: {}, accessConflict: null, projectAccess: null, assignees: null, workspace: null, members: null, projects: null, project: null, tasks: null, task: null, pageError: null };
 const id = (value: unknown): value is string => typeof value === 'string' && /^[A-Za-z0-9_-]{1,128}$/.test(value);
-function urlFor(s: ProjectTaskSelection, views: ProjectTaskState['views'], taskView: TaskView): string {
+function urlFor(s: ProjectTaskSelection, views: ProjectTaskState['views'], taskView: TaskView, discovery: Pick<ProjectTaskState, 'taskScope' | 'searchQuery' | 'discoveryProjectId'>): string {
   const path = !s.workspaceId ? '/projects' : !s.projectId ? `/projects?workspace=${encodeURIComponent(s.workspaceId)}`
     : s.taskId ? taskURL(s.workspaceId, s.projectId, s.taskId) : projectURL(s.workspaceId, s.projectId);
   const url = new URL(path, 'https://location.invalid');
@@ -43,6 +51,9 @@ function urlFor(s: ProjectTaskSelection, views: ProjectTaskState['views'], taskV
   if (taskView.layout === 'board') url.searchParams.set('taskLayout', 'board');
   for (const [key, value] of Object.entries(taskView.filters)) url.searchParams.set(key, value);
   if (taskView.column !== 'backlog') url.searchParams.set('column', taskView.column);
+  if (discovery.taskScope !== 'project') url.searchParams.set('taskScope', discovery.taskScope);
+  if (discovery.searchQuery) url.searchParams.set('q', discovery.searchQuery);
+  if (discovery.discoveryProjectId) url.searchParams.set('searchProject', discovery.discoveryProjectId);
   return url.pathname + url.search;
 }
 function sameTarget(a: ProjectCommand, b: ProjectCommand): boolean {
@@ -56,14 +67,19 @@ function sameTarget(a: ProjectCommand, b: ProjectCommand): boolean {
 export function createProjectTaskController(options: {
   identity: Pick<IdentityTransport, 'configuration' | 'session'>;
   workspaces: Pick<WorkspaceTransport, 'workspaces' | 'detail' | 'members'>;
-  transport: ProjectTaskTransport; key?: () => string; navigate?: (url: string) => void;
+  transport: ProjectTaskTransport; key?: () => string; navigate?: (url: string, replace?: boolean) => void;
 }) {
   let state: ProjectTaskState = { status: 'loading', session: null, workspaces: null, ...cleared, selection: { ...selectionEmpty }, views: { projects: 'active', tasks: 'active' }, url: '/projects',
+    workspaceNavigation: null, discoveryFocusTaskId: null, discoveryContextLimitReached: false, taskScope: 'project', searchQuery: '', discoveryProjectId: null, discovery: discoveryEmpty, streamStatus: 'idle', refreshRequired: false, refreshDeferred: false,
     draftGuard: { kind: 'none', atTarget: true, canReturn: false, canDiscard: false, canStageNew: true },
     taskView: { layout: 'list', filters: {}, column: 'backlog' }, moveNeedsDestination: false,
     taskSummary: { status: 'loading', total: null, orderVersion: null, canCreate: false }, selectedTaskAssignee: null, taskFilterAssigneeStatus: 'none',
     draft: null, pending: null, outcome: null, retryTarget: null, conflict: null, accessConflict: null, result: null, requestId: null };
-  let generation = 0; let abort = new AbortController(); let owner: string | null = null;
+  let generation = 0; let abort = new AbortController(); let owner: string | null = null; let sessionId: string | null = null; let backgroundPending = false;
+  let backgroundEpoch = 0; let resetWanted = false; let backgroundTimer: ReturnType<typeof setTimeout> | undefined;
+  let disposed = false;
+  let workspaceNavigation: (() => Promise<void>) | null = null;
+  let discoveryContext: { key: string; page: TaskDiscoveryPage } | null = null;
   let retry: { command: ProjectCommand; key: string } | null = null;
   const listeners = new Set<() => void>();
   const publish = (next: ProjectTaskState) => {
@@ -83,24 +99,32 @@ export function createProjectTaskController(options: {
     const atTarget = !command || command.workspaceId === next.selection.workspaceId && (!('projectId' in command) || command.projectId === next.selection.projectId)
       && (!('taskId' in command) || command.taskId === next.selection.taskId || command.type === 'move-task' && next.selection.taskId === null);
     const kind = next.pending ? 'pending' : next.retryTarget ? 'recovery' : next.draft ? 'draft' : 'none';
-    state = { ...next, taskColumnsChanged, taskSummary, selectedTaskAssignee, draftGuard: { kind, atTarget, canReturn: !!command && !atTarget && !next.pending, canDiscard: !!command && !next.pending, canStageNew: !command && !next.pending },
+    const releaseRefresh = next.refreshRequired && next.refreshDeferred && kind === 'none' && !next.conflict && !next.closeWarning && !next.commentConflict && !next.checklistConflict && !next.accessConflict;
+    state = { ...next, ...(releaseRefresh ? { refreshDeferred: false } : {}), discoveryContextLimitReached: (next.discovery.page?.items.length ?? 0) >= 1000 && !!next.discovery.page?.nextCursor,
+      taskColumnsChanged, taskSummary, selectedTaskAssignee, draftGuard: { kind, atTarget, canReturn: !!command && !atTarget && !next.pending, canDiscard: !!command && !next.pending, canStageNew: !command && !next.pending },
       taskFilterAssigneeStatus: !assignee ? 'none' : assignee === 'unassigned' ? 'unassigned' : !metadata ? 'loading' : selectedTaskAssignee ? 'resolved' : 'unavailable',
       moveNeedsDestination: next.draft?.type === 'move-task' && next.outcome === 'conflict' };
     for (const listener of listeners) listener();
+    if (releaseRefresh) { clearTimeout(backgroundTimer); backgroundTimer = setTimeout(() => { void backgroundRefresh(); }, 100); }
   };
   const begin = () => { abort.abort(); abort = new AbortController(); return { generation: ++generation, signal: abort.signal }; };
   const current = (request: { generation: number }) => generation === request.generation;
   const fresh = () => state.session !== null && Date.parse(state.session.session.expiresAt) > Date.now();
+  function guardWorkspace(workspaceId: string | null, navigate: () => Promise<void>) {
+    if (state.selection.workspaceId === null || state.selection.workspaceId === workspaceId || !(state.draft || retry || state.pending)) return false;
+    workspaceNavigation = navigate; publish({ ...state, workspaceNavigation: { workspaceId } }); return true;
+  }
   function select(selection: ProjectTaskSelection, navigate = true) {
     const sameScope = selection.workspaceId === state.selection.workspaceId && selection.projectId === state.selection.projectId && selection.taskId === state.selection.taskId;
-    const url = urlFor(selection, state.views, state.taskView); publish({ ...state, selection: { ...selection }, url, parentCandidatesWanted: sameScope && state.parentCandidatesWanted });
+    const url = urlFor(selection, state.views, state.taskView, state); publish({ ...state, selection: { ...selection }, url, parentCandidatesWanted: sameScope && state.parentCandidatesWanted });
     if (navigate) options.navigate?.(url);
   }
-  function expire() { begin(); publish({ ...state, ...cleared, status: 'signed-out', session: null, workspaces: null, pending: null, retryTarget: retry ? structuredClone(retry.command) : null, result: null, conflict: null }); }
+  function expire() { discoveryContext = null; begin(); publish({ ...state, ...cleared, discoveryFocusTaskId: null, discovery: discoveryEmpty, refreshRequired: false, refreshDeferred: false, streamStatus: 'signed-out', status: 'signed-out', session: null, workspaces: null, pending: null, retryTarget: retry ? structuredClone(retry.command) : null, result: null, conflict: null }); }
   function readFailure(error: unknown) {
+    discoveryContext = null;
     if ((error instanceof ProjectTaskFailure || error instanceof WorkspaceFailure) && error.status === 401) { expire(); return; }
     if ((error instanceof ProjectTaskFailure || error instanceof WorkspaceFailure) && error.status === 403) begin();
-    publish({ ...state, ...cleared, status: (error instanceof ProjectTaskFailure || error instanceof WorkspaceFailure) && error.status === 403 ? 'forbidden' : 'error',
+    publish({ ...state, ...cleared, discovery: discoveryEmpty, status: (error instanceof ProjectTaskFailure || error instanceof WorkspaceFailure) && error.status === 403 ? 'forbidden' : 'error',
       conflict: null, accessConflict: null, ...((error instanceof ProjectTaskFailure || error instanceof WorkspaceFailure) && error.status === 403 ? { result: null } : {}), requestId: error instanceof ProjectTaskFailure ? error.requestId : null });
   }
   function policyFailure(collection: PolicyCollection, failure: PolicyPageFailure) {
@@ -139,6 +163,30 @@ export function createProjectTaskController(options: {
     if (previous && !previous.nextCursor) return;
     await fetchTaskColumn(status, { generation, signal: abort.signal }, previous);
   }
+  function discoveryQuery(): TaskDiscoveryQuery {
+    return { scope: state.taskScope === 'mine' ? 'mine' : 'search', q: state.searchQuery, view: state.views.tasks,
+      filters: { ...state.taskView.filters }, ...(state.discoveryProjectId ? { projectId: state.discoveryProjectId } : {}) };
+  }
+  async function fetchDiscovery(request: { generation: number; signal: AbortSignal }, append = false) {
+    const w = state.selection.workspaceId; if (!w || state.taskScope === 'project') return;
+    const previous = state.discovery;
+    if (append && (previous.status === 'loading' || previous.status === 'changed' || previous.page && (!previous.page.nextCursor || previous.page.items.length >= 1000))) return;
+    const query = discoveryQuery(); const key = JSON.stringify([owner, sessionId, w, query.scope, query.q, query.view, query.projectId, Object.entries(query.filters).sort()]);
+    const loading = { ...previous, status: 'loading' as const, requestId: null }; publish({ ...state, discovery: loading });
+    try {
+      const next = await options.transport.discover(w, query, request.signal, append ? previous.page?.nextCursor ?? undefined : undefined);
+      if (!current(request) || state.discovery !== loading) return;
+      if (append && previous.page && previous.page.revision !== next.revision) { publish({ ...state, discovery: { ...previous, status: 'changed' } }); return; }
+      const cached = !append && discoveryContext?.key === key && discoveryContext.page.revision === next.revision && discoveryContext.page.total === next.total ? discoveryContext.page : null;
+      const page = cached ?? { ...next, items: [...(append ? previous.page?.items ?? [] : []), ...next.items] };
+      discoveryContext = { key, page };
+      publish({ ...state, discoveryFocusTaskId: page.items.some(row => row.id === state.discoveryFocusTaskId) ? state.discoveryFocusTaskId : null, discovery: { status: page.total ? 'ready' : 'empty', page, requestId: null } });
+    } catch (error) {
+      if (!current(request) || state.discovery !== loading) return;
+      if (error instanceof ProjectTaskFailure && [401, 403].includes(error.status)) readFailure(error);
+      else publish({ ...state, discovery: { ...previous, status: error instanceof ProjectTaskFailure && error.code === 'page-changed' ? 'changed' : 'error', requestId: error instanceof ProjectTaskFailure ? error.requestId : null } });
+    }
+  }
   async function fetchCollaboration(collection: CollaborationCollection, request: { generation: number; signal: AbortSignal }, append = false) {
     const { workspaceId: w, projectId: p, taskId: t } = state.selection;
     if (!w || !p || !t || collection === 'parent-candidates' && !state.parentCandidatesWanted) return;
@@ -165,9 +213,11 @@ export function createProjectTaskController(options: {
     const w = s.workspaceId;
     const [workspace, members, projects] = await Promise.all([options.workspaces.detail(w, request.signal), options.workspaces.members(w, request.signal), options.transport.projects(w, views.projects, request.signal)]);
     if (!current(request)) return;
-    const projectId = s.projectId ?? projects.items[0]?.id ?? null;
+    if (state.taskScope !== 'project') await fetchDiscovery(request);
+    if (!current(request)) return;
+    const projectId = s.projectId ?? (state.taskScope === 'project' ? projects.items[0]?.id : null) ?? null;
     select({ workspaceId: w, projectId, taskId: s.taskId }, false);
-    publish({ ...state, workspace, members, projects, status: projectId ? 'loading' : 'empty' });
+    publish({ ...state, workspace, members, projects, status: projectId ? 'loading' : state.taskScope === 'project' ? 'empty' : 'ready' });
     if (!projectId) return;
     const [project, tasks, task] = await Promise.all([options.transport.project(w, projectId, request.signal), state.taskView.layout === 'list' ? options.transport.tasks(w, projectId, views.tasks, request.signal, undefined, state.taskView.filters) : Promise.resolve(null),
       s.taskId ? options.transport.task(w, projectId, s.taskId, request.signal) : Promise.resolve(null)]);
@@ -191,7 +241,7 @@ export function createProjectTaskController(options: {
   }
   async function refresh(): Promise<void> {
     if (state.pending) return;
-    const request = begin(); publish({ ...state, ...cleared, parentCandidatesWanted: state.parentCandidatesWanted, status: 'loading', session: null, workspaces: null });
+    const request = begin(); publish({ ...state, ...cleared, discovery: discoveryEmpty, refreshRequired: false, refreshDeferred: false, parentCandidatesWanted: state.parentCandidatesWanted, status: 'loading', session: null, workspaces: null });
     try {
       const config = parseIdentityConfiguration(await options.identity.configuration());
       const session = config.enabled ? parseIdentitySession(await options.identity.session()) : null;
@@ -199,10 +249,12 @@ export function createProjectTaskController(options: {
       if (!config.enabled || !session || Date.parse(session.session.expiresAt) <= Date.now()) {
         publish({ ...state, parentCandidatesWanted: false, status: config.enabled ? 'signed-out' : 'disabled', session: null, result: null, conflict: null }); return;
       }
-      if (owner !== null && owner !== session.user.id) {
-        retry = null; publish({ ...state, parentCandidatesWanted: false, selection: { ...selectionEmpty }, taskView: { layout: 'list', filters: {}, column: 'backlog' }, url: '/projects', draft: null, retryTarget: null, outcome: null, result: null, conflict: null, accessConflict: null, requestId: null });
+      if (owner !== null && (owner !== session.user.id || sessionId !== session.session.id)) {
+        discoveryContext = null;
+        workspaceNavigation = null;
+        retry = null; publish({ ...state, workspaceNavigation: null, discovery: discoveryEmpty, searchQuery: '', discoveryProjectId: null, parentCandidatesWanted: false, selection: { ...selectionEmpty }, taskView: { layout: 'list', filters: {}, column: 'backlog' }, url: '/projects', draft: null, retryTarget: null, outcome: null, result: null, conflict: null, accessConflict: null, requestId: null });
       }
-      owner = session.user.id; publish({ ...state, session });
+      owner = session.user.id; sessionId = session.session.id; publish({ ...state, session });
       const workspaces = await options.workspaces.workspaces(request.signal);
       if (!current(request)) return;
       publish({ ...state, workspaces });
@@ -211,10 +263,56 @@ export function createProjectTaskController(options: {
     } catch (error) { if (current(request)) readFailure(error); }
   }
   async function changeSelection(selection: ProjectTaskSelection) {
+    if (guardWorkspace(selection.workspaceId, () => changeSelection(selection))) return;
+    if (state.selection.workspaceId !== null && selection.workspaceId !== state.selection.workspaceId) {
+      discoveryContext = null;
+      retry = null; publish({ ...state, draft: null, retryTarget: null, conflict: null, result: null, outcome: null, searchQuery: '', discoveryProjectId: null, taskView: { ...state.taskView, filters: {} }, refreshRequired: false, refreshDeferred: false });
+    }
     const request = begin(); select(selection);
-    publish({ ...state, ...cleared, parentCandidatesWanted: state.parentCandidatesWanted, status: 'loading', pending: null, retryTarget: retry ? structuredClone(retry.command) : null });
+    publish({ ...state, ...cleared, discovery: discoveryEmpty, parentCandidatesWanted: state.parentCandidatesWanted, status: 'loading', pending: null, retryTarget: retry ? structuredClone(retry.command) : null });
     if (!fresh()) { await refresh(); return; }
     try { await load(request); } catch (error) { if (current(request)) readFailure(error); }
+  }
+  async function backgroundRefresh(reset = false): Promise<void> {
+    if (disposed) return;
+    const epoch = ++backgroundEpoch; resetWanted ||= reset;
+    publish({ ...state, refreshRequired: true });
+    if (backgroundPending || state.status === 'loading') return;
+    if (!fresh()) { expire(); return; }
+    backgroundPending = true;
+    const shouldReset = resetWanted; resetWanted = false;
+    let request = { generation, signal: abort.signal };
+    try {
+      const session = parseIdentitySession(await options.identity.session());
+      if (!current(request)) return;
+      if (!session || Date.parse(session.session.expiresAt) <= Date.now()) { expire(); return; }
+      if (session.user.id !== owner || session.session.id !== sessionId) { begin(); retry = null; publish({ ...state, pending: null, draft: null, retryTarget: null, conflict: null, result: null }); await refresh(); return; }
+      publish({ ...state, session });
+      // A reset can mean lost private access. Discard cached cross-project
+      // collections immediately and verify selected detail before deferring.
+      // The one bounded return context remains private until a fresh first page
+      // proves the same authorized revision; it is never rendered while reset.
+      if (shouldReset) publish({ ...state, projects: null, discovery: discoveryEmpty });
+      const { workspaceId: w, projectId: p, taskId: t } = state.selection;
+      if (w && p) { if (t) await options.transport.task(w, p, t, request.signal); else await options.transport.project(w, p, request.signal); }
+      else if (w) await options.workspaces.detail(w, request.signal);
+      if (!current(request)) return;
+      if (state.pending || state.draft || retry || state.conflict || state.closeWarning || state.commentConflict || state.checklistConflict) {
+        publish({ ...state, refreshRequired: true, refreshDeferred: true }); return;
+      }
+      request = begin();
+      await load(request);
+      if (current(request)) publish({ ...state, refreshRequired: backgroundEpoch !== epoch, refreshDeferred: false });
+    } catch (error) {
+      if (!current(request)) return;
+      if ((error instanceof ProjectTaskFailure || error instanceof WorkspaceFailure) && [401, 403].includes(error.status)) readFailure(error);
+      else publish({ ...state, refreshRequired: true });
+    } finally {
+      backgroundPending = false;
+      if (!disposed && backgroundEpoch !== epoch && fresh() && !['forbidden', 'signed-out', 'error'].includes(state.status)) {
+        clearTimeout(backgroundTimer); backgroundTimer = setTimeout(() => { void backgroundRefresh(); }, 100);
+      }
+    }
   }
   function stage(command: ProjectCommand) {
     if (state.pending) return;
@@ -280,7 +378,7 @@ export function createProjectTaskController(options: {
       publish({ ...state, pending: null, outcome, retryTarget: retry ? structuredClone(command) : null, closeWarning: error instanceof ProjectTaskFailure && error.current && status === 409 ? error.closeWarning : null, commentConflict: null, checklistConflict: null,
         conflict: status === 409 && error instanceof ProjectTaskFailure ? error.current : null, accessConflict: status === 409 && error instanceof ProjectTaskFailure ? error.accessCurrent : null, requestId: error instanceof ProjectTaskFailure ? error.requestId : null });
       if (status === 401) expire();
-      else if (status === 403) publish({ ...state, ...cleared, status: 'forbidden', conflict: null, accessConflict: null, result: null });
+      else if (status === 403) readFailure(error);
     }
   }
   async function submit() { if (retry) { await retrySave(); return; } if (state.draft) await execute(structuredClone(state.draft), (options.key ?? (() => crypto.randomUUID()))()); }
@@ -356,6 +454,38 @@ export function createProjectTaskController(options: {
     publish({ ...state, draft: { ...draft, expectedVersion: conflict.version, ...(draft.type === 'edit-comment' ? { expectedCommentVersion: state.commentConflict!.version } : {}) }, conflict: null, accessConflict: null, commentConflict: null, checklistConflict: null, outcome: null });
   }
   return { getState: () => state, subscribe(listener: () => void) { listeners.add(listener); return () => { listeners.delete(listener); }; },
+    dispose() { disposed = true; clearTimeout(backgroundTimer); begin(); },
+    async resolveWorkspaceNavigation(choice: 'stay' | 'discard') {
+      if (choice === 'stay') { workspaceNavigation = null; publish({ ...state, workspaceNavigation: null }); return; }
+      if (choice !== 'discard' || state.pending || !workspaceNavigation) return;
+      const navigate = workspaceNavigation; workspaceNavigation = null; retry = null;
+      publish({ ...state, workspaceNavigation: null, draft: null, retryTarget: null, conflict: null, closeWarning: null, accessConflict: null, commentConflict: null, checklistConflict: null, outcome: null });
+      await navigate?.();
+    },
+    backgroundRefresh,
+    setStreamStatus(streamStatus: TaskStreamStatus) { publish({ ...state, streamStatus }); },
+    streamDenied(reason: 'signed-out' | 'forbidden') { if (reason === 'signed-out') expire(); else { readFailure(new ProjectTaskFailure(403)); publish({ ...state, streamStatus: 'forbidden' }); } },
+    loadDiscoveryMore: () => !state.pending && fresh() ? fetchDiscovery({ generation, signal: abort.signal }, true) : Promise.resolve(),
+    async setTaskScope(taskScope: TaskScope) {
+      if (!['project', 'mine', 'search'].includes(taskScope) || state.pending) return;
+      const filters = { ...state.taskView.filters }; if (taskScope === 'mine') delete filters.assignee;
+      publish({ ...state, taskScope, taskView: { ...state.taskView, filters } });
+      await changeSelection({ ...state.selection, projectId: null, taskId: null });
+    },
+    async setSearchQuery(searchQuery: string) {
+      if (!isTaskSearch(searchQuery) || state.pending) return;
+      publish({ ...state, searchQuery: searchQuery.trim(), taskScope: state.taskScope === 'project' ? 'search' : state.taskScope });
+      await changeSelection({ ...state.selection, projectId: null, taskId: null });
+    },
+    async setDiscoveryProject(projectId: string | null) {
+      if (projectId !== null && !id(projectId) || state.pending) return;
+      publish({ ...state, discoveryProjectId: projectId }); await changeSelection({ ...state.selection, projectId: null, taskId: null });
+    },
+    openDiscoveryTask(item: TaskDiscoveryItem) {
+      if (state.pending || item.workspaceId !== state.selection.workspaceId || !state.discovery.page?.items.some(row => row.id === item.id && row.projectId === item.projectId)) return Promise.resolve();
+      publish({ ...state, discoveryFocusTaskId: item.id }); return changeSelection({ workspaceId: item.workspaceId, projectId: item.projectId, taskId: item.id });
+    },
+    returnToDiscovery: () => state.taskScope !== 'project' ? changeSelection({ ...state.selection, projectId: null, taskId: null }) : Promise.resolve(),
     refresh, stage, stageMove, moveEligibility: (taskId: string, status: TaskStatus, beforeTaskId: string | null) => moveEvidence(taskId, status, beforeTaskId).eligibility, submit, retrySave, loadMore, loadTaskColumn, reloadConflict, rebaseDraft,
     loadCollaborationMore: (collection: CollaborationCollection) => !state.pending && fresh() ? fetchCollaboration(collection, { generation, signal: abort.signal }, true) : Promise.resolve(),
     async setParentCandidatesWanted(wanted: boolean) {
@@ -376,7 +506,7 @@ export function createProjectTaskController(options: {
       publish({ ...state, taskView: { ...state.taskView, layout } }); await changeSelection({ ...state.selection });
     },
     async setTaskFilters(filters: TaskFilters) {
-      if (!isTaskFilters(filters) || state.pending) return;
+      if (!isTaskFilters(filters) || state.taskScope === 'mine' && filters.assignee !== undefined || state.pending) return;
       publish({ ...state, taskView: { ...state.taskView, filters: { ...filters }, column: filters.status ?? state.taskView.column } }); await changeSelection({ ...state.selection });
     },
     async setTaskColumn(column: TaskStatus) {
@@ -384,7 +514,7 @@ export function createProjectTaskController(options: {
       publish({ ...state, taskView: { ...state.taskView, column } }); await changeSelection({ ...state.selection });
     },
     selectWorkspace: (workspaceId: string | null) => changeSelection({ workspaceId, projectId: null, taskId: null }),
-    selectProject: (projectId: string | null) => changeSelection({ ...state.selection, projectId, taskId: null }),
+    selectProject: (projectId: string | null) => { publish({ ...state, taskScope: 'project' }); return changeSelection({ ...state.selection, projectId, taskId: null }); },
     selectTask: (taskId: string | null) => changeSelection({ ...state.selection, taskId }),
     async setView(collection: 'projects' | 'tasks', view: ArchiveView) {
       if (!['active', 'archived'].includes(view)) return;
@@ -392,15 +522,20 @@ export function createProjectTaskController(options: {
       await changeSelection(collection === 'projects' ? { ...state.selection, projectId: null, taskId: null } : { ...state.selection, taskId: null });
     },
     async openLocation(search: string) {
+      disposed = false;
       const query = new URLSearchParams(search); const w = query.get('workspace'); const p = query.get('project'); const t = query.get('task');
       const projectsView = query.get('projectsView') ?? 'active'; const tasksView = query.get('tasksView') ?? 'active';
       const layout = query.get('taskLayout') ?? 'list'; const column = query.get('column') ?? 'backlog';
+      const taskScope = query.get('taskScope') ?? 'project'; const searchQuery = query.get('q') ?? ''; const searchProject = query.get('searchProject');
       const filters = Object.fromEntries(['status', 'assignee', 'priority'].filter(key => query.has(key)).map(key => [key, query.get(key)]));
       if ((w !== null && !id(w)) || (p !== null && (!id(p) || !w)) || (t !== null && (!id(t) || !p))
         || !['active', 'archived'].includes(projectsView) || !['active', 'archived'].includes(tasksView)
         || !['list', 'board'].includes(layout) || !taskStatuses.includes(column as TaskStatus) || !isTaskFilters(filters)
-        || ['workspace', 'project', 'task', 'projectsView', 'tasksView', 'taskLayout', 'status', 'assignee', 'priority', 'column'].some(key => query.getAll(key).length > 1)) { begin(); publish({ ...state, ...cleared, status: 'error' }); return; }
-      begin(); publish({ ...state, views: { projects: projectsView as ArchiveView, tasks: tasksView as ArchiveView }, taskView: { layout: layout as TaskView['layout'], filters, column: column as TaskStatus } });
+        || !['project', 'mine', 'search'].includes(taskScope) || !isTaskSearch(searchQuery) || searchProject !== null && !id(searchProject) || taskScope === 'mine' && filters.assignee !== undefined
+        || ['workspace', 'project', 'task', 'projectsView', 'tasksView', 'taskLayout', 'status', 'assignee', 'priority', 'column', 'taskScope', 'q', 'searchProject'].some(key => query.getAll(key).length > 1)) { begin(); publish({ ...state, ...cleared, discovery: discoveryEmpty, status: 'error' }); return; }
+      if (guardWorkspace(w, () => this.openLocation(search))) { options.navigate?.(state.url, true); return; }
+      if (state.selection.workspaceId !== null && state.selection.workspaceId !== w) { discoveryContext = null; retry = null; publish({ ...state, draft: null, retryTarget: null, conflict: null, result: null, outcome: null }); }
+      begin(); publish({ ...state, taskScope: taskScope as TaskScope, searchQuery: searchQuery.trim(), discoveryProjectId: searchProject, views: { projects: projectsView as ArchiveView, tasks: tasksView as ArchiveView }, taskView: { layout: layout as TaskView['layout'], filters, column: column as TaskStatus } });
       select({ workspaceId: w, projectId: p, taskId: t }, false); publish({ ...state, pending: null, retryTarget: retry ? structuredClone(retry.command) : null }); await refresh();
     },
     async returnToDraft() {

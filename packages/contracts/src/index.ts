@@ -81,3 +81,4 @@ export function isPage<T>(value: unknown, item: (value: unknown) => value is T):
   return isRecord(value) && Array.isArray(value['items']) && value['items'].every(item) && Number.isSafeInteger(value['total'])
     && Number(value['total']) >= value['items'].length && (value['nextCursor'] === null || text(value['nextCursor']));
 }
+export * from './task-discovery.js';

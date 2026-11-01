@@ -1,5 +1,6 @@
 import { isPage, isRecord, isProject, isTask, isTaskPage, isTaskFilters, type TaskFilters, type TaskPage, isProjectAccessMember, isDomainPerson, type ArchiveView, type DomainPage, type Project, type ProjectCommand, type ProjectTaskResult, type Task, type ProjectAccessPage, type ProjectAssigneePage, type ProjectAccessMember, type ProjectAccessReview } from '@rielia/contracts';
 import { isCollaborationPage, isTaskComment, isCloseWarning, isCollaborationCommand, type CloseWarning, type CollaborationCollection, type TaskCollaborationPages, type TaskCommentReview } from '@rielia/contracts';
+import { isTaskDiscoveryPage, isTaskDiscoveryQuery, type TaskDiscoveryQuery, type TaskDiscoveryPage } from '@rielia/contracts';
 
 export class ProjectTaskFailure extends Error {
   readonly status: number; readonly code: string | null; readonly current: ProjectTaskResult | null; readonly requestId: string | null;
@@ -10,6 +11,7 @@ export class ProjectTaskFailure extends Error {
   }
 }
 export interface ProjectTaskTransport {
+  discover(workspaceId: string, query: TaskDiscoveryQuery, signal: AbortSignal, cursor?: string): Promise<TaskDiscoveryPage>;
   projects(workspaceId: string, view: ArchiveView, signal: AbortSignal, cursor?: string): Promise<DomainPage<Project>>;
   project(workspaceId: string, projectId: string, signal: AbortSignal): Promise<Project>;
   tasks(workspaceId: string, projectId: string, view: ArchiveView, signal: AbortSignal, cursor?: string, filters?: TaskFilters): Promise<TaskPage>;
@@ -49,6 +51,20 @@ export function createProjectTaskTransport(options: { baseURL?: string; timeout?
     return value as unknown as DomainPage<T>;
   }
   return {
+    async discover(w, query, signal, cursor) {
+      if (!isTaskDiscoveryQuery(query)) throw new ProjectTaskFailure(400);
+      const params = new URLSearchParams({ scope: query.scope, q: query.q.trim(), view: query.view, ...query.filters });
+      if (query.projectId) params.set('project', query.projectId); if (cursor) params.set('cursor', cursor);
+      const value = await request(`workspaces/${segment(w)}/task-discovery?${params}`, signal);
+      if (!isTaskDiscoveryPage(value) || value.workspaceId !== w || value.query.scope !== query.scope || value.query.q !== query.q.trim() || value.query.view !== query.view
+        || value.query.projectId !== query.projectId || JSON.stringify(Object.entries(value.query.filters).sort()) !== JSON.stringify(Object.entries(query.filters).sort())
+        || value.items.some(row => query.projectId && row.projectId !== query.projectId || query.filters.status && row.status !== query.filters.status
+          || query.filters.priority && row.priority !== query.filters.priority || query.scope === 'mine' && row.assigneePrincipalId !== value.principalId
+          || query.filters.assignee && row.assigneePrincipalId !== (query.filters.assignee === 'unassigned' ? null : query.filters.assignee)
+          || query.view === 'active' && (row.archivedAt !== null || row.projectArchivedAt !== null)
+          || query.view === 'archived' && row.archivedAt === null && row.projectArchivedAt === null)) throw new ProjectTaskFailure(502);
+      return value;
+    },
     async collaboration(w, p, t, collection, signal, cursor) {
       const value = await request(`${projectPath(w, p)}/tasks/${segment(t)}/${collection}${cursor ? `?cursor=${segment(cursor)}` : ''}`, signal);
       if (!isCollaborationPage(value, collection) || value.workspaceId !== w || value.projectId !== p || value.taskId !== t) throw new ProjectTaskFailure(502);

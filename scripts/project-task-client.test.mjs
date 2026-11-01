@@ -8,6 +8,19 @@ const project = { id: 'p', workspaceId: 'w', key: 'RIE', name: 'Project', descri
 const page = items => ({ items, total: items.length, nextCursor: null, capabilities: { canCreate: true } });
 const task = { ...project, id: 't', projectId: 'p', projectKey: 'RIE', key: 'RIE-1', number: 1, title: 'Title', type: 'task', priority: 'none', status: 'backlog', assigneePrincipalId: null, assignee: null, dueDate: null, projectArchivedAt: null, orderVersion: 1, parentTaskId: null };
 const signal = () => new AbortController().signal;
+test('T10 discovery transport validates requested scope, filters, archive and assignment before exposing results', async t => {
+  const original = globalThis.fetch; t.after(() => { globalThis.fetch = original; }); const calls = [];
+  const item = Object.fromEntries(Object.entries({ ...task, assigneePrincipalId: 'human', assignee: creator, projectName: 'Project' }).filter(([key]) => key !== 'description'));
+  const query = { scope: 'mine', q: 'Title', view: 'active', filters: { priority: 'none' } };
+  const good = { workspaceId: 'w', principalId: 'human', query, revision: 'a'.repeat(64), items: [item], total: 1, nextCursor: null }; let value = good;
+  globalThis.fetch = async (url, init) => { calls.push({ url: String(url), init }); return Response.json(value); };
+  const api = createProjectTaskTransport(); assert.equal((await api.discover('w', query, signal())).items[0].id, 't'); assert.match(calls[0].url, /task-discovery\?scope=mine/); assert.equal(calls[0].init.credentials, 'same-origin');
+  for (const bad of [{ ...good, workspaceId: 'foreign' }, { ...good, query: { ...query, scope: 'search' } }, { ...good, items: [{ ...item, assigneePrincipalId: null }] },
+    { ...good, items: [{ ...item, workspaceId: 'foreign' }] }, { ...good, items: [{ ...item, archivedAt: '2026-01-01' }] }, { ...good, items: [{ ...item, priority: 'high' }] }, { ...good, items: [{ ...item, description: 'Not a discovery field' }] }]) {
+    value = bad; await assert.rejects(api.discover('w', query, signal()), e => e.status === 502);
+  }
+  const count = calls.length; await assert.rejects(api.discover('w', { ...query, filters: { assignee: 'other' } }, signal()), e => e.status === 400); assert.equal(calls.length, count);
+});
 test('T08 transport validates scoped revision pages and exact move payload; proxy rejects unsupported/repeated filters', async t => {
   const original = globalThis.fetch; t.after(() => { globalThis.fetch = original; }); const calls = [];
   let value = { ...page([{ ...task, priority: 'urgent' }]), orderVersion: 1, columnCounts: { backlog: 1, todo: 0, in_progress: 0, done: 0, canceled: 0 }, selectedAssignee: null };

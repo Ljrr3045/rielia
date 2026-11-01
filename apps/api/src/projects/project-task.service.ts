@@ -3,6 +3,8 @@ import { createHash, randomUUID } from 'node:crypto';
 import { isTaskFilters, projectURL, taskURL, taskStatuses, taskTypes, taskPriorities, type TaskFilters, type TaskStatus, type TaskPage, type TaskColumnCounts, type ArchiveView, type DomainPage, type DomainPerson, type ExecutionContextResponse, type Project, type ProjectTaskResult, type Task, type ProjectAccessPage, type ProjectAssigneePage, type MembershipRole, type ProjectAccessReview } from '@rielia/contracts';
 import type { Prisma, Project as ProjectRow, Task as TaskRow } from '../generated/prisma/client.js';
 import { PrincipalService, type Transaction, type VerifiedExecution } from '../principals/principal.service.js';
+import type { TaskDiscoveryItem } from '@rielia/contracts';
+export type ReadableTaskProject = Pick<ProjectRow, 'id' | 'workspaceId' | 'key' | 'name' | 'version' | 'taskRevision' | 'visibility' | 'archivedAt'>;
 
 const identifier = (value: unknown): value is string => typeof value === 'string' && /^[A-Za-z0-9_-]{1,128}$/.test(value);
 export function object(value: unknown, allowed: string[], required: string[] = []): Record<string, unknown> {
@@ -70,7 +72,7 @@ export class ProjectTaskService {
   private readable(actor: ExecutionContextResponse): Prisma.ProjectWhereInput {
     return { workspaceId: actor.workspaceId, ...(this.administrator(actor) ? {} : { OR: [{ visibility: 'workspace' }, { accesses: { some: { principalId: actor.actorPrincipalId, state: 'active' } } }] }) };
   }
-  private eligible(project: ProjectRow): Prisma.MembershipWhereInput {
+  private eligible(project: ReadableTaskProject): Prisma.MembershipWhereInput {
     return { workspaceId: project.workspaceId, state: 'active', principal: { state: 'active', kind: { in: ['human', 'agent'] } },
       ...(project.visibility === 'workspace' ? {} : { OR: [
         { role: { in: ['owner', 'admin'] }, principal: { kind: 'human' } },
@@ -94,7 +96,7 @@ export class ProjectTaskService {
       archivedAt: iso(row.archivedAt), createdAt: row.createdAt.toISOString(), updatedAt: row.updatedAt.toISOString(), creator: people.get(row.createdByPrincipalId)!, provenance: provenance(row),
       capabilities: { canEdit: canWrite && !row.archivedAt, canArchive: canWrite && !row.archivedAt, canRestore: canWrite && !!row.archivedAt, canManageAccess: this.canManage(actor), canChangeVisibility: this.canManage(actor) && !row.archivedAt, canGrantAccess: this.canManage(actor) && !row.archivedAt, canRevokeAccess: this.canManage(actor) }, url: projectURL(row.workspaceId, row.id) };
   }
-  private taskDto(row: TaskRow, project: ProjectRow, people: Map<string, DomainPerson>, canWrite: boolean, eligible: Set<string>): Task {
+  private taskDto(row: TaskRow, project: ReadableTaskProject, people: Map<string, DomainPerson>, canWrite: boolean, eligible: Set<string>): Task {
     const active = !project.archivedAt && !row.archivedAt;
     return { id: row.id, workspaceId: row.workspaceId, projectId: row.projectId, projectKey: project.key, number: row.number, key: `${project.key}-${row.number}`,
       title: row.title, description: row.description, type: row.type as Task['type'], priority: row.priority as Task['priority'], status: row.status as Task['status'],
@@ -104,7 +106,7 @@ export class ProjectTaskService {
       capabilities: { canEdit: canWrite && active, canArchive: canWrite && active, canRestore: canWrite && !project.archivedAt && !!row.archivedAt }, url: taskURL(row.workspaceId, row.projectId, row.id) };
   }
   private async projectView(tx: Transaction, row: ProjectRow, canWrite: boolean, actor: ExecutionContextResponse) { return this.projectDto(row, await this.people(tx, row.workspaceId, [row.createdByPrincipalId]), canWrite, actor); }
-  private async taskPeople(tx: Transaction, project: ProjectRow, rows: TaskRow[]) {
+  private async taskPeople(tx: Transaction, project: ReadableTaskProject, rows: TaskRow[]) {
     const people = await this.people(tx, project.workspaceId, rows.flatMap(row => [row.createdByPrincipalId, ...(row.assigneePrincipalId ? [row.assigneePrincipalId] : [])]));
     const eligible = new Set((await tx.membership.findMany({ where: { ...this.eligible(project), principalId: { in: rows.flatMap(row => row.assigneePrincipalId ? [row.assigneePrincipalId] : []) } }, select: { principalId: true } })).map(row => row.principalId));
     return { people, eligible };
@@ -136,6 +138,25 @@ export class ProjectTaskService {
   }
   project(context: VerifiedExecution, workspaceId: string, projectId: string) {
     return this.principals.domainOperation(context, workspaceId, 'read', async (tx, actor, canWrite) => this.projectView(tx, await this.projectRow(tx, workspaceId, projectId, actor), canWrite, actor));
+  }
+  /** Internal discovery composition; one current fenced authority snapshot,
+   * with the exact same readable-project predicate used by detail and writes. */
+  discoveryRead<T>(context: VerifiedExecution, workspaceId: string,
+    work: (tx: Transaction, actor: ExecutionContextResponse, canWrite: boolean, projects: ReadableTaskProject[]) => Promise<T>) {
+    return this.principals.domainOperation(context, workspaceId, 'read', async (tx, actor, canWrite) => work(tx, actor, canWrite,
+      await tx.project.findMany({ where: this.readable(actor), orderBy: { id: 'asc' }, select: { id: true, workspaceId: true, key: true, name: true, version: true, taskRevision: true, visibility: true, archivedAt: true } })));
+  }
+  async discoveryItems(tx: Transaction, rows: TaskRow[], projects: ReadableTaskProject[], canWrite: boolean): Promise<TaskDiscoveryItem[]> {
+    const results = new Map<string, TaskDiscoveryItem>();
+    for (const project of projects) {
+      const group = rows.filter(row => row.projectId === project.id); if (!group.length) continue;
+      const { people, eligible } = await this.taskPeople(tx, project, group);
+      for (const row of group) {
+        const item = Object.fromEntries(Object.entries(this.taskDto(row, project, people, canWrite, eligible)).filter(([key]) => key !== 'description')) as Omit<Task, 'description'>;
+        results.set(row.id, { ...item, projectName: project.name });
+      }
+    }
+    return rows.map(row => results.get(row.id)!);
   }
   tasks(context: VerifiedExecution, workspaceId: string, projectId: string, view: ArchiveView = 'active', cursor?: string, filters: TaskFilters = {}): Promise<TaskPage> {
     if (!isTaskFilters(filters)) throw new BadRequestException('Invalid task filters.');
