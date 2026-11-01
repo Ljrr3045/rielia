@@ -3819,3 +3819,12 @@
 .discoveryCreateBody .filterField {
   max-width: 22rem;
 }
+
+.app a.discoveryTitleLink {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.1rem 0;
+  border-radius: 0.3rem;
+}

@@ -543,7 +543,7 @@ export function TaskDiscoveryList({
                     </div>
                     <div className={styles.taskMain}>
                       <a
-                        className={styles.taskTitleButton}
+                        className={cx(styles.taskTitleButton, styles.discoveryTitleLink)}
                         data-discovery-open
                         href={item.url}
                         onClick={event => {
