@@ -1,0 +1,23 @@
+docs/development/task-discovery-ui.md
+  s_37f6f126e69e73::t_cb0587248aec2e 121-123,133-134,154-156
+CHANGELOG.md
+  s_37f6f126e69e73::t_a08600c7e36d40 27-31
+docs/development/progress.md
+  s_37f6f126e69e73::t_63ac93db1cfe15 48,221
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8b2e18013a81a6b75502afaa0e79ac5ea71034d4",
+  "prompts": {},
+  "sessions": {
+    "s_37f6f126e69e73": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e670003e1ffe0hm07HLe8PdoMm",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
