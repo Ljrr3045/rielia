@@ -149,20 +149,31 @@ Root review findings resolved in `c329d50`:
 - filtered/query zero results always use the no-matching-results state, not the
   true-empty scope copy;
 - the development home task-work link and primary sidebar My tasks entry use the
-  explicit My tasks URL, preserving the selected workspace where available;
+  explicit My Tasks URL, preserving the selected workspace where available;
 - a visible choose-project-to-create disclosure routes through an editable,
-  non-archived visible project to the existing quick capture;
+  non-archived visible project to the existing quick capture.
+
+Additional presentation correction in `c1a2a1d`:
+
 - the discovery result title is a genuine full-width 44 px native link without
-  overlapping metadata or a blanket row-click role.
+  overlapping metadata or a blanket row-click role; the results section has an
+  explicit heading.
 
 Local checks on the checkpoint:
 
 - `pnpm --filter @rielia/web typecheck` passes with the generated route types.
 - Targeted `pnpm exec eslint` passes with zero warnings.
 - `pnpm --filter @rielia/web build` passes; `/projects` remains a static page.
-- The existing `pnpm test:projects:logic` suite passes 61 focused client/proxy/
-  controller/SSE checks, including T10 scope/search/detail/Back, paging, draft,
-  conflict, workspace guard and stream cases. No functional test source is added.
+- The existing `pnpm test:projects:logic` suite passes 61 focused project/client/
+  proxy/controller checks including T10 scope/search/detail/Back, paging, draft,
+  conflict, workspace guard and SSE cases. No functional test source is added.
+
+Initial independent responsive evidence on the earlier `792414f` candidate
+measured a 169.23×18 px result-title target and two visible duplicate detail
+dialogs at 390×844 EN dark touch, with no whole-page horizontal overflow. Those
+two observations correspond to the source corrections in `c329d50`/`c1a2a1d` and
+are awaiting the validator's recheck on the frozen candidate. Validator
+screenshots remain external to the repository.
 
 Independent functional and responsive validation is coordinated by the
 coordinator with separate SOL xhigh validators and isolated browser contexts.

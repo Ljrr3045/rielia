@@ -26,9 +26,9 @@ This records repository changes. No application version has been released.
   visible choose-project disclosure routes to editable projects' existing quick
   capture without cross-project creation or auto-assignment. The discovery result
   title is a full-width 44 px native link. Corrected checkpoint `c1a2a1d` passes
-  web typecheck, targeted ESLint, production web build and the existing 61
-  logic/client/proxy/state checks; independent SOL validation, full checks and
-  PR/review evidence are pending.
+  web typecheck, targeted ESLint, production web build and 61 focused project/
+  client/proxy/controller checks including T10; independent SOL validation, full
+  checks and PR/review evidence are pending.
   [UI guide](docs/development/task-discovery-ui.md). No full T10/P11/US05,
   labels/sprints, exports, coediting, real OAuth/staging/users,
   physical-device/AT/WCAG or deployment acceptance is claimed.
