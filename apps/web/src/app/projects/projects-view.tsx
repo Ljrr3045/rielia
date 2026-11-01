@@ -2611,6 +2611,8 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
 
                 {!feedbackInForm && recoveryBlock}
 
+                <h2 className={styles.srOnly}>{copy.discovery.resultsHeading[lang]}</h2>
+
                 <TaskDiscoveryList
                   archived={isArchivedTasks}
                   contextLimit={discoveryContextLimitReached}

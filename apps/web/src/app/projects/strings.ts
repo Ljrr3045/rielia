@@ -220,6 +220,7 @@ export const copy = {
     searchSubmit: { es: 'Buscar', en: 'Search' },
     clearSearch: { es: 'Limpiar búsqueda', en: 'Clear search' },
     filters: { es: 'Filtros', en: 'Filters' },
+    resultsHeading: { es: 'Resultados de tareas', en: 'Task results' },
     filterPanel: { es: 'Filtros de Mis tareas y búsqueda', en: 'My tasks and search filters' },
     filterCount: {
       es: (count: number) => (count === 1 ? '1 filtro' : `${count} filtros`),

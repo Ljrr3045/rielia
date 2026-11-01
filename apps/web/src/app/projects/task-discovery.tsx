@@ -337,7 +337,8 @@ export function TaskCreateShortcut({
   );
 }
 
-export function TaskDiscoveryList({  discovery,
+export function TaskDiscoveryList({
+  discovery,
   scope,
   query,
   projectId,
