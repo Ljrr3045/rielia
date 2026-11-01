@@ -1,0 +1,120 @@
+docs/development/progress.md
+  s_3e608367e90b3f::t_e00fe414503387 11-13
+  s_3e608367e90b3f::t_0432825b77559d 3,42-46,49
+  s_3e608367e90b3f::t_3f485f43c1277b 47
+  s_3e608367e90b3f::t_adc2319df4dcaa 175-178
+apps/web/src/lib/project-task-proxy.ts
+  s_3e608367e90b3f::t_28d3dbd91f8425 2,8-9,15,21,25,29-31,34-36,39-40,42
+  s_3e608367e90b3f::t_c363cc0dc1ee6e 37
+apps/api/src/projects/project-task-http.ts
+  s_3e608367e90b3f::t_8964152d9c79df 4,11,20,23-24,33-35,38-39
+scripts/project-task-logic.test.mjs
+  s_3e608367e90b3f::t_1d6bd400ad221b 79-101
+  s_3e608367e90b3f::t_abd388c9859026 28-54,58-78,137
+  s_3e608367e90b3f::t_dfc9d472c2d571 102-106
+  s_3e608367e90b3f::t_bf3fae91ba2ad6 55-57,243-246
+  s_3e608367e90b3f::t_954f06aed1fc9c 107-130
+  s_3e608367e90b3f::t_a35c3ab66cc353 131-136
+  s_3e608367e90b3f::t_e454d3aac4ef6f 273-274,347
+scripts/task-events-client.test.mjs
+  s_3e608367e90b3f::t_10890e8ce649b5 5-6
+  s_3e608367e90b3f::t_abd388c9859026 1-4,7-50
+package.json
+  s_3e608367e90b3f::t_abd388c9859026 27
+apps/api/prisma/migrations/20261101203000_task_discovery/migration.sql
+  s_3e608367e90b3f::t_7859d8a8535d48 1-27
+apps/api/src/projects/task-discovery.controller.ts
+  s_3e608367e90b3f::t_8964152d9c79df 1-18
+apps/web/src/lib/use-project-tasks.ts
+  s_3e608367e90b3f::t_13ce8d9de091ad 28,60
+  s_3e608367e90b3f::t_5fb14884b4b269 20
+  s_3e608367e90b3f::t_961a1a78c52b4f 11,18,25-27,30-41,58-59
+apps/api/src/projects/task-discovery.service.ts
+  s_3e608367e90b3f::t_940fe127801856 1-26,28-33,35-55
+  s_3e608367e90b3f::t_ad8ece734e559a 27
+  s_3e608367e90b3f::t_28d3dbd91f8425 34
+apps/api/test/event-stream-client.mjs
+  s_3e608367e90b3f::t_280f926ee79da1 1-13
+scripts/test-identity.mjs
+  s_3e608367e90b3f::t_bf3fae91ba2ad6 89-90
+apps/api/src/app.module.ts
+  s_3e608367e90b3f::t_8964152d9c79df 16-18,20
+apps/api/test/task-discovery.test.mjs
+  s_3e608367e90b3f::t_280f926ee79da1 17-18
+  s_3e608367e90b3f::t_61d958ee5d64b1 1-4,7-16,19-32,46-51,53-73,92-125,127-128,135-137
+  s_3e608367e90b3f::t_ad8ece734e559a 52
+  s_3e608367e90b3f::t_1fb2b232b152f7 5-6,33-45,74-91
+  s_3e608367e90b3f::t_10890e8ce649b5 126
+  s_3e608367e90b3f::t_e00fe414503387 129-134
+apps/api/src/projects/project-task.service.ts
+  s_3e608367e90b3f::t_940fe127801856 6-7,75,99,109,142-154,156-160
+  s_3e608367e90b3f::t_8cf3af42894d7c 155
+apps/web/src/app/api/v1/workspaces/[[...path]]/route.ts
+  s_3e608367e90b3f::t_28d3dbd91f8425 4
+apps/api/src/projects/task-events.service.ts
+  s_3e608367e90b3f::t_28d3dbd91f8425 61-64
+  s_3e608367e90b3f::t_10890e8ce649b5 46
+  s_3e608367e90b3f::t_8964152d9c79df 1-45,47-60,65-79
+apps/web/src/lib/project-task-client.ts
+  s_3e608367e90b3f::t_793106d608c473 3,14,54-67
+apps/web/src/lib/project-task-controller.ts
+  s_3e608367e90b3f::t_1d6bd400ad221b 254-255,460
+  s_3e608367e90b3f::t_954f06aed1fc9c 293-295
+  s_3e608367e90b3f::t_a35c3ab66cc353 80,277,312,457,525
+  s_3e608367e90b3f::t_e410f2e5556dbd 7-8,17-19,42
+  s_3e608367e90b3f::t_5fb14884b4b269 20,70,73,82,102-104,108,122,124,173-174,177,180-183,253,268,486,536-537
+  s_3e608367e90b3f::t_13ce8d9de091ad 16,79,81,113-116,266,278,283,305,310-311,313-315,458-459,461-464
+  s_3e608367e90b3f::t_90a0071bbab6cc 45,54-56,78,119,127,166-172,175-176,178-179,184-189,216-218,220,252,257,267,269-270,272
+  s_3e608367e90b3f::t_b49b31ea4224b2 244,276,279-282,285-288,290-292,296-302,306-309,316,465-485,487-488,509,517,529,534-535,538
+  s_3e608367e90b3f::t_e454d3aac4ef6f 284,289,303-304
+  s_3e608367e90b3f::t_5464f02bfca058 43,381
+apps/api/test/project-task-qa.mjs
+  s_3e608367e90b3f::t_d90866e29b5d3f 188-224
+  s_3e608367e90b3f::t_d238640bd8d0b5 243
+  s_3e608367e90b3f::t_a5b3f7e6ff3566 17-18,91-99
+scripts/project-task-client.test.mjs
+  s_3e608367e90b3f::t_d0ae6479825aad 11-23
+CHANGELOG.md
+  s_3e608367e90b3f::t_1590772aebebdf 9-23
+docs/development/task-discovery.md
+  s_3e608367e90b3f::t_6054db5ac7f417 39-66,75-82
+  s_3e608367e90b3f::t_8c9cf2167be73e 67-74,92-150
+  s_3e608367e90b3f::t_2e25d6375d0a2a 1-38
+  s_3e608367e90b3f::t_1590772aebebdf 151-154,156-206
+  s_3e608367e90b3f::t_bf3fae91ba2ad6 83-91
+  s_3e608367e90b3f::t_3f485f43c1277b 155
+packages/contracts/src/task-discovery.ts
+  s_3e608367e90b3f::t_8964152d9c79df 17-23
+  s_3e608367e90b3f::t_c363cc0dc1ee6e 13,35-37
+  s_3e608367e90b3f::t_8cf3af42894d7c 10
+  s_3e608367e90b3f::t_7859d8a8535d48 1-9,11-12,14-16,24-34,38-39
+packages/contracts/src/index.ts
+  s_3e608367e90b3f::t_7859d8a8535d48 84
+CONTRIBUTING.md
+  s_3e608367e90b3f::t_1590772aebebdf 97-104
+apps/api/src/principals/principal.service.ts
+  s_3e608367e90b3f::t_940fe127801856 82-88
+apps/api/prisma/schema.prisma
+  s_3e608367e90b3f::t_7859d8a8535d48 299,306
+  s_3e608367e90b3f::t_793106d608c473 244
+  s_3e608367e90b3f::t_940fe127801856 302
+apps/web/src/lib/task-events-client.ts
+  s_3e608367e90b3f::t_8cf3af42894d7c 8,21,27
+  s_3e608367e90b3f::t_e410f2e5556dbd 1-7,9-20,22-26,28-53
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8d243c0890bfede6904f839bed5a3b1b3e426455",
+  "prompts": {},
+  "sessions": {
+    "s_3e608367e90b3f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a198c0-121f-7c52-8ea0-005bc2024a57",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
