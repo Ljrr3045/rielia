@@ -15,17 +15,21 @@ This records repository changes. No application version has been released.
   totals and next cursors, bounded paging with a 1,000-row context limit, and
   loading/empty/error/changed states. Rows preserve scope/query/filter context
   through the existing URL-addressable detail and Back, restoring focus only
-  after a real detail return. Existing draft/retry/conflict recovery remains, a
-  workspace-navigation Stay/Discard guard protects local work, and live status
-  distinguishes connected, pending/deferred refresh, reconnecting and offline.
-  Discovery exposes status/priority/project/archive filters; the full authorized
-  assignee selector stays in project view and no workspace-wide people catalog is
-  invented. Existing project quick capture remains; no cross-project capture or
-  auto-assignment is added. Committed checkpoint `792414f` passes web typecheck,
-  targeted ESLint, production web build and the existing 61 logic/client/proxy/
-  state checks; independent SOL validation, full checks and PR/review evidence
-  are pending. [UI guide](docs/development/task-discovery-ui.md). No full
-  T10/P11/US05, labels/sprints, exports, coediting, real OAuth/staging/users,
+  after a real detail return. Discovery and legacy project/detail rendering are
+  mutually exclusive. Existing draft/retry/conflict recovery remains, a
+  workspace-navigation Stay/Discard guard protects local work in place of an open
+  form, and live status distinguishes connected, pending/deferred refresh,
+  reconnecting and offline. Discovery exposes status/priority/project/archive
+  filters with combined count/clear; the full authorized assignee selector stays
+  in project view and an inherited assignee is shown only as a clearable value.
+  The primary home/sidebar My tasks entry uses the explicit scope URL, and a
+  visible choose-project disclosure routes to editable projects' existing quick
+  capture without cross-project creation or auto-assignment. Corrected checkpoint
+  `c329d50` passes web typecheck, targeted ESLint, production web build and the
+  existing 61 logic/client/proxy/state checks; independent SOL validation, full
+  checks and PR/review evidence are pending.
+  [UI guide](docs/development/task-discovery-ui.md). No full T10/P11/US05,
+  labels/sprints, exports, coediting, real OAuth/staging/users,
   physical-device/AT/WCAG or deployment acceptance is claimed.
 
 - T10.0/B1b workspace-authorized ID/title search and current-principal-assignee

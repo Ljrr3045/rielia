@@ -16,8 +16,9 @@ composition only. It does not change the bare `/projects` default.
 
 | Area | Presentation delivered | Requirement |
 | --- | --- | --- |
-| Navigation | Explicit **My tasks** (`?taskScope=mine`) and **Search tasks** (`?taskScope=search`) entries in the existing workspace sidebar; selected scope is marked, project links keep their existing behavior | P11/P33, US02, UX01 |
-| Discovery bar | Scope switch, literal ID/key-number/title query (100 UTF-16 units maximum), status/priority/project/archive filters, active-filter count and clear | P02/P08/P11, US05/US08, UXR03 |
+| Navigation | Explicit **My tasks** (`?taskScope=mine`) and **Search tasks** (`?taskScope=search`) entries in the existing workspace sidebar; My tasks is the primary styled entry, the development home task-work link uses the explicit My tasks URL, and selected workspace parameters are preserved | P11/P33, US02, UX01 |
+| Discovery bar | Scope switch, literal ID/key-number/title query (100 UTF-16 units maximum), status/priority/project/archive filters with a combined active-filter count, an inherited URL assignee shown only as a clearable selected value, and an explicit all-filter clear | P02/P08/P11, US05/US08, UXR03 |
+| Creation affordance | Visible "Choose a project to create a task" disclosure over visible non-archived projects the project capabilities allow editing; it routes to that project's existing quick capture and focuses it. It never creates cross-project, invents capability or auto-assigns | P05/P11, US04/US08, UX02/UX03 |
 | My tasks | Workspace-wide current-assignee rows; server resolves the assignee from the verified principal. The screen never substitutes creator or credential issuer | P11/P38, US02/US05/US25, UX06/UX11 |
 | Search | Literal case-insensitive title substring or exact public UUID / project key and number; empty query lists readable tasks; optional project filter | P11, US05, UXR03 |
 | Results | Project-grouped rows with project name and key, task key, title, type, status, priority, due date, human/Agent assignee, inactive/historical marker and archive state; no descriptions or foreign data | P11/P33/P38, US08/US25, UX03/UX06/UX09 |
@@ -39,6 +40,8 @@ Key files:
   control says "Back to My tasks" or "Back to the search results" in discovery.
 - `project-ui.tsx`, `strings.ts` and `projects.module.css` provide the search
   icon, ES/EN copy, shared semantic tokens and scoped responsive/theme styles.
+- `apps/web/src/app/page.tsx` updates the development home's task-work entry to
+  the explicit My tasks URL without changing auth/session or bare-path behavior.
 
 Canonical route selectors are supplied and validated by the merged controller:
 `/projects?workspace=W&taskScope=mine|search&q=…&searchProject=…` plus the
@@ -60,6 +63,11 @@ does not parse selectors. The sidebar links explicitly request a scope; bare
   loading, the previous context's rows are replaced by a loading region rather
   than being presented under the new controls. A same-context refresh or
   continuation keeps the loaded rows and labels the update.
+- Discovery and legacy project rendering are mutually exclusive: the project
+  header/list/board/detail block requires `taskScope=project`, and the legacy
+  project-overview empty block is gated the same way. Opening a discovery detail
+  therefore cannot mount a second task detail, dialog ID or focus trap behind the
+  discovery result list.
 - `discovery.status === 'changed'` keeps the stale page readable but requires
   Refresh before continuing. A failed first page offers Retry; a failed
   continuation keeps the rows and offers Retry. A 401/403 clears private data
@@ -67,14 +75,21 @@ does not parse selectors. The sidebar links explicitly request a scope; bare
 - The 1,000-row context limit is shown explicitly; it disables append and points
   to narrower filters or Refresh. No fake total or client search is introduced.
 - The approved status/priority/project/archive filters are exposed. The project
-  view keeps its authorized project-assignee selector. Discovery does not invent
-  a workspace-wide assignee catalog: an assignee value already present in a URL
-  is displayed only as a clearable selected value, with no invented people
-  options. This is recorded as a bounded presentation decision.
-- Quick capture remains the existing project-scoped capture. Discovery does not
-  fabricate a cross-project create command because the merged controller accepts
-  creation only at the selected project. Opening a project from the sidebar keeps
-  the existing capture and never auto-assigns.
+  filter is included in the active-filter count and the explicit all-filter
+  clear; the query stays separately clearable. The project view keeps its
+  authorized project-assignee selector. Discovery does not invent a
+  workspace-wide assignee catalog: an assignee value already present in a URL or
+  inherited from project scope is displayed only as a clearable selected value,
+  with no invented people options or displayed name.
+- Zero-result discovery states distinguish a true empty scope (My tasks with no
+  assignment, empty search guidance, archived-empty) from a query/filter that
+  merely matches nothing; the latter always uses the no-matching-results copy.
+- Quick capture remains the existing project-scoped capture. The discovery view
+  exposes a visible "Choose a project to create a task" disclosure for visible,
+  non-archived projects whose returned capabilities allow editing; choosing one
+  opens that project's existing quick capture and focuses it. The UI does not
+  fabricate a cross-project create command, an unavailable project choice or an
+  auto-assignment. Archived task views hide creation.
 - Opening a row calls `openDiscoveryTask`; closing uses `returnToDiscovery`.
   Browser Back and reload reconstruct the scope/query/filter context. Focus is
   restored to `discoveryFocusTaskId` only after leaving a discovery detail, and a
@@ -82,7 +97,10 @@ does not parse selectors. The sidebar links explicitly request a scope; bare
 - Existing draft/retry/conflict/unknown-outcome/close-warning feedback is reused.
   A discovery detail can still edit/archive/restore according to the returned
   task and project permissions. Workspace changes with pending local state open
-  the explicit guard; forms and the guard are never stacked.
+  the explicit guard in place of an open form: exactly one modal/focus trap is
+  active, retained form state is not reset, Stay restores the form, and Discard
+  is disabled while a save is pending. The guard explains that discarding removes
+  local state but cannot undo a server-accepted write.
 - `streamStatus` is displayed truthfully: connected is not described as
   up-to-date; pending refresh, deferred refresh, reconnecting, retry exhaustion
   and offline are separate messages. A safe Refresh action is offered where the
@@ -109,9 +127,27 @@ does not parse selectors. The sidebar links explicitly request a scope; bare
 ## Validation evidence
 
 Committed presentation checkpoint:
-`792414f0ea3b8d386780ab35a0c73c475c27d0b7`. The source files are
+`c329d50e3778c2ed0196767388ecb4857756f3d4`. The source files are
 `task-discovery.tsx`, `projects-view.tsx`, `task-detail.tsx`, `project-ui.tsx`,
-`strings.ts` and `projects.module.css`.
+`strings.ts`, `projects.module.css` and the development home `page.tsx`.
+Earlier checkpoint `792414f0ea3b8d386780ab35a0c73c475c27d0b7` was the validators'
+initial fixture source; the corrections below replace it.
+
+Root review findings resolved in `c329d50`:
+
+- discovery and legacy project/detail blocks are now mutually exclusive, including
+  the empty project overview, so an open discovery detail cannot duplicate the
+  detail, dialog IDs or focus traps;
+- the workspace guard replaces an open form rather than being hidden behind it,
+  keeping one focus trap and retained form state with Stay/Discard behavior;
+- the project filter is counted and cleared with the explicit all-filter action,
+  and an inherited URL assignee is a visible clearable criterion;
+- filtered/query zero results always use the no-matching-results state, not the
+  true-empty scope copy;
+- the development home task-work link and primary sidebar My tasks entry use the
+  explicit My tasks URL, preserving the selected workspace where available;
+- a visible choose-project-to-create disclosure routes through an editable,
+  non-archived visible project to the existing quick capture.
 
 Local checks on the checkpoint:
 
@@ -135,11 +171,12 @@ private QA state remain outside the repository.
   public-launch acceptance is claimed.
 - The bare `/projects` default is intentionally unchanged; discovery is reached
   through the explicit My tasks/Search entries or a scope URL.
-- The discovery assignee filter is limited to a value already supplied by the
-  URL. A full people picker in workspace search would need a logic-owned
-  authorized source.
-- Creation remains project-scoped; no cross-project capture or auto-assignment
-  is presented. The existing project quick capture remains available.
+- The discovery assignee filter is limited to a value already supplied by the URL
+  or inherited from the project view. A full people picker in workspace search
+  would need a logic-owned authorized source.
+- Creation remains project-scoped: the discovery disclosure only chooses an
+  editable project and opens its existing quick capture. No cross-project create
+  or auto-assignment is presented.
 - SSE is single-replica invalidation, not a durable client log or coediting
   guarantee. A live connection does not imply that a pending refresh has already
   completed.

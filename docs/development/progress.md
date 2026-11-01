@@ -45,7 +45,7 @@ implementation, without completing tickets or weakening automated checks/launch 
 | Branch | `feat/t10-search-my-tasks-ui`, one English non-draft presentation/docs PR to `dev` |
 | Worktree | Isolated `feat-t10-search-my-tasks-ui`; OpenCode Go `opencode-go/deepseek-v4.1-flash` variant `max` verified by the coordinator's terminal footer; no helpers or shared checkout |
 | Current PR | T10.1 presentation PR pending after independent SOL validation; T10.0 logic [PR #23](https://github.com/Ljrr3045/rielia/pull/23) is merged as `6bde444cd4e69115bc7004cf8d58c229ee7c55a7` |
-| T10.1 evidence | [Search and My tasks UI guide](task-discovery-ui.md): committed checkpoint `792414f0ea3b8d386780ab35a0c73c475c27d0b7`; web typecheck, targeted ESLint, production web build and the 61 existing project/client/proxy/state checks pass. Independent functional/responsive validation is coordinated by the root; standard check/audit/handoff/whitespace and PR/CI/Kody evidence remain pending |
+| T10.1 evidence | [Search and My tasks UI guide](task-discovery-ui.md): corrected checkpoint `c329d50e3778c2ed0196767388ecb4857756f3d4`; web typecheck, targeted ESLint, production web build and the 61 existing project/client/proxy/state checks pass. Independent functional/responsive validation is coordinated by the root; standard check/audit/handoff/whitespace and PR/CI/Kody evidence remain pending |
 | T10 evidence | [Discovery/SSE contract](task-discovery.md): 61 focused client/proxy/state checks; full standard check; real PostgreSQL search/authority/rollback/commit-order/replay/revocation plus eight-table restart witness; real Nest→Next 105-row search and two-session streaming QA; Docker runtime smoke; audit high/critical, handoff and whitespace pass. Independent denial/deferral/page-two return findings fixed with regressions; Kody hydration and SSE metadata findings addressed by one bounded shared hydration and id/version-only polling, with 12 T10 PG tests. T10.0 [PR #23](https://github.com/Ljrr3045/rielia/pull/23) merged as `6bde444cd4e69115bc7004cf8d58c229ee7c55a7` |
 | T09 evidence | Frozen install, full `pnpm check`, 46 focused project/client/proxy/XSS checks, real PG migration/permission/race/rollback/aborted-HTTP tests and eight-table PostgreSQL-restart witness pass. Actual archived-row migration preservation, >100 paging and new/edited-comment discovery, final-migration Docker runtime, expanded real Next proxy QA, audit high/critical gate, handoff and whitespace pass. PR #21 reviewed head `0e4784c3d41ddd095c69f61b49489e9a78065347`; root Kody trigger `6546958383`, final Kody check `124610642083` SUCCESS/no-issues comment `6546960524`, CI `41226123949` / check `124610518385` SUCCESS. Logic worktree removed by coordinator |
 | T09.1 presentation | [Task collaboration UI](task-collaboration-ui.md), [PR #22](https://github.com/Ljrr3045/rielia/pull/22), verified merged 2026-10-31T20:10:22Z as `8d51135af5260bdb8773863a4a7fb8ff6a966f8e`. Functional/responsive validators and final standard checks passed their documented bounded cases; historical CI/Kody evidence remains on the PR/external report. No full T09/P05/P14/P38, real-user/AT/WCAG, staging or deployment claim |
@@ -196,21 +196,29 @@ loading/empty/error/changed states are presented from the merged hook.
 
 Rows open the existing URL-addressable detail through `openDiscoveryTask` and
 return through `returnToDiscovery`, preserving scope/query/filters across Back
-and reload and restoring focus only after an actual detail return. The existing
+and reload and restoring focus only after an actual detail return. Discovery and
+legacy project/detail rendering are mutually exclusive, so an open discovery
+detail cannot mount a second detail or focus trap. The existing
 draft/retry/conflict/close-warning/policy/collaboration panels remain in the
 discovery route. A workspace change with local unsaved or recovery state opens an
-explicit Stay/Discard dialog; Discard is disabled while a save is pending and
+explicit Stay/Discard dialog in place of an open form, preserving retained form
+state with one focus trap; Discard is disabled while a save is pending and
 explains that it removes local state but cannot undo a server write. Live status
 distinguishes connected, pending refresh, deferred refresh, reconnecting and
 offline states; a live connection is never described as already up to date.
 
-Discovery does not invent a workspace-wide assignee catalog: the approved full
-assignee selector remains in the project view, while discovery only exposes an
-assignee value already supplied by the URL as a clearable selected value.
-Creation remains the existing project-scoped quick capture; discovery does not
-fabricate cross-project capture or auto-assignment.
+The project-filter criterion is included in the active-filter count and the
+explicit all-filter clear; the query stays separately clearable. An assignee
+criterion inherited from the URL or project scope is shown as a clearable selected
+value without inventing a workspace-wide people catalog. Discovery does not
+invent an assignee catalog: the approved full selector remains in the project
+view. The development home task-work entry and the primary styled sidebar My tasks
+entry use the explicit My tasks URL, preserving the selected workspace where
+available. A visible "Choose a project to create a task" disclosure lists editable
+non-archived visible projects and routes to that project's existing quick capture,
+without cross-project creation or auto-assignment.
 
-Committed checkpoint `792414f0ea3b8d386780ab35a0c73c475c27d0b7` passes web
+Committed checkpoint `c329d50e3778c2ed0196767388ecb4857756f3d4` passes web
 typecheck, targeted ESLint, production web build and the existing 61
 project/client/proxy/state checks. Independent SOL functional and responsive
 validation, full standard checks, audit, handoff/whitespace and PR/CI/Kody
