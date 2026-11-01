@@ -1,0 +1,40 @@
+apps/web/src/app/page.tsx
+  s_37f6f126e69e73::t_7de5d1c292d816 36,45
+apps/web/src/app/projects/projects.module.css
+  s_37f6f126e69e73::t_e786b1aa825367 3761-3821
+apps/web/src/app/projects/projects-view.tsx
+  s_37f6f126e69e73::t_d5d68a8dc2c0f5 2225,2411
+  s_37f6f126e69e73::t_969ae5f8543284 2587-2594,2599
+  s_37f6f126e69e73::t_4d9a9eac6d6672 2935
+  s_37f6f126e69e73::t_b55ad309356ce7 2270
+  s_37f6f126e69e73::t_bee84c0e107465 2519
+  s_37f6f126e69e73::t_4cc81bafa4a2d2 2635,2832
+  s_37f6f126e69e73::t_a72cbb651b79df 58,200
+  s_37f6f126e69e73::t_b4c8b606b2c80a 2054-2059
+  s_37f6f126e69e73::t_22f1bf33548ebb 2295,2306
+  s_37f6f126e69e73::t_91c7d17d21afb6 571-580
+apps/web/src/app/projects/task-discovery.tsx
+  s_37f6f126e69e73::t_1cf46bf2dedea1 281-339
+  s_37f6f126e69e73::t_bc31b0dc53f356 340
+  s_37f6f126e69e73::t_2d626d3635c5cd 435-441,461-466
+  s_37f6f126e69e73::t_00db1f1837d4b0 182-183,262,270-271
+  s_37f6f126e69e73::t_a45618ccf48f54 23-24,50,65,80
+apps/web/src/app/projects/strings.ts
+  s_37f6f126e69e73::t_59f812a259ceba 285-295
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c329d50e3778c2ed0196767388ecb4857756f3d4",
+  "prompts": {},
+  "sessions": {
+    "s_37f6f126e69e73": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e670003e1ffe0hm07HLe8PdoMm",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
