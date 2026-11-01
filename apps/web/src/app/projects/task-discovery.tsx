@@ -184,7 +184,7 @@ export function TaskDiscoveryBar({
   }
 
   return (
-    <section aria-label={copy.discovery.filterPanel[lang]} className={styles.discoveryBar} data-discovery-bar tabIndex={-1}>
+    <section aria-label={copy.discovery.barLabel[lang]} className={styles.discoveryBar} data-discovery-bar tabIndex={-1}>
       <div className={styles.discoveryTop}>
         <div aria-label={copy.discovery.scopeLabel[lang]} className={styles.discoveryScope} role="group">
           <button
@@ -490,6 +490,9 @@ export function TaskDiscoveryList({
                       </a>
                       <div className={styles.taskMeta}>
                         <span className={styles.taskKey}>{item.key}</span>
+                        <span className={cx(styles.taskMetaItem, styles.discoveryProjectTag)}>
+                          {item.projectName} · {item.projectKey}
+                        </span>
                         <span className={styles.taskMetaItem}>{typeName(item.type)[lang]}</span>
                         {item.dueDate !== null && (
                           <span className={styles.taskMetaItem}><DueDate value={item.dueDate} /></span>

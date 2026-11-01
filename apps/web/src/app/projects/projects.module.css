@@ -3710,6 +3710,12 @@
   overflow-wrap: anywhere;
 }
 
+.discoveryProjectTag {
+  color: var(--text-secondary);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
 .discoverySkeleton {
   display: grid;
   gap: 0.4rem;

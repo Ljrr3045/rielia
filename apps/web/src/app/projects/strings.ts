@@ -208,6 +208,7 @@ export const copy = {
       en: 'Search every visible project in the workspace by ID, project key and number, or title. Results and metadata respect current access.',
     },
     scopeLabel: { es: 'Ámbito de las tareas', en: 'Task scope' },
+    barLabel: { es: 'Mis tareas y búsqueda', en: 'My tasks and search' },
     myTasksMeta: { es: 'Asignadas a tu cuenta actual', en: 'Assigned to your current account' },
     searchMeta: { es: 'Todos los proyectos visibles', en: 'All visible projects' },
     searchLabel: { es: 'Buscar por ID o título', en: 'Search by ID or title' },
@@ -233,18 +234,8 @@ export const copy = {
       es: 'Este enlace ya incluye un responsable. Puedes conservarlo o quitar el filtro; para elegir otra persona, abre un proyecto.',
       en: 'This link already includes an assignee. Keep or clear the filter; open a project to choose another person.',
     },
-    peopleLoading: { es: 'Cargando miembros del espacio…', en: 'Loading workspace members…' },
-    peopleError: { es: 'No se pudieron cargar todos los miembros del espacio.', en: 'Not all workspace members could be loaded.' },
-    retryPeople: { es: 'Reintentar miembros', en: 'Retry members' },
-    loadMorePeople: { es: 'Cargar más miembros', en: 'Load more members' },
-    peopleHint: {
-      es: 'El filtro usa los miembros del espacio ya cargados; los responsables históricos siguen visibles en cada tarea.',
-      en: 'The filter uses loaded workspace members; historical assignees remain visible on each task.',
-    },
     archiveShort: { es: 'Archivadas', en: 'Archived' },
     activeShort: { es: 'Activas', en: 'Active' },
-    resultsLabel: { es: 'Resultados de tareas del espacio', en: 'Workspace task results' },
-    resultsLabelMine: { es: 'Tareas asignadas a ti', en: 'Tasks assigned to you' },
     count: {
       es: (count: number) => (count === 1 ? '1 tarea' : `${count} tareas`),
       en: (count: number) => (count === 1 ? '1 task' : `${count} tasks`),
@@ -254,7 +245,6 @@ export const copy = {
       en: (loaded: number, total: number) => `Showing ${loaded} of ${total}`,
     },
     loading: { es: 'Cargando tareas del espacio…', en: 'Loading workspace tasks…' },
-    loadingMore: { es: 'Cargando más tareas…', en: 'Loading more tasks…' },
     updating: { es: 'Actualizando resultados…', en: 'Updating results…' },
     emptyMineTitle: { es: 'No tienes tareas asignadas', en: 'No tasks assigned to you' },
     emptyMineBody: {
@@ -292,13 +282,8 @@ export const copy = {
       en: 'The 1,000 loaded-result limit was reached. Narrow the search or refresh to start again.',
     },
     loadMore: { es: 'Cargar más resultados', en: 'Load more results' },
-    openTask: { es: 'Abrir tarea', en: 'Open task' },
     backToMine: { es: 'Volver a Mis tareas', en: 'Back to My tasks' },
     backToSearch: { es: 'Volver a los resultados', en: 'Back to the search results' },
-    noProjectsHint: {
-      es: 'El espacio todavía no tiene proyectos visibles. Crea o abre un proyecto para capturar tareas.',
-      en: 'The workspace has no visible projects yet. Create or open a project to capture tasks.',
-    },
   },
   live: {
     connected: { es: 'Actualizaciones en vivo conectadas.', en: 'Live updates connected.' },
@@ -327,8 +312,8 @@ export const copy = {
   workspaceGuard: {
     title: { es: 'Cambiar de espacio con trabajo pendiente', en: 'Switch workspace with pending work' },
     body: {
-      es: (target: string) => `El borrador, guardado o recuperación actual pertenece a este espacio. Si cambias a ${target}, se descartará ese estado local no guardado. Los permisos actuales se siguen aplicando en el servidor.`,
-      en: (target: string) => `The current draft, pending save, or recovery belongs to this workspace. Switching to ${target} discards that unsaved local state. Current permissions still apply on the server.`,
+      es: (target: string) => `El borrador, guardado o recuperación actual pertenece a este espacio. Si cambias a ${target}, se descartará ese estado local no guardado; no se deshace un guardado que el servidor ya haya aceptado. Los permisos actuales se siguen aplicando en el servidor.`,
+      en: (target: string) => `The current draft, pending save, or recovery belongs to this workspace. Switching to ${target} discards that unsaved local state; it does not undo a save the server already accepted. Current permissions still apply on the server.`,
     },
     targetFallback: { es: 'el otro espacio', en: 'the other workspace' },
     pending: {
