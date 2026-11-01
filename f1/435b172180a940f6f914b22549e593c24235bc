@@ -1,0 +1,22 @@
+scripts/project-task-logic.test.mjs
+  s_66ada2819989fc::t_7a76f828f7e1ff 102-103,105-123
+  s_66ada2819989fc::t_1e34135b646883 104
+apps/web/src/lib/project-task-controller.ts
+  s_66ada2819989fc::t_550d251889782b 524,536,539-543
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f1435b172180a940f6f914b22549e593c24235bc",
+  "prompts": {},
+  "sessions": {
+    "s_66ada2819989fc": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19900-dbe1-7801-9c3d-7d13101e7bcc",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
