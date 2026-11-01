@@ -17,6 +17,7 @@ import {
   type ProjectTaskResult,
   type ProjectVisibility,
   type Task,
+  type TaskDiscoveryItem,
   type TaskFields,
   type TaskStatus,
 } from '@rielia/contracts';
@@ -37,6 +38,7 @@ import {
   IconPlus,
   IconProject,
   IconRestore,
+  IconSearch,
   IconSettings,
   IconTask,
   IconUsers,
@@ -53,6 +55,7 @@ import {
 import { TaskBoard } from './task-board';
 import { TaskCaptureForm, TaskEditForm } from './task-forms';
 import { TaskDetail } from './task-detail';
+import { TaskDiscoveryBar, TaskDiscoveryList, LiveUpdateNotice } from './task-discovery';
 import { TaskCollaboration } from './task-collaboration';
 import { TaskDescription } from './task-description';
 import { TaskList } from './task-list';
@@ -167,6 +170,8 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   const projectTasks = useProjectTasks();
   const {
     status, workspaces, workspace, projects, project, tasks, task,
+    taskScope, searchQuery, discoveryProjectId, discovery, discoveryFocusTaskId, discoveryContextLimitReached,
+    streamStatus, refreshRequired, refreshDeferred, workspaceNavigation,
     taskView, taskColumns, taskColumnErrors, taskColumnsChanged, taskSummary, selectedTaskAssignee, taskFilterAssigneeStatus,
     selection, views, draft, pending, outcome, retryTarget, conflict, result, pageError,
     moveDraft, movePending, moveRetryTarget, moveNeedsDestination,
@@ -174,6 +179,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
     policyDraft, policyPending, policyRetryTarget,
     closeWarning, draftGuard, mutationPending, collaborationDraft, collaborationRetryTarget,
     refresh, selectWorkspace, selectProject, selectTask, setView,
+    setTaskScope, setSearchQuery, setDiscoveryProject, loadDiscoveryMore, openDiscoveryTask, returnToDiscovery, resolveWorkspaceNavigation,
     setTaskLayout, setTaskFilters, setTaskColumn, loadMore, loadTaskColumn, stageMove,
     stage, submit, retrySave, discardDraft, returnToDraft, reloadConflict, rebaseDraft, dismissOutcome, dismissPageError,
     setParentCandidatesWanted, acknowledgeClose,
@@ -193,6 +199,8 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   const [resumeAccessOnReady, setResumeAccessOnReady] = useState(false);
   const captureRef = useRef<HTMLInputElement>(null);
   const projectHeadingRef = useRef<HTMLHeadingElement>(null);
+  const discoveryHeadingRef = useRef<HTMLHeadingElement>(null);
+  const discoveryReturnRef = useRef(false);
   const sidebarRef = useRef<HTMLElement>(null);
   const drawerOpenerRef = useRef<HTMLElement | null>(null);
   const modalOpenerRef = useRef<HTMLElement | null>(null);
@@ -384,6 +392,34 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
       }
     }
   }, [selection.taskId, status]);
+
+  useEffect(() => {
+    if (taskScope === 'project') {
+      discoveryReturnRef.current = false;
+      return;
+    }
+    if (status === 'error' || status === 'forbidden' || status === 'signed-out' || status === 'disabled') {
+      discoveryReturnRef.current = false;
+      return;
+    }
+    if (selection.taskId !== null) {
+      discoveryReturnRef.current = true;
+      return;
+    }
+    if (!discoveryReturnRef.current || status !== 'ready') return;
+    discoveryReturnRef.current = false;
+    const frame = requestAnimationFrame(() => {
+      if (discoveryFocusTaskId === null) {
+        discoveryHeadingRef.current?.focus();
+        return;
+      }
+      const row = [...document.querySelectorAll<HTMLElement>('[data-discovery-task-id]')]
+        .find(element => element.dataset.discoveryTaskId === discoveryFocusTaskId);
+      const target = row?.querySelector<HTMLElement>('[data-discovery-open]') ?? discoveryHeadingRef.current;
+      target?.focus();
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [taskScope, selection.taskId, status, discoveryFocusTaskId]);
 
   useEffect(() => {
     if (!form) return;
@@ -1979,6 +2015,36 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
     closeDrawer();
   }
 
+  function discoveryLink(scope: 'mine' | 'search'): string {
+    const params = new URLSearchParams();
+    if (selection.workspaceId !== null) params.set('workspace', selection.workspaceId);
+    params.set('taskScope', scope);
+    return `/projects?${params.toString()}`;
+  }
+
+  function openDiscoveryRow(item: TaskDiscoveryItem, opener: HTMLElement) {
+    returnFocusRef.current = opener;
+    void openDiscoveryTask(item);
+    if (drawerOpen) closeDrawer();
+  }
+
+  function changeDiscoveryScope(scope: 'mine' | 'search') {
+    if (anyPending) return;
+    void setTaskScope(scope);
+    if (drawerOpen) closeDrawer();
+  }
+
+  function clearDiscoveryFilters() {
+    if (anyPending) return;
+    void setTaskFilters({});
+    if (discoveryProjectId !== null) void setDiscoveryProject(null);
+  }
+
+  function resolveWorkspaceChoice(choice: 'stay' | 'discard') {
+    if (choice === 'discard' && mutationPending !== null) return;
+    void resolveWorkspaceNavigation(choice);
+  }
+
   function openProject(projectId: string) {
     if (anyPending) return;
     void selectProject(projectId);
@@ -2072,11 +2138,66 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
     );
   }
 
+  function renderTaskDetail() {
+    if (task === null) return null;
+    return (
+      <div>
+        <TaskDetail
+          actionsDisabled={blocked || policyDraft !== null || moveDraft !== null || collaborationDraft !== null}
+          backLabel={taskScope === 'mine'
+            ? copy.discovery.backToMine
+            : taskScope === 'search'
+              ? copy.discovery.backToSearch
+              : copy.common.backToProject}
+          collaboration={(
+            <TaskCollaboration
+              collaborationSource={lastOutcomeSourceRef.current === 'collaboration'}
+              hook={projectTasks}
+              onDiscard={discardCollaboration}
+              onReloadConflict={reloadCollaborationConflict}
+              onRetry={retryCollaboration}
+              onStage={stageCollaboration}
+              onSubmit={submitCollaboration}
+              projectArchived={projectArchived}
+              task={task}
+            />
+          )}
+          description={task.description.length > 0 ? <TaskDescription source={task.description} /> : undefined}
+          feedback={form === null && (feedbackInDetail || draftInDetail || moveFeedbackInDetail || closeWarningNode !== null)
+            ? (
+              <>
+                {closeWarningNode}
+                {draftInDetail ? draftBanner : null}
+                {feedbackInDetail ? feedbackNode : null}
+                {moveFeedbackInDetail ? moveFeedbackNode : null}
+              </>
+            )
+            : undefined}
+          onArchive={opener => requestTaskArchive(false, task, opener)}
+          onClose={() => {
+            void setParentCandidatesWanted(false);
+            if (taskScope === 'project') void selectTask(null);
+            else void returnToDiscovery();
+          }}
+          onEdit={openTaskEdit}
+          onRestore={opener => requestTaskArchive(true, task, opener)}
+          modalOpen={form !== null}
+          overlay={detailOverlay}
+          projectArchived={projectArchived}
+          task={task}
+        />
+      </div>
+    );
+  }
+
   const projectList = projects?.items ?? [];
   const taskList = tasks?.items ?? [];
   const isArchivedProjects = views.projects === 'archived';
   const isArchivedTasks = views.tasks === 'archived';
   const hasWorkspace = workspace !== null || (workspaces?.items.length ?? 0) > 0;
+  const discoveryProjectName = discoveryProjectId === null
+    ? null
+    : discovery.page?.items.find(item => item.projectId === discoveryProjectId)?.projectName ?? null;
 
   return (
     <div className={styles.app} lang={lang}>
@@ -2143,6 +2264,50 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
                 <IconClose size={20} />
               </button>
             )}
+          </div>
+
+          <div className={styles.navGroup}>
+            <div className={styles.navGroupLabel}>
+              <span>{copy.discovery.navLabel[lang]}</span>
+            </div>
+            <nav aria-label={copy.discovery.navLabel[lang]}>
+              <ul className={styles.projectNav}>
+                <li>
+                  <a
+                    aria-current={taskScope === 'mine' ? 'page' : undefined}
+                    className={cx(styles.navItem, taskScope === 'mine' && styles.navItemActive)}
+                    href={discoveryLink('mine')}
+                    onClick={event => {
+                      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+                      event.preventDefault();
+                      changeDiscoveryScope('mine');
+                    }}
+                  >
+                    <span aria-hidden="true" className={styles.navItemIcon}><IconTask size={18} /></span>
+                    <span className={styles.navItemMain}>
+                      <span className={styles.navItemTitle}>{copy.discovery.myTasks[lang]}</span>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    aria-current={taskScope === 'search' ? 'page' : undefined}
+                    className={cx(styles.navItem, taskScope === 'search' && styles.navItemActive)}
+                    href={discoveryLink('search')}
+                    onClick={event => {
+                      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+                      event.preventDefault();
+                      changeDiscoveryScope('search');
+                    }}
+                  >
+                    <span aria-hidden="true" className={styles.navItemIcon}><IconSearch size={18} /></span>
+                    <span className={styles.navItemMain}>
+                      <span className={styles.navItemTitle}>{copy.discovery.search[lang]}</span>
+                    </span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
           </div>
 
           <div className={styles.navGroup}>
@@ -2230,7 +2395,13 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
             <button aria-label={copy.common.menu[lang]} className={styles.mobileMenuButton} onClick={openDrawer} type="button">
               <IconMenu size={20} />
             </button>
-            <span className={styles.mobileTitle}>{project?.name ?? copy.header.projectsTitle[lang]}</span>
+            <span className={styles.mobileTitle}>
+              {taskScope === 'mine'
+                ? copy.discovery.myTasks[lang]
+                : taskScope === 'search'
+                  ? copy.discovery.search[lang]
+                  : project?.name ?? copy.header.projectsTitle[lang]}
+            </span>
             {workspace !== null && (
               <button
                 aria-label={copy.project.newProject[lang]}
@@ -2362,6 +2533,78 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
             </section>
           )}
 
+          {status === 'ready' && taskScope !== 'project' && (
+            <div className={cx(styles.workLayout, detailOpen && styles.workLayoutOpen)}>
+              <section className={styles.listColumn} inert={overlayOpen ? true : undefined}>
+                <header className={styles.mainHeader}>
+                  <nav aria-label={copy.common.workspaces[lang]} className={styles.breadcrumb}>
+                    <Link href="/workspaces">{copy.common.workspaces[lang]}</Link>
+                    <span aria-hidden="true" className={styles.breadcrumbSeparator}>/</span>
+                    <span>{workspace?.name ?? copy.header.workspaceFallback[lang]}</span>
+                  </nav>
+                  <div className={styles.pageTitleRow}>
+                    <div className={styles.titleBlock}>
+                      <h1 className={styles.title} ref={discoveryHeadingRef} tabIndex={-1}>
+                        {taskScope === 'mine' ? copy.discovery.myTasks[lang] : copy.discovery.search[lang]}
+                      </h1>
+                      <p className={styles.lede}>
+                        {taskScope === 'mine' ? copy.discovery.myTasksLede[lang] : copy.discovery.searchLede[lang]}
+                      </p>
+                      <div className={styles.metaLine}>
+                        <span>{workspace?.name ?? copy.header.workspaceFallback[lang]}</span>
+                        <span>{taskScope === 'mine' ? copy.discovery.myTasksMeta[lang] : copy.discovery.searchMeta[lang]}</span>
+                      </div>
+                    </div>
+                  </div>
+                </header>
+
+                <LiveUpdateNotice
+                  disabled={anyPending}
+                  onRefresh={() => { void refresh(); }}
+                  refreshDeferred={refreshDeferred}
+                  refreshRequired={refreshRequired}
+                  status={streamStatus}
+                />
+
+                <TaskDiscoveryBar
+                  archived={isArchivedTasks}
+                  disabled={anyPending}
+                  filters={taskView.filters}
+                  onFilters={filters => { if (!anyPending) void setTaskFilters(filters); }}
+                  onProject={projectId => { if (!anyPending) void setDiscoveryProject(projectId); }}
+                  onScope={changeDiscoveryScope}
+                  onSearch={value => { if (!anyPending) void setSearchQuery(value); }}
+                  onToggleArchive={toggleTasksView}
+                  projects={projectList}
+                  projectId={discoveryProjectId}
+                  query={searchQuery}
+                  scope={taskScope}
+                  selectedProjectName={discoveryProjectName}
+                />
+
+                {!feedbackInForm && recoveryBlock}
+
+                <TaskDiscoveryList
+                  archived={isArchivedTasks}
+                  contextLimit={discoveryContextLimitReached}
+                  disabled={anyPending}
+                  discovery={discovery}
+                  filters={taskView.filters}
+                  onClearFilters={clearDiscoveryFilters}
+                  onClearQuery={() => { if (!anyPending) void setSearchQuery(''); }}
+                  onLoadMore={() => { void loadDiscoveryMore(); }}
+                  onOpen={openDiscoveryRow}
+                  onRefresh={() => { void refresh(); }}
+                  projectId={discoveryProjectId}
+                  query={searchQuery}
+                  scope={taskScope}
+                />
+              </section>
+
+              {renderTaskDetail()}
+            </div>
+          )}
+
           {status === 'ready' && project !== null && (
             <div className={cx(styles.workLayout, detailOpen && styles.workLayoutOpen)}>
               <section className={styles.listColumn} inert={overlayOpen ? true : undefined}>
@@ -2455,6 +2698,14 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
                   <FeedbackPanel body={copy.task.viewerBody} title={copy.task.viewerTitle} tone="info" />
                 )}
 
+                <LiveUpdateNotice
+                  disabled={anyPending}
+                  onRefresh={() => { void refresh(); }}
+                  refreshDeferred={refreshDeferred}
+                  refreshRequired={refreshRequired}
+                  status={streamStatus}
+                />
+
                 <TaskViewBar
                   assigneeError={policyPageErrors.assignees !== undefined}
                   assigneeLoading={assignees === null && policyPageErrors.assignees === undefined}
@@ -2545,48 +2796,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
                 {taskView.layout === 'list' && taskPageErrorBlock}
               </section>
 
-              {task !== null && (
-                <div>
-                  <TaskDetail
-                    actionsDisabled={blocked || policyDraft !== null || moveDraft !== null || collaborationDraft !== null}
-                    collaboration={(
-                      <TaskCollaboration
-                        collaborationSource={lastOutcomeSourceRef.current === 'collaboration'}
-                        hook={projectTasks}
-                        onDiscard={discardCollaboration}
-                        onReloadConflict={reloadCollaborationConflict}
-                        onRetry={retryCollaboration}
-                        onStage={stageCollaboration}
-                        onSubmit={submitCollaboration}
-                        projectArchived={projectArchived}
-                        task={task}
-                      />
-                    )}
-                    description={task.description.length > 0 ? <TaskDescription source={task.description} /> : undefined}
-                    feedback={form === null && (feedbackInDetail || draftInDetail || moveFeedbackInDetail || closeWarningNode !== null)
-                      ? (
-                        <>
-                          {closeWarningNode}
-                          {draftInDetail ? draftBanner : null}
-                          {feedbackInDetail ? feedbackNode : null}
-                          {moveFeedbackInDetail ? moveFeedbackNode : null}
-                        </>
-                      )
-                      : undefined}
-                    onArchive={opener => requestTaskArchive(false, task, opener)}
-                    onClose={() => {
-                      void setParentCandidatesWanted(false);
-                      void selectTask(null);
-                    }}
-                    onEdit={openTaskEdit}
-                    onRestore={opener => requestTaskArchive(true, task, opener)}
-                    modalOpen={form !== null}
-                    overlay={detailOverlay}
-                    projectArchived={projectArchived}
-                    task={task}
-                  />
-                </div>
-              )}
+              {renderTaskDetail()}
             </div>
           )}
         </main>
@@ -2692,6 +2902,44 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
               title={form.kind === 'task-archive' ? copy.task.archiveConfirmTitle : copy.task.restore}
             />
           )}
+        </ModalFrame>
+      )}
+
+      {workspaceNavigation !== null && form === null && (
+        <ModalFrame
+          busy={mutationPending !== null}
+          eyebrow={copy.common.workspace}
+          onClose={() => resolveWorkspaceChoice('stay')}
+          small
+          title={copy.workspaceGuard.title}
+        >
+          <p className={styles.stateHint}>
+            {copy.workspaceGuard.body[lang](
+              workspaces?.items.find(item => item.id === workspaceNavigation.workspaceId)?.name
+                ?? copy.workspaceGuard.targetFallback[lang],
+            )}
+          </p>
+          {mutationPending !== null && (
+            <p className={styles.stateHint} role="status">{copy.workspaceGuard.pending[lang]}</p>
+          )}
+          <div className={styles.formActions}>
+            <button
+              className={styles.primary}
+              data-autofocus
+              onClick={() => resolveWorkspaceChoice('stay')}
+              type="button"
+            >
+              {copy.workspaceGuard.stay[lang]}
+            </button>
+            <button
+              className={styles.dangerButton}
+              disabled={mutationPending !== null}
+              onClick={() => resolveWorkspaceChoice('discard')}
+              type="button"
+            >
+              {copy.workspaceGuard.discard[lang]}
+            </button>
+          </div>
         </ModalFrame>
       )}
     </div>
