@@ -224,9 +224,11 @@ Validation evidence:
   offline/online plus focus recovers; member suspension and actual session expiry
   pass; the real authorization suite and a 1,001-row context cap pass. The SOL
   session-replacement regression covers same/different human and ready/empty/
-  forbidden/unavailable targets without resubmitting. The final existing-390
-  functional regression/report was still pending when this guide was updated; the
-  combined standard check below passes.
+  forbidden/unavailable targets without resubmitting. The final functional report
+  and `mobile-return-results.json` accept all assigned behavior, including
+  persisted comment/checklist, no auto-assignment, an accessible H1 fallback after
+  full reload and exact row focus after in-session reopen/Escape; the combined
+  standard check below passes.
 - `pnpm install --frozen-lockfile` and the combined `pnpm check` pass on
   `29601ac`: lint, Express-free closure, process cleanup, identity/workspace/
   project suites, 63 focused project/client/proxy/controller checks including T10,

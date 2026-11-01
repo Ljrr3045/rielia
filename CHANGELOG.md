@@ -32,8 +32,10 @@ This records repository changes. No application version has been released.
   session clears the stale task/query URL. Combined source `29601ac` passes full
   `pnpm check`, 63 focused project/client/proxy/controller checks including T10,
   production build, accepted seven-width responsive evidence and the precise
-  shell-dismissal disposition (no demonstrated private-field leak); final
-  functional 390 report and PR/review evidence are pending.
+  shell-dismissal disposition (no demonstrated private-field leak); the final
+  functional/mobile-return report accepts persisted comment/checklist, no
+  auto-assignment, accessible H1 fallback after reload and exact row focus after
+  in-session reopen/Escape. PR/review evidence is recorded on the PR.
   [UI guide](docs/development/task-discovery-ui.md). No full T10/P11/US05,
   labels/sprints, exports, coediting, real OAuth/staging/users,
   physical-device/AT/WCAG or deployment acceptance is claimed.
