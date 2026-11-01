@@ -249,16 +249,19 @@ export function createProjectTaskController(options: {
       if (!config.enabled || !session || Date.parse(session.session.expiresAt) <= Date.now()) {
         publish({ ...state, parentCandidatesWanted: false, status: config.enabled ? 'signed-out' : 'disabled', session: null, result: null, conflict: null }); return;
       }
-      if (owner !== null && (owner !== session.user.id || sessionId !== session.session.id)) {
+      const sessionChanged = owner !== null && (owner !== session.user.id || sessionId !== session.session.id);
+      if (sessionChanged) {
         discoveryContext = null;
         workspaceNavigation = null;
         retry = null; publish({ ...state, workspaceNavigation: null, discovery: discoveryEmpty, searchQuery: '', discoveryProjectId: null, parentCandidatesWanted: false, selection: { ...selectionEmpty }, taskView: { layout: 'list', filters: {}, column: 'backlog' }, url: '/projects', draft: null, retryTarget: null, outcome: null, result: null, conflict: null, accessConflict: null, requestId: null });
+        options.navigate?.(state.url, true);
       }
       owner = session.user.id; sessionId = session.session.id; publish({ ...state, session });
       const workspaces = await options.workspaces.workspaces(request.signal);
       if (!current(request)) return;
       publish({ ...state, workspaces });
       if (!state.selection.workspaceId) select({ workspaceId: workspaces.items[0]?.id ?? null, projectId: null, taskId: null }, false);
+      if (sessionChanged) options.navigate?.(state.url, true);
       await load(request);
     } catch (error) { if (current(request)) readFailure(error); }
   }
