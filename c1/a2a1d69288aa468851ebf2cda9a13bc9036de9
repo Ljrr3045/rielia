@@ -1,0 +1,21 @@
+apps/web/src/app/projects/projects.module.css
+  s_37f6f126e69e73::t_00d3b5f9aa8b54 3822-3830
+apps/web/src/app/projects/task-discovery.tsx
+  s_37f6f126e69e73::t_36fa5dd5f8e674 546
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c1a2a1d69288aa468851ebf2cda9a13bc9036de9",
+  "prompts": {},
+  "sessions": {
+    "s_37f6f126e69e73": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e670003e1ffe0hm07HLe8PdoMm",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
