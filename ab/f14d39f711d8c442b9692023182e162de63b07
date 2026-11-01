@@ -1,0 +1,30 @@
+apps/api/src/projects/project-task.service.ts
+  s_3e608367e90b3f::t_7ae7b93452a49e 69,110-132,170-176,178-185
+docs/development/progress.md
+  s_3e608367e90b3f::t_732453374808c3 47
+CHANGELOG.md
+  s_3e608367e90b3f::t_3543ccc4e82669 14-16
+apps/api/src/projects/task-events.service.ts
+  s_3e608367e90b3f::t_7ae7b93452a49e 41
+docs/development/task-discovery.md
+  s_3e608367e90b3f::t_ef4b32014335de 101-106,112-114,167,173-176,220-238
+apps/api/test/task-discovery.test.mjs
+  s_3e608367e90b3f::t_b26ca4f8657a9f 95-97,106-109
+  s_3e608367e90b3f::t_223a8e162046d5 93-94,98-105,110-114
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "abf14d39f711d8c442b9692023182e162de63b07",
+  "prompts": {},
+  "sessions": {
+    "s_3e608367e90b3f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a198c0-121f-7c52-8ea0-005bc2024a57",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
