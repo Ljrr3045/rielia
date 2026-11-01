@@ -1751,6 +1751,8 @@
   font-size: 0.78rem;
   font-weight: 650;
   opacity: 0.85;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .feedbackActions {
@@ -1861,8 +1863,32 @@
 }
 
 .modalBody {
-  overflow-y: auto;
+  min-width: 0;
   padding: 1rem;
+  overflow-y: auto;
+  overflow-wrap: anywhere;
+}
+
+.modalBody .stateHint,
+.modalBody .feedbackTarget,
+.modalBody .feedbackBody {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 47.9375rem) {
+  .modal .formActions {
+    align-items: stretch;
+  }
+
+  .modal .formActions > .primary,
+  .modal .formActions > .secondary,
+  .modal .formActions > .dangerButton,
+  .modal .formActions > .ghostButton {
+    flex: 1 1 100%;
+    width: 100%;
+    white-space: normal;
+  }
 }
 
 .modalFooter {
