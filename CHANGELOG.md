@@ -24,10 +24,11 @@ This records repository changes. No application version has been released.
   in project view and an inherited assignee is shown only as a clearable value.
   The primary home/sidebar My tasks entry uses the explicit scope URL, and a
   visible choose-project disclosure routes to editable projects' existing quick
-  capture without cross-project creation or auto-assignment. Corrected checkpoint
-  `c329d50` passes web typecheck, targeted ESLint, production web build and the
-  existing 61 logic/client/proxy/state checks; independent SOL validation, full
-  checks and PR/review evidence are pending.
+  capture without cross-project creation or auto-assignment. The discovery result
+  title is a full-width 44 px native link. Corrected checkpoint `c1a2a1d` passes
+  web typecheck, targeted ESLint, production web build and the existing 61
+  logic/client/proxy/state checks; independent SOL validation, full checks and
+  PR/review evidence are pending.
   [UI guide](docs/development/task-discovery-ui.md). No full T10/P11/US05,
   labels/sprints, exports, coediting, real OAuth/staging/users,
   physical-device/AT/WCAG or deployment acceptance is claimed.

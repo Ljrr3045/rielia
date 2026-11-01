@@ -118,6 +118,9 @@ does not parse selectors. The sidebar links explicitly request a scope; bare
 - The result list is grouped by project with a heading per group and a labelled
   list per group. Project name and key are visible with every workspace result,
   not only in a tooltip.
+- Each result title is a full-width native link with a 44 px minimum target in
+  normal flow; metadata remains outside the link and modified clicks keep native
+  new-tab/open behavior. The results section has an explicit heading.
 - ES/EN copy and light/dark semantic tokens are included. The localized subtree
   keeps its existing `lang` behavior; the document shell language is unchanged.
 - Toolkit widths for validation are 320, 375, 390, 768, 1024 and 1440 px, plus
@@ -127,7 +130,8 @@ does not parse selectors. The sidebar links explicitly request a scope; bare
 ## Validation evidence
 
 Committed presentation checkpoint:
-`c329d50e3778c2ed0196767388ecb4857756f3d4`. The source files are
+`c1a2a1d69288aa468851ebf2cda9a13bc9036de9` (correction series `c329d50` plus
+the 44 px result-target/heading correction). The source files are
 `task-discovery.tsx`, `projects-view.tsx`, `task-detail.tsx`, `project-ui.tsx`,
 `strings.ts`, `projects.module.css` and the development home `page.tsx`.
 Earlier checkpoint `792414f0ea3b8d386780ab35a0c73c475c27d0b7` was the validators'
@@ -147,7 +151,9 @@ Root review findings resolved in `c329d50`:
 - the development home task-work link and primary sidebar My tasks entry use the
   explicit My tasks URL, preserving the selected workspace where available;
 - a visible choose-project-to-create disclosure routes through an editable,
-  non-archived visible project to the existing quick capture.
+  non-archived visible project to the existing quick capture;
+- the discovery result title is a genuine full-width 44 px native link without
+  overlapping metadata or a blanket row-click role.
 
 Local checks on the checkpoint:
 
