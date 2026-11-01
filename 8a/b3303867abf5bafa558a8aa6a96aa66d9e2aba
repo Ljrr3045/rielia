@@ -1,0 +1,19 @@
+apps/web/src/app/projects/projects.module.css
+  s_37f6f126e69e73::t_d56eaaa56151bd 580-582
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8ab3303867abf5bafa558a8aa6a96aa66d9e2aba",
+  "prompts": {},
+  "sessions": {
+    "s_37f6f126e69e73": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_e670003e1ffe0hm07HLe8PdoMm",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
