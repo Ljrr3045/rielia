@@ -1,0 +1,95 @@
+name: One-time OpenCode Go bootstrap
+
+# Ephemeral maintainer-reviewed activation branch; never merge this workflow.
+on:
+  push:
+    branches: [test/opencode-review-bootstrap]
+
+permissions:
+  contents: read
+  pull-requests: read
+  issues: read
+
+jobs:
+  review:
+    if: >-
+      github.event_name == 'push' &&
+      !github.event.deleted &&
+      github.repository == 'Ljrr3045/rielia' &&
+      github.ref == 'refs/heads/test/opencode-review-bootstrap' &&
+      github.actor == 'Ljrr3045' &&
+      github.triggering_actor == 'Ljrr3045'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      pull-requests: read
+      issues: read
+      id-token: write
+    concurrency:
+      group: opencode-bootstrap-25
+      cancel-in-progress: false
+    env:
+      REVIEW_PR: '25'
+    steps:
+      # Audited release support code only, never the live PR/product checkout.
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: 14cc8ab9904bd6cd67821263e1caec44d8490b48
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/scripts/
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 24.22.1
+      - name: Prepare live PR 25 and require the frozen audited snapshot
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          # Use the real push event directly; plan(push) targets the wrong base.
+          # prepare verifies the PR is open and unchanged during context capture.
+          node .github/scripts/opencode-review.mjs prepare "$REVIEW_PR"
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import { readFile } from 'node:fs/promises';
+          import { join } from 'node:path';
+          const input = JSON.parse(await readFile(join(process.env.RUNNER_TEMP, 'opencode-review', '25', 'input.json'), 'utf8'));
+          assert.deepEqual(input.expected, {
+            number: 25,
+            head: '14cc8ab9904bd6cd67821263e1caec44d8490b48',
+            headRepo: 'Ljrr3045/rielia',
+            base: '64ad0d7f0e69537ebb1c2abc136ba86b4212bddb',
+            baseRef: 'dev',
+            baseRepo: 'Ljrr3045/rielia',
+            draft: false,
+          });
+          assert.equal(input.mode, 'review');
+          assert.equal(input.command, null);
+          NODE
+      - name: Install immutable official OpenCode CLI (no project dependencies)
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/opencode-cli"
+          curl --fail --silent --show-error --location --max-time 120 \
+            https://github.com/anomalyco/opencode/releases/download/v1.19.5/opencode-linux-x64-baseline.tar.gz \
+            --output "$RUNNER_TEMP/opencode-cli/release.tar.gz"
+          echo "17c200fd4b2289954cc01552559f9b6d03ec157b2ddfb5eb54144f491656333d  $RUNNER_TEMP/opencode-cli/release.tar.gz" | sha256sum --check
+          tar -xzf "$RUNNER_TEMP/opencode-cli/release.tar.gz" -C "$RUNNER_TEMP/opencode-cli"
+          test "$("$RUNNER_TEMP/opencode-cli/opencode" --version)" = '1.19.5'
+      - name: Generate tool-denied review with no GitHub/OIDC child credentials
+        env:
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          OPENCODE_MODEL: ${{ vars.OPENCODE_MODEL || 'opencode-go/deepseek-v4.1-flash' }}
+          OPENCODE_VARIANT: ${{ vars.OPENCODE_VARIANT || 'max' }}
+          OPENCODE_BIN: ${{ runner.temp }}/opencode-cli/opencode
+        run: node .github/scripts/opencode-review.mjs generate "$REVIEW_PR"
+      - name: Publish validated current-head review using installed App OIDC
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node .github/scripts/opencode-review.mjs publish "$REVIEW_PR"
+      - name: Remove task-local review data
+        if: always()
+        shell: bash
+        run: rm -rf -- "$RUNNER_TEMP/opencode-review/$REVIEW_PR"
