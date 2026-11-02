@@ -6,6 +6,14 @@ This records repository changes. No application version has been released.
 
 ### Added
 
+- Coordinator-authorized 20-minute review-model / 30-minute job deadlines after
+  [bootstrap 41372213130](https://github.com/Ljrr3045/rielia/actions/runs/41372213130)
+  reached the prior ten-minute deadline with publication skipped. Timeout-only
+  diagnostics expose capped byte/event counts and fixed completion/JSON-parse
+  booleans; streams, reasons, IDs and exception text remain private. All 29 focused
+  checks include complete-looking output that still times out and cannot approve.
+  The 128,000 output cap, `max`, provider and strict gates remain; this establishes
+  no provider cause. Fresh audit/CI and root approval precede another live run.
 - Safe static review-generation failure categories after bootstrap
   [41368385352](https://github.com/Ljrr3045/rielia/actions/runs/41368385352)
   failed with publication skipped and no recoverable precise cause. Diagnostics

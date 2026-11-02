@@ -163,7 +163,7 @@ Only the coordinator merges, through normal repository requirements.
 | Missing/truncated patch, binary, symlink, unavailable context | Explicit incomplete COMMENT; never APPROVE |
 | Ten 100-row pages per API list | Fail closed, no assumed complete review |
 | 100 open PRs per base-push fanout; three parallel jobs | Fail if fanout is larger; each PR can be requested explicitly |
-| 20 findings; 1 MB CLI output; fixed 128,000-token generation cap; 10-minute model / 20-minute job | Fail closed on excess/timeout; token cap also clamps to the known model limit |
+| 20 findings; 1 MB CLI output; fixed 128,000-token generation cap; 20-minute model / 30-minute job | Fail closed on excess/timeout; token cap also clamps to the known model limit |
 | Relay ZIP 8 KB metadata / 32 KB download / 4 KB JSON | Reject before using identifiers |
 
 No tests or install hooks from a PR are executed by review. Applicable product CI
@@ -196,7 +196,8 @@ effort/provider. It replaces that broad code with finite
 `JSONL_FINISH_MISSING`, `MULTIPLE`, `LENGTH`, `TOOL`, `CONTENT_FILTER`, `ERROR`,
 `UNKNOWN` and `OTHER` suffixes under the same `JSONL_FINISH_` prefix.
 
-Only rejected completion failures carry a fixed sanitized metadata object:
+Rejected completion failures and model timeouts carry a fixed sanitized
+completion metadata object:
 finish/text counts capped at3 (3means3+), exact known-reason booleans, duplicate-
 finish-ID and complete-ID-presence booleans (IDs compared privately), and reported
 output/reasoning counts capped at1,000,000 or null. Usage is null for multiple
@@ -208,16 +209,35 @@ The coordinator subsequently authorized a controlled, fixed **128,000-token
 output cap** in only the isolated child environment through
 `OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX`. The parent environment, repository
 settings and user-confirmed `max` effort are unchanged. The pinned provider
-transform still clamps this to the known model output limit. Ten-minute model,
-20-minute job, 1 MB output and every completion/schema/coverage guard remain.
+transform still clamps this to the known model output limit. The experiment
+initially retained the ten-minute model and 20-minute job deadlines, 1 MB output
+and every completion/schema/coverage guard.
 Actual pinned-CLI loopback smoke asserts `max_tokens: 128000`, `max` reasoning
 and zero tools on the review request, using only generated fake credentials.
 This bounded experiment does not establish that either earlier failure was
 caused by length, and it requires fresh independent review/CI before live use.
 
+The third root-authorized
+[run 41372213130](https://github.com/Ljrr3045/rielia/actions/runs/41372213130)
+used independently audited `110d2d2` and reached `CLI_TIMEOUT` at the ten-minute
+model deadline. App publication was skipped and cleanup passed. That log cannot
+distinguish ongoing generation from completed output whose process did not exit;
+it establishes neither a provider cause nor successful review. The coordinator
+then authorized a **20-minute model / 30-minute job** bound with the same output
+cap, `max`, provider and strict gates. This needs fresh independent review/CI
+before any further root-authorized live attempt.
+
+Timeout-only progress metadata adds stdout/stderr byte counts capped at 1,000,000,
+parsed-event count capped at 1,000, and fixed `malformedJsonl`,
+`normalStopWithText` and `reviewJsonParsed` booleans. The latter two indicate
+exactly one stop and one string text without observed error/tool events, and
+whether that text parses as JSON. They do not establish schema, binding,
+coverage or review success. No raw stream, reason, ID or exception is copied;
+every timeout kills the child and fails even if all output appears complete.
+
 The diagnostic follow-up preserves strict parsing/coverage and adds only
 allowlisted static failure codes. Main logs a fixed sentence containing a code
-and, for rejected completion only, the bounded primitive metadata above;
+and, for rejected completion or timeout only, the bounded primitive metadata above;
 it never prints raw stdout/stderr, model text, provider responses, exception
 message/stack or credential values. Unknown exceptions and unrecognized shapes
 remain generic. Temporary generation state is still removed.
@@ -244,7 +264,7 @@ causes CLI exit 1. No message/body is inspected to guess a cause, and an auth
 category does not prove a particular key is wrong. A nonzero CLI exit never
 becomes successful review even if stdout contains plausible review JSON.
 
-The original 22 checks plus six focused diagnostic/redaction checks pass on
+The original 22 checks plus seven focused diagnostic/redaction checks pass on
 Node 24.22.1. A real adapter-process test uses an inert fake executable with
 secret-shaped strings, provider URLs and workflow commands in both streams;
 only the expected static code appears and no result artifact is written.
@@ -260,8 +280,8 @@ request preparation defaults to a32,000-token output cap; the separately
 authorized 128,000-token experiment above changes that cap while retaining
 `max`. New-head review and actual live reason/count evidence remain required.
 
-Local evidence: 22 event/auth/fork/main-exclusion/relay/coverage/verdict/current-
-head/base-race/token-isolation tests pass; all workflows pass checksum-pinned
+Local evidence: 29 event/auth/fork/main-exclusion/relay/coverage/verdict/current-
+head/base-race/token-isolation/diagnostic tests pass; all workflows pass checksum-pinned
 actionlint 1.7.12; immutable handoff and whitespace checks pass. The real CLI
 1.19.5 macOS archive was verified with SHA-256
 `c1c9e62521192192ef4c3ed1355ada2144055bddb61682217e997b03c55203c1`.
@@ -298,11 +318,14 @@ Activation/bootstrap steps, owned by the coordinator:
 
 1. Confirm the App is installed for this repository and `OPENCODE_API_KEY` exists
    by name only. Optional model/variant variables can remain unset for defaults.
-2. Independently review this infrastructure PR and pass no-secret CI. Because
-   trusted support code must first exist on `dev`/default, the new assistant
-   cannot review its own bootstrap PR. Satisfy normal repository-required
-   approval/code-owner rules and record the transition evidence; no direct merge,
-   bypass, pretend review or Kody trigger is authorized by this guide.
+2. Independently review this infrastructure PR and pass no-secret CI. Normal
+   workflows load trusted support from `dev`/default. The user/coordinator has
+   explicitly authorized a one-time bootstrap exception: a temporary branch
+   with independently audited immutable support and a fixed PR/head target for
+   a manual run. Only the coordinator accepts the pins and authorizes each
+   attempt; no PR code executes. Satisfy normal repository-required approval/
+   code-owner rules and record actual results; no direct merge, admin bypass,
+   protection weakening, pretend review or Kody trigger is authorized.
 3. After a legitimate coordinator merge, use an authorized disposable PR targeting
    `dev` to verify automatic review and `/oc review`, root question/follow-up,
    inline request/follow-up and formal GitHub verdict/inline findings with the

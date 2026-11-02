@@ -55,7 +55,7 @@ jobs:
       matrix:
         pr: ${{ fromJSON(needs.plan.outputs.prs) }}
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     permissions:
       contents: read
       pull-requests: read

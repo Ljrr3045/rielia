@@ -283,6 +283,43 @@ test('CLI diagnostics cover spawn, exit, input, timeout and combined stream boun
   assert.equal(await result, 'okay');
 });
 
+test('timeout progress distinguishes incomplete generation and output hang but always rejects', async () => {
+  const sensitive = 'fake-secret-progress\n::error::must-not-log';
+  for (const [output, normal, parsed, malformed] of [
+    [JSON.stringify({ type: 'step_start', part: { id: sensitive } }) + '\n', false, false, false],
+    [stream({ ...generated().result, summary: sensitive }), true, true, false],
+    [[{ type: 'step_finish', part: { reason: 'stop', id: sensitive } }, { type: 'text', part: { text: sensitive } }].map(JSON.stringify).join('\n'), true, false, false],
+    [stream(generated().result) + '\n' + sensitive, false, false, true],
+    [stream(generated().result) + '\n' + JSON.stringify({ type: 'error', error: { message: sensitive } }), false, false, false],
+    [stream(generated().result) + '\n' + JSON.stringify({ type: 'tool_use', part: { input: sensitive } }), false, false, false],
+    [stream(generated().result) + '\n' + JSON.stringify({ type: 'step_finish', part: { reason: 'stop', id: sensitive } }), false, false, false],
+  ]) {
+    const child = inertChild();
+    const result = collectCliOutput(child, 'prompt', { modelMs: 1, outputBytes: 10_000 });
+    child.stdout.write(output);
+    child.stderr.write(sensitive);
+    await assert.rejects(result, (error) => {
+      assert(hasCode('CLI_TIMEOUT')(error));
+      assert.equal(error.progress.stdoutBytes, Buffer.byteLength(output));
+      assert.equal(error.progress.stderrBytes, Buffer.byteLength(sensitive));
+      assert.equal(error.progress.normalStopWithText, normal);
+      assert.equal(error.progress.reviewJsonParsed, parsed);
+      assert.equal(error.progress.malformedJsonl, malformed);
+      assert(Object.isFrozen(error.progress));
+      assert(!formatFailure(error).includes('fake-') && !formatFailure(error).includes('::error::'));
+      return true;
+    });
+    assert.equal(child.killed, true);
+  }
+  const error = new ReviewFailure('CLI_TIMEOUT', {}, { stdoutBytes: 2_000_000, stderrBytes: 'fake-key', parsedEvents: 9000, normalStopWithText: 'fake-key', arbitrary: sensitive });
+  assert.equal(error.progress.stdoutBytes, LIMITS.outputBytes);
+  assert.equal(error.progress.stderrBytes, null);
+  assert.equal(error.progress.parsedEvents, 1000);
+  assert.equal(error.progress.normalStopWithText, false);
+  assert.equal(error.progress.arbitrary, undefined);
+  assert(!formatFailure(error).includes('fake-'));
+});
+
 test('failure formatter only accepts branded static codes and never exception text', () => {
   const sensitive = 'fake-secret-key\n::set-output name=token::fake-token https://provider.test/?key=fake-key';
   const spoof = Object.assign(new Error(sensitive), { code: 'CLI_EXIT' });
@@ -450,6 +487,8 @@ test('workflow topology keeps fork inline secrets in trusted workflow_run and pi
   assert(!workflow.includes('contents: write'));
   assert(!workflow.includes('pull-requests: write'));
   assert(workflow.includes('sha256sum --check'));
+  assert.equal(LIMITS.modelMs, 20 * 60 * 1000);
+  assert.match(workflow, /review:\n[\s\S]*?timeout-minutes: 30/);
   assert(!workflow.includes('@latest'));
   assert(relay.includes('permissions: {}'));
   assert(!/\$\{\{\s*secrets\./.test(relay) && !relay.includes('checkout@'));

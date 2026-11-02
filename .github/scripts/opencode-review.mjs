@@ -8,7 +8,7 @@ import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { TextDecoder } from 'node:util';
 
-export const LIMITS = Object.freeze({ files: 80, treeEntries: 5000, fileBytes: 160_000, contextBytes: 1_000_000, patchBytes: 300_000, pages: 10, findings: 20, modelMs: 600_000, outputBytes: 1_000_000 });
+export const LIMITS = Object.freeze({ files: 80, treeEntries: 5000, fileBytes: 160_000, contextBytes: 1_000_000, patchBytes: 300_000, pages: 10, findings: 20, modelMs: 1_200_000, outputBytes: 1_000_000 });
 const SHA = /^[a-f0-9]{40}$/;
 const REPO = /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/;
 const actions = new Set(['opened', 'synchronize', 'reopened', 'ready_for_review', 'edited']);
@@ -31,12 +31,12 @@ const failureCodes = new Set([
 ]);
 
 export class ReviewFailure extends Error {
-  constructor(code, completion) {
+  constructor(code, completion, progress) {
     const safeCode = failureCodes.has(code) ? code : 'REVIEW_UNKNOWN';
     super(`OpenCode review failure: ${safeCode}`);
     this.code = safeCode;
-    if (completionCodes.has(safeCode) && completion) {
-      const count = (value, cap) => Number.isSafeInteger(value) && value >= 0 ? Math.min(value, cap) : null;
+    const count = (value, cap) => Number.isSafeInteger(value) && value >= 0 ? Math.min(value, cap) : null;
+    if ((completionCodes.has(safeCode) || safeCode === 'CLI_TIMEOUT') && completion) {
       // Explicit keys and primitive sanitizers only; no reason, ID or text copy.
       this.completion = Object.freeze({
         finishCount: count(completion.finishCount, 3), textCount: count(completion.textCount, 3),
@@ -48,25 +48,30 @@ export class ReviewFailure extends Error {
         outputTokens: count(completion.outputTokens, 1_000_000), reasoningTokens: count(completion.reasoningTokens, 1_000_000),
       });
     }
+    if (safeCode === 'CLI_TIMEOUT' && progress) {
+      this.progress = Object.freeze({
+        stdoutBytes: count(progress.stdoutBytes, LIMITS.outputBytes), stderrBytes: count(progress.stderrBytes, LIMITS.outputBytes),
+        parsedEvents: count(progress.parsedEvents, 1000), malformedJsonl: progress.malformedJsonl === true,
+        normalStopWithText: progress.normalStopWithText === true, reviewJsonParsed: progress.reviewJsonParsed === true,
+      });
+    }
     Object.freeze(this);
   }
 }
 
 export function formatFailure(error) {
   const code = error instanceof ReviewFailure && failureCodes.has(error.code) ? error.code : error instanceof Obsolete ? 'REVIEW_OBSOLETE' : 'REVIEW_UNKNOWN';
-  const completion = error instanceof ReviewFailure && completionCodes.has(code) && error.completion ? ` completion=${JSON.stringify(error.completion)}` : '';
-  return `OpenCode review failed [${code}].${completion} No successful current-head review is established; inspect the run and PR before retrying.`;
+  const completion = error instanceof ReviewFailure && (completionCodes.has(code) || code === 'CLI_TIMEOUT') && error.completion ? ` completion=${JSON.stringify(error.completion)}` : '';
+  const progress = error instanceof ReviewFailure && code === 'CLI_TIMEOUT' && error.progress ? ` progress=${JSON.stringify(error.progress)}` : '';
+  return `OpenCode review failed [${code}].${completion}${progress} No successful current-head review is established; inspect the run and PR before retrying.`;
 }
 
-function completionFailure(events, finishes) {
+function completionDetails(events, finishes) {
   const reasons = finishes.map((event) => event.part?.reason);
   const known = ['stop', 'length', 'tool-calls', 'content-filter', 'error', 'unknown'];
-  const mapped = new Map([['length', 'LENGTH'], ['tool-calls', 'TOOL'], ['content-filter', 'CONTENT_FILTER'], ['error', 'ERROR'], ['unknown', 'UNKNOWN']]);
-  const reason = reasons[0];
-  const code = finishes.length > 1 ? 'MULTIPLE' : !finishes.length || reason == null ? 'MISSING' : mapped.get(reason) ?? 'OTHER';
   const tokens = finishes.length === 1 ? finishes[0].part?.tokens : null;
   const ids = finishes.map((event) => event.part?.id).filter((id) => typeof id === 'string' && id.length > 0);
-  return new ReviewFailure(`JSONL_FINISH_${code}`, {
+  return {
     finishCount: finishes.length, textCount: events.filter((event) => event.type === 'text').length,
     stop: reasons.includes('stop'), length: reasons.includes('length'),
     tool: reasons.includes('tool-calls'), contentFilter: reasons.includes('content-filter'),
@@ -76,7 +81,33 @@ function completionFailure(events, finishes) {
     duplicateFinishId: new Set(ids).size < ids.length, finishIdsComplete: finishes.length > 0 && ids.length === finishes.length,
     // Multiple finishes are ambiguous; never sum possibly duplicate usage.
     outputTokens: tokens?.output, reasoningTokens: tokens?.reasoning,
-  });
+  };
+}
+
+function completionFailure(events, finishes) {
+  const mapped = new Map([['length', 'LENGTH'], ['tool-calls', 'TOOL'], ['content-filter', 'CONTENT_FILTER'], ['error', 'ERROR'], ['unknown', 'UNKNOWN']]);
+  const reason = finishes[0]?.part?.reason;
+  const code = finishes.length > 1 ? 'MULTIPLE' : !finishes.length || reason == null ? 'MISSING' : mapped.get(reason) ?? 'OTHER';
+  return new ReviewFailure(`JSONL_FINISH_${code}`, completionDetails(events, finishes));
+}
+
+function timeoutFailure(stdout, stdoutBytes, stderrBytes) {
+  // Inspect only bounded in-memory protocol structure; never emit its strings.
+  const events = [];
+  let malformedJsonl = false;
+  for (const line of stdout.split('\n').filter(Boolean)) {
+    try {
+      const event = JSON.parse(line);
+      if (!event || typeof event !== 'object' || Array.isArray(event) || typeof event.type !== 'string') malformedJsonl = true;
+      else events.push(event);
+    } catch { malformedJsonl = true; }
+  }
+  const finishes = events.filter((event) => event.type === 'step_finish');
+  const texts = events.filter((event) => event.type === 'text');
+  const normalStopWithText = !malformedJsonl && finishes.length === 1 && finishes[0].part?.reason === 'stop' && texts.length === 1 && typeof texts[0].part?.text === 'string' && !events.some((event) => event.type === 'error' || event.type === 'tool_use');
+  let reviewJsonParsed = false;
+  if (normalStopWithText) { try { JSON.parse(texts[0].part.text); reviewJsonParsed = true; } catch { /* No text or exception copy. */ } }
+  return new ReviewFailure('CLI_TIMEOUT', completionDetails(events, finishes), { stdoutBytes, stderrBytes, parsedEvents: events.length, malformedJsonl, normalStopWithText, reviewJsonParsed });
 }
 
 export class GitHub {
@@ -380,23 +411,28 @@ export function collectCliOutput(child, prompt, limits = LIMITS) {
   return new Promise((fulfill, reject) => {
     let stdout = '';
     let total = 0;
+    let stdoutBytes = 0;
+    let stderrBytes = 0;
     let settled = false;
     const fail = (code) => {
       if (settled) return;
       settled = true;
       clearTimeout(timer);
       try { child.kill('SIGKILL'); } catch { /* Failure remains static. */ }
-      reject(new ReviewFailure(code));
+      reject(code === 'CLI_TIMEOUT' ? timeoutFailure(stdout, stdoutBytes, stderrBytes) : new ReviewFailure(code));
     };
     const timer = setTimeout(() => fail('CLI_TIMEOUT'), limits.modelMs);
     child.stdout.setEncoding('utf8');
     child.stdout.on('data', (chunk) => {
-      total += Buffer.byteLength(chunk);
+      const bytes = Buffer.byteLength(chunk);
+      stdoutBytes += bytes;
+      total += bytes;
       if (total > limits.outputBytes) fail('CLI_OUTPUT_LIMIT');
       else stdout += chunk;
     });
     // Count stderr toward the same bound without retaining or printing it.
     child.stderr.on('data', (chunk) => {
+      stderrBytes += chunk.length;
       total += chunk.length;
       if (total > limits.outputBytes) fail('CLI_OUTPUT_LIMIT');
     });
