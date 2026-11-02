@@ -230,8 +230,12 @@ except `main`, including forks, after opening/updating/reopening/ready or base
 changes. Draft reviews use COMMENT and do not establish approval.
 
 After local checks pass, send the coordinator the PR URL and exact head/base
-SHAs. The **coordinator alone** requests `/oc review` or `/opencode review` when
-another full round is needed; workers must not duplicate requests or invoke Kody.
+SHAs. In supervised worker delivery, the **coordinator alone** requests
+`/oc review` or `/opencode review` when another full round is needed; workers
+must never trigger review or invoke Kody. Ordinary authorized human maintainers
+may use manual commands. Runtime checks the account's current `write`, `maintain`
+or `admin` permission and cannot distinguish a person from automation using the
+same human credentials; the worker rule is not a runtime login allowlist.
 Record the actual run/formal-review/comment URLs and head/base markers. A natural-
 language `/oc <question>` receives a root or inline-thread reply and cannot
 approve the PR. Manual requests require current human maintainer permission.
@@ -257,11 +261,15 @@ Historical Kody and retired-workflow evidence stays historical. The
 [review guide](docs/development/opencode-review.md) documents coverage bounds,
 the non-atomic GitHub publication race, fork inline relay and operational limits.
 
-The replacement workflow must first exist on trusted `dev`/default. Its bootstrap
-PR requires independent source/security review, no-secret CI, normal repository
-required approval/code-owner rules and coordinator merge; the new assistant cannot review
-its own bootstrap. Live App/OIDC/Go and root/inline/fork event acceptance remains
-OPEN until actual smoke evidence is recorded. No protection bypass is authorized.
+Normal event activation requires the replacement workflow on trusted `dev`/default.
+The [review guide](docs/development/opencode-review.md) records the separately
+authorized temporary fixed-SHA bootstrap used for pre-activation evidence.
+Automated review of that bootstrap never substitutes for independent source/
+security audit, exact-head CI, normal required approval/code-owner rules or
+coordinator merge. It grants no self-certification or protection bypass.
+Full activation and root/inline/fork event acceptance remain OPEN until their
+actual evidence is recorded; successful App/OIDC/Go runs establish only the
+specific recorded head/run behavior.
 
 Only the coordinator merges. Do not deploy or merge from a worker task. A dispatched
 worker reports branch/worktree, PR/head SHA, validation/review evidence, and blockers

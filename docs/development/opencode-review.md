@@ -90,6 +90,14 @@ external authors can receive automatic reviews but cannot spend credentials on
 arbitrary commands. Requests to edit, push, merge, deploy, or administer stay
 outside the assistant's capabilities.
 
+Coordinator-only manual triggering governs supervised worker delivery: workers
+report readiness and never invoke review. Ordinary authorized human maintainers
+may use these commands. Runtime account-type/permission checks cannot distinguish
+a person from automation using the same human credentials; there is no
+coordinator login allowlist. The main plan job skips ordinary non-PR issue
+comments before checkout. This guard leaves inline relay events and implicit
+App-thread follow-ups unchanged.
+
 The [main workflow](../../.github/workflows/opencode-review.yml) handles trusted
 PR-target events, root comments, base pushes and manual dispatch. It always
 checks out support code from the trusted default branch, with credentials not
@@ -100,6 +108,9 @@ Base/head Git tree metadata supplies actual file modes; raw Git blobs avoid the
 Contents API's automatic symlink dereference. Mode-only executable changes stay
 visible even with zero textual additions/deletions. Symlinks, gitlinks and
 unavailable/truncated tree metadata cannot establish approval.
+Fatal UTF-8 decoding preserves an initial BOM as file data, including BOM-only
+files. Byte limits, invalid UTF-8 and NUL/binary rejection remain enforced before
+lossless projection and canonical patch reconstruction.
 
 The [workflow token is repository-scoped](https://docs.github.com/en/actions/concepts/security/github_token).
 Same-repository reads retain it; foreign head repositories use an anonymous,
@@ -462,6 +473,20 @@ client failure regressions (50 focused checks total), and separate historical
 checkpoints from the live PR gate. This review does not approve changed code;
 new source still requires its own audit/CI/current-head review.
 
+Historical 2026-11-02 checkpoint: exact `410e069` passed support
+[CI41408268722](https://github.com/Ljrr3045/rielia/actions/runs/41408268722), product
+[CI41408268838](https://github.com/Ljrr3045/rielia/actions/runs/41408268838) and
+independent audit. [Run41409281560](https://github.com/Ljrr3045/rielia/actions/runs/41409281560)
+completed generation (18m34), App publication and cleanup; App
+[CHANGES_REQUESTED5733637006](https://github.com/Ljrr3045/rielia/pull/25#pullrequestreview-5733637006)
+at 08:13:17Z raised BOM decoding loss, ambiguous coordinator/manual authorization
+wording and ordinary issue plan-job starts. The next bounded corrections retain
+runtime permission checks and every review/freshness gate. Actual post-review
+discussion measured 498,466/512,000 raw JSON bytes with 13,534 bytes remaining,
+18/18 files and no input limitations; no capacity workaround was used. This is
+historical measurement and review evidence, not approval of changed source or
+completed event acceptance.
+
 The diagnostic follow-up preserves strict parsing/coverage and adds only
 allowlisted static failure codes. Main logs a fixed sentence containing a code
 and, for rejected completion or timeout only, the bounded primitive metadata above;
@@ -498,7 +523,7 @@ causes CLI exit 1. No message/body is inspected to guess a cause, and an auth
 category does not prove a particular key is wrong. A nonzero CLI exit never
 becomes successful review even if stdout contains plausible review JSON.
 
-All 50 focused event/auth/review/diagnostic/trust/representation checks pass on
+All 53 focused event/auth/review/diagnostic/trust/representation checks pass on
 Node 24.22.1. A real adapter-process test uses an inert fake executable with
 secret-shaped strings, provider URLs and workflow commands in both streams;
 only the expected static code appears and no result artifact is written.
@@ -514,7 +539,7 @@ request preparation defaults to a32,000-token output cap; the authorized fixed
 384,000 cap supersedes the earlier 128,000 experiment while retaining `max`.
 New-head review and actual Go acceptance/completion evidence remain required.
 
-Local evidence: 50 event/auth/fork/main-exclusion/relay/coverage/verdict/current-
+Local evidence: 53 event/auth/fork/main-exclusion/relay/coverage/verdict/current-
 head/base-race/token-isolation/diagnostic tests pass; all workflows pass checksum-pinned
 actionlint 1.7.12; immutable handoff and whitespace checks pass. The real CLI
 1.19.5 macOS archive was verified with SHA-256

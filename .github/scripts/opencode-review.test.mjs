@@ -9,6 +9,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { PassThrough } from 'node:stream';
 import test from 'node:test';
+import { runInNewContext } from 'node:vm';
 import { GitHub, LIMITS, Obsolete, ReviewFailure, assertFresh, authorize, buildPrompt, changedLines, collectCliOutput, commandContext, exchangeToken, expandModelInput, findingLineRanges, formatFailure, modelConfig, modelEnvironment, parseEvents, plan, prepare, projectModelInput, publish, publishWithRevocation, snapshot, validateRelay, validateResult } from './opencode-review.mjs';
 
 const repo = 'Ljrr3045/rielia';
@@ -377,6 +378,44 @@ const fixturePatch = (text, side = 'head', heading = '', finalLF = false) => {
   return (side === 'head' ? `@@ -0,0 +1,${rows.length} @@${heading}` : `@@ -1,${rows.length} +0,0 @@${heading}`) + '\n' + rows.map((row) => (side === 'head' ? '+' : '-') + row).join('\n') + (text.endsWith('\n') ? '' : '\n\\ No newline at end of file') + (finalLF ? '\n' : '');
 };
 const fileInput = (files, extra = {}) => input({ files, allPaths: files.map((file) => file.path), ...extra });
+
+test('real blob decode and prepare preserve UTF8 BOM bytes through lossless context and patch encoding', async () => {
+  const bom = '\ufeff';
+  const large = bom + longShared;
+  const cases = [
+    { status: 'modified', head: bom, base: '', patch: fixturePatch(bom) },
+    { status: 'modified', head: bom + 'new\n', base: bom + 'old\n', patch: '@@ -1 +1 @@\n-\ufeffold\n+\ufeffnew' },
+    { status: 'added', head: large, patch: fixturePatch(large), encoded: true },
+    { status: 'removed', base: large, patch: fixturePatch(large, 'base'), encoded: true },
+    { status: 'added', head: bom + 'x'.repeat(LIMITS.fileBytes - 3), patch: fixturePatch(bom + 'x'.repeat(LIMITS.fileBytes - 3)), encoded: true },
+  ];
+  for (const value of cases) {
+    const blob = (text) => ({ encoding: 'base64', size: Buffer.byteLength(text), content: Buffer.from(text).toString('base64') });
+    const changes = changedLines(value.patch);
+    const api = fakeApi({ '/pulls/7': pr(), '/pulls/7/files': [{ filename: 'a.js', status: value.status, patch: value.patch, additions: changes.RIGHT.size, deletions: changes.LEFT.size }], ...(value.head === undefined ? {} : { [`/contents/a.js?ref=${head}`]: blob(value.head) }), ...(value.base === undefined ? {} : { [`/contents/a.js?ref=${base}`]: blob(value.base) }), [`/contents/AGENTS.md?ref=${base}`]: blob(bom + 'Policy'), '/issues/7/comments': [], '/pulls/7/reviews': [], '/pulls/7/comments': [] });
+    const prepared = await prepare(api, 'pull_request_target', {}, 7);
+    assert.deepEqual(prepared.limitations, []);
+    assert.equal(prepared.guidance, bom + 'Policy');
+    for (const side of ['head', 'base']) {
+      assert.equal(prepared.files[0][side], value[side]);
+      if (value[side] !== undefined) assert.deepEqual(Buffer.from(prepared.files[0][side]), Buffer.from(value[side]));
+    }
+    const projected = projectModelInput(prepared);
+    if (value.encoded) assert.equal(projected.files[0].patch.encoding, 'whole-file-patch-v1');
+    assert.deepEqual(expandModelInput(projected), prepared);
+    assert.equal(validateResult(prepared, generated()).complete, true);
+  }
+});
+
+test('BOM-prefixed invalid UTF8, binary and over-limit blobs remain incomplete', async () => {
+  for (const bytes of [Buffer.from([0xef, 0xbb, 0xbf, 0xff]), Buffer.from([0xef, 0xbb, 0xbf, 0]), Buffer.concat([Buffer.from('\ufeff'), Buffer.alloc(LIMITS.fileBytes - 2, 'x')])]) {
+    const api = fakeApi({ '/pulls/7': pr(), '/pulls/7/files': [{ filename: 'a.js', status: 'added', additions: 1, deletions: 0, patch: '@@ -0,0 +1 @@\n+not accepted' }], [`/contents/a.js?ref=${head}`]: { encoding: 'base64', size: bytes.length, content: bytes.toString('base64') }, [`/contents/AGENTS.md?ref=${base}`]: { encoding: 'base64', size: 6, content: Buffer.from('Policy').toString('base64') }, '/issues/7/comments': [], '/pulls/7/reviews': [], '/pulls/7/comments': [] });
+    const prepared = await prepare(api, 'pull_request_target', {}, 7);
+    assert(prepared.limitations.some((limit) => limit.includes('Unavailable, binary, symlink, or oversized context')));
+    assert.equal(validateResult(prepared, generated()).verdict, 'COMMENT');
+    assert.equal(validateResult(prepared, generated()).complete, false);
+  }
+});
 
 test('lossless model projection preserves full parent, modes, paths, limitations and every file', () => {
   const files = [
@@ -1028,6 +1067,26 @@ test('fork inline relay validates run, source head/workflow, actor, PR, age and 
     { c: { ...f.c, created_at: '2026-10-01T12:00:00Z' } }, { c: { ...f.c, user: bot } },
   ];
   for (const change of cases) { const changed = { ...f, ...change }; assert.throws(() => validateRelay(repo, f.run, changed.run, changed.workflow, changed.artifact, changed.request, changed.c), /relay/); }
+});
+
+test('plan job skips ordinary issues and failed/bot relays while preserving PR and implicit inline events', async () => {
+  const workflow = await readFile(new URL('../workflows/opencode-review.yml', import.meta.url), 'utf8');
+  const expression = workflow.match(/ {2}plan:\n {4}if: >-\n((?: {6}.+\n)+)/)?.[1].trim();
+  assert(expression);
+  const cases = [
+    ['issue_comment', { issue: {} }, false],
+    ['issue_comment', { issue: { pull_request: null } }, false],
+    ['issue_comment', { issue: { pull_request: { url: 'https://api.github.com/repos/o/r/pulls/7' } } }, true],
+    ['pull_request_target', {}, true], ['push', {}, true], ['workflow_dispatch', {}, true],
+    ['workflow_run', { workflow_run: { conclusion: 'success', actor: { type: 'User' } } }, true],
+    ['workflow_run', { workflow_run: { conclusion: 'failure', actor: { type: 'User' } } }, false],
+    ['workflow_run', { workflow_run: { conclusion: 'cancelled', actor: { type: 'User' } } }, false],
+    ['workflow_run', { workflow_run: { conclusion: 'success', actor: { type: 'Bot' } } }, false],
+  ];
+  for (const [event_name, event, expected] of cases) {
+    const value = runInNewContext(expression, { github: { event_name, event } }, { timeout: 1000, contextCodeGeneration: { strings: false, wasm: false } });
+    assert.equal(Boolean(value), expected, event_name + ' ' + JSON.stringify(event));
+  }
 });
 
 test('workflow topology keeps fork inline secrets in trusted workflow_run and pins downloads', async () => {

@@ -26,7 +26,9 @@ permissions:
 
 jobs:
   plan:
-    if: github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.actor.type == 'User')
+    if: >-
+      (github.event_name != 'issue_comment' || github.event.issue.pull_request) &&
+      (github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.actor.type == 'User'))
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:

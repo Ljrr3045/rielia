@@ -281,7 +281,7 @@ function decodeText(blob) {
   if (blob.encoding !== 'base64' || blob.size > LIMITS.fileBytes) throw new Error('File exceeds review bound');
   const bytes = Buffer.from(blob.content, 'base64');
   if (bytes.length !== blob.size || bytes.includes(0)) throw new Error('Binary or incomplete file');
-  return new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+  return new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes);
 }
 
 async function gitTree(api, ref) {

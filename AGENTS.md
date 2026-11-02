@@ -163,10 +163,15 @@ Keep these boundaries in both current and future code.
    limitations, and remaining decisions. Use a body file for multiline CLI text.
 6. Every ready PR/head/base requires complete current OpenCode Go review under
    the [review guide](docs/development/opencode-review.md). Automatic review covers
-   all PR bases except `main`, including forks; the coordinator alone requests
-   `/oc review` or `/opencode review` when a fresh manual round is needed.
-   Workers report the PR URL and exact head/base SHAs after checks and do not
-   duplicate requests or invoke Kody. Maintainer questions receive replies;
+   all PR bases except `main`, including forks. In supervised worker delivery,
+   the coordinator alone requests `/oc review` or `/opencode review` when a fresh
+   manual round is needed; workers report the PR URL and exact head/base SHAs
+   after checks and never trigger review or invoke Kody. Ordinary authorized
+   human maintainers may use manual commands. Runtime checks the requesting
+   account's current `write`, `maintain` or `admin` permission; it cannot
+   distinguish a person from automation using the same human credentials.
+   Coordinator-only worker delivery is an orchestration rule, not a runtime
+   login allowlist. Maintainer questions receive replies;
    replies, drafts and incomplete reviews are not approvals. Inspect issue
    comments, submitted reviews, inline comments and applicable checks; confirm
    the actual reviewed head/base and handle every finding with concise technical

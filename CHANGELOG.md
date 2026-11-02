@@ -6,6 +6,15 @@ This records repository changes. No application version has been released.
 
 ### Added
 
+- Exact UTF-8 BOM preservation through immutable blob decoding, prepare and
+  lossless patch projection, retaining invalid/binary/byte-bound rejection.
+  The plan job skips ordinary non-PR issue comments and preserves implicit
+  inline follow-ups. 53 focused checks include real-byte regressions and the
+  workflow event matrix. Manual-trigger governance now distinguishes supervised
+  workers from authorized human maintainers and states the shared-credential
+  limitation. The audited fixed-SHA bootstrap exception grants no self-approval
+  or protection bypass. Historical [410e069 review5733637006](https://github.com/Ljrr3045/rielia/pull/25#pullrequestreview-5733637006)
+  requested these fixes; changed-head review and full activation remain OPEN.
 - Bounded non-reposting recovery for ambiguous formal approval writes: exact
   trailing run footer/App identity/PR/head binding, one bounded review lookup,
   best-effort dismissal and a persistently failed gate with explicit consistency
