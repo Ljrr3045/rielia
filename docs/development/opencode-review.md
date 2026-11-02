@@ -185,6 +185,24 @@ skipped. The old generic failure log and deleted temporary state do not establis
 the precise cause. No bad-key diagnosis, successful review or approval follows
 from that failure. Live operational acceptance remains OPEN.
 
+The next root-authorized
+[run 41369790351](https://github.com/Ljrr3045/rielia/actions/runs/41369790351)
+used independently reviewed `2abd2bc` and failed `JSONL_COMPLETION`, before review
+JSON parsing; publication again did not run. This establishes a finish-count/
+reason rejection, not which finish condition occurred. A follow-up diagnostic
+refinement preserves exactly-one-stop acceptance and the user-confirmed `max`
+effort, provider and output cap. It replaces that broad code with finite
+`JSONL_FINISH_MISSING`, `MULTIPLE`, `LENGTH`, `TOOL`, `CONTENT_FILTER`, `ERROR`,
+`UNKNOWN` and `OTHER` suffixes under the same `JSONL_FINISH_` prefix.
+
+Only rejected completion failures carry a fixed sanitized metadata object:
+finish/text counts capped at3 (3means3+), exact known-reason booleans, duplicate-
+finish-ID and complete-ID-presence booleans (IDs compared privately), and reported
+output/reasoning counts capped at1,000,000 or null. Usage is null for multiple
+finishes rather than summing possibly repeated parts. No raw ID, reason, model
+text or arbitrary key/value is copied. Duplicate identical IDs still fail; no
+deduplication or continuation acceptance is introduced.
+
 The diagnostic follow-up preserves strict parsing/coverage and adds only
 allowlisted static failure codes. Main logs one fixed sentence containing a code;
 it never prints raw stdout/stderr, model text, provider responses, exception
@@ -198,7 +216,8 @@ remain generic. Temporary generation state is still removed.
 | `MODEL_HTTP_AUTH`, `MODEL_HTTP_LIMIT` | Structured numeric HTTP 401/403 or 429 in an error event |
 | `MODEL_HTTP_REQUEST`, `MODEL_HTTP_SERVER` | Structured numeric HTTP 400/422 or 5xx in an error event |
 | `MODEL_ERROR_EVENT`, `MODEL_TOOL_EVENT` | Other model/CLI error event or prohibited tool event |
-| `JSONL_PARSE`, `JSONL_ENVELOPE`, `JSONL_COMPLETION` | Invalid JSONL, invalid/empty event envelope, or absent/multiple/non-stop completion |
+| `JSONL_PARSE`, `JSONL_ENVELOPE` | Invalid JSONL or invalid/empty event envelope |
+| `JSONL_FINISH_*` | Missing/multiple finishes or one non-stop reason, with only the finite codes and bounded metadata above |
 | `JSONL_TEXT_MISSING`, `JSONL_TEXT_MULTIPLE`, `JSONL_TEXT_SHAPE` | Missing, multiple, or non-string text events |
 | `REVIEW_JSON_PARSE`, `REVIEW_JSON_FENCE` | Invalid review JSON; the latter indicates an outer Markdown fence, which remains rejected |
 | `REVIEW_SCHEMA`, `REVIEW_BINDING`, `REVIEW_COVERAGE` | Invalid result shape, wrong head/base, or mismatched reviewed-file set |
@@ -212,13 +231,20 @@ causes CLI exit 1. No message/body is inspected to guess a cause, and an auth
 category does not prove a particular key is wrong. A nonzero CLI exit never
 becomes successful review even if stdout contains plausible review JSON.
 
-The original 22 checks plus four focused diagnostic/redaction checks pass on
+The original 22 checks plus six focused diagnostic/redaction checks pass on
 Node 24.22.1. A real adapter-process test uses an inert fake executable with
 secret-shaped strings, provider URLs and workflow commands in both streams;
 only the expected static code appears and no result artifact is written.
 No paid model or live App call is part of that check. Previous source audit/CI
 at `14cc8ab` does not approve the new diagnostic head; independent review and
 root-approved live feedback remain required before another bootstrap attempt.
+An independent actual-CLI loopback probe also observed one stop finish on normal
+responses, one length finish with no continuation, and distinct unknown+stop
+finishes when the CLI continued after an unknown result. Split reasoning and
+final usage chunks did not produce duplicate IDs in those fixtures. These fake-
+provider observations do not establish the live run's reason/count. Pinned CLI
+request preparation defaults to a32,000-token output cap; no cap or effort change
+is made on that clue alone. New-head review/live metadata remains required.
 
 Local evidence: 22 event/auth/fork/main-exclusion/relay/coverage/verdict/current-
 head/base-race/token-isolation tests pass; all workflows pass checksum-pinned

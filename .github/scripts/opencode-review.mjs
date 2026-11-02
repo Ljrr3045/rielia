@@ -21,26 +21,62 @@ export class Obsolete extends Error {}
 // Only these branded, static codes may reach logs. Never classify by matching
 // uncontrolled exception messages or expose raw CLI/model/provider responses.
 const modelFailureCodes = new Set(['MODEL_ERROR_EVENT', 'MODEL_TOOL_EVENT', 'MODEL_HTTP_AUTH', 'MODEL_HTTP_LIMIT', 'MODEL_HTTP_REQUEST', 'MODEL_HTTP_SERVER']);
+const completionCodes = new Set(['JSONL_FINISH_MISSING', 'JSONL_FINISH_MULTIPLE', 'JSONL_FINISH_LENGTH', 'JSONL_FINISH_TOOL', 'JSONL_FINISH_CONTENT_FILTER', 'JSONL_FINISH_ERROR', 'JSONL_FINISH_UNKNOWN', 'JSONL_FINISH_OTHER']);
 const failureCodes = new Set([
   'REVIEW_UNKNOWN', 'REVIEW_OBSOLETE', 'REVIEW_CONFIGURATION',
   'CLI_SPAWN', 'CLI_EXIT', 'CLI_TIMEOUT', 'CLI_OUTPUT_LIMIT', 'CLI_INPUT',
   ...modelFailureCodes, 'JSONL_PARSE', 'JSONL_ENVELOPE', 'JSONL_TEXT_MISSING', 'JSONL_TEXT_MULTIPLE', 'JSONL_TEXT_SHAPE',
-  'JSONL_COMPLETION', 'REVIEW_JSON_PARSE', 'REVIEW_JSON_FENCE', 'REVIEW_SCHEMA', 'REVIEW_BINDING',
+  ...completionCodes, 'REVIEW_JSON_PARSE', 'REVIEW_JSON_FENCE', 'REVIEW_SCHEMA', 'REVIEW_BINDING',
   'REVIEW_COVERAGE', 'REVIEW_FINDING', 'REVIEW_VERDICT',
 ]);
 
 export class ReviewFailure extends Error {
-  constructor(code) {
+  constructor(code, completion) {
     const safeCode = failureCodes.has(code) ? code : 'REVIEW_UNKNOWN';
     super(`OpenCode review failure: ${safeCode}`);
     this.code = safeCode;
+    if (completionCodes.has(safeCode) && completion) {
+      const count = (value, cap) => Number.isSafeInteger(value) && value >= 0 ? Math.min(value, cap) : null;
+      // Explicit keys and primitive sanitizers only; no reason, ID or text copy.
+      this.completion = Object.freeze({
+        finishCount: count(completion.finishCount, 3), textCount: count(completion.textCount, 3),
+        stop: completion.stop === true, length: completion.length === true,
+        tool: completion.tool === true, contentFilter: completion.contentFilter === true,
+        error: completion.error === true, unknown: completion.unknown === true,
+        missing: completion.missing === true, other: completion.other === true,
+        duplicateFinishId: completion.duplicateFinishId === true, finishIdsComplete: completion.finishIdsComplete === true,
+        outputTokens: count(completion.outputTokens, 1_000_000), reasoningTokens: count(completion.reasoningTokens, 1_000_000),
+      });
+    }
     Object.freeze(this);
   }
 }
 
 export function formatFailure(error) {
   const code = error instanceof ReviewFailure && failureCodes.has(error.code) ? error.code : error instanceof Obsolete ? 'REVIEW_OBSOLETE' : 'REVIEW_UNKNOWN';
-  return `OpenCode review failed [${code}]. No successful current-head review is established; inspect the run and PR before retrying.`;
+  const completion = error instanceof ReviewFailure && completionCodes.has(code) && error.completion ? ` completion=${JSON.stringify(error.completion)}` : '';
+  return `OpenCode review failed [${code}].${completion} No successful current-head review is established; inspect the run and PR before retrying.`;
+}
+
+function completionFailure(events, finishes) {
+  const reasons = finishes.map((event) => event.part?.reason);
+  const known = ['stop', 'length', 'tool-calls', 'content-filter', 'error', 'unknown'];
+  const mapped = new Map([['length', 'LENGTH'], ['tool-calls', 'TOOL'], ['content-filter', 'CONTENT_FILTER'], ['error', 'ERROR'], ['unknown', 'UNKNOWN']]);
+  const reason = reasons[0];
+  const code = finishes.length > 1 ? 'MULTIPLE' : !finishes.length || reason == null ? 'MISSING' : mapped.get(reason) ?? 'OTHER';
+  const tokens = finishes.length === 1 ? finishes[0].part?.tokens : null;
+  const ids = finishes.map((event) => event.part?.id).filter((id) => typeof id === 'string' && id.length > 0);
+  return new ReviewFailure(`JSONL_FINISH_${code}`, {
+    finishCount: finishes.length, textCount: events.filter((event) => event.type === 'text').length,
+    stop: reasons.includes('stop'), length: reasons.includes('length'),
+    tool: reasons.includes('tool-calls'), contentFilter: reasons.includes('content-filter'),
+    error: reasons.includes('error'), unknown: reasons.includes('unknown'),
+    missing: !finishes.length || reasons.some((value) => value == null),
+    other: reasons.some((value) => value != null && !known.includes(value)),
+    duplicateFinishId: new Set(ids).size < ids.length, finishIdsComplete: finishes.length > 0 && ids.length === finishes.length,
+    // Multiple finishes are ambiguous; never sum possibly duplicate usage.
+    outputTokens: tokens?.output, reasoningTokens: tokens?.reasoning,
+  });
 }
 
 export class GitHub {
@@ -329,7 +365,7 @@ export function parseEvents(output) {
   }
   if (events.some((event) => event.type === 'tool_use')) throw new ReviewFailure('MODEL_TOOL_EVENT');
   const finishes = events.filter((e) => e.type === 'step_finish');
-  if (finishes.length !== 1 || finishes[0].part?.reason !== 'stop') throw new ReviewFailure('JSONL_COMPLETION');
+  if (finishes.length !== 1 || finishes[0].part?.reason !== 'stop') throw completionFailure(events, finishes);
   const texts = events.filter((e) => e.type === 'text').map((e) => e.part?.text);
   if (!texts.length) throw new ReviewFailure('JSONL_TEXT_MISSING');
   if (texts.length !== 1) throw new ReviewFailure('JSONL_TEXT_MULTIPLE');

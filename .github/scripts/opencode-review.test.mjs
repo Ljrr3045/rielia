@@ -161,7 +161,7 @@ test('comments and injected shell strings remain JSON prompt data', () => {
 function stream(result, finish = 'stop', extra = []) { return [{ type: 'step_start', part: {} }, ...extra, { type: 'text', part: { text: JSON.stringify(result) } }, { type: 'step_finish', part: { reason: finish } }].map((row) => JSON.stringify(row)).join('\n'); }
 test('JSONL validates success, errors, blocked tools, missing/non-stop/truncated output', () => {
   assert.deepEqual(parseEvents(stream(generated().result)), generated().result);
-  for (const reason of ['length', 'tool-calls', 'error', 'unknown']) assert.throws(() => parseEvents(stream(generated().result, reason)), hasCode('JSONL_COMPLETION'));
+  for (const [reason, code] of [['length', 'LENGTH'], ['tool-calls', 'TOOL'], ['error', 'ERROR'], ['unknown', 'UNKNOWN']]) assert.throws(() => parseEvents(stream(generated().result, reason)), hasCode(`JSONL_FINISH_${code}`));
   for (const [type, code] of [['tool_use', 'MODEL_TOOL_EVENT'], ['error', 'MODEL_ERROR_EVENT']]) assert.throws(() => parseEvents(stream(generated().result, 'stop', [{ type }])), hasCode(code));
   for (const output of ['', '{bad', JSON.stringify({ type: 'text', part: { text: '{}' } })]) assert.throws(() => parseEvents(output));
 });
@@ -171,7 +171,7 @@ test('diagnostics distinguish JSONL, model, review JSON, binding, coverage and f
     ['uncontrolled malformed output', 'JSONL_PARSE'], ['', 'JSONL_ENVELOPE'], ['null', 'JSONL_ENVELOPE'],
     [stream(generated().result, 'stop', [{ type: 'error', error: { message: 'uncontrolled provider response' } }]), 'MODEL_ERROR_EVENT'],
     [stream(generated().result, 'stop', [{ type: 'tool_use' }]), 'MODEL_TOOL_EVENT'],
-    [JSON.stringify({ type: 'text', part: { text: '{}' } }), 'JSONL_COMPLETION'],
+    [JSON.stringify({ type: 'text', part: { text: '{}' } }), 'JSONL_FINISH_MISSING'],
     [[{ type: 'step_finish', part: { reason: 'stop' } }, { type: 'text', part: { text: 'not review JSON' } }].map(JSON.stringify).join('\n'), 'REVIEW_JSON_PARSE'],
     [[{ type: 'step_finish', part: { reason: 'stop' } }, { type: 'text', part: {} }].map(JSON.stringify).join('\n'), 'JSONL_TEXT_SHAPE'],
     [JSON.stringify({ type: 'step_finish', part: { reason: 'stop' } }), 'JSONL_TEXT_MISSING'],
@@ -187,6 +187,67 @@ test('diagnostics distinguish JSONL, model, review JSON, binding, coverage and f
   for (const [status, code] of [[401, 'MODEL_HTTP_AUTH'], [403, 'MODEL_HTTP_AUTH'], [429, 'MODEL_HTTP_LIMIT'], [400, 'MODEL_HTTP_REQUEST'], [422, 'MODEL_HTTP_REQUEST'], [500, 'MODEL_HTTP_SERVER'], [503, 'MODEL_HTTP_SERVER'], [599, 'MODEL_HTTP_SERVER'], ['401', 'MODEL_ERROR_EVENT'], [404, 'MODEL_ERROR_EVENT'], [null, 'MODEL_ERROR_EVENT']]) {
     assert.throws(() => parseEvents(JSON.stringify({ type: 'error', error: { data: { statusCode: status, message: 'never log this', responseBody: 'fake-secret' } } })), hasCode(code));
   }
+});
+
+test('completion diagnostics separate every rejected finish without accepting continuations', () => {
+  const sensitive = 'fake-secret-reason\n::error::must-never-log';
+  const finish = (reason, tokens) => ({ type: 'step_finish', part: { reason, tokens, id: sensitive } });
+  for (const [events, code] of [
+    [[{ type: 'text', part: { text: sensitive } }], 'MISSING'],
+    [[finish(undefined)], 'MISSING'], [[finish('length')], 'LENGTH'], [[finish('tool-calls')], 'TOOL'],
+    [[finish('content-filter')], 'CONTENT_FILTER'], [[finish('error')], 'ERROR'], [[finish('unknown')], 'UNKNOWN'],
+    [[finish('other')], 'OTHER'], [[finish('__proto__')], 'OTHER'], [[finish('toString')], 'OTHER'], [[finish(sensitive)], 'OTHER'], [[finish({ reason: sensitive })], 'OTHER'],
+    [[finish('unknown'), finish('stop')], 'MULTIPLE'], [[finish('stop'), finish('stop')], 'MULTIPLE'],
+  ]) {
+    assert.throws(() => parseEvents(events.map(JSON.stringify).join('\n')), (error) => {
+      assert(hasCode(`JSONL_FINISH_${code}`)(error));
+      assert.equal(error.completion.finishCount, Math.min(events.filter((event) => event.type === 'step_finish').length, 3));
+      const diagnostic = formatFailure(error);
+      assert(!diagnostic.includes('fake-') && !diagnostic.includes('::error::') && !diagnostic.includes('\n'));
+      return true;
+    });
+  }
+  const events = [finish('unknown'), finish('stop'), finish('length'), finish(sensitive)];
+  assert.throws(() => parseEvents(events.map(JSON.stringify).join('\n')), (error) => {
+    assert.equal(error.completion.finishCount, 3);
+    assert.equal(error.completion.unknown, true);
+    assert.equal(error.completion.stop, true);
+    assert.equal(error.completion.length, true);
+    assert.equal(error.completion.other, true);
+    assert.equal(error.completion.duplicateFinishId, true);
+    assert.equal(error.completion.finishIdsComplete, true);
+    assert.equal(error.completion.outputTokens, null);
+    return true;
+  });
+  assert.throws(() => parseEvents([{ type: 'step_finish', part: { reason: 'unknown', id: 'first' } }, { type: 'step_finish', part: { reason: 'stop', id: 'second' } }].map(JSON.stringify).join('\n')), (error) => {
+    assert.equal(error.completion.duplicateFinishId, false);
+    assert.equal(error.completion.finishIdsComplete, true);
+    return hasCode('JSONL_FINISH_MULTIPLE')(error);
+  });
+  assert.throws(() => parseEvents(JSON.stringify({ type: 'step_finish', part: { reason: 'length' } })), (error) => {
+    assert.equal(error.completion.duplicateFinishId, false);
+    assert.equal(error.completion.finishIdsComplete, false);
+    return true;
+  });
+  assert.deepEqual(parseEvents(stream(generated().result)), generated().result);
+});
+
+test('completion numeric metadata is capped or null and cannot copy arbitrary fields', () => {
+  const error = new ReviewFailure('JSONL_FINISH_LENGTH', { finishCount: 9999, textCount: -1, length: true, stop: 'fake-token', outputTokens: 2_000_000, reasoningTokens: 'fake-key', arbitrary: 'fake-secret' });
+  assert.equal(error.completion.finishCount, 3);
+  assert.equal(error.completion.textCount, null);
+  assert.equal(error.completion.stop, false);
+  assert.equal(error.completion.outputTokens, 1_000_000);
+  assert.equal(error.completion.reasoningTokens, null);
+  assert.equal(error.completion.arbitrary, undefined);
+  assert(!formatFailure(error).includes('fake-'));
+  assert(Object.isFrozen(error.completion));
+  const output = JSON.stringify({ type: 'step_finish', part: { reason: 'length', tokens: { output: 32000, reasoning: 31990 } } });
+  assert.throws(() => parseEvents(output), (failure) => {
+    assert.equal(failure.completion.outputTokens, 32000);
+    assert.equal(failure.completion.reasoningTokens, 31990);
+    return hasCode('JSONL_FINISH_LENGTH')(failure);
+  });
 });
 
 function inertChild() {
@@ -251,12 +312,16 @@ test('actual adapter process redacts hostile fake CLI streams and never writes a
       [stream({ ...generated().result, summary: secret, complete: 'true' }), 0, 'REVIEW_SCHEMA'],
       [stream({ ...generated().result, summary: secret, head: base }), 0, 'REVIEW_BINDING'],
       [stream({ ...generated().result, summary: secret, reviewed_files: [] }), 0, 'REVIEW_COVERAGE'],
+      [stream(generated().result, 'length'), 0, 'JSONL_FINISH_LENGTH'],
+      [stream(generated().result, 'stop', [{ type: 'step_finish', part: { reason: 'unknown', id: secret } }]), 0, 'JSONL_FINISH_MULTIPLE'],
     ]) {
       await writeFile(binary, `#!${process.execPath}\nprocess.stderr.write(${JSON.stringify(secret)}); process.stdout.write(${JSON.stringify(stdout)}); process.exit(${exit});\n`, { mode: 0o700 });
       const result = await new Promise((fulfill) => execFile(process.execPath, [new URL('./opencode-review.mjs', import.meta.url).pathname, 'generate', '7'], { env: { PATH: process.env.PATH, GITHUB_REPOSITORY: repo, GITHUB_EVENT_PATH: eventPath, RUNNER_TEMP: directory, OPENCODE_BIN: binary, OPENCODE_API_KEY: secret }, timeout: 5000 }, (error, stdout, stderr) => fulfill({ error, stdout, stderr })));
       assert.equal(result.error?.code, 1);
       assert.equal(result.stdout, '');
-      assert.equal(result.stderr, `${formatFailure(new ReviewFailure(code))}\n`);
+      let failure = new ReviewFailure(code);
+      if (code.startsWith('JSONL_FINISH_')) { try { parseEvents(stdout); } catch (error) { failure = error; } }
+      assert.equal(result.stderr, `${formatFailure(failure)}\n`);
       assert(!result.stderr.includes('fake-') && !result.stderr.includes('::error::') && !result.stderr.includes('https://'));
       await assert.rejects(readFile(join(state, 'result.json')), { code: 'ENOENT' });
     }
