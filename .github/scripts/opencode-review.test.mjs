@@ -139,13 +139,15 @@ test('whole-file byte boundary permits normal progress docs and rejects excess/b
 });
 
 test('model environment isolates HOME/XDG and strips every GitHub/OIDC/auth override', () => {
-  const parent = { PATH: '/trusted/bin', HOME: '/original/home', OPENCODE_API_KEY: 'fake-provider-key', GITHUB_TOKEN: 'github-secret', GH_TOKEN: 'other', ACTIONS_ID_TOKEN_REQUEST_TOKEN: 'oidc-secret', OPENCODE_CONFIG: '/malicious.json', NODE_OPTIONS: '--require=/malicious.js', BUN_OPTIONS: 'evil' };
+  const parent = { PATH: '/trusted/bin', HOME: '/original/home', OPENCODE_API_KEY: 'fake-provider-key', GITHUB_TOKEN: 'github-secret', GH_TOKEN: 'other', ACTIONS_ID_TOKEN_REQUEST_TOKEN: 'oidc-secret', OPENCODE_CONFIG: '/malicious.json', NODE_OPTIONS: '--require=/malicious.js', BUN_OPTIONS: 'evil', OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX: '999999999' };
   const environment = modelEnvironment(parent, '/isolated/task', modelConfig('opencode-go/deepseek-v4.1-flash', 'max'));
   assert.equal(environment.HOME, '/isolated/task/home');
   assert.equal(parent.HOME, '/original/home');
   assert.equal(environment.XDG_DATA_HOME, '/isolated/task/data');
   for (const key of ['GITHUB_TOKEN', 'GH_TOKEN', 'ACTIONS_ID_TOKEN_REQUEST_TOKEN', 'OPENCODE_CONFIG', 'NODE_OPTIONS', 'BUN_OPTIONS']) assert.equal(environment[key], undefined);
   assert.equal(environment.OPENCODE_API_KEY, 'fake-provider-key');
+  assert.equal(environment.OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX, '128000');
+  assert.equal(parent.OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX, '999999999');
   assert.equal(JSON.parse(environment.OPENCODE_CONFIG_CONTENT).permission['*'], 'deny');
   assert.throws(() => modelConfig('other/model', 'max'), hasCode('REVIEW_CONFIGURATION'));
   assert.throws(() => modelConfig('opencode-go/model', 'max\ncommand'), hasCode('REVIEW_CONFIGURATION'));

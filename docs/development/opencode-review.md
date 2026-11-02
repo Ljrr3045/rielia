@@ -51,6 +51,7 @@ installation. Updating the binary or its digest is a reviewed source change.
 | `OPENCODE_API_KEY` | Actions repository secret | User-provisioned Go key; absent key fails closed |
 | `OPENCODE_MODEL` | Actions repository variable | `opencode-go/deepseek-v4.1-flash`; other providers are rejected |
 | `OPENCODE_VARIANT` | Actions repository variable | `max`; passed as CLI variant with explicit compatible-provider reasoning effort |
+| Review output cap | Fixed isolated child environment | 128,000 tokens; pinned CLI clamps to the model output limit; no repository variable or inherited override |
 | App authentication | Actions OIDC | Installed `opencode-agent`; token acquired only for publication and revoked afterwards |
 
 The public [models.dev catalog](https://models.dev/api.json) inspected on
@@ -162,7 +163,7 @@ Only the coordinator merges, through normal repository requirements.
 | Missing/truncated patch, binary, symlink, unavailable context | Explicit incomplete COMMENT; never APPROVE |
 | Ten 100-row pages per API list | Fail closed, no assumed complete review |
 | 100 open PRs per base-push fanout; three parallel jobs | Fail if fanout is larger; each PR can be requested explicitly |
-| 20 findings; 1 MB CLI output; 10-minute model / 20-minute job | Fail closed on excess/timeout |
+| 20 findings; 1 MB CLI output; fixed 128,000-token generation cap; 10-minute model / 20-minute job | Fail closed on excess/timeout; token cap also clamps to the known model limit |
 | Relay ZIP 8 KB metadata / 32 KB download / 4 KB JSON | Reject before using identifiers |
 
 No tests or install hooks from a PR are executed by review. Applicable product CI
@@ -191,7 +192,7 @@ used independently reviewed `2abd2bc` and failed `JSONL_COMPLETION`, before revi
 JSON parsing; publication again did not run. This establishes a finish-count/
 reason rejection, not which finish condition occurred. A follow-up diagnostic
 refinement preserves exactly-one-stop acceptance and the user-confirmed `max`
-effort, provider and output cap. It replaces that broad code with finite
+effort/provider. It replaces that broad code with finite
 `JSONL_FINISH_MISSING`, `MULTIPLE`, `LENGTH`, `TOOL`, `CONTENT_FILTER`, `ERROR`,
 `UNKNOWN` and `OTHER` suffixes under the same `JSONL_FINISH_` prefix.
 
@@ -203,8 +204,20 @@ finishes rather than summing possibly repeated parts. No raw ID, reason, model
 text or arbitrary key/value is copied. Duplicate identical IDs still fail; no
 deduplication or continuation acceptance is introduced.
 
+The coordinator subsequently authorized a controlled, fixed **128,000-token
+output cap** in only the isolated child environment through
+`OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX`. The parent environment, repository
+settings and user-confirmed `max` effort are unchanged. The pinned provider
+transform still clamps this to the known model output limit. Ten-minute model,
+20-minute job, 1 MB output and every completion/schema/coverage guard remain.
+Actual pinned-CLI loopback smoke asserts `max_tokens: 128000`, `max` reasoning
+and zero tools on the review request, using only generated fake credentials.
+This bounded experiment does not establish that either earlier failure was
+caused by length, and it requires fresh independent review/CI before live use.
+
 The diagnostic follow-up preserves strict parsing/coverage and adds only
-allowlisted static failure codes. Main logs one fixed sentence containing a code;
+allowlisted static failure codes. Main logs a fixed sentence containing a code
+and, for rejected completion only, the bounded primitive metadata above;
 it never prints raw stdout/stderr, model text, provider responses, exception
 message/stack or credential values. Unknown exceptions and unrecognized shapes
 remain generic. Temporary generation state is still removed.
@@ -243,15 +256,17 @@ responses, one length finish with no continuation, and distinct unknown+stop
 finishes when the CLI continued after an unknown result. Split reasoning and
 final usage chunks did not produce duplicate IDs in those fixtures. These fake-
 provider observations do not establish the live run's reason/count. Pinned CLI
-request preparation defaults to a32,000-token output cap; no cap or effort change
-is made on that clue alone. New-head review/live metadata remains required.
+request preparation defaults to a32,000-token output cap; the separately
+authorized 128,000-token experiment above changes that cap while retaining
+`max`. New-head review and actual live reason/count evidence remain required.
 
 Local evidence: 22 event/auth/fork/main-exclusion/relay/coverage/verdict/current-
 head/base-race/token-isolation tests pass; all workflows pass checksum-pinned
 actionlint 1.7.12; immutable handoff and whitespace checks pass. The real CLI
 1.19.5 macOS archive was verified with SHA-256
 `c1c9e62521192192ef4c3ed1355ada2144055bddb61682217e997b03c55203c1`.
-Its loopback fake-provider smoke verifies JSONL transport, effective review `max`,
+Its loopback fake-provider smoke verifies JSONL transport, effective review `max`
+and the fixed 128,000 output cap on the wire,
 no exposed tools and rejection of an unsolicited malicious tool call. It uses
 only generated fake credentials and no local auth. This does **not** verify Go
 billing/inference, App exchange, fork event delivery or real GitHub publication.

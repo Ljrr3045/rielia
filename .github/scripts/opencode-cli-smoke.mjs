@@ -55,12 +55,13 @@ try {
   for (const request of reviewRequests) {
     assert.equal(request.authorization, 'Bearer fake-provider-key');
     assert.equal(request.body.reasoning_effort, 'max', 'Pinned CLI must send effective max reasoning on the review call');
+    assert.equal(request.body.max_tokens, 128000, 'Pinned CLI must send the fixed child-only output cap');
     assert.equal(request.body.tools?.length ?? 0, 0, 'Tools must be absent under wildcard deny');
   }
   malicious = true;
   const attempted = await run();
   assert.throws(() => parseEvents(attempted.stdout), 'A provider tool attempt must never establish review completion');
-  console.log('Pinned CLI 1.19.5 smoke passed: fake Go-compatible provider, max on wire, no tools exposed, malicious tool attempt rejected, isolated HOME/XDG, no GitHub/OIDC credentials.');
+  console.log('Pinned CLI 1.19.5 smoke passed: fake Go-compatible provider, max and output cap 128000 on wire, no tools exposed, malicious tool attempt rejected, isolated HOME/XDG, no GitHub/OIDC credentials.');
 } finally {
   await rm(directory, { recursive: true, force: true });
   await new Promise((fulfill) => server.close(fulfill));

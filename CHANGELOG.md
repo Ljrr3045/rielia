@@ -23,6 +23,12 @@ This records repository changes. No application version has been released.
   finish, continuation, hostile-reason and numeric-redaction cases. Exactly-one-
   stop acceptance, user-confirmed `max`, provider and output cap stay unchanged;
   the live reason/count remains unknown pending root-reviewed instrumentation.
+- Coordinator-authorized controlled review output cap of128,000 tokens, set only
+  in the isolated child and clamped by the pinned CLI to the model output limit.
+  Actual pinned fake-provider smoke verifies the cap on the wire with `max` and
+  zero tools; a parent-environment regression prevents inherited overrides.
+  Provider/effort, timeouts and strict approval gates are preserved. This is not
+  proof of an earlier length failure; fresh independent review/CI precedes live use.
 - OpenCode Go PR-review replacement before T11, under the user's 2026-11-01
   decision. The [trusted adapter](docs/development/opencode-review.md) uses the
   official installed App/OIDC and checksum-pinned CLI 1.19.5, rather than the
