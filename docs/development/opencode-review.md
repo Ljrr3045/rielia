@@ -89,6 +89,10 @@ checks out support code from the trusted default branch, with credentials not
 persisted. No PR/fork tree is checked out. Changed files, base/head contents,
 guidance and discussion are fetched through GitHub APIs at immutable SHAs and
 passed as JSON reference data. Fork head files are read from the fork repository.
+Base/head Git tree metadata supplies actual file modes; raw Git blobs avoid the
+Contents API's automatic symlink dereference. Mode-only executable changes stay
+visible even with zero textual additions/deletions. Symlinks, gitlinks and
+unavailable/truncated tree metadata cannot establish approval.
 
 GitHub withholds secrets for fork `pull_request_review_comment` events. The
 [unprivileged inline relay](../../.github/workflows/opencode-inline.yml) therefore
@@ -152,6 +156,7 @@ Only the coordinator merges, through normal repository requirements.
 | Bound | Outcome on excess |
 | --- | --- |
 | 80 changed files; 160,000 bytes per whole file | Partial context, explicit incomplete COMMENT |
+| 5,000 entries per immutable base/head Git tree | Incomplete COMMENT if missing/truncated/oversized |
 | 1,000,000 bytes combined file context; 300,000 patch bytes | Partial context, explicit incomplete COMMENT |
 | 80,000 discussion characters | Bounded recent/thread context, incomplete COMMENT |
 | Missing/truncated patch, binary, symlink, unavailable context | Explicit incomplete COMMENT; never APPROVE |
@@ -172,7 +177,7 @@ budget still bounds total context rather than silently truncating large files.
 
 ## Validation and activation
 
-Local evidence: 21 event/auth/fork/main-exclusion/relay/coverage/verdict/current-
+Local evidence: 22 event/auth/fork/main-exclusion/relay/coverage/verdict/current-
 head/base-race/token-isolation tests pass; all workflows pass checksum-pinned
 actionlint 1.7.12; immutable handoff and whitespace checks pass. The real CLI
 1.19.5 macOS archive was verified with SHA-256
@@ -181,6 +186,16 @@ Its loopback fake-provider smoke verifies JSONL transport, effective review `max
 no exposed tools and rejection of an unsolicited malicious tool call. It uses
 only generated fake credentials and no local auth. This does **not** verify Go
 billing/inference, App exchange, fork event delivery or real GitHub publication.
+
+Independent SOL audit identified the Contents API symlink/mode gap; Git commit/
+tree/blob reads now pass mode-only, misleading dereferenced-symlink and truncated-
+tree regressions. [PR #25](https://github.com/Ljrr3045/rielia/pull/25) tracks final
+audit/CI evidence. Initial Linux support CI
+[41367097671](https://github.com/Ljrr3045/rielia/actions/runs/41367097671) passed
+at `ffdfae02`; later source changes need fresh evidence. Initial feature-push
+[review 41367051504](https://github.com/Ljrr3045/rielia/actions/runs/41367051504)
+failed with `MODULE_NOT_FOUND` because trusted default `dev` lacks the adapter
+before bootstrap merge. No model/App call ran; this is not successful review.
 
 ```sh
 node --test .github/scripts/opencode-review.test.mjs

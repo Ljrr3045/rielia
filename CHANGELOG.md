@@ -15,12 +15,16 @@ This records repository changes. No application version has been released.
   A secret-free inline relay supports fork events. Generation has isolated
   HOME/XDG, no GitHub/OIDC credentials and no tools; deterministic publication
   validates coverage, actual head/base, inline locations and formal outcomes.
-  Incomplete/draft reviews cannot approve. Twenty-one focused tests, actual pinned-
+  Incomplete/draft reviews cannot approve. Twenty-two focused tests, actual pinned-
   CLI fake-provider smoke (`max` on review call, tool denial), workflow lint,
   immutable handoff and whitespace pass locally; independent audit/remote CI
   and legitimate default-branch activation/live App/Go/fork smoke remain pending.
   No product code, handoff, secret values, repository protections or deployment
-  change. Historical Kody evidence is preserved; no new Kody trigger is required.
+  change. Independent audit's symlink/mode gap is fixed with immutable Git trees/
+  raw blobs and regressions. [PR #25](https://github.com/Ljrr3045/rielia/pull/25)
+  records CI/audit; the initial review run failed because trusted default lacks
+  the script, without model/App publication. Historical Kody evidence stays;
+  no new Kody trigger is required.
 - T10.1/B1b search and My tasks presentation on merged T10.0 logic
   [PR #23](https://github.com/Ljrr3045/rielia/pull/23) (`6bde444c`). `/projects`
   gains explicit workspace My tasks (`taskScope=mine`, current assignee) and

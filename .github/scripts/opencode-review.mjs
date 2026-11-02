@@ -8,7 +8,7 @@ import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { TextDecoder } from 'node:util';
 
-export const LIMITS = Object.freeze({ files: 80, fileBytes: 160_000, contextBytes: 1_000_000, patchBytes: 300_000, pages: 10, findings: 20, modelMs: 600_000, outputBytes: 1_000_000 });
+export const LIMITS = Object.freeze({ files: 80, treeEntries: 5000, fileBytes: 160_000, contextBytes: 1_000_000, patchBytes: 300_000, pages: 10, findings: 20, modelMs: 600_000, outputBytes: 1_000_000 });
 const SHA = /^[a-f0-9]{40}$/;
 const REPO = /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/;
 const actions = new Set(['opened', 'synchronize', 'reopened', 'ready_for_review', 'edited']);
@@ -184,9 +184,24 @@ function decodeText(blob) {
   return new TextDecoder('utf-8', { fatal: true }).decode(bytes);
 }
 
-async function fileText(api, path, ref) {
-  const blob = await api.get(`/contents/${path.split('/').map(encode).join('/')}?ref=${ref}`);
-  if (blob.type !== 'file') throw new Error('Nonregular file');
+async function gitTree(api, ref) {
+  const commit = await api.get(`/git/commits/${ref}`);
+  if (commit.sha !== ref || !SHA.test(commit.tree?.sha)) throw new Error('Unavailable immutable commit tree');
+  const result = await api.get(`/git/trees/${commit.tree.sha}?recursive=1`);
+  if (result.sha !== commit.tree.sha || result.truncated || !Array.isArray(result.tree) || result.tree.length > LIMITS.treeEntries) throw new Error('Unavailable/truncated/oversized Git tree');
+  const tree = new Map();
+  for (const entry of result.tree) {
+    if (typeof entry.path !== 'string' || tree.has(entry.path)) throw new Error('Invalid Git tree entries');
+    tree.set(entry.path, entry);
+  }
+  return tree;
+}
+
+async function fileText(api, entry) {
+  // Contents API dereferences some symlinks. Tree mode + raw blob avoids that.
+  if (entry?.type !== 'blob' || !['100644', '100755'].includes(entry.mode) || !SHA.test(entry.sha) || !Number.isSafeInteger(entry.size) || entry.size > LIMITS.fileBytes) throw new Error('Nonregular or oversized Git blob');
+  const blob = await api.get(`/git/blobs/${entry.sha}`);
+  if (blob.sha !== entry.sha || blob.size !== entry.size) throw new Error('Inconsistent Git blob');
   return decodeText(blob);
 }
 
@@ -202,16 +217,24 @@ export async function prepare(api, eventName, event, number) {
   if (files.length > LIMITS.files) limitations.push(`More than ${LIMITS.files} changed files`);
   const context = [];
   const headApi = api.repository(expected.headRepo);
+  let headTree;
+  let baseTree;
+  try { headTree = await gitTree(headApi, expected.head); }
+  catch { limitations.push('Head Git tree unavailable/truncated/oversized'); }
+  try { baseTree = await gitTree(api, expected.base); }
+  catch { limitations.push('Base Git tree unavailable/truncated/oversized'); }
   let bytes = 0;
   let patchBytes = 0;
   for (const file of files.slice(0, LIMITS.files)) {
-    const item = { path: file.filename, previousPath: file.previous_filename, status: file.status, patch: file.patch };
+    const headEntry = headTree?.get(file.filename);
+    const baseEntry = baseTree?.get(file.previous_filename ?? file.filename);
+    const item = { path: file.filename, previousPath: file.previous_filename, status: file.status, patch: file.patch, headMode: headEntry?.mode, baseMode: baseEntry?.mode };
     patchBytes += Buffer.byteLength(file.patch ?? '');
     const changes = changedLines(file.patch);
     if (changes.RIGHT.size !== file.additions || changes.LEFT.size !== file.deletions) limitations.push(`Missing/truncated/inconsistent patch: ${file.filename}`);
     try {
-      if (file.status !== 'removed') item.head = await fileText(headApi, file.filename, expected.head);
-      if (file.status !== 'added') item.base = await fileText(api, file.previous_filename ?? file.filename, expected.base);
+      if (file.status !== 'removed') item.head = await fileText(headApi, headEntry);
+      if (file.status !== 'added') item.base = await fileText(api, baseEntry);
     } catch {
       limitations.push(`Unavailable, binary, symlink, or oversized context: ${file.filename}`);
     }
@@ -233,7 +256,7 @@ export async function prepare(api, eventName, event, number) {
   if (discussionText.length > discussionLimit) limitations.push('Discussion context truncated');
   // Missing trusted policy context also prevents a clean approval.
   let guidance;
-  try { guidance = (await fileText(api, 'AGENTS.md', expected.base)).slice(0, LIMITS.fileBytes); }
+  try { guidance = await fileText(api, baseTree?.get('AGENTS.md')); }
   catch { limitations.push('Base repository guidance unavailable'); }
   assertFresh(await api.get(`/pulls/${number}`), expected);
   return { expected, command, mode: command?.mode ?? 'review', files: context, allPaths: files.map((f) => f.filename), limitations, title: pr.title?.slice(0, 2000), body: pr.body?.slice(0, 12_000), discussion: boundedDiscussion, guidance };

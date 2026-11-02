@@ -1,6 +1,7 @@
 /* global structuredClone */
 import assert from 'node:assert/strict';
 import { Buffer } from 'node:buffer';
+import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import { GitHub, LIMITS, Obsolete, assertFresh, authorize, buildPrompt, changedLines, commandContext, exchangeToken, modelConfig, modelEnvironment, parseEvents, plan, prepare, publish, snapshot, validateRelay, validateResult } from './opencode-review.mjs';
@@ -16,8 +17,20 @@ function event(body = '/oc review', kind = 'root') { return { repository: { full
 function comment(body = '/oc review', overrides = {}) { return { id: 9, user: human, body, ...overrides }; }
 function fakeApi(routes = {}) {
   const calls = [];
+  const contents = Object.entries(routes).filter(([path]) => path.startsWith('/contents/')).map(([path, blob]) => ({ path: path.slice('/contents/'.length, path.indexOf('?ref=')), ref: path.split('?ref=')[1], blob, sha: createHash('sha1').update(path).digest('hex') }));
+  const treeSha = (ref) => createHash('sha1').update(`tree-${ref}`).digest('hex');
   const api = { root: `/repos/${repo}`, calls,
-    async get(path) { calls.push(['GET', path]); if (!(path in routes)) throw new Error(`Unexpected GET ${path}`); const value = routes[path]; return typeof value === 'function' ? value() : structuredClone(value); },
+    async get(path) {
+      calls.push(['GET', path]);
+      if (path in routes) { const value = routes[path]; return typeof value === 'function' ? value() : structuredClone(value); }
+      const commit = /^\/git\/commits\/([a-f0-9]{40})$/.exec(path);
+      if (commit) return { sha: commit[1], tree: { sha: treeSha(commit[1]) } };
+      const tree = /^\/git\/trees\/([a-f0-9]{40})\?recursive=1$/.exec(path);
+      if (tree) return { sha: tree[1], truncated: false, tree: contents.filter((entry) => treeSha(entry.ref) === tree[1]).map((entry) => ({ path: entry.path, sha: entry.sha, type: 'blob', mode: entry.blob.mode ?? (entry.blob.type === 'symlink' ? '120000' : '100644'), size: entry.blob.size })) };
+      const blob = /^\/git\/blobs\/([a-f0-9]{40})$/.exec(path);
+      if (blob) { const entry = contents.find((entry) => entry.sha === blob[1]); if (entry) return { ...entry.blob, sha: entry.sha }; }
+      throw new Error(`Unexpected GET ${path}`);
+    },
     async list(path) { return this.get(path); },
     async post(path, body) { calls.push(['POST', path, body]); return { id: 123, html_url: 'https://example.test/review', commit_id: head, state: { APPROVE: 'APPROVED', REQUEST_CHANGES: 'CHANGES_REQUESTED', COMMENT: 'COMMENTED' }[body.event] }; },
     async request(method, path, body) { calls.push([method, path, body]); return {}; },
@@ -81,7 +94,25 @@ test('prepare obtains fork head files by immutable SHA, never checkout/install',
   assert.deepEqual(prepared.limitations, []);
   assert.equal(prepared.files[0].head, 'new');
   assert(api.calls.some(([kind, name]) => kind === 'REPOSITORY' && name === 'outside/fork'));
+  assert(!api.calls.some(([method, path]) => method === 'GET' && path.startsWith('/contents/')));
   assert(api.calls.every(([method]) => !['POST', 'PUT'].includes(method)));
+});
+
+test('Git tree mode preserves mode-only changes and rejects dereferenced symlinks/truncated trees', async () => {
+  const blob = (text, mode = '100644') => ({ type: 'file', mode, encoding: 'base64', size: Buffer.byteLength(text), content: Buffer.from(text).toString('base64') });
+  for (const mode of ['100755', '120000']) {
+    // A Contents response can misleadingly claim type=file for a real symlink.
+    const api = fakeApi({ '/pulls/7': pr(), '/pulls/7/files': [{ filename: 'a.js', status: 'modified', additions: 0, deletions: 0 }], [`/contents/a.js?ref=${head}`]: blob('same', mode), [`/contents/a.js?ref=${base}`]: blob('same'), [`/contents/AGENTS.md?ref=${base}`]: blob('Policy'), '/issues/7/comments': [], '/pulls/7/reviews': [], '/pulls/7/comments': [] });
+    const prepared = await prepare(api, 'pull_request_target', {}, 7);
+    assert.equal(prepared.files[0].baseMode, '100644');
+    assert.equal(prepared.files[0].headMode, mode);
+    assert.equal(validateResult(prepared, generated()).verdict, mode === '100755' ? 'APPROVE' : 'COMMENT');
+  }
+  const tree = 'e'.repeat(40);
+  const api = fakeApi({ '/pulls/7': pr(), '/pulls/7/files': [{ filename: 'a.js', status: 'modified', additions: 0, deletions: 0 }], [`/git/commits/${head}`]: { sha: head, tree: { sha: tree } }, [`/git/trees/${tree}?recursive=1`]: { sha: tree, truncated: true, tree: [] }, '/issues/7/comments': [], '/pulls/7/reviews': [], '/pulls/7/comments': [] });
+  const prepared = await prepare(api, 'pull_request_target', {}, 7);
+  assert(prepared.limitations.some((limit) => limit.includes('Head Git tree')));
+  assert.equal(validateResult(prepared, generated()).verdict, 'COMMENT');
 });
 
 test('missing/binary/oversized file context and missing patches cannot approve', async () => {
