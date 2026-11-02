@@ -1,0 +1,108 @@
+name: OpenCode Go PR review
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review, edited]
+    branches-ignore: [main]
+  issue_comment:
+    types: [created]
+  workflow_run:
+    workflows: [OpenCode inline request]
+    types: [completed]
+  push:
+    branches-ignore: [main]
+  workflow_dispatch:
+    inputs:
+      pull_request:
+        description: Open PR number to review (base must not be main)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  pull-requests: read
+  issues: read
+  actions: read
+
+jobs:
+  plan:
+    if: github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.actor.type == 'User')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      prs: ${{ steps.plan.outputs.prs }}
+    steps:
+      # Always trusted default-branch support code. NEVER check out a PR head.
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 24.22.1
+      - id: plan
+        name: Resolve eligible live PRs and authorize manual requests
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node .github/scripts/opencode-review.mjs plan
+
+  review:
+    needs: plan
+    if: needs.plan.outputs.prs != '[]' && needs.plan.outputs.prs != ''
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        pr: ${{ fromJSON(needs.plan.outputs.prs) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      pull-requests: read
+      issues: read
+      actions: read
+      id-token: write
+    concurrency:
+      # Manual requests have distinct groups; GitHub's default concurrency can
+      # replace pending runs, so a shared command group would lose replies.
+      group: opencode-${{ matrix.pr }}-${{ (github.event_name == 'issue_comment' || github.event_name == 'workflow_run' || github.event_name == 'workflow_dispatch') && github.run_id || 'automatic' }}
+      cancel-in-progress: false
+    env:
+      REVIEW_PR: ${{ matrix.pr }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 24.22.1
+      - name: Capture live head/base and bounded file/discussion context as data
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node .github/scripts/opencode-review.mjs prepare "$REVIEW_PR"
+      - name: Install immutable official OpenCode CLI (no project dependencies)
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/opencode-cli"
+          curl --fail --silent --show-error --location --max-time 120 \
+            https://github.com/anomalyco/opencode/releases/download/v1.19.5/opencode-linux-x64-baseline.tar.gz \
+            --output "$RUNNER_TEMP/opencode-cli/release.tar.gz"
+          echo "17c200fd4b2289954cc01552559f9b6d03ec157b2ddfb5eb54144f491656333d  $RUNNER_TEMP/opencode-cli/release.tar.gz" | sha256sum --check
+          tar -xzf "$RUNNER_TEMP/opencode-cli/release.tar.gz" -C "$RUNNER_TEMP/opencode-cli"
+          test "$("$RUNNER_TEMP/opencode-cli/opencode" --version)" = '1.19.5'
+      - name: Generate tool-denied review with no GitHub/OIDC child credentials
+        env:
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          OPENCODE_MODEL: ${{ vars.OPENCODE_MODEL || 'opencode-go/deepseek-v4.1-flash' }}
+          OPENCODE_VARIANT: ${{ vars.OPENCODE_VARIANT || 'max' }}
+          OPENCODE_BIN: ${{ runner.temp }}/opencode-cli/opencode
+        run: node .github/scripts/opencode-review.mjs generate "$REVIEW_PR"
+      - name: Publish validated current-head review/reply using installed App OIDC
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node .github/scripts/opencode-review.mjs publish "$REVIEW_PR"
+      - name: Remove task-local review data
+        if: always()
+        shell: bash
+        run: rm -rf -- "$RUNNER_TEMP/opencode-review/$REVIEW_PR"
