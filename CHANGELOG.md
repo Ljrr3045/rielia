@@ -14,6 +14,8 @@ the [OpenCode Go review guide](docs/development/opencode-review.md).
   [acf70fd review5734973337](https://github.com/Ljrr3045/rielia/pull/25#pullrequestreview-5734973337)
   also prompted active-review footer corrections and a historical T10.1 label;
   current-head audit/CI/review remain required.
+- Extract reply cases after GitHub omitted the large `a30fa30` test-file patch;
+  all60 tests/assertions and the entry point remain, with strict coverage unchanged.
 - Separate reply contract for bound COMMENT answers with empty/subset file
   coverage and no findings; successful replies retain `complete=false` without
   claiming or requiring formal review completion. Host metadata now renders as

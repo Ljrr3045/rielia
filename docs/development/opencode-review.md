@@ -563,7 +563,8 @@ category does not prove a particular key is wrong. A nonzero CLI exit never
 becomes successful review even if stdout contains plausible review JSON.
 
 All 60 focused event/auth/review/diagnostic/trust/representation checks pass on
-Node 24.22.1. A real adapter-process test uses an inert fake executable with
+Node 24.22.1 through the main test entry and imported reply cases.
+A real adapter-process test uses an inert fake executable with
 secret-shaped strings, provider URLs and workflow commands in both streams;
 only the expected static code appears and no result artifact is written.
 No paid model or live App call is part of that check. Previous source audit/CI
