@@ -97,6 +97,9 @@ a person from automation using the same human credentials; there is no
 coordinator login allowlist. The main plan job skips ordinary non-PR issue
 comments before checkout. This guard leaves inline relay events and implicit
 App-thread follow-ups unchanged.
+Planning treats an explicit account/permission denial as ineligible and emits
+no review work. Transport, API and relay failures still fail; permission loss
+during preparation or publication still blocks the request.
 
 The [main workflow](../../.github/workflows/opencode-review.yml) handles trusted
 PR-target events, root comments, base pushes and manual dispatch. It always
@@ -196,18 +199,30 @@ evidence are reported separately before any root-authorized live run.
 
 JSONL must contain normal `stop` completion and exactly one valid review JSON
 object. A tool attempt, error, missing completion, malformed schema, wrong head/
-base, inconsistent file coverage, output bound or timeout blocks publication.
+base, inconsistent formal-review file coverage, output bound or timeout blocks
+publication. Reply paths must be typed, unique and drawn from supplied files.
 Inline findings must identify a changed file and an actual changed diff line.
 
 Full reviews use GitHub's formal `APPROVE`, `REQUEST_CHANGES` or `COMMENT`, with
 explicit `commit_id` and batched inline findings. Approval requires complete
 coverage and no actionable findings; change requests require concrete findings.
-Drafts and incomplete coverage use `COMMENT`. A question reply always stays a
-reply in the root discussion or original inline thread, regardless of any model
-verdict. Missing coverage is stated explicitly and leaves the job failed; it is
-never a clean review. Network-ambiguous writes are not automatically retried;
+Drafts and incomplete coverage use `COMMENT`. A question reply requires model
+`COMMENT` and no findings, and stays in the root discussion or original inline
+thread. It may name an empty/subset file list and answer with limited or empty
+file context; its outcome always records `complete=false` and `REPLY`, with no
+formal coverage claim. Successfully posting that answer does not fail solely
+for missing formal coverage. Schema, authorization, freshness, write and token
+cleanup failures still fail the reply job. Missing formal-review coverage is
+stated explicitly and leaves the job failed; it is never a clean review.
+Network-ambiguous writes are not automatically retried;
 inspect the PR before rerunning. A same-run publication marker prevents blind
 duplicate retries.
+
+Host-generated metadata uses fixed code spans containing ASCII JSON string
+literals. Limitations, base refs, model names and variants escape backticks,
+mentions, HTML and non-ASCII/control characters; decoding the literal recovers
+the original value. Raw input/projection and normal model-authored prose remain
+unchanged. Run/repository/SHA fields retain their validated fixed grammars.
 
 Before and after publication the adapter rechecks open state, head SHA/repository,
 base ref/SHA/repository and draft state. `main` is checked dynamically for all
@@ -252,7 +267,7 @@ state without inferring successful revocation.
 | 80 changed files; 160,000 bytes per whole file | Partial context, explicit incomplete COMMENT |
 | 5,000 entries per immutable base/head Git tree | Incomplete COMMENT if missing/truncated/oversized |
 | 1,000,000 bytes combined file context; 300,000 patch bytes | Partial context, explicit incomplete COMMENT |
-| 512,000 UTF-8 bytes of complete raw discussion JSON | Bounded recent/thread fallback above this limit, explicit incomplete COMMENT |
+| 1,024,000 UTF-8 bytes of complete raw discussion JSON | Bounded recent/thread fallback above this limit, explicit incomplete formal COMMENT |
 | 2,000 title / 12,000 body UTF-16 code units | Existing slice bounds; any omitted text adds an explicit limitation and prevents APPROVE |
 | Missing/truncated patch, binary, symlink, unavailable context | Explicit incomplete COMMENT; never APPROVE |
 | Ten 100-row pages per API list | Fail closed, no assumed complete review |
@@ -487,6 +502,23 @@ discussion measured 498,466/512,000 raw JSON bytes with 13,534 bytes remaining,
 historical measurement and review evidence, not approval of changed source or
 completed event acceptance.
 
+Historical 2026-11-02 checkpoint: exact `111c70e` passed both CIs and independent
+audit. [Run41414538419](https://github.com/Ljrr3045/rielia/actions/runs/41414538419)
+completed generation (20m18), App publication and cleanup. Complete App
+[CHANGES_REQUESTED5734110898](https://github.com/Ljrr3045/rielia/pull/25#pullrequestreview-5734110898)
+at 08:59:07Z raised reply coverage, literal host-metadata rendering and expected
+manual-authorization denial. The bounded corrections above preserve every
+formal-review gate and add focused reply/publication/error-path regressions.
+Post-review full raw discussion measured 621,484 bytes, exceeding the then-current
+512,000 bound; no history was deleted or truncated to establish approval.
+The coordinator authorized a single bounded increase to 1,024,000 actual UTF-8
+bytes, leaving 402,516 bytes at that captured history size. Exact 1,024,000 and
+1,024,001-byte ASCII/multibyte preparation regressions preserve every raw field
+at/below the bound and keep overflow incomplete. Pagination, file/patch bounds,
+model/max/output/time limits and formal approval rules stay unchanged. This
+addresses a measured local coverage bound, not a provider token-capacity guarantee.
+Changed source needs fresh immutable audit, CI and complete current-head review.
+
 The diagnostic follow-up preserves strict parsing/coverage and adds only
 allowlisted static failure codes. Main logs a fixed sentence containing a code
 and, for rejected completion or timeout only, the bounded primitive metadata above;
@@ -523,7 +555,7 @@ causes CLI exit 1. No message/body is inspected to guess a cause, and an auth
 category does not prove a particular key is wrong. A nonzero CLI exit never
 becomes successful review even if stdout contains plausible review JSON.
 
-All 53 focused event/auth/review/diagnostic/trust/representation checks pass on
+All 59 focused event/auth/review/diagnostic/trust/representation checks pass on
 Node 24.22.1. A real adapter-process test uses an inert fake executable with
 secret-shaped strings, provider URLs and workflow commands in both streams;
 only the expected static code appears and no result artifact is written.
@@ -539,7 +571,7 @@ request preparation defaults to a32,000-token output cap; the authorized fixed
 384,000 cap supersedes the earlier 128,000 experiment while retaining `max`.
 New-head review and actual Go acceptance/completion evidence remain required.
 
-Local evidence: 53 event/auth/fork/main-exclusion/relay/coverage/verdict/current-
+Local evidence: 59 event/auth/fork/main-exclusion/relay/coverage/verdict/current-
 head/base-race/token-isolation/diagnostic tests pass; all workflows pass checksum-pinned
 actionlint 1.7.12; immutable handoff and whitespace checks pass. The real CLI
 1.19.5 macOS archive was verified with SHA-256

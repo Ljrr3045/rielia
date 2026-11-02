@@ -10,7 +10,7 @@ import { join } from 'node:path';
 import { PassThrough } from 'node:stream';
 import test from 'node:test';
 import { runInNewContext } from 'node:vm';
-import { GitHub, LIMITS, Obsolete, ReviewFailure, assertFresh, authorize, buildPrompt, changedLines, collectCliOutput, commandContext, exchangeToken, expandModelInput, findingLineRanges, formatFailure, modelConfig, modelEnvironment, parseEvents, plan, prepare, projectModelInput, publish, publishWithRevocation, snapshot, validateRelay, validateResult } from './opencode-review.mjs';
+import { AuthorizationDenied, GitHub, LIMITS, Obsolete, ReviewFailure, assertFresh, authorize, buildPrompt, changedLines, collectCliOutput, commandContext, exchangeToken, expandModelInput, findingLineRanges, formatFailure, modelConfig, modelEnvironment, parseEvents, plan, prepare, projectModelInput, publish, publishWithRevocation, snapshot, validateRelay, validateResult } from './opencode-review.mjs';
 
 const repo = 'Ljrr3045/rielia';
 const head = 'a'.repeat(40);
@@ -82,6 +82,45 @@ test('manual command boundaries, live permission, bots and non-PR issues', async
   assert.equal(await commandContext(fakeApi(), 'issue_comment', { ...event(), issue: { number: 7 } }), null);
   await assert.rejects(commandContext(commandApi('/oc', { '/collaborators/maintainer/permission': { permission: 'read' } }), 'issue_comment', event()), /current write/);
   for (const permission of ['write', 'maintain', 'admin']) await authorize(fakeApi({ '/collaborators/maintainer/permission': { permission } }), human);
+});
+
+test('plan ignores only known manual authorization denial; prepare and publication still reject it', async () => {
+  for (const name of ['workflow_dispatch', 'issue_comment', 'pull_request_review_comment']) {
+    const ev = { ...event('/oc review', name === 'issue_comment' ? 'root' : 'inline'), inputs: { pull_request: '7' } };
+    for (const permission of ['read', 'triage', 'none']) {
+      const denied = commandApi('/oc review', { '/collaborators/maintainer/permission': { permission } });
+      assert.deepEqual(await plan(denied, name, ev), []);
+      await assert.rejects(prepare(denied, name, ev, 7), AuthorizationDenied);
+      const command = await commandContext(commandApi(), name, ev);
+      await assert.rejects(publishWithRevocation(denied, input({ command }), generated(), name, ev, '123-1'), AuthorizationDenied);
+      assert(!denied.calls.some(([method]) => method === 'POST'));
+      assert.equal(denied.calls.filter(([method]) => method === 'DELETE').length, 1);
+    }
+    assert.deepEqual(await plan(commandApi(), name, ev), [7]);
+    const outsider = { login: 'external-contributor', type: 'User' };
+    const outsideApi = commandApi('/oc review', { '/issues/comments/9': comment('/oc review', { user: outsider }), '/pulls/comments/9': comment('/oc review', { user: outsider }), '/collaborators/external-contributor/permission': { permission: 'read' } });
+    assert.deepEqual(await plan(outsideApi, name, { ...ev, sender: outsider }), []);
+  }
+  const implicit = commandApi('question', { '/pulls/comments/9': comment('question', { in_reply_to_id: 4 }), '/pulls/comments/4': comment('finding', { id: 4, user: bot }), '/collaborators/maintainer/permission': { permission: 'read' } });
+  assert.deepEqual(await plan(implicit, 'pull_request_review_comment', event('question', 'inline')), []);
+});
+
+test('planning preserves transport, API, invalid event and comment failures instead of treating them as denial', async () => {
+  for (const name of ['workflow_dispatch', 'issue_comment', 'pull_request_review_comment']) {
+    const ev = { ...event('/oc review', name === 'issue_comment' ? 'root' : 'inline'), inputs: { pull_request: '7' } };
+    for (const status of [undefined, 401, 403, 404, 429, 500]) {
+      const failure = Object.assign(new Error('Manual requests require current write/maintain/admin access'), { status });
+      const api = commandApi('/oc review', { '/collaborators/maintainer/permission': () => { throw failure; } });
+      await assert.rejects(plan(api, name, ev), (error) => error === failure);
+    }
+    for (const malformed of [null, {}, { permission: null }, { permission: {} }, { permission: 'unexpected' }]) {
+      await assert.rejects(plan(commandApi('/oc review', { '/collaborators/maintainer/permission': malformed }), name, ev), /Invalid GitHub permission response/);
+    }
+    const failure = new Error('Comment fetch failed');
+    const api = commandApi('/oc review', { '/issues/comments/9': () => { throw failure; }, '/pulls/comments/9': () => { throw failure; } });
+    if (name !== 'workflow_dispatch') await assert.rejects(plan(api, name, ev), (error) => error === failure);
+    await assert.rejects(plan(commandApi(), name, { ...ev, repository: { full_name: 'wrong/repository' } }), /repository mismatch/);
+  }
 });
 
 test('inline mention and app-thread follow-up preserve original root comment', async () => {
@@ -312,21 +351,25 @@ test('four real-shaped large inline hunks retain every raw body, binding and met
 });
 
 test('discussion limit counts actual UTF8 bytes, accepts exact bound and marks overflow incomplete', async () => {
-  const exact = { root: [{ id: 1, body: '', user: human }], reviews: [], inline: [] };
-  exact.root[0].body = 'x'.repeat(LIMITS.discussionBytes - Buffer.byteLength(JSON.stringify(exact)));
-  assert.equal(Buffer.byteLength(JSON.stringify(exact)), LIMITS.discussionBytes);
-  const full = await prepareDiscussion(exact);
-  assert.deepEqual(full.discussion, exact);
-  assert.deepEqual(full.limitations, []);
-  for (const body of [exact.root[0].body + 'x', '🙂'.repeat(Math.floor(LIMITS.discussionBytes / 3))]) {
-    const over = { root: [{ id: 1, body, user: human }], reviews: [], inline: [] };
-    assert(Buffer.byteLength(JSON.stringify(over)) > LIMITS.discussionBytes);
-    if (body.startsWith('🙂')) assert(JSON.stringify(over).length < LIMITS.discussionBytes, 'UTF16 character count must not bypass the byte bound');
-    const prepared = await prepareDiscussion(over);
-    assert(prepared.limitations.includes('Discussion context truncated'));
-    assert(prepared.discussion.note.includes('omitted'));
-    assert.equal(validateResult(prepared, generated()).verdict, 'COMMENT');
-    assert.equal(validateResult(prepared, generated()).complete, false);
+  assert.equal(LIMITS.discussionBytes, 1_024_000);
+  for (const target of [621_484, 1_024_000, 1_024_001]) {
+    for (const prefix of ['', '🙂\n字']) {
+      const discussion = { root: [{ id: 1, body: prefix, user: human }], reviews: [], inline: [] };
+      discussion.root[0].body += 'x'.repeat(target - Buffer.byteLength(JSON.stringify(discussion)));
+      assert.equal(Buffer.byteLength(JSON.stringify(discussion)), target);
+      const prepared = await prepareDiscussion(discussion);
+      if (target <= LIMITS.discussionBytes) {
+        assert.deepEqual(prepared.discussion, discussion);
+        assert.deepEqual(prepared.limitations, []);
+        assert.equal(validateResult(prepared, generated()).verdict, 'APPROVE');
+      } else {
+        if (prefix) assert(JSON.stringify(discussion).length < LIMITS.discussionBytes, 'UTF16 count must not bypass actual UTF8 byte bound');
+        assert(prepared.limitations.includes('Discussion context truncated'));
+        assert(prepared.discussion.note.includes('omitted'));
+        assert.equal(validateResult(prepared, generated()).verdict, 'COMMENT');
+        assert.equal(validateResult(prepared, generated()).complete, false);
+      }
+    }
   }
 });
 
@@ -822,10 +865,25 @@ test('formal verdict and coverage contract fail closed', () => {
   assert.equal(validateResult(input(), generated()).verdict, 'APPROVE');
   const finding = { path: 'a.js', side: 'RIGHT', line: 2, body: 'Dereference fails on null input, causing a request failure.' };
   assert.equal(validateResult(input(), generated({ verdict: 'REQUEST_CHANGES', findings: [finding] })).verdict, 'REQUEST_CHANGES');
-  for (const changed of [input({ limitations: ['binary omitted'] }), input({ expected: snapshot(pr({ draft: true })) }), input({ mode: 'reply' }), input({ allPaths: ['a.js', 'missing.js'] })]) assert.equal(validateResult(changed, generated()).verdict, 'COMMENT');
+  for (const changed of [input({ limitations: ['binary omitted'] }), input({ expected: snapshot(pr({ draft: true })) }), input({ allPaths: ['a.js', 'missing.js'] })]) assert.equal(validateResult(changed, generated()).verdict, 'COMMENT');
   assert.equal(validateResult(input(), generated({ complete: false })).complete, false);
   for (const change of [{ head: 'c'.repeat(40) }, { base: 'c'.repeat(40) }, { complete: 'true' }, { reviewed_files: [] }, { reviewed_files: ['a.js', 'a.js'] }, { findings: [{ ...finding, line: 100 }] }, { findings: [finding] }, { verdict: 'REQUEST_CHANGES' }]) assert.throws(() => validateResult(input(), generated(change)));
   assert.deepEqual([...changedLines(patch).RIGHT], [2]);
+});
+
+test('reply validation accepts only bound COMMENT answers and typed unique supplied-path subsets', () => {
+  const reply = input({ mode: 'reply', files: [{ path: 'a.js', patch }, { path: 'b.js', patch }], allPaths: ['a.js', 'b.js'], limitations: ['missing context'] });
+  for (const reviewed_files of [[], ['a.js'], ['b.js'], ['b.js', 'a.js']]) {
+    for (const complete of [false, true]) assert.deepEqual(validateResult(reply, generated({ verdict: 'COMMENT', complete, reviewed_files })), { summary: generated().result.summary, findings: [], complete: false, verdict: 'COMMENT' });
+  }
+  for (const reviewed_files of [['a.js', 'a.js'], ['outside.js'], [null], [7]]) assert.throws(() => validateResult(reply, generated({ verdict: 'COMMENT', reviewed_files })), hasCode('REVIEW_COVERAGE'));
+  for (const verdict of ['APPROVE', 'REQUEST_CHANGES']) assert.throws(() => validateResult(reply, generated({ verdict, reviewed_files: [] })), hasCode('REVIEW_VERDICT'));
+  assert.throws(() => validateResult(reply, generated({ verdict: 'COMMENT', reviewed_files: [], findings: [{}] })), hasCode('REVIEW_VERDICT'));
+  for (const field of ['head', 'base']) assert.throws(() => validateResult(reply, generated({ verdict: 'COMMENT', [field]: 'c'.repeat(40), reviewed_files: [] })), hasCode('REVIEW_BINDING'));
+  for (const invalid of [{ complete: 'false' }, { summary: '' }, { findings: null }]) assert.throws(() => validateResult(reply, generated({ verdict: 'COMMENT', reviewed_files: [], ...invalid })), hasCode('REVIEW_SCHEMA'));
+  assert.throws(() => validateResult(input(), generated({ verdict: 'COMMENT', reviewed_files: [] })), hasCode('REVIEW_COVERAGE'));
+  assert.equal(validateResult(input({ limitations: ['missing context'] }), generated()).complete, false);
+  assert(modelConfig('opencode-go/deepseek-v4.1-flash', 'max').agent.review.prompt.includes('reviewed_files may be empty or a unique subset'));
 });
 
 test('publishes formal current-head reviews with atomic inline batch', async () => {
@@ -848,13 +906,108 @@ test('root and inline follow-up publication cannot approve and routes to origina
     const name = kind === 'root' ? 'issue_comment' : 'pull_request_review_comment';
     const ev = event('/oc explain', kind);
     const command = await commandContext(api, name, ev);
-    const outcome = await publish(api, input({ command, mode: 'reply' }), generated(), name, ev, '123-1');
+    const outcome = await publish(api, input({ command, mode: 'reply' }), generated({ verdict: 'COMMENT' }), name, ev, '123-1');
     assert.equal(outcome.verdict, 'REPLY');
     const write = api.calls.find(([method]) => method === 'POST');
     assert.equal(write[1], kind === 'root' ? '/issues/7/comments' : '/pulls/7/comments/4/replies');
     assert.equal(write[2].event, undefined);
     assert(write[2].body.includes('no review approval'));
   }
+});
+
+test('root and inline incomplete replies succeed without claiming full coverage, including empty and limited input', async () => {
+  for (const kind of ['root', 'inline']) {
+    for (const context of [{}, { files: [], allPaths: [] }, { files: [], allPaths: ['missing.js'], limitations: ['unavailable file'] }, { limitations: ['discussion truncated'] }]) {
+      const api = commandApi('/oc explain', { '/pulls/comments/9': comment('/oc explain', { in_reply_to_id: 4 }) });
+      const name = kind === 'root' ? 'issue_comment' : 'pull_request_review_comment';
+      const ev = event('/oc explain', kind);
+      const command = await commandContext(api, name, ev);
+      const recorded = [];
+      const outcome = await publishWithRevocation(api, input({ command, mode: 'reply', ...context }), generated({ verdict: 'COMMENT', complete: false, reviewed_files: [] }), name, ev, '123-1', async (value) => recorded.push(value));
+      assert.equal(outcome.verdict, 'REPLY');
+      assert.equal(outcome.complete, false);
+      assert.deepEqual(recorded, [outcome]);
+      const writes = api.calls.filter(([method]) => method === 'POST');
+      assert.equal(writes.length, 1);
+      assert.equal(writes[0][1], kind === 'root' ? '/issues/7/comments' : '/pulls/7/comments/4/replies');
+      assert(writes[0][2].body.includes('Thread reply only; no review approval.'));
+      assert(!writes[0][2].body.includes('Complete supplied-file review.'));
+      assert.equal(api.calls.filter(([method]) => method === 'DELETE').length, 1);
+    }
+  }
+});
+
+test('reply authorization, edits, duplicates, freshness and cleanup failures remain failed gates', async (t) => {
+  const logs = [];
+  t.mock.method(console, 'error', (message) => logs.push(message));
+  for (const kind of ['root', 'inline']) {
+    const name = kind === 'root' ? 'issue_comment' : 'pull_request_review_comment';
+    const ev = event('/oc explain', kind);
+    const command = await commandContext(commandApi('/oc explain'), name, ev);
+    const reply = input({ command, mode: 'reply' });
+    const result = generated({ verdict: 'COMMENT', complete: false, reviewed_files: [] });
+    for (const invalid of [{ verdict: 'APPROVE' }, { reviewed_files: ['unknown.js'] }, { complete: 'false' }]) {
+      const malformed = commandApi('/oc explain');
+      await assert.rejects(publishWithRevocation(malformed, reply, generated({ ...result.result, ...invalid }), name, ev, '123-1'), ReviewFailure);
+      assert(!malformed.calls.some(([method]) => method === 'POST'));
+      assert.equal(malformed.calls.filter(([method]) => method === 'DELETE').length, 1);
+    }
+    for (const [extra, expected] of [[{ '/collaborators/maintainer/permission': { permission: 'read' } }, AuthorizationDenied], [{ '/issues/comments/9': comment('/oc edited'), '/pulls/comments/9': comment('/oc edited') }, Obsolete], [{ '/pulls/7': pr({ base: { sha: base, ref: 'main', repo: { full_name: repo } } }) }, Obsolete]]) {
+      const api = commandApi('/oc explain', extra);
+      await assert.rejects(publishWithRevocation(api, reply, result, name, ev, '123-1'), expected);
+      assert(!api.calls.some(([method]) => method === 'POST'));
+      assert.equal(api.calls.filter(([method]) => method === 'DELETE').length, 1);
+    }
+    let reads = 0;
+    const stale = commandApi('/oc explain', { '/pulls/7': () => ++reads === 1 ? pr() : pr({ state: 'closed' }) });
+    await assert.rejects(publishWithRevocation(stale, reply, result, name, ev, '123-1'), Obsolete);
+    assert.equal(stale.calls.filter(([method]) => method === 'POST').length, 1);
+    assert.equal(stale.calls.filter(([method]) => method === 'DELETE').length, 1);
+    const duplicate = commandApi('/oc explain', { [kind === 'root' ? '/issues/7/comments' : '/pulls/7/comments']: [{ user: bot, body: `<!-- rielia-opencode 123-1 head=${head} base=${base} -->` }] });
+    await assert.rejects(publishWithRevocation(duplicate, reply, result, name, ev, '123-1'), /already published/);
+    assert(!duplicate.calls.some(([method]) => method === 'POST'));
+    const cleanup = commandApi('/oc explain');
+    cleanup.request = async (method, path) => { cleanup.calls.push([method, path]); throw new Error('fake-revoke-must-not-log'); };
+    await assert.rejects(publishWithRevocation(cleanup, reply, result, name, ev, '123-1'), hasCode('APP_TOKEN_REVOCATION_FAILED'));
+    assert.equal(cleanup.calls.filter(([method]) => method === 'POST').length, 1);
+    assert.equal(cleanup.calls.filter(([method]) => method === 'DELETE').length, 1);
+    assert(logs.at(-1).includes('publication=confirmed'));
+    assert(!logs.at(-1).includes('fake-'));
+  }
+});
+
+test('actual prepare/publication renders hostile path and host metadata as lossless inert literals', async () => {
+  const path = '@org/team`\n### spoof\r\n[link](https://example.test)</code>&\u202e.js';
+  const baseRef = 'release/`@org/team`<tag>&\u2028';
+  const current = pr({ base: { sha: base, ref: baseRef, repo: { full_name: repo } } });
+  const blob = (text) => ({ encoding: 'base64', size: Buffer.byteLength(text), content: Buffer.from(text).toString('base64') });
+  const api = fakeApi({ '/pulls/7': current, '/pulls/7/files': [{ filename: path, status: 'added', additions: 1, deletions: 0, patch: '@@ -0,0 +1 @@\n+data' }], [`/contents/${path}?ref=${head}`]: blob('\0'), [`/contents/AGENTS.md?ref=${base}`]: blob('Policy'), '/issues/7/comments': [], '/pulls/7/reviews': [], '/pulls/7/comments': [] });
+  const prepared = await prepare(api, 'pull_request_target', {}, 7);
+  assert(prepared.limitations.some((value) => value.includes(path)));
+  const before = JSON.stringify(prepared);
+  assert.deepEqual(expandModelInput(projectModelInput(prepared)), prepared);
+  const summary = '## Model prose\n\nKeep `code` and @model-prose unchanged.';
+  const result = generated({ summary, reviewed_files: [path] });
+  result.model = 'provider/`@model`<tag>';
+  result.variant = 'max\n@variant';
+  await assert.rejects(publishWithRevocation(api, prepared, result, 'pull_request_target', {}, '123-1'), hasCode('REVIEW_INCOMPLETE'));
+  const write = api.calls.find(([method]) => method === 'POST');
+  assert.equal(write[2].event, 'COMMENT');
+  const body = write[2].body;
+  assert(body.startsWith(summary + '\n\n'));
+  const metadata = body.slice(summary.length);
+  assert(!metadata.includes('@') && !metadata.includes('<tag>') && !metadata.includes('### spoof\r\n'));
+  assert(!/[\u007f-\uffff]/.test(metadata));
+  const decode = (span) => JSON.parse(span.slice(1, -1));
+  assert.equal(decode(metadata.match(/base: (`[^\n]+?`) at/)[1]), baseRef);
+  assert.equal(decode(metadata.match(/Model: (`[^\n]+?`),/)[1]), result.model);
+  assert.equal(decode(metadata.match(/variant (`[^\n]+?`)\./)[1]), result.variant);
+  const literalLines = metadata.split('\n').filter((line) => line.startsWith('- '));
+  assert.deepEqual(literalLines.map((line) => decode(line.slice(2))), prepared.limitations);
+  assert(literalLines.every((line) => (line.match(/`/g) ?? []).length === 2));
+  assert(body.endsWith(`<!-- rielia-opencode 123-1 head=${head} base=${base} -->`));
+  assert.equal(JSON.stringify(prepared), before);
+  assert.equal(api.calls.filter(([method]) => method === 'DELETE').length, 1);
 });
 
 test('freshness checks block head/base/ref/draft/closure races before any write', async () => {

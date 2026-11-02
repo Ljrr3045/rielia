@@ -6,6 +6,17 @@ This records repository changes. No application version has been released.
 
 ### Added
 
+- Separate reply contract for bound COMMENT answers with empty/subset file
+  coverage and no findings; successful replies retain `complete=false` without
+  claiming or requiring formal review completion. Host metadata now renders as
+  escaped literal JSON, and only explicit authorization denial skips planning;
+  genuine API/transport failures and revoked access still fail closed.
+  Measured discussion621,484 exceeded512,000 bytes; the coordinator authorized
+  a bounded1,024,000-byte limit with exact/overflow/multibyte preparation checks,
+  preserving all raw history and incomplete-above-bound formal review.
+  59 focused checks cover actual publication, hostile filenames, reply races
+  and cleanup. These address historical [111c70e review5734110898](https://github.com/Ljrr3045/rielia/pull/25#pullrequestreview-5734110898);
+  changed-head audit/CI/review and full activation remain OPEN.
 - Exact UTF-8 BOM preservation through immutable blob decoding, prepare and
   lossless patch projection, retaining invalid/binary/byte-bound rejection.
   The plan job skips ordinary non-PR issue comments and preserves implicit
