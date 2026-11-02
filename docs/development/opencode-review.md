@@ -151,8 +151,8 @@ Only the coordinator merges, through normal repository requirements.
 
 | Bound | Outcome on excess |
 | --- | --- |
-| 80 changed files; 48,000 bytes per whole file | Partial context, explicit incomplete COMMENT |
-| 600,000 bytes combined file context; 200,000 patch bytes | Partial context, explicit incomplete COMMENT |
+| 80 changed files; 160,000 bytes per whole file | Partial context, explicit incomplete COMMENT |
+| 1,000,000 bytes combined file context; 300,000 patch bytes | Partial context, explicit incomplete COMMENT |
 | 80,000 discussion characters | Bounded recent/thread context, incomplete COMMENT |
 | Missing/truncated patch, binary, symlink, unavailable context | Explicit incomplete COMMENT; never APPROVE |
 | Ten 100-row pages per API list | Fail closed, no assumed complete review |
@@ -165,10 +165,14 @@ still runs separately; a model cannot claim it executed those checks. Large or
 binary changes need a maintainer to arrange complete review or split the change.
 App exchange, public Go availability, API rate limits and Actions/fork approval
 policy are external dependencies; a failure remains a blocker.
+The 160 KB whole-file limit permits the existing 103,545-byte progress ledger
+and 33,722-byte changelog (measured before this update), which normal deliveries
+must edit. Exactly-at-limit and over-limit file cases are tested; the combined
+budget still bounds total context rather than silently truncating large files.
 
 ## Validation and activation
 
-Local evidence: 20 event/auth/fork/main-exclusion/relay/coverage/verdict/current-
+Local evidence: 21 event/auth/fork/main-exclusion/relay/coverage/verdict/current-
 head/base-race/token-isolation tests pass; all workflows pass checksum-pinned
 actionlint 1.7.12; immutable handoff and whitespace checks pass. The real CLI
 1.19.5 macOS archive was verified with SHA-256
@@ -197,8 +201,8 @@ Activation/bootstrap steps, owned by the coordinator:
    by name only. Optional model/variant variables can remain unset for defaults.
 2. Independently review this infrastructure PR and pass no-secret CI. Because
    trusted support code must first exist on `dev`/default, the new assistant
-   cannot review its own bootstrap PR. Satisfy normal repository human/code-owner
-   approval requirements and record the transition evidence; no direct merge,
+   cannot review its own bootstrap PR. Satisfy normal repository-required
+   approval/code-owner rules and record the transition evidence; no direct merge,
    bypass, pretend review or Kody trigger is authorized by this guide.
 3. After a legitimate coordinator merge, use an authorized disposable PR targeting
    `dev` to verify automatic review and `/oc review`, root question/follow-up,

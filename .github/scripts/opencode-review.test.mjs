@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { Buffer } from 'node:buffer';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
-import { GitHub, Obsolete, assertFresh, authorize, buildPrompt, changedLines, commandContext, exchangeToken, modelConfig, modelEnvironment, parseEvents, plan, prepare, publish, snapshot, validateRelay, validateResult } from './opencode-review.mjs';
+import { GitHub, LIMITS, Obsolete, assertFresh, authorize, buildPrompt, changedLines, commandContext, exchangeToken, modelConfig, modelEnvironment, parseEvents, plan, prepare, publish, snapshot, validateRelay, validateResult } from './opencode-review.mjs';
 
 const repo = 'Ljrr3045/rielia';
 const head = 'a'.repeat(40);
@@ -89,6 +89,16 @@ test('missing/binary/oversized file context and missing patches cannot approve',
   const prepared = await prepare(api, 'pull_request_target', {}, 7);
   assert(prepared.limitations.length >= 3);
   assert.equal(validateResult(prepared, generated()).verdict, 'COMMENT');
+});
+
+test('whole-file byte boundary permits normal progress docs and rejects excess/binary/truncated patch', async () => {
+  const blob = (bytes) => ({ type: 'file', encoding: 'base64', size: bytes.length, content: bytes.toString('base64') });
+  for (const [bytes, missingPatch, expectedComplete] of [[Buffer.alloc(LIMITS.fileBytes, 'x'), false, true], [Buffer.alloc(LIMITS.fileBytes + 1, 'x'), false, false], [Buffer.from([0]), false, false], [Buffer.from([0xff]), false, false], [Buffer.from('new'), true, false]]) {
+    const api = fakeApi({ '/pulls/7': pr(), '/pulls/7/files': [{ filename: 'a.js', status: 'modified', additions: 1, deletions: 1, patch: missingPatch ? '@@ -1 +1 @@\n-old' : `@@ -1 +1 @@\n-old\n+${bytes.toString()}` }], [`/contents/a.js?ref=${head}`]: blob(bytes), [`/contents/a.js?ref=${base}`]: blob(Buffer.from('old')), [`/contents/AGENTS.md?ref=${base}`]: blob(Buffer.from('Policy')), '/issues/7/comments': [], '/pulls/7/reviews': [], '/pulls/7/comments': [] });
+    const prepared = await prepare(api, 'pull_request_target', {}, 7);
+    assert.equal(prepared.limitations.length === 0, expectedComplete);
+    assert.equal(validateResult(prepared, generated()).verdict === 'APPROVE', expectedComplete);
+  }
 });
 
 test('model environment isolates HOME/XDG and strips every GitHub/OIDC/auth override', () => {

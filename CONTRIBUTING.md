@@ -259,7 +259,7 @@ the non-atomic GitHub publication race, fork inline relay and operational limits
 
 The replacement workflow must first exist on trusted `dev`/default. Its bootstrap
 PR requires independent source/security review, no-secret CI, normal repository
-human/code-owner approval and coordinator merge; the new assistant cannot review
+required approval/code-owner rules and coordinator merge; the new assistant cannot review
 its own bootstrap. Live App/OIDC/Go and root/inline/fork event acceptance remains
 OPEN until actual smoke evidence is recorded. No protection bypass is authorized.
 

@@ -15,7 +15,7 @@ This records repository changes. No application version has been released.
   A secret-free inline relay supports fork events. Generation has isolated
   HOME/XDG, no GitHub/OIDC credentials and no tools; deterministic publication
   validates coverage, actual head/base, inline locations and formal outcomes.
-  Incomplete/draft reviews cannot approve. Twenty focused tests, actual pinned-
+  Incomplete/draft reviews cannot approve. Twenty-one focused tests, actual pinned-
   CLI fake-provider smoke (`max` on review call, tool denial), workflow lint,
   immutable handoff and whitespace pass locally; independent audit/remote CI
   and legitimate default-branch activation/live App/Go/fork smoke remain pending.

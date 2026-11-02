@@ -8,7 +8,7 @@ import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { TextDecoder } from 'node:util';
 
-export const LIMITS = Object.freeze({ files: 80, fileBytes: 48_000, contextBytes: 600_000, patchBytes: 200_000, pages: 10, findings: 20, modelMs: 600_000, outputBytes: 1_000_000 });
+export const LIMITS = Object.freeze({ files: 80, fileBytes: 160_000, contextBytes: 1_000_000, patchBytes: 300_000, pages: 10, findings: 20, modelMs: 600_000, outputBytes: 1_000_000 });
 const SHA = /^[a-f0-9]{40}$/;
 const REPO = /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/;
 const actions = new Set(['opened', 'synchronize', 'reopened', 'ready_for_review', 'edited']);
