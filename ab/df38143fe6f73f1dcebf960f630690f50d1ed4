@@ -1,0 +1,38 @@
+CONTRIBUTING.md
+  s_b8020eceba4182::t_f30e081c8d4bdb 49-50,139-140
+  s_b8020eceba4182::t_c5a694427d8688 85-93,228-232,235-240,256-262
+CHANGELOG.md
+  s_b8020eceba4182::t_c5a694427d8688 7-13,19
+  s_b8020eceba4182::t_f30e081c8d4bdb 14-18
+docs/development/progress.md
+  s_b8020eceba4182::t_808a46af0c0d66 56-59
+  s_b8020eceba4182::t_c5a694427d8688 3,40-43,47-52,62,71,105-109,829
+  s_b8020eceba4182::t_f30e081c8d4bdb 44-46,53-55,60-61,100,839
+.github/pull_request_template.md
+  s_b8020eceba4182::t_c5a694427d8688 24-26,29-30,32-34
+AGENTS.md
+  s_b8020eceba4182::t_c5a694427d8688 68-70,72,151-152,161-171
+  s_b8020eceba4182::t_f30e081c8d4bdb 71,78-79
+REVIEW.md
+  s_b8020eceba4182::t_c5a694427d8688 1-50
+docs/development/kilo-review.md
+  s_b8020eceba4182::t_f30e081c8d4bdb 20-37,44-45,89-90
+  s_b8020eceba4182::t_808a46af0c0d66 42-43
+  s_b8020eceba4182::t_c5a694427d8688 1-19,38-41,46-88,91-97
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "abdf38143fe6f73f1dcebf960f630690f50d1ed4",
+  "prompts": {},
+  "sessions": {
+    "s_b8020eceba4182": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a17016-ab9e-7501-b8a7-f63987eb61f7",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
