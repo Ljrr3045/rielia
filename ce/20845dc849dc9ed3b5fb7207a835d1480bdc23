@@ -1,0 +1,38 @@
+.github/scripts/opencode-review.mjs
+  s_29631ef230441d::t_3820d49cade9d5 11,341-343,368-369,371
+.github/scripts/opencode-review.test.mjs
+  s_29631ef230441d::t_06ae1737626cb6 231-244
+  s_29631ef230441d::t_4a1c05dc07b550 213-230,245-278,280,284-301
+  s_b8020eceba4182::t_0de41ac612c3f3 302
+CHANGELOG.md
+  s_29631ef230441d::t_b4e56d7f6c8840 9-19
+docs/development/progress.md
+  s_29631ef230441d::t_cf2e35c76ceacd 56-58,69
+docs/development/opencode-review.md
+  s_29631ef230441d::t_21438808374022 12
+  s_29631ef230441d::t_099ec0156e74c1 10-11,13-15,58,229,347-350,388-415,445,461
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ce20845dc849dc9ed3b5fb7207a835d1480bdc23",
+  "prompts": {},
+  "sessions": {
+    "s_29631ef230441d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1998a-2a13-74a0-81ae-a5105bd337ca",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    },
+    "s_b8020eceba4182": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a17016-ab9e-7501-b8a7-f63987eb61f7",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
