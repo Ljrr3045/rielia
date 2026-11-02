@@ -35,7 +35,7 @@ jobs:
       # Audited release support code only, never the live PR/product checkout.
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
-          ref: 14cc8ab9904bd6cd67821263e1caec44d8490b48
+          ref: 2abd2bc6c310198fba38f569c47fc2fb4742a8cc
           persist-credentials: false
           sparse-checkout-cone-mode: false
           sparse-checkout: |
@@ -58,7 +58,7 @@ jobs:
           const input = JSON.parse(await readFile(join(process.env.RUNNER_TEMP, 'opencode-review', '25', 'input.json'), 'utf8'));
           assert.deepEqual(input.expected, {
             number: 25,
-            head: '14cc8ab9904bd6cd67821263e1caec44d8490b48',
+            head: '2abd2bc6c310198fba38f569c47fc2fb4742a8cc',
             headRepo: 'Ljrr3045/rielia',
             base: '64ad0d7f0e69537ebb1c2abc136ba86b4212bddb',
             baseRef: 'dev',
