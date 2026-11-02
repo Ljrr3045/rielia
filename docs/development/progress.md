@@ -64,11 +64,11 @@ exception follows merge actor, not author; coordinator policy limits it to PRs
 **authored by `Ljrr3045`**. Other contributors need his current-head `APPROVED` and
 resolved findings. The exception cannot bypass core gates and creates no fake
 approval. No global admin bypass, auto-approve action, token expansion or PAT.
-[CODEOWNERS](../../.github/CODEOWNERS) assigns every file, including itself, to him;
-matching activates on `dev` when this file reaches the base. Main has only README,
-so main CODEOWNERS/CI activation remains pending its separate minimal bootstrap.
-The user authorized one-off Kilo review of that bootstrap, not full product
-promotion. This worker neither opens nor merges that main PR.
+[CODEOWNERS](../../.github/CODEOWNERS) assigns every file, including itself, to him.
+The file and CI are active on `dev` after PR #26 and on `main` after the separate
+minimal PR #27 bootstrap. The PR-only exception covers both approval and code-owner
+requirements in the separate ownership layer. The user authorized one-off Kilo
+review of that bootstrap, not full product promotion or general main review.
 [Configuration and evidence](kilo-review.md) distinguish settings from base-file
 activation. The coordinator triages/delegates findings, verifies evidence and
 records dispositions; the assigned worker implements fixes. Only the coordinator
@@ -89,17 +89,59 @@ variables/secrets, and disabled four retired workflow registrations; Technical
 fixture CI alone remains active. Historical evidence and the OpenCode Go frontend
 worker choice remain unchanged.
 
-[PR #26](https://github.com/Ljrr3045/rielia/pull/26) is non-draft to `dev` on
-`chore/kilo-review-policy`, isolated from base `origin/dev` `64ad0d7`. The coordinator
-verified Kilo and CI SUCCESS/no findings on prior head `49f3d4e`, with no formal
-reviews. The updated head requires fresh checks and feedback inspection. Local documentation
-validation passes: 47 imported files, 30 asset hashes/sizes, 497 local links in 59
-documents, whitespace checks and 33-file PR scope inspection. Root `REVIEW.md` is
-4,311 characters (below 10,000). Verification also confirms 23 older guide
-bodies unchanged after removing their notices and the historical progress ledger
-unchanged. No product code, immutable handoff edit, ticket
-acceptance, deployment or merge is included. Application suites are inapplicable
-to this prose-only change.
+[PR #26](https://github.com/Ljrr3045/rielia/pull/26) merged into `dev` on
+2026-11-02 at 16:14:48 UTC as `a52beaa3bd535062f293fbb5f16e2699129092b4`.
+Its final head `0cb53a4ac8f128f0111476e2e925db4532d84c25` passed
+[validate](https://github.com/Ljrr3045/rielia/actions/runs/41477983229/job/125388505559)
+and [Kilo](https://app.kilo.ai/code-reviews/52c2c59a-7ea4-4302-9472-5a2e06c6707b).
+Its local documentation evidence remains 47 imported files, 30 asset hashes/sizes,
+497 local links in 59 documents, whitespace and 33-file scope inspection; the
+23 older guide bodies and historical progress ledger were preserved. No product
+code, immutable handoff edit, full-ticket acceptance or deployment was included.
+
+[PR #27](https://github.com/Ljrr3045/rielia/pull/27) merged the separate minimal
+main bootstrap on 2026-11-02 at 16:25:11 UTC as
+`41c26bc0ac6f984f8d3fecfd7f461bb5179e0465`. Its final head
+`6afd20aa38bf009a70e66f183838bb49b6f9c88e` passed
+[validate](https://github.com/Ljrr3045/rielia/actions/runs/41479780807/job/125394679013)
+and the specifically authorized [Kilo review](https://app.kilo.ai/code-reviews/f1cad821-3909-42b9-a795-f4dca0bcaae1).
+Its one conditional CODEOWNERS warning was resolved using live ownership-ruleset
+evidence: the owner's PR-only exception covers the whole separate ownership
+layer, including code-owner review, without a core bypass. Main now contains
+README, CODEOWNERS and bootstrap CI; no product implementation was promoted.
+The coordinator removed both completed worktrees.
+
+## 2026-11-02 main/dev ancestry reconciliation
+
+T00 maintenance on `fix/main-dev-reconciliation`, isolated from `origin/dev`
+`a52beaa3bd535062f293fbb5f16e2699129092b4`, merges `origin/main`
+`41c26bc0ac6f984f8d3fecfd7f461bb5179e0465` into the branch. The single add/add
+conflict is `.github/workflows/ci.yml`. The resolution keeps all dev technical
+fixture jobs, checks and pins, adds main's exact CODEOWNERS and whitespace checks,
+uses checkout `fetch-depth: 2` and `persist-credentials: false`, and runs pushes
+on both `dev` and `main` while retaining unrestricted pull-request validation.
+The check remains `validate`, contents permission stays read-only, and the full
+25-minute job/concurrency contract remains.
+
+The coordinator must integrate this PR into `dev` with a **merge commit**, not
+squash or rebase, preserving main as an ancestor so subsequent merges do not
+repeat the add/add conflict. This is main-into-dev reconciliation only; no product
+promotion to `main`, T11, deployment, dependency or reviewer-setting change is
+included. Historical Kody evidence and immutable handoff content remain unchanged.
+[PR #28](https://github.com/Ljrr3045/rielia/pull/28) is non-draft to `dev` on this
+branch. Merge commit `76e07c2170d613ce3982e0f796ae8c91cfea4d7a` has the exact dev
+and main refs above as first/second parents. Local checks pass: the handoff/link
+verifier (47 imported files, 30 asset hashes/sizes, 497 links in 59 documents),
+unstaged/staged/commit whitespace checks, Ruby Psych YAML parsing, structural
+comparison preserving all nine dev steps/pins and the two exact main governance
+checks, Bash syntax for all eight run commands, and execution of the ownership
+and whitespace commands. Four `git merge-tree --write-tree` simulations (both
+directions for HEAD/main and HEAD/dev) are conflict-free and yield the HEAD tree;
+main ancestry is verified. The eight-file diff preserves immutable handoff content
+and the historical progress ledger; root `REVIEW.md` is 4,443 characters.
+No dedicated Actions linter is installed locally. Unrelated application suites
+and dependency installation were not duplicated; full remote technical CI and
+native Kilo review of the final head remain required before coordinator merge.
 
 ## Current delivery
 

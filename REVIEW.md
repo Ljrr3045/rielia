@@ -58,9 +58,11 @@ follows the merge actor, not author, so coordinator policy must enforce that lim
 it cannot bypass core gates and does not create an approval. No global admin
 bypass, auto-approve action, token expansion or PAT. Only the coordinator merges.
 
-Code-owner matching needs the file on the base branch. Main currently lacks
-CODEOWNERS and CI; separate minimal bootstrap activation is pending, with one-off
-Kilo review authorized and no product promotion. Kilo is not required by main
+Code-owner matching uses the file on the base branch. CODEOWNERS and CI are active
+on dev after PR #26 and main after the separate minimal PR #27 bootstrap, whose
+one-off Kilo review was authorized. No product promotion occurred. Preserve the
+main/dev reconciliation's merge ancestry through a merge commit into dev, not
+squash or rebase. Kilo is not required by main
 protection; required-check selection does not enforce automatic-event exclusion.
 The coordinator triages/delegates findings and records dispositions; the assigned
 worker implements fixes. Skip Bots ON leaves unreviewed bot PRs to dev blocked;

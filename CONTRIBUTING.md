@@ -258,12 +258,20 @@ bypass core checks, PR/thread requirements, deletion or force-push protection an
 does not fabricate approval. There is no global admin bypass.
 
 The coordinator applied and verified [ruleset configuration](docs/development/kilo-review.md).
-Code-owner matching uses the base branch's file: this PR adds it for future `dev`
-reviews after merge. `main` currently has only README, so ownership/CI activation
-needs a separate minimal bootstrap. The user authorized one-off Kilo review of
-that bootstrap; base-file activation remains pending, and no full product promotion
-is authorized. This worker neither opens nor merges that main PR. Missing checks
-must not be bypassed.
+Code-owner matching uses the base branch's file. [PR #26](https://github.com/Ljrr3045/rielia/pull/26)
+merged into `dev` as `a52beaa3bd535062f293fbb5f16e2699129092b4`, and the separate
+minimal [PR #27](https://github.com/Ljrr3045/rielia/pull/27) merged into `main` as
+`41c26bc0ac6f984f8d3fecfd7f461bb5179e0465`. Both bases now contain CODEOWNERS and
+CI. The user authorized one-off Kilo review of that bootstrap; it did not promote
+the product to `main` or authorize general Kilo review there. Missing checks must
+not be bypassed. The ownership exception covers the separate ownership ruleset's
+approval and code-owner requirements, while core rules retain no bypass.
+
+For the `fix/main-dev-reconciliation` PR, the coordinator must use a **merge
+commit**, not squash or rebase. Its branch merges `origin/main` into the `dev`
+lineage and combines the two CI files. Preserve that ancestry so later merges
+recognize the bootstrap as integrated instead of repeating its add/add conflict.
+This reconciliation targets `dev`; product promotion to `main` remains separate.
 
 Native Kilo uses its GitHub App. Once enabled, it reviews non-draft opening,
 pushes, reopening and marking ready. After local checks pass, send the coordinator
