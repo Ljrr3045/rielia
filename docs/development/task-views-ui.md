@@ -1,5 +1,9 @@
 # T08.1/B1b task views presentation
 
+> Review policy update (2026-11-02): Kody triggers and Kody review requirements
+> below are obsolete. [Current review policy](kilo-review.md) governs new changes.
+> Historical review evidence and runtime guidance are preserved.
+
 Status: bounded presentation on the merged T08 persistent list/Kanban logic
 ([PR #19](https://github.com/Ljrr3045/rielia/pull/19), merge
 `f8895709f881df18a4d2d4a33483dab5add0e51e`). It implements the existing-field

@@ -89,8 +89,12 @@ abandoned replacement integration. Do not restore, repair, or invoke either.
 Native Kilo Code Reviews replaces Kody as the selected external reviewer; its
 [setup status and evidence requirements](docs/development/kilo-review.md) distinguish
 verified behavior from pending configuration. Preserve historical Kody/OpenCode
-evidence and the separate OpenCode Go frontend development choice. Do not modify
-secrets, introduce personal tokens, or bypass review. Treat `docs/handoff/` as an
+evidence and the separate OpenCode Go frontend development choice. Every legacy
+Kody trigger or requirement to use Kody for future reviews in older development guides is obsolete,
+even when phrased as an instruction; the current Kilo policy governs all new
+changes. This supersedes review governance only and preserves historical evidence
+and runtime guidance. Do not modify secrets, introduce personal tokens, or bypass
+review. Treat `docs/handoff/` as an
 immutable import, including its asset manifest and file inventory. Record later
 ratifications/corrections separately under `docs/development/` and link the
 affected source section. Never modify a baseline just to make a hash check pass.

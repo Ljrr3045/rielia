@@ -1,5 +1,9 @@
 # Delivery progress and decisions
 
+> Review policy update (2026-11-02): Kody triggers and Kody review requirements
+> below are obsolete. [Current review policy](kilo-review.md) governs new changes.
+> Historical review evidence and runtime guidance are preserved.
+
 Updated: 2026-11-02 UTC. This is repository delivery tracking, separate from the
 unchanged [handoff](../handoff/00-START-HERE.md). Plans describe intended outcomes,
 not completed implementation. This checkout has the T02.0 fixture, merged T02.1/
@@ -40,7 +44,10 @@ implementation, without completing tickets or weakening automated checks/launch 
 ## 2026-11-02 review policy maintenance
 
 T00 governance maintenance selects native Kilo Code Reviews in place of Kody and
-the abandoned OpenCode PR integration. The coordinator applied and verified:
+the abandoned OpenCode PR integration. Current policy explicitly supersedes every
+legacy Kody trigger or future-review requirement; 24 older development documents
+receive dated review-only notices. Their historical bodies and runtime guidance
+remain unchanged, and README/frontend-worker entrypoints use current instructions. The coordinator applied and verified:
 
 - Core [Development — Review & CI (`26377556`)](https://github.com/Ljrr3045/rielia/rules/26377556),
   `dev` only: current-head Kilo (App `2193792`, `kilo-code-bot`) and validate
@@ -86,9 +93,11 @@ worker choice remain unchanged.
 `chore/kilo-review-policy`, isolated from base `origin/dev` `64ad0d7`. The coordinator
 verified Kilo and CI SUCCESS/no findings on prior head `49f3d4e`, with no formal
 reviews. The updated head requires fresh checks and feedback inspection. Local documentation
-validation passes: 47 imported files, 30 asset hashes/sizes, 473 local links in 59
-documents, whitespace checks and ten-file PR scope inspection. Root `REVIEW.md` is
-4,311 characters (below 10,000). No product code, immutable handoff edit, ticket
+validation passes: 47 imported files, 30 asset hashes/sizes, 497 local links in 59
+documents, whitespace checks and 33-file PR scope inspection. Root `REVIEW.md` is
+4,311 characters (below 10,000). Verification also confirms 23 older guide
+bodies unchanged after removing their notices and the historical progress ledger
+unchanged. No product code, immutable handoff edit, ticket
 acceptance, deployment or merge is included. Application suites are inapplicable
 to this prose-only change.
 

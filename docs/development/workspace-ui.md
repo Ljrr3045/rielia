@@ -1,5 +1,9 @@
 # T05.1/B1 workspace and membership UI
 
+> Review policy update (2026-11-02): Kody triggers and Kody review requirements
+> below are obsolete. [Current review policy](kilo-review.md) governs new changes.
+> Historical review evidence and runtime guidance are preserved.
+
 Updated: 2026-10-28 UTC. This bounded presentation delivery adds the
 `/workspaces` product flow for the [T05.0 logic](workspace-flows.md). It is not a
 full T05/T07/T35 delivery, a production announcement, or evidence of real-user

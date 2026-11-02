@@ -1,5 +1,9 @@
 # T09.0/B1b task collaboration logic
 
+> Review policy update (2026-11-02): Kody triggers and Kody review requirements
+> below are obsolete. [Current review policy](kilo-review.md) governs new changes.
+> Historical review evidence and runtime guidance are preserved.
+
 This bounded slice follows merged T08.1 [PR #20](https://github.com/Ljrr3045/rielia/pull/20),
 `a93cb85e1e4a4175b1ea7a93ca89d922032fa3fa`, reviewed `a46a5e47`,
 [Kody approval 5723763333](https://github.com/Ljrr3045/rielia/pull/20#pullrequestreview-5723763333),

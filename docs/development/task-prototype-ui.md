@@ -1,5 +1,9 @@
 # Task prototype presentation (T01/B0)
 
+> Review policy update (2026-11-02): Kody triggers and Kody review requirements
+> below are obsolete. [Current review policy](kilo-review.md) governs new changes.
+> Historical review evidence and runtime guidance are preserved.
+
 Status: presentation integrated on the merged T01/B0 logic and typed save/retry
 context (PR #7 merged as `bfaf24d790daa2cebd1a92a5ecc5b3f9bbea6e3f`). This document
 records UI-owned decisions and evidence for `/prototype`. It does not complete

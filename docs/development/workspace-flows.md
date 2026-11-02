@@ -1,5 +1,9 @@
 # T05.0/B1 workspace and membership logic
 
+> Review policy update (2026-11-02): Kody triggers and Kody review requirements
+> below are obsolete. [Current review policy](kilo-review.md) governs new changes.
+> Historical review evidence and runtime guidance are preserved.
+
 This bounded slice follows [PR #12](https://github.com/Ljrr3045/rielia/pull/12),
 merged as `b87dadb165971d0594429f6a08c047626f9d596e` on
 2026-10-28T18:36:55Z. It implements P02/P03 and US02/US03 with the applicable

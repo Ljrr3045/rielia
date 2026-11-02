@@ -1,5 +1,9 @@
 # Nest HTTP adapter migration
 
+> Review policy update (2026-11-02): Kody triggers and Kody review requirements
+> below are obsolete. [Current review policy](kilo-review.md) governs new changes.
+> Historical review evidence and runtime guidance are preserved.
+
 Implementation/research: 2026-10-27. This is the authorized T02/T04 technical
 follow-up to [the stack decision](stack-validation-decisions.md), based on `dev`
 `3efb49fde4f43d9d58964510c3ef61f744bea062`. It preserves P01/US01 identity and

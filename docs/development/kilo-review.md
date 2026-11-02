@@ -5,6 +5,12 @@ P/US or UI acceptance changes; no T01–T35 ticket is completed. Native Kilo Cod
 Reviews replaces Kody and the abandoned OpenCode PR integration. OpenCode Go
 remains the separately selected frontend presentation worker.
 
+This is the authoritative review policy for all new changes. Every legacy Kody
+trigger or requirement to use Kody for future reviews in older development guides is obsolete,
+even when phrased as an instruction. Dated notices mark those guides for readers
+who open them directly. This supersession affects review governance only;
+historical review evidence, runtime guidance and product scope are preserved.
+
 ## Approved layered protection
 
 The coordinator applied and verified these active core rulesets:

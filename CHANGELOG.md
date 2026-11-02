@@ -18,9 +18,11 @@ This records repository changes. No application version has been released.
   token expansion or PAT. Base-file ownership activates on dev after merge; main
   CODEOWNERS/CI bootstrap activation is pending, with one-off Kilo review authorized
   and no product promotion. Clarify coordinator triage/delegation versus assigned
-  worker fixes, remove remaining active Kody instructions, and retain the mandatory
-  Kilo gate for skipped bot PRs per the user's explicit keep-setting/block-unreviewed
-  decision, without claiming complete automated coverage.
+  worker fixes, replace Kody instructions in README/frontend-worker entrypoints,
+  explicitly supersede legacy review requirements and add dated review-only notices
+  to older development guides. Retain the mandatory Kilo gate for skipped bot PRs
+  per the user's explicit keep-setting/block-unreviewed decision, without claiming
+  complete automated coverage.
   [PR #26](https://github.com/Ljrr3045/rielia/pull/26) updates contribution/PR policy,
   root `REVIEW.md` and the [evidence guide](docs/development/kilo-review.md).
   Preserve historical Kody/OpenCode evidence and frontend worker selection. Main

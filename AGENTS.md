@@ -69,7 +69,11 @@ or an Orca installation.
   the abandoned replacement integration. Native Kilo Code Reviews replaces Kody
   as the selected external reviewer. Follow the [review policy and setup status](docs/development/kilo-review.md)
   below; unverified configuration and capabilities remain explicit gates. Preserve
-  historical review evidence. Do not modify secrets or substitute personal tokens.
+  historical review evidence. Every legacy Kody trigger or requirement to use Kody for future reviews
+  in older development guides is obsolete, even when written as an instruction;
+  the current Kilo review policy governs all new changes. This supersedes review
+  governance only, preserving historical evidence and runtime guidance. Do not
+  modify secrets or substitute personal tokens.
 - License selection, final brand and private-project admin visibility remain
   undecided. Real OAuth/staging and real-project/user acceptance stay OPEN/DEFERRED
   until an advanced end-to-end product slice and user scheduling; do not request
