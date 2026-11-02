@@ -1,0 +1,101 @@
+docs/development/local-mcp.md
+  s_b8020eceba4182::t_67cedbab2fc8ba 4-6
+  s_b8020eceba4182::t_ab4ff31138ee97 3
+docs/development/task-collaboration.md
+  s_b8020eceba4182::t_ab4ff31138ee97 3
+  s_b8020eceba4182::t_67cedbab2fc8ba 4-6
+docs/development/task-prototype-ui.md
+  s_b8020eceba4182::t_67cedbab2fc8ba 4-6
+  s_b8020eceba4182::t_ab4ff31138ee97 3
+CONTRIBUTING.md
+  s_b8020eceba4182::t_67cedbab2fc8ba 92,94-97
+  s_b8020eceba4182::t_ab4ff31138ee97 93
+docs/development/kilo-review.md
+  s_b8020eceba4182::t_67cedbab2fc8ba 8,10-13
+  s_b8020eceba4182::t_ab4ff31138ee97 9
+docs/development/workspace-ui.md
+  s_b8020eceba4182::t_ab4ff31138ee97 3
+  s_b8020eceba4182::t_67cedbab2fc8ba 4-6
+docs/development/principal-foundations.md
+  s_b8020eceba4182::t_ab4ff31138ee97 3
+  s_b8020eceba4182::t_67cedbab2fc8ba 4-6
+CHANGELOG.md
+  s_b8020eceba4182::t_67cedbab2fc8ba 21-22
+  s_b8020eceba4182::t_ab4ff31138ee97 23-25
+docs/development/identity-ui.md
+  s_b8020eceba4182::t_ab4ff31138ee97 3
+  s_b8020eceba4182::t_67cedbab2fc8ba 4-6
+docs/development/workspace-flows.md
+  s_b8020eceba4182::t_ab4ff31138ee97 3
+  s_b8020eceba4182::t_67cedbab2fc8ba 4-6
+docs/development/task-views-ui.md
+  s_b8020eceba4182::t_67cedbab2fc8ba 4-6
+  s_b8020eceba4182::t_ab4ff31138ee97 3
+docs/development/nest-http-adapter.md
+  s_b8020eceba4182::t_67cedbab2fc8ba 4-6
+  s_b8020eceba4182::t_ab4ff31138ee97 3
+docs/development/task-discovery.md
+  s_b8020eceba4182::t_ab4ff31138ee97 3
+  s_b8020eceba4182::t_67cedbab2fc8ba 4-6
+docs/development/task-views.md
+  s_b8020eceba4182::t_ab4ff31138ee97 3
+  s_b8020eceba4182::t_67cedbab2fc8ba 4-6
+docs/development/progress.md
+  s_b8020eceba4182::t_ab4ff31138ee97 3,96-100
+  s_b8020eceba4182::t_67cedbab2fc8ba 4-6,47-50
+docs/development/project-task-ui.md
+  s_b8020eceba4182::t_ab4ff31138ee97 3
+  s_b8020eceba4182::t_67cedbab2fc8ba 4-6
+docs/development/project-access.md
+  s_b8020eceba4182::t_ab4ff31138ee97 3
+  s_b8020eceba4182::t_67cedbab2fc8ba 4-6
+docs/development/technical-fixture.md
+  s_b8020eceba4182::t_ab4ff31138ee97 3
+  s_b8020eceba4182::t_67cedbab2fc8ba 4-6
+docs/development/project-task-flows.md
+  s_b8020eceba4182::t_67cedbab2fc8ba 4-6
+  s_b8020eceba4182::t_ab4ff31138ee97 3
+docs/development/task-prototype.md
+  s_b8020eceba4182::t_67cedbab2fc8ba 4-6
+  s_b8020eceba4182::t_ab4ff31138ee97 3
+docs/development/handoff-import.md
+  s_b8020eceba4182::t_67cedbab2fc8ba 4-6
+  s_b8020eceba4182::t_ab4ff31138ee97 3
+docs/development/identity-spike.md
+  s_b8020eceba4182::t_67cedbab2fc8ba 4-6
+  s_b8020eceba4182::t_ab4ff31138ee97 3
+docs/development/local-runtime.md
+  s_b8020eceba4182::t_67cedbab2fc8ba 4-6
+  s_b8020eceba4182::t_ab4ff31138ee97 3
+docs/development/task-discovery-ui.md
+  s_b8020eceba4182::t_ab4ff31138ee97 3
+  s_b8020eceba4182::t_67cedbab2fc8ba 4-6
+docs/development/project-access-ui.md
+  s_b8020eceba4182::t_67cedbab2fc8ba 4-6
+  s_b8020eceba4182::t_ab4ff31138ee97 3
+AGENTS.md
+  s_b8020eceba4182::t_ab4ff31138ee97 72
+  s_b8020eceba4182::t_67cedbab2fc8ba 73-76
+docs/development/stack-validation-decisions.md
+  s_b8020eceba4182::t_ab4ff31138ee97 3
+  s_b8020eceba4182::t_67cedbab2fc8ba 4-6
+docs/development/task-collaboration-ui.md
+  s_b8020eceba4182::t_ab4ff31138ee97 3
+  s_b8020eceba4182::t_67cedbab2fc8ba 4-6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0cb53a4ac8f128f0111476e2e925db4532d84c25",
+  "prompts": {},
+  "sessions": {
+    "s_b8020eceba4182": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a17016-ab9e-7501-b8a7-f63987eb61f7",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
