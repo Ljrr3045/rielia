@@ -1,0 +1,20 @@
+.github/workflows/opencode-bootstrap.yml
+  s_a07ddb62ac5b0b::t_476aa6f2affcc6 107-136
+  s_a07ddb62ac5b0b::t_75f426a1d804ba 38,87
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "fd0b19b74fedf4f139d56a9b640baa823253df28",
+  "prompts": {},
+  "sessions": {
+    "s_a07ddb62ac5b0b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a199ae-f0e6-76f3-a8f1-289e030ec987",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
