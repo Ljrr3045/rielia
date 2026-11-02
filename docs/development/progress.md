@@ -56,7 +56,8 @@ fixture CI remains active. OpenCode App removal is a pending user decision. Bran
 `64ad0d7` in its isolated worktree. Documentation validation passes: 47 imported files, 30 asset hashes/sizes and 467
 local links in 59 documents; whitespace checks and scope inspection pass. Root
 `REVIEW.md` has 3,098 characters (below 10,000). Application suites are inapplicable
-to this prose-only change. The PR URL will be recorded after creation. The coordinator authorized native review of
+to this prose-only change. [PR #26](https://github.com/Ljrr3045/rielia/pull/26) is non-draft to `dev`; final-head
+CI and native review are pending and coordinator-owned. The coordinator authorized native review of
 this bounded PR to `dev`; latest-head review and unresolved capabilities remain
 pending. This entry does not claim completed Kilo acceptance or formal approval.
 
