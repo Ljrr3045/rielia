@@ -210,11 +210,95 @@ test('whole-file byte boundary permits normal progress docs and rejects excess/b
   }
 });
 
-async function prepareDiscussion(discussion) {
+function snapshotCase(status) {
+  const blob = (text) => ({ encoding: 'base64', size: Buffer.byteLength(text), content: Buffer.from(text).toString('base64') });
+  const change = status === 'added' ? { additions: 1, deletions: 0, patch: '@@ -0,0 +1 @@\n+PR head\n' } : { additions: 0, deletions: 1, patch: '@@ -1 +0,0 @@\n-merge-base text\n' };
+  return fakeApi({ '/pulls/7': pr(), '/pulls/7/files': [{ filename: 'a.js', status, ...change }], [`/contents/a.js?ref=${head}`]: { ...blob('PR head\n'), mode: '100755' }, [`/contents/a.js?ref=${base}`]: blob('Current base differs from merge-base\n'), [`/contents/AGENTS.md?ref=${base}`]: blob('Policy'), '/issues/7/comments': [], '/pulls/7/reviews': [], '/pulls/7/comments': [] });
+}
+
+test('merge-base added/removed status never hides existing immutable opposite-side text', async () => {
+  for (const status of ['added', 'removed']) {
+    const prepared = await prepare(snapshotCase(status), 'pull_request_target', {}, 7);
+    const file = prepared.files[0];
+    assert.deepEqual(prepared.limitations, []);
+    assert.equal(file.head, 'PR head\n');
+    assert.equal(file.base, 'Current base differs from merge-base\n');
+    assert.equal(file.headMode, '100755');
+    assert.equal(file.baseMode, '100644');
+    assert.equal(typeof projectModelInput(prepared).files[0].patch, 'string', 'An existing opposite side forbids whole-file patch encoding');
+    assert.deepEqual(expandModelInput(projectModelInput(prepared)), prepared);
+    assert.equal(validateResult(prepared, generated()).complete, true);
+
+    const normal = snapshotCase(status);
+    const absentRef = status === 'added' ? base : head;
+    const absentTree = createHash('sha1').update(`tree-${absentRef}`).digest('hex');
+    const originalGet = normal.get.bind(normal);
+    normal.get = async (path) => {
+      const value = await originalGet(path);
+      if (path === `/git/trees/${absentTree}?recursive=1`) value.tree = value.tree.filter((entry) => entry.path !== 'a.js');
+      return value;
+    };
+    const absent = await prepare(normal, 'pull_request_target', {}, 7);
+    assert.deepEqual(absent.limitations, []);
+    assert.equal(absent.files[0][status === 'added' ? 'base' : 'head'], undefined);
+    assert.equal(validateResult(absent, generated()).complete, true);
+  }
+});
+
+test('opposite-side directories, symlinks and unavailable blobs, or missing required sides, prevent approval', async () => {
+  for (const status of ['added', 'removed']) {
+    for (const failure of ['directory', 'symlink', 'blob', 'required missing']) {
+      const api = snapshotCase(status);
+      const oppositeRef = status === 'added' ? base : head;
+      const requiredRef = status === 'added' ? head : base;
+      const affectedRef = failure === 'required missing' ? requiredRef : oppositeRef;
+      const treeSha = createHash('sha1').update(`tree-${affectedRef}`).digest('hex');
+      const originalGet = api.get.bind(api);
+      let deniedBlob;
+      api.get = async (path) => {
+        if (deniedBlob && path === `/git/blobs/${deniedBlob}`) throw new Error('Unavailable fixture blob');
+        const value = await originalGet(path);
+        if (path === `/git/trees/${treeSha}?recursive=1`) {
+          const entry = value.tree.find((entry) => entry.path === 'a.js');
+          if (failure === 'directory') Object.assign(entry, { type: 'tree', mode: '040000' });
+          if (failure === 'symlink') entry.mode = '120000';
+          if (failure === 'blob') deniedBlob = entry.sha;
+          if (failure === 'required missing') value.tree = value.tree.filter((entry) => entry.path !== 'a.js');
+        }
+        return value;
+      };
+      const prepared = await prepare(api, 'pull_request_target', {}, 7);
+      assert(prepared.limitations.some((limit) => limit.includes('Unavailable, binary, symlink, or oversized context')), `${status}: ${failure}`);
+      assert.equal(validateResult(prepared, generated()).complete, false);
+      assert.equal(validateResult(prepared, generated()).verdict, 'COMMENT');
+    }
+  }
+});
+
+async function prepareDiscussion(discussion, prOverrides = {}) {
   const blob = (text) => ({ type: 'file', encoding: 'base64', size: Buffer.byteLength(text), content: Buffer.from(text).toString('base64') });
-  const api = fakeApi({ '/pulls/7': pr(), '/pulls/7/files': [{ filename: 'a.js', status: 'modified', additions: 1, deletions: 1, patch }], [`/contents/a.js?ref=${head}`]: blob('new'), [`/contents/a.js?ref=${base}`]: blob('old'), [`/contents/AGENTS.md?ref=${base}`]: blob('Policy'), '/issues/7/comments': discussion.root, '/pulls/7/reviews': discussion.reviews, '/pulls/7/comments': discussion.inline });
+  const api = fakeApi({ '/pulls/7': pr(prOverrides), '/pulls/7/files': [{ filename: 'a.js', status: 'modified', additions: 1, deletions: 1, patch }], [`/contents/a.js?ref=${head}`]: blob('new'), [`/contents/a.js?ref=${base}`]: blob('old'), [`/contents/AGENTS.md?ref=${base}`]: blob('Policy'), '/issues/7/comments': discussion.root, '/pulls/7/reviews': discussion.reviews, '/pulls/7/comments': discussion.inline });
   return prepare(api, 'pull_request_target', {}, 7);
 }
+
+test('title/body retain exact bounds and missing values, but any truncation prevents approval', async () => {
+  const discussion = { root: [], reviews: [], inline: [] };
+  for (const values of [{}, { title: null, body: null }, { title: 't'.repeat(LIMITS.titleChars), body: 'b'.repeat(LIMITS.bodyChars) }]) {
+    const prepared = await prepareDiscussion(discussion, values);
+    assert.equal(prepared.title, values.title?.slice(0, LIMITS.titleChars));
+    assert.equal(prepared.body, values.body?.slice(0, LIMITS.bodyChars));
+    assert.deepEqual(prepared.limitations, []);
+  }
+  for (const [field, limit] of [['title', LIMITS.titleChars], ['body', LIMITS.bodyChars]]) {
+    for (const value of ['x'.repeat(limit + 1), '🙂'.repeat(limit)]) {
+      const prepared = await prepareDiscussion(discussion, { [field]: value });
+      assert.equal(prepared[field], value.slice(0, limit));
+      assert(prepared.limitations.includes(`PR ${field} context truncated`));
+      assert.equal(validateResult(prepared, generated()).complete, false);
+      assert.equal(validateResult(prepared, generated()).verdict, 'COMMENT');
+    }
+  }
+});
 
 test('four real-shaped large inline hunks retain every raw body, binding and metadata below discussion bound', async () => {
   const discussion = { root: [{ id: 10, body: 'Root context', user: human }], reviews: [{ id: 11, body: 'Review context', user: bot, commit_id: head, state: 'CHANGES_REQUESTED' }], inline: Array.from({ length: 4 }, (_, index) => ({ id: 20 + index, body: `Finding ${index}`, user: bot, path: 'a.js', line: 2, original_line: 2, commit_id: head, original_commit_id: head, in_reply_to_id: index ? 20 : undefined, diff_hunk: '@@ -1 +1 @@\n' + '+complete old source context\n'.repeat(1000), retained_metadata: { url: 'https://api.github.com/fake', arbitrary: index } })) };

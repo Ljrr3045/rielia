@@ -6,6 +6,17 @@ This records repository changes. No application version has been released.
 
 ### Added
 
+- Complete App [CHANGES_REQUESTED5732507392](https://github.com/Ljrr3045/rielia/pull/25#pullrequestreview-5732507392)
+  on `390cff2` from the successful unchanged second attempt of
+  [run41391130696](https://github.com/Ljrr3045/rielia/actions/runs/41391130696/attempts/2),
+  following attempt1's20m37 `JSONL_FINISH_MULTIPLE`/zero-text failure and skipped
+  publication. Dated390 CI/audit passed; four new findings prompt bounded fixes:
+  read existing head/base snapshot entries independently of merge-base status,
+  mark title/body truncation incomplete, and correct stale progress evidence.
+  Official collaborator-permission docs specify Metadata read; workflow/token
+  scope stays unchanged and live endpoint preflight remains pending.43 focused
+  local regressions pass; changed source requires its own audit/CI/current-head
+  review, with activation and T11 still OPEN.
 - Explicit 512000-byte UTF-8 raw-discussion limit after the four real findings'
   94701-byte metadata/hunks crossed the former 80000-character guard. Full raw
   evidence is retained below the finite bound; overbound context remains honest

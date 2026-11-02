@@ -8,7 +8,7 @@ import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { TextDecoder } from 'node:util';
 
-export const LIMITS = Object.freeze({ files: 80, treeEntries: 5000, fileBytes: 160_000, contextBytes: 1_000_000, patchBytes: 300_000, discussionBytes: 512_000, pages: 10, findings: 20, modelMs: 2_700_000, outputBytes: 1_000_000 });
+export const LIMITS = Object.freeze({ files: 80, treeEntries: 5000, fileBytes: 160_000, contextBytes: 1_000_000, patchBytes: 300_000, discussionBytes: 512_000, titleChars: 2000, bodyChars: 12_000, pages: 10, findings: 20, modelMs: 2_700_000, outputBytes: 1_000_000 });
 const SHA = /^[a-f0-9]{40}$/;
 const REPO = /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/;
 const actions = new Set(['opened', 'synchronize', 'reopened', 'ready_for_review', 'edited']);
@@ -338,8 +338,9 @@ export async function prepare(api, eventName, event, number) {
     const changes = changedLines(file.patch);
     if (changes.RIGHT.size !== file.additions || changes.LEFT.size !== file.deletions) limitations.push(`Missing/truncated/inconsistent patch: ${file.filename}`);
     try {
-      if (file.status !== 'removed') item.head = await fileText(headApi, headEntry);
-      if (file.status !== 'added') item.base = await fileText(api, baseEntry);
+      // GitHub status describes the merge-base diff, not both captured trees.
+      if (headEntry || file.status !== 'removed') item.head = await fileText(headApi, headEntry);
+      if (baseEntry || file.status !== 'added') item.base = await fileText(api, baseEntry);
     } catch {
       limitations.push(`Unavailable, binary, symlink, or oversized context: ${file.filename}`);
     }
@@ -364,8 +365,10 @@ export async function prepare(api, eventName, event, number) {
   let guidance;
   try { guidance = await fileText(api, baseTree?.get('AGENTS.md')); }
   catch { limitations.push('Base repository guidance unavailable'); }
+  if (pr.title?.length > LIMITS.titleChars) limitations.push('PR title context truncated');
+  if (pr.body?.length > LIMITS.bodyChars) limitations.push('PR body context truncated');
   assertFresh(await api.get(`/pulls/${number}`), expected);
-  return { expected, command, mode: command?.mode ?? 'review', files: context, allPaths: files.map((f) => f.filename), limitations, title: pr.title?.slice(0, 2000), body: pr.body?.slice(0, 12_000), discussion: boundedDiscussion, guidance };
+  return { expected, command, mode: command?.mode ?? 'review', files: context, allPaths: files.map((f) => f.filename), limitations, title: pr.title?.slice(0, LIMITS.titleChars), body: pr.body?.slice(0, LIMITS.bodyChars), discussion: boundedDiscussion, guidance };
 }
 
 function textLines(text) { return text.match(/[^\n]*\n|[^\n]+$/g) ?? []; }

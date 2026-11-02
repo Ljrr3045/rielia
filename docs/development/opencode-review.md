@@ -7,10 +7,12 @@ infrastructure/governance work, not T11 implementation or full T16 acceptance;
 no product P/US/UX scope, application code, handoff, credentials, deployment or
 repository protection settings change is included.
 
-Bootstrap source `bf3ce99` produced a complete real Go review and App formal
-`CHANGES_REQUESTED` with four inline findings. This is review/publication evidence,
-not approval. Corrected-head review and automatic/fork/root/inline event acceptance
-remain **OPEN until activation**.
+On 2026-11-02, bootstrap sources `bf3ce99` and `390cff2` each produced a complete
+real Go review and App formal `CHANGES_REQUESTED` with four inline findings.
+The dated [review evidence below](#validation-and-activation) records the failed
+attempt and successful unchanged retry separately. This proves review/publication,
+not approval of subsequent corrections. Fresh changed-head review and automatic/
+fork/root/inline event acceptance remain **OPEN until activation**.
 The repository secret was configured by the user out of band; workers never
 read its value, local OpenCode auth, or personal tokens.
 
@@ -53,7 +55,7 @@ installation. Updating the binary or its digest is a reviewed source change.
 | `OPENCODE_API_KEY` | Actions repository secret | User-provisioned Go key; absent key fails closed |
 | `OPENCODE_MODEL` | Actions repository variable | `opencode-go/deepseek-v4.1-flash`; other providers are rejected |
 | `OPENCODE_VARIANT` | Actions repository variable | `max`; passed as CLI variant with explicit compatible-provider reasoning effort |
-| Review output cap | Fixed isolated child environment | 384,000 tokens; pinned CLI clamps to the model output limit; no repository variable or inherited override; live Go acceptance still required |
+| Review output cap | Fixed isolated child environment | 384,000 tokens; pinned CLI clamps to the model output limit; no repository variable or inherited override; accepted in the dated tiny/full live requests below, without a completion guarantee |
 | App authentication | Actions OIDC | Installed `opencode-agent`; token acquired only for publication and revoked afterwards |
 
 The public [models.dev catalog](https://models.dev/api.json) inspected on
@@ -224,6 +226,7 @@ fresh complete review before merge.
 | 5,000 entries per immutable base/head Git tree | Incomplete COMMENT if missing/truncated/oversized |
 | 1,000,000 bytes combined file context; 300,000 patch bytes | Partial context, explicit incomplete COMMENT |
 | 512,000 UTF-8 bytes of complete raw discussion JSON | Bounded recent/thread fallback above this limit, explicit incomplete COMMENT |
+| 2,000 title / 12,000 body UTF-16 code units | Existing slice bounds; any omitted text adds an explicit limitation and prevents APPROVE |
 | Missing/truncated patch, binary, symlink, unavailable context | Explicit incomplete COMMENT; never APPROVE |
 | Ten 100-row pages per API list | Fail closed, no assumed complete review |
 | 100 open PRs per base-push fanout; three parallel jobs | Fail if fanout is larger; each PR can be requested explicitly |
@@ -341,9 +344,10 @@ do not establish Go alias support. The previously captured [models.dev Go catalo
 lists output 384000 for this alias. The pinned CLI still clamps the fixed child
 cap to its actual model limit; fake-provider wire smoke confirms 384000 with
 `max` and zero tools. Catalog-fetch errors are not provider-inference evidence.
-Go parameter acceptance remains OPEN until a separately authorized live tiny
-review control accepts it; full review/publication remain separate gates. This
-is an explicit larger budget, not a new reasoning variant or automatic retry.
+Before the seventh attempt, live Go parameter acceptance required a separately
+authorized tiny review control; the following actual evidence records its
+acceptance and the separate full-review result. This is an explicit larger
+budget, not a new reasoning variant or automatic retry.
 
 The seventh authorized
 [run 41385907633](https://github.com/Ljrr3045/rielia/actions/runs/41385907633)
@@ -381,6 +385,34 @@ input is 912,518 bytes including that discussion, and projected user input is
 does not guarantee completion. Exact-bound and multibyte-overflow regressions
 verify the finite byte guard rather than silently clearing limitations.
 
+On 2026-11-02, exact `390cff2` passed [support CI41390031083](https://github.com/Ljrr3045/rielia/actions/runs/41390031083),
+[product CI41390031068](https://github.com/Ljrr3045/rielia/actions/runs/41390031068)
+and independent immutable source audit with40 focused tests/pinned fake wire.
+These dated results apply to that head only. The eighth
+[run41391130696, attempt1](https://github.com/Ljrr3045/rielia/actions/runs/41391130696/attempts/1)
+then passed App/preparation and a4s complete control but failed full generation
+after20m37s: `JSONL_FINISH_MULTIPLE`, two distinct complete finish IDs, unknown+
+stop reasons, zero text; token totals are unavailable for multiple completions.
+Publication was skipped and cleanup passed. No provider/gateway/context cause
+is established; no parser relaxation or reasoning-to-answer conversion occurred.
+
+Root authorized exactly one unchanged
+[attempt2](https://github.com/Ljrr3045/rielia/actions/runs/41391130696/attempts/2).
+It succeeded and published App [CHANGES_REQUESTED5732507392](https://github.com/Ljrr3045/rielia/pull/25#pullrequestreview-5732507392)
+on `390cff2` at2026-11-02T05:40:20Z, with four new inline findings:
+
+| Actual finding | Bounded disposition |
+| --- | --- |
+| [4439247089](https://github.com/Ljrr3045/rielia/pull/25#discussion_r4439247089): merge-base status hides an existing snapshot side | Read every existing head/base entry even for removed/added status; retain required-side errors and explicit limitations for directories, symlinks or unavailable blobs; regression covers divergent full text, modes, absent legitimate sides and lossless projection |
+| [4439247096](https://github.com/Ljrr3045/rielia/pull/25#discussion_r4439247096): title/body truncation | Keep the existing2,000/12,000 bounds; mark either cut as incomplete COMMENT, with exact-bound, missing/null and Unicode-overflow regressions |
+| [4439247102](https://github.com/Ljrr3045/rielia/pull/25#discussion_r4439247102): collaborator endpoint token permission | Do not add Administration or widen credentials. On2026-11-02, [official endpoint documentation](https://docs.github.com/en/rest/collaborators/collaborators#get-repository-permissions-for-a-user) specifies Metadata read for App installation tokens. Existing workflow/token routing and fail-closed authorization remain; real GITHUB_TOKEN/App endpoint acceptance is pending a separately authorized preflight |
+| [4439247104](https://github.com/Ljrr3045/rielia/pull/25#discussion_r4439247104): stale progress | Replace current pending-CI wording with dated390 results and both actual attempt outcomes; changed source still requires its own audit, CI and current-head review |
+
+These corrections add three focused regressions (43 total). They do not claim
+that old-head checks or either CHANGES_REQUESTED review approves the changed
+source. Root owns technical replies, invocation, activation and merge; automatic/
+fork/question/inline acceptance and T11 remain OPEN.
+
 The diagnostic follow-up preserves strict parsing/coverage and adds only
 allowlisted static failure codes. Main logs a fixed sentence containing a code
 and, for rejected completion or timeout only, the bounded primitive metadata above;
@@ -410,7 +442,7 @@ causes CLI exit 1. No message/body is inspected to guess a cause, and an auth
 category does not prove a particular key is wrong. A nonzero CLI exit never
 becomes successful review even if stdout contains plausible review JSON.
 
-All 40 focused event/auth/review/diagnostic/trust/representation checks pass on
+All 43 focused event/auth/review/diagnostic/trust/representation checks pass on
 Node 24.22.1. A real adapter-process test uses an inert fake executable with
 secret-shaped strings, provider URLs and workflow commands in both streams;
 only the expected static code appears and no result artifact is written.
@@ -426,7 +458,7 @@ request preparation defaults to a32,000-token output cap; the authorized fixed
 384,000 cap supersedes the earlier 128,000 experiment while retaining `max`.
 New-head review and actual Go acceptance/completion evidence remain required.
 
-Local evidence: 40 event/auth/fork/main-exclusion/relay/coverage/verdict/current-
+Local evidence: 43 event/auth/fork/main-exclusion/relay/coverage/verdict/current-
 head/base-race/token-isolation/diagnostic tests pass; all workflows pass checksum-pinned
 actionlint 1.7.12; immutable handoff and whitespace checks pass. The real CLI
 1.19.5 macOS archive was verified with SHA-256
