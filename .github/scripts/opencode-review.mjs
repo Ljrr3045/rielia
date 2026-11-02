@@ -27,7 +27,7 @@ const failureCodes = new Set([
   'CLI_SPAWN', 'CLI_EXIT', 'CLI_TIMEOUT', 'CLI_OUTPUT_LIMIT', 'CLI_INPUT',
   ...modelFailureCodes, 'JSONL_PARSE', 'JSONL_ENVELOPE', 'JSONL_TEXT_MISSING', 'JSONL_TEXT_MULTIPLE', 'JSONL_TEXT_SHAPE',
   ...completionCodes, 'REVIEW_JSON_PARSE', 'REVIEW_JSON_FENCE', 'REVIEW_SCHEMA', 'REVIEW_BINDING',
-  'REVIEW_COVERAGE', 'REVIEW_FINDING', 'REVIEW_FINDING_COUNT', 'REVIEW_FINDING_SHAPE', 'REVIEW_FINDING_PATH', 'REVIEW_FINDING_SIDE', 'REVIEW_FINDING_LINE', 'REVIEW_FINDING_BODY', 'REVIEW_VERDICT',
+  'REVIEW_COVERAGE', 'REVIEW_FINDING', 'REVIEW_FINDING_COUNT', 'REVIEW_FINDING_SHAPE', 'REVIEW_FINDING_PATH', 'REVIEW_FINDING_SIDE', 'REVIEW_FINDING_LINE', 'REVIEW_FINDING_BODY', 'REVIEW_VERDICT', 'REVIEW_INCOMPLETE', 'APP_TOKEN_REVOCATION_FAILED',
 ]);
 
 export class ReviewFailure extends Error {
@@ -61,6 +61,7 @@ export class ReviewFailure extends Error {
 
 export function formatFailure(error) {
   const code = error instanceof ReviewFailure && failureCodes.has(error.code) ? error.code : error instanceof Obsolete ? 'REVIEW_OBSOLETE' : 'REVIEW_UNKNOWN';
+  if (code === 'APP_TOKEN_REVOCATION_FAILED') return 'OpenCode cleanup failed [APP_TOKEN_REVOCATION_FAILED]. Publication was confirmed before token cleanup; inspect the published outcome and token state before merging.';
   const completion = error instanceof ReviewFailure && (completionCodes.has(code) || code === 'CLI_TIMEOUT') && error.completion ? ` completion=${JSON.stringify(error.completion)}` : '';
   const progress = error instanceof ReviewFailure && code === 'CLI_TIMEOUT' && error.progress ? ` progress=${JSON.stringify(error.progress)}` : '';
   return `OpenCode review failed [${code}].${completion}${progress} No successful current-head review is established; inspect the run and PR before retrying.`;
@@ -620,6 +621,34 @@ export async function exchangeToken(env, fetcher = fetch) {
   return token;
 }
 
+async function recoverApproval(api, input, marker, response) {
+  const number = input.expected.number;
+  const matches = (review) => Number.isSafeInteger(review?.id) && review.id > 0 && review.state === 'APPROVED' && review.commit_id === input.expected.head && review.pull_request_url === `https://api.github.com${api.root}/pulls/${number}` && review.user?.login === 'opencode-agent[bot]' && review.user.type === 'Bot' && typeof review.body === 'string' && review.body.endsWith(marker);
+  let reviews;
+  if (matches(response)) reviews = [response];
+  else {
+    // The existing pagination cap bounds this single re-list. No POST retry or
+    // polling: an absent review can still be delayed or missed by consistency.
+    try { reviews = await api.list(`/pulls/${number}/reviews`); }
+    catch { return 'APPROVAL_RECOVERY_READ_FAILED'; }
+  }
+  const ids = new Set(reviews.filter(matches).map((review) => review.id));
+  if (!ids.size) return 'APPROVAL_RECOVERY_NOT_OBSERVED';
+  let failed = false;
+  for (const id of ids) {
+    try { await api.request('PUT', `${api.root}/pulls/${number}/reviews/${id}/dismissals`, { message: 'Approval publication or freshness unverified; coordinator inspection and fresh review required.' }); }
+    catch { failed = true; }
+  }
+  return failed ? 'APPROVAL_RECOVERY_DISMISS_FAILED' : 'APPROVAL_RECOVERY_DISMISS_REQUESTED';
+}
+
+function reportApprovalRecovery(status) {
+  const codes = new Set(['APPROVAL_RECOVERY_READ_FAILED', 'APPROVAL_RECOVERY_NOT_OBSERVED', 'APPROVAL_RECOVERY_DISMISS_FAILED', 'APPROVAL_RECOVERY_DISMISS_REQUESTED']);
+  const code = codes.has(status) ? status : 'APPROVAL_RECOVERY_READ_FAILED';
+  try { console.error(`OpenCode approval recovery [${code}]. Publication remains unverified; the workflow failed and the coordinator must inspect any approval before merging.`); }
+  catch { /* Logging must not replace the primary publication failure. */ }
+}
+
 export async function publish(api, input, generated, eventName, event, run) {
   const result = validateResult(input, generated);
   if (!/^\d+-\d+$/.test(run)) throw new Error('Invalid workflow run identity');
@@ -638,26 +667,46 @@ export async function publish(api, input, generated, eventName, event, run) {
   if (existing.some((item) => item.user?.login === 'opencode-agent[bot]' && item.body?.includes(marker))) throw new Error('This run already published; inspect existing outcome');
   assertFresh(await api.get(`/pulls/${number}`), input.expected);
   let response;
-  if (input.mode === 'review') response = await api.post(`/pulls/${number}/reviews`, { commit_id: input.expected.head, event: result.verdict, body, comments: result.findings });
-  else if (input.command.kind === 'inline') response = await api.post(`/pulls/${number}/comments/${input.command.thread}/replies`, { body });
-  else response = await api.post(`/issues/${number}/comments`, { body });
-  // GitHub has no compare-and-swap for head+base on review creation. An approval
-  // whose post-write freshness/outcome cannot be verified is dismissed fail-closed,
-  // including transient read failures; an unverified APPROVED badge cannot remain.
+  // GitHub has no atomic head/base compare-and-swap. Catch both ambiguous POST
+  // outcomes and post-write check failures; recovery is bounded best effort,
+  // never proof that an approval cannot remain. The failed job stays blocked.
   try {
+    if (input.mode === 'review') response = await api.post(`/pulls/${number}/reviews`, { commit_id: input.expected.head, event: result.verdict, body, comments: result.findings });
+    else if (input.command.kind === 'inline') response = await api.post(`/pulls/${number}/comments/${input.command.thread}/replies`, { body });
+    else response = await api.post(`/issues/${number}/comments`, { body });
     assertFresh(await api.get(`/pulls/${number}`), input.expected);
     const state = { APPROVE: 'APPROVED', REQUEST_CHANGES: 'CHANGES_REQUESTED', COMMENT: 'COMMENTED' };
-    if (input.mode === 'review' && (response.commit_id !== input.expected.head || response.state !== state[result.verdict])) throw new Obsolete('GitHub did not confirm the expected formal review outcome');
+    if (input.mode === 'review' && (!Number.isSafeInteger(response?.id) || response.id <= 0 || response.commit_id !== input.expected.head || response.state !== state[result.verdict])) throw new Obsolete('GitHub did not confirm the expected formal review outcome');
   }
   catch (error) {
     if (input.mode === 'review' && result.verdict === 'APPROVE') {
-      const reason = error instanceof Obsolete ? 'obsolete or outcome mismatch' : 'freshness unverified';
-      try { await api.request('PUT', `${api.root}/pulls/${number}/reviews/${response.id}/dismissals`, { message: `Review ${reason} after publication; fresh review required.` }); }
-      catch { throw new Error(`Review ${reason}; automatic dismissal failed. Coordinator must inspect/dismiss any approval and obtain fresh review; do not merge.`); }
+      let recovery = 'APPROVAL_RECOVERY_READ_FAILED';
+      try { recovery = await recoverApproval(api, input, marker, response); }
+      catch { /* Recovery is best effort; the original failure remains primary. */ }
+      reportApprovalRecovery(recovery);
     }
     throw error;
   }
   return { verdict: input.mode === 'review' ? result.verdict : 'REPLY', complete: result.complete, id: response.id, url: response.html_url, head: input.expected.head, base: input.expected.base };
+}
+
+export async function publishWithRevocation(api, input, generated, eventName, event, run, record = async () => {}) {
+  let outcome;
+  let primary;
+  let failed = false;
+  try {
+    outcome = await publish(api, input, generated, eventName, event, run);
+    await record(outcome);
+    if (!outcome.complete) throw new ReviewFailure('REVIEW_INCOMPLETE');
+  } catch (error) { primary = error; failed = true; }
+  try { await api.request('DELETE', '/installation/token'); }
+  catch {
+    try { console.error(`OpenCode cleanup [APP_TOKEN_REVOCATION_FAILED]; publication=${outcome ? 'confirmed' : 'unconfirmed'}. Coordinator must inspect publication and token state.`); }
+    catch { /* Cleanup/logging must not mask the primary failure. */ }
+    if (!failed) throw new ReviewFailure('APP_TOKEN_REVOCATION_FAILED');
+  }
+  if (failed) throw primary;
+  return outcome;
 }
 
 async function main() {
@@ -687,12 +736,10 @@ async function main() {
     const generated = JSON.parse(await readFile(join(state, 'result.json'), 'utf8'));
     const token = await exchangeToken(env);
     const writer = new GitHub(env.GITHUB_REPOSITORY, token);
-    try {
-      const outcome = await publish(writer, input, generated, eventName, event, `${env.GITHUB_RUN_ID}-${env.GITHUB_RUN_ATTEMPT}`);
+    await publishWithRevocation(writer, input, generated, eventName, event, `${env.GITHUB_RUN_ID}-${env.GITHUB_RUN_ATTEMPT}`, async (outcome) => {
       console.log(JSON.stringify(outcome));
       await appendFile(env.GITHUB_STEP_SUMMARY, `OpenCode ${outcome.verdict}, complete=${outcome.complete}; head ${outcome.head}; base ${outcome.base}; [result](${outcome.url}).\n`);
-      if (!outcome.complete) throw new Error('Published COMMENT with incomplete coverage; review gate remains blocked');
-    } finally { await writer.request('DELETE', '/installation/token'); }
+    });
   } else throw new Error('Unknown review operation');
 }
 

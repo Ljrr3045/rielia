@@ -58,7 +58,7 @@ installation. Updating the binary or its digest is a reviewed source change.
 | `OPENCODE_MODEL` | Actions repository variable | `opencode-go/deepseek-v4.1-flash`; other providers are rejected |
 | `OPENCODE_VARIANT` | Actions repository variable | `max`; passed as CLI variant with explicit compatible-provider reasoning effort |
 | Review output cap | Fixed isolated child environment | 384,000 tokens; pinned CLI clamps to the model output limit; no repository variable or inherited override; accepted in the dated tiny/full live requests below, without a completion guarantee |
-| App authentication | Actions OIDC | Installed `opencode-agent`; token acquired only for publication and revoked afterwards |
+| App authentication | Actions OIDC | Installed `opencode-agent`; token acquired only for publication, revocation attempted afterwards; cleanup errors are reported separately and fail the job |
 
 The public [models.dev catalog](https://models.dev/api.json) inspected on
 2026-11-01 lists the Go provider, `OPENCODE_API_KEY`, this model, and
@@ -201,9 +201,9 @@ duplicate retries.
 Before and after publication the adapter rechecks open state, head SHA/repository,
 base ref/SHA/repository and draft state. `main` is checked dynamically for all
 entry points and before each write. GitHub provides no atomic head-and-base
-compare-and-swap for review creation: a remaining publication race fails the job
-and attempts to dismiss an obsolete approval. If dismissal is denied, the
-coordinator must dismiss it and obtain a fresh review before merging.
+compare-and-swap for review creation. An ambiguous approval POST or failed
+post-write confirmation fails the job and attempts bounded approval recovery;
+it never repeats the approval POST.
 
 The current repository rules do not dismiss all stale approvals automatically.
 This PR does not change those settings. An old green check or GitHub APPROVED
@@ -212,13 +212,27 @@ gate**. Always inspect issue comments, submitted reviews, inline comments and
 applicable checks; handle all findings and re-review after source/base changes.
 Only the coordinator merges, through normal repository requirements.
 
-An unverified post-write approval is also dismissed conservatively when the
-confirmation read fails transiently. This intentionally prefers failed review
-over retaining an unverified APPROVED badge while automatic stale dismissal is
-disabled. Static dismissal reasons distinguish obsolete/outcome mismatch from
-freshness unverified; neither invents a confirmed head change. The run fails even
-if dismissal succeeds; denial requires coordinator inspection/dismissal and a
-fresh complete review before merge.
+Recovery uses a fully matched returned approval or one re-list bounded by the
+existing ten-page limit. Only safe-ID APPROVED reviews with the actual App's
+`opencode-agent[bot]` login and Bot type, exact PR URL/head, and exact trailing
+trusted run-marker footer qualify. A marker quoted inside an untrusted summary
+does not qualify. Matching IDs are dismissed at most once each; transient check
+failure is not treated as successful review. The original publication error
+remains primary and static recovery categories report the attempt only.
+
+This is best effort, not an atomic guarantee. A lost/malformed response, read
+failure, pagination bound, eventual consistency or dismissal denial can leave an
+approval unobserved or undismissed. A failed workflow stays blocked even after
+an accepted dismissal request. The coordinator must inspect actual publication,
+dismiss any unverified approval and obtain fresh complete review before merging.
+
+App-token revocation is always attempted after publication work. A failure emits
+`APP_TOKEN_REVOCATION_FAILED` with a fixed confirmed/unconfirmed publication
+flag; it preserves an existing ReviewFailure, Obsolete or incomplete-review
+failure. If publication was confirmed and only cleanup fails, that distinct
+cleanup failure records the published outcome instead of calling it an unknown
+verdict. Cleanup failure still blocks delivery; inspect publication and token
+state without inferring successful revocation.
 
 ## Runtime bounds and limitations
 
@@ -437,9 +451,22 @@ patches, hostile path data and process-level static-code redaction. This is a
 prospective contract clarification, not a proven fix for the failed run; fresh
 head audit/CI/root-authorized live review remain required.
 
+Historical2026-11-02 checkpoint: exact `4c88974` passed both CIs and independent
+audit, then [run41403692735](https://github.com/Ljrr3045/rielia/actions/runs/41403692735)
+completed generation (19m21), App publication and cleanup. App
+[CHANGES_REQUESTED5733195211](https://github.com/Ljrr3045/rielia/pull/25#pullrequestreview-5733195211)
+at07:22:04Z raised three findings: ambiguous approval-write recovery, revocation
+masking the primary failure, and stale current-table wording. The bounded
+corrections above retain no-repeat writes and failed-gate semantics, add real-
+client failure regressions (50 focused checks total), and separate historical
+checkpoints from the live PR gate. This review does not approve changed code;
+new source still requires its own audit/CI/current-head review.
+
 The diagnostic follow-up preserves strict parsing/coverage and adds only
 allowlisted static failure codes. Main logs a fixed sentence containing a code
 and, for rejected completion or timeout only, the bounded primitive metadata above;
+publication may add fixed recovery categories or a revocation category and
+confirmed/unconfirmed outcome flag;
 it never prints raw stdout/stderr, model text, provider responses, exception
 message/stack or credential values. Unknown exceptions and unrecognized shapes
 remain generic. Temporary generation state is still removed.
@@ -459,6 +486,9 @@ remain generic. Temporary generation state is still removed.
 | `REVIEW_FINDING_COUNT`, `REVIEW_FINDING_SHAPE` | Too many findings or a finding that is not an object |
 | `REVIEW_FINDING_PATH`, `REVIEW_FINDING_SIDE`, `REVIEW_FINDING_LINE`, `REVIEW_FINDING_BODY` | Unknown path, invalid side, ineligible/noninteger line, or invalid/blank/oversized body; no field values or exception text are emitted |
 | `REVIEW_FINDING` (historical), `REVIEW_VERDICT` | Earlier generic finding failure; inconsistent findings/verdict/reply remains rejected |
+| `REVIEW_INCOMPLETE` | Published COMMENT has incomplete coverage; the review gate remains failed |
+| `APPROVAL_RECOVERY_READ_FAILED`, `APPROVAL_RECOVERY_NOT_OBSERVED`, `APPROVAL_RECOVERY_DISMISS_FAILED`, `APPROVAL_RECOVERY_DISMISS_REQUESTED` | Secondary static recovery status; never proves an approval cannot remain or turns a failed attempt into success |
+| `APP_TOKEN_REVOCATION_FAILED` | Secondary cleanup failure preserves the primary error; cleanup-only failure explicitly distinguishes previously confirmed publication |
 | `REVIEW_CONFIGURATION`, `REVIEW_OBSOLETE`, `REVIEW_UNKNOWN` | Missing/invalid required generation configuration, stale PR/request, or unclassified failure |
 
 The numeric HTTP field follows the pinned
@@ -468,7 +498,7 @@ causes CLI exit 1. No message/body is inspected to guess a cause, and an auth
 category does not prove a particular key is wrong. A nonzero CLI exit never
 becomes successful review even if stdout contains plausible review JSON.
 
-All 46 focused event/auth/review/diagnostic/trust/representation checks pass on
+All 50 focused event/auth/review/diagnostic/trust/representation checks pass on
 Node 24.22.1. A real adapter-process test uses an inert fake executable with
 secret-shaped strings, provider URLs and workflow commands in both streams;
 only the expected static code appears and no result artifact is written.
@@ -484,7 +514,7 @@ request preparation defaults to a32,000-token output cap; the authorized fixed
 384,000 cap supersedes the earlier 128,000 experiment while retaining `max`.
 New-head review and actual Go acceptance/completion evidence remain required.
 
-Local evidence: 46 event/auth/fork/main-exclusion/relay/coverage/verdict/current-
+Local evidence: 50 event/auth/fork/main-exclusion/relay/coverage/verdict/current-
 head/base-race/token-isolation/diagnostic tests pass; all workflows pass checksum-pinned
 actionlint 1.7.12; immutable handoff and whitespace checks pass. The real CLI
 1.19.5 macOS archive was verified with SHA-256

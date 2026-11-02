@@ -6,6 +6,15 @@ This records repository changes. No application version has been released.
 
 ### Added
 
+- Bounded non-reposting recovery for ambiguous formal approval writes: exact
+  trailing run footer/App identity/PR/head binding, one bounded review lookup,
+  best-effort dismissal and a persistently failed gate with explicit consistency
+  limits. Revocation reports a separate static category without masking the
+  primary failure, and distinguishes confirmed publication from cleanup success.
+  50 focused checks cover lost/malformed responses, spoofed markers, recovery
+  failures and cleanup outcomes. Historical [4c88974 review5733195211](https://github.com/Ljrr3045/rielia/pull/25#pullrequestreview-5733195211)
+  requested these fixes; current progress now links live PR gates instead of
+  carrying old head/test/CI evidence forward. No new-head approval is claimed.
 - Explicit existing output bounds and original-patch LEFT/RIGHT eligible ranges
   in the model-only prompt, with untrusted path strings and full parent/projection
   unchanged. Finding rejection now distinguishes static count/shape/path/side/

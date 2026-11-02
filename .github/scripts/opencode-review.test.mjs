@@ -9,7 +9,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { PassThrough } from 'node:stream';
 import test from 'node:test';
-import { GitHub, LIMITS, Obsolete, ReviewFailure, assertFresh, authorize, buildPrompt, changedLines, collectCliOutput, commandContext, exchangeToken, expandModelInput, findingLineRanges, formatFailure, modelConfig, modelEnvironment, parseEvents, plan, prepare, projectModelInput, publish, snapshot, validateRelay, validateResult } from './opencode-review.mjs';
+import { GitHub, LIMITS, Obsolete, ReviewFailure, assertFresh, authorize, buildPrompt, changedLines, collectCliOutput, commandContext, exchangeToken, expandModelInput, findingLineRanges, formatFailure, modelConfig, modelEnvironment, parseEvents, plan, prepare, projectModelInput, publish, publishWithRevocation, snapshot, validateRelay, validateResult } from './opencode-review.mjs';
 
 const repo = 'Ljrr3045/rielia';
 const head = 'a'.repeat(40);
@@ -37,7 +37,7 @@ function fakeApi(routes = {}) {
       throw new Error(`Unexpected GET ${path}`);
     },
     async list(path) { return this.get(path); },
-    async post(path, body) { calls.push(['POST', path, body]); return { id: 123, html_url: 'https://example.test/review', commit_id: head, state: { APPROVE: 'APPROVED', REQUEST_CHANGES: 'CHANGES_REQUESTED', COMMENT: 'COMMENTED' }[body.event] }; },
+    async post(path, body) { calls.push(['POST', path, body]); return { id: 123, html_url: 'https://example.test/review', pull_request_url: `https://api.github.com/repos/${repo}/pulls/7`, user: bot, body: body.body, commit_id: head, state: { APPROVE: 'APPROVED', REQUEST_CHANGES: 'CHANGES_REQUESTED', COMMENT: 'COMMENTED' }[body.event] }; },
     async request(method, path, body) { calls.push([method, path, body]); return {}; },
     repository(name) { calls.push(['REPOSITORY', name]); return api; },
   };
@@ -828,27 +828,153 @@ test('freshness checks block head/base/ref/draft/closure races before any write'
   }
 });
 
-test('post-write race attempts to dismiss obsolete approval and fails the gate', async () => {
+test('post-write race attempts to dismiss obsolete approval and fails the gate', async (t) => {
+  const logs = [];
+  t.mock.method(console, 'error', (message) => logs.push(message));
   let count = 0;
   const api = commandApi('/oc', { '/pulls/7': () => ++count === 1 ? pr() : pr({ state: 'closed' }) });
   await assert.rejects(publish(api, input(), generated(), 'pull_request_target', {}, '123-1'), Obsolete);
   assert(api.calls.some(([method, path]) => method === 'PUT' && path.endsWith('/reviews/123/dismissals')));
-  assert(api.calls.find(([method]) => method === 'PUT')[2].message.includes('obsolete or outcome mismatch'));
+  assert(api.calls.find(([method]) => method === 'PUT')[2].message.includes('publication or freshness unverified'));
+  assert(logs[0].includes('APPROVAL_RECOVERY_DISMISS_REQUESTED'));
 });
 
-test('transient post-write uncertainty dismisses approval and keeps the gate failed even if dismissal fails', async () => {
+test('transient post-write uncertainty dismisses approval and keeps the gate failed even if dismissal fails', async (t) => {
+  const logs = [];
+  t.mock.method(console, 'error', (message) => logs.push(message));
   for (const denied of [false, true]) {
     let reads = 0;
     const transient = new Error('fake post-write API unavailable');
     const api = commandApi('/oc', { '/pulls/7': () => { if (++reads === 1) return pr(); throw transient; } });
     api.request = async (method, path, body) => { api.calls.push([method, path, body]); if (denied) throw new Error('fake denied dismissal'); return {}; };
-    await assert.rejects(publish(api, input(), generated(), 'pull_request_target', {}, '123-1'), denied ? /freshness unverified; automatic dismissal failed/ : (error) => error === transient);
+    await assert.rejects(publish(api, input(), generated(), 'pull_request_target', {}, '123-1'), (error) => error === transient);
     assert.equal(api.calls.filter(([method]) => method === 'POST').length, 1);
     const dismissals = api.calls.filter(([method]) => method === 'PUT');
     assert.equal(dismissals.length, 1);
-    assert(dismissals[0][2].message.includes('freshness unverified'));
+    assert(dismissals[0][2].message.includes('publication or freshness unverified'));
     assert(!dismissals[0][2].message.includes('head/base changed'));
+    assert(logs.at(-1).includes(denied ? 'APPROVAL_RECOVERY_DISMISS_FAILED' : 'APPROVAL_RECOVERY_DISMISS_REQUESTED'));
   }
+});
+
+function publicationClient({ post = 'lost', recovery = 'matching', dismissalDenied = false, revokeDenied = false, primary } = {}) {
+  const calls = [];
+  let reviewReads = 0;
+  let stored;
+  const lost = new Error('fake-token lost response ::error:: must-not-log');
+  const api = new GitHub(repo, 'fake-installation-token', async (url, options) => {
+    const path = new URL(url).pathname + new URL(url).search;
+    const body = options.body ? JSON.parse(options.body) : undefined;
+    calls.push({ path, method: options.method, headers: options.headers, body });
+    if (options.method === 'DELETE' && path === '/installation/token') return Response.json({}, { status: revokeDenied ? 403 : 200 });
+    if (options.method === 'GET' && path === `/repos/${repo}/pulls/7`) {
+      if (primary) throw primary;
+      return Response.json(pr());
+    }
+    if (options.method === 'POST' && path === `/repos/${repo}/pulls/7/reviews`) {
+      stored = { id: 123, user: bot, pull_request_url: `https://api.github.com/repos/${repo}/pulls/7`, commit_id: head, state: { APPROVE: 'APPROVED', REQUEST_CHANGES: 'CHANGES_REQUESTED', COMMENT: 'COMMENTED' }[body.event], body: body.body, html_url: 'https://github.com/example/review/123' };
+      if (post === 'lost') throw lost;
+      if (post === 'invalid-json') return new Response('invalid response', { status: 201 });
+      if (post === 'null') return Response.json(null);
+      if (post === 'invalid-id') return Response.json({ ...stored, id: '123' });
+      if (post === 'wrong-state') return Response.json({ ...stored, state: 'COMMENTED' });
+      return Response.json(stored);
+    }
+    if (options.method === 'GET' && path.startsWith(`/repos/${repo}/pulls/7/reviews?`)) {
+      reviewReads++;
+      if (!stored || recovery === 'not-observed') return Response.json([]);
+      if (recovery === 'read-denied') return Response.json({}, { status: 403 });
+      if (recovery === 'malformed') return Response.json({});
+      if (recovery === 'page-bound') return Response.json(Array.from({ length: 100 }, () => ({ id: 999, user: human, body: 'unrelated' })));
+      const marker = stored.body.slice(stored.body.lastIndexOf('<!-- rielia-opencode'));
+      return Response.json([
+        { ...stored, id: 10, user: human }, { ...stored, id: 11, user: { ...bot, type: 'User' } },
+        { ...stored, id: 12, user: { ...bot, login: 'other-app[bot]' } },
+        { ...stored, id: 13, commit_id: base }, { ...stored, id: 14, pull_request_url: `https://api.github.com/repos/${repo}/pulls/8` },
+        { ...stored, id: 15, body: marker + '\nquoted marker; different final footer' },
+        { ...stored, id: 16, body: stored.body.replace('123-1', '123-2') },
+        { ...stored, id: 17, state: 'COMMENTED' }, { ...stored, id: '18' },
+        stored, stored, { ...stored, id: 124 },
+      ]);
+    }
+    if (options.method === 'PUT' && /^\/repos\/[^/]+\/[^/]+\/pulls\/7\/reviews\/\d+\/dismissals$/.test(path)) return Response.json({}, { status: dismissalDenied ? 403 : 200 });
+    throw new Error('Unexpected fake publication endpoint');
+  });
+  return { api, calls, lost, reviewReads: () => reviewReads, stored: () => stored };
+}
+
+test('actual client recovers ambiguous approval writes by exact App/footer/PR/head binding, never reposting', async (t) => {
+  const logs = [];
+  t.mock.method(console, 'error', (message) => logs.push(message));
+  for (const post of ['lost', 'invalid-json', 'null', 'invalid-id', 'wrong-state']) {
+    const fixture = publicationClient({ post });
+    await assert.rejects(publish(fixture.api, input(), generated(), 'pull_request_target', {}, '123-1'), post === 'lost' ? (error) => error === fixture.lost : undefined);
+    assert.equal(fixture.calls.filter((call) => call.method === 'POST').length, 1);
+    assert.equal(fixture.reviewReads(), 2, 'Initial duplicate check plus one bounded recovery list');
+    const writes = fixture.calls.filter((call) => call.method === 'PUT');
+    assert.deepEqual(writes.map((call) => Number(call.path.split('/').at(-2))), [123, 124], 'Only exact matching approvals, each ID once');
+    assert(logs.at(-1).includes('APPROVAL_RECOVERY_DISMISS_REQUESTED'));
+    for (const call of fixture.calls) assert.equal(call.headers.Authorization, 'Bearer fake-installation-token');
+  }
+  assert(logs.every((line) => !line.includes('fake-') && !line.includes('::error::') && !line.includes(head)));
+});
+
+test('approval recovery read, consistency, dismissal and pagination limits keep the original failed gate', async (t) => {
+  const logs = [];
+  t.mock.method(console, 'error', (message) => logs.push(message));
+  for (const [recovery, dismissalDenied, code] of [['not-observed', false, 'NOT_OBSERVED'], ['read-denied', false, 'READ_FAILED'], ['malformed', false, 'READ_FAILED'], ['page-bound', false, 'READ_FAILED'], ['matching', true, 'DISMISS_FAILED']]) {
+    const fixture = publicationClient({ recovery, dismissalDenied });
+    await assert.rejects(publish(fixture.api, input(), generated(), 'pull_request_target', {}, '123-1'), (error) => error === fixture.lost);
+    assert.equal(fixture.calls.filter((call) => call.method === 'POST').length, 1);
+    assert.equal(fixture.reviewReads(), recovery === 'page-bound' ? LIMITS.pages + 1 : 2);
+    assert.equal(fixture.calls.filter((call) => call.method === 'PUT').length, recovery === 'matching' ? 2 : 0);
+    assert(logs.at(-1).includes(`APPROVAL_RECOVERY_${code}`));
+    assert.equal(fixture.stored().state, 'APPROVED', 'A failed job cannot guarantee an unobserved approval was removed');
+  }
+  for (const verdict of ['COMMENT', 'REQUEST_CHANGES']) {
+    const fixture = publicationClient();
+    const findings = verdict === 'REQUEST_CHANGES' ? [{ path: 'a.js', side: 'RIGHT', line: 2, body: 'Concrete defect.' }] : [];
+    await assert.rejects(publish(fixture.api, input(), generated({ verdict, findings }), 'pull_request_target', {}, '123-1'), (error) => error === fixture.lost);
+    assert.equal(fixture.reviewReads(), 1);
+    assert.equal(fixture.calls.filter((call) => call.method === 'PUT').length, 0);
+  }
+});
+
+test('revocation failure preserves the primary static error and records publication certainty separately', async (t) => {
+  const logs = [];
+  t.mock.method(console, 'error', (message) => logs.push(message));
+  for (const primary of [new ReviewFailure('REVIEW_FINDING_LINE'), new Obsolete('fake-secret must-not-log'), new Error('fake-secret must-not-log')]) {
+    const fixture = publicationClient({ post: 'success', revokeDenied: true, primary });
+    await assert.rejects(publishWithRevocation(fixture.api, input(), generated(), 'pull_request_target', {}, '123-1'), (error) => error === primary);
+    assert.equal(fixture.calls.filter((call) => call.method === 'DELETE').length, 1);
+    assert(logs.at(-1).includes('[APP_TOKEN_REVOCATION_FAILED]; publication=unconfirmed'));
+    assert(!formatFailure(primary).includes('fake-secret'));
+  }
+  const incomplete = publicationClient({ post: 'success', revokeDenied: true });
+  await assert.rejects(publishWithRevocation(incomplete.api, input(), generated({ complete: false }), 'pull_request_target', {}, '123-1'), hasCode('REVIEW_INCOMPLETE'));
+  assert.equal(incomplete.stored().state, 'COMMENTED');
+  assert(logs.at(-1).includes('publication=confirmed'));
+  assert(logs.every((line) => !line.includes('fake-') && !line.includes('::error::')));
+});
+
+test('confirmed publication with failed revocation is a distinct cleanup failure, never an unknown verdict', async (t) => {
+  const logs = [];
+  t.mock.method(console, 'error', (message) => logs.push(message));
+  const fixture = publicationClient({ post: 'success', revokeDenied: true });
+  const recorded = [];
+  await assert.rejects(publishWithRevocation(fixture.api, input(), generated(), 'pull_request_target', {}, '123-1', async (outcome) => recorded.push(outcome)), (error) => {
+    assert(hasCode('APP_TOKEN_REVOCATION_FAILED')(error));
+    assert(formatFailure(error).includes('Publication was confirmed before token cleanup'));
+    assert(!formatFailure(error).includes('REVIEW_UNKNOWN'));
+    return true;
+  });
+  assert.equal(recorded.length, 1);
+  assert.equal(recorded[0].verdict, 'APPROVE');
+  assert.equal(fixture.calls.filter((call) => call.method === 'POST').length, 1);
+  assert.equal(fixture.calls.filter((call) => call.method === 'DELETE').length, 1);
+  assert(logs[0].includes('publication=confirmed'));
+  const success = publicationClient({ post: 'success' });
+  assert.equal((await publishWithRevocation(success.api, input(), generated(), 'pull_request_target', {}, '123-1')).verdict, 'APPROVE');
 });
 
 test('revoked access, edited requests and duplicate publication are blocked', async () => {
