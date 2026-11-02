@@ -6,6 +6,14 @@ This records repository changes. No application version has been released.
 
 ### Added
 
+- Explicit existing output bounds and original-patch LEFT/RIGHT eligible ranges
+  in the model-only prompt, with untrusted path strings and full parent/projection
+  unchanged. Finding rejection now distinguishes static count/shape/path/side/
+  line/body categories without leaking values.46 focused checks retain strict
+  acceptance after `ce20845` [run41397290916](https://github.com/Ljrr3045/rielia/actions/runs/41397290916)
+  passed real dual-token authorization/control but failed `REVIEW_FINDING`
+  after32m20 with publication skipped. No specific cause, current-head approval
+  or completed activation is claimed; fresh audit/CI/review remain required.
 - Complete App [CHANGES_REQUESTED5732507392](https://github.com/Ljrr3045/rielia/pull/25#pullrequestreview-5732507392)
   on `390cff2` from the successful unchanged second attempt of
   [run41391130696](https://github.com/Ljrr3045/rielia/actions/runs/41391130696/attempts/2),

@@ -13,6 +13,8 @@ The dated [review evidence below](#validation-and-activation) records the failed
 attempt and successful unchanged retry separately. This proves review/publication,
 not approval of subsequent corrections. Fresh changed-head review and automatic/
 fork/root/inline event acceptance remain **OPEN until activation**.
+The later `ce20845` run passed real dual-token authorization but failed finding
+validation with publication skipped; no current corrected-head approval exists.
 The repository secret was configured by the user out of band; workers never
 read its value, local OpenCode auth, or personal tokens.
 
@@ -413,6 +415,28 @@ that old-head checks or either CHANGES_REQUESTED review approves the changed
 source. Root owns technical replies, invocation, activation and merge; automatic/
 fork/question/inline acceptance and T11 remain OPEN.
 
+At exact `ce20845`, both [support CI41396562223](https://github.com/Ljrr3045/rielia/actions/runs/41396562223)
+and [product CI41396562272](https://github.com/Ljrr3045/rielia/actions/runs/41396562272)
+plus independent audit passed. On2026-11-02,
+[run41397290916](https://github.com/Ljrr3045/rielia/actions/runs/41397290916)
+proved the existing Actions and App clients can authorize the owner through the
+Metadata-read endpoint, including token revocation; its complete tiny control
+also passed. Full generation then failed `REVIEW_FINDING` after32m20, publisher
+SKIPPED/cleanup PASS, with no new App review on that head. The generic code does
+not identify the rejected finding field or line; no cause is established.
+
+Root authorized explicit existing summary20000/body8000 UTF-16/nonblank limits
+and exact path/side/integer rules in the trusted policy, plus sorted/coalesced
+inclusive LEFT/RIGHT ranges derived only from original full patches. A separate
+model-prompt section carries these ranges; its path strings and every INPUT
+string remain untrusted data. LEFT is merge-base diff position, not current-base
+whole-text position. Full parent, original patches, project/expand equality and
+accepted-result guards remain unchanged: no remapping, dropping or shortening
+findings.46 focused tests include boundaries, gaps/sides/divergent base, encoded
+patches, hostile path data and process-level static-code redaction. This is a
+prospective contract clarification, not a proven fix for the failed run; fresh
+head audit/CI/root-authorized live review remain required.
+
 The diagnostic follow-up preserves strict parsing/coverage and adds only
 allowlisted static failure codes. Main logs a fixed sentence containing a code
 and, for rejected completion or timeout only, the bounded primitive metadata above;
@@ -432,7 +456,9 @@ remain generic. Temporary generation state is still removed.
 | `JSONL_TEXT_MISSING`, `JSONL_TEXT_MULTIPLE`, `JSONL_TEXT_SHAPE` | Missing, multiple, or non-string text events |
 | `REVIEW_JSON_PARSE`, `REVIEW_JSON_FENCE` | Invalid review JSON; the latter indicates an outer Markdown fence, which remains rejected |
 | `REVIEW_SCHEMA`, `REVIEW_BINDING`, `REVIEW_COVERAGE` | Invalid result shape, wrong head/base, or mismatched reviewed-file set |
-| `REVIEW_FINDING`, `REVIEW_VERDICT` | Invalid/bounded inline finding or inconsistent findings/verdict/reply |
+| `REVIEW_FINDING_COUNT`, `REVIEW_FINDING_SHAPE` | Too many findings or a finding that is not an object |
+| `REVIEW_FINDING_PATH`, `REVIEW_FINDING_SIDE`, `REVIEW_FINDING_LINE`, `REVIEW_FINDING_BODY` | Unknown path, invalid side, ineligible/noninteger line, or invalid/blank/oversized body; no field values or exception text are emitted |
+| `REVIEW_FINDING` (historical), `REVIEW_VERDICT` | Earlier generic finding failure; inconsistent findings/verdict/reply remains rejected |
 | `REVIEW_CONFIGURATION`, `REVIEW_OBSOLETE`, `REVIEW_UNKNOWN` | Missing/invalid required generation configuration, stale PR/request, or unclassified failure |
 
 The numeric HTTP field follows the pinned
@@ -442,7 +468,7 @@ causes CLI exit 1. No message/body is inspected to guess a cause, and an auth
 category does not prove a particular key is wrong. A nonzero CLI exit never
 becomes successful review even if stdout contains plausible review JSON.
 
-All 43 focused event/auth/review/diagnostic/trust/representation checks pass on
+All 46 focused event/auth/review/diagnostic/trust/representation checks pass on
 Node 24.22.1. A real adapter-process test uses an inert fake executable with
 secret-shaped strings, provider URLs and workflow commands in both streams;
 only the expected static code appears and no result artifact is written.
@@ -458,7 +484,7 @@ request preparation defaults to a32,000-token output cap; the authorized fixed
 384,000 cap supersedes the earlier 128,000 experiment while retaining `max`.
 New-head review and actual Go acceptance/completion evidence remain required.
 
-Local evidence: 43 event/auth/fork/main-exclusion/relay/coverage/verdict/current-
+Local evidence: 46 event/auth/fork/main-exclusion/relay/coverage/verdict/current-
 head/base-race/token-isolation/diagnostic tests pass; all workflows pass checksum-pinned
 actionlint 1.7.12; immutable handoff and whitespace checks pass. The real CLI
 1.19.5 macOS archive was verified with SHA-256
