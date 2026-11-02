@@ -1,0 +1,31 @@
+docs/development/progress.md
+  s_29631ef230441d::t_566725f9b3273f 58
+  s_29631ef230441d::t_1f11734ad84c99 830
+.github/scripts/opencode-review.mjs
+  s_29631ef230441d::t_1f11734ad84c99 11
+.github/scripts/opencode-review.test.mjs
+  s_29631ef230441d::t_1f11734ad84c99 6,94-101
+  s_29631ef230441d::t_58bfc41f004f05 102-103
+docs/development/opencode-review.md
+  s_29631ef230441d::t_1f11734ad84c99 154-155,168-171,175,204-205
+CHANGELOG.md
+  s_29631ef230441d::t_1f11734ad84c99 18
+CONTRIBUTING.md
+  s_29631ef230441d::t_1f11734ad84c99 262
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ffdfae02c3984df2e074edc0ab84c1d6e7af458b",
+  "prompts": {},
+  "sessions": {
+    "s_29631ef230441d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1998a-2a13-74a0-81ae-a5105bd337ca",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
