@@ -6,6 +6,16 @@ This records repository changes. No application version has been released.
 
 ### Review policy
 
+- Reconcile the minimal main governance bootstrap into dev with a real merge
+  commit. Combine the CI ownership/whitespace gates and secure checkout options
+  with every existing technical fixture check/pin, keeping `validate`, read-only
+  contents permission, concurrency and the 25-minute job; push coverage includes
+  both branches and pull requests remain unrestricted. Preserve main ancestry
+  when integrating this PR into dev: use merge, not squash or rebase, to avoid
+  repeating the CI add/add conflict. Update entrypoints and governance evidence
+  for merged PRs #26/#27 and active CODEOWNERS/CI on both bases. No product promotion
+  to main, T11, dependency, reviewer-setting or deployment change is included.
+
 - Adopt native Kilo and layered branch protection. Core `Development — Review & CI`
   (`26377556`) requires Kilo App `2193792` and validate App `15368`; core
   `Main — Release Protection` (`25810056`) requires validate only. Both have no
@@ -15,9 +25,14 @@ This records repository changes. No application version has been released.
   require his current-head APPROVED. His approval-layer PR-only exception follows
   merge actor natively, so coordinator policy limits it to his own PRs; it cannot
   bypass core gates or create approval. No global admin bypass, auto-approve,
-  token expansion or PAT. Base-file ownership activates on dev after merge; main
-  CODEOWNERS/CI bootstrap activation is pending, with one-off Kilo review authorized
-  and no product promotion. Clarify coordinator triage/delegation versus assigned
+  token expansion or PAT. [PR #26](https://github.com/Ljrr3045/rielia/pull/26)
+  merged into dev as `a52beaa3`; the separate minimal
+  [PR #27](https://github.com/Ljrr3045/rielia/pull/27) merged into main as `41c26bc0`.
+  Both bases now contain CODEOWNERS and CI after successful final-head checks.
+  PR #27's one-off Kilo review had one conditional ownership warning, resolved
+  using live evidence that the PR-only exception covers the separate ownership
+  layer's approval and code-owner rules; core gates have no bypass. Neither PR
+  promotes product code to main. Clarify coordinator triage/delegation versus assigned
   worker fixes, replace Kody instructions in README/frontend-worker entrypoints,
   explicitly supersede legacy review requirements and add dated review-only notices
   to older development guides. Retain the mandatory Kilo gate for skipped bot PRs
@@ -27,7 +42,8 @@ This records repository changes. No application version has been released.
   root `REVIEW.md` and the [evidence guide](docs/development/kilo-review.md).
   Preserve historical Kody/OpenCode evidence and frontend worker selection. Main
   automatic Kilo exclusion and OpenCode App uninstall remain unverified/unanswered.
-  No product code, workflow, handoff or deployment change; no full ticket completed.
+  PR #26 changed no product code, workflow, handoff or deployment; no full ticket
+  completed. Both completed governance worktrees were removed by the coordinator.
 
 ### Added
 

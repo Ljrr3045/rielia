@@ -47,14 +47,21 @@ no fake approval is created. The exception cannot bypass core checks, PR/thread
 requirements, deletion or force-push protection. There is no global admin bypass.
 Do not add auto-approve actions, expand `GITHUB_TOKEN` permissions or introduce PATs.
 
-Code-owner matching uses the base branch's CODEOWNERS file. This PR adds the file
-for `dev` activation after merge. Main currently has only README: CODEOWNERS and CI
-have not landed there, so main ownership/CI activation is **pending the separate
-minimal bootstrap**. The user authorized its one-off Kilo review; no full product
-promotion is authorized. Active ruleset configuration is not proof of base-file
-activation. This worker neither opens nor merges the main bootstrap PR.
-Settings changes belong to the coordinator; this worker changes only repository
-guidance and CODEOWNERS.
+Code-owner matching uses the base branch's CODEOWNERS file. [PR #26](https://github.com/Ljrr3045/rielia/pull/26)
+merged into `dev` as `a52beaa3bd535062f293fbb5f16e2699129092b4` and the separate
+minimal [PR #27](https://github.com/Ljrr3045/rielia/pull/27) merged into `main` as
+`41c26bc0ac6f984f8d3fecfd7f461bb5179e0465`. CODEOWNERS and CI are now present on
+both bases. Main's bootstrap adds only governance files to its README; it is not
+product promotion. The user authorized its one-off Kilo review. Settings changes
+remain outside this reconciliation.
+
+The PR-only exception covers the entire separate ownership ruleset, including
+its approval and code-owner requirements. It does not bypass either core ruleset.
+The coordinator verified this live configuration when resolving PR #27's
+conditional self-approval warning; repository content alone cannot prove a bypass
+list. The reconciliation PR to `dev` must retain its main-into-dev merge ancestry
+through a **merge commit**, not squash or rebase. Otherwise a later merge can
+repeat the same CI add/add conflict despite an equivalent file resolution.
 
 ## Native setup and observed evidence
 
@@ -69,11 +76,22 @@ On prior head `49f3d4eded3876ce12d978d834ad48c58966309e` of
 [PR #26](https://github.com/Ljrr3045/rielia/pull/26), the coordinator verified
 `Kilo Code Review` and `validate` SUCCESS with no Kilo findings and no submitted
 formal reviews. This establishes native check behavior, not GitHub `APPROVED`.
-The amended head requires a fresh successful run of both checks and review-surface
-inspection; prior-head evidence cannot approve it.
 The later `c160c6b` run returned check SUCCESS with two warnings and one suggestion
 in its summary, so success alone does not establish no findings; the coordinator
-must inspect summaries and inline feedback.
+must inspect summaries and inline feedback. The final reviewed head
+`0cb53a4ac8f128f0111476e2e925db4532d84c25` passed
+[validate](https://github.com/Ljrr3045/rielia/actions/runs/41477983229/job/125388505559)
+and [Kilo](https://app.kilo.ai/code-reviews/52c2c59a-7ea4-4302-9472-5a2e06c6707b)
+before PR #26 merged on 2026-11-02 at 16:14:48 UTC.
+
+PR #27's reviewed head `6afd20aa38bf009a70e66f183838bb49b6f9c88e` passed
+[validate](https://github.com/Ljrr3045/rielia/actions/runs/41479780807/job/125394679013)
+and [Kilo](https://app.kilo.ai/code-reviews/f1cad821-3909-42b9-a795-f4dca0bcaae1)
+before merge on 2026-11-02 at 16:25:11 UTC. Its
+[one conditional CODEOWNERS warning](https://github.com/Ljrr3045/rielia/pull/27#issuecomment-6582155310)
+was resolved with the live ownership-ruleset evidence described above, rather than
+claimed absent. The coordinator removed both completed worktrees. These prior
+results do not approve the reconciliation's new head.
 
 The user's requested exclusion of base `main` from Kilo events remains
 **unverified**. No supported control was found in the inspected UI, and the

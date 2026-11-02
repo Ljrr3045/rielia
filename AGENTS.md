@@ -171,8 +171,10 @@ Keep these boundaries in both current and future code.
    resolved findings. Only his own PRs may use his approval-layer PR-only exception;
    the native exception follows the merge actor, not PR author, so coordinator
    policy must enforce that limit. It cannot bypass core checks/protections and
-   creates no fake approval. Main ownership/CI base activation awaits a separate
-   minimal bootstrap with one-off Kilo review authorized; no full product promotion.
+   creates no fake approval. CODEOWNERS and CI are active on dev after PR #26 and
+   main after the minimal PR #27 bootstrap, whose one-off Kilo review was authorized;
+   no product promotion occurred. Preserve the main/dev reconciliation's merge
+   ancestry when integrating it into dev: use a merge commit, not squash or rebase.
    Kilo is not required by main
    protection; its automatic-event exclusion remains unverified. After any push,
    rerun affected checks and wait for current-head required evidence, including

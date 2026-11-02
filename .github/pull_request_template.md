@@ -30,7 +30,7 @@
 - Coordinator triage/delegation/dispositions, assigned-worker fixes/checks, and fresh-head review:
 - Core ruleset: `Development — Review & CI` (`dev`, `26377556`) or `Main — Release Protection` (`main`, `25810056`); no core bypass:
 - Ownership layer (`26378917`): other authors need `Ljrr3045`'s current-head APPROVED URL; own PRs need author/merger evidence for the limited PR-only exception:
-- Base CODEOWNERS/CI activation status (main bootstrap is pending):
+- Base CODEOWNERS/CI activation evidence (active on dev via PR #26 and main via PR #27):
 - Setup, `main` exclusion, or other unverified integration blockers:
 
 <!-- See docs/development/kilo-review.md. No legacy Kody trigger or invented Kilo command. -->
@@ -38,7 +38,8 @@
 <!-- dev requires both App-bound checks; main requires validate only. Both require an up-to-date head, PR, resolved threads and coordinator disposition. -->
 <!-- The approval-only exception follows merge actor, not PR author. Coordinator may use it only for Ljrr3045-authored PRs; never bypass core gates. -->
 <!-- No fake auto-approval/token expansion/PAT/global bypass. Required-check selection does not enforce the still-unverified main Kilo event exclusion. -->
-<!-- main base CODEOWNERS/CI activation is pending separate minimal bootstrap; its one-off Kilo review is authorized, not product promotion. -->
+<!-- CODEOWNERS/CI are active on both bases after PRs #26/#27; the bootstrap had one-off Kilo authorization without product promotion. -->
+<!-- Integrate the main/dev reconciliation with a merge commit into dev, not squash/rebase, preserving main ancestry. -->
 <!-- Skip Bots ON leaves bot dev PRs without Kilo blocked; do not exempt/bypass or claim complete bot coverage. -->
 
 ## Limitations and remaining decisions
