@@ -1,0 +1,30 @@
+.github/scripts/opencode-review.mjs
+  s_29631ef230441d::t_04dc7f7d029ce2 350
+.github/scripts/opencode-review.test.mjs
+  s_29631ef230441d::t_04dc7f7d029ce2 142,149-150
+.github/scripts/opencode-cli-smoke.mjs
+  s_29631ef230441d::t_04dc7f7d029ce2 58,64
+docs/development/progress.md
+  s_29631ef230441d::t_d5910798e5fbf3 62
+CHANGELOG.md
+  s_29631ef230441d::t_d5910798e5fbf3 26-31
+docs/development/opencode-review.md
+  s_29631ef230441d::t_4c28701e803ba4 54,166,195
+  s_29631ef230441d::t_d5910798e5fbf3 207-217,219-220,259-261,268-269
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "110d2d2b3b2fcdb1e598e20e9472242a3ba562bc",
+  "prompts": {},
+  "sessions": {
+    "s_29631ef230441d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1998a-2a13-74a0-81ae-a5105bd337ca",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
