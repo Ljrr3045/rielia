@@ -177,6 +177,49 @@ budget still bounds total context rather than silently truncating large files.
 
 ## Validation and activation
 
+The root-authorized one-time bootstrap
+[run 41368385352](https://github.com/Ljrr3045/rielia/actions/runs/41368385352)
+used audited support `14cc8ab` and fixed PR #25. Preparation and pinned CLI setup
+passed; generation failed after about four minutes, and App publication was
+skipped. The old generic failure log and deleted temporary state do not establish
+the precise cause. No bad-key diagnosis, successful review or approval follows
+from that failure. Live operational acceptance remains OPEN.
+
+The diagnostic follow-up preserves strict parsing/coverage and adds only
+allowlisted static failure codes. Main logs one fixed sentence containing a code;
+it never prints raw stdout/stderr, model text, provider responses, exception
+message/stack or credential values. Unknown exceptions and unrecognized shapes
+remain generic. Temporary generation state is still removed.
+
+| Static code | Meaning; every case fails closed |
+| --- | --- |
+| `CLI_SPAWN`, `CLI_EXIT`, `CLI_INPUT` | Child start failure, nonzero/signal exit without a recognized structured model error, or failed prompt input |
+| `CLI_TIMEOUT`, `CLI_OUTPUT_LIMIT` | Fixed model deadline or combined stdout/stderr byte bound reached |
+| `MODEL_HTTP_AUTH`, `MODEL_HTTP_LIMIT` | Structured numeric HTTP 401/403 or 429 in an error event |
+| `MODEL_HTTP_REQUEST`, `MODEL_HTTP_SERVER` | Structured numeric HTTP 400/422 or 5xx in an error event |
+| `MODEL_ERROR_EVENT`, `MODEL_TOOL_EVENT` | Other model/CLI error event or prohibited tool event |
+| `JSONL_PARSE`, `JSONL_ENVELOPE`, `JSONL_COMPLETION` | Invalid JSONL, invalid/empty event envelope, or absent/multiple/non-stop completion |
+| `JSONL_TEXT_MISSING`, `JSONL_TEXT_MULTIPLE`, `JSONL_TEXT_SHAPE` | Missing, multiple, or non-string text events |
+| `REVIEW_JSON_PARSE`, `REVIEW_JSON_FENCE` | Invalid review JSON; the latter indicates an outer Markdown fence, which remains rejected |
+| `REVIEW_SCHEMA`, `REVIEW_BINDING`, `REVIEW_COVERAGE` | Invalid result shape, wrong head/base, or mismatched reviewed-file set |
+| `REVIEW_FINDING`, `REVIEW_VERDICT` | Invalid/bounded inline finding or inconsistent findings/verdict/reply |
+| `REVIEW_CONFIGURATION`, `REVIEW_OBSOLETE`, `REVIEW_UNKNOWN` | Missing/invalid required generation configuration, stale PR/request, or unclassified failure |
+
+The numeric HTTP field follows the pinned
+[CLI error serialization](https://github.com/anomalyco/opencode/blob/810c0eba1a7348036f8bdf61e6632d0c36c6876c/packages/opencode/src/session/message-v2.ts).
+Only those finite groups are emitted, including when a structured error also
+causes CLI exit 1. No message/body is inspected to guess a cause, and an auth
+category does not prove a particular key is wrong. A nonzero CLI exit never
+becomes successful review even if stdout contains plausible review JSON.
+
+The original 22 checks plus four focused diagnostic/redaction checks pass on
+Node 24.22.1. A real adapter-process test uses an inert fake executable with
+secret-shaped strings, provider URLs and workflow commands in both streams;
+only the expected static code appears and no result artifact is written.
+No paid model or live App call is part of that check. Previous source audit/CI
+at `14cc8ab` does not approve the new diagnostic head; independent review and
+root-approved live feedback remain required before another bootstrap attempt.
+
 Local evidence: 22 event/auth/fork/main-exclusion/relay/coverage/verdict/current-
 head/base-race/token-isolation tests pass; all workflows pass checksum-pinned
 actionlint 1.7.12; immutable handoff and whitespace checks pass. The real CLI

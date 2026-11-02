@@ -6,6 +6,15 @@ This records repository changes. No application version has been released.
 
 ### Added
 
+- Safe static review-generation failure categories after bootstrap
+  [41368385352](https://github.com/Ljrr3045/rielia/actions/runs/41368385352)
+  failed with publication skipped and no recoverable precise cause. Diagnostics
+  distinguish CLI lifecycle/bounds, structured model error/status/tool events,
+  JSONL/text/completion, fenced or malformed review JSON, schema/head/base/
+  coverage/findings/verdict failures. Raw streams, exception messages, provider
+  bodies and credentials remain private; no parser or approval gate is relaxed.
+  All 26 focused checks include actual fake-CLI process redaction/no-result
+  regressions; independent review and root-approved live feedback remain pending.
 - OpenCode Go PR-review replacement before T11, under the user's 2026-11-01
   decision. The [trusted adapter](docs/development/opencode-review.md) uses the
   official installed App/OIDC and checksum-pinned CLI 1.19.5, rather than the

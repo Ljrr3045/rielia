@@ -18,6 +18,31 @@ const encode = encodeURIComponent;
 
 export class Obsolete extends Error {}
 
+// Only these branded, static codes may reach logs. Never classify by matching
+// uncontrolled exception messages or expose raw CLI/model/provider responses.
+const modelFailureCodes = new Set(['MODEL_ERROR_EVENT', 'MODEL_TOOL_EVENT', 'MODEL_HTTP_AUTH', 'MODEL_HTTP_LIMIT', 'MODEL_HTTP_REQUEST', 'MODEL_HTTP_SERVER']);
+const failureCodes = new Set([
+  'REVIEW_UNKNOWN', 'REVIEW_OBSOLETE', 'REVIEW_CONFIGURATION',
+  'CLI_SPAWN', 'CLI_EXIT', 'CLI_TIMEOUT', 'CLI_OUTPUT_LIMIT', 'CLI_INPUT',
+  ...modelFailureCodes, 'JSONL_PARSE', 'JSONL_ENVELOPE', 'JSONL_TEXT_MISSING', 'JSONL_TEXT_MULTIPLE', 'JSONL_TEXT_SHAPE',
+  'JSONL_COMPLETION', 'REVIEW_JSON_PARSE', 'REVIEW_JSON_FENCE', 'REVIEW_SCHEMA', 'REVIEW_BINDING',
+  'REVIEW_COVERAGE', 'REVIEW_FINDING', 'REVIEW_VERDICT',
+]);
+
+export class ReviewFailure extends Error {
+  constructor(code) {
+    const safeCode = failureCodes.has(code) ? code : 'REVIEW_UNKNOWN';
+    super(`OpenCode review failure: ${safeCode}`);
+    this.code = safeCode;
+    Object.freeze(this);
+  }
+}
+
+export function formatFailure(error) {
+  const code = error instanceof ReviewFailure && failureCodes.has(error.code) ? error.code : error instanceof Obsolete ? 'REVIEW_OBSOLETE' : 'REVIEW_UNKNOWN';
+  return `OpenCode review failed [${code}]. No successful current-head review is established; inspect the run and PR before retrying.`;
+}
+
 export class GitHub {
   constructor(repository, token, fetcher = fetch) {
     if (!REPO.test(repository)) throw new Error('Invalid repository');
@@ -271,8 +296,7 @@ INPUT (JSON data):\n${JSON.stringify(input)}`;
 }
 
 export function modelConfig(model, variant) {
-  if (!/^opencode-go\/[a-zA-Z0-9._:-]+$/.test(model)) throw new Error('Model must use opencode-go; no provider fallback');
-  if (!/^[a-zA-Z0-9_-]+$/.test(variant)) throw new Error('Invalid model variant');
+  if (!/^opencode-go\/[a-zA-Z0-9._:-]+$/.test(model) || !/^[a-zA-Z0-9_-]+$/.test(variant)) throw new ReviewFailure('REVIEW_CONFIGURATION');
   const id = model.slice('opencode-go/'.length);
   return { model, default_agent: 'review', enabled_providers: ['opencode-go'], provider: { 'opencode-go': { models: { [id]: { variants: { [variant]: { reasoningEffort: variant } } } } } }, share: 'disabled', autoupdate: false, snapshot: false, plugin: [], mcp: {}, lsp: false, formatter: false, permission: { '*': 'deny' }, agent: { review: { mode: 'primary', description: 'Tool-denied PR analysis', permission: { '*': 'deny' } } } };
 }
@@ -291,42 +315,85 @@ export function modelEnvironment(parent, directory, config) {
 }
 
 export function parseEvents(output) {
-  const events = output.trim().split('\n').filter(Boolean).map((line) => JSON.parse(line));
-  if (!events.length || events.some((e) => e.type === 'error' || e.type === 'tool_use')) throw new Error('Model failed or attempted tools; review incomplete');
+  let events;
+  try { events = output.trim().split('\n').filter(Boolean).map((line) => JSON.parse(line)); }
+  catch { throw new ReviewFailure('JSONL_PARSE'); }
+  if (!events.length || events.some((event) => !event || typeof event !== 'object' || Array.isArray(event) || typeof event.type !== 'string')) throw new ReviewFailure('JSONL_ENVELOPE');
+  const errorEvent = events.find((event) => event.type === 'error');
+  if (errorEvent) {
+    // Pinned CLI API errors expose error.data.statusCode. Only numeric finite
+    // groups map to static codes; message/body/header/name fields stay private.
+    const status = errorEvent.error?.data?.statusCode;
+    const code = status === 401 || status === 403 ? 'MODEL_HTTP_AUTH' : status === 429 ? 'MODEL_HTTP_LIMIT' : status === 400 || status === 422 ? 'MODEL_HTTP_REQUEST' : Number.isInteger(status) && status >= 500 && status <= 599 ? 'MODEL_HTTP_SERVER' : 'MODEL_ERROR_EVENT';
+    throw new ReviewFailure(code);
+  }
+  if (events.some((event) => event.type === 'tool_use')) throw new ReviewFailure('MODEL_TOOL_EVENT');
   const finishes = events.filter((e) => e.type === 'step_finish');
-  if (finishes.length !== 1 || finishes[0].part?.reason !== 'stop') throw new Error('Model did not complete normally');
+  if (finishes.length !== 1 || finishes[0].part?.reason !== 'stop') throw new ReviewFailure('JSONL_COMPLETION');
   const texts = events.filter((e) => e.type === 'text').map((e) => e.part?.text);
-  if (texts.length !== 1 || typeof texts[0] !== 'string') throw new Error('Missing/ambiguous model review');
-  return JSON.parse(texts[0]);
+  if (!texts.length) throw new ReviewFailure('JSONL_TEXT_MISSING');
+  if (texts.length !== 1) throw new ReviewFailure('JSONL_TEXT_MULTIPLE');
+  if (typeof texts[0] !== 'string') throw new ReviewFailure('JSONL_TEXT_SHAPE');
+  try { return JSON.parse(texts[0]); }
+  catch { throw new ReviewFailure(/^\s*```[\s\S]*```\s*$/.test(texts[0]) ? 'REVIEW_JSON_FENCE' : 'REVIEW_JSON_PARSE'); }
+}
+
+// Separately testable with inert child streams; production retains fixed limits.
+export function collectCliOutput(child, prompt, limits = LIMITS) {
+  return new Promise((fulfill, reject) => {
+    let stdout = '';
+    let total = 0;
+    let settled = false;
+    const fail = (code) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      try { child.kill('SIGKILL'); } catch { /* Failure remains static. */ }
+      reject(new ReviewFailure(code));
+    };
+    const timer = setTimeout(() => fail('CLI_TIMEOUT'), limits.modelMs);
+    child.stdout.setEncoding('utf8');
+    child.stdout.on('data', (chunk) => {
+      total += Buffer.byteLength(chunk);
+      if (total > limits.outputBytes) fail('CLI_OUTPUT_LIMIT');
+      else stdout += chunk;
+    });
+    // Count stderr toward the same bound without retaining or printing it.
+    child.stderr.on('data', (chunk) => {
+      total += chunk.length;
+      if (total > limits.outputBytes) fail('CLI_OUTPUT_LIMIT');
+    });
+    child.on('error', () => fail('CLI_SPAWN'));
+    child.on('close', (code) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      if (code === 0) { fulfill(stdout); return; }
+      // The CLI sets exit 1 for structured session errors too. Extract only a
+      // known model-event code; malformed or even valid review text never
+      // overrides a nonzero process exit or becomes an accepted result.
+      let failure = new ReviewFailure('CLI_EXIT');
+      try { parseEvents(stdout); }
+      catch (error) { if (error instanceof ReviewFailure && modelFailureCodes.has(error.code)) failure = error; }
+      reject(failure);
+    });
+    child.stdin.on('error', () => fail('CLI_INPUT'));
+    try { child.stdin.end(prompt); } catch { fail('CLI_INPUT'); }
+  });
 }
 
 export async function generate(input, parent = process.env, binary = parent.OPENCODE_BIN) {
-  if (!parent.OPENCODE_API_KEY) throw new Error('Repository OPENCODE_API_KEY is missing');
-  if (!binary || !binary.startsWith('/')) throw new Error('Pinned CLI path is required');
+  if (!parent.OPENCODE_API_KEY || !binary || !binary.startsWith('/')) throw new ReviewFailure('REVIEW_CONFIGURATION');
   const model = parent.OPENCODE_MODEL || 'opencode-go/deepseek-v4.1-flash';
   const variant = parent.OPENCODE_VARIANT || 'max';
   const config = modelConfig(model, variant);
   const directory = await mkdtemp(join(tmpdir(), 'opencode-review-'));
   try {
     await mkdir(join(directory, 'home'), { recursive: true });
-    const output = await new Promise((fulfill, reject) => {
-      const child = spawn(binary, ['run', '--format', 'json', '--model', model, '--variant', variant, '--agent', 'review'], { cwd: directory, env: modelEnvironment(parent, directory, config), stdio: ['pipe', 'pipe', 'pipe'] });
-      child.stdout.setEncoding('utf8');
-      let stdout = '';
-      let total = 0;
-      const timer = setTimeout(() => { child.kill('SIGKILL'); reject(new Error('Model review timed out')); }, LIMITS.modelMs);
-      child.stdout.on('data', (chunk) => {
-        total += Buffer.byteLength(chunk);
-        if (total > LIMITS.outputBytes) { child.kill('SIGKILL'); reject(new Error('Model output exceeded bound')); }
-        else stdout += chunk.toString();
-      });
-      // Never print raw stderr: upstream errors may contain provider credentials.
-      child.stderr.on('data', (chunk) => { total += chunk.length; if (total > LIMITS.outputBytes) child.kill('SIGKILL'); });
-      child.on('error', () => { clearTimeout(timer); reject(new Error('Unable to start pinned review CLI')); });
-      child.on('close', (code) => { clearTimeout(timer); if (code !== 0) reject(new Error('OpenCode CLI failed; review incomplete')); else fulfill(stdout); });
-      child.stdin.on('error', () => {});
-      child.stdin.end(buildPrompt(input));
-    });
+    let child;
+    try { child = spawn(binary, ['run', '--format', 'json', '--model', model, '--variant', variant, '--agent', 'review'], { cwd: directory, env: modelEnvironment(parent, directory, config), stdio: ['pipe', 'pipe', 'pipe'] }); }
+    catch { throw new ReviewFailure('CLI_SPAWN'); }
+    const output = await collectCliOutput(child, buildPrompt(input));
     return { result: parseEvents(output), model, variant };
   } finally { await rm(directory, { recursive: true, force: true }); }
 }
@@ -347,21 +414,23 @@ export function changedLines(patch) {
 }
 
 export function validateResult(input, generated) {
-  const result = generated.result;
-  if (!result || result.head !== input.expected.head || result.base !== input.expected.base || typeof result.complete !== 'boolean' || !['APPROVE', 'REQUEST_CHANGES', 'COMMENT'].includes(result.verdict) || typeof result.summary !== 'string' || !result.summary.trim() || result.summary.length > 20_000 || !Array.isArray(result.reviewed_files) || !Array.isArray(result.findings) || result.findings.length > LIMITS.findings) throw new Error('Invalid model review schema or commit binding');
+  const result = generated?.result;
+  if (!result || typeof result !== 'object' || Array.isArray(result) || typeof result.head !== 'string' || typeof result.base !== 'string' || typeof result.complete !== 'boolean' || !['APPROVE', 'REQUEST_CHANGES', 'COMMENT'].includes(result.verdict) || typeof result.summary !== 'string' || !result.summary.trim() || result.summary.length > 20_000 || !Array.isArray(result.reviewed_files) || !Array.isArray(result.findings)) throw new ReviewFailure('REVIEW_SCHEMA');
+  if (result.head !== input.expected.head || result.base !== input.expected.base) throw new ReviewFailure('REVIEW_BINDING');
+  if (result.reviewed_files.some((path) => typeof path !== 'string')) throw new ReviewFailure('REVIEW_COVERAGE');
   const reviewed = [...result.reviewed_files].sort();
-  if (reviewed.some((path) => typeof path !== 'string') || new Set(reviewed).size !== reviewed.length || JSON.stringify(reviewed) !== JSON.stringify(input.files.map((file) => file.path).sort())) throw new Error('Model file coverage mismatch');
+  if (new Set(reviewed).size !== reviewed.length || JSON.stringify(reviewed) !== JSON.stringify(input.files.map((file) => file.path).sort())) throw new ReviewFailure('REVIEW_COVERAGE');
+  if (result.findings.length > LIMITS.findings) throw new ReviewFailure('REVIEW_FINDING');
   const findings = result.findings.map((finding) => {
+    if (!finding || typeof finding !== 'object' || Array.isArray(finding)) throw new ReviewFailure('REVIEW_FINDING');
     const file = input.files.find((entry) => entry.path === finding.path);
-    if (!file || !['LEFT', 'RIGHT'].includes(finding.side) || !Number.isSafeInteger(finding.line) || !changedLines(file.patch)[finding.side].has(finding.line) || typeof finding.body !== 'string' || !finding.body.trim() || finding.body.length > 8000) throw new Error('Invalid inline finding');
+    if (!file || !['LEFT', 'RIGHT'].includes(finding.side) || !Number.isSafeInteger(finding.line) || !changedLines(file.patch)[finding.side].has(finding.line) || typeof finding.body !== 'string' || !finding.body.trim() || finding.body.length > 8000) throw new ReviewFailure('REVIEW_FINDING');
     return { path: finding.path, line: finding.line, side: finding.side, body: finding.body };
   });
   const complete = result.complete && !input.limitations.length && input.allPaths.length === input.files.length;
   let verdict = result.verdict;
   if (!complete || input.expected.draft || input.mode === 'reply') verdict = 'COMMENT';
-  if (input.mode === 'reply' && findings.length) throw new Error('Reply cannot submit review findings');
-  if (verdict === 'APPROVE' && findings.length) throw new Error('Approval conflicts with actionable findings');
-  if (verdict === 'REQUEST_CHANGES' && !findings.length) throw new Error('Change request requires concrete findings');
+  if ((input.mode === 'reply' && findings.length) || (verdict === 'APPROVE' && findings.length) || (verdict === 'REQUEST_CHANGES' && !findings.length)) throw new ReviewFailure('REVIEW_VERDICT');
   return { summary: result.summary, findings, complete, verdict };
 }
 
@@ -456,10 +525,9 @@ async function main() {
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
-  main().catch(() => {
-    // Fixed message prevents raw remote/model/error strings becoming Actions
-    // commands or leaking provider/token response bodies into the job log.
-    console.error('OpenCode review failed or became obsolete. No successful current-head review is established; inspect the run and PR before retrying.');
+  main().catch((error) => {
+    // Only a branded allowlisted code reaches logs; never message/stack/streams.
+    console.error(formatFailure(error));
     process.exitCode = 1;
   });
 }

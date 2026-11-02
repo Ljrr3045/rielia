@@ -1,10 +1,15 @@
 /* global structuredClone */
 import assert from 'node:assert/strict';
 import { Buffer } from 'node:buffer';
+import { execFile } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { readFile } from 'node:fs/promises';
+import { EventEmitter } from 'node:events';
+import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { PassThrough } from 'node:stream';
 import test from 'node:test';
-import { GitHub, LIMITS, Obsolete, assertFresh, authorize, buildPrompt, changedLines, commandContext, exchangeToken, modelConfig, modelEnvironment, parseEvents, plan, prepare, publish, snapshot, validateRelay, validateResult } from './opencode-review.mjs';
+import { GitHub, LIMITS, Obsolete, ReviewFailure, assertFresh, authorize, buildPrompt, changedLines, collectCliOutput, commandContext, exchangeToken, formatFailure, modelConfig, modelEnvironment, parseEvents, plan, prepare, publish, snapshot, validateRelay, validateResult } from './opencode-review.mjs';
 
 const repo = 'Ljrr3045/rielia';
 const head = 'a'.repeat(40);
@@ -40,6 +45,7 @@ function fakeApi(routes = {}) {
 }
 function input(overrides = {}) { return { expected: snapshot(pr()), mode: 'review', files: [{ path: 'a.js', patch }], allPaths: ['a.js'], limitations: [], ...overrides }; }
 function generated(overrides = {}) { return { model: 'opencode-go/deepseek-v4.1-flash', variant: 'max', result: { head, base, complete: true, reviewed_files: ['a.js'], verdict: 'APPROVE', summary: 'Reviewed the actual change and no actionable defects found.', findings: [], ...overrides } }; }
+const hasCode = (code) => (error) => error instanceof ReviewFailure && error.code === code;
 function commandApi(body = '/oc review', extra = {}) { return fakeApi({ '/issues/comments/9': comment(body), '/pulls/comments/9': comment(body), '/collaborators/maintainer/permission': { permission: 'write' }, '/pulls/7': pr(), '/pulls/7/reviews': [], '/pulls/7/comments': [], '/issues/7/comments': [], ...extra }); }
 
 test('automatic events cover every non-main base, forks, drafts and base retarget', async () => {
@@ -141,8 +147,8 @@ test('model environment isolates HOME/XDG and strips every GitHub/OIDC/auth over
   for (const key of ['GITHUB_TOKEN', 'GH_TOKEN', 'ACTIONS_ID_TOKEN_REQUEST_TOKEN', 'OPENCODE_CONFIG', 'NODE_OPTIONS', 'BUN_OPTIONS']) assert.equal(environment[key], undefined);
   assert.equal(environment.OPENCODE_API_KEY, 'fake-provider-key');
   assert.equal(JSON.parse(environment.OPENCODE_CONFIG_CONTENT).permission['*'], 'deny');
-  assert.throws(() => modelConfig('other/model', 'max'), /opencode-go/);
-  assert.throws(() => modelConfig('opencode-go/model', 'max\ncommand'), /variant/);
+  assert.throws(() => modelConfig('other/model', 'max'), hasCode('REVIEW_CONFIGURATION'));
+  assert.throws(() => modelConfig('opencode-go/model', 'max\ncommand'), hasCode('REVIEW_CONFIGURATION'));
 });
 
 test('comments and injected shell strings remain JSON prompt data', () => {
@@ -155,9 +161,106 @@ test('comments and injected shell strings remain JSON prompt data', () => {
 function stream(result, finish = 'stop', extra = []) { return [{ type: 'step_start', part: {} }, ...extra, { type: 'text', part: { text: JSON.stringify(result) } }, { type: 'step_finish', part: { reason: finish } }].map((row) => JSON.stringify(row)).join('\n'); }
 test('JSONL validates success, errors, blocked tools, missing/non-stop/truncated output', () => {
   assert.deepEqual(parseEvents(stream(generated().result)), generated().result);
-  for (const reason of ['length', 'tool-calls', 'error', 'unknown']) assert.throws(() => parseEvents(stream(generated().result, reason)), /complete/);
-  for (const type of ['tool_use', 'error']) assert.throws(() => parseEvents(stream(generated().result, 'stop', [{ type }])), /failed|attempted/);
+  for (const reason of ['length', 'tool-calls', 'error', 'unknown']) assert.throws(() => parseEvents(stream(generated().result, reason)), hasCode('JSONL_COMPLETION'));
+  for (const [type, code] of [['tool_use', 'MODEL_TOOL_EVENT'], ['error', 'MODEL_ERROR_EVENT']]) assert.throws(() => parseEvents(stream(generated().result, 'stop', [{ type }])), hasCode(code));
   for (const output of ['', '{bad', JSON.stringify({ type: 'text', part: { text: '{}' } })]) assert.throws(() => parseEvents(output));
+});
+
+test('diagnostics distinguish JSONL, model, review JSON, binding, coverage and findings', () => {
+  for (const [output, code] of [
+    ['uncontrolled malformed output', 'JSONL_PARSE'], ['', 'JSONL_ENVELOPE'], ['null', 'JSONL_ENVELOPE'],
+    [stream(generated().result, 'stop', [{ type: 'error', error: { message: 'uncontrolled provider response' } }]), 'MODEL_ERROR_EVENT'],
+    [stream(generated().result, 'stop', [{ type: 'tool_use' }]), 'MODEL_TOOL_EVENT'],
+    [JSON.stringify({ type: 'text', part: { text: '{}' } }), 'JSONL_COMPLETION'],
+    [[{ type: 'step_finish', part: { reason: 'stop' } }, { type: 'text', part: { text: 'not review JSON' } }].map(JSON.stringify).join('\n'), 'REVIEW_JSON_PARSE'],
+    [[{ type: 'step_finish', part: { reason: 'stop' } }, { type: 'text', part: {} }].map(JSON.stringify).join('\n'), 'JSONL_TEXT_SHAPE'],
+    [JSON.stringify({ type: 'step_finish', part: { reason: 'stop' } }), 'JSONL_TEXT_MISSING'],
+    [stream(generated().result, 'stop', [{ type: 'text', part: { text: '{}' } }]), 'JSONL_TEXT_MULTIPLE'],
+    [[{ type: 'step_finish', part: { reason: 'stop' } }, { type: 'text', part: { text: '```json\n{}\n```' } }].map(JSON.stringify).join('\n'), 'REVIEW_JSON_FENCE'],
+  ]) assert.throws(() => parseEvents(output), hasCode(code));
+  for (const [result, code] of [
+    [{ complete: 'true' }, 'REVIEW_SCHEMA'], [{ head: base }, 'REVIEW_BINDING'], [{ base: head }, 'REVIEW_BINDING'],
+    [{ reviewed_files: [] }, 'REVIEW_COVERAGE'], [{ reviewed_files: [null] }, 'REVIEW_COVERAGE'],
+    [{ findings: [null] }, 'REVIEW_FINDING'], [{ findings: [{ path: 'a.js', line: 99, side: 'RIGHT', body: 'bad location' }] }, 'REVIEW_FINDING'],
+    [{ verdict: 'REQUEST_CHANGES' }, 'REVIEW_VERDICT'],
+  ]) assert.throws(() => validateResult(input(), generated(result)), hasCode(code));
+  for (const [status, code] of [[401, 'MODEL_HTTP_AUTH'], [403, 'MODEL_HTTP_AUTH'], [429, 'MODEL_HTTP_LIMIT'], [400, 'MODEL_HTTP_REQUEST'], [422, 'MODEL_HTTP_REQUEST'], [500, 'MODEL_HTTP_SERVER'], [503, 'MODEL_HTTP_SERVER'], [599, 'MODEL_HTTP_SERVER'], ['401', 'MODEL_ERROR_EVENT'], [404, 'MODEL_ERROR_EVENT'], [null, 'MODEL_ERROR_EVENT']]) {
+    assert.throws(() => parseEvents(JSON.stringify({ type: 'error', error: { data: { statusCode: status, message: 'never log this', responseBody: 'fake-secret' } } })), hasCode(code));
+  }
+});
+
+function inertChild() {
+  const child = new EventEmitter();
+  child.stdout = new PassThrough();
+  child.stderr = new PassThrough();
+  child.stdin = new PassThrough();
+  child.kill = () => { child.killed = true; return true; };
+  return child;
+}
+
+test('CLI diagnostics cover spawn, exit, input, timeout and combined stream bound', async () => {
+  const sensitive = 'fake-token\n::error::uncontrolled failure';
+  for (const [trigger, code] of [
+    [(child) => child.emit('error', new Error(sensitive)), 'CLI_SPAWN'],
+    [(child) => child.emit('close', 7), 'CLI_EXIT'],
+    [(child) => child.stdin.emit('error', new Error(sensitive)), 'CLI_INPUT'],
+    [(child) => { child.stdout.write('1234'); child.stderr.write('56789'); child.emit('close', 1); }, 'CLI_OUTPUT_LIMIT'],
+    [(child) => { child.stderr.write('123456789'); child.emit('close', 1); }, 'CLI_OUTPUT_LIMIT'],
+    [() => {}, 'CLI_TIMEOUT'],
+  ]) {
+    const child = inertChild();
+    const result = collectCliOutput(child, 'prompt', { modelMs: code === 'CLI_TIMEOUT' ? 1 : 1000, outputBytes: 8 });
+    trigger(child);
+    await assert.rejects(result, hasCode(code));
+  }
+  const child = inertChild();
+  const result = collectCliOutput(child, 'prompt', { modelMs: 1000, outputBytes: 8 });
+  child.stdout.write('okay');
+  child.emit('close', 0);
+  assert.equal(await result, 'okay');
+});
+
+test('failure formatter only accepts branded static codes and never exception text', () => {
+  const sensitive = 'fake-secret-key\n::set-output name=token::fake-token https://provider.test/?key=fake-key';
+  const spoof = Object.assign(new Error(sensitive), { code: 'CLI_EXIT' });
+  const getter = { get message() { throw new Error('must not inspect message'); }, get code() { throw new Error('must not inspect code'); } };
+  for (const [error, code] of [[new ReviewFailure('CLI_EXIT'), 'CLI_EXIT'], [new ReviewFailure(sensitive), 'REVIEW_UNKNOWN'], [new Error(sensitive), 'REVIEW_UNKNOWN'], [spoof, 'REVIEW_UNKNOWN'], [getter, 'REVIEW_UNKNOWN'], [new Obsolete(sensitive), 'REVIEW_OBSOLETE']]) {
+    assert.equal(formatFailure(error), `OpenCode review failed [${code}]. No successful current-head review is established; inspect the run and PR before retrying.`);
+    assert(!formatFailure(error).includes('fake-'));
+    assert(!formatFailure(error).includes('\n'));
+  }
+});
+
+test('actual adapter process redacts hostile fake CLI streams and never writes a result on failure', async () => {
+  const directory = await mkdtemp(join(tmpdir(), 'review-diagnostic-test-'));
+  const secret = 'fake-secret-canary\n::error::workflow-command https://provider.test/?token=fake-provider-token';
+  try {
+    const eventPath = join(directory, 'event.json');
+    const binary = join(directory, 'fake-cli');
+    const state = join(directory, 'opencode-review', '7');
+    await mkdir(state, { recursive: true });
+    await writeFile(eventPath, '{}');
+    await writeFile(join(state, 'input.json'), JSON.stringify(input()));
+    for (const [stdout, exit, code] of [
+      [secret, 7, 'CLI_EXIT'], [secret, 0, 'JSONL_PARSE'],
+      [stream(generated().result, 'stop', [{ type: 'error', error: { message: secret } }]), 0, 'MODEL_ERROR_EVENT'],
+      [JSON.stringify({ type: 'error', error: { data: { statusCode: 401, message: secret, responseBody: secret } } }), 1, 'MODEL_HTTP_AUTH'],
+      [JSON.stringify({ type: 'error', error: { data: { statusCode: 429, message: secret } } }), 1, 'MODEL_HTTP_LIMIT'],
+      [[{ type: 'step_finish', part: { reason: 'stop' } }, { type: 'text', part: { text: `\u0060\u0060\u0060json\n${secret}\n\u0060\u0060\u0060` } }].map(JSON.stringify).join('\n'), 0, 'REVIEW_JSON_FENCE'],
+      [stream(generated().result, 'stop', [{ type: 'tool_use', part: { text: secret } }]), 0, 'MODEL_TOOL_EVENT'],
+      [stream({ ...generated().result, summary: secret, complete: 'true' }), 0, 'REVIEW_SCHEMA'],
+      [stream({ ...generated().result, summary: secret, head: base }), 0, 'REVIEW_BINDING'],
+      [stream({ ...generated().result, summary: secret, reviewed_files: [] }), 0, 'REVIEW_COVERAGE'],
+    ]) {
+      await writeFile(binary, `#!${process.execPath}\nprocess.stderr.write(${JSON.stringify(secret)}); process.stdout.write(${JSON.stringify(stdout)}); process.exit(${exit});\n`, { mode: 0o700 });
+      const result = await new Promise((fulfill) => execFile(process.execPath, [new URL('./opencode-review.mjs', import.meta.url).pathname, 'generate', '7'], { env: { PATH: process.env.PATH, GITHUB_REPOSITORY: repo, GITHUB_EVENT_PATH: eventPath, RUNNER_TEMP: directory, OPENCODE_BIN: binary, OPENCODE_API_KEY: secret }, timeout: 5000 }, (error, stdout, stderr) => fulfill({ error, stdout, stderr })));
+      assert.equal(result.error?.code, 1);
+      assert.equal(result.stdout, '');
+      assert.equal(result.stderr, `${formatFailure(new ReviewFailure(code))}\n`);
+      assert(!result.stderr.includes('fake-') && !result.stderr.includes('::error::') && !result.stderr.includes('https://'));
+      await assert.rejects(readFile(join(state, 'result.json')), { code: 'ENOENT' });
+    }
+  } finally { await rm(directory, { recursive: true, force: true }); }
 });
 
 test('formal verdict and coverage contract fail closed', () => {
