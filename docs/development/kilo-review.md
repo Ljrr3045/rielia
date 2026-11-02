@@ -65,6 +65,9 @@ On prior head `49f3d4eded3876ce12d978d834ad48c58966309e` of
 formal reviews. This establishes native check behavior, not GitHub `APPROVED`.
 The amended head requires a fresh successful run of both checks and review-surface
 inspection; prior-head evidence cannot approve it.
+The later `c160c6b` run returned check SUCCESS with two warnings and one suggestion
+in its summary, so success alone does not establish no findings; the coordinator
+must inspect summaries and inline feedback.
 
 The user's requested exclusion of base `main` from Kilo events remains
 **unverified**. No supported control was found in the inspected UI, and the
