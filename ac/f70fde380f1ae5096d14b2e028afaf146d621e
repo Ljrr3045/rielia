@@ -1,0 +1,40 @@
+.github/scripts/opencode-review.mjs
+  s_29631ef230441d::t_9d4e3c4f264638 441
+  s_29631ef230441d::t_e92ca740a36ed9 206
+  s_29631ef230441d::t_d731572bad829a 443
+  s_29631ef230441d::t_28d67f0198a158 445
+  s_29631ef230441d::t_9afeeb992f1def 11
+  s_29631ef230441d::t_946bff28661260 20,204,207,275-280,597-602,615-616,664-670,680-681,719
+.github/scripts/opencode-review.test.mjs
+  s_29631ef230441d::t_c90294dc545c3f 87-99,103,106-115,119-125,874-885,887,918-939,943-948,955-968,976-1011
+  s_29631ef230441d::t_5f398625156153 100-102,104-105,886,940-942,969-975
+  s_29631ef230441d::t_259f7e9f01e785 13,868,909
+  s_29631ef230441d::t_e92ca740a36ed9 116-118
+  s_29631ef230441d::t_c30bb819abcf03 354-372
+  s_29631ef230441d::t_47d3098d0b17c0 949-954
+  s_29631ef230441d::t_52cb5308172ece 888,1012
+docs/development/progress.md
+  s_29631ef230441d::t_d72eb0c27fc507 60
+CHANGELOG.md
+  s_29631ef230441d::t_d72eb0c27fc507 9-13,17-19
+  s_29631ef230441d::t_c30bb819abcf03 14-16
+docs/development/opencode-review.md
+  s_29631ef230441d::t_d72eb0c27fc507 100-102,202-203,209-217,221-226,505-513,520-521,558,574
+  s_29631ef230441d::t_c30bb819abcf03 270,514-519
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "acf70fde380f1ae5096d14b2e028afaf146d621e",
+  "prompts": {},
+  "sessions": {
+    "s_29631ef230441d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1998a-2a13-74a0-81ae-a5105bd337ca",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
