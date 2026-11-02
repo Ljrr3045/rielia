@@ -1,0 +1,55 @@
+CHANGELOG.md
+  s_29631ef230441d::t_264fb3e362d0e1 14-19,21
+  s_29631ef230441d::t_12543ad4b134b6 9-13,20
+docs/development/opencode-review.md
+  s_29631ef230441d::t_264fb3e362d0e1 10-13,100-116,211-218,348-369
+  s_29631ef230441d::t_12543ad4b134b6 226,371-383,413,429
+  s_a07ddb62ac5b0b::t_047f7efe2f5a7b 370
+docs/development/progress.md
+  s_29631ef230441d::t_12543ad4b134b6 67-68
+.github/scripts/opencode-review.test.mjs
+  s_29631ef230441d::t_8333ecd2cb4fd0 177,213-247,662
+  s_29631ef230441d::t_7c2019641a7247 664-669,671-673,675-676
+  s_29631ef230441d::t_d918b8a9a2112b 147-151
+  s_29631ef230441d::t_e988495eb6e519 109,111,115-116,120-121,124-125,137,143-145,152,157,160,162-163,165,167-169,661,670,674
+  s_29631ef230441d::t_264fb3e362d0e1 166
+  s_29631ef230441d::t_717c20ecb70991 174
+  s_29631ef230441d::t_6504757064fbfe 98,107-108,110,112-114,117-119,122-123,126-136,138-142,146,153-156,158-159,161,164,170-173,175-176
+  s_a07ddb62ac5b0b::t_fe24b4227efba5 178,663
+.github/scripts/opencode-cli-smoke.mjs
+  s_29631ef230441d::t_7c2019641a7247 6,18,44-46,49,51,53-54,73,100,104,107
+  s_29631ef230441d::t_6504757064fbfe 15-17,47-48,52
+  s_29631ef230441d::t_32b78c230b3d86 38
+.github/scripts/opencode-review.mjs
+  s_29631ef230441d::t_717c20ecb70991 140,322
+  s_29631ef230441d::t_7c2019641a7247 622-624
+  s_29631ef230441d::t_6504757064fbfe 124,128,143,321,323-327
+  s_29631ef230441d::t_264fb3e362d0e1 353
+  s_29631ef230441d::t_8333ecd2cb4fd0 11,360-362
+  s_29631ef230441d::t_d918b8a9a2112b 123
+  s_29631ef230441d::t_e988495eb6e519 119,125,131-134,632-634
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "390cff2cbcf211f10a0a32bf1ab85c850ed33522",
+  "prompts": {},
+  "sessions": {
+    "s_29631ef230441d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1998a-2a13-74a0-81ae-a5105bd337ca",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    },
+    "s_a07ddb62ac5b0b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a199ae-f0e6-76f3-a8f1-289e030ec987",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
