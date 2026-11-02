@@ -1,5 +1,9 @@
 # T06.0/B1a project and task logic
 
+> Review policy update (2026-11-02): Kody triggers and Kody review requirements
+> below are obsolete. [Current review policy](kilo-review.md) governs new changes.
+> Historical review evidence and runtime guidance are preserved.
+
 This bounded vertical builds on merged T05.1 [PR #14](https://github.com/Ljrr3045/rielia/pull/14),
 `d27e3302a059cda6ef570c75efed42deda188a39`. It implements the project/task
 subset of P02/P04/P05/P14/P38 and US04/US08/US12/US24/US25, with

@@ -1,5 +1,9 @@
 # T35.0 principal and authorship foundations
 
+> Review policy update (2026-11-02): Kody triggers and Kody review requirements
+> below are obsolete. [Current review policy](kilo-review.md) governs new changes.
+> Historical review evidence and runtime guidance are preserved.
+
 This bounded B1 slice follows merged [PR #11](https://github.com/Ljrr3045/rielia/pull/11)
 at `70314c550b643fd5678375939535cdb93331c9b2`. It implements prerequisite storage,
 backend policy and public types for T35 before T05/T06/T12 under the

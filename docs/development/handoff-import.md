@@ -1,5 +1,9 @@
 # T00 handoff import record
 
+> Review policy update (2026-11-02): Kody triggers and Kody review requirements
+> below are obsolete. [Current review policy](kilo-review.md) governs new changes.
+> Historical review evidence and runtime guidance are preserved.
+
 Imported on 2026-10-24 from the user-supplied `rielia-agent-handoff` directory
 without modifying the original source. All 47 files (2,435,020 bytes) and four
 subdirectories were copied, including the bilingual entry point, six English/

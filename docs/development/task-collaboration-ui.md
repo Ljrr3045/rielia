@@ -1,5 +1,9 @@
 # T09.1/B1b task collaboration presentation
 
+> Review policy update (2026-11-02): Kody triggers and Kody review requirements
+> below are obsolete. [Current review policy](kilo-review.md) governs new changes.
+> Historical review evidence and runtime guidance are preserved.
+
 Status: bounded presentation on the merged T09.0 collaboration logic
 ([PR #21](https://github.com/Ljrr3045/rielia/pull/21), merge
 `76d7d31bce1e61e46dcab632fb5b53e50d564ce2`). Presentation PR

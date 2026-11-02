@@ -1,5 +1,9 @@
 # T03.0 / B0 local MCP transport experiment
 
+> Review policy update (2026-11-02): Kody triggers and Kody review requirements
+> below are obsolete. [Current review policy](kilo-review.md) governs new changes.
+> Historical review evidence and runtime guidance are preserved.
+
 Status: bounded local stdio spike, originally authorized before user stack
 approval. The [2026-10-27 decision](stack-validation-decisions.md) approves the
 current stack except Express and defers real staging-dependent discovery/provider

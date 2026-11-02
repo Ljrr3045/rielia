@@ -1,5 +1,9 @@
 # T10.1/B1b search and My tasks presentation
 
+> Review policy update (2026-11-02): Kody triggers and Kody review requirements
+> below are obsolete. [Current review policy](kilo-review.md) governs new changes.
+> Historical review evidence and runtime guidance are preserved.
+
 Status: bounded presentation on the merged T10.0 logic
 ([PR #23](https://github.com/Ljrr3045/rielia/pull/23), merge
 `6bde444cd4e69115bc7004cf8d58c229ee7c55a7`). It supports P11, P02, P33 and

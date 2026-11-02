@@ -1,5 +1,9 @@
 # T10.0/B1b search, My tasks and session invalidation
 
+> Review policy update (2026-11-02): Kody triggers and Kody review requirements
+> below are obsolete. [Current review policy](kilo-review.md) governs new changes.
+> Historical review evidence and runtime guidance are preserved.
+
 Implementation acceptance, recorded before code changes: this isolated logic
 slice follows T07–T09 and merged T09.1 [PR #22](https://github.com/Ljrr3045/rielia/pull/22),
 merged 2026-10-31T20:10:22Z as `8d51135af5260bdb8773863a4a7fb8ff6a966f8e`.

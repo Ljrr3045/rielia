@@ -1,5 +1,9 @@
 # T07.0/B1b project privacy and access logic
 
+> Review policy update (2026-11-02): Kody triggers and Kody review requirements
+> below are obsolete. [Current review policy](kilo-review.md) governs new changes.
+> Historical review evidence and runtime guidance are preserved.
+
 On 2026-10-29 the user ratified automatic private-project content access for
 active workspace human owners/admins: they must be able to see everything created
 inside their workspace. This resolves the proposal in

@@ -1,5 +1,9 @@
 # T01/B0 task-navigation prototype logic
 
+> Review policy update (2026-11-02): Kody triggers and Kody review requirements
+> below are obsolete. [Current review policy](kilo-review.md) governs new changes.
+> Historical review evidence and runtime guidance are preserved.
+
 This is a **fictional, frontend-only, in-memory demo adapter**, prepared for a
 separately owned presentation at `/prototype`. This change adds no route, JSX,
 CSS, backend, identity integration, database, real permissions, credentials, or

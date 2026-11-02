@@ -1,5 +1,9 @@
 # T08.0/B1b persistent list and Kanban logic
 
+> Review policy update (2026-11-02): Kody triggers and Kody review requirements
+> below are obsolete. [Current review policy](kilo-review.md) governs new changes.
+> Historical review evidence and runtime guidance are preserved.
+
 This bounded logic slice follows merged [PR #18](https://github.com/Ljrr3045/rielia/pull/18),
 `ac3de5351e49b8b60bf3b2bbb55b8d695899f68d`. Both completed T07 worktrees are absent
 from current Orca inventory. It implements the existing-field portion of

@@ -46,8 +46,8 @@ real-project/user acceptance remain OPEN/DEFERRED until an advanced end-to-end
 product slice and user scheduling. They do not immediately block authorized local
 implementation; do not ask for credentials/staging now or report missing checks
 as passed. Preserve source dependencies and public-launch acceptance. Applicable
-automated unit/integration/security/local Docker checks, CI and Kody remain
-required. License and brand/final landing design remain undecided. The
+automated unit/integration/security/local Docker checks, CI and branch-specific
+review gates remain required. License and brand/final landing design remain undecided. The
 [2026-10-29 project policy](docs/development/project-access.md) ratifies automatic
 private content access for active human workspace owner/admin, with current grant
 ceilings and human-web-only privacy administration; imported proposals alone are
@@ -82,12 +82,19 @@ for UI/UX presentation only; all logic uses
 Codex `gpt-6.1-sol` `xhigh`, including frontend auth/session/data hooks, proxies,
 and functional tests. Verify the effective configuration and isolate each
 worker's checkout. See the [model decision and verification limits](docs/development/frontend-agent.md).
-This is separate from Kody's external review role.
+This remains separate from Kilo Code Reviews' external review role.
 
-The user retired OpenCode review and requested deletion of its entire workflow,
-including the version inherited from `dev`. Do not restore, repair, or invoke it;
-Kody AI is the current reviewer. Do not modify secrets or introduce personal
-tokens or a review bypass. Treat `docs/handoff/` as an
+The user retired OpenCode PR review, including the inherited workflow and the
+abandoned replacement integration. Do not restore, repair, or invoke either.
+Native Kilo Code Reviews replaces Kody as the selected external reviewer; its
+[setup status and evidence requirements](docs/development/kilo-review.md) distinguish
+verified behavior from pending configuration. Preserve historical Kody/OpenCode
+evidence and the separate OpenCode Go frontend development choice. Every legacy
+Kody trigger or requirement to use Kody for future reviews in older development guides is obsolete,
+even when phrased as an instruction; the current Kilo policy governs all new
+changes. This supersedes review governance only and preserves historical evidence
+and runtime guidance. Do not modify secrets, introduce personal tokens, or bypass
+review. Treat `docs/handoff/` as an
 immutable import, including its asset manifest and file inventory. Record later
 ratifications/corrections separately under `docs/development/` and link the
 affected source section. Never modify a baseline just to make a hash check pass.
@@ -133,7 +140,8 @@ focused pure state/HTTP proxy checks and is included in `pnpm check`;
 is separately owned; no full T05/T07/T35 acceptance is implied.
 
 Documentation-only changes run the handoff/link verifier and unstaged/staged
-whitespace checks below, inspect the diff, and retain existing CI and Kody gates.
+whitespace checks below, inspect the diff, and retain CI and the applicable
+branch review gates.
 Unrelated local application suites need not be rerun for prose-only edits.
 
 Use Python 3.9+, Node 24.22.1, and pnpm 12.15.0. From the repository root:
@@ -221,17 +229,48 @@ gh pr create --base dev --title "docs: describe the change" --body-file /tmp/rie
 ```
 
 Add the real PR URL to progress after creation and push that update to the same
-branch. Do not open a second PR for review fixes. Every ready PR/head requires
-an explicit Kody AI request; a push alone does not satisfy that requirement.
+branch. Do not open a second PR for review fixes. The approved protections use
+separate core and ownership layers:
 
-After local checks pass, send the coordinator the PR URL and exact head SHA.
-The **coordinator alone** posts a root PR comment exactly `@kody start-review`.
-Workers must not duplicate the trigger. Record its comment URL, the requested
-head, and the resulting Kody review/comment URLs. Confirm the review applies to
-the current head rather than relying on an earlier completion message.
+| Base | Core ruleset | Required current-head checks | Core bypass |
+| --- | --- | --- | --- |
+| `dev` | `Development — Review & CI` (`26377556`) | `Kilo Code Review`, `validate` | None |
+| `main` | `Main — Release Protection` (`25810056`) | `validate` only | None |
 
-Inspect applicable checks plus all three review surfaces: issue comments, submitted
-reviews, and inline review comments. For example, replace `123` with your PR:
+| Required check | Expected GitHub App |
+| --- | --- |
+| `Kilo Code Review` | `kilo-code-bot`, App ID `2193792` |
+| `validate` | `github-actions`, App ID `15368` |
+
+Core rules require an up-to-date head, PR, resolved review threads, deletion and
+non-fast-forward protection. Both core bypass lists are empty and the current
+user cannot bypass them. Separate `Ownership — Maintainer Approval` (`26378917`)
+requires one code-owner approval on both branches; [.github/CODEOWNERS](.github/CODEOWNERS)
+assigns all files, including itself, to `@Ljrr3045`.
+
+Other contributors' PRs require `Ljrr3045`'s current-head GitHub `APPROVED` review
+and resolved findings. His own PRs can use the ownership layer's PR-only exception
+for User `98565958`. GitHub applies that exception to the merge actor, not the PR
+author: it can technically permit him to merge another author's PR without formal
+review, but coordinator policy forbids that. Use it only for PRs authored by
+`Ljrr3045`, with evidence of authorship and all core gates satisfied. It does not
+bypass core checks, PR/thread requirements, deletion or force-push protection and
+does not fabricate approval. There is no global admin bypass.
+
+The coordinator applied and verified [ruleset configuration](docs/development/kilo-review.md).
+Code-owner matching uses the base branch's file: this PR adds it for future `dev`
+reviews after merge. `main` currently has only README, so ownership/CI activation
+needs a separate minimal bootstrap. The user authorized one-off Kilo review of
+that bootstrap; base-file activation remains pending, and no full product promotion
+is authorized. This worker neither opens nor merges that main PR. Missing checks
+must not be bypassed.
+
+Native Kilo uses its GitHub App. Once enabled, it reviews non-draft opening,
+pushes, reopening and marking ready. After local checks pass, send the coordinator
+the PR URL and exact head SHA. Record the completion/check URLs, source Apps and
+reviewed SHA; an eye reaction or old summary is insufficient. Inspect applicable
+checks and all three review surfaces: issue comments, submitted reviews and inline
+review comments. For example, replace `123` with your PR:
 
 ```sh
 gh pr view 123 --json url,headRefOid,baseRefName,isDraft,statusCheckRollup
@@ -240,14 +279,28 @@ gh api --paginate repos/Ljrr3045/rielia/pulls/123/reviews
 gh api --paginate repos/Ljrr3045/rielia/pulls/123/comments
 ```
 
-Evaluate every finding against the code/requirements. Fix real defects and attach
-relevant validation; give a concise technical disposition for substantive findings
-that are fixed, deferred, or rejected. A failed, cancelled, missing, or incomplete
-review is a blocker, not evidence of no findings. After any push, rerun affected
-checks and report the new head ready for the coordinator's fresh Kody trigger.
-Wait for that round, reread all three surfaces, and handle feedback before
-handoff. A prior-head review never approves changed code. Retired OpenCode checks
-are historical evidence and are not the current review gate.
+The coordinator triages each finding, delegates valid fixes to the assigned
+worker, verifies evidence and records concise technical dispositions. The assigned
+worker implements fixes, reruns affected checks and reports the exact head.
+After any push, wait for the new head's required checks and, for `dev`, completed Kilo review. Missing, failed,
+cancelled, incomplete or prior-head-only required evidence blocks merge. Confirm
+maintainer approval for other authors or the permitted own-PR exception, and resolve
+required threads. Kilo success is separate from a formal GitHub `APPROVED` review.
+
+The user approved keeping **Skip Bots ON** and blocking unreviewed PRs. A
+bot-authored PR to `dev` without native Kilo completion remains blocked by the
+required check; do not fabricate a success result. This is an intentional closed gate and an
+unresolved automation usability limit, not complete bot-review coverage. Do not
+exempt or bypass it. A maintainer may open a human-authored replacement PR while
+preserving commit provenance; it still needs native Kilo, CI and ownership gates.
+No Kilo platform setting change is claimed here.
+
+Do not add an auto-approve action, expand `GITHUB_TOKEN` permissions, introduce a
+PAT, bypass core protections, misuse the approval-only exception, post legacy
+Kody triggers, or invent Kilo cloud commands.
+The requested exclusion of base `main` from native Kilo events remains unverified
+and awaits the user's decision. Kilo is not a required check on `main`; choosing
+required checks is not an event filter or permission to review `main`. Retired Kody/OpenCode evidence remains historical.
 
 Only the coordinator merges. Do not deploy or merge from a worker task. A dispatched
 worker reports branch/worktree, PR/head SHA, validation/review evidence, and blockers

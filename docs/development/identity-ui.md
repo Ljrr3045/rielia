@@ -1,5 +1,9 @@
 # Identity presentation (T02.2)
 
+> Review policy update (2026-11-02): Kody triggers and Kody review requirements
+> below are obsolete. [Current review policy](kilo-review.md) governs new changes.
+> Historical review evidence and runtime guidance are preserved.
+
 Status: presentation integrated on the merged T02.1 `useIdentity` contract. This
 document records UI-owned decisions and evidence for the experimental `/identity`
 page. It does not complete T02, US01, or P01 and claims no product

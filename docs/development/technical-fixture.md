@@ -1,5 +1,9 @@
 # B0 technical fixture (T02.0)
 
+> Review policy update (2026-11-02): Kody triggers and Kody review requirements
+> below are obsolete. [Current review policy](kilo-review.md) governs new changes.
+> Historical review evidence and runtime guidance are preserved.
+
 T02.0 was merged in PR #2. This guide records its original bounded fixture;
 subsequent [T02.1 identity work](identity-spike.md) adds opt-in identity storage,
 protocol/state logic, and its own checks without completing full T02/T03/T04.

@@ -1,5 +1,9 @@
 # T06.1/B1a project and task presentation
 
+> Review policy update (2026-11-02): Kody triggers and Kody review requirements
+> below are obsolete. [Current review policy](kilo-review.md) governs new changes.
+> Historical review evidence and runtime guidance are preserved.
+
 Status: bounded presentation delivered on the merged T06 project/task contracts
 and client logic ([PR #15](https://github.com/Ljrr3045/rielia/pull/15), merge
 `e23d2e495a2e4c3dc499bcdde4ac8dd84d74fdad`). This document records UI-owned

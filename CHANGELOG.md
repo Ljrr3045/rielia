@@ -4,6 +4,31 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+### Review policy
+
+- Adopt native Kilo and layered branch protection. Core `Development — Review & CI`
+  (`26377556`) requires Kilo App `2193792` and validate App `15368`; core
+  `Main — Release Protection` (`25810056`) requires validate only. Both have no
+  bypass and retain PR/up-to-date/check/thread/deletion/non-fast-forward gates.
+  Separate `Ownership — Maintainer Approval` (`26378917`) requires one code-owner
+  approval; new `.github/CODEOWNERS` assigns all files to `@Ljrr3045`. Other authors
+  require his current-head APPROVED. His approval-layer PR-only exception follows
+  merge actor natively, so coordinator policy limits it to his own PRs; it cannot
+  bypass core gates or create approval. No global admin bypass, auto-approve,
+  token expansion or PAT. Base-file ownership activates on dev after merge; main
+  CODEOWNERS/CI bootstrap activation is pending, with one-off Kilo review authorized
+  and no product promotion. Clarify coordinator triage/delegation versus assigned
+  worker fixes, replace Kody instructions in README/frontend-worker entrypoints,
+  explicitly supersede legacy review requirements and add dated review-only notices
+  to older development guides. Retain the mandatory Kilo gate for skipped bot PRs
+  per the user's explicit keep-setting/block-unreviewed decision, without claiming
+  complete automated coverage.
+  [PR #26](https://github.com/Ljrr3045/rielia/pull/26) updates contribution/PR policy,
+  root `REVIEW.md` and the [evidence guide](docs/development/kilo-review.md).
+  Preserve historical Kody/OpenCode evidence and frontend worker selection. Main
+  automatic Kilo exclusion and OpenCode App uninstall remain unverified/unanswered.
+  No product code, workflow, handoff or deployment change; no full ticket completed.
+
 ### Added
 
 - T10.1/B1b search and My tasks presentation on merged T10.0 logic

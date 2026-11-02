@@ -1,5 +1,9 @@
 # Stack approval and validation sequencing
 
+> Review policy update (2026-11-02): Kody triggers and Kody review requirements
+> below are obsolete. [Current review policy](kilo-review.md) governs new changes.
+> Historical review evidence and runtime guidance are preserved.
+
 Decision date: **2026-10-27**. Authority: the user's explicit stack and testing
 direction, recorded separately from the unchanged handoff. This supersedes active
 claims that the current stack awaits user confirmation; it does not rewrite past

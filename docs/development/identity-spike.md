@@ -1,5 +1,9 @@
 # T02 identity and proxy spike
 
+> Review policy update (2026-11-02): Kody triggers and Kody review requirements
+> below are obsolete. [Current review policy](kilo-review.md) governs new changes.
+> Historical review evidence and runtime guidance are preserved.
+
 Research and implementation: 2026-10-25 UTC. The coordinator authorized T02.1 as a
 bounded, reversible experiment before user stack approval. The
 [2026-10-27 decision](stack-validation-decisions.md) now approves the current

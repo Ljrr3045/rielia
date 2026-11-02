@@ -75,9 +75,10 @@ and staging HTTPS acceptance remain pending; see the identity guide.
   agent acts as its own Agent principal. Author, connection, and assignee are distinct.
 - The landing and v0.1 assets remain planning/proposals. Rielia is a working name;
   no final logo, availability, performance, or usability claims are established.
-- The coordinator requests Kody AI review for every ready head with a root PR
-  comment exactly `@kody start-review` and alone merges PRs to `dev` after validation
-  and feedback handling. See CONTRIBUTING before selecting work.
+- Native Kilo and branch-specific checks gate review. The coordinator triages
+  findings, delegates fixes to the assigned worker, records dispositions and alone
+  merges after validation and required ownership review. See
+  [CONTRIBUTING](CONTRIBUTING.md) and the [review policy](docs/development/kilo-review.md).
 
 ## Verify the imported handoff
 

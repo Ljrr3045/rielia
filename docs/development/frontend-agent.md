@@ -12,9 +12,10 @@ records still identify the models that actually performed those tasks.
 
 Each development worker and subagent retains its own isolated worktree. The
 coordinator must verify its effective model and effort before assigning work;
-do not silently substitute another model or effort. Kody AI remains the external
-PR reviewer, and the sequential PR-to-`dev`, review, merge, and worktree cleanup
-rules remain in effect.
+do not silently substitute another model or effort. Native Kilo Code Reviews is
+the external reviewer under the [current review policy](kilo-review.md), separate
+from OpenCode Go's development role. The sequential PR-to-`dev`, review, merge and
+worktree cleanup rules remain in effect.
 
 ## Verification
 

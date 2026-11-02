@@ -1,5 +1,9 @@
 # T04.0 local runtime preparation
 
+> Review policy update (2026-11-02): Kody triggers and Kody review requirements
+> below are obsolete. [Current review policy](kilo-review.md) governs new changes.
+> Historical review evidence and runtime guidance are preserved.
+
 This coordinator-authorized T04/B0 preparatory split implements architecture
 §1.2/§6.2 and the local build, migration and persistent-job portion of T04.
 The source ticket is B1 with T02–T03 dependencies. Real T02 OAuth/HTTPS and T03

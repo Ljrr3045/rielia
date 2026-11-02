@@ -1,5 +1,9 @@
 # T07.1/B1b private-project access presentation
 
+> Review policy update (2026-11-02): Kody triggers and Kody review requirements
+> below are obsolete. [Current review policy](kilo-review.md) governs new changes.
+> Historical review evidence and runtime guidance are preserved.
+
 Status: bounded presentation delivered on the merged T07.0 privacy/access logic
 ([PR #17](https://github.com/Ljrr3045/rielia/pull/17), merge
 `c72831c1be4ca2332a6162adc2af85d529b441b8`). This document records UI-owned
