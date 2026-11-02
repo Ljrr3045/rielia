@@ -94,8 +94,9 @@ claimed absent. The coordinator removed both completed worktrees. These prior
 results do not approve the reconciliation's new head.
 
 The user's requested exclusion of base `main` from Kilo events remains
-**unverified**. No supported control was found in the inspected UI, and the
-coordinator's question about allowing native review including `main` is unanswered.
+**unverified**. The coordinator found no supported control in the inspected UI
+or checked public source; the question about allowing native review including
+`main` is unanswered. No reviewer-setting change is authorized by this reconciliation.
 Required-check selection, prompt text and `REVIEW.md` are not event filters and do
 not authorize general review of `main`; the separate minimal bootstrap has a
 specific one-off Kilo authorization. The user explicitly approved retaining

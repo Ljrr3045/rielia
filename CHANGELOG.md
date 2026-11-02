@@ -15,6 +15,9 @@ This records repository changes. No application version has been released.
   repeating the CI add/add conflict. Update entrypoints and governance evidence
   for merged PRs #26/#27 and active CODEOWNERS/CI on both bases. No product promotion
   to main, T11, dependency, reviewer-setting or deployment change is included.
+  [PR #28](https://github.com/Ljrr3045/rielia/pull/28). Local handoff/link, whitespace,
+  YAML/structure/shell and bidirectional merge-tree checks pass; final-head remote
+  CI and Kilo remain coordinator merge gates.
 
 - Adopt native Kilo and layered branch protection. Core `Development — Review & CI`
   (`26377556`) requires Kilo App `2193792` and validate App `15368`; core

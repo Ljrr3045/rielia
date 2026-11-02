@@ -128,7 +128,20 @@ squash or rebase, preserving main as an ancestor so subsequent merges do not
 repeat the add/add conflict. This is main-into-dev reconciliation only; no product
 promotion to `main`, T11, deployment, dependency or reviewer-setting change is
 included. Historical Kody evidence and immutable handoff content remain unchanged.
-Current-head CI and Kilo review remain mandatory before coordinator merge.
+[PR #28](https://github.com/Ljrr3045/rielia/pull/28) is non-draft to `dev` on this
+branch. Merge commit `76e07c2170d613ce3982e0f796ae8c91cfea4d7a` has the exact dev
+and main refs above as first/second parents. Local checks pass: the handoff/link
+verifier (47 imported files, 30 asset hashes/sizes, 497 links in 59 documents),
+unstaged/staged/commit whitespace checks, Ruby Psych YAML parsing, structural
+comparison preserving all nine dev steps/pins and the two exact main governance
+checks, Bash syntax for all eight run commands, and execution of the ownership
+and whitespace commands. Four `git merge-tree --write-tree` simulations (both
+directions for HEAD/main and HEAD/dev) are conflict-free and yield the HEAD tree;
+main ancestry is verified. The eight-file diff preserves immutable handoff content
+and the historical progress ledger; root `REVIEW.md` is 4,443 characters.
+No dedicated Actions linter is installed locally. Unrelated application suites
+and dependency installation were not duplicated; full remote technical CI and
+native Kilo review of the final head remain required before coordinator merge.
 
 ## Current delivery
 
