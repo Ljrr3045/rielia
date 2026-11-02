@@ -195,5 +195,5 @@ PAT/service token, domain permissions or task/agent workflow was tested. Those
 remain future T02/T03/T13/T20/T35 work in dependency order. Full T01/B0 real-user
 validation and installation OAuth/staging evidence are OPEN/DEFERRED under the
 dated decision; license remains undecided. PR checks and current-head
-coordinator-triggered Kody evidence belong in the PR and [progress](progress.md),
+OpenCode Go run/review evidence belong in the PR and [progress](progress.md),
 without self-referential commit updates here.

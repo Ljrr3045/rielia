@@ -57,6 +57,7 @@ implementation, without completing tickets or weakening automated checks/launch 
 | Live PR and merge gate | [PR #25](https://github.com/Ljrr3045/rielia/pull/25) targets `dev`. Verify its live remote head/base, [current checks](https://github.com/Ljrr3045/rielia/pull/25/checks), independent audit and all review surfaces/technical dispositions before merge. These live records determine acceptance; a historical checkpoint below never approves later code. In supervised worker delivery only the coordinator invokes review; ordinary authorized human maintainers may use manual commands. Only the coordinator merges |
 | Review implementation contract | [Guide](opencode-review.md) defines applicable focused tests, pinned fake-provider wire, workflow lint, handoff/scope/whitespace checks and exact-head review. Credentials stay out of source/logs; App/OIDC and model/variant provisioning are separate from per-head review and event acceptance. Use the live PR gate above for the current outcome |
 | Historical checkpoints below | The remaining evidence rows record the named head/run/date at delivery, including failed attempts and then-pending checks. They are historical evidence, not claims about the latest PR head; test counts and CI/review outcomes must not be carried forward after edits |
+| Historical 2026-11-02 acf70fd checkpoint | Both CIs, independent audit and59 focused checks passed that head. [Run41420882589](https://github.com/Ljrr3045/rielia/actions/runs/41420882589) completed generation43m52/App publication/cleanup; [CHANGES_REQUESTED5734973337](https://github.com/Ljrr3045/rielia/pull/25#pullrequestreview-5734973337) raised reply-receipt confirmation and three active-doc state defects. Corrections require fresh audit/CI/review; unchanged history690846/1024000 fits. No new-head approval, completed activation or T11 acceptance |
 | Historical 2026-11-02 111c70e checkpoint | [Support CI41413478040](https://github.com/Ljrr3045/rielia/actions/runs/41413478040), [product CI41413477998](https://github.com/Ljrr3045/rielia/actions/runs/41413477998), independent audit and53 focused checks passed that head. [Run41414538419](https://github.com/Ljrr3045/rielia/actions/runs/41414538419) completed generation/App publication/cleanup; [CHANGES_REQUESTED5734110898](https://github.com/Ljrr3045/rielia/pull/25#pullrequestreview-5734110898) at08:59:07Z raised reply coverage, host-metadata rendering and expected authorization denial. Bounded corrections retain full formal-review gates. Discussion621484 exceeded then-current512000; no history deletion/truncation for approval. Changed source needs fresh audit/CI/review; activation/T11 remain OPEN |
 | Historical2026-11-02 410e069 checkpoint | [Support CI41408268722](https://github.com/Ljrr3045/rielia/actions/runs/41408268722), [product CI41408268838](https://github.com/Ljrr3045/rielia/actions/runs/41408268838), independent audit and50 focused checks passed that head. [Run41409281560](https://github.com/Ljrr3045/rielia/actions/runs/41409281560) completed generation/App publication/cleanup and [CHANGES_REQUESTED5733637006](https://github.com/Ljrr3045/rielia/pull/25#pullrequestreview-5733637006) at08:13:17Z. Three findings prompt exact-byte BOM decode/prepare regressions, supervised-worker/human-maintainer policy clarification and a non-PR issue plan guard/event matrix. Post-review full raw discussion498466/512000 fits without fallback;18/18 files/limitations[]. Changed source still requires fresh audit/CI/review; activation/T11 remain OPEN |
 | Historical2026-11-02 4c88974 checkpoint | [Support CI41402861653](https://github.com/Ljrr3045/rielia/actions/runs/41402861653), [product CI41402861656](https://github.com/Ljrr3045/rielia/actions/runs/41402861656), independent audit and46 focused checks passed that head. [Run41403692735](https://github.com/Ljrr3045/rielia/actions/runs/41403692735) completed generation/App publication/cleanup and [CHANGES_REQUESTED5733195211](https://github.com/Ljrr3045/rielia/pull/25#pullrequestreview-5733195211) on that head at07:22:04Z with three new findings. Those findings require a later source correction and fresh live gate above. No changed-head approval, completed activation or T11 acceptance is implied |
@@ -111,6 +112,10 @@ inherited version. That historical selection is superseded by the 2026-11-01
 [review replacement](opencode-review.md); historical approvals are preserved.
 T00 itself added no app/scaffold scope; its
 final Kody approval covered head `53243fbea2ae6c4f5a1ab3e47d6e1dc8cc296cec`.
+
+Product-specific validation records below preserve historical states and their
+then-current review instructions. New work follows the live gate above and
+[OpenCode Go review](opencode-review.md), not historical Kody requests.
 
 ## T08.0 persistent list/Kanban logic
 
@@ -749,11 +754,13 @@ the following records preserve the original first-wave scope and acceptance:
    open. PR #9 is merged; see [runtime scope and evidence](local-runtime.md). This is a preparatory
    split of the B1 T04 ticket, without business effects, deployment or full acceptance.
 
-Current bounded product step: **T10.1** My tasks/search presentation on the merged
+Historical pre-merge checkpoint: **T10.1** My tasks/search presentation on the merged
 T10.0 logic. T10.0 is merged in
 [PR #23](https://github.com/Ljrr3045/rielia/pull/23) at `6bde444c`; the T10.1
-presentation candidate `c1a2a1d` is in independent functional/responsive
-validation with its PR pending. The bounded slice covers workspace-authorized
+presentation candidate `c1a2a1d` was in independent functional/responsive
+validation with its PR then pending. This checkpoint was superseded by merged
+[PR #24](https://github.com/Ljrr3045/rielia/pull/24), recorded above at `64ad0d7f`.
+The bounded slice covers workspace-authorized
 ID/title search, current-assignee My tasks, existing filters, SSE status feedback
 and context-preserving detail/recovery presentation. Invitations/guests, full
 T06/T07/T08/T09/T10/T35, labels/sprints, exports, coediting, MCP/history

@@ -52,9 +52,10 @@ Migration acceptance must include:
   expiry/revocation, account-linking protections, and disabled-identity behavior.
   Preserve web protocol contracts, liveness/readiness and graceful shutdown.
 - Passing applicable unit, integration, security, real-library/database and local
-  Docker regressions, advisory review, CI, and current-head coordinator-triggered
-  Kody review. Local simulated-provider checks remain required; deferred live
-  provider/staging parity stays explicitly open for the later acceptance round.
+  Docker regressions, advisory review, CI, and current-head review under the
+  [active review policy](opencode-review.md). Local simulated-provider checks
+  remain required; deferred live provider/staging parity stays explicitly open
+  for the later acceptance round.
 
 ## Current technical follow-up: NodeAdapter
 

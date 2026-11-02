@@ -1,11 +1,19 @@
 # Changelog
 
 This records repository changes. No application version has been released.
+Historical Kody entries retain their earlier review gates; current work follows
+the [OpenCode Go review guide](docs/development/opencode-review.md).
 
 ## Unreleased
 
 ### Added
 
+- Confirmed root/inline reply receipts bind safe IDs, exact comment/PR/thread
+  URLs, body/run marker and App identity without POST retries. 60 focused checks
+  include real-client malformed responses and cleanup failures. Historical
+  [acf70fd review5734973337](https://github.com/Ljrr3045/rielia/pull/25#pullrequestreview-5734973337)
+  also prompted active-review footer corrections and a historical T10.1 label;
+  current-head audit/CI/review remain required.
 - Separate reply contract for bound COMMENT answers with empty/subset file
   coverage and no findings; successful replies retain `complete=false` without
   claiming or requiring formal review completion. Host metadata now renders as

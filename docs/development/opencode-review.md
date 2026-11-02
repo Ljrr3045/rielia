@@ -214,6 +214,13 @@ formal coverage claim. Successfully posting that answer does not fail solely
 for missing formal coverage. Schema, authorization, freshness, write and token
 cleanup failures still fail the reply job. Missing formal-review coverage is
 stated explicitly and leaves the job failed; it is never a clean review.
+Reply confirmation requires a positive safe ID, exact repository/PR comment
+link, posted body/footer and App author; root `issue_url` or inline
+`pull_request_url`/`in_reply_to_id` must bind the original PR/thread. Unexpected
+receipts fail without reposting. Fields follow GitHub's
+[root-comment](https://docs.github.com/en/rest/issues/comments#create-an-issue-comment)
+and [review-reply](https://docs.github.com/en/rest/pulls/comments#create-a-reply-for-a-review-comment)
+responses; current GitHub comment anchors are required, with no guessed legacy-ID mapping.
 Network-ambiguous writes are not automatically retried;
 inspect the PR before rerunning. A same-run publication marker prevents blind
 duplicate retries.
@@ -555,7 +562,7 @@ causes CLI exit 1. No message/body is inspected to guess a cause, and an auth
 category does not prove a particular key is wrong. A nonzero CLI exit never
 becomes successful review even if stdout contains plausible review JSON.
 
-All 59 focused event/auth/review/diagnostic/trust/representation checks pass on
+All 60 focused event/auth/review/diagnostic/trust/representation checks pass on
 Node 24.22.1. A real adapter-process test uses an inert fake executable with
 secret-shaped strings, provider URLs and workflow commands in both streams;
 only the expected static code appears and no result artifact is written.
@@ -571,7 +578,7 @@ request preparation defaults to a32,000-token output cap; the authorized fixed
 384,000 cap supersedes the earlier 128,000 experiment while retaining `max`.
 New-head review and actual Go acceptance/completion evidence remain required.
 
-Local evidence: 59 event/auth/fork/main-exclusion/relay/coverage/verdict/current-
+Local evidence: 60 event/auth/fork/main-exclusion/relay/coverage/verdict/current-
 head/base-race/token-isolation/diagnostic tests pass; all workflows pass checksum-pinned
 actionlint 1.7.12; immutable handoff and whitespace checks pass. The real CLI
 1.19.5 macOS archive was verified with SHA-256

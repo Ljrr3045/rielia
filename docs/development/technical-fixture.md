@@ -182,7 +182,7 @@ semantic language/heading structure. Manual foreground-browser/screen-reader
 review and trustworthy light/dark captures remain required; no AA compliance
 claim is made.
 
-PR/latest-head Kody review results are recorded in active progress and PR evidence.
+PR/latest-head OpenCode Go run/review results are recorded in active progress and PR evidence.
 
 Source acceptance still requires T02 real Google/GitHub flows (including private email), web/API
 sessions, logout, expiry, proxy/HTTPS callbacks and staging evidence; T03 real

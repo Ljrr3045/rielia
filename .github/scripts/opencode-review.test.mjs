@@ -38,7 +38,13 @@ function fakeApi(routes = {}) {
       throw new Error(`Unexpected GET ${path}`);
     },
     async list(path) { return this.get(path); },
-    async post(path, body) { calls.push(['POST', path, body]); return { id: 123, html_url: 'https://example.test/review', pull_request_url: `https://api.github.com/repos/${repo}/pulls/7`, user: bot, body: body.body, commit_id: head, state: { APPROVE: 'APPROVED', REQUEST_CHANGES: 'CHANGES_REQUESTED', COMMENT: 'COMMENTED' }[body.event] }; },
+    async post(path, body) {
+      calls.push(['POST', path, body]);
+      const common = { id: 123, user: bot, body: body.body };
+      if (path.endsWith('/reviews')) return { ...common, html_url: 'https://example.test/review', pull_request_url: `https://api.github.com/repos/${repo}/pulls/7`, commit_id: head, state: { APPROVE: 'APPROVED', REQUEST_CHANGES: 'CHANGES_REQUESTED', COMMENT: 'COMMENTED' }[body.event] };
+      if (path.startsWith('/issues/')) return { ...common, html_url: `https://github.com/${repo}/pull/7#issuecomment-123`, issue_url: `https://api.github.com/repos/${repo}/issues/7` };
+      return { ...common, html_url: `https://github.com/${repo}/pull/7#discussion_r123`, pull_request_url: `https://api.github.com/repos/${repo}/pulls/7`, in_reply_to_id: Number(path.split('/').at(-2)) };
+    },
     async request(method, path, body) { calls.push([method, path, body]); return {}; },
     repository(name) { calls.push(['REPOSITORY', name]); return api; },
   };
@@ -973,6 +979,66 @@ test('reply authorization, edits, duplicates, freshness and cleanup failures rem
     assert.equal(cleanup.calls.filter(([method]) => method === 'DELETE').length, 1);
     assert(logs.at(-1).includes('publication=confirmed'));
     assert(!logs.at(-1).includes('fake-'));
+  }
+});
+
+test('actual GitHub root/inline reply responses require confirmed id, route, body, App and thread without retry', async (t) => {
+  const logs = [];
+  t.mock.method(console, 'error', (message) => logs.push(message));
+  for (const kind of ['root', 'inline']) {
+    const name = kind === 'root' ? 'issue_comment' : 'pull_request_review_comment';
+    const ev = event('/oc explain', kind);
+    const command = await commandContext(commandApi('/oc explain', { '/pulls/comments/9': comment('/oc explain', { in_reply_to_id: 4 }) }), name, ev);
+    const reply = input({ command, mode: 'reply' });
+    const answer = generated({ verdict: 'COMMENT', complete: false, reviewed_files: [] });
+    const fixture = (mutate = (value) => value, revokeDenied = false) => {
+      const calls = [];
+      const api = new GitHub(repo, 'fake-token', async (url, options) => {
+        const path = new URL(url).pathname.replace(`/repos/${repo}`, '');
+        calls.push([options.method, path]);
+        if (options.method === 'DELETE') {
+          if (revokeDenied) throw new Error('fake-revoke-must-not-log');
+          return new Response(null, { status: 204 });
+        }
+        if (options.method === 'POST') {
+          const posted = JSON.parse(options.body);
+          const value = { id: 123, body: posted.body, user: bot, html_url: `https://github.com/${repo}/pull/7#${kind === 'root' ? 'issuecomment-' : 'discussion_r'}123`, ...(kind === 'root' ? { issue_url: `https://api.github.com/repos/${repo}/issues/7` } : { pull_request_url: `https://api.github.com/repos/${repo}/pulls/7`, in_reply_to_id: 4 }) };
+          return Response.json(mutate(value), { status: 201 });
+        }
+        if (path === '/pulls/7') return Response.json(pr());
+        if (path.endsWith('/permission')) return Response.json({ permission: 'write' });
+        if (path === '/issues/comments/9' || path === '/pulls/comments/9') return Response.json(comment('/oc explain', kind === 'inline' ? { in_reply_to_id: 4 } : {}));
+        if (path === '/issues/7/comments' || path === '/pulls/7/comments') return Response.json([]);
+        throw new Error('Unexpected reply fixture request');
+      });
+      return { api, calls };
+    };
+    const valid = fixture();
+    const outcome = await publishWithRevocation(valid.api, reply, answer, name, ev, '123-1');
+    assert.equal(outcome.id, 123);
+    assert.equal(outcome.verdict, 'REPLY');
+    assert.equal(outcome.complete, false);
+    assert.equal(outcome.url, `https://github.com/${repo}/pull/7#${kind === 'root' ? 'issuecomment-' : 'discussion_r'}123`);
+    assert.deepEqual(valid.calls.filter(([method]) => method === 'POST'), [['POST', kind === 'root' ? '/issues/7/comments' : '/pulls/7/comments/4/replies']]);
+    const changes = [() => null, () => ({}), () => 'wrong type', ...[0, -1, 1.5, '123', Number.MAX_SAFE_INTEGER + 1].map((id) => (r) => ({ ...r, id })),
+      ...[undefined, null, 'https://evil.test/pull/7#issuecomment-123', `https://github.com/${repo}/pull/8#discussion_r123`, `https://github.com/${repo}/pull/7#${kind === 'root' ? 'issuecomment-' : 'discussion_r'}124`, `https://github.com/other/repo/pull/7#discussion_r123`].map((html_url) => (r) => ({ ...r, html_url })),
+      (r) => ({ ...r, body: undefined }), (r) => ({ ...r, body: r.body + '\n' }), (r) => ({ ...r, body: r.body.replace('123-1 head=', '124-1 head=') }),
+      ...[null, { login: 'other[bot]', type: 'Bot' }, { login: bot.login, type: 'User' }].map((user) => (r) => ({ ...r, user })),
+      (r) => ({ ...r, [kind === 'root' ? 'issue_url' : 'pull_request_url']: `https://api.github.com/repos/${repo}/${kind === 'root' ? 'issues' : 'pulls'}/8` }),
+      ...(kind === 'inline' ? [undefined, '4', 5].map((in_reply_to_id) => (r) => ({ ...r, in_reply_to_id })) : []),
+    ];
+    for (const mutate of changes) {
+      for (const revokeDenied of [false, true]) {
+        const invalid = fixture(mutate, revokeDenied);
+        let recorded = false;
+        await assert.rejects(publishWithRevocation(invalid.api, reply, answer, name, ev, '123-1', async () => { recorded = true; }), Obsolete);
+        assert.equal(recorded, false);
+        assert.equal(invalid.calls.filter(([method]) => method === 'POST').length, 1);
+        assert.equal(invalid.calls.filter(([method]) => method === 'DELETE').length, 1);
+        assert(!invalid.calls.some(([method]) => method === 'PUT'));
+        if (revokeDenied) assert(logs.at(-1).includes('publication=unconfirmed') && !logs.at(-1).includes('fake-'));
+      }
+    }
   }
 });
 

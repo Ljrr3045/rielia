@@ -696,6 +696,14 @@ export async function publish(api, input, generated, eventName, event, run) {
     assertFresh(await api.get(`/pulls/${number}`), input.expected);
     const state = { APPROVE: 'APPROVED', REQUEST_CHANGES: 'CHANGES_REQUESTED', COMMENT: 'COMMENTED' };
     if (input.mode === 'review' && (!Number.isSafeInteger(response?.id) || response.id <= 0 || response.commit_id !== input.expected.head || response.state !== state[result.verdict])) throw new Obsolete('GitHub did not confirm the expected formal review outcome');
+    if (input.mode === 'reply') {
+      // REST201 issue-comment/review-reply fields; no formal-review fields are
+      // assumed for replies. Unexpected response shapes remain unconfirmed.
+      const inline = input.command.kind === 'inline';
+      const anchor = inline ? 'discussion_r' : 'issuecomment-';
+      const bound = Number.isSafeInteger(response?.id) && response.id > 0 && response.html_url === `https://github.com/${input.expected.baseRepo}/pull/${number}#${anchor}${response.id}` && response.body === body && response.body.endsWith(marker) && response.user?.login === 'opencode-agent[bot]' && response.user.type === 'Bot' && (inline ? response.pull_request_url === `https://api.github.com${api.root}/pulls/${number}` && response.in_reply_to_id === input.command.thread : response.issue_url === `https://api.github.com${api.root}/issues/${number}`);
+      if (!bound) throw new Obsolete('GitHub did not confirm the expected reply outcome');
+    }
   }
   catch (error) {
     if (input.mode === 'review' && result.verdict === 'APPROVE') {
