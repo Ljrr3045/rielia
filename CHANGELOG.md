@@ -6,6 +6,48 @@ This records repository changes. No application version has been released.
 
 ### Added
 
+- Safe static review-generation failure categories after bootstrap
+  [41368385352](https://github.com/Ljrr3045/rielia/actions/runs/41368385352)
+  failed with publication skipped and no recoverable precise cause. Diagnostics
+  distinguish CLI lifecycle/bounds, structured model error/status/tool events,
+  JSONL/text/completion, fenced or malformed review JSON, schema/head/base/
+  coverage/findings/verdict failures. Raw streams, exception messages, provider
+  bodies and credentials remain private; no parser or approval gate is relaxed.
+  All 26 focused checks include actual fake-CLI process redaction/no-result
+  regressions; independent review and root-approved live feedback remain pending.
+- Refine the broad completion failure observed in
+  [retry 41369790351](https://github.com/Ljrr3045/rielia/actions/runs/41369790351)
+  into missing/multiple and finite non-stop reason codes. Only capped structural
+  counts, fixed reason/identity booleans and bounded numeric usage can be logged;
+  raw reasons, IDs and text remain private. All28 focused checks include duplicate-
+  finish, continuation, hostile-reason and numeric-redaction cases. Exactly-one-
+  stop acceptance, user-confirmed `max`, provider and output cap stay unchanged;
+  the live reason/count remains unknown pending root-reviewed instrumentation.
+- Coordinator-authorized controlled review output cap of128,000 tokens, set only
+  in the isolated child and clamped by the pinned CLI to the model output limit.
+  Actual pinned fake-provider smoke verifies the cap on the wire with `max` and
+  zero tools; a parent-environment regression prevents inherited overrides.
+  Provider/effort, timeouts and strict approval gates are preserved. This is not
+  proof of an earlier length failure; fresh independent review/CI precedes live use.
+- OpenCode Go PR-review replacement before T11, under the user's 2026-11-01
+  decision. The [trusted adapter](docs/development/opencode-review.md) uses the
+  official installed App/OIDC and checksum-pinned CLI 1.19.5, rather than the
+  unsafe general-purpose stock GitHub runner. Automatic reviews cover every
+  non-main base, including forks and base advances; authorized `/oc`/`/opencode`
+  requests receive formal reviews or root/original-inline-thread replies.
+  A secret-free inline relay supports fork events. Generation has isolated
+  HOME/XDG, no GitHub/OIDC credentials and no tools; deterministic publication
+  validates coverage, actual head/base, inline locations and formal outcomes.
+  Incomplete/draft reviews cannot approve. Twenty-two focused tests, actual pinned-
+  CLI fake-provider smoke (`max` on review call, tool denial), workflow lint,
+  immutable handoff and whitespace pass locally; independent audit/remote CI
+  and legitimate default-branch activation/live App/Go/fork smoke remain pending.
+  No product code, handoff, secret values, repository protections or deployment
+  change. Independent audit's symlink/mode gap is fixed with immutable Git trees/
+  raw blobs and regressions. [PR #25](https://github.com/Ljrr3045/rielia/pull/25)
+  records CI/audit; the initial review run failed because trusted default lacks
+  the script, without model/App publication. Historical Kody evidence stays;
+  no new Kody trigger is required.
 - T10.1/B1b search and My tasks presentation on merged T10.0 logic
   [PR #23](https://github.com/Ljrr3045/rielia/pull/23) (`6bde444c`). `/projects`
   gains explicit workspace My tasks (`taskScope=mine`, current assignee) and

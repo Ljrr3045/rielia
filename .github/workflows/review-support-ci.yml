@@ -1,0 +1,46 @@
+name: Review support CI
+
+on:
+  pull_request:
+    paths: ['.github/**', AGENTS.md, CONTRIBUTING.md, 'docs/development/opencode-review.md']
+  push:
+    branches: [dev]
+    paths: ['.github/**', AGENTS.md, CONTRIBUTING.md, 'docs/development/opencode-review.md']
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 24.22.1
+      - name: Event, authorization, review outcome, isolation and race regressions
+        run: node --test .github/scripts/opencode-review.test.mjs
+      - name: Install checksum-pinned validation tools
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/review-tools"
+          curl --fail --silent --show-error --location --max-time 120 \
+            https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz \
+            --output "$RUNNER_TEMP/review-tools/actionlint.tar.gz"
+          echo "8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8  $RUNNER_TEMP/review-tools/actionlint.tar.gz" | sha256sum --check
+          tar -xzf "$RUNNER_TEMP/review-tools/actionlint.tar.gz" -C "$RUNNER_TEMP/review-tools" actionlint
+          curl --fail --silent --show-error --location --max-time 120 \
+            https://github.com/anomalyco/opencode/releases/download/v1.19.5/opencode-linux-x64-baseline.tar.gz \
+            --output "$RUNNER_TEMP/review-tools/opencode.tar.gz"
+          echo "17c200fd4b2289954cc01552559f9b6d03ec157b2ddfb5eb54144f491656333d  $RUNNER_TEMP/review-tools/opencode.tar.gz" | sha256sum --check
+          tar -xzf "$RUNNER_TEMP/review-tools/opencode.tar.gz" -C "$RUNNER_TEMP/review-tools"
+          test "$("$RUNNER_TEMP/review-tools/opencode" --version)" = '1.19.5'
+      - name: Lint every GitHub workflow
+        run: '"$RUNNER_TEMP/review-tools/actionlint" -shellcheck='
+      - name: Actual pinned CLI against loopback fake provider (no real credentials)
+        env:
+          OPENCODE_BIN: ${{ runner.temp }}/review-tools/opencode
+        run: node .github/scripts/opencode-cli-smoke.mjs

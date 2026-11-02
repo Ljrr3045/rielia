@@ -9,7 +9,8 @@ them, full T04, P34/self-hosting acceptance, or any product story. The
 except Express; the [Nest NodeAdapter migration](nest-http-adapter.md) removes it
 from API/worker/migration runtime and deployed package closure, and the decision
 defers real provider/HTTPS/staging and staging-dependent remote discovery evidence.
-Local automated checks/CI/Kody remain required; license remains undecided.
+Local automated checks/CI/[current review](opencode-review.md) remain required;
+license remains undecided.
 T04.0 itself added no domain schema or principal. The later
 [T35.0 foundations](principal-foundations.md) add an additive principal/minimal
 workspace/membership migration to the same explicit one-shot and checksum gate.

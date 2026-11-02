@@ -3,7 +3,8 @@
 Status: bounded local stdio spike, originally authorized before user stack
 approval. The [2026-10-27 decision](stack-validation-decisions.md) approves the
 current stack except Express and defers real staging-dependent discovery/provider
-validation; local checks/CI/Kody remain required. This spike adds one
+validation; local checks/CI/[current review](opencode-review.md) remain required.
+This spike adds one
 experimental read-only diagnostic, `rielia_health`, which calls the existing
 `GET /api/v1/health` REST route. Its result is exactly
 `{"status":"ok","service":"rielia-api"}`. This is **process liveness only**:

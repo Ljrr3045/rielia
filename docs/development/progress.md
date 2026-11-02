@@ -27,6 +27,15 @@ T06/P05/T07/T08/T09/US05 and integration scope remain open. It has no
 deployed task product, deployment or software release. The coordinator owns
 integration and status across workers.
 
+The user's 2026-11-01 decision replaces Kody with
+[OpenCode Go PR review](opencode-review.md) before T11. This supersedes older
+review-trigger instructions throughout development guides; historical Kody
+findings/URLs remain evidence of their original deliveries. The trusted adapter
+uses official App/OIDC and pinned CLI 1.19.5, without executing PR code/config or
+granting reviewer edits/push/merge. Local source/tests are prepared; operational
+App/Go/fork/root/inline acceptance stays OPEN until legitimate default-branch
+activation and real smoke. No product ticket or deployment is completed here.
+
 The user's [2026-10-27 stack and sequencing decision](stack-validation-decisions.md)
 approves the current stack except Express. The [authorized migration](nest-http-adapter.md)
 now uses official Nest NodeAdapter 12.3.2 and checks actual API/worker/migration
@@ -41,11 +50,16 @@ implementation, without completing tickets or weakening automated checks/launch 
 
 | Field | Evidence/state |
 | --- | --- |
-| Scope | T10.1/B1b presentation on merged T10.0 logic: explicit workspace **My tasks** (`taskScope=mine`, current assignee) and ID/title **Search tasks** (`taskScope=search`), project-grouped results with project name/key, status/priority/project/archive filters, canonical totals/paging and bound, loading/empty/error/changed states, visible live/pending/reconnecting/offline feedback, context-preserving detail navigation, existing draft/retry/conflict recovery and a workspace-navigation Stay/Discard guard. P11/P02/P33/P38; US02/05/08/12/25; UXR01/03; UX01/03/05/06/07/09/11. No JSX logic/hooks/controllers/proxies/session policy/functional tests, labels/sprints, exports, coediting, credentials, staging or deployment |
-| Base | `origin/dev`, T10.0 [PR #23](https://github.com/Ljrr3045/rielia/pull/23), verified merged as `6bde444cd4e69115bc7004cf8d58c229ee7c55a7` |
-| Branch | `feat/t10-search-my-tasks-ui`, one English non-draft presentation/docs PR to `dev` |
-| Worktree | Isolated `feat-t10-search-my-tasks-ui`; OpenCode Go `opencode-go/deepseek-v4.1-flash` variant `max` verified by the coordinator's terminal footer; no helpers or shared checkout |
-| Current PR | T10.1 presentation [PR #24](https://github.com/Ljrr3045/rielia/pull/24), non-draft to `dev`; exact-head CI and coordinator-triggered Kody remain required. T10.0 logic [PR #23](https://github.com/Ljrr3045/rielia/pull/23) is merged as `6bde444cd4e69115bc7004cf8d58c229ee7c55a7` |
+| Scope | Review infrastructure/governance before T11: automatic every non-main PR/fork, maintainer root/inline requests and thread follow-ups, tool-denied Go generation, formal current-head/base verdicts, deterministic App/OIDC publication, isolated fork-inline relay. No product P/US/UX scope, application code, handoff, settings/secrets values, merge or deployment |
+| Base | `origin/dev`, T10.1 [PR #24](https://github.com/Ljrr3045/rielia/pull/24), merged as `64ad0d7f0e69537ebb1c2abc136ba86b4212bddb` |
+| Branch | `feat/opencode-go-pr-review`, one English non-draft infrastructure/governance PR to `dev` |
+| Worktree | Isolated `feat-opencode-go-pr-review`; effective Codex `gpt-6.1-sol` `xhigh` verified in terminal footer before edits; source candidate `ead0b7ca1db3613925f3e99c80fcffa1030f1825` sent for independent SOL audit |
+| Current PR | [PR #25](https://github.com/Ljrr3045/rielia/pull/25), non-draft to `dev`; final remote CI and independent audit pending. Bootstrap requires normal repository approval and coordinator activation |
+| Review implementation evidence | [Guide](opencode-review.md): 22 focused event/auth/main/fork/coverage/relay/token/verdict/race checks on Node 24.22.1, targeted ESLint, actual checksum-pinned macOS CLI 1.19.5 loopback fake-provider smoke (review `max`, zero tools, malicious tool rejection), actionlint 1.7.12, handoff/whitespace pass. Whole-file cap 160 KB admits the existing 103 KB progress ledger; exact/over-limit, binary/truncated patch and symlink/mode-only/tree regressions pass. User configured the secret out of band; coordinator set model/variant variables to defaults. Initial Linux support CI [41367097671](https://github.com/Ljrr3045/rielia/actions/runs/41367097671) passed at `ffdfae02`; changed source requires fresh final-head evidence. Live Go/App/OIDC/fork/inline behavior is OPEN |
+| Bootstrap review failure | [Feature-push run 41367051504](https://github.com/Ljrr3045/rielia/actions/runs/41367051504) failed with `MODULE_NOT_FOUND` because trusted default `dev` does not yet contain the new script. No model/App publication ran; this is not successful review or a reason to check out untrusted support code |
+| Bootstrap generation diagnostics | Root-authorized [run 41368385352](https://github.com/Ljrr3045/rielia/actions/runs/41368385352) used audited `14cc8ab` support: prepare/CLI setup passed, generation failed after about four minutes, publication skipped and no approval. Cause is unavailable from the old generic log/deleted state. [Diagnostic follow-up](opencode-review.md) adds allowlisted CLI/model/JSONL/review/schema/binding/coverage/finding codes without raw data or relaxed parsing; all 26 focused Node 24 checks pass. New-head independent review/live feedback pending; prior-head audit/CI does not approve this change |
+| Completion refinement | Both CIs and independent review passed `2abd2bc`; [retry 41369790351](https://github.com/Ljrr3045/rielia/actions/runs/41369790351) then failed `JSONL_COMPLETION` before review JSON parsing/publication. Root authorized finite finish subcodes plus sanitized capped counts/reason booleans/private-ID comparison/reported usage, with exactly-one-stop acceptance, `max`, provider and output cap unchanged. All28 focused Node24 checks pass locally; the new head needs fresh review/CI and root-approved live feedback. No exact reason, bad-key claim, parser relaxation or paid local call |
+| Controlled output experiment | After independent completion-diagnostic review at `55b071d`, root explicitly authorized a fixed isolated-child128,000-token cap while retaining user-confirmed `max`, provider,10-minute model/20-minute job and all strict gates. Actual pinned-CLI fake-provider smoke asserts max_tokens128000/max/no-tools; parent overrides are ignored. No secret/settings change or paid local call. This does not prove prior length exhaustion; fresh head audit/CI and root live authorization remain required |
 | T10.1 evidence | [Search and My tasks UI guide](task-discovery-ui.md), [PR #24](https://github.com/Ljrr3045/rielia/pull/24): combined source `29601ac17965f7038c397e95fa8773eb9fdd4798` (presentation corrections plus two exact root-reviewed SOL controller/test commits). Full `pnpm check`, 63 focused project/client/proxy/controller checks including T10, web typecheck, targeted ESLint and production build pass; independent responsive seven-width/recovery and final functional/mobile-return evidence accepted. Audit/handoff/whitespace pass; exact PR head/CI/Kody state is recorded in GitHub and the external report |
 | T10 evidence | [Discovery/SSE contract](task-discovery.md): 61 focused client/proxy/state checks; full standard check; real PostgreSQL search/authority/rollback/commit-order/replay/revocation plus eight-table restart witness; real Nest→Next 105-row search and two-session streaming QA; Docker runtime smoke; audit high/critical, handoff and whitespace pass. Independent denial/deferral/page-two return findings fixed with regressions; Kody hydration and SSE metadata findings addressed by one bounded shared hydration and id/version-only polling, with 12 T10 PG tests. T10.0 [PR #23](https://github.com/Ljrr3045/rielia/pull/23) merged as `6bde444cd4e69115bc7004cf8d58c229ee7c55a7` |
 | T09 evidence | Frozen install, full `pnpm check`, 46 focused project/client/proxy/XSS checks, real PG migration/permission/race/rollback/aborted-HTTP tests and eight-table PostgreSQL-restart witness pass. Actual archived-row migration preservation, >100 paging and new/edited-comment discovery, final-migration Docker runtime, expanded real Next proxy QA, audit high/critical gate, handoff and whitespace pass. PR #21 reviewed head `0e4784c3d41ddd095c69f61b49489e9a78065347`; root Kody trigger `6546958383`, final Kody check `124610642083` SUCCESS/no-issues comment `6546960524`, CI `41226123949` / check `124610518385` SUCCESS. Logic worktree removed by coordinator |
@@ -74,15 +88,16 @@ implementation, without completing tickets or weakening automated checks/launch 
 | T00 | Complete: [PR #1](https://github.com/Ljrr3045/rielia/pull/1) merged 2026-10-24T23:56:43Z as `8dd7c31f454c1989d017dbf7b40e6646112d2d2a` after final-head Kody SUCCESS/APPROVED |
 | T01–T35 | No full ticket complete; T01 logic and presentation are bounded partial evidence only |
 | Prior resource cleanup | Coordinator reports all prior completed worktrees removed, preview stopped and evidence preserved outside the repository; current worker never deletes its active checkout |
-| Automated review | Kody AI: coordinator alone posts exact root `@kody start-review` for each ready head; prior-head evidence never approves changed code |
+| Automated review | OpenCode Go replacement under [current guide](opencode-review.md); automatic non-main review, coordinator-only manual `/oc review` when needed, exact current head/base gate. No Kody trigger. Bootstrap/live acceptance remains OPEN |
 
 T00 acceptance: complete byte-identical import with links/assets/hashes/proposal
 status; practical repository instructions and docs; truthful dependency/state
 tracking; passing whitespace/integrity checks; one non-draft PR to `dev`; latest
-head Kody review handled with passing applicable checks. The user retired OpenCode
-and requested deletion of its entire workflow, including the inherited version.
-The coordinator alone posts each ready head's Kody trigger and merges after
-validation and feedback handling. T00 itself added no app/scaffold scope; its
+head Kody review handled with passing applicable checks. At that time the user
+retired OpenCode and requested deletion of its entire workflow, including the
+inherited version. That historical selection is superseded by the 2026-11-01
+[review replacement](opencode-review.md); historical approvals are preserved.
+T00 itself added no app/scaffold scope; its
 final Kody approval covered head `53243fbea2ae6c4f5a1ab3e47d6e1dc8cc296cec`.
 
 ## T08.0 persistent list/Kanban logic
@@ -803,7 +818,7 @@ actual use/demand; no launch date or public capacity has been established.
 | License | Pending user answer; Apache-2.0 remains a proposal; no LICENSE adopted | User/maintainer records selection and notice/dependency review |
 | Stack | User approved current stack except Express, 2026-10-27 | [Dated decision](stack-validation-decisions.md); no automatic ratification of future dependencies/ADRs |
 | Express removal | Merged PR #11 with coherent Nest NodeAdapter 12.3.2 and exact-head CI/Kody | [Adapter rationale, source/integrity, security and closure evidence](nest-http-adapter.md); T35.0 preserves runtime/deployed backend closure |
-| Real validation sequencing | OPEN/DEFERRED until advanced end-to-end product slice and user scheduling; no immediate blocker to authorized local implementation | Retain staging/provider/HTTPS, staging-dependent discovery and real-project/user backlog; automated checks/CI/Kody and public-launch gates still apply |
+| Real validation sequencing | OPEN/DEFERRED until advanced end-to-end product slice and user scheduling; no immediate blocker to authorized local implementation | Retain staging/provider/HTTPS, staging-dependent discovery and real-project/user backlog; automated checks/CI/current review and public-launch gates still apply |
 | Local MCP split | Coordinator originally authorized T03.0 public health-only stdio before stack approval | [Versions, actual terminal-client matrix and limits](local-mcp.md); no remote OAuth/credential/domain acceptance |
 | Branch names | User requires `feat/**`, `fix/**`, `refactor/**`, `docs/**`, `chore/**`, `test/**` by purpose, never username prefixes | Worktree names correspond; coordinator renamed the empty Orca-created branch before development and verified `feat/t03-local-mcp` |
 | OAuth credentials/callbacks | OPEN/DEFERRED with real provider validation; no request for credentials/staging now | Installation operator configures secrets when user schedules later acceptance; no test date invented |
@@ -813,10 +828,10 @@ actual use/demand; no launch date or public capacity has been established.
 | Principal/authorship | T35.0 implements bounded identity/membership/policy and server-derived context; delegated user and autonomous Agent remain distinct | [Scope and local evidence](principal-foundations.md); actual task/comment/export and verified credential adapters remain future work |
 | Private-project admin visibility | Ratified 2026-10-29: active human workspace owners/admins automatically read every scoped private project; delegated content keeps grant ceilings and privacy administration remains human web only | [Decision and bounded T07 contract](project-access.md); presentation must disclose automatic administrative access |
 | Operations/public service | VPS capacity, budget/date, registration policy, public obligations not established | Maintainer records decisions and measured readiness in later tickets |
-| Automated review | Kody AI replaces OpenCode; every ready PR/head needs an explicit root `@kody start-review` request | Coordinator alone posts trigger; worker verifies reviewed head, issue comments, formal reviews, inline comments, and applicable checks |
-| Development models | User's 2026-10-25 rule: UI/UX presentation uses OpenCode Go DeepSeek V4.1 Flash 1017 (`opencode-go/deepseek-v4.1-flash`, `max`); all logic uses Codex `gpt-6.1-sol` `xhigh`, including browser auth/data/hooks/proxy/tests | [Model evidence and limits](frontend-agent.md); verify effective sessions and isolated worktrees. User resumed bounded T01/B0 development after the model-only pause checkpoint; OpenCode development does not restore its retired review workflow |
+| Automated review | User's 2026-11-01 decision replaces Kody with [OpenCode Go review](opencode-review.md) before T11 | Installed App/OIDC, pinned CLI, trusted adapter, automatic every non-main PR/fork and authorized root/inline replies; coordinator checks exact head/base/all three surfaces and alone merges. Bootstrap/live acceptance OPEN; no stale approval or protection bypass |
+| Development models | User's 2026-10-25 rule: UI/UX presentation uses OpenCode Go DeepSeek V4.1 Flash 1017 (`opencode-go/deepseek-v4.1-flash`, `max`); all logic uses Codex `gpt-6.1-sol` `xhigh`, including browser auth/data/hooks/proxy/tests | [Model evidence and limits](frontend-agent.md); verify effective sessions and isolated worktrees. Development roles are separate from the new tool-denied PR-review adapter |
 | Completed worktree cleanup | User explicitly requested removal after PR merge and finished delivery, without recurring confirmation | Coordinator verifies merged PR, clean tree, and preserved evidence, safely stops/settles task resources, then removes via Orca; workers never delete active/coordinator checkouts |
-| Retired reviewer | User explicitly requested full OpenCode workflow deletion, including the inherited version; no further repairs/runs or secret changes | Deletion merged in PR #1; keep it absent and preserve the historical handoff |
+| Historical reviewer retirement | User requested full old OpenCode workflow deletion in PR #1; this was the prior Kody-era decision | Superseded by the 2026-11-01 [new trusted OpenCode Go adapter](opencode-review.md). The old general-purpose runner and immutable handoff remain unchanged; no secret values are changed by this PR |
 
 Remaining product decisions did not block T00; current stack approval is bounded
 by the Express exclusion and does not resolve license/brand/admin policy.

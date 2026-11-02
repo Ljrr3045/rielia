@@ -54,10 +54,12 @@ Current validation and PR evidence are recorded in [progress](progress.md).
 The base included an OpenCode workflow at `origin/dev` commit
 `188a760c36f8ec6d09f10f5027d162facce13875`. After unsuccessful OpenCode runs, the
 user retired that reviewer and explicitly requested deletion of the entire
-workflow, including the inherited version. Kody AI is now requested by the
-coordinator for every ready PR/head via the exact root `@kody start-review`
-comment. The historical runs and current review evidence are in progress/PR #1;
-this process change does not alter the imported archive or its hash baseline.
+workflow, including the inherited version. Kody AI then reviewed the original
+deliveries; those runs and review evidence remain in progress/PR #1. The user's
+2026-11-01 decision now replaces Kody with a new
+[trusted OpenCode Go adapter](opencode-review.md), official installed App/OIDC
+and pinned CLI, without restoring the old runner. Neither review-process change
+alters the imported archive or its hash baseline.
 
 Do not refresh the inventory after an accidental edit. Restore the imported file
 and rerun the check. Later corrections or ratifications belong in separate
