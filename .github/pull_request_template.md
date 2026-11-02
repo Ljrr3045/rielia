@@ -23,18 +23,22 @@
 
 - Latest PR head SHA and base branch:
 - Kilo Code Reviews completion URL(s), result, and evidence tying it to that head:
-- Current-head `Kilo Code Review` result/URL/source App (`2193792`, `kilo-code-bot`):
+- Current-head `Kilo Code Review` result/URL/source App (`2193792`, `kilo-code-bot`; required for `dev` only):
 - Current-head `validate` result/URL/source App (`15368`, `github-actions`):
 - Branch up-to-date status and unresolved review threads:
 - Issue comments, submitted reviews, and inline comments inspected:
 - Findings, technical dispositions/fix evidence, and any fresh head review:
-- Base-specific protection: `dev` requires zero formal approvals; existing `main` approval rules remain unchanged:
+- Core ruleset: `Development — Review & CI` (`dev`, `26377556`) or `Main — Release Protection` (`main`, `25810056`); no core bypass:
+- Ownership layer (`26378917`): other authors need `Ljrr3045`'s current-head APPROVED URL; own PRs need author/merger evidence for the limited PR-only exception:
+- Base CODEOWNERS/CI activation status (main bootstrap is pending):
 - Setup, `main` exclusion, or other unverified integration blockers:
 
 <!-- See docs/development/kilo-review.md. No legacy Kody trigger or invented Kilo command. -->
 <!-- Missing/failed/cancelled/incomplete review blocks merge; prior-head evidence never approves changed code. -->
-<!-- dev requires both App-bound checks on the current head, resolved threads and coordinator disposition. No auto-approve action/token expansion/PAT/bypass. -->
-<!-- main rules are unchanged. Required-check selection does not enforce the still-unverified main Kilo event exclusion. -->
+<!-- dev requires both App-bound checks; main requires validate only. Both require an up-to-date head, PR, resolved threads and coordinator disposition. -->
+<!-- The approval-only exception follows merge actor, not PR author. Coordinator may use it only for Ljrr3045-authored PRs; never bypass core gates. -->
+<!-- No fake auto-approval/token expansion/PAT/global bypass. Required-check selection does not enforce the still-unverified main Kilo event exclusion. -->
+<!-- main lacks base CODEOWNERS/CI; separate bootstrap is pending. No product promotion/main PR or merge is authorized here. -->
 
 ## Limitations and remaining decisions
 

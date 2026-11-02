@@ -75,7 +75,7 @@ or an Orca installation.
   until an advanced end-to-end product slice and user scheduling; do not request
   credentials or staging now. These deferred checks do not immediately block
   authorized local implementation; applicable automated unit/integration/security/
-  local Docker checks, CI and current-head Kilo review remain required. Do not
+  local Docker checks, CI and branch-specific review gates remain required. Do not
   adopt Apache-2.0 merely because the plan proposes it. Do not add secrets to any tracked file or PR.
 - Name/logo, v0.1 assets, unratified ADRs, performance targets, and usability
   assumptions retain their proposal/validation status. The runnable fixture
@@ -158,19 +158,23 @@ Keep these boundaries in both current and future code.
 5. Run `git diff --check` and the applicable checks in CONTRIBUTING. Open one
    non-draft PR targeting `dev`, in English, with scope/requirements, validation,
    limitations, and remaining decisions. Use a body file for multiline CLI text.
-6. PRs to `dev` require current-head successful `Kilo Code Review` from the Kilo
-   App and `validate` from GitHub Actions, with the branch up to date. The approved
-   `dev` policy requires zero formal approvals; no auto-approve action, token
-   permission expansion, PAT, or bypass substitutes for these checks. Preserve
-   the PR requirement, thread resolution, deletion/non-fast-forward protections,
-   and existing `main` rules, including its formal approval requirement. The
-   requested exclusion of `main` from Kilo events remains unverified; required-check
-   selection is not an event filter. Report the PR/head to the coordinator, inspect
-   issue comments, submitted reviews, inline comments and checks, resolve valid
-   findings with evidence, and record concise dispositions. After any push, rerun
-   affected checks and wait for the new head's review. Missing, failed, cancelled,
-   incomplete, or prior-head-only review blocks merge. No legacy Kody trigger or
-   invented Kilo command. See [App identities, protection and evidence](docs/development/kilo-review.md).
+6. Core `Development — Review & CI` requires current-head successful Kilo/validate
+   checks for `dev`; core `Main — Release Protection` requires validate for `main`.
+   Both have no bypass actors and require PRs, an up-to-date head, resolved threads,
+   deletion/non-fast-forward protection. Separate `Ownership — Maintainer Approval`
+   requires one code-owner approval; [.github/CODEOWNERS](.github/CODEOWNERS) assigns
+   all files to `@Ljrr3045`. Other authors need his current-head `APPROVED` and
+   resolved findings. Only his own PRs may use his approval-layer PR-only exception;
+   the native exception follows the merge actor, not PR author, so coordinator
+   policy must enforce that limit. It cannot bypass core checks/protections and
+   creates no fake approval. Main ownership/CI activation awaits a separate base-file
+   bootstrap; no full product promotion is authorized. Kilo is not required by main
+   protection; its automatic-event exclusion remains unverified. After any push,
+   rerun affected checks and wait for current-head required evidence, including
+   completed Kilo feedback for `dev`. Inspect all review surfaces and resolve valid
+   findings with evidence. No auto-approve action, token expansion, PAT, global admin
+   bypass, legacy Kody trigger or invented Kilo command. See [ruleset identities,
+   exception limits and evidence](docs/development/kilo-review.md).
 7. Only the coordinator merges. Do not deploy or merge. A dispatched worker reports
    through its active Orca preamble with branch/worktree, PR/head, checks, review
    evidence, and blockers; send `worker_done` once and then stop task activity.

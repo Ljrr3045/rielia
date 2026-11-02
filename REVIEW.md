@@ -43,13 +43,22 @@ of affected invariants, failure recovery, security, and persistence. UI evidence
 includes responsive, keyboard/touch, accessible and nonideal states; screenshots
 alone do not complete a flow. Mark unavailable checks honestly.
 
-Stay read-only. Reviewers do not merge, deploy, alter secrets, or bypass gates.
-Tie the review result to the current PR head; a prior-head result does not cover
-new commits. Report findings and completion truthfully without claiming CI,
-formal GitHub approval, or a platform capability that was not observed. PRs to
-`dev` require successful current-head `Kilo Code Review` (Kilo App `2193792`) and
-`validate` (GitHub Actions App `15368`), an up-to-date branch and resolved threads,
-with zero required formal approvals. Existing `main` rules are unchanged. Do not
-add auto-approval, expand token permissions, introduce a PAT or use bypass. The
-coordinator evaluates findings and alone merges after the evidence and protections
-pass. Selecting required checks does not filter Kilo events for `main`.
+Stay read-only. Reviewers do not merge, deploy, alter secrets or bypass gates.
+Tie results to the current PR head; old results do not cover new commits. Do not
+claim CI, formal approval or platform behavior without observed evidence.
+
+Core `Development — Review & CI` requires current-head Kilo (App `2193792`) and
+validate (App `15368`) on `dev`; core `Main — Release Protection` requires validate
+on `main`. Both have no bypass and require an up-to-date PR, resolved threads and
+deletion/non-fast-forward protection. Separate `Ownership — Maintainer Approval`
+requires one code-owner approval; `.github/CODEOWNERS` names `@Ljrr3045` for all
+files. Other authors require his current-head `APPROVED` and resolved findings.
+Only his own PRs may use his approval-layer PR-only exception. The native exception
+follows the merge actor, not author, so coordinator policy must enforce that limit;
+it cannot bypass core gates and does not create an approval. No global admin
+bypass, auto-approve action, token expansion or PAT. Only the coordinator merges.
+
+Code-owner matching needs the file on the base branch. Main currently lacks
+CODEOWNERS and CI; separate bootstrap is pending and no product promotion is
+authorized. Kilo is not required by main protection; required-check selection does
+not enforce the still-unverified automatic-event exclusion.

@@ -5,33 +5,49 @@ P/US or UI acceptance changes; no T01–T35 ticket is completed. Native Kilo Cod
 Reviews replaces Kody and the abandoned OpenCode PR integration. OpenCode Go
 remains the separately selected frontend presentation worker.
 
-## Approved dev protection
+## Approved layered protection
 
-The user approved **mandatory checks** for `dev`, with zero required formal
-approvals. PRs remain required; both checks must succeed on the current head:
+The coordinator applied and verified these active core rulesets:
+
+| Base | Core ruleset | Required current-head checks |
+| --- | --- | --- |
+| `dev` | [Development — Review & CI (`26377556`)](https://github.com/Ljrr3045/rielia/rules/26377556) | `Kilo Code Review`, `validate` |
+| `main` | [Main — Release Protection (`25810056`)](https://github.com/Ljrr3045/rielia/rules/25810056) | `validate` only |
 
 | Required check | Expected source App | App ID |
 | --- | --- | --- |
-| `Kilo Code Review` | `kilo-code-bot` | `2193792` |
-| `validate` | `github-actions` | `15368` |
+| `Kilo Code Review` (`dev` only) | `kilo-code-bot` | `2193792` |
+| `validate` (both bases) | `github-actions` | `15368` |
 
-The separate active `dev` ruleset uses
-`strict_required_status_checks_policy=true` (branch up to date) and
-`do_not_enforce_on_create=false`. It retains thread resolution, deletion and
-non-fast-forward protection. The existing user bypass entry is preserved but
-must not be exercised. The coordinator applied and verified active `dev`-only
-[ruleset `26377556`](https://github.com/Ljrr3045/rielia/rules/26377556), with zero
-required approving reviews and code-owner review disabled. Effective branch/API
-readbacks confirmed the App-bound checks; `gh pr checks 26 --required` recognized
-both prior-head checks as passing. No bypass was used. This documentation worker
-does not apply rules or alter credentials.
+Both core bypass lists are empty and `current_user_can_bypass=never`. They require
+PRs, up-to-date heads, resolved threads, deletion/non-fast-forward protection,
+`strict_required_status_checks_policy=true` and `do_not_enforce_on_create=false`.
+Effective branch/API readbacks confirmed the source Apps. Main retains merge/squash
+and stale-review dismissal; no last-push approval is required.
 
-After verifying `dev` protection, the coordinator narrowed prior
-[ruleset `25810056`](https://github.com/Ljrr3045/rielia/rules/25810056) to `main`
-only, preserving its original rules including formal approval. Zero
-required approvals on `dev` does not waive current-head review, findings handling,
-thread resolution, CI, or coordinator merge ownership. Do not add an auto-approve
-action, expand `GITHUB_TOKEN` permissions, introduce a PAT, or use bypass.
+Separate [Ownership — Maintainer Approval (`26378917`)](https://github.com/Ljrr3045/rielia/rules/26378917)
+applies to both branches: one approval, code-owner review required, stale approvals
+dismissed, no last-push approval, and no additional unattributed-review requirement.
+The only exception is User `98565958` (`Ljrr3045`), mode `pull_request`, in this
+approval-only ruleset. [.github/CODEOWNERS](../../.github/CODEOWNERS) assigns every
+file, including itself, to `@Ljrr3045`.
+
+The native exception follows the **merge actor**, not the PR author. It can
+technically let the owner merge someone else's PR without a formal review.
+Coordinator policy permits it **only for PRs authored by `Ljrr3045`**. Other
+contributors must have his current-head GitHub `APPROVED` review and resolved
+findings. For an own PR, record author/merger evidence and verify all core gates;
+no fake approval is created. The exception cannot bypass core checks, PR/thread
+requirements, deletion or force-push protection. There is no global admin bypass.
+Do not add auto-approve actions, expand `GITHUB_TOKEN` permissions or introduce PATs.
+
+Code-owner matching uses the base branch's CODEOWNERS file. This PR adds the file
+for `dev` activation after merge. Main currently has only README: CODEOWNERS and CI
+have not landed there, so main ownership/CI activation is **pending a separately
+authorized bootstrap**. Active ruleset configuration is not proof of base-file
+activation. No full product promotion, main PR or main merge is authorized here.
+Settings changes belong to the coordinator; this worker changes only repository
+guidance and CODEOWNERS.
 
 ## Native setup and observed evidence
 
@@ -56,7 +72,8 @@ Required-check selection, prompt text and `REVIEW.md` are not event filters and 
 not authorize reviewing `main`. Default bot-PR skipping also limits every-PR
 coverage until configured and verified. Cloud rerun commands, threaded reply
 handling and formal `APPROVED` submission remain unverified; formal approval is
-not required by the accepted `dev` policy.
+separate from required maintainer approval for other authors. Kilo is not a
+required check on `main`; this does not establish or authorize automatic events.
 
 ## Retired integration cleanup
 
@@ -86,18 +103,20 @@ Official documentation consulted on 2026-11-02:
 ## Acceptance and merge evidence
 
 1. Run applicable checks and report the exact PR/head to the coordinator. Verify
-   current-head SUCCESS for both required check names and expected source Apps,
-   plus the branch's up-to-date state. An eye reaction or old summary is insufficient.
+   current-head SUCCESS and source Apps for both checks on `dev`, or `validate`
+   on `main`, plus an up-to-date branch. An eye reaction or old summary is insufficient.
 2. Inspect issue comments, submitted reviews and inline comments. The coordinator
    analyzes every finding, fixes valid issues with evidence and records concise
    technical dispositions. Resolve required threads; a reply is not a documented
    rerun or completion mechanism.
-3. After any push, rerun affected checks and wait for both fresh checks and Kilo
-   completion on the new head. Missing, failed, cancelled, incomplete or
-   prior-head-only review blocks merge. No legacy Kody trigger or invented command.
-4. Verify the applicable branch rules without using bypass. `dev` requires zero
-   formal approvals; `main` retains its existing approval rules. Only the
-   coordinator merges after checking feedback and all required evidence.
+3. After any push, rerun affected checks and wait for the new head's required
+   results, including Kilo completion for `dev`. Missing, failed, cancelled,
+   incomplete or prior-head-only required evidence blocks merge. No legacy Kody
+   trigger or invented command.
+4. Verify the core gates with no bypass. For another author, require `Ljrr3045`'s
+   current-head `APPROVED` review; for his own PR, record the permitted approval-only
+   exception and author/merger evidence. Check base-file activation and resolved
+   threads. Only the coordinator merges after all required evidence is satisfied.
 
 For prose-only changes, run `python3 scripts/verify-handoff.py`,
 `git diff --check` and `git diff --cached --check`, inspect scope and root guidance

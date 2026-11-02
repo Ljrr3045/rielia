@@ -6,18 +6,22 @@ This records repository changes. No application version has been released.
 
 ### Review policy
 
-- Adopt native Kilo Code Reviews and the user-approved `dev` policy: mandatory
-  current-head `Kilo Code Review` (Kilo App `2193792`) and `validate` (GitHub Actions
-  App `15368`), up-to-date branch and zero required formal approvals. Retain PR,
-  thread-resolution, deletion/non-fast-forward protection and coordinator feedback
-  review/merge ownership. Existing `main` rules, including formal approval, remain
-  unchanged. No auto-approve action, token permission expansion, PAT or bypass.
-  [PR #26](https://github.com/Ljrr3045/rielia/pull/26) updates active contribution/PR
-  policy, root `REVIEW.md` and the [configuration/evidence guide](docs/development/kilo-review.md).
-  Preserve historical Kody/OpenCode evidence and the frontend worker choice.
-  Base-`main` Kilo event exclusion, bot-PR coverage, reply/rerun behavior and OpenCode
-  App removal remain pending. No product code, workflow, handoff or deployment
-  change; no product ticket is completed.
+- Adopt native Kilo and layered branch protection. Core `Development — Review & CI`
+  (`26377556`) requires Kilo App `2193792` and validate App `15368`; core
+  `Main — Release Protection` (`25810056`) requires validate only. Both have no
+  bypass and retain PR/up-to-date/check/thread/deletion/non-fast-forward gates.
+  Separate `Ownership — Maintainer Approval` (`26378917`) requires one code-owner
+  approval; new `.github/CODEOWNERS` assigns all files to `@Ljrr3045`. Other authors
+  require his current-head APPROVED. His approval-layer PR-only exception follows
+  merge actor natively, so coordinator policy limits it to his own PRs; it cannot
+  bypass core gates or create approval. No global admin bypass, auto-approve,
+  token expansion or PAT. Base-file ownership activates on dev after merge; main
+  CODEOWNERS/CI bootstrap is pending, with no product promotion authorized.
+  [PR #26](https://github.com/Ljrr3045/rielia/pull/26) updates contribution/PR policy,
+  root `REVIEW.md` and the [evidence guide](docs/development/kilo-review.md).
+  Preserve historical Kody/OpenCode evidence and frontend worker selection. Main
+  automatic Kilo exclusion and OpenCode App uninstall remain unverified/unanswered.
+  No product code, workflow, handoff or deployment change; no full ticket completed.
 
 ### Added
 

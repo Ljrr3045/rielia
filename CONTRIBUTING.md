@@ -46,8 +46,8 @@ real-project/user acceptance remain OPEN/DEFERRED until an advanced end-to-end
 product slice and user scheduling. They do not immediately block authorized local
 implementation; do not ask for credentials/staging now or report missing checks
 as passed. Preserve source dependencies and public-launch acceptance. Applicable
-automated unit/integration/security/local Docker checks, CI and current-head Kilo
-review remain required. License and brand/final landing design remain undecided. The
+automated unit/integration/security/local Docker checks, CI and branch-specific
+review gates remain required. License and brand/final landing design remain undecided. The
 [2026-10-29 project policy](docs/development/project-access.md) ratifies automatic
 private content access for active human workspace owner/admin, with current grant
 ceilings and human-web-only privacy administration; imported proposals alone are
@@ -136,8 +136,8 @@ focused pure state/HTTP proxy checks and is included in `pnpm check`;
 is separately owned; no full T05/T07/T35 acceptance is implied.
 
 Documentation-only changes run the handoff/link verifier and unstaged/staged
-whitespace checks below, inspect the diff, and retain CI and current-head Kilo
-review gates.
+whitespace checks below, inspect the diff, and retain CI and the applicable
+branch review gates.
 Unrelated local application suites need not be rerun for prose-only edits.
 
 Use Python 3.9+, Node 24.22.1, and pnpm 12.15.0. From the repository root:
@@ -225,20 +225,39 @@ gh pr create --base dev --title "docs: describe the change" --body-file /tmp/rie
 ```
 
 Add the real PR URL to progress after creation and push that update to the same
-branch. Do not open a second PR for review fixes. The user approved mandatory
-checks for `dev`, with zero required formal approvals:
+branch. Do not open a second PR for review fixes. The approved protections use
+separate core and ownership layers:
+
+| Base | Core ruleset | Required current-head checks | Core bypass |
+| --- | --- | --- | --- |
+| `dev` | `Development — Review & CI` (`26377556`) | `Kilo Code Review`, `validate` | None |
+| `main` | `Main — Release Protection` (`25810056`) | `validate` only | None |
 
 | Required check | Expected GitHub App |
 | --- | --- |
 | `Kilo Code Review` | `kilo-code-bot`, App ID `2193792` |
 | `validate` | `github-actions`, App ID `15368` |
 
-Both checks must succeed on the current head, and strict required checks require
-the branch to be up to date with `dev`. Preserve the PR requirement, resolved
-review threads, deletion and non-fast-forward protections. Existing `main` rules,
-including its formal approval requirement, remain unchanged. The coordinator owns
-[ruleset configuration and evidence](docs/development/kilo-review.md); an existing
-user bypass entry is preserved but must not be exercised.
+Core rules require an up-to-date head, PR, resolved review threads, deletion and
+non-fast-forward protection. Both core bypass lists are empty and the current
+user cannot bypass them. Separate `Ownership — Maintainer Approval` (`26378917`)
+requires one code-owner approval on both branches; [.github/CODEOWNERS](.github/CODEOWNERS)
+assigns all files, including itself, to `@Ljrr3045`.
+
+Other contributors' PRs require `Ljrr3045`'s current-head GitHub `APPROVED` review
+and resolved findings. His own PRs can use the ownership layer's PR-only exception
+for User `98565958`. GitHub applies that exception to the merge actor, not the PR
+author: it can technically permit him to merge another author's PR without formal
+review, but coordinator policy forbids that. Use it only for PRs authored by
+`Ljrr3045`, with evidence of authorship and all core gates satisfied. It does not
+bypass core checks, PR/thread requirements, deletion or force-push protection and
+does not fabricate approval. There is no global admin bypass.
+
+The coordinator applied and verified [ruleset configuration](docs/development/kilo-review.md).
+Code-owner matching uses the base branch's file: this PR adds it for future `dev`
+reviews after merge. `main` currently has only README, so ownership/CI activation
+needs a separate authorized bootstrap. This task does not promote the product to
+`main` or authorize a main PR/merge. Missing checks must not be bypassed.
 
 Native Kilo uses its GitHub App. Once enabled, it reviews non-draft opening,
 pushes, reopening and marking ready. After local checks pass, send the coordinator
@@ -257,16 +276,17 @@ gh api --paginate repos/Ljrr3045/rielia/pulls/123/comments
 The coordinator evaluates every finding against the code and requirements. Fix
 valid defects with relevant validation and give concise technical dispositions for
 substantive findings. After any push, rerun affected checks and wait for the new
-head's completed Kilo review. Missing, failed, cancelled, incomplete or
-prior-head-only evidence blocks merge. Zero required approvals on `dev` does not
-waive feedback handling, thread resolution or coordinator ownership. Kilo check
-success does not claim a formal GitHub `APPROVED` review.
+head's required checks and, for `dev`, completed Kilo review. Missing, failed,
+cancelled, incomplete or prior-head-only required evidence blocks merge. Confirm
+maintainer approval for other authors or the permitted own-PR exception, and resolve
+required threads. Kilo success is separate from a formal GitHub `APPROVED` review.
 
 Do not add an auto-approve action, expand `GITHUB_TOKEN` permissions, introduce a
-PAT, exercise bypass, post legacy Kody triggers, or invent Kilo cloud commands.
+PAT, bypass core protections, misuse the approval-only exception, post legacy
+Kody triggers, or invent Kilo cloud commands.
 The requested exclusion of base `main` from native Kilo events remains unverified
-and awaits the user's decision; choosing required checks is not an event filter
-or permission to review `main`. Retired Kody/OpenCode evidence remains historical.
+and awaits the user's decision. Kilo is not a required check on `main`; choosing
+required checks is not an event filter or permission to review `main`. Retired Kody/OpenCode evidence remains historical.
 
 Only the coordinator merges. Do not deploy or merge from a worker task. A dispatched
 worker reports branch/worktree, PR/head SHA, validation/review evidence, and blockers

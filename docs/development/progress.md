@@ -39,21 +39,30 @@ implementation, without completing tickets or weakening automated checks/launch 
 
 ## 2026-11-02 review policy maintenance
 
-T00 governance-only maintenance selects native Kilo Code Reviews in place of Kody
-and the abandoned OpenCode PR integration. The user approved mandatory checks on
-`dev`: current-head SUCCESS for `Kilo Code Review` (App `2193792`, `kilo-code-bot`)
-and `validate` (App `15368`, `github-actions`), with zero required formal approvals.
-Strict checks require an up-to-date branch. PR, thread-resolution, deletion and
-non-fast-forward protections remain; the existing user bypass entry is retained
-but never exercised. The coordinator reviews comments, resolves valid findings
-and alone merges. Existing `main` rules, including formal approval, are unchanged.
-No auto-approve workflow, token permission expansion, PAT or bypass is included.
-[Configuration, App identities and evidence](kilo-review.md) record ruleset
-implementation separately from this documentation-only PR. The coordinator applied
-and verified active `dev`-only [ruleset `26377556`](https://github.com/Ljrr3045/rielia/rules/26377556)
-and then narrowed `25810056` to `main` only with its original rules preserved;
-effective branch/API reads confirmed both required source Apps. No bypass or
-token permission change was used.
+T00 governance maintenance selects native Kilo Code Reviews in place of Kody and
+the abandoned OpenCode PR integration. The coordinator applied and verified:
+
+- Core [Development — Review & CI (`26377556`)](https://github.com/Ljrr3045/rielia/rules/26377556),
+  `dev` only: current-head Kilo (App `2193792`, `kilo-code-bot`) and validate
+  (App `15368`, `github-actions`).
+- Core [Main — Release Protection (`25810056`)](https://github.com/Ljrr3045/rielia/rules/25810056),
+  `main` only: validate, merge/squash and stale-review dismissal.
+- Separate [Ownership — Maintainer Approval (`26378917`)](https://github.com/Ljrr3045/rielia/rules/26378917),
+  both bases: one code-owner approval with stale approval dismissal. User `98565958`
+  (`Ljrr3045`) has a PR-only exception in this approval layer.
+
+Both core layers have empty bypass lists and current-user bypass `never`, with
+PR/up-to-date/head-check/thread/deletion/non-fast-forward protection. The approval
+exception follows merge actor, not author; coordinator policy limits it to PRs
+**authored by `Ljrr3045`**. Other contributors need his current-head `APPROVED` and
+resolved findings. The exception cannot bypass core gates and creates no fake
+approval. No global admin bypass, auto-approve action, token expansion or PAT.
+[CODEOWNERS](../../.github/CODEOWNERS) assigns every file, including itself, to him;
+matching activates on `dev` when this file reaches the base. Main has only README,
+so main CODEOWNERS/CI activation remains pending a separately authorized bootstrap.
+No full product promotion, main PR or main merge is authorized by this task.
+[Configuration and evidence](kilo-review.md) distinguish settings from base-file
+activation; the coordinator alone handles feedback and merges.
 
 The connected/enabled dashboard has **Use REVIEW.md OFF** and **Skip Bots ON**.
 Native exclusion of base `main` remains unverified and the user's scope decision
@@ -70,9 +79,9 @@ worker choice remain unchanged.
 `chore/kilo-review-policy`, isolated from base `origin/dev` `64ad0d7`. The coordinator
 verified Kilo and CI SUCCESS/no findings on prior head `49f3d4e`, with no formal
 reviews. The updated head requires fresh checks and feedback inspection. Local documentation
-validation passes: 47 imported files, 30 asset hashes/sizes, 467 local links in 59
-documents, whitespace checks and seven-file scope inspection. Root `REVIEW.md` is
-3,501 characters (below 10,000). No product code, immutable handoff edit, ticket
+validation passes: 47 imported files, 30 asset hashes/sizes, 470 local links in 59
+documents, whitespace checks and eight-file scope inspection. Root `REVIEW.md` is
+4,050 characters (below 10,000). No product code, immutable handoff edit, ticket
 acceptance, deployment or merge is included. Application suites are inapplicable
 to this prose-only change.
 
@@ -113,7 +122,7 @@ to this prose-only change.
 | T00 | Complete: [PR #1](https://github.com/Ljrr3045/rielia/pull/1) merged 2026-10-24T23:56:43Z as `8dd7c31f454c1989d017dbf7b40e6646112d2d2a` after final-head Kody SUCCESS/APPROVED |
 | T01–T35 | No full ticket complete; T01 logic and presentation are bounded partial evidence only |
 | Prior resource cleanup | Coordinator reports all prior completed worktrees removed, preview stopped and evidence preserved outside the repository; current worker never deletes its active checkout |
-| Automated review | `dev` requires current-head successful App-bound `Kilo Code Review` and `validate`, up-to-date branch, resolved threads and coordinator disposition, with zero required formal approvals. Existing `main` rules are unchanged; [Kilo event exclusion and remaining limits](kilo-review.md) are still pending. Historical Kody evidence is preserved |
+| Automated review | Core dev Kilo/validate and main validate rules have no bypass. Separate ownership layer requires Ljrr3045 approval for other authors, with his own-PR exception restricted by coordinator policy. [Base-file activation, event exclusion and limits](kilo-review.md) remain explicit; historical Kody evidence is preserved |
 
 T00 acceptance: complete byte-identical import with links/assets/hashes/proposal
 status; practical repository instructions and docs; truthful dependency/state
@@ -852,7 +861,7 @@ actual use/demand; no launch date or public capacity has been established.
 | Principal/authorship | T35.0 implements bounded identity/membership/policy and server-derived context; delegated user and autonomous Agent remain distinct | [Scope and local evidence](principal-foundations.md); actual task/comment/export and verified credential adapters remain future work |
 | Private-project admin visibility | Ratified 2026-10-29: active human workspace owners/admins automatically read every scoped private project; delegated content keeps grant ceilings and privacy administration remains human web only | [Decision and bounded T07 contract](project-access.md); presentation must disclose automatic administrative access |
 | Operations/public service | VPS capacity, budget/date, registration policy, public obligations not established | Maintainer records decisions and measured readiness in later tickets |
-| Automated review | User approved mandatory App-bound Kilo/validate checks and zero formal approvals for `dev`; retain PR/thread/deletion/non-fast-forward protection and existing `main` rules | [Ruleset and check evidence](kilo-review.md); coordinator verifies the current head and all feedback before merge without bypass. Required checks do not enforce the pending `main` Kilo event exclusion |
+| Automated review | Core Kilo/validate on dev and validate on main have no bypass; separate ownership approval has a PR-only owner exception used only for his own PRs | [Named rulesets, approval policy and activation](kilo-review.md); other authors need his current-head APPROVED. No main promotion authorized; automatic Kilo main exclusion remains unverified |
 | Development models | User's 2026-10-25 rule: UI/UX presentation uses OpenCode Go DeepSeek V4.1 Flash 1017 (`opencode-go/deepseek-v4.1-flash`, `max`); all logic uses Codex `gpt-6.1-sol` `xhigh`, including browser auth/data/hooks/proxy/tests | [Model evidence and limits](frontend-agent.md); verify effective sessions and isolated worktrees. User resumed bounded T01/B0 development after the model-only pause checkpoint; OpenCode development does not restore its retired review workflow |
 | Completed worktree cleanup | User explicitly requested removal after PR merge and finished delivery, without recurring confirmation | Coordinator verifies merged PR, clean tree, and preserved evidence, safely stops/settles task resources, then removes via Orca; workers never delete active/coordinator checkouts |
 | Retired reviewer | User explicitly requested full OpenCode workflow deletion, including the inherited version; no further repairs/runs or secret changes | Deletion merged in PR #1; keep it absent and preserve the historical handoff |
