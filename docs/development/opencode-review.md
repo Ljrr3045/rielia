@@ -134,6 +134,33 @@ content, generic coding/lint/reminder-authority instructions are absent and PR
 tag text stays in the user message. Tool denial/isolation and deterministic
 validation remain independent controls; prompt text does not replace them.
 
+Only the model's serialized view uses lossless references. The parent retains
+the full immutable input and original patches for validation/publication; all
+file/context bounds are still applied before projection. Every supplied head,
+file path/status/mode, rename path, limitation and discussion remains present.
+
+| Model-view field | Exact representation |
+| --- | --- |
+| `base` with `encoding: head-edges-v1` | First `prefixLines` complete head lines + literal `middle` + last `suffixLines` head lines; the ranges never overlap |
+| `patch` with `encoding: whole-file-patch-v1` | Original header and side, with the whole addition/removal reconstructed from complete head/base text; `trailingNewline` preserves the patch's terminal LF |
+
+Lines retain their LF; a final unterminated line also counts, with CR and Unicode
+unchanged. Whole-file patch reconstruction preserves the no-final-newline marker.
+The trusted system policy fixes these semantics; file text cannot redefine them.
+Each projected file must decode to its exact original JSON and use fewer bytes
+for each replacement. Unsupported/noncanonical/small patches retain their full
+original form. Modified patches are never rewritten or assumed to apply to the
+current base: their merge-base semantics are independent of the captured current-
+base text. A divergent current base is preserved through direct text equality.
+
+Measured frozen PR #25 input at `8921b41` has 18/18 files and no limitations:
+771,046 input JSON bytes become 524,489 (**31.98% fewer**), with 11 base references
+and seven whole-added-file patch descriptors. Its old user prompt was 773,051
+bytes; with the new encoding policy, the same corpus is 774,066 bytes unprojected
+or 527,509 projected. These are UTF-8 byte measurements, not token estimates or
+proof that context caused the provider failure. New-head metrics and CI/audit
+evidence are reported separately before any root-authorized live run.
+
 JSONL must contain normal `stop` completion and exactly one valid review JSON
 object. A tool attempt, error, missing completion, malformed schema, wrong head/
 base, inconsistent file coverage, output bound or timeout blocks publication.
@@ -259,6 +286,17 @@ claim is made that this caused the length failure or that the correction will
 make live inference succeed. Model, `max`, cap, deadlines and strict gates remain.
 Fresh head audit/CI and root approval precede any further live attempt.
 
+The fifth root-authorized
+[run 41377729585](https://github.com/Ljrr3045/rielia/actions/runs/41377729585)
+used `8921b41`: App preflight and a tiny synthetic Go reply control passed; the
+control returned `complete=true` in six seconds without publication. The real
+full review then failed `JSONL_FINISH_LENGTH` after 9m42s, with zero text events
+and reported output/reasoning counts of 0/128000. Publication was skipped,
+cleanup passed and all three review surfaces remained empty. The control is
+protocol evidence, not full-review acceptance. The separately authorized lossless
+projection above reduces redundant input while retaining the full parent and
+all gates; it is not a proven causal remedy. No new paid run is implied.
+
 The diagnostic follow-up preserves strict parsing/coverage and adds only
 allowlisted static failure codes. Main logs a fixed sentence containing a code
 and, for rejected completion or timeout only, the bounded primitive metadata above;
@@ -288,7 +326,7 @@ causes CLI exit 1. No message/body is inspected to guess a cause, and an auth
 category does not prove a particular key is wrong. A nonzero CLI exit never
 becomes successful review even if stdout contains plausible review JSON.
 
-All 30 focused event/auth/review/diagnostic/trust checks pass on
+All 36 focused event/auth/review/diagnostic/trust/representation checks pass on
 Node 24.22.1. A real adapter-process test uses an inert fake executable with
 secret-shaped strings, provider URLs and workflow commands in both streams;
 only the expected static code appears and no result artifact is written.
@@ -304,13 +342,14 @@ request preparation defaults to a32,000-token output cap; the separately
 authorized 128,000-token experiment above changes that cap while retaining
 `max`. New-head review and actual live reason/count evidence remain required.
 
-Local evidence: 30 event/auth/fork/main-exclusion/relay/coverage/verdict/current-
+Local evidence: 36 event/auth/fork/main-exclusion/relay/coverage/verdict/current-
 head/base-race/token-isolation/diagnostic tests pass; all workflows pass checksum-pinned
 actionlint 1.7.12; immutable handoff and whitespace checks pass. The real CLI
 1.19.5 macOS archive was verified with SHA-256
 `c1c9e62521192192ef4c3ed1355ada2144055bddb61682217e997b03c55203c1`.
-Its loopback fake-provider smoke verifies the dedicated system policy and
-untrusted tags, JSONL transport, effective review `max`
+Its loopback fake-provider smoke verifies the projected wire payload decodes to
+the full unchanged parent, the dedicated system policy and untrusted tags,
+JSONL transport, effective review `max`
 and the fixed 128,000 output cap on the wire,
 no exposed tools and rejection of an unsolicited malicious tool call. It uses
 only generated fake credentials and no local auth. This does **not** verify Go

@@ -6,6 +6,17 @@ This records repository changes. No application version has been released.
 
 ### Added
 
+- Lossless model-input references while the review parent retains full immutable
+  context and original validation patches. Identical head-line edges replace
+  redundant base text; exact canonical whole-added/removed patches use compact
+  descriptors. Modes, rename paths, CRLF/EOF, current-base divergence, coverage,
+  permissions and all approval gates remain intact. The frozen 18-file PR #25
+  corpus shrinks 31.98% in JSON bytes; 36 focused checks and actual pinned CLI
+  projected-wire smoke pass with `max`,128000 and no tools unchanged.
+  [Fifth bootstrap 41377729585](https://github.com/Ljrr3045/rielia/actions/runs/41377729585)
+  passed App/tiny protocol control, then full review failed length with zero text
+  and reported128000 reasoning tokens. This does not prove a context cause or
+  successful review; fresh candidate audit/CI/root authorization precede live use.
 - Dedicated reviewer system policy replacing the pinned CLI's inherited coding
   instructions. Embedded policy/reminder tags remain untrusted user data; missing
   context requires incomplete COMMENT. Actual pinned fake-wire and 30 focused
