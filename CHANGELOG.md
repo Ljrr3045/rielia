@@ -6,6 +6,15 @@ This records repository changes. No application version has been released.
 
 ### Added
 
+- Dedicated reviewer system policy replacing the pinned CLI's inherited coding
+  instructions. Embedded policy/reminder tags remain untrusted user data; missing
+  context requires incomplete COMMENT. Actual pinned fake-wire and 30 focused
+  checks retain model/max/128000/deadlines/no-tools and strict validation.
+  [Fourth bootstrap 41374467405](https://github.com/Ljrr3045/rielia/actions/runs/41374467405)
+  passed App read/revoke preflight, then failed length completion with zero text
+  and reported 128000 reasoning tokens; publication skipped. This separate prompt
+  correction does not establish that inherited instructions caused the failure.
+  New-head audit/CI and root authorization remain required before another run.
 - Coordinator-authorized 20-minute review-model / 30-minute job deadlines after
   [bootstrap 41372213130](https://github.com/Ljrr3045/rielia/actions/runs/41372213130)
   reached the prior ten-minute deadline with publication skipped. Timeout-only

@@ -7,7 +7,8 @@ infrastructure/governance work, not T11 implementation or full T16 acceptance;
 no product P/US/UX scope, application code, handoff, credentials, deployment or
 repository protection settings change is included.
 
-Implementation and local checks are prepared. Real GitHub App/OIDC, Go inference,
+Implementation and local checks are prepared. A bootstrap App/OIDC PR-read and
+revocation preflight passed; successful Go review generation, App review writes,
 fork relay and formal-review event acceptance remain **OPEN until activation**.
 The repository secret was configured by the user out of band; workers never
 read its value, local OpenCode auth, or personal tokens.
@@ -123,6 +124,16 @@ install hook or shell command enters that subprocess. PR content is supplied
 through stdin as data. The parent shell's HOME is unchanged. Generated text has
 no GitHub write capability; deterministic trusted code owns publication.
 
+The dedicated `agent.review.prompt` supplies trusted review-only, no-tools,
+untrusted-input and final-JSON policy at system priority. Embedded role/policy/
+`<system-reminder>` tags remain data; missing context requires incomplete COMMENT,
+not a search for unavailable tools. The [pinned request assembly](https://github.com/anomalyco/opencode/blob/810c0eba1a7348036f8bdf61e6632d0c36c6876c/packages/opencode/src/session/llm/request.ts#L53)
+uses this agent prompt instead of the generic provider [coding prompt](https://github.com/anomalyco/opencode/blob/810c0eba1a7348036f8bdf61e6632d0c36c6876c/packages/opencode/src/session/prompt/default.txt).
+Actual pinned fake-provider wire checks confirm the review policy is system
+content, generic coding/lint/reminder-authority instructions are absent and PR
+tag text stays in the user message. Tool denial/isolation and deterministic
+validation remain independent controls; prompt text does not replace them.
+
 JSONL must contain normal `stop` completion and exactly one valid review JSON
 object. A tool attempt, error, missing completion, malformed schema, wrong head/
 base, inconsistent file coverage, output bound or timeout blocks publication.
@@ -235,6 +246,19 @@ whether that text parses as JSON. They do not establish schema, binding,
 coverage or review success. No raw stream, reason, ID or exception is copied;
 every timeout kills the child and fails even if all output appears complete.
 
+The fourth root-authorized
+[run 41374467405](https://github.com/Ljrr3045/rielia/actions/runs/41374467405)
+used `02c8073`: App OIDC exchange, PR read and token revocation preflight passed;
+generation then failed `JSONL_FINISH_LENGTH`, with one finish, zero text events
+and reported output/reasoning counts of 0/128000. Publication was skipped and
+cleanup passed. This establishes a length/no-text result for this attempt only;
+earlier causes remain unknown. A separately verified prompt-boundary correction
+adds the dedicated reviewer system policy above: previously the agent inherited
+generic coding instructions while review policy was only in user stdin. No
+claim is made that this caused the length failure or that the correction will
+make live inference succeed. Model, `max`, cap, deadlines and strict gates remain.
+Fresh head audit/CI and root approval precede any further live attempt.
+
 The diagnostic follow-up preserves strict parsing/coverage and adds only
 allowlisted static failure codes. Main logs a fixed sentence containing a code
 and, for rejected completion or timeout only, the bounded primitive metadata above;
@@ -264,7 +288,7 @@ causes CLI exit 1. No message/body is inspected to guess a cause, and an auth
 category does not prove a particular key is wrong. A nonzero CLI exit never
 becomes successful review even if stdout contains plausible review JSON.
 
-The original 22 checks plus seven focused diagnostic/redaction checks pass on
+All 30 focused event/auth/review/diagnostic/trust checks pass on
 Node 24.22.1. A real adapter-process test uses an inert fake executable with
 secret-shaped strings, provider URLs and workflow commands in both streams;
 only the expected static code appears and no result artifact is written.
@@ -280,12 +304,13 @@ request preparation defaults to a32,000-token output cap; the separately
 authorized 128,000-token experiment above changes that cap while retaining
 `max`. New-head review and actual live reason/count evidence remain required.
 
-Local evidence: 29 event/auth/fork/main-exclusion/relay/coverage/verdict/current-
+Local evidence: 30 event/auth/fork/main-exclusion/relay/coverage/verdict/current-
 head/base-race/token-isolation/diagnostic tests pass; all workflows pass checksum-pinned
 actionlint 1.7.12; immutable handoff and whitespace checks pass. The real CLI
 1.19.5 macOS archive was verified with SHA-256
 `c1c9e62521192192ef4c3ed1355ada2144055bddb61682217e997b03c55203c1`.
-Its loopback fake-provider smoke verifies JSONL transport, effective review `max`
+Its loopback fake-provider smoke verifies the dedicated system policy and
+untrusted tags, JSONL transport, effective review `max`
 and the fixed 128,000 output cap on the wire,
 no exposed tools and rejection of an unsolicited malicious tool call. It uses
 only generated fake credentials and no local auth. This does **not** verify Go
