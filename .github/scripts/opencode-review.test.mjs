@@ -95,13 +95,85 @@ test('inline mention and app-thread follow-up preserve original root comment', a
 test('prepare obtains fork head files by immutable SHA, never checkout/install', async () => {
   const blob = (text) => ({ type: 'file', encoding: 'base64', size: Buffer.byteLength(text), content: Buffer.from(text).toString('base64') });
   const fork = pr({ head: { sha: head, repo: { full_name: 'outside/fork' } } });
-  const api = fakeApi({ '/pulls/7': fork, '/pulls/7/files': [{ filename: 'a.js', status: 'modified', additions: 1, deletions: 1, patch }], [`/contents/a.js?ref=${head}`]: blob('new'), [`/contents/a.js?ref=${base}`]: blob('old'), [`/contents/AGENTS.md?ref=${base}`]: blob('Reference policy'), '/issues/7/comments': [], '/pulls/7/reviews': [], '/pulls/7/comments': [] });
+  const api = fakeApi({ '': { full_name: 'outside/fork', private: false, visibility: 'public' }, '/pulls/7': fork, '/pulls/7/files': [{ filename: 'a.js', status: 'modified', additions: 1, deletions: 1, patch }], [`/contents/a.js?ref=${head}`]: blob('new'), [`/contents/a.js?ref=${base}`]: blob('old'), [`/contents/AGENTS.md?ref=${base}`]: blob('Reference policy'), '/issues/7/comments': [], '/pulls/7/reviews': [], '/pulls/7/comments': [] });
   const prepared = await prepare(api, 'pull_request_target', {}, 7);
   assert.deepEqual(prepared.limitations, []);
   assert.equal(prepared.files[0].head, 'new');
   assert(api.calls.some(([kind, name]) => kind === 'REPOSITORY' && name === 'outside/fork'));
   assert(!api.calls.some(([method, path]) => method === 'GET' && path.startsWith('/contents/')));
   assert(api.calls.every(([method]) => !['POST', 'PUT'].includes(method)));
+});
+
+test('real repository clients never forward base credentials to public fork immutable reads', async () => {
+  const forkName = 'outside/fork';
+  const headTree = 'c'.repeat(40), baseTree = 'd'.repeat(40), headBlob = 'e'.repeat(40), baseBlob = 'f'.repeat(40), guidanceBlob = '1'.repeat(40), secondHeadBlob = '2'.repeat(40), secondBaseBlob = '3'.repeat(40);
+  const encoded = (sha, text) => ({ sha, encoding: 'base64', size: Buffer.byteLength(text), content: Buffer.from(text).toString('base64') });
+  for (const failure of [null, 'private', 'internal', 'unknown', 'metadata403', 'metadata404', 'metadata429', 'blob403', 'blob404', 'blob429']) {
+    const calls = [];
+    const baseRoot = `/repos/${repo}`, forkRoot = `/repos/${forkName}`;
+    const routes = {
+      [`${baseRoot}/pulls/7`]: pr({ changed_files: 2, head: { sha: head, repo: { full_name: forkName } } }),
+      [`${baseRoot}/pulls/7/files?per_page=100&page=1`]: ['a.js', 'b.js'].map((filename) => ({ filename, status: 'modified', additions: 1, deletions: 1, patch })),
+      [forkRoot]: { full_name: forkName, private: failure === 'private', visibility: failure === 'internal' ? 'internal' : 'public', ...(failure === 'unknown' ? { private: undefined } : {}) },
+      [`${forkRoot}/git/commits/${head}`]: { sha: head, tree: { sha: headTree } },
+      [`${baseRoot}/git/commits/${base}`]: { sha: base, tree: { sha: baseTree } },
+      [`${forkRoot}/git/trees/${headTree}?recursive=1`]: { sha: headTree, truncated: false, tree: [{ path: 'a.js', type: 'blob', mode: '100755', sha: headBlob, size: 3 }, { path: 'b.js', type: 'blob', mode: '100644', sha: secondHeadBlob, size: 3 }] },
+      [`${baseRoot}/git/trees/${baseTree}?recursive=1`]: { sha: baseTree, truncated: false, tree: [{ path: 'a.js', type: 'blob', mode: '100644', sha: baseBlob, size: 3 }, { path: 'b.js', type: 'blob', mode: '100644', sha: secondBaseBlob, size: 3 }, { path: 'AGENTS.md', type: 'blob', mode: '100644', sha: guidanceBlob, size: 6 }] },
+      [`${forkRoot}/git/blobs/${headBlob}`]: encoded(headBlob, 'new'),
+      [`${baseRoot}/git/blobs/${baseBlob}`]: encoded(baseBlob, 'old'),
+      [`${forkRoot}/git/blobs/${secondHeadBlob}`]: encoded(secondHeadBlob, 'new'),
+      [`${baseRoot}/git/blobs/${secondBaseBlob}`]: encoded(secondBaseBlob, 'old'),
+      [`${baseRoot}/git/blobs/${guidanceBlob}`]: encoded(guidanceBlob, 'Policy'),
+      [`${baseRoot}/issues/7/comments?per_page=100&page=1`]: [],
+      [`${baseRoot}/pulls/7/reviews?per_page=100&page=1`]: [],
+      [`${baseRoot}/pulls/7/comments?per_page=100&page=1`]: [],
+    };
+    const api = new GitHub(repo, 'fake-base-token', async (url, options) => {
+      const path = new URL(url).pathname + new URL(url).search;
+      calls.push({ path, options });
+      if (path.startsWith(forkRoot)) {
+        assert.equal(options.headers.Authorization, undefined, 'Base token must never reach the fork');
+        assert.equal(options.method, 'GET');
+        if ((path === forkRoot && failure?.startsWith('metadata')) || (path.startsWith(forkRoot + '/git/blobs/') && failure?.startsWith('blob'))) return Response.json({}, { status: Number(failure.slice(-3)) });
+      } else assert.equal(options.headers.Authorization, 'Bearer fake-base-token');
+      assert.equal(options.redirect, 'error');
+      assert(path in routes, 'Only expected fixed GitHub routes may be used');
+      return Response.json(routes[path]);
+    });
+    const makeRepository = api.repository.bind(api);
+    let forkClient;
+    api.repository = (name) => { const client = makeRepository(name); if (name === forkName) forkClient = client; return client; };
+    const prepared = await prepare(api, 'pull_request_target', {}, 7);
+    for (const { path, options } of calls) {
+      assert.equal(options.headers.Authorization, path.startsWith(forkRoot) ? undefined : 'Bearer fake-base-token');
+      assert.equal(options.redirect, 'error');
+      assert.equal(options.method, 'GET');
+    }
+    const result = generated({ reviewed_files: ['a.js', 'b.js'] });
+    if (failure === null) {
+      assert.deepEqual(prepared.limitations, []);
+      assert.equal(prepared.files[0].head, 'new');
+      assert.equal(prepared.files[0].headMode, '100755');
+      assert.equal(validateResult(prepared, result).verdict, 'APPROVE');
+    } else {
+      assert(prepared.limitations.length > 0);
+      assert.equal(validateResult(prepared, result).verdict, 'COMMENT');
+    }
+    if (['private', 'internal', 'unknown', 'metadata403', 'metadata404', 'metadata429'].includes(failure)) assert.equal(calls.some(({ path }) => path.startsWith(forkRoot + '/git/')), false);
+    if (['blob403', 'blob429'].includes(failure)) assert.equal(calls.filter(({ path }) => path.startsWith(forkRoot + '/git/blobs/')).length, 1, 'Do not fetch the second blob after anonymous denial');
+    const before = calls.length;
+    if (failure?.endsWith('403') || failure?.endsWith('429')) {
+      assert(prepared.limitations.includes('Public-fork reads denied or rate-limited; anonymous reads stopped'));
+      await assert.rejects(forkClient.get(`/git/blobs/${headBlob}`), /stopped after denial or rate limit/);
+      assert.equal(calls.length, before, 'No anonymous HTTP retry after403/429');
+    }
+    await assert.rejects(api.repository(forkName).post('/pulls/7/reviews', {}), /only public Git reads/);
+    await assert.rejects(api.repository(forkName).artifact(1), /requires repository authentication/);
+    assert.equal(calls.length, before, 'Anonymous client must reject write/artifact requests before fetch');
+    assert.equal(api.repository(repo).token, 'fake-base-token');
+    assert.equal(api.repository(repo.toLowerCase()).token, 'fake-base-token');
+    assert.equal(api.repository(forkName).token, undefined);
+  }
 });
 
 test('Git tree mode preserves mode-only changes and rejects dereferenced symlinks/truncated trees', async () => {
@@ -135,6 +207,41 @@ test('whole-file byte boundary permits normal progress docs and rejects excess/b
     const prepared = await prepare(api, 'pull_request_target', {}, 7);
     assert.equal(prepared.limitations.length === 0, expectedComplete);
     assert.equal(validateResult(prepared, generated()).verdict === 'APPROVE', expectedComplete);
+  }
+});
+
+async function prepareDiscussion(discussion) {
+  const blob = (text) => ({ type: 'file', encoding: 'base64', size: Buffer.byteLength(text), content: Buffer.from(text).toString('base64') });
+  const api = fakeApi({ '/pulls/7': pr(), '/pulls/7/files': [{ filename: 'a.js', status: 'modified', additions: 1, deletions: 1, patch }], [`/contents/a.js?ref=${head}`]: blob('new'), [`/contents/a.js?ref=${base}`]: blob('old'), [`/contents/AGENTS.md?ref=${base}`]: blob('Policy'), '/issues/7/comments': discussion.root, '/pulls/7/reviews': discussion.reviews, '/pulls/7/comments': discussion.inline });
+  return prepare(api, 'pull_request_target', {}, 7);
+}
+
+test('four real-shaped large inline hunks retain every raw body, binding and metadata below discussion bound', async () => {
+  const discussion = { root: [{ id: 10, body: 'Root context', user: human }], reviews: [{ id: 11, body: 'Review context', user: bot, commit_id: head, state: 'CHANGES_REQUESTED' }], inline: Array.from({ length: 4 }, (_, index) => ({ id: 20 + index, body: `Finding ${index}`, user: bot, path: 'a.js', line: 2, original_line: 2, commit_id: head, original_commit_id: head, in_reply_to_id: index ? 20 : undefined, diff_hunk: '@@ -1 +1 @@\n' + '+complete old source context\n'.repeat(1000), retained_metadata: { url: 'https://api.github.com/fake', arbitrary: index } })) };
+  const bytes = Buffer.byteLength(JSON.stringify(discussion));
+  assert(bytes > 80_000 && bytes < LIMITS.discussionBytes);
+  const prepared = await prepareDiscussion(discussion);
+  assert.deepEqual(prepared.discussion, discussion);
+  assert.deepEqual(prepared.limitations, []);
+  assert.equal(validateResult(prepared, generated()).verdict, 'APPROVE');
+});
+
+test('discussion limit counts actual UTF8 bytes, accepts exact bound and marks overflow incomplete', async () => {
+  const exact = { root: [{ id: 1, body: '', user: human }], reviews: [], inline: [] };
+  exact.root[0].body = 'x'.repeat(LIMITS.discussionBytes - Buffer.byteLength(JSON.stringify(exact)));
+  assert.equal(Buffer.byteLength(JSON.stringify(exact)), LIMITS.discussionBytes);
+  const full = await prepareDiscussion(exact);
+  assert.deepEqual(full.discussion, exact);
+  assert.deepEqual(full.limitations, []);
+  for (const body of [exact.root[0].body + 'x', '🙂'.repeat(Math.floor(LIMITS.discussionBytes / 3))]) {
+    const over = { root: [{ id: 1, body, user: human }], reviews: [], inline: [] };
+    assert(Buffer.byteLength(JSON.stringify(over)) > LIMITS.discussionBytes);
+    if (body.startsWith('🙂')) assert(JSON.stringify(over).length < LIMITS.discussionBytes, 'UTF16 character count must not bypass the byte bound');
+    const prepared = await prepareDiscussion(over);
+    assert(prepared.limitations.includes('Discussion context truncated'));
+    assert(prepared.discussion.note.includes('omitted'));
+    assert.equal(validateResult(prepared, generated()).verdict, 'COMMENT');
+    assert.equal(validateResult(prepared, generated()).complete, false);
   }
 });
 
@@ -551,6 +658,22 @@ test('post-write race attempts to dismiss obsolete approval and fails the gate',
   const api = commandApi('/oc', { '/pulls/7': () => ++count === 1 ? pr() : pr({ state: 'closed' }) });
   await assert.rejects(publish(api, input(), generated(), 'pull_request_target', {}, '123-1'), Obsolete);
   assert(api.calls.some(([method, path]) => method === 'PUT' && path.endsWith('/reviews/123/dismissals')));
+  assert(api.calls.find(([method]) => method === 'PUT')[2].message.includes('obsolete or outcome mismatch'));
+});
+
+test('transient post-write uncertainty dismisses approval and keeps the gate failed even if dismissal fails', async () => {
+  for (const denied of [false, true]) {
+    let reads = 0;
+    const transient = new Error('fake post-write API unavailable');
+    const api = commandApi('/oc', { '/pulls/7': () => { if (++reads === 1) return pr(); throw transient; } });
+    api.request = async (method, path, body) => { api.calls.push([method, path, body]); if (denied) throw new Error('fake denied dismissal'); return {}; };
+    await assert.rejects(publish(api, input(), generated(), 'pull_request_target', {}, '123-1'), denied ? /freshness unverified; automatic dismissal failed/ : (error) => error === transient);
+    assert.equal(api.calls.filter(([method]) => method === 'POST').length, 1);
+    const dismissals = api.calls.filter(([method]) => method === 'PUT');
+    assert.equal(dismissals.length, 1);
+    assert(dismissals[0][2].message.includes('freshness unverified'));
+    assert(!dismissals[0][2].message.includes('head/base changed'));
+  }
 });
 
 test('revoked access, edited requests and duplicate publication are blocked', async () => {

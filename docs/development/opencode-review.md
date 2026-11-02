@@ -7,9 +7,10 @@ infrastructure/governance work, not T11 implementation or full T16 acceptance;
 no product P/US/UX scope, application code, handoff, credentials, deployment or
 repository protection settings change is included.
 
-Implementation and local checks are prepared. A bootstrap App/OIDC PR-read and
-revocation preflight passed; successful Go review generation, App review writes,
-fork relay and formal-review event acceptance remain **OPEN until activation**.
+Bootstrap source `bf3ce99` produced a complete real Go review and App formal
+`CHANGES_REQUESTED` with four inline findings. This is review/publication evidence,
+not approval. Corrected-head review and automatic/fork/root/inline event acceptance
+remain **OPEN until activation**.
 The repository secret was configured by the user out of band; workers never
 read its value, local OpenCode auth, or personal tokens.
 
@@ -95,6 +96,23 @@ Base/head Git tree metadata supplies actual file modes; raw Git blobs avoid the
 Contents API's automatic symlink dereference. Mode-only executable changes stay
 visible even with zero textual additions/deletions. Symlinks, gitlinks and
 unavailable/truncated tree metadata cannot establish approval.
+
+The [workflow token is repository-scoped](https://docs.github.com/en/actions/concepts/security/github_token).
+Same-repository reads retain it; foreign head repositories use an anonymous,
+GET-only Git client after exact-name/public-visibility metadata confirmation.
+No base/App token is forwarded to the fork, and private/inaccessible metadata
+cannot establish full context. GitHub documents public unauthenticated
+[commit](https://docs.github.com/en/rest/git/commits#get-a-commit),
+[tree](https://docs.github.com/en/rest/git/trees#get-a-tree) and
+[blob](https://docs.github.com/en/rest/git/blobs#get-a-blob) reads. This avoids
+assuming a cross-repository credential guarantee; it does not claim every old
+public-fork request was proven to fail. Immutable SHA/tree/blob/mode/bounds checks
+remain unchanged. Anonymous `403/429` stops further anonymous requests for that
+run, with explicit incomplete limitations and no credential fallback/retry.
+
+Public-fork access has a practical [60 requests/hour/IP quota](https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api).
+The configured 80-file bound is an upper bound, not guaranteed anonymous coverage;
+quota or unavailable context blocks approval. No PAT or broader credential is used.
 
 GitHub withholds secrets for fork `pull_request_review_comment` events. The
 [unprivileged inline relay](../../.github/workflows/opencode-inline.yml) therefore
@@ -190,6 +208,14 @@ gate**. Always inspect issue comments, submitted reviews, inline comments and
 applicable checks; handle all findings and re-review after source/base changes.
 Only the coordinator merges, through normal repository requirements.
 
+An unverified post-write approval is also dismissed conservatively when the
+confirmation read fails transiently. This intentionally prefers failed review
+over retaining an unverified APPROVED badge while automatic stale dismissal is
+disabled. Static dismissal reasons distinguish obsolete/outcome mismatch from
+freshness unverified; neither invents a confirmed head change. The run fails even
+if dismissal succeeds; denial requires coordinator inspection/dismissal and a
+fresh complete review before merge.
+
 ## Runtime bounds and limitations
 
 | Bound | Outcome on excess |
@@ -197,7 +223,7 @@ Only the coordinator merges, through normal repository requirements.
 | 80 changed files; 160,000 bytes per whole file | Partial context, explicit incomplete COMMENT |
 | 5,000 entries per immutable base/head Git tree | Incomplete COMMENT if missing/truncated/oversized |
 | 1,000,000 bytes combined file context; 300,000 patch bytes | Partial context, explicit incomplete COMMENT |
-| 80,000 discussion characters | Bounded recent/thread context, incomplete COMMENT |
+| 512,000 UTF-8 bytes of complete raw discussion JSON | Bounded recent/thread fallback above this limit, explicit incomplete COMMENT |
 | Missing/truncated patch, binary, symlink, unavailable context | Explicit incomplete COMMENT; never APPROVE |
 | Ten 100-row pages per API list | Fail closed, no assumed complete review |
 | 100 open PRs per base-push fanout; three parallel jobs | Fail if fanout is larger; each PR can be requested explicitly |
@@ -319,6 +345,42 @@ Go parameter acceptance remains OPEN until a separately authorized live tiny
 review control accepts it; full review/publication remain separate gates. This
 is an explicit larger budget, not a new reasoning variant or automatic retry.
 
+The seventh authorized
+[run 41385907633](https://github.com/Ljrr3045/rielia/actions/runs/41385907633)
+used `bf3ce99`: App preflight, complete tiny review control, full generation,
+publication and cleanup succeeded. The actual App
+[review 5732005666](https://github.com/Ljrr3045/rielia/pull/25#pullrequestreview-5732005666)
+states complete supplied-file review at that exact head/base with DeepSeek/max,
+formal `CHANGES_REQUESTED` and four real inline findings. No approval or complete
+post-activation event smoke is claimed. Source corrections require fresh current-
+head review; this earlier review cannot approve changed code.
+
+| Actual finding | Disposition and evidence |
+| --- | --- |
+| [4438840988](https://github.com/Ljrr3045/rielia/pull/25#discussion_r4438840988): fork token scope | Accepted scope assumption; public metadata + anonymous immutable GETs, real-client namespace/credential/403/404/429/private regressions; quota limitation disclosed |
+| [4438840994](https://github.com/Ljrr3045/rielia/pull/25#discussion_r4438840994): transient confirmation dismissal | Keep required fail-closed dismissal; reject preserving unverified approval, correct inaccurate stale wording, test transient read with dismissal success/failure |
+| [4438840996](https://github.com/Ljrr3045/rielia/pull/25#discussion_r4438840996): tool shape | Accept only absent tools or an actual empty array; null/object/nonarray/length-zero-object negative checks |
+| [4438840998](https://github.com/Ljrr3045/rielia/pull/25#discussion_r4438840998): canary evidence | Unique task-temp canary, presence-detector self-check, valid pinned Bash command schema, absent before/after both actual CLI runs |
+
+The smoke's fake malicious command uses only the pinned
+[Bash input schema](https://github.com/anomalyco/opencode/blob/810c0eba1a7348036f8bdf61e6632d0c36c6876c/packages/core/src/tool/bash.ts)
+and an owned temporary path. Filesystem uncertainty fails the absence check;
+the canary and CLI homes are removed in cleanup. These are fake-provider local
+checks, not permission to execute PR code or post model-trigger comments.
+
+The four findings themselves exposed a bounded follow-up input issue: complete
+raw discussion JSON measured 94,701 bytes, including 79,482 characters of server
+diff hunks; the former 80,000-character guard marked it truncated. The coordinator
+explicitly raised `LIMITS.discussionBytes` to **512,000 actual UTF-8 bytes**.
+Every raw authored body, identity, thread/binding, metadata and diff hunk below
+that bound is retained; no new encoding, normalizer or evidence deletion is used.
+Above it the existing honest incomplete fallback still prevents approval.
+The captured current `bf3ce99` files occupy 797,715 JSON bytes; complete parent
+input is 912,518 bytes including that discussion, and projected user input is
+648,368 bytes. Mutable discussion may grow; larger input can lengthen review and
+does not guarantee completion. Exact-bound and multibyte-overflow regressions
+verify the finite byte guard rather than silently clearing limitations.
+
 The diagnostic follow-up preserves strict parsing/coverage and adds only
 allowlisted static failure codes. Main logs a fixed sentence containing a code
 and, for rejected completion or timeout only, the bounded primitive metadata above;
@@ -348,7 +410,7 @@ causes CLI exit 1. No message/body is inspected to guess a cause, and an auth
 category does not prove a particular key is wrong. A nonzero CLI exit never
 becomes successful review even if stdout contains plausible review JSON.
 
-All 36 focused event/auth/review/diagnostic/trust/representation checks pass on
+All 40 focused event/auth/review/diagnostic/trust/representation checks pass on
 Node 24.22.1. A real adapter-process test uses an inert fake executable with
 secret-shaped strings, provider URLs and workflow commands in both streams;
 only the expected static code appears and no result artifact is written.
@@ -364,7 +426,7 @@ request preparation defaults to a32,000-token output cap; the authorized fixed
 384,000 cap supersedes the earlier 128,000 experiment while retaining `max`.
 New-head review and actual Go acceptance/completion evidence remain required.
 
-Local evidence: 36 event/auth/fork/main-exclusion/relay/coverage/verdict/current-
+Local evidence: 40 event/auth/fork/main-exclusion/relay/coverage/verdict/current-
 head/base-race/token-isolation/diagnostic tests pass; all workflows pass checksum-pinned
 actionlint 1.7.12; immutable handoff and whitespace checks pass. The real CLI
 1.19.5 macOS archive was verified with SHA-256

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { Buffer } from 'node:buffer';
 import { spawn } from 'node:child_process';
 import { createServer } from 'node:http';
-import { mkdir, mkdtemp, rm } from 'node:fs/promises';
+import { lstat, mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { buildPrompt, expandModelInput, modelConfig, modelEnvironment, parseEvents, validateResult } from './opencode-review.mjs';
@@ -12,6 +12,10 @@ const binary = process.env.OPENCODE_BIN;
 assert(binary?.startsWith('/'), 'Set OPENCODE_BIN to the checksum-verified 1.19.5 binary');
 const requests = [];
 let malicious = false;
+const assertNoTools = (tools) => assert(tools === undefined || (Array.isArray(tools) && tools.length === 0), 'Tools must be absent or an actual empty array');
+for (const empty of [undefined, []]) assertNoTools(empty);
+for (const exposed of [null, {}, { length: 0 }, { bash: {} }, ['bash'], '', 0]) assert.throws(() => assertNoTools(exposed));
+const shellQuote = (value) => "'" + value.replaceAll("'", "'\\''") + "'";
 const untrustedMarker = 'UNTRUSTED_SYSTEM_CANARY';
 const shared = Array.from({ length: 16 }, (_, index) => `complete shared fixture line ${index}\n`).join('');
 const files = [
@@ -31,13 +35,23 @@ const server = createServer(async (req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache' });
   const attempt = malicious && isReview(body);
   if (attempt) malicious = false;
-  const delta = attempt ? { tool_calls: [{ index: 0, id: 'untrusted-tool', type: 'function', function: { name: 'bash', arguments: '{"command":"touch /tmp/this-must-never-run"}' } }] } : { content: JSON.stringify(expected) };
+  const delta = attempt ? { tool_calls: [{ index: 0, id: 'untrusted-tool', type: 'function', function: { name: 'bash', arguments: JSON.stringify({ command: `touch -- ${shellQuote(canary)}` }) } }] } : { content: JSON.stringify(expected) };
   for (const [content, reason] of [[{ role: 'assistant', ...delta }, null], [{}, attempt ? 'tool_calls' : 'stop']]) res.write(`data: ${JSON.stringify({ id: 'fake', object: 'chat.completion.chunk', created: 1, model: 'deepseek-v4.1-flash', choices: [{ index: 0, delta: content, finish_reason: reason }] })}\n\n`);
   res.end('data: [DONE]\n\n');
 });
 await new Promise((fulfill) => server.listen(0, '127.0.0.1', fulfill));
 const directory = await mkdtemp(join(tmpdir(), 'opencode-cli-smoke-'));
+const canary = join(directory, 'must-never-be-created-by-tool');
+const assertNoCanary = async () => {
+  try { await lstat(canary); }
+  catch (error) { if (error.code === 'ENOENT') return; }
+  assert.fail('Smoke canary is present or unverifiable');
+};
 try {
+  await writeFile(canary, 'verify presence detection', { mode: 0o600 });
+  await assert.rejects(assertNoCanary, /present or unverifiable/);
+  await rm(canary);
+  await assertNoCanary();
   const config = modelConfig('opencode-go/deepseek-v4.1-flash', 'max');
   config.provider['opencode-go'].options = { baseURL: `http://127.0.0.1:${server.address().port}/v1`, apiKey: 'fake-provider-key' };
   await mkdir(join(directory, 'home'));
@@ -56,6 +70,7 @@ try {
   });
   const normal = await run();
   assert.equal(normal.code, 0, 'Actual CLI failed using generated fake credentials');
+  await assertNoCanary();
   assert.deepEqual(parseEvents(normal.stdout), expected);
   assert.equal(validateResult(input, { result: parseEvents(normal.stdout) }).verdict, 'COMMENT');
   assert(requests.length > 0);
@@ -82,13 +97,14 @@ try {
     assert.equal(request.authorization, 'Bearer fake-provider-key');
     assert.equal(request.body.reasoning_effort, 'max', 'Pinned CLI must send effective max reasoning on the review call');
     assert.equal(request.body.max_tokens, 384000, 'Pinned CLI must send the fixed child-only output cap');
-    assert.equal(request.body.tools?.length ?? 0, 0, 'Tools must be absent under wildcard deny');
+    assertNoTools(request.body.tools);
   }
   malicious = true;
   const attempted = await run();
+  await assertNoCanary();
   assert.throws(() => parseEvents(attempted.stdout), 'A provider tool attempt must never establish review completion');
   assert.equal(JSON.stringify(input), originalJson, 'Parent validation input must remain full and unchanged');
-  console.log('Pinned CLI 1.19.5 smoke passed: exact lossless projected payload, full parent unchanged, dedicated system policy, untrusted user tags, variant max, output cap384000, no tools, malicious tool rejected, isolated HOME/XDG, no GitHub/OIDC credentials.');
+  console.log('Pinned CLI 1.19.5 smoke passed: exact lossless payload/full parent, trusted system/user data, max384000, strict empty-tool shape, unique canary absent after both runs, malicious tool rejected, isolated HOME/XDG, no GitHub/OIDC credentials.');
 } finally {
   await rm(directory, { recursive: true, force: true });
   await new Promise((fulfill) => server.close(fulfill));

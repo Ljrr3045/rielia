@@ -6,6 +6,19 @@ This records repository changes. No application version has been released.
 
 ### Added
 
+- Explicit 512000-byte UTF-8 raw-discussion limit after the four real findings'
+  94701-byte metadata/hunks crossed the former 80000-character guard. Full raw
+  evidence is retained below the finite bound; overbound context remains honest
+  incomplete COMMENT. Exact-bound and multibyte overflow checks preserve the
+  approval gate, with no new normalizer or deleted review evidence.
+- Real complete OpenCode App review [5732005666](https://github.com/Ljrr3045/rielia/pull/25#pullrequestreview-5732005666)
+  from successful [seventh run 41385907633](https://github.com/Ljrr3045/rielia/actions/runs/41385907633),
+  with formal CHANGES_REQUESTED and four inline findings at `bf3ce99`; no approval
+  is claimed. Bounded corrections avoid forwarding base credentials to foreign
+  public Git reads, stop anonymous403/429, preserve intentional fail-closed
+  approval dismissal with accurate reasons, and verify strict tool shape plus a
+  unique canary's absence.40 focused checks and pinned fake-provider smoke pass;
+  fresh changed-head CI/audit/review and activation acceptance remain required.
 - Explicit fixed child output budget of 384000 tokens, with 45-minute model and
   60-minute job limits, after [sixth run 41383485431](https://github.com/Ljrr3045/rielia/actions/runs/41383485431)
   again ended length/zero-text/reported 128000 reasoning despite passing App and

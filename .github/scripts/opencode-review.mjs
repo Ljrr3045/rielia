@@ -8,7 +8,7 @@ import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { TextDecoder } from 'node:util';
 
-export const LIMITS = Object.freeze({ files: 80, treeEntries: 5000, fileBytes: 160_000, contextBytes: 1_000_000, patchBytes: 300_000, pages: 10, findings: 20, modelMs: 2_700_000, outputBytes: 1_000_000 });
+export const LIMITS = Object.freeze({ files: 80, treeEntries: 5000, fileBytes: 160_000, contextBytes: 1_000_000, patchBytes: 300_000, discussionBytes: 512_000, pages: 10, findings: 20, modelMs: 2_700_000, outputBytes: 1_000_000 });
 const SHA = /^[a-f0-9]{40}$/;
 const REPO = /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/;
 const actions = new Set(['opened', 'synchronize', 'reopened', 'ready_for_review', 'edited']);
@@ -116,24 +116,31 @@ export class GitHub {
     this.root = `/repos/${repository}`;
     this.token = token;
     this.fetcher = fetcher;
+    this.anonymousDenied = false;
   }
 
   async request(method, path, body) {
-    if (!(path.startsWith(`${this.root}/`) || path === '/installation/token')) throw new Error('Invalid GitHub endpoint');
+    if (!((method === 'GET' && path === this.root) || path.startsWith(`${this.root}/`) || path === '/installation/token')) throw new Error('Invalid GitHub endpoint');
+    if (!this.token && !(method === 'GET' && (path === this.root || path.startsWith(`${this.root}/git/`)))) throw new Error('Anonymous GitHub client permits only public Git reads');
+    if (!this.token && this.anonymousDenied) throw new Error('Anonymous GitHub reads stopped after denial or rate limit');
     const response = await this.fetcher(`https://api.github.com${path}`, {
       method, redirect: 'error', signal: AbortSignal.timeout(30_000),
-      headers: { Accept: 'application/vnd.github+json', Authorization: `Bearer ${this.token}`, 'X-GitHub-Api-Version': '2022-11-28', ...(body ? { 'Content-Type': 'application/json' } : {}) },
+      headers: { Accept: 'application/vnd.github+json', ...(this.token ? { Authorization: `Bearer ${this.token}` } : {}), 'X-GitHub-Api-Version': '2022-11-28', ...(body ? { 'Content-Type': 'application/json' } : {}) },
       ...(body ? { body: JSON.stringify(body) } : {}),
     });
-    if (!response.ok) throw new Error(`GitHub ${method} failed (${response.status})`);
+    if (!response.ok) {
+      if (!this.token && [403, 429].includes(response.status)) this.anonymousDenied = true;
+      throw new Error(`GitHub ${method} failed (${response.status})`);
+    }
     return response.status === 204 ? null : response.json();
   }
 
   get(path) { return this.request('GET', `${this.root}${path}`); }
   post(path, body) { return this.request('POST', `${this.root}${path}`, body); }
-  repository(name) { return new GitHub(name, this.token, this.fetcher); }
+  repository(name) { return new GitHub(name, `/repos/${name}`.toLowerCase() === this.root.toLowerCase() ? this.token : undefined, this.fetcher); }
 
   async artifact(id) {
+    if (!this.token) throw new Error('Artifact access requires repository authentication');
     const response = await this.fetcher(`https://api.github.com${this.root}/actions/artifacts/${prNumber(id)}/zip`, { headers: { Authorization: `Bearer ${this.token}`, Accept: 'application/vnd.github+json' }, redirect: 'manual', signal: AbortSignal.timeout(30_000) });
     if (response.status !== 302) throw new Error('Artifact download did not redirect');
     const location = new URL(response.headers.get('location'));
@@ -311,7 +318,13 @@ export async function prepare(api, eventName, event, number) {
   const headApi = api.repository(expected.headRepo);
   let headTree;
   let baseTree;
-  try { headTree = await gitTree(headApi, expected.head); }
+  try {
+    if (expected.headRepo.toLowerCase() !== expected.baseRepo.toLowerCase()) {
+      const repository = await headApi.get('');
+      if (repository.full_name !== expected.headRepo || repository.private !== false || repository.visibility !== 'public') throw new Error('Fork head repository is not confirmed public');
+    }
+    headTree = await gitTree(headApi, expected.head);
+  }
   catch { limitations.push('Head Git tree unavailable/truncated/oversized'); }
   try { baseTree = await gitTree(api, expected.base); }
   catch { limitations.push('Base Git tree unavailable/truncated/oversized'); }
@@ -337,15 +350,16 @@ export async function prepare(api, eventName, event, number) {
     }
     context.push(item);
   }
+  if (headApi.anonymousDenied) limitations.push('Public-fork reads denied or rate-limited; anonymous reads stopped');
   // All three surfaces provide follow-up context. A pagination failure aborts.
   const root = await api.list(`/issues/${number}/comments`);
   const reviews = await api.list(`/pulls/${number}/reviews`);
   const inline = await api.list(`/pulls/${number}/comments`);
   const discussion = { root, reviews, inline };
   const discussionText = JSON.stringify(discussion);
-  const discussionLimit = 80_000;
-  const boundedDiscussion = discussionText.length <= discussionLimit ? discussion : { note: 'Older discussion omitted by byte bound', root: root.slice(-10).map(({ body, user, id }) => ({ body: body?.slice(0, 2000), user: user?.login, id })), inline: inline.filter((c) => c.id === command?.thread || c.in_reply_to_id === command?.thread).slice(-20).map(({ body, user, id, in_reply_to_id }) => ({ body: body?.slice(0, 2000), user: user?.login, id, in_reply_to_id })) };
-  if (discussionText.length > discussionLimit) limitations.push('Discussion context truncated');
+  const discussionBytes = Buffer.byteLength(discussionText);
+  const boundedDiscussion = discussionBytes <= LIMITS.discussionBytes ? discussion : { note: 'Older discussion omitted by byte bound', root: root.slice(-10).map(({ body, user, id }) => ({ body: body?.slice(0, 2000), user: user?.login, id })), inline: inline.filter((c) => c.id === command?.thread || c.in_reply_to_id === command?.thread).slice(-20).map(({ body, user, id, in_reply_to_id }) => ({ body: body?.slice(0, 2000), user: user?.login, id, in_reply_to_id })) };
+  if (discussionBytes > LIMITS.discussionBytes) limitations.push('Discussion context truncated');
   // Missing trusted policy context also prevents a clean approval.
   let guidance;
   try { guidance = await fileText(api, baseTree?.get('AGENTS.md')); }
@@ -605,8 +619,9 @@ export async function publish(api, input, generated, eventName, event, run) {
   if (input.mode === 'review') response = await api.post(`/pulls/${number}/reviews`, { commit_id: input.expected.head, event: result.verdict, body, comments: result.findings });
   else if (input.command.kind === 'inline') response = await api.post(`/pulls/${number}/comments/${input.command.thread}/replies`, { body });
   else response = await api.post(`/issues/${number}/comments`, { body });
-  // GitHub has no compare-and-swap for head+base on review creation. Detect the
-  // remaining API race and attempt to dismiss an obsolete formal approval.
+  // GitHub has no compare-and-swap for head+base on review creation. An approval
+  // whose post-write freshness/outcome cannot be verified is dismissed fail-closed,
+  // including transient read failures; an unverified APPROVED badge cannot remain.
   try {
     assertFresh(await api.get(`/pulls/${number}`), input.expected);
     const state = { APPROVE: 'APPROVED', REQUEST_CHANGES: 'CHANGES_REQUESTED', COMMENT: 'COMMENTED' };
@@ -614,8 +629,9 @@ export async function publish(api, input, generated, eventName, event, run) {
   }
   catch (error) {
     if (input.mode === 'review' && result.verdict === 'APPROVE') {
-      try { await api.request('PUT', `${api.root}/pulls/${number}/reviews/${response.id}/dismissals`, { message: 'Obsolete review: head/base changed during publication. Fresh review required.' }); }
-      catch { throw new Error('Obsolete approval race; automatic dismissal failed. Coordinator must dismiss it; do not merge.'); }
+      const reason = error instanceof Obsolete ? 'obsolete or outcome mismatch' : 'freshness unverified';
+      try { await api.request('PUT', `${api.root}/pulls/${number}/reviews/${response.id}/dismissals`, { message: `Review ${reason} after publication; fresh review required.` }); }
+      catch { throw new Error(`Review ${reason}; automatic dismissal failed. Coordinator must inspect/dismiss any approval and obtain fresh review; do not merge.`); }
     }
     throw error;
   }
