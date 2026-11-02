@@ -59,16 +59,23 @@ resolved findings. The exception cannot bypass core gates and creates no fake
 approval. No global admin bypass, auto-approve action, token expansion or PAT.
 [CODEOWNERS](../../.github/CODEOWNERS) assigns every file, including itself, to him;
 matching activates on `dev` when this file reaches the base. Main has only README,
-so main CODEOWNERS/CI activation remains pending a separately authorized bootstrap.
-No full product promotion, main PR or main merge is authorized by this task.
+so main CODEOWNERS/CI activation remains pending its separate minimal bootstrap.
+The user authorized one-off Kilo review of that bootstrap, not full product
+promotion. This worker neither opens nor merges that main PR.
 [Configuration and evidence](kilo-review.md) distinguish settings from base-file
-activation; the coordinator alone handles feedback and merges.
+activation. The coordinator triages/delegates findings, verifies evidence and
+records dispositions; the assigned worker implements fixes. Only the coordinator
+merges after all gates pass.
 
 The connected/enabled dashboard has **Use REVIEW.md OFF** and **Skip Bots ON**.
 Native exclusion of base `main` remains unverified and the user's scope decision
 is still pending; required-check selection is not an event filter or permission
 to review `main`. Cloud rerun/reply/formal-approval behavior and bot-PR coverage
-remain limited or unverified. OpenCode App uninstall is also unanswered. The
+remain limited or unverified. The user approved retaining Skip Bots ON and
+blocking unreviewed PRs: bot dev PRs without native Kilo stay blocked, with no
+exemption or fabricated success. The required check is retained, with human-authored replacement PRs subject to every
+gate and preserved provenance. No Skip Bots setting change or complete automated
+bot coverage is claimed. OpenCode App uninstall is also unanswered. The
 coordinator closed [PR #25](https://github.com/Ljrr3045/rielia/pull/25) unmerged,
 removed abandoned branches/worktrees, verified empty repository Actions
 variables/secrets, and disabled four retired workflow registrations; Technical
@@ -79,9 +86,9 @@ worker choice remain unchanged.
 `chore/kilo-review-policy`, isolated from base `origin/dev` `64ad0d7`. The coordinator
 verified Kilo and CI SUCCESS/no findings on prior head `49f3d4e`, with no formal
 reviews. The updated head requires fresh checks and feedback inspection. Local documentation
-validation passes: 47 imported files, 30 asset hashes/sizes, 470 local links in 59
-documents, whitespace checks and eight-file scope inspection. Root `REVIEW.md` is
-4,050 characters (below 10,000). No product code, immutable handoff edit, ticket
+validation passes: 47 imported files, 30 asset hashes/sizes, 473 local links in 59
+documents, whitespace checks and ten-file PR scope inspection. Root `REVIEW.md` is
+4,311 characters (below 10,000). No product code, immutable handoff edit, ticket
 acceptance, deployment or merge is included. Application suites are inapplicable
 to this prose-only change.
 

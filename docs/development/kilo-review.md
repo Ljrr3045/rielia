@@ -43,9 +43,10 @@ Do not add auto-approve actions, expand `GITHUB_TOKEN` permissions or introduce 
 
 Code-owner matching uses the base branch's CODEOWNERS file. This PR adds the file
 for `dev` activation after merge. Main currently has only README: CODEOWNERS and CI
-have not landed there, so main ownership/CI activation is **pending a separately
-authorized bootstrap**. Active ruleset configuration is not proof of base-file
-activation. No full product promotion, main PR or main merge is authorized here.
+have not landed there, so main ownership/CI activation is **pending the separate
+minimal bootstrap**. The user authorized its one-off Kilo review; no full product
+promotion is authorized. Active ruleset configuration is not proof of base-file
+activation. This worker neither opens nor merges the main bootstrap PR.
 Settings changes belong to the coordinator; this worker changes only repository
 guidance and CODEOWNERS.
 
@@ -69,10 +70,17 @@ The user's requested exclusion of base `main` from Kilo events remains
 **unverified**. No supported control was found in the inspected UI, and the
 coordinator's question about allowing native review including `main` is unanswered.
 Required-check selection, prompt text and `REVIEW.md` are not event filters and do
-not authorize reviewing `main`. Default bot-PR skipping also limits every-PR
-coverage until configured and verified. Cloud rerun commands, threaded reply
-handling and formal `APPROVED` submission remain unverified; formal approval is
-separate from required maintainer approval for other authors. Kilo is not a
+not authorize general review of `main`; the separate minimal bootstrap has a
+specific one-off Kilo authorization. The user explicitly approved retaining
+**Skip Bots ON** and blocking PRs without review. Bot-authored PRs to `dev` that
+lack native Kilo remain blocked by the mandatory check; do not fabricate success.
+This deliberately fails closed; automated bot-review coverage is incomplete. Do not exempt bot PRs
+or bypass the gate. A maintainer can open a human-authored replacement PR,
+preserving commit provenance, that still needs native Kilo, CI and ownership gates.
+No Skip Bots setting change is claimed; platform coverage remains unresolved.
+Cloud rerun commands, threaded replies and Kilo's formal `APPROVED` submission
+remain unverified; native Kilo does not replace required maintainer approval for
+other authors. Kilo is not a
 required check on `main`; this does not establish or authorize automatic events.
 
 ## Retired integration cleanup
@@ -106,8 +114,9 @@ Official documentation consulted on 2026-11-02:
    current-head SUCCESS and source Apps for both checks on `dev`, or `validate`
    on `main`, plus an up-to-date branch. An eye reaction or old summary is insufficient.
 2. Inspect issue comments, submitted reviews and inline comments. The coordinator
-   analyzes every finding, fixes valid issues with evidence and records concise
-   technical dispositions. Resolve required threads; a reply is not a documented
+   triages findings, delegates valid fixes to the assigned worker, verifies evidence
+   and records concise dispositions. The assigned worker implements fixes and
+   reruns affected checks. Resolve required threads; a reply is not a documented
    rerun or completion mechanism.
 3. After any push, rerun affected checks and wait for the new head's required
    results, including Kilo completion for `dev`. Missing, failed, cancelled,

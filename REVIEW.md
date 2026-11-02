@@ -59,6 +59,9 @@ it cannot bypass core gates and does not create an approval. No global admin
 bypass, auto-approve action, token expansion or PAT. Only the coordinator merges.
 
 Code-owner matching needs the file on the base branch. Main currently lacks
-CODEOWNERS and CI; separate bootstrap is pending and no product promotion is
-authorized. Kilo is not required by main protection; required-check selection does
-not enforce the still-unverified automatic-event exclusion.
+CODEOWNERS and CI; separate minimal bootstrap activation is pending, with one-off
+Kilo review authorized and no product promotion. Kilo is not required by main
+protection; required-check selection does not enforce automatic-event exclusion.
+The coordinator triages/delegates findings and records dispositions; the assigned
+worker implements fixes. Skip Bots ON leaves unreviewed bot PRs to dev blocked;
+retain required checks and report incomplete automated bot coverage honestly.

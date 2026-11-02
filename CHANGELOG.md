@@ -16,7 +16,11 @@ This records repository changes. No application version has been released.
   merge actor natively, so coordinator policy limits it to his own PRs; it cannot
   bypass core gates or create approval. No global admin bypass, auto-approve,
   token expansion or PAT. Base-file ownership activates on dev after merge; main
-  CODEOWNERS/CI bootstrap is pending, with no product promotion authorized.
+  CODEOWNERS/CI bootstrap activation is pending, with one-off Kilo review authorized
+  and no product promotion. Clarify coordinator triage/delegation versus assigned
+  worker fixes, remove remaining active Kody instructions, and retain the mandatory
+  Kilo gate for skipped bot PRs per the user's explicit keep-setting/block-unreviewed
+  decision, without claiming complete automated coverage.
   [PR #26](https://github.com/Ljrr3045/rielia/pull/26) updates contribution/PR policy,
   root `REVIEW.md` and the [evidence guide](docs/development/kilo-review.md).
   Preserve historical Kody/OpenCode evidence and frontend worker selection. Main

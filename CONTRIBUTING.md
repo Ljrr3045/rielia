@@ -256,8 +256,10 @@ does not fabricate approval. There is no global admin bypass.
 The coordinator applied and verified [ruleset configuration](docs/development/kilo-review.md).
 Code-owner matching uses the base branch's file: this PR adds it for future `dev`
 reviews after merge. `main` currently has only README, so ownership/CI activation
-needs a separate authorized bootstrap. This task does not promote the product to
-`main` or authorize a main PR/merge. Missing checks must not be bypassed.
+needs a separate minimal bootstrap. The user authorized one-off Kilo review of
+that bootstrap; base-file activation remains pending, and no full product promotion
+is authorized. This worker neither opens nor merges that main PR. Missing checks
+must not be bypassed.
 
 Native Kilo uses its GitHub App. Once enabled, it reviews non-draft opening,
 pushes, reopening and marking ready. After local checks pass, send the coordinator
@@ -273,13 +275,21 @@ gh api --paginate repos/Ljrr3045/rielia/pulls/123/reviews
 gh api --paginate repos/Ljrr3045/rielia/pulls/123/comments
 ```
 
-The coordinator evaluates every finding against the code and requirements. Fix
-valid defects with relevant validation and give concise technical dispositions for
-substantive findings. After any push, rerun affected checks and wait for the new
-head's required checks and, for `dev`, completed Kilo review. Missing, failed,
+The coordinator triages each finding, delegates valid fixes to the assigned
+worker, verifies evidence and records concise technical dispositions. The assigned
+worker implements fixes, reruns affected checks and reports the exact head.
+After any push, wait for the new head's required checks and, for `dev`, completed Kilo review. Missing, failed,
 cancelled, incomplete or prior-head-only required evidence blocks merge. Confirm
 maintainer approval for other authors or the permitted own-PR exception, and resolve
 required threads. Kilo success is separate from a formal GitHub `APPROVED` review.
+
+The user approved keeping **Skip Bots ON** and blocking unreviewed PRs. A
+bot-authored PR to `dev` without native Kilo completion remains blocked by the
+required check; do not fabricate a success result. This is an intentional closed gate and an
+unresolved automation usability limit, not complete bot-review coverage. Do not
+exempt or bypass it. A maintainer may open a human-authored replacement PR while
+preserving commit provenance; it still needs native Kilo, CI and ownership gates.
+No Kilo platform setting change is claimed here.
 
 Do not add an auto-approve action, expand `GITHUB_TOKEN` permissions, introduce a
 PAT, bypass core protections, misuse the approval-only exception, post legacy

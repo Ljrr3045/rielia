@@ -167,12 +167,16 @@ Keep these boundaries in both current and future code.
    resolved findings. Only his own PRs may use his approval-layer PR-only exception;
    the native exception follows the merge actor, not PR author, so coordinator
    policy must enforce that limit. It cannot bypass core checks/protections and
-   creates no fake approval. Main ownership/CI activation awaits a separate base-file
-   bootstrap; no full product promotion is authorized. Kilo is not required by main
+   creates no fake approval. Main ownership/CI base activation awaits a separate
+   minimal bootstrap with one-off Kilo review authorized; no full product promotion.
+   Kilo is not required by main
    protection; its automatic-event exclusion remains unverified. After any push,
    rerun affected checks and wait for current-head required evidence, including
-   completed Kilo feedback for `dev`. Inspect all review surfaces and resolve valid
-   findings with evidence. No auto-approve action, token expansion, PAT, global admin
+   completed Kilo feedback for `dev`. The coordinator triages findings, delegates
+   fixes to the assigned worker, verifies evidence and records dispositions; that
+   worker implements fixes and reruns affected checks. With Skip Bots ON, bot PRs
+   to dev lacking Kilo remain blocked; do not waive the gate or claim complete
+   automated bot coverage. No auto-approve action, token expansion, PAT, global admin
    bypass, legacy Kody trigger or invented Kilo command. See [ruleset identities,
    exception limits and evidence](docs/development/kilo-review.md).
 7. Only the coordinator merges. Do not deploy or merge. A dispatched worker reports
