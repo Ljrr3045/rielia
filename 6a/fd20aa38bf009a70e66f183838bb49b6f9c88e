@@ -1,0 +1,21 @@
+.github/CODEOWNERS
+  s_b8020eceba4182::t_43d10705b93853 1
+.github/workflows/ci.yml
+  s_b8020eceba4182::t_43d10705b93853 1-24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "6afd20aa38bf009a70e66f183838bb49b6f9c88e",
+  "prompts": {},
+  "sessions": {
+    "s_b8020eceba4182": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a17016-ab9e-7501-b8a7-f63987eb61f7",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
