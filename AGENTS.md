@@ -65,15 +65,20 @@ or an Orca installation.
   filename, relative link, asset, and hash. Put decisions, corrections, and delivery
   evidence in `docs/development/`; never silently rewrite the source proposals or
   regenerate the import checksum baseline to conceal a change.
-- OpenCode review is retired. Its workflow is deleted, including the version
-  inherited from `dev`; do not restore, repair, or run it. Kody AI review follows
-  the explicit process below. Do not modify secrets or substitute personal tokens.
+- The user's 2026-11-01 decision replaces Kody with OpenCode Go PR review before
+  T11. Use the [trusted review adapter](docs/development/opencode-review.md),
+  installed `opencode-agent` App/OIDC and pinned official CLI. The retired
+  general-purpose workflow is not restored. Never check out/execute PR code,
+  config/plugins or install hooks with review credentials; no code edits,
+  push, merge or deployment by the reviewer. Do not read local auth, modify
+  secret values or substitute personal tokens. Live activation remains OPEN
+  until actual App/Go/event evidence is recorded.
 - License selection, final brand and private-project admin visibility remain
   undecided. Real OAuth/staging and real-project/user acceptance stay OPEN/DEFERRED
   until an advanced end-to-end product slice and user scheduling; do not request
   credentials or staging now. These deferred checks do not immediately block
   authorized local implementation; applicable automated unit/integration/security/
-  local Docker checks, CI and Kody remain required. Do not adopt Apache-2.0 merely
+  local Docker checks, CI and current-head OpenCode review remain required. Do not adopt Apache-2.0 merely
   because the plan proposes it. Do not add secrets to any tracked file or PR.
 - Name/logo, v0.1 assets, unratified ADRs, performance targets, and usability
   assumptions retain their proposal/validation status. The runnable fixture
@@ -146,8 +151,8 @@ Keep these boundaries in both current and future code.
    model/effort rather than silently substituting an unavailable configuration.
    See the [model decision and verification limits](docs/development/frontend-agent.md).
    This does not prescribe tools/models
-   for ordinary human contributors. Kody AI is the external PR reviewer invoked
-   by the coordinator's root comment, not a development worker.
+   for ordinary human contributors. OpenCode Go PR review is a separate,
+   tool-denied external review role, not a development worker.
 3. Deliver a bounded change with relevant evidence. For UI, verify mobile/desktop,
    touch/keyboard, nonideal states, accessibility, persistence, and failure recovery.
    A screenshot alone never completes a flow. Record unavailable checks honestly.
@@ -156,15 +161,20 @@ Keep these boundaries in both current and future code.
 5. Run `git diff --check` and the applicable checks in CONTRIBUTING. Open one
    non-draft PR targeting `dev`, in English, with scope/requirements, validation,
    limitations, and remaining decisions. Use a body file for multiline CLI text.
-6. Every ready PR/head requires an explicit Kody AI request. After checks pass,
-   report the PR URL and head SHA to the coordinator, who alone posts a root PR
-   comment exactly `@kody start-review`. Workers must not duplicate this trigger.
-   Inspect issue comments, submitted reviews, inline comments, and applicable
-   checks. Confirm the reviewed head; analyze every finding, fix valid issues with
-   evidence, and document concise technical dispositions. After any push, report
-   the new head ready for a fresh coordinator trigger and wait for that round.
-   A prior-head review never approves changed code. A failed, missing, or incomplete
-   review is a blocker, not a clean review.
+6. Every ready PR/head/base requires complete current OpenCode Go review under
+   the [review guide](docs/development/opencode-review.md). Automatic review covers
+   all PR bases except `main`, including forks; the coordinator alone requests
+   `/oc review` or `/opencode review` when a fresh manual round is needed.
+   Workers report the PR URL and exact head/base SHAs after checks and do not
+   duplicate requests or invoke Kody. Maintainer questions receive replies;
+   replies, drafts and incomplete reviews are not approvals. Inspect issue
+   comments, submitted reviews, inline comments and applicable checks; confirm
+   the actual reviewed head/base and handle every finding with concise technical
+   dispositions and validation. After source/base changes, report readiness and
+   wait for fresh review. Failed, missing, incomplete or obsolete review blocks
+   acceptance; an old APPROVED badge alone is insufficient. Bootstrap requires
+   independent source/security review, passing CI and normal repository approval
+   before coordinator activation; never bypass protection or claim unrun live review.
 7. Only the coordinator merges. Do not deploy or merge. A dispatched worker reports
    through its active Orca preamble with branch/worktree, PR/head, checks, review
    evidence, and blockers; send `worker_done` once and then stop task activity.

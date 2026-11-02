@@ -46,7 +46,7 @@ real-project/user acceptance remain OPEN/DEFERRED until an advanced end-to-end
 product slice and user scheduling. They do not immediately block authorized local
 implementation; do not ask for credentials/staging now or report missing checks
 as passed. Preserve source dependencies and public-launch acceptance. Applicable
-automated unit/integration/security/local Docker checks, CI and Kody remain
+automated unit/integration/security/local Docker checks, CI and current-head OpenCode review remain
 required. License and brand/final landing design remain undecided. The
 [2026-10-29 project policy](docs/development/project-access.md) ratifies automatic
 private content access for active human workspace owner/admin, with current grant
@@ -82,12 +82,15 @@ for UI/UX presentation only; all logic uses
 Codex `gpt-6.1-sol` `xhigh`, including frontend auth/session/data hooks, proxies,
 and functional tests. Verify the effective configuration and isolate each
 worker's checkout. See the [model decision and verification limits](docs/development/frontend-agent.md).
-This is separate from Kody's external review role.
+This is separate from the tool-denied OpenCode Go PR review role.
 
-The user retired OpenCode review and requested deletion of its entire workflow,
-including the version inherited from `dev`. Do not restore, repair, or invoke it;
-Kody AI is the current reviewer. Do not modify secrets or introduce personal
-tokens or a review bypass. Treat `docs/handoff/` as an
+The user's 2026-11-01 decision replaces Kody with the
+[OpenCode Go review adapter](docs/development/opencode-review.md), using the
+installed official App, OIDC and a pinned CLI. This supersedes the earlier
+retirement instruction; the old general-purpose workflow stays deleted. Never
+execute PR code/config/plugins/install hooks with review credentials or grant
+autonomous edits, pushes, merge or deployment. Do not read local auth, modify
+secret values, introduce personal tokens or bypass review. Treat `docs/handoff/` as an
 immutable import, including its asset manifest and file inventory. Record later
 ratifications/corrections separately under `docs/development/` and link the
 affected source section. Never modify a baseline just to make a hash check pass.
@@ -133,7 +136,7 @@ focused pure state/HTTP proxy checks and is included in `pnpm check`;
 is separately owned; no full T05/T07/T35 acceptance is implied.
 
 Documentation-only changes run the handoff/link verifier and unstaged/staged
-whitespace checks below, inspect the diff, and retain existing CI and Kody gates.
+whitespace checks below, inspect the diff, and retain CI and current automated review gates.
 Unrelated local application suites need not be rerun for prose-only edits.
 
 Use Python 3.9+, Node 24.22.1, and pnpm 12.15.0. From the repository root:
@@ -221,14 +224,17 @@ gh pr create --base dev --title "docs: describe the change" --body-file /tmp/rie
 ```
 
 Add the real PR URL to progress after creation and push that update to the same
-branch. Do not open a second PR for review fixes. Every ready PR/head requires
-an explicit Kody AI request; a push alone does not satisfy that requirement.
+branch. Do not open a second PR for review fixes. Every ready PR/head/base needs
+complete current OpenCode Go review. Automatic review covers all live bases
+except `main`, including forks, after opening/updating/reopening/ready or base
+changes. Draft reviews use COMMENT and do not establish approval.
 
-After local checks pass, send the coordinator the PR URL and exact head SHA.
-The **coordinator alone** posts a root PR comment exactly `@kody start-review`.
-Workers must not duplicate the trigger. Record its comment URL, the requested
-head, and the resulting Kody review/comment URLs. Confirm the review applies to
-the current head rather than relying on an earlier completion message.
+After local checks pass, send the coordinator the PR URL and exact head/base
+SHAs. The **coordinator alone** requests `/oc review` or `/opencode review` when
+another full round is needed; workers must not duplicate requests or invoke Kody.
+Record the actual run/formal-review/comment URLs and head/base markers. A natural-
+language `/oc <question>` receives a root or inline-thread reply and cannot
+approve the PR. Manual requests require current human maintainer permission.
 
 Inspect applicable checks plus all three review surfaces: issue comments, submitted
 reviews, and inline review comments. For example, replace `123` with your PR:
@@ -243,11 +249,19 @@ gh api --paginate repos/Ljrr3045/rielia/pulls/123/comments
 Evaluate every finding against the code/requirements. Fix real defects and attach
 relevant validation; give a concise technical disposition for substantive findings
 that are fixed, deferred, or rejected. A failed, cancelled, missing, or incomplete
-review is a blocker, not evidence of no findings. After any push, rerun affected
-checks and report the new head ready for the coordinator's fresh Kody trigger.
-Wait for that round, reread all three surfaces, and handle feedback before
-handoff. A prior-head review never approves changed code. Retired OpenCode checks
-are historical evidence and are not the current review gate.
+review is a blocker, not evidence of no findings. After any source/base change,
+rerun affected checks and report readiness for fresh review. Wait for that round,
+reread all three surfaces and handle feedback before handoff. Prior-head/base
+review never approves changed code; an old APPROVED badge alone is insufficient.
+Historical Kody and retired-workflow evidence stays historical. The
+[review guide](docs/development/opencode-review.md) documents coverage bounds,
+the non-atomic GitHub publication race, fork inline relay and operational limits.
+
+The replacement workflow must first exist on trusted `dev`/default. Its bootstrap
+PR requires independent source/security review, no-secret CI, normal repository
+human/code-owner approval and coordinator merge; the new assistant cannot review
+its own bootstrap. Live App/OIDC/Go and root/inline/fork event acceptance remains
+OPEN until actual smoke evidence is recorded. No protection bypass is authorized.
 
 Only the coordinator merges. Do not deploy or merge from a worker task. A dispatched
 worker reports branch/worktree, PR/head SHA, validation/review evidence, and blockers

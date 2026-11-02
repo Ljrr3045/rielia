@@ -221,7 +221,7 @@ test('fork inline relay validates run, source head/workflow, actor, PR, age and 
   validateRelay(repo, f.run, f.run, f.workflow, f.artifact, f.request, f.c);
   const cases = [
     { run: { ...f.run, event: 'pull_request' } }, { run: { ...f.run, conclusion: 'failure' } }, { run: { ...f.run, actor: { login: 'attacker' } } },
-    { workflow: { ...f.workflow, path: '.github/workflows/attacker.yml' } }, { request: { ...f.request, head_sha: base } }, { request: { ...f.request, pull_request: 8 } },
+    { workflow: { ...f.workflow, path: '.github/workflows/attacker.yml' } }, { run: { ...f.run, head_sha: base } }, { request: { ...f.request, pull_request: 8 } },
     { request: { ...f.request, run_id: 11 } }, { artifact: { ...f.artifact, size_in_bytes: 100_000 } }, { artifact: { ...f.artifact, expired: true } },
     { c: { ...f.c, created_at: '2026-10-01T12:00:00Z' } }, { c: { ...f.c, user: bot } },
   ];

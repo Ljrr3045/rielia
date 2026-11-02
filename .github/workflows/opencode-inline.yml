@@ -25,8 +25,6 @@ jobs:
             comment_id: event.comment.id,
             run_id: Number(process.env.GITHUB_RUN_ID),
             attempt: Number(process.env.GITHUB_RUN_ATTEMPT),
-            head_sha: process.env.GITHUB_SHA,
-            head_repository: event.pull_request.head.repo.full_name,
           };
           fs.writeFileSync('inline-request.json', JSON.stringify(request));
           NODE

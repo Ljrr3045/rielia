@@ -94,7 +94,8 @@ the override defers the listed environment/user evidence without claiming any
 dependency or ticket complete. Local contract, isolation, authorization,
 security, persistence and recovery prerequisites still apply to each slice.
 No full T01/B0, T02, T03 or T04 acceptance is granted. Automated unit/integration/
-security/local Docker checks, existing CI, and Kody remain required for relevant
+security/local Docker checks, existing CI, and
+[current automated review](opencode-review.md) remain required for relevant
 implementation. PR #10 required documentation checks only; the adapter migration
 requires the full applicable checks. Existing CI is unchanged.
 

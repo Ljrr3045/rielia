@@ -6,6 +6,21 @@ This records repository changes. No application version has been released.
 
 ### Added
 
+- OpenCode Go PR-review replacement before T11, under the user's 2026-11-01
+  decision. The [trusted adapter](docs/development/opencode-review.md) uses the
+  official installed App/OIDC and checksum-pinned CLI 1.19.5, rather than the
+  unsafe general-purpose stock GitHub runner. Automatic reviews cover every
+  non-main base, including forks and base advances; authorized `/oc`/`/opencode`
+  requests receive formal reviews or root/original-inline-thread replies.
+  A secret-free inline relay supports fork events. Generation has isolated
+  HOME/XDG, no GitHub/OIDC credentials and no tools; deterministic publication
+  validates coverage, actual head/base, inline locations and formal outcomes.
+  Incomplete/draft reviews cannot approve. Twenty focused tests, actual pinned-
+  CLI fake-provider smoke (`max` on review call, tool denial), workflow lint,
+  immutable handoff and whitespace pass locally; independent audit/remote CI
+  and legitimate default-branch activation/live App/Go/fork smoke remain pending.
+  No product code, handoff, secret values, repository protections or deployment
+  change. Historical Kody evidence is preserved; no new Kody trigger is required.
 - T10.1/B1b search and My tasks presentation on merged T10.0 logic
   [PR #23](https://github.com/Ljrr3045/rielia/pull/23) (`6bde444c`). `/projects`
   gains explicit workspace My tasks (`taskScope=mine`, current assignee) and

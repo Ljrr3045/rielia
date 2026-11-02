@@ -14,7 +14,8 @@ except Express in the [2026-10-27 decision](stack-validation-decisions.md).
 The [subsequent migration](nest-http-adapter.md) now uses official Nest NodeAdapter
 12.3.2 with backend package/image closure checks. Original fixture pins and
 Express advisory history below are dated delivery evidence. Real provider/staging and real-project/user acceptance remain OPEN/DEFERRED
-under that decision; applicable local automated checks, CI and Kody still apply.
+under that decision; applicable local automated checks, CI and
+[current automated review](opencode-review.md) still apply.
 The planning documents remain the source of product/architecture requirements.
 It follows the merged [T00 onboarding PR #1](https://github.com/Ljrr3045/rielia/pull/1),
 merge `8dd7c31f454c1989d017dbf7b40e6646112d2d2a`; the immutable handoff is unchanged.
@@ -136,8 +137,9 @@ use or stop an existing developer server.
 
 CI verifies handoff integrity/local links, installs the frozen lockfile on Linux
 with the pinned toolchain, runs `pnpm check`, and fails on high/critical registry
-advisories. Kody review follows the active repository governance; the retired
-OpenCode workflow is absent. This fixture does not implement
+advisories. The [current OpenCode Go review adapter](opencode-review.md) follows
+active repository governance; the retired general-purpose runner stays absent.
+This fixture does not implement
 the full architecture CI/release/security program.
 
 CI action pins were resolved from each official repository's `v6`/`v4` refs

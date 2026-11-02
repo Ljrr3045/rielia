@@ -12,9 +12,11 @@ records still identify the models that actually performed those tasks.
 
 Each development worker and subagent retains its own isolated worktree. The
 coordinator must verify its effective model and effort before assigning work;
-do not silently substitute another model or effort. Kody AI remains the external
-PR reviewer, and the sequential PR-to-`dev`, review, merge, and worktree cleanup
-rules remain in effect.
+do not silently substitute another model or effort. The separate
+[OpenCode Go PR reviewer](opencode-review.md) supersedes Kody under the user's
+2026-11-01 decision; development model assignments are unchanged. Sequential
+PR-to-`dev`, current-head/base review, coordinator merge and worktree cleanup
+rules remain in effect. Historical evidence below describes development sessions.
 
 ## Verification
 
