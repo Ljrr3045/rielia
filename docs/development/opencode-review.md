@@ -52,7 +52,7 @@ installation. Updating the binary or its digest is a reviewed source change.
 | `OPENCODE_API_KEY` | Actions repository secret | User-provisioned Go key; absent key fails closed |
 | `OPENCODE_MODEL` | Actions repository variable | `opencode-go/deepseek-v4.1-flash`; other providers are rejected |
 | `OPENCODE_VARIANT` | Actions repository variable | `max`; passed as CLI variant with explicit compatible-provider reasoning effort |
-| Review output cap | Fixed isolated child environment | 128,000 tokens; pinned CLI clamps to the model output limit; no repository variable or inherited override |
+| Review output cap | Fixed isolated child environment | 384,000 tokens; pinned CLI clamps to the model output limit; no repository variable or inherited override; live Go acceptance still required |
 | App authentication | Actions OIDC | Installed `opencode-agent`; token acquired only for publication and revoked afterwards |
 
 The public [models.dev catalog](https://models.dev/api.json) inspected on
@@ -201,7 +201,7 @@ Only the coordinator merges, through normal repository requirements.
 | Missing/truncated patch, binary, symlink, unavailable context | Explicit incomplete COMMENT; never APPROVE |
 | Ten 100-row pages per API list | Fail closed, no assumed complete review |
 | 100 open PRs per base-push fanout; three parallel jobs | Fail if fanout is larger; each PR can be requested explicitly |
-| 20 findings; 1 MB CLI output; fixed 128,000-token generation cap; 20-minute model / 30-minute job | Fail closed on excess/timeout; token cap also clamps to the known model limit |
+| 20 findings; 1 MB CLI output; fixed 384,000-token generation cap; 45-minute model / 60-minute job | Fail closed on excess/timeout; token cap also clamps to the known model limit |
 | Relay ZIP 8 KB metadata / 32 KB download / 4 KB JSON | Reject before using identifiers |
 
 No tests or install hooks from a PR are executed by review. Applicable product CI
@@ -250,7 +250,7 @@ settings and user-confirmed `max` effort are unchanged. The pinned provider
 transform still clamps this to the known model output limit. The experiment
 initially retained the ten-minute model and 20-minute job deadlines, 1 MB output
 and every completion/schema/coverage guard.
-Actual pinned-CLI loopback smoke asserts `max_tokens: 128000`, `max` reasoning
+At that head, pinned-CLI loopback smoke asserted `max_tokens: 128000`, `max` reasoning
 and zero tools on the review request, using only generated fake credentials.
 This bounded experiment does not establish that either earlier failure was
 caused by length, and it requires fresh independent review/CI before live use.
@@ -297,6 +297,28 @@ protocol evidence, not full-review acceptance. The separately authorized lossles
 projection above reduces redundant input while retaining the full parent and
 all gates; it is not a proven causal remedy. No new paid run is implied.
 
+The sixth authorized
+[run 41383485431](https://github.com/Ljrr3045/rielia/actions/runs/41383485431)
+used projected source `e2be745`. App preflight and a complete synthetic
+review-mode control passed (four seconds), but full generation again failed
+`JSONL_FINISH_LENGTH` after 9m59s, with one finish, zero text and reported
+output/reasoning counts of 0/128000. Publication was skipped, cleanup passed and
+all review surfaces remained empty. The measured reduction did not resolve that
+attempt; no successful review or precise underlying cause is established.
+
+The coordinator then authorized the fixed **384,000 output cap / 45-minute model
+/ 60-minute job** bounds, retaining the same model, `max`, lossless projection
+and every strict gate. The live [native DeepSeek API specification](https://api-docs.deepseek.com/api/create-chat-completion/)
+allows `max_tokens` from 1 to 393216 (384K); omitted max-effort requests default
+to 128K. That native default is not a maximum, and the native endpoint/model IDs
+do not establish Go alias support. The previously captured [models.dev Go catalog](https://models.dev/api.json)
+lists output 384000 for this alias. The pinned CLI still clamps the fixed child
+cap to its actual model limit; fake-provider wire smoke confirms 384000 with
+`max` and zero tools. Catalog-fetch errors are not provider-inference evidence.
+Go parameter acceptance remains OPEN until a separately authorized live tiny
+review control accepts it; full review/publication remain separate gates. This
+is an explicit larger budget, not a new reasoning variant or automatic retry.
+
 The diagnostic follow-up preserves strict parsing/coverage and adds only
 allowlisted static failure codes. Main logs a fixed sentence containing a code
 and, for rejected completion or timeout only, the bounded primitive metadata above;
@@ -338,9 +360,9 @@ responses, one length finish with no continuation, and distinct unknown+stop
 finishes when the CLI continued after an unknown result. Split reasoning and
 final usage chunks did not produce duplicate IDs in those fixtures. These fake-
 provider observations do not establish the live run's reason/count. Pinned CLI
-request preparation defaults to a32,000-token output cap; the separately
-authorized 128,000-token experiment above changes that cap while retaining
-`max`. New-head review and actual live reason/count evidence remain required.
+request preparation defaults to a32,000-token output cap; the authorized fixed
+384,000 cap supersedes the earlier 128,000 experiment while retaining `max`.
+New-head review and actual Go acceptance/completion evidence remain required.
 
 Local evidence: 36 event/auth/fork/main-exclusion/relay/coverage/verdict/current-
 head/base-race/token-isolation/diagnostic tests pass; all workflows pass checksum-pinned
@@ -350,7 +372,7 @@ actionlint 1.7.12; immutable handoff and whitespace checks pass. The real CLI
 Its loopback fake-provider smoke verifies the projected wire payload decodes to
 the full unchanged parent, the dedicated system policy and untrusted tags,
 JSONL transport, effective review `max`
-and the fixed 128,000 output cap on the wire,
+and the fixed 384,000 output cap on the wire,
 no exposed tools and rejection of an unsolicited malicious tool call. It uses
 only generated fake credentials and no local auth. This does **not** verify Go
 billing/inference, App exchange, fork event delivery or real GitHub publication.

@@ -146,7 +146,7 @@ test('model environment isolates HOME/XDG and strips every GitHub/OIDC/auth over
   assert.equal(environment.XDG_DATA_HOME, '/isolated/task/data');
   for (const key of ['GITHUB_TOKEN', 'GH_TOKEN', 'ACTIONS_ID_TOKEN_REQUEST_TOKEN', 'OPENCODE_CONFIG', 'NODE_OPTIONS', 'BUN_OPTIONS']) assert.equal(environment[key], undefined);
   assert.equal(environment.OPENCODE_API_KEY, 'fake-provider-key');
-  assert.equal(environment.OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX, '128000');
+  assert.equal(environment.OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX, '384000');
   assert.equal(parent.OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX, '999999999');
   assert.equal(JSON.parse(environment.OPENCODE_CONFIG_CONTENT).permission['*'], 'deny');
   assert.throws(() => modelConfig('other/model', 'max'), hasCode('REVIEW_CONFIGURATION'));
@@ -617,8 +617,8 @@ test('workflow topology keeps fork inline secrets in trusted workflow_run and pi
   assert(!workflow.includes('contents: write'));
   assert(!workflow.includes('pull-requests: write'));
   assert(workflow.includes('sha256sum --check'));
-  assert.equal(LIMITS.modelMs, 20 * 60 * 1000);
-  assert.match(workflow, /review:\n[\s\S]*?timeout-minutes: 30/);
+  assert.equal(LIMITS.modelMs, 45 * 60 * 1000);
+  assert.match(workflow, /review:\n[\s\S]*?timeout-minutes: 60/);
   assert(!workflow.includes('@latest'));
   assert(relay.includes('permissions: {}'));
   assert(!/\$\{\{\s*secrets\./.test(relay) && !relay.includes('checkout@'));

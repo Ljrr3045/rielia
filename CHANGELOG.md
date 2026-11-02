@@ -6,6 +6,14 @@ This records repository changes. No application version has been released.
 
 ### Added
 
+- Explicit fixed child output budget of 384000 tokens, with 45-minute model and
+  60-minute job limits, after [sixth run 41383485431](https://github.com/Ljrr3045/rielia/actions/runs/41383485431)
+  again ended length/zero-text/reported 128000 reasoning despite passing App and
+  tiny review-mode control. The model, `max`, lossless projection and all strict
+  gates remain. Native DeepSeek's documented 393216 maximum differs from its 128K
+  omitted default at max; captured Go catalog/fake-wire evidence is not live Go
+  acceptance. Pinned CLI wire sends 384000/max/no-tools; fresh audit/CI and an
+  authorized tiny Go control remain required before any full real attempt.
 - Lossless model-input references while the review parent retains full immutable
   context and original validation patches. Identical head-line edges replace
   redundant base text; exact canonical whole-added/removed patches use compact

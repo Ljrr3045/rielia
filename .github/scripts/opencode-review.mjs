@@ -8,7 +8,7 @@ import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { TextDecoder } from 'node:util';
 
-export const LIMITS = Object.freeze({ files: 80, treeEntries: 5000, fileBytes: 160_000, contextBytes: 1_000_000, patchBytes: 300_000, pages: 10, findings: 20, modelMs: 1_200_000, outputBytes: 1_000_000 });
+export const LIMITS = Object.freeze({ files: 80, treeEntries: 5000, fileBytes: 160_000, contextBytes: 1_000_000, patchBytes: 300_000, pages: 10, findings: 20, modelMs: 2_700_000, outputBytes: 1_000_000 });
 const SHA = /^[a-f0-9]{40}$/;
 const REPO = /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/;
 const actions = new Set(['opened', 'synchronize', 'reopened', 'ready_for_review', 'edited']);
@@ -439,7 +439,7 @@ export function modelEnvironment(parent, directory, config) {
     OPENCODE_DISABLE_PROJECT_CONFIG: 'true', OPENCODE_DISABLE_AUTOUPDATE: 'true',
     OPENCODE_DISABLE_CLAUDE_CODE: 'true', OPENCODE_DISABLE_EXTERNAL_SKILLS: 'true',
     OPENCODE_DISABLE_DEFAULT_PLUGINS: 'true', OPENCODE_EXPERIMENTAL_DISABLE_FILEWATCHER: 'true',
-    OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX: '128000',
+    OPENCODE_EXPERIMENTAL_OUTPUT_TOKEN_MAX: '384000',
   };
 }
 

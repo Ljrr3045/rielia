@@ -81,14 +81,14 @@ try {
     assert.deepEqual(expandModelInput(view), input, 'Actual model payload must reconstruct every original input field');
     assert.equal(request.authorization, 'Bearer fake-provider-key');
     assert.equal(request.body.reasoning_effort, 'max', 'Pinned CLI must send effective max reasoning on the review call');
-    assert.equal(request.body.max_tokens, 128000, 'Pinned CLI must send the fixed child-only output cap');
+    assert.equal(request.body.max_tokens, 384000, 'Pinned CLI must send the fixed child-only output cap');
     assert.equal(request.body.tools?.length ?? 0, 0, 'Tools must be absent under wildcard deny');
   }
   malicious = true;
   const attempted = await run();
   assert.throws(() => parseEvents(attempted.stdout), 'A provider tool attempt must never establish review completion');
   assert.equal(JSON.stringify(input), originalJson, 'Parent validation input must remain full and unchanged');
-  console.log('Pinned CLI 1.19.5 smoke passed: exact lossless projected payload, full parent unchanged, dedicated system policy, untrusted user tags, max128000, no tools, malicious tool rejected, isolated HOME/XDG, no GitHub/OIDC credentials.');
+  console.log('Pinned CLI 1.19.5 smoke passed: exact lossless projected payload, full parent unchanged, dedicated system policy, untrusted user tags, variant max, output cap384000, no tools, malicious tool rejected, isolated HOME/XDG, no GitHub/OIDC credentials.');
 } finally {
   await rm(directory, { recursive: true, force: true });
   await new Promise((fulfill) => server.close(fulfill));
