@@ -1,0 +1,33 @@
+.github/pull_request_template.md
+  s_b8020eceba4182::t_8462a5a83e6373 33,41-42
+.github/workflows/ci.yml
+  s_b8020eceba4182::t_8462a5a83e6373 6,23-29
+docs/development/kilo-review.md
+  s_b8020eceba4182::t_8462a5a83e6373 50-64,81-94
+AGENTS.md
+  s_b8020eceba4182::t_8462a5a83e6373 174-177
+CHANGELOG.md
+  s_b8020eceba4182::t_8462a5a83e6373 9-18,28-35,45-46
+REVIEW.md
+  s_b8020eceba4182::t_8462a5a83e6373 61-65
+CONTRIBUTING.md
+  s_b8020eceba4182::t_8462a5a83e6373 261-274
+docs/development/progress.md
+  s_b8020eceba4182::t_8462a5a83e6373 67-71,92-131
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "76e07c2170d613ce3982e0f796ae8c91cfea4d7a",
+  "prompts": {},
+  "sessions": {
+    "s_b8020eceba4182": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a17016-ab9e-7501-b8a7-f63987eb61f7",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
