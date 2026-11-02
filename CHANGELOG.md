@@ -4,6 +4,19 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+### Review policy
+
+- Select native Kilo Code Reviews in place of Kody and the abandoned OpenCode PR
+  integration. Update active contribution/PR policies and add root `REVIEW.md`
+  with [setup status and evidence requirements](docs/development/kilo-review.md).
+  Latest-head feedback and applicable checks remain required; formal GitHub
+  approval, requested base-`main` exclusion, and bot-PR coverage are pending
+  verification. Record the connected/enabled dashboard, disabled retired workflow
+  registrations, and pending OpenCode App removal decision. Configuration remains
+  coordinator-owned. Preserve historical review evidence and the OpenCode Go
+  frontend worker choice. No workflow, secret, product code, handoff change or
+  deployment is included; this change does not complete a product ticket.
+
 ### Added
 
 - T10.1/B1b search and My tasks presentation on merged T10.0 logic

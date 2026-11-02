@@ -46,8 +46,8 @@ real-project/user acceptance remain OPEN/DEFERRED until an advanced end-to-end
 product slice and user scheduling. They do not immediately block authorized local
 implementation; do not ask for credentials/staging now or report missing checks
 as passed. Preserve source dependencies and public-launch acceptance. Applicable
-automated unit/integration/security/local Docker checks, CI and Kody remain
-required. License and brand/final landing design remain undecided. The
+automated unit/integration/security/local Docker checks, CI and current-head Kilo
+review remain required. License and brand/final landing design remain undecided. The
 [2026-10-29 project policy](docs/development/project-access.md) ratifies automatic
 private content access for active human workspace owner/admin, with current grant
 ceilings and human-web-only privacy administration; imported proposals alone are
@@ -82,12 +82,15 @@ for UI/UX presentation only; all logic uses
 Codex `gpt-6.1-sol` `xhigh`, including frontend auth/session/data hooks, proxies,
 and functional tests. Verify the effective configuration and isolate each
 worker's checkout. See the [model decision and verification limits](docs/development/frontend-agent.md).
-This is separate from Kody's external review role.
+This remains separate from Kilo Code Reviews' external review role.
 
-The user retired OpenCode review and requested deletion of its entire workflow,
-including the version inherited from `dev`. Do not restore, repair, or invoke it;
-Kody AI is the current reviewer. Do not modify secrets or introduce personal
-tokens or a review bypass. Treat `docs/handoff/` as an
+The user retired OpenCode PR review, including the inherited workflow and the
+abandoned replacement integration. Do not restore, repair, or invoke either.
+Native Kilo Code Reviews replaces Kody as the selected external reviewer; its
+[setup status and evidence requirements](docs/development/kilo-review.md) distinguish
+verified behavior from pending configuration. Preserve historical Kody/OpenCode
+evidence and the separate OpenCode Go frontend development choice. Do not modify
+secrets, introduce personal tokens, or bypass review. Treat `docs/handoff/` as an
 immutable import, including its asset manifest and file inventory. Record later
 ratifications/corrections separately under `docs/development/` and link the
 affected source section. Never modify a baseline just to make a hash check pass.
@@ -133,7 +136,8 @@ focused pure state/HTTP proxy checks and is included in `pnpm check`;
 is separately owned; no full T05/T07/T35 acceptance is implied.
 
 Documentation-only changes run the handoff/link verifier and unstaged/staged
-whitespace checks below, inspect the diff, and retain existing CI and Kody gates.
+whitespace checks below, inspect the diff, and retain CI and current-head Kilo
+review gates.
 Unrelated local application suites need not be rerun for prose-only edits.
 
 Use Python 3.9+, Node 24.22.1, and pnpm 12.15.0. From the repository root:
@@ -221,14 +225,19 @@ gh pr create --base dev --title "docs: describe the change" --body-file /tmp/rie
 ```
 
 Add the real PR URL to progress after creation and push that update to the same
-branch. Do not open a second PR for review fixes. Every ready PR/head requires
-an explicit Kody AI request; a push alone does not satisfy that requirement.
+branch. Do not open a second PR for review fixes. The selected reviewer is native
+Kilo Code Reviews through its GitHub App. Every ready PR/head whose base is not
+`main` requires completed latest-head Kilo feedback plus passing applicable checks.
+The user's requested exclusion for base `main` is pending platform verification;
+`REVIEW.md` or dashboard prompt text does not enforce an event filter.
 
 After local checks pass, send the coordinator the PR URL and exact head SHA.
-The **coordinator alone** posts a root PR comment exactly `@kody start-review`.
-Workers must not duplicate the trigger. Record its comment URL, the requested
-head, and the resulting Kody review/comment URLs. Confirm the review applies to
-the current head rather than relying on an earlier completion message.
+Once enabled for this repository, Kilo documents automatic review on non-draft
+opening, pushes, reopening, and marking ready. Record the resulting review/comment
+URLs and verify which head completed; an eye reaction or an old summary is not
+completion evidence. The [Kilo guide](docs/development/kilo-review.md) records setup
+and current limitations. Do not post legacy Kody triggers or invent cloud rerun
+commands. Missing setup or a missing review remains a blocker.
 
 Inspect applicable checks plus all three review surfaces: issue comments, submitted
 reviews, and inline review comments. For example, replace `123` with your PR:
@@ -244,10 +253,13 @@ Evaluate every finding against the code/requirements. Fix real defects and attac
 relevant validation; give a concise technical disposition for substantive findings
 that are fixed, deferred, or rejected. A failed, cancelled, missing, or incomplete
 review is a blocker, not evidence of no findings. After any push, rerun affected
-checks and report the new head ready for the coordinator's fresh Kody trigger.
-Wait for that round, reread all three surfaces, and handle feedback before
-handoff. A prior-head review never approves changed code. Retired OpenCode checks
-are historical evidence and are not the current review gate.
+checks, report the new head, and wait for Kilo's latest-head round. Reread all three
+surfaces and handle feedback before handoff. A prior-head review never approves
+changed code. Verify check names/results actually emitted by the integration;
+do not invent a required check name. Kilo summary/inline feedback does not establish
+a formal GitHub `APPROVED` review. If repository protection requires approval,
+obtain it independently and preserve that gate. Retired Kody/OpenCode evidence
+remains historical; no review bypass is authorized.
 
 Only the coordinator merges. Do not deploy or merge from a worker task. A dispatched
 worker reports branch/worktree, PR/head SHA, validation/review evidence, and blockers

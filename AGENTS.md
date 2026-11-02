@@ -65,16 +65,18 @@ or an Orca installation.
   filename, relative link, asset, and hash. Put decisions, corrections, and delivery
   evidence in `docs/development/`; never silently rewrite the source proposals or
   regenerate the import checksum baseline to conceal a change.
-- OpenCode review is retired. Its workflow is deleted, including the version
-  inherited from `dev`; do not restore, repair, or run it. Kody AI review follows
-  the explicit process below. Do not modify secrets or substitute personal tokens.
+- OpenCode PR review is retired; do not restore, repair, or run its workflow or
+  the abandoned replacement integration. Native Kilo Code Reviews replaces Kody
+  as the selected external reviewer. Follow the [review policy and setup status](docs/development/kilo-review.md)
+  below; unverified configuration and capabilities remain explicit gates. Preserve
+  historical review evidence. Do not modify secrets or substitute personal tokens.
 - License selection, final brand and private-project admin visibility remain
   undecided. Real OAuth/staging and real-project/user acceptance stay OPEN/DEFERRED
   until an advanced end-to-end product slice and user scheduling; do not request
   credentials or staging now. These deferred checks do not immediately block
   authorized local implementation; applicable automated unit/integration/security/
-  local Docker checks, CI and Kody remain required. Do not adopt Apache-2.0 merely
-  because the plan proposes it. Do not add secrets to any tracked file or PR.
+  local Docker checks, CI and current-head Kilo review remain required. Do not
+  adopt Apache-2.0 merely because the plan proposes it. Do not add secrets to any tracked file or PR.
 - Name/logo, v0.1 assets, unratified ADRs, performance targets, and usability
   assumptions retain their proposal/validation status. The runnable fixture
   exposes a development page, API liveness, and optional experimental identity;
@@ -146,8 +148,8 @@ Keep these boundaries in both current and future code.
    model/effort rather than silently substituting an unavailable configuration.
    See the [model decision and verification limits](docs/development/frontend-agent.md).
    This does not prescribe tools/models
-   for ordinary human contributors. Kody AI is the external PR reviewer invoked
-   by the coordinator's root comment, not a development worker.
+   for ordinary human contributors. Kilo Code Reviews is the external PR reviewer,
+   separate from OpenCode Go's development role.
 3. Deliver a bounded change with relevant evidence. For UI, verify mobile/desktop,
    touch/keyboard, nonideal states, accessibility, persistence, and failure recovery.
    A screenshot alone never completes a flow. Record unavailable checks honestly.
@@ -156,15 +158,17 @@ Keep these boundaries in both current and future code.
 5. Run `git diff --check` and the applicable checks in CONTRIBUTING. Open one
    non-draft PR targeting `dev`, in English, with scope/requirements, validation,
    limitations, and remaining decisions. Use a body file for multiline CLI text.
-6. Every ready PR/head requires an explicit Kody AI request. After checks pass,
-   report the PR URL and head SHA to the coordinator, who alone posts a root PR
-   comment exactly `@kody start-review`. Workers must not duplicate this trigger.
-   Inspect issue comments, submitted reviews, inline comments, and applicable
-   checks. Confirm the reviewed head; analyze every finding, fix valid issues with
-   evidence, and document concise technical dispositions. After any push, report
-   the new head ready for a fresh coordinator trigger and wait for that round.
-   A prior-head review never approves changed code. A failed, missing, or incomplete
-   review is a blocker, not a clean review.
+6. Every ready PR/head with a base other than `main` requires completed native
+   Kilo Code Reviews feedback and passing applicable checks. The requested `main`
+   exclusion is pending platform verification; a prompt is not an enforced filter.
+   Report the PR URL and head SHA to the coordinator. Inspect issue comments,
+   submitted reviews, inline comments, and applicable checks; tie completion to
+   that exact head, resolve valid findings with evidence, and record concise
+   technical dispositions. After any push, rerun affected checks and wait for the
+   latest-head review. Missing, failed, cancelled, or incomplete review blocks
+   merge. Kilo feedback is not evidence of GitHub `APPROVED`; satisfy any required
+   formal approval independently without bypassing protection. No legacy Kody
+   trigger or invented Kilo command. See [setup and evidence requirements](docs/development/kilo-review.md).
 7. Only the coordinator merges. Do not deploy or merge. A dispatched worker reports
    through its active Orca preamble with branch/worktree, PR/head, checks, review
    evidence, and blockers; send `worker_done` once and then stop task activity.

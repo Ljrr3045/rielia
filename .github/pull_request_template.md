@@ -21,14 +21,17 @@
 
 ## Review evidence (complete after automated review)
 
-- Latest PR head SHA:
-- Coordinator's root `@kody start-review` comment URL and requested head:
-- Kody AI review/comment URLs and result for that head:
+- Latest PR head SHA and base branch:
+- Kilo Code Reviews completion URL(s), result, and evidence tying it to that head:
+- Applicable CI/Kilo check names, URLs, and results actually observed:
 - Issue comments, submitted reviews, and inline comments inspected:
 - Findings, technical dispositions/fix evidence, and any fresh head review:
+- Formal GitHub approval evidence if required by repository protection:
+- Setup, `main` exclusion, or other unverified integration blockers:
 
-<!-- Coordinator alone posts the exact root trigger for every ready head; workers do not duplicate it. -->
-<!-- Failed/cancelled/missing/incomplete review is a blocker. Prior-head review never approves changed code. -->
+<!-- See docs/development/kilo-review.md. No legacy Kody trigger or invented Kilo command. -->
+<!-- Missing/failed/cancelled/incomplete review blocks merge; prior-head evidence never approves changed code. -->
+<!-- Kilo feedback alone does not establish GitHub APPROVED. The requested base-main exclusion is pending verification. -->
 
 ## Limitations and remaining decisions
 

@@ -1,6 +1,6 @@
 # Delivery progress and decisions
 
-Updated: 2026-11-01 UTC. This is repository delivery tracking, separate from the
+Updated: 2026-11-02 UTC. This is repository delivery tracking, separate from the
 unchanged [handoff](../handoff/00-START-HERE.md). Plans describe intended outcomes,
 not completed implementation. This checkout has the T02.0 fixture, merged T02.1/
 T02.2 identity experiment, and a fictional T01/B0 task-prototype logic adapter plus
@@ -37,6 +37,29 @@ real-project/user acceptance are OPEN/DEFERRED until an advanced end-to-end slic
 and user scheduling. This overrides their immediate scheduling gate for local
 implementation, without completing tickets or weakening automated checks/launch gates.
 
+## 2026-11-02 review policy maintenance
+
+T00 governance-only maintenance selects native Kilo Code Reviews in place of Kody
+and the abandoned OpenCode PR integration. [Setup, sources and evidence gates](kilo-review.md)
+record the connected/enabled native dashboard, existing global settings with
+**Use REVIEW.md OFF** and **Skip Bots ON**, unresolved base-`main` scope, unverified
+formal approval/reply/rerun behavior, and bot-PR coverage limits. Every ready non-`main` head requires completed latest-head
+Kilo feedback plus applicable checks; any formal approval required by GitHub
+protection remains independent. No legacy Kody trigger, custom workflow, secrets,
+product code, handoff edits, product acceptance, deployment or merge is included.
+The OpenCode Go frontend development choice and historical review evidence remain.
+
+The coordinator reports [PR #25](https://github.com/Ljrr3045/rielia/pull/25) closed
+unmerged, abandoned branches/worktrees removed, empty repository Actions
+variables/secrets, and four retired workflow registrations disabled; only Technical
+fixture CI remains active. OpenCode App removal is a pending user decision. Branch `chore/kilo-review-policy` starts from `origin/dev`
+`64ad0d7` in its isolated worktree. Documentation validation passes: 47 imported files, 30 asset hashes/sizes and 467
+local links in 59 documents; whitespace checks and scope inspection pass. Root
+`REVIEW.md` has 3,098 characters (below 10,000). Application suites are inapplicable
+to this prose-only change. The PR URL will be recorded after creation. The coordinator authorized native review of
+this bounded PR to `dev`; latest-head review and unresolved capabilities remain
+pending. This entry does not claim completed Kilo acceptance or formal approval.
+
 ## Current delivery
 
 | Field | Evidence/state |
@@ -45,7 +68,7 @@ implementation, without completing tickets or weakening automated checks/launch 
 | Base | `origin/dev`, T10.0 [PR #23](https://github.com/Ljrr3045/rielia/pull/23), verified merged as `6bde444cd4e69115bc7004cf8d58c229ee7c55a7` |
 | Branch | `feat/t10-search-my-tasks-ui`, one English non-draft presentation/docs PR to `dev` |
 | Worktree | Isolated `feat-t10-search-my-tasks-ui`; OpenCode Go `opencode-go/deepseek-v4.1-flash` variant `max` verified by the coordinator's terminal footer; no helpers or shared checkout |
-| Current PR | T10.1 presentation [PR #24](https://github.com/Ljrr3045/rielia/pull/24), non-draft to `dev`; exact-head CI and coordinator-triggered Kody remain required. T10.0 logic [PR #23](https://github.com/Ljrr3045/rielia/pull/23) is merged as `6bde444cd4e69115bc7004cf8d58c229ee7c55a7` |
+| T10.1 PR evidence | Presentation [PR #24](https://github.com/Ljrr3045/rielia/pull/24), non-draft to `dev`; its historical exact-head CI/Kody evidence remains on the PR. T10.0 logic [PR #23](https://github.com/Ljrr3045/rielia/pull/23) is merged as `6bde444cd4e69115bc7004cf8d58c229ee7c55a7` |
 | T10.1 evidence | [Search and My tasks UI guide](task-discovery-ui.md), [PR #24](https://github.com/Ljrr3045/rielia/pull/24): combined source `29601ac17965f7038c397e95fa8773eb9fdd4798` (presentation corrections plus two exact root-reviewed SOL controller/test commits). Full `pnpm check`, 63 focused project/client/proxy/controller checks including T10, web typecheck, targeted ESLint and production build pass; independent responsive seven-width/recovery and final functional/mobile-return evidence accepted. Audit/handoff/whitespace pass; exact PR head/CI/Kody state is recorded in GitHub and the external report |
 | T10 evidence | [Discovery/SSE contract](task-discovery.md): 61 focused client/proxy/state checks; full standard check; real PostgreSQL search/authority/rollback/commit-order/replay/revocation plus eight-table restart witness; real Nest→Next 105-row search and two-session streaming QA; Docker runtime smoke; audit high/critical, handoff and whitespace pass. Independent denial/deferral/page-two return findings fixed with regressions; Kody hydration and SSE metadata findings addressed by one bounded shared hydration and id/version-only polling, with 12 T10 PG tests. T10.0 [PR #23](https://github.com/Ljrr3045/rielia/pull/23) merged as `6bde444cd4e69115bc7004cf8d58c229ee7c55a7` |
 | T09 evidence | Frozen install, full `pnpm check`, 46 focused project/client/proxy/XSS checks, real PG migration/permission/race/rollback/aborted-HTTP tests and eight-table PostgreSQL-restart witness pass. Actual archived-row migration preservation, >100 paging and new/edited-comment discovery, final-migration Docker runtime, expanded real Next proxy QA, audit high/critical gate, handoff and whitespace pass. PR #21 reviewed head `0e4784c3d41ddd095c69f61b49489e9a78065347`; root Kody trigger `6546958383`, final Kody check `124610642083` SUCCESS/no-issues comment `6546960524`, CI `41226123949` / check `124610518385` SUCCESS. Logic worktree removed by coordinator |
@@ -74,16 +97,16 @@ implementation, without completing tickets or weakening automated checks/launch 
 | T00 | Complete: [PR #1](https://github.com/Ljrr3045/rielia/pull/1) merged 2026-10-24T23:56:43Z as `8dd7c31f454c1989d017dbf7b40e6646112d2d2a` after final-head Kody SUCCESS/APPROVED |
 | T01–T35 | No full ticket complete; T01 logic and presentation are bounded partial evidence only |
 | Prior resource cleanup | Coordinator reports all prior completed worktrees removed, preview stopped and evidence preserved outside the repository; current worker never deletes its active checkout |
-| Automated review | Kody AI: coordinator alone posts exact root `@kody start-review` for each ready head; prior-head evidence never approves changed code |
+| Automated review | Native Kilo Code Reviews connected/enabled; [unverified controls and scope](kilo-review.md) remain pending. Every ready non-`main` head needs completed current-head feedback and passing applicable checks; satisfy any required formal approval independently. Historical Kody evidence is preserved |
 
 T00 acceptance: complete byte-identical import with links/assets/hashes/proposal
 status; practical repository instructions and docs; truthful dependency/state
 tracking; passing whitespace/integrity checks; one non-draft PR to `dev`; latest
-head Kody review handled with passing applicable checks. The user retired OpenCode
-and requested deletion of its entire workflow, including the inherited version.
-The coordinator alone posts each ready head's Kody trigger and merges after
-validation and feedback handling. T00 itself added no app/scaffold scope; its
-final Kody approval covered head `53243fbea2ae6c4f5a1ab3e47d6e1dc8cc296cec`.
+head Kody review handled with passing applicable checks under the historical
+review policy. The user retired OpenCode and requested deletion of its entire
+workflow, including the inherited version. The 2026-11-02 policy above supersedes
+Kody for new review work. T00 itself added no app/scaffold scope; its final Kody
+approval covered head `53243fbea2ae6c4f5a1ab3e47d6e1dc8cc296cec`.
 
 ## T08.0 persistent list/Kanban logic
 
@@ -803,7 +826,7 @@ actual use/demand; no launch date or public capacity has been established.
 | License | Pending user answer; Apache-2.0 remains a proposal; no LICENSE adopted | User/maintainer records selection and notice/dependency review |
 | Stack | User approved current stack except Express, 2026-10-27 | [Dated decision](stack-validation-decisions.md); no automatic ratification of future dependencies/ADRs |
 | Express removal | Merged PR #11 with coherent Nest NodeAdapter 12.3.2 and exact-head CI/Kody | [Adapter rationale, source/integrity, security and closure evidence](nest-http-adapter.md); T35.0 preserves runtime/deployed backend closure |
-| Real validation sequencing | OPEN/DEFERRED until advanced end-to-end product slice and user scheduling; no immediate blocker to authorized local implementation | Retain staging/provider/HTTPS, staging-dependent discovery and real-project/user backlog; automated checks/CI/Kody and public-launch gates still apply |
+| Real validation sequencing | OPEN/DEFERRED until advanced end-to-end product slice and user scheduling; no immediate blocker to authorized local implementation | Retain staging/provider/HTTPS, staging-dependent discovery and real-project/user backlog; automated checks/CI/current-head Kilo review and public-launch gates still apply |
 | Local MCP split | Coordinator originally authorized T03.0 public health-only stdio before stack approval | [Versions, actual terminal-client matrix and limits](local-mcp.md); no remote OAuth/credential/domain acceptance |
 | Branch names | User requires `feat/**`, `fix/**`, `refactor/**`, `docs/**`, `chore/**`, `test/**` by purpose, never username prefixes | Worktree names correspond; coordinator renamed the empty Orca-created branch before development and verified `feat/t03-local-mcp` |
 | OAuth credentials/callbacks | OPEN/DEFERRED with real provider validation; no request for credentials/staging now | Installation operator configures secrets when user schedules later acceptance; no test date invented |
@@ -813,7 +836,7 @@ actual use/demand; no launch date or public capacity has been established.
 | Principal/authorship | T35.0 implements bounded identity/membership/policy and server-derived context; delegated user and autonomous Agent remain distinct | [Scope and local evidence](principal-foundations.md); actual task/comment/export and verified credential adapters remain future work |
 | Private-project admin visibility | Ratified 2026-10-29: active human workspace owners/admins automatically read every scoped private project; delegated content keeps grant ceilings and privacy administration remains human web only | [Decision and bounded T07 contract](project-access.md); presentation must disclose automatic administrative access |
 | Operations/public service | VPS capacity, budget/date, registration policy, public obligations not established | Maintainer records decisions and measured readiness in later tickets |
-| Automated review | Kody AI replaces OpenCode; every ready PR/head needs an explicit root `@kody start-review` request | Coordinator alone posts trigger; worker verifies reviewed head, issue comments, formal reviews, inline comments, and applicable checks |
+| Automated review | Native Kilo Code Reviews selected 2026-11-02; latest-head feedback and applicable checks required for ready PRs except base `main` | [Current configuration, pending exclusion and approval limits](kilo-review.md); coordinator verifies the reviewed SHA, all review surfaces and independent GitHub protection before merging |
 | Development models | User's 2026-10-25 rule: UI/UX presentation uses OpenCode Go DeepSeek V4.1 Flash 1017 (`opencode-go/deepseek-v4.1-flash`, `max`); all logic uses Codex `gpt-6.1-sol` `xhigh`, including browser auth/data/hooks/proxy/tests | [Model evidence and limits](frontend-agent.md); verify effective sessions and isolated worktrees. User resumed bounded T01/B0 development after the model-only pause checkpoint; OpenCode development does not restore its retired review workflow |
 | Completed worktree cleanup | User explicitly requested removal after PR merge and finished delivery, without recurring confirmation | Coordinator verifies merged PR, clean tree, and preserved evidence, safely stops/settles task resources, then removes via Orca; workers never delete active/coordinator checkouts |
 | Retired reviewer | User explicitly requested full OpenCode workflow deletion, including the inherited version; no further repairs/runs or secret changes | Deletion merged in PR #1; keep it absent and preserve the historical handoff |
