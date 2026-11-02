@@ -225,22 +225,27 @@ gh pr create --base dev --title "docs: describe the change" --body-file /tmp/rie
 ```
 
 Add the real PR URL to progress after creation and push that update to the same
-branch. Do not open a second PR for review fixes. The selected reviewer is native
-Kilo Code Reviews through its GitHub App. Every ready PR/head whose base is not
-`main` requires completed latest-head Kilo feedback plus passing applicable checks.
-The user's requested exclusion for base `main` is pending platform verification;
-`REVIEW.md` or dashboard prompt text does not enforce an event filter.
+branch. Do not open a second PR for review fixes. The user approved mandatory
+checks for `dev`, with zero required formal approvals:
 
-After local checks pass, send the coordinator the PR URL and exact head SHA.
-Once enabled for this repository, Kilo documents automatic review on non-draft
-opening, pushes, reopening, and marking ready. Record the resulting review/comment
-URLs and verify which head completed; an eye reaction or an old summary is not
-completion evidence. The [Kilo guide](docs/development/kilo-review.md) records setup
-and current limitations. Do not post legacy Kody triggers or invent cloud rerun
-commands. Missing setup or a missing review remains a blocker.
+| Required check | Expected GitHub App |
+| --- | --- |
+| `Kilo Code Review` | `kilo-code-bot`, App ID `2193792` |
+| `validate` | `github-actions`, App ID `15368` |
 
-Inspect applicable checks plus all three review surfaces: issue comments, submitted
-reviews, and inline review comments. For example, replace `123` with your PR:
+Both checks must succeed on the current head, and strict required checks require
+the branch to be up to date with `dev`. Preserve the PR requirement, resolved
+review threads, deletion and non-fast-forward protections. Existing `main` rules,
+including its formal approval requirement, remain unchanged. The coordinator owns
+[ruleset configuration and evidence](docs/development/kilo-review.md); an existing
+user bypass entry is preserved but must not be exercised.
+
+Native Kilo uses its GitHub App. Once enabled, it reviews non-draft opening,
+pushes, reopening and marking ready. After local checks pass, send the coordinator
+the PR URL and exact head SHA. Record the completion/check URLs, source Apps and
+reviewed SHA; an eye reaction or old summary is insufficient. Inspect applicable
+checks and all three review surfaces: issue comments, submitted reviews and inline
+review comments. For example, replace `123` with your PR:
 
 ```sh
 gh pr view 123 --json url,headRefOid,baseRefName,isDraft,statusCheckRollup
@@ -249,17 +254,19 @@ gh api --paginate repos/Ljrr3045/rielia/pulls/123/reviews
 gh api --paginate repos/Ljrr3045/rielia/pulls/123/comments
 ```
 
-Evaluate every finding against the code/requirements. Fix real defects and attach
-relevant validation; give a concise technical disposition for substantive findings
-that are fixed, deferred, or rejected. A failed, cancelled, missing, or incomplete
-review is a blocker, not evidence of no findings. After any push, rerun affected
-checks, report the new head, and wait for Kilo's latest-head round. Reread all three
-surfaces and handle feedback before handoff. A prior-head review never approves
-changed code. Verify check names/results actually emitted by the integration;
-do not invent a required check name. Kilo summary/inline feedback does not establish
-a formal GitHub `APPROVED` review. If repository protection requires approval,
-obtain it independently and preserve that gate. Retired Kody/OpenCode evidence
-remains historical; no review bypass is authorized.
+The coordinator evaluates every finding against the code and requirements. Fix
+valid defects with relevant validation and give concise technical dispositions for
+substantive findings. After any push, rerun affected checks and wait for the new
+head's completed Kilo review. Missing, failed, cancelled, incomplete or
+prior-head-only evidence blocks merge. Zero required approvals on `dev` does not
+waive feedback handling, thread resolution or coordinator ownership. Kilo check
+success does not claim a formal GitHub `APPROVED` review.
+
+Do not add an auto-approve action, expand `GITHUB_TOKEN` permissions, introduce a
+PAT, exercise bypass, post legacy Kody triggers, or invent Kilo cloud commands.
+The requested exclusion of base `main` from native Kilo events remains unverified
+and awaits the user's decision; choosing required checks is not an event filter
+or permission to review `main`. Retired Kody/OpenCode evidence remains historical.
 
 Only the coordinator merges. Do not deploy or merge from a worker task. A dispatched
 worker reports branch/worktree, PR/head SHA, validation/review evidence, and blockers

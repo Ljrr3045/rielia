@@ -46,5 +46,10 @@ alone do not complete a flow. Mark unavailable checks honestly.
 Stay read-only. Reviewers do not merge, deploy, alter secrets, or bypass gates.
 Tie the review result to the current PR head; a prior-head result does not cover
 new commits. Report findings and completion truthfully without claiming CI,
-formal GitHub approval, or a platform capability that was not observed. The
-coordinator alone decides merge after the required evidence and protections pass.
+formal GitHub approval, or a platform capability that was not observed. PRs to
+`dev` require successful current-head `Kilo Code Review` (Kilo App `2193792`) and
+`validate` (GitHub Actions App `15368`), an up-to-date branch and resolved threads,
+with zero required formal approvals. Existing `main` rules are unchanged. Do not
+add auto-approval, expand token permissions, introduce a PAT or use bypass. The
+coordinator evaluates findings and alone merges after the evidence and protections
+pass. Selecting required checks does not filter Kilo events for `main`.

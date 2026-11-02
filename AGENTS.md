@@ -158,17 +158,19 @@ Keep these boundaries in both current and future code.
 5. Run `git diff --check` and the applicable checks in CONTRIBUTING. Open one
    non-draft PR targeting `dev`, in English, with scope/requirements, validation,
    limitations, and remaining decisions. Use a body file for multiline CLI text.
-6. Every ready PR/head with a base other than `main` requires completed native
-   Kilo Code Reviews feedback and passing applicable checks. The requested `main`
-   exclusion is pending platform verification; a prompt is not an enforced filter.
-   Report the PR URL and head SHA to the coordinator. Inspect issue comments,
-   submitted reviews, inline comments, and applicable checks; tie completion to
-   that exact head, resolve valid findings with evidence, and record concise
-   technical dispositions. After any push, rerun affected checks and wait for the
-   latest-head review. Missing, failed, cancelled, or incomplete review blocks
-   merge. Kilo feedback is not evidence of GitHub `APPROVED`; satisfy any required
-   formal approval independently without bypassing protection. No legacy Kody
-   trigger or invented Kilo command. See [setup and evidence requirements](docs/development/kilo-review.md).
+6. PRs to `dev` require current-head successful `Kilo Code Review` from the Kilo
+   App and `validate` from GitHub Actions, with the branch up to date. The approved
+   `dev` policy requires zero formal approvals; no auto-approve action, token
+   permission expansion, PAT, or bypass substitutes for these checks. Preserve
+   the PR requirement, thread resolution, deletion/non-fast-forward protections,
+   and existing `main` rules, including its formal approval requirement. The
+   requested exclusion of `main` from Kilo events remains unverified; required-check
+   selection is not an event filter. Report the PR/head to the coordinator, inspect
+   issue comments, submitted reviews, inline comments and checks, resolve valid
+   findings with evidence, and record concise dispositions. After any push, rerun
+   affected checks and wait for the new head's review. Missing, failed, cancelled,
+   incomplete, or prior-head-only review blocks merge. No legacy Kody trigger or
+   invented Kilo command. See [App identities, protection and evidence](docs/development/kilo-review.md).
 7. Only the coordinator merges. Do not deploy or merge. A dispatched worker reports
    through its active Orca preamble with branch/worktree, PR/head, checks, review
    evidence, and blockers; send `worker_done` once and then stop task activity.

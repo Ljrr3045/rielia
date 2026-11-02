@@ -23,15 +23,18 @@
 
 - Latest PR head SHA and base branch:
 - Kilo Code Reviews completion URL(s), result, and evidence tying it to that head:
-- Applicable CI/Kilo check names, URLs, and results actually observed:
+- Current-head `Kilo Code Review` result/URL/source App (`2193792`, `kilo-code-bot`):
+- Current-head `validate` result/URL/source App (`15368`, `github-actions`):
+- Branch up-to-date status and unresolved review threads:
 - Issue comments, submitted reviews, and inline comments inspected:
 - Findings, technical dispositions/fix evidence, and any fresh head review:
-- Formal GitHub approval evidence if required by repository protection:
+- Base-specific protection: `dev` requires zero formal approvals; existing `main` approval rules remain unchanged:
 - Setup, `main` exclusion, or other unverified integration blockers:
 
 <!-- See docs/development/kilo-review.md. No legacy Kody trigger or invented Kilo command. -->
 <!-- Missing/failed/cancelled/incomplete review blocks merge; prior-head evidence never approves changed code. -->
-<!-- Kilo feedback alone does not establish GitHub APPROVED. The requested base-main exclusion is pending verification. -->
+<!-- dev requires both App-bound checks on the current head, resolved threads and coordinator disposition. No auto-approve action/token expansion/PAT/bypass. -->
+<!-- main rules are unchanged. Required-check selection does not enforce the still-unverified main Kilo event exclusion. -->
 
 ## Limitations and remaining decisions
 

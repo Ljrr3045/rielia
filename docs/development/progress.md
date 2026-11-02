@@ -40,26 +40,41 @@ implementation, without completing tickets or weakening automated checks/launch 
 ## 2026-11-02 review policy maintenance
 
 T00 governance-only maintenance selects native Kilo Code Reviews in place of Kody
-and the abandoned OpenCode PR integration. [Setup, sources and evidence gates](kilo-review.md)
-record the connected/enabled native dashboard, existing global settings with
-**Use REVIEW.md OFF** and **Skip Bots ON**, unresolved base-`main` scope, unverified
-formal approval/reply/rerun behavior, and bot-PR coverage limits. Every ready non-`main` head requires completed latest-head
-Kilo feedback plus applicable checks; any formal approval required by GitHub
-protection remains independent. No legacy Kody trigger, custom workflow, secrets,
-product code, handoff edits, product acceptance, deployment or merge is included.
-The OpenCode Go frontend development choice and historical review evidence remain.
+and the abandoned OpenCode PR integration. The user approved mandatory checks on
+`dev`: current-head SUCCESS for `Kilo Code Review` (App `2193792`, `kilo-code-bot`)
+and `validate` (App `15368`, `github-actions`), with zero required formal approvals.
+Strict checks require an up-to-date branch. PR, thread-resolution, deletion and
+non-fast-forward protections remain; the existing user bypass entry is retained
+but never exercised. The coordinator reviews comments, resolves valid findings
+and alone merges. Existing `main` rules, including formal approval, are unchanged.
+No auto-approve workflow, token permission expansion, PAT or bypass is included.
+[Configuration, App identities and evidence](kilo-review.md) record ruleset
+implementation separately from this documentation-only PR. The coordinator applied
+and verified active `dev`-only [ruleset `26377556`](https://github.com/Ljrr3045/rielia/rules/26377556)
+and then narrowed `25810056` to `main` only with its original rules preserved;
+effective branch/API reads confirmed both required source Apps. No bypass or
+token permission change was used.
 
-The coordinator reports [PR #25](https://github.com/Ljrr3045/rielia/pull/25) closed
-unmerged, abandoned branches/worktrees removed, empty repository Actions
-variables/secrets, and four retired workflow registrations disabled; only Technical
-fixture CI remains active. OpenCode App removal is a pending user decision. Branch `chore/kilo-review-policy` starts from `origin/dev`
-`64ad0d7` in its isolated worktree. Documentation validation passes: 47 imported files, 30 asset hashes/sizes and 467
-local links in 59 documents; whitespace checks and scope inspection pass. Root
-`REVIEW.md` has 3,098 characters (below 10,000). Application suites are inapplicable
-to this prose-only change. [PR #26](https://github.com/Ljrr3045/rielia/pull/26) is non-draft to `dev`; final-head
-CI and native review are pending and coordinator-owned. The coordinator authorized native review of
-this bounded PR to `dev`; latest-head review and unresolved capabilities remain
-pending. This entry does not claim completed Kilo acceptance or formal approval.
+The connected/enabled dashboard has **Use REVIEW.md OFF** and **Skip Bots ON**.
+Native exclusion of base `main` remains unverified and the user's scope decision
+is still pending; required-check selection is not an event filter or permission
+to review `main`. Cloud rerun/reply/formal-approval behavior and bot-PR coverage
+remain limited or unverified. OpenCode App uninstall is also unanswered. The
+coordinator closed [PR #25](https://github.com/Ljrr3045/rielia/pull/25) unmerged,
+removed abandoned branches/worktrees, verified empty repository Actions
+variables/secrets, and disabled four retired workflow registrations; Technical
+fixture CI alone remains active. Historical evidence and the OpenCode Go frontend
+worker choice remain unchanged.
+
+[PR #26](https://github.com/Ljrr3045/rielia/pull/26) is non-draft to `dev` on
+`chore/kilo-review-policy`, isolated from base `origin/dev` `64ad0d7`. The coordinator
+verified Kilo and CI SUCCESS/no findings on prior head `49f3d4e`, with no formal
+reviews. The updated head requires fresh checks and feedback inspection. Local documentation
+validation passes: 47 imported files, 30 asset hashes/sizes, 467 local links in 59
+documents, whitespace checks and seven-file scope inspection. Root `REVIEW.md` is
+3,501 characters (below 10,000). No product code, immutable handoff edit, ticket
+acceptance, deployment or merge is included. Application suites are inapplicable
+to this prose-only change.
 
 ## Current delivery
 
@@ -98,7 +113,7 @@ pending. This entry does not claim completed Kilo acceptance or formal approval.
 | T00 | Complete: [PR #1](https://github.com/Ljrr3045/rielia/pull/1) merged 2026-10-24T23:56:43Z as `8dd7c31f454c1989d017dbf7b40e6646112d2d2a` after final-head Kody SUCCESS/APPROVED |
 | T01–T35 | No full ticket complete; T01 logic and presentation are bounded partial evidence only |
 | Prior resource cleanup | Coordinator reports all prior completed worktrees removed, preview stopped and evidence preserved outside the repository; current worker never deletes its active checkout |
-| Automated review | Native Kilo Code Reviews connected/enabled; [unverified controls and scope](kilo-review.md) remain pending. Every ready non-`main` head needs completed current-head feedback and passing applicable checks; satisfy any required formal approval independently. Historical Kody evidence is preserved |
+| Automated review | `dev` requires current-head successful App-bound `Kilo Code Review` and `validate`, up-to-date branch, resolved threads and coordinator disposition, with zero required formal approvals. Existing `main` rules are unchanged; [Kilo event exclusion and remaining limits](kilo-review.md) are still pending. Historical Kody evidence is preserved |
 
 T00 acceptance: complete byte-identical import with links/assets/hashes/proposal
 status; practical repository instructions and docs; truthful dependency/state
@@ -837,7 +852,7 @@ actual use/demand; no launch date or public capacity has been established.
 | Principal/authorship | T35.0 implements bounded identity/membership/policy and server-derived context; delegated user and autonomous Agent remain distinct | [Scope and local evidence](principal-foundations.md); actual task/comment/export and verified credential adapters remain future work |
 | Private-project admin visibility | Ratified 2026-10-29: active human workspace owners/admins automatically read every scoped private project; delegated content keeps grant ceilings and privacy administration remains human web only | [Decision and bounded T07 contract](project-access.md); presentation must disclose automatic administrative access |
 | Operations/public service | VPS capacity, budget/date, registration policy, public obligations not established | Maintainer records decisions and measured readiness in later tickets |
-| Automated review | Native Kilo Code Reviews selected 2026-11-02; latest-head feedback and applicable checks required for ready PRs except base `main` | [Current configuration, pending exclusion and approval limits](kilo-review.md); coordinator verifies the reviewed SHA, all review surfaces and independent GitHub protection before merging |
+| Automated review | User approved mandatory App-bound Kilo/validate checks and zero formal approvals for `dev`; retain PR/thread/deletion/non-fast-forward protection and existing `main` rules | [Ruleset and check evidence](kilo-review.md); coordinator verifies the current head and all feedback before merge without bypass. Required checks do not enforce the pending `main` Kilo event exclusion |
 | Development models | User's 2026-10-25 rule: UI/UX presentation uses OpenCode Go DeepSeek V4.1 Flash 1017 (`opencode-go/deepseek-v4.1-flash`, `max`); all logic uses Codex `gpt-6.1-sol` `xhigh`, including browser auth/data/hooks/proxy/tests | [Model evidence and limits](frontend-agent.md); verify effective sessions and isolated worktrees. User resumed bounded T01/B0 development after the model-only pause checkpoint; OpenCode development does not restore its retired review workflow |
 | Completed worktree cleanup | User explicitly requested removal after PR merge and finished delivery, without recurring confirmation | Coordinator verifies merged PR, clean tree, and preserved evidence, safely stops/settles task resources, then removes via Orca; workers never delete active/coordinator checkouts |
 | Retired reviewer | User explicitly requested full OpenCode workflow deletion, including the inherited version; no further repairs/runs or secret changes | Deletion merged in PR #1; keep it absent and preserve the historical handoff |
