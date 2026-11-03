@@ -6,18 +6,39 @@ This records repository changes. No application version has been released.
 
 ### Review policy
 
+- Adopt the user-approved 2026-11-03 Draft → complete commits/checks → Ready
+  cadence for this governance bootstrap and future development. Batch all source,
+  documentation, PR URL/progress and base updates while Draft; workers verify Draft
+  before each push to an existing PR. Only the coordinator controls transitions,
+  freezes each complete new head and marks Ready once, then returns completed
+  reviews to Draft before valid-fix batches. Final delivery stays non-draft with
+  required current-head Kilo/validate, completed requested-round feedback and
+  resolved findings/threads. Preserve automatic CI, all protections/ownership
+  limits, Use REVIEW.md OFF and Skip Bots ON. [Pinned-source evidence](docs/development/kilo-review.md#manually-controlled-draft-batches)
+  supports the cadence; live draft/Ready adoption proof remains pending. Draft
+  does not cancel live review, same-SHA toggles can deduplicate, and later rounds
+  may be incremental/rechecks. No verified native mention command or dashboard
+  manual-job substitute for the required check; no dashboard/workflow/ruleset,
+  product, T11, permission, secret or deployment change. Main automatic exclusion
+  remains unverified.
+
 - Reconcile the minimal main governance bootstrap into dev with a real merge
   commit. Combine the CI ownership/whitespace gates and secure checkout options
   with every existing technical fixture check/pin, keeping `validate`, read-only
   contents permission, concurrency and the 25-minute job; push coverage includes
   both branches and pull requests remain unrestricted. Preserve main ancestry
-  when integrating this PR into dev: use merge, not squash or rebase, to avoid
-  repeating the CI add/add conflict. Update entrypoints and governance evidence
-  for merged PRs #26/#27 and active CODEOWNERS/CI on both bases. No product promotion
+  through its merge into dev, avoiding a repeated CI add/add conflict. Update
+  entrypoints and governance evidence for merged PRs #26/#27 and active CODEOWNERS/CI
+  on both bases. No product promotion
   to main, T11, dependency, reviewer-setting or deployment change is included.
-  [PR #28](https://github.com/Ljrr3045/rielia/pull/28). Local handoff/link, whitespace,
-  YAML/structure/shell and bidirectional merge-tree checks pass; final-head remote
-  CI and Kilo remain coordinator merge gates.
+  [PR #28](https://github.com/Ljrr3045/rielia/pull/28) merged 2026-11-02 at 16:59:22
+  UTC as `13d0029aa87262af1560e1bc1ba3312d30f6da6e`. Final source head
+  `5be7aae6c8e63a36333480c2386b7f130a755f4a` passed
+  [validate](https://github.com/Ljrr3045/rielia/actions/runs/41485473282/job/125414972576)
+  and [Kilo](https://app.kilo.ai/code-reviews/5a40b954-1ced-475a-9963-3dba3e874072)
+  from the required Apps; [post-merge validate](https://github.com/Ljrr3045/rielia/actions/runs/41486779176/job/125419130069)
+  also passed. Local handoff/link, whitespace, YAML/structure/shell and bidirectional
+  merge-tree checks passed. This historical evidence does not approve later heads.
 
 - Adopt native Kilo and layered branch protection. Core `Development — Review & CI`
   (`26377556`) requires Kilo App `2193792` and validate App `15368`; core

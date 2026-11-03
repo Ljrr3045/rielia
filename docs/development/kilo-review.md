@@ -1,6 +1,7 @@
 # Native Kilo Code Reviews
 
-Decision date: 2026-11-02. Scope: T00 repository-governance maintenance. No product
+Decision dates: 2026-11-02 (reviewer/protections), 2026-11-03 (draft batching).
+Scope: T00 repository-governance maintenance. No product
 P/US or UI acceptance changes; no T01–T35 ticket is completed. Native Kilo Code
 Reviews replaces Kody and the abandoned OpenCode PR integration. OpenCode Go
 remains the separately selected frontend presentation worker.
@@ -59,17 +60,16 @@ The PR-only exception covers the entire separate ownership ruleset, including
 its approval and code-owner requirements. It does not bypass either core ruleset.
 The coordinator verified this live configuration when resolving PR #27's
 conditional self-approval warning; repository content alone cannot prove a bypass
-list. The reconciliation PR to `dev` must retain its main-into-dev merge ancestry
-through a **merge commit**, not squash or rebase. Otherwise a later merge can
-repeat the same CI add/add conflict despite an equivalent file resolution.
+list. [PR #28](https://github.com/Ljrr3045/rielia/pull/28) retained the main-into-dev
+ancestry through a **merge commit**; preserve that ancestry in later integrations.
 
 ## Native setup and observed evidence
 
-The coordinator verified the connected GitHub App and existing global settings:
+On 2026-11-02, the coordinator verified the connected GitHub App and global settings:
 AI review enabled for all 23 App-accessible repositories, including available
 Rielia; DeepSeek V4.1 Flash 1017, Thinking Max; Balanced; PR Gate Threshold
 **Warnings and above**; **Use REVIEW.md OFF**, **Skip Bots ON**, Advanced OFF.
-Unsaved UI exploration was discarded by reload. This PR does not change those
+Unsaved UI exploration was discarded by reload. Draft batching does not change those
 settings or activate its own repository guidance. Model reasoning uses Kilo credits.
 
 On prior head `49f3d4eded3876ce12d978d834ad48c58966309e` of
@@ -91,7 +91,15 @@ before merge on 2026-11-02 at 16:25:11 UTC. Its
 [one conditional CODEOWNERS warning](https://github.com/Ljrr3045/rielia/pull/27#issuecomment-6582155310)
 was resolved with the live ownership-ruleset evidence described above, rather than
 claimed absent. The coordinator removed both completed worktrees. These prior
-results do not approve the reconciliation's new head.
+results do not approve later heads.
+
+PR #28's final source head `5be7aae6c8e63a36333480c2386b7f130a755f4a` passed
+[validate](https://github.com/Ljrr3045/rielia/actions/runs/41485473282/job/125414972576)
+(App `15368`) and [Kilo](https://app.kilo.ai/code-reviews/5a40b954-1ced-475a-9963-3dba3e874072)
+(check `125414538453`, App `2193792`) before merging to `dev` on 2026-11-02 at
+16:59:22 UTC as `13d0029aa87262af1560e1bc1ba3312d30f6da6e`. Its
+[post-merge validate](https://github.com/Ljrr3045/rielia/actions/runs/41486779176/job/125419130069)
+also passed. These are historical results, not draft-batching adoption evidence.
 
 The user's requested exclusion of base `main` from Kilo events remains
 **unverified**. The coordinator found no supported control in the inspected UI
@@ -123,13 +131,76 @@ still has all-repository access; uninstall remains an unanswered user decision.
 Preserve historical evidence. No custom workflow, App uninstall, credential,
 variable, token permission, or product code change is included in this PR.
 
+## Manually controlled draft batches
+
+On 2026-11-03, the user approved **Draft → complete commits/checks → Ready** for
+this governance bootstrap and future development. This supersedes unconditional
+non-draft opening. Native automatic review stays enabled; the coordinator controls
+when its Ready event occurs. No dashboard change is needed if the documented
+enabled setup remains in place. No workflow, ruleset, CODEOWNERS, App, permission,
+secret or token change is part of this policy.
+
+1. For initial publication, verify no PR exists for the branch, push prepared
+   commits and immediately open one **Draft** PR to `dev`. Complete all remaining
+   source/documentation commits, the real PR URL/progress update, applicable checks and base synchronization
+   while Draft. CI remains automatic and required on normal PR/push events.
+   Before every push to an existing PR, the worker verifies its actual draft
+   state; if it is not Draft, stop and ask the coordinator. Do not push while
+   Ready or during a live review.
+2. The coordinator verifies the complete batch, current-head CI, up-to-date base
+   and absence of a paid Kilo review during draft opening/pushes. If live behavior
+   differs, stop Ready transitions and report the discrepancy without weakening
+   gates. Freeze the head, record the SHA and transition time, then the coordinator
+   marks Ready **once** for that completed new-head batch.
+3. Wait for the requested Kilo round to finish. The coordinator inspects all
+   feedback, triages findings and delegates valid fixes together. After completed
+   review, the coordinator converts the same PR to Draft **before** corrective
+   pushes. The assigned worker batches fixes, documentation, base updates and
+   affected checks; the coordinator verifies/freezes that new head and marks Ready
+   once for the next round. Final review/delivery is non-draft.
+4. Any later push, including documentation or base-update commits, invalidates
+   older acceptance and requires this cycle again. Record final review evidence
+   in the PR body or external delivery report without adding a source commit after
+   final review. Only the coordinator controls Draft/Ready transitions and merges.
+
+This cadence is supported by official documentation and public source pinned to
+Kilo-Org/cloud commit `6028971e06143007a764a7d473ff5e543934786d`:
+
+- The [native PR handler](https://github.com/Kilo-Org/cloud/blob/6028971e06143007a764a7d473ff5e543934786d/apps/web/src/lib/integrations/platforms/github/webhook-handlers/pull-request-handler.ts#L74)
+  exits for drafts before review creation or cancellation, accepts `ready_for_review`,
+  creates the native check on the PR head and deduplicates existing same-SHA runs.
+  **Draft conversion does not cancel in-flight work**; repeated same-SHA toggles
+  are not a reliable rerun. Failed/cancelled same-SHA rounds need separately verified
+  supported native retry behavior; do not manufacture commits or statuses.
+- [Payload preparation](https://github.com/Kilo-Org/cloud/blob/6028971e06143007a764a7d473ff5e543934786d/apps/web/src/lib/code-reviews/triggers/prepare-review-payload.ts#L687)
+  can use prior completed review context for incremental/recheck rounds. The handler
+  can also reuse covered merge-only verdicts; a new green icon does not prove a fresh
+  full model pass. Inspect coverage and the requested round's details.
+- Fresh [dashboard manual jobs](https://github.com/Kilo-Org/cloud/blob/6028971e06143007a764a7d473ff5e543934786d/apps/web/src/lib/code-reviews/manual-code-review-jobs.ts#L266)
+  dispatch without native check creation, and the [completion guard](https://github.com/Kilo-Org/cloud/blob/6028971e06143007a764a7d473ff5e543934786d/apps/web/src/app/api/internal/code-review-status/%5BreviewId%5D/route.ts#L1046)
+  skips GitHub updates without a check ID. A dashboard report cannot substitute for
+  the required native check. No native `@kilocode-bot /review` check trigger is
+  verified; conversational mentions and local `/review` do not establish one.
+
+These are source findings, not an attestation of deployed code. Live adoption
+still requires coordinator observation of draft events without paid review,
+one Ready transition/native round per completed new-head batch, correct App/SHA
+checks and merge-box recognition. [Progress](progress.md) records actual versus
+pending evidence. Missing Kilo while Draft is an expected **closed merge gate**.
+This cadence controls cooperating contributors, not who can open a public ready
+PR. Restricting paid native review to approved authors (initially `Ljrr3045`) is
+an open cost-control requirement under separate research; no author/fork abuse
+protection is established here. The coordinator holds Ready pending that decision.
+
 ## Documented behavior
 
-Official documentation consulted on 2026-11-02:
+Official documentation consulted on 2026-11-02 and 2026-11-03:
 
 - [GitHub Code Reviews](https://kilo.ai/docs/automate/code-reviews/github) documents
   native App setup and automatic review on non-draft opening, pushes, reopening
-  and marking ready. New pushes cancel older runs; summaries may update in place.
+  and marking ready; draft opening is skipped. Summaries may update in place.
+  Its general push-cancellation description does not override the pinned draft
+  guard above; never rely on Draft to cancel a live review.
 - [Code Reviews overview](https://kilo.ai/docs/automate/code-reviews/overview)
   documents **Use REVIEW.md**: root [REVIEW.md](../../REVIEW.md) comes from the PR
   base branch, with a 10,000-character limit. This PR cannot supply its own active
@@ -138,22 +209,32 @@ Official documentation consulted on 2026-11-02:
 
 ## Acceptance and merge evidence
 
-1. Run applicable checks and report the exact PR/head to the coordinator. Verify
-   current-head SUCCESS and source Apps for both checks on `dev`, or `validate`
-   on `main`, plus an up-to-date branch. An eye reaction or old summary is insufficient.
-2. Inspect issue comments, submitted reviews and inline comments. The coordinator
+1. Finish the Draft batch and applicable checks, then report the exact PR/head
+   to the coordinator. Record the Ready transition URL/time and requested Kilo
+   run/check ID. Wait for that requested round, including a supported retry;
+   an earlier green result cannot satisfy a queued/incomplete new request.
+2. Verify completed current-head SUCCESS and source Apps for both checks on `dev`,
+   or `validate` on `main`, plus an up-to-date branch. Inspect all runs, including
+   failed/cancelled ones, and the PR's effective required checks/merge box. Retain
+   the Kilo-reviewed source SHA and CI's PR/head or synthetic merge association;
+   [GitHub distinguishes these checks](https://docs.github.com/en/pull-requests/how-tos/merge-and-close-pull-requests/troubleshooting-required-status-checks).
+   An eye reaction, prior-head check or old mutable summary is insufficient.
+3. Inspect check summaries/annotations, issue comments, submitted reviews and inline
+   comments/threads. Kilo SUCCESS can contain warnings. The coordinator
    triages findings, delegates valid fixes to the assigned worker, verifies evidence
    and records concise dispositions. The assigned worker implements fixes and
    reruns affected checks. Resolve required threads; a reply is not a documented
    rerun or completion mechanism.
-3. After any push, rerun affected checks and wait for the new head's required
-   results, including Kilo completion for `dev`. Missing, failed, cancelled,
+4. Batch valid fixes through Draft before the coordinator requests the next round.
+   After any push, rerun affected checks and require the new head's results,
+   including completed Kilo feedback for `dev`. Missing, failed, cancelled,
    incomplete or prior-head-only required evidence blocks merge. No legacy Kody
    trigger or invented command.
-4. Verify the core gates with no bypass. For another author, require `Ljrr3045`'s
+5. Verify the core gates with no bypass. For another author, require `Ljrr3045`'s
    current-head `APPROVED` review; for his own PR, record the permitted approval-only
    exception and author/merger evidence. Check base-file activation and resolved
-   threads. Only the coordinator merges after all required evidence is satisfied.
+   threads, final non-draft state and unchanged head immediately before merge.
+   Only the coordinator merges after all required evidence is satisfied.
 
 For prose-only changes, run `python3 scripts/verify-handoff.py`,
 `git diff --check` and `git diff --cached --check`, inspect scope and root guidance

@@ -36,6 +36,10 @@ uncertainty from demonstrated defects. Avoid style-only or speculative findings.
 
 ## Evidence and review output
 
+The 2026-11-02 setup observation has **Use REVIEW.md OFF**. Editing this file does
+not activate platform guidance; if enabled later, Kilo loads the base branch's
+file. See the [current policy and activation evidence](docs/development/kilo-review.md).
+
 For documentation-only changes, expect the handoff/link verifier, whitespace
 checks, and diff inspection. Do not demand unrelated application suites. For
 behavior changes, use the applicable contribution checks and meaningful evidence
@@ -46,6 +50,18 @@ alone do not complete a flow. Mark unavailable checks honestly.
 Stay read-only. Reviewers do not merge, deploy, alter secrets or bypass gates.
 Tie results to the current PR head; old results do not cover new commits. Do not
 claim CI, formal approval or platform behavior without observed evidence.
+
+The approved cadence is Draft → complete commits/checks/base sync → coordinator
+Ready once at the frozen head. Workers verify actual Draft before every push to
+an existing PR and ask the coordinator if not Draft; no push while Ready or during
+live review. After completed feedback, the coordinator triages findings and
+returns the same PR to Draft before worker fix batches. Only the coordinator
+controls Draft/Ready transitions. Draft does not cancel live review, same-SHA
+toggles can deduplicate, and later rounds may be incremental/rechecks. Wait for
+the requested round's completion/run ID and reviewed SHA, inspect all check and
+feedback surfaces, and keep missing/failed/cancelled/incomplete evidence blocked.
+Any push, including docs/base changes, invalidates older acceptance; final delivery
+is non-draft. Dashboard manual jobs do not substitute for the native required check.
 
 Core `Development — Review & CI` requires current-head Kilo (App `2193792`) and
 validate (App `15368`) on `dev`; core `Main — Release Protection` requires validate
@@ -61,8 +77,8 @@ bypass, auto-approve action, token expansion or PAT. Only the coordinator merges
 Code-owner matching uses the file on the base branch. CODEOWNERS and CI are active
 on dev after PR #26 and main after the separate minimal PR #27 bootstrap, whose
 one-off Kilo review was authorized. No product promotion occurred. Preserve the
-main/dev reconciliation's merge ancestry through a merge commit into dev, not
-squash or rebase. Kilo is not required by main
+main/dev reconciliation's merge ancestry, integrated into dev by PR #28's merge
+commit. Kilo is not required by main
 protection; required-check selection does not enforce automatic-event exclusion.
 The coordinator triages/delegates findings and records dispositions; the assigned
 worker implements fixes. Skip Bots ON leaves unreviewed bot PRs to dev blocked;

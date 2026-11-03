@@ -1,10 +1,11 @@
 # Delivery progress and decisions
 
-> Review policy update (2026-11-02): Kody triggers and Kody review requirements
+> Review policy updates (2026-11-02/03): Kody triggers and Kody review requirements
 > below are obsolete. [Current review policy](kilo-review.md) governs new changes.
+> New PRs open Draft for batching; only the coordinator controls Ready transitions.
 > Historical review evidence and runtime guidance are preserved.
 
-Updated: 2026-11-02 UTC. This is repository delivery tracking, separate from the
+Updated: 2026-11-03 UTC. This is repository delivery tracking, separate from the
 unchanged [handoff](../handoff/00-START-HERE.md). Plans describe intended outcomes,
 not completed implementation. This checkout has the T02.0 fixture, merged T02.1/
 T02.2 identity experiment, and a fictional T01/B0 task-prototype logic adapter plus
@@ -40,6 +41,52 @@ Real provider/staging, staging-dependent remote OAuth discovery and
 real-project/user acceptance are OPEN/DEFERRED until an advanced end-to-end slice
 and user scheduling. This overrides their immediate scheduling gate for local
 implementation, without completing tickets or weakening automated checks/launch gates.
+
+## 2026-11-03 manually controlled Kilo batches
+
+The user approved Draft → complete commits/checks → coordinator Ready once for
+this T00 governance bootstrap and future development, superseding unconditional
+non-draft opening. The seven-file policy update uses `docs/kilo-review-batching`,
+isolated from `origin/dev` at `13d0029aa87262af1560e1bc1ba3312d30f6da6e`.
+Implementation PR creation is pending. All commits, PR URL/progress evidence,
+applicable checks and base sync belong in Draft; workers verify actual Draft
+before each push to an existing PR and ask if not Draft. The coordinator alone
+controls transitions, freezes the batch and marks Ready once. After completed
+feedback, the coordinator triages findings and returns the same PR to Draft
+before assigned-worker corrective batches. No push while Ready or during live
+review; every changed head needs new applicable acceptance. Final delivery is
+non-draft, with current-head App-bound Kilo/validate and resolved findings/threads.
+
+[Pinned source and official evidence](kilo-review.md#manually-controlled-draft-batches)
+support the draft guard, Ready route, head-specific native check, same-SHA dedupe
+and incremental/recheck limits. Draft conversion does not cancel a live review.
+No native mention review command is verified; fresh dashboard manual jobs lack
+native check creation in the pinned source. These findings do not prove deployed
+behavior. **Live adoption evidence remains pending**: no paid Kilo during draft
+events, one coordinator Ready/native round per completed new-head batch, completed
+requested-round feedback, correct Apps/SHA and effective merge-box recognition.
+Missing/cancelled/incomplete checks remain closed gates. The Nov 2 enabled setup,
+Use REVIEW.md OFF, Skip Bots ON, main validate-only protection and unverified main
+event exclusion remain unchanged; no dashboard change is needed if setup holds.
+The coordinator also holds Ready pending separate research into restricting paid
+native review to approved authors, initially `Ljrr3045`. Draft batching does not
+prevent external authors from opening ready PRs; no author/fork abuse gate is
+claimed or implemented by this update.
+
+Local handoff/link verification passes (47 imported files, 30 asset hashes/sizes,
+502 local links in 59 documents), with unstaged/staged whitespace and full
+seven-file diff inspection. Full remote CI and coordinator review/adoption gates
+remain pending. No product P/US/UI acceptance, full ticket, T11, product code,
+workflow, CODEOWNERS, ruleset, App, pin, permission, secret or deployment change.
+
+Separately, [PR #29](https://github.com/Ljrr3045/rielia/pull/29) and
+[PR #30](https://github.com/Ljrr3045/rielia/pull/30), dev-to-main tests, closed
+unmerged. PR #30's [CI run](https://github.com/Ljrr3045/rielia/actions/runs/41584259240)
+failed proposed-diff whitespace on `projects-view.tsx:2992` (new blank line at EOF)
+in its synthetic merge; no product fix is included here. Its
+[cancelled native Kilo artifact](https://app.kilo.ai/code-reviews/c70f1da4-6329-4f02-8891-4ad879c3e881)
+does not prove review success or main event exclusion. These later contexts do
+not invalidate PR #28's historical source-head delivery evidence below.
 
 ## 2026-11-02 review policy maintenance
 
@@ -123,25 +170,35 @@ on both `dev` and `main` while retaining unrestricted pull-request validation.
 The check remains `validate`, contents permission stays read-only, and the full
 25-minute job/concurrency contract remains.
 
-The coordinator must integrate this PR into `dev` with a **merge commit**, not
-squash or rebase, preserving main as an ancestor so subsequent merges do not
-repeat the add/add conflict. This is main-into-dev reconciliation only; no product
+The coordinator integrated this PR into `dev` with a **merge commit**, preserving
+main as an ancestor so subsequent merges do not repeat the add/add conflict.
+This is main-into-dev reconciliation only; no product
 promotion to `main`, T11, deployment, dependency or reviewer-setting change is
 included. Historical Kody evidence and immutable handoff content remain unchanged.
-[PR #28](https://github.com/Ljrr3045/rielia/pull/28) is non-draft to `dev` on this
-branch. Merge commit `76e07c2170d613ce3982e0f796ae8c91cfea4d7a` has the exact dev
-and main refs above as first/second parents. Local checks pass: the handoff/link
+[PR #28](https://github.com/Ljrr3045/rielia/pull/28) merged to `dev` on 2026-11-02
+at 16:59:22 UTC as `13d0029aa87262af1560e1bc1ba3312d30f6da6e`, with parents
+`a52beaa3bd535062f293fbb5f16e2699129092b4` and
+`5be7aae6c8e63a36333480c2386b7f130a755f4a`. Its internal merge commit
+`76e07c2170d613ce3982e0f796ae8c91cfea4d7a` has the original dev
+and main base refs named at this section's start as first/second parents.
+Local checks passed: the handoff/link
 verifier (47 imported files, 30 asset hashes/sizes, 497 links in 59 documents),
 unstaged/staged/commit whitespace checks, Ruby Psych YAML parsing, structural
 comparison preserving all nine dev steps/pins and the two exact main governance
 checks, Bash syntax for all eight run commands, and execution of the ownership
 and whitespace commands. Four `git merge-tree --write-tree` simulations (both
 directions for HEAD/main and HEAD/dev) are conflict-free and yield the HEAD tree;
-main ancestry is verified. The eight-file diff preserves immutable handoff content
-and the historical progress ledger; root `REVIEW.md` is 4,443 characters.
-No dedicated Actions linter is installed locally. Unrelated application suites
-and dependency installation were not duplicated; full remote technical CI and
-native Kilo review of the final head remain required before coordinator merge.
+main ancestry was verified. The eight-file diff preserved immutable handoff content
+and the historical progress ledger; root `REVIEW.md` was 4,443 characters then.
+No dedicated Actions linter was installed locally. Unrelated application suites
+and dependency installation were not duplicated. Final source head
+`5be7aae6c8e63a36333480c2386b7f130a755f4a` passed
+[validate](https://github.com/Ljrr3045/rielia/actions/runs/41485473282/job/125414972576)
+(App `15368`, 16:57:44 UTC) and
+[Kilo](https://app.kilo.ai/code-reviews/5a40b954-1ced-475a-9963-3dba3e874072)
+(check `125414538453`, App `2193792`, 16:53:19 UTC) before merge.
+[Post-merge validate](https://github.com/Ljrr3045/rielia/actions/runs/41486779176/job/125419130069)
+also passed on `13d0029…`. These results do not approve the new batching PR.
 
 ## Current delivery
 
@@ -180,7 +237,7 @@ native Kilo review of the final head remain required before coordinator merge.
 | T00 | Complete: [PR #1](https://github.com/Ljrr3045/rielia/pull/1) merged 2026-10-24T23:56:43Z as `8dd7c31f454c1989d017dbf7b40e6646112d2d2a` after final-head Kody SUCCESS/APPROVED |
 | T01–T35 | No full ticket complete; T01 logic and presentation are bounded partial evidence only |
 | Prior resource cleanup | Coordinator reports all prior completed worktrees removed, preview stopped and evidence preserved outside the repository; current worker never deletes its active checkout |
-| Automated review | Core dev Kilo/validate and main validate rules have no bypass. Separate ownership layer requires Ljrr3045 approval for other authors, with his own-PR exception restricted by coordinator policy. [Base-file activation, event exclusion and limits](kilo-review.md) remain explicit; historical Kody evidence is preserved |
+| Automated review | Draft batching and coordinator-only Ready transitions approved 2026-11-03; live adoption proof pending. Core dev Kilo/validate and main validate retain no bypass. Other authors require Ljrr3045 current-head approval; his ownership exception remains own-PR only. [Cadence, activation, event exclusion and limits](kilo-review.md) preserve historical evidence |
 
 T00 acceptance: complete byte-identical import with links/assets/hashes/proposal
 status; practical repository instructions and docs; truthful dependency/state
@@ -919,7 +976,7 @@ actual use/demand; no launch date or public capacity has been established.
 | Principal/authorship | T35.0 implements bounded identity/membership/policy and server-derived context; delegated user and autonomous Agent remain distinct | [Scope and local evidence](principal-foundations.md); actual task/comment/export and verified credential adapters remain future work |
 | Private-project admin visibility | Ratified 2026-10-29: active human workspace owners/admins automatically read every scoped private project; delegated content keeps grant ceilings and privacy administration remains human web only | [Decision and bounded T07 contract](project-access.md); presentation must disclose automatic administrative access |
 | Operations/public service | VPS capacity, budget/date, registration policy, public obligations not established | Maintainer records decisions and measured readiness in later tickets |
-| Automated review | Core Kilo/validate on dev and validate on main have no bypass; separate ownership approval has a PR-only owner exception used only for his own PRs | [Named rulesets, approval policy and activation](kilo-review.md); other authors need his current-head APPROVED. No main promotion authorized; automatic Kilo main exclusion remains unverified |
+| Automated review | Approved Draft batching; coordinator verifies/freezes each complete batch and marks Ready once. Core Kilo/validate on dev and validate on main retain no bypass; ownership exception remains own-PR only | [Cadence and proof gates](kilo-review.md); live adoption pending, other authors need current-head APPROVED, main automatic exclusion remains unverified; no main promotion |
 | Development models | User's 2026-10-25 rule: UI/UX presentation uses OpenCode Go DeepSeek V4.1 Flash 1017 (`opencode-go/deepseek-v4.1-flash`, `max`); all logic uses Codex `gpt-6.1-sol` `xhigh`, including browser auth/data/hooks/proxy/tests | [Model evidence and limits](frontend-agent.md); verify effective sessions and isolated worktrees. User resumed bounded T01/B0 development after the model-only pause checkpoint; OpenCode development does not restore its retired review workflow |
 | Completed worktree cleanup | User explicitly requested removal after PR merge and finished delivery, without recurring confirmation | Coordinator verifies merged PR, clean tree, and preserved evidence, safely stops/settles task resources, then removes via Orca; workers never delete active/coordinator checkouts |
 | Retired reviewer | User explicitly requested full OpenCode workflow deletion, including the inherited version; no further repairs/runs or secret changes | Deletion merged in PR #1; keep it absent and preserve the historical handoff |

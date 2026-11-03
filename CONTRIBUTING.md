@@ -219,18 +219,29 @@ accepted scope without a recorded decision.
 
 ## Pull requests and review
 
-Open **one non-draft PR targeting `dev`** for the assigned change. Use English and
+Open **one Draft PR targeting `dev`** for the assigned change. Use English and
 the [PR template](.github/pull_request_template.md). Include the problem/result,
 T00 or T/P/US scope, validation evidence, exclusions, risks, and pending decisions.
 Use a body file for multiline GitHub CLI descriptions/comments:
 
+For initial publication, verify no PR exists for the branch, push the prepared
+commits, then immediately create the Draft PR. The draft-state guard below applies
+to every subsequent PR-associated push.
+
 ```sh
-gh pr create --base dev --title "docs: describe the change" --body-file /tmp/rielia-pr-body.md
+gh pr create --draft --base dev --title "docs: describe the change" --body-file /tmp/rielia-pr-body.md
 ```
 
-Add the real PR URL to progress after creation and push that update to the same
-branch. Do not open a second PR for review fixes. The approved protections use
-separate core and ownership layers:
+Complete all commits, the real PR URL/progress update, applicable checks and base
+synchronization while Draft. Before every push to an existing PR, verify it is
+actually Draft; if not, stop and ask the coordinator. CI remains automatic and
+required on normal PR/push events. Only the coordinator controls Draft/Ready
+transitions: verify the batch, current-head CI, up-to-date base and absence of paid
+Kilo during draft events, freeze the head, then mark Ready once for that completed
+new-head batch. Final review/delivery must be non-draft. Do not push while Ready or
+during a live review, or open a second PR for fixes. This user-approved 2026-11-03
+cadence supersedes unconditional non-draft opening, including its governance
+bootstrap. The approved protections retain separate core and ownership layers:
 
 | Base | Core ruleset | Required current-head checks | Core bypass |
 | --- | --- | --- | --- |
@@ -267,18 +278,28 @@ the product to `main` or authorize general Kilo review there. Missing checks mus
 not be bypassed. The ownership exception covers the separate ownership ruleset's
 approval and code-owner requirements, while core rules retain no bypass.
 
-For the `fix/main-dev-reconciliation` PR, the coordinator must use a **merge
-commit**, not squash or rebase. Its branch merges `origin/main` into the `dev`
-lineage and combines the two CI files. Preserve that ancestry so later merges
-recognize the bootstrap as integrated instead of repeating its add/add conflict.
-This reconciliation targets `dev`; product promotion to `main` remains separate.
+[PR #28](https://github.com/Ljrr3045/rielia/pull/28) integrated the main/dev
+reconciliation through a **merge commit**, preserving `main` ancestry and combining
+the CI files. Preserve that ancestry in later integrations. Product promotion to
+`main` remains separate.
 
-Native Kilo uses its GitHub App. Once enabled, it reviews non-draft opening,
-pushes, reopening and marking ready. After local checks pass, send the coordinator
-the PR URL and exact head SHA. Record the completion/check URLs, source Apps and
-reviewed SHA; an eye reaction or old summary is insufficient. Inspect applicable
-checks and all three review surfaces: issue comments, submitted reviews and inline
-review comments. For example, replace `123` with your PR:
+Native Kilo uses its GitHub App and remains enabled. Its draft guard and Ready
+event support the [controlled batching policy and pinned evidence](docs/development/kilo-review.md#manually-controlled-draft-batches).
+Ready-state opening/push/reopen events can still start paid review. Draft conversion
+does not cancel an in-flight run; wait for completion before a corrective batch.
+Same-SHA Ready toggles can deduplicate, and later rounds may be incremental/rechecks.
+No native `@kilocode-bot /review` check trigger is verified; fresh dashboard manual
+jobs lack native check creation in the pinned source and cannot replace the gate.
+No dashboard change is needed if the documented enabled setup remains in place.
+
+Send the coordinator the complete Draft batch's PR URL and exact head SHA. Record
+the coordinator's Ready transition URL/time, requested run/check ID, completion/check
+URLs, source Apps and reviewed SHA. Wait for that requested round, including a
+supported retry; an old green check, reaction or mutable summary is insufficient.
+Inspect all check runs, summaries/annotations and review surfaces: issue comments,
+submitted reviews and inline comments/threads. Retain CI's PR/head or synthetic
+merge association and confirm effective required checks in the merge box. For
+example, replace `123` with your PR:
 
 ```sh
 gh pr view 123 --json url,headRefOid,baseRefName,isDraft,statusCheckRollup
@@ -287,13 +308,20 @@ gh api --paginate repos/Ljrr3045/rielia/pulls/123/reviews
 gh api --paginate repos/Ljrr3045/rielia/pulls/123/comments
 ```
 
-The coordinator triages each finding, delegates valid fixes to the assigned
-worker, verifies evidence and records concise technical dispositions. The assigned
-worker implements fixes, reruns affected checks and reports the exact head.
-After any push, wait for the new head's required checks and, for `dev`, completed Kilo review. Missing, failed,
+After completed feedback, the coordinator triages all findings, converts the same
+PR to Draft before corrective pushes and delegates valid fixes together. The
+assigned worker verifies Draft, batches fixes/documentation/base updates, runs
+affected checks and reports the exact new head. The coordinator verifies evidence
+and dispositions, freezes that head and marks Ready once for the next round.
+Any push, including documentation or base changes, invalidates prior acceptance.
+After a push, require the new head's checks and, for `dev`, completed feedback from
+the requested Kilo round. Missing, failed,
 cancelled, incomplete or prior-head-only required evidence blocks merge. Confirm
 maintainer approval for other authors or the permitted own-PR exception, and resolve
-required threads. Kilo success is separate from a formal GitHub `APPROVED` review.
+required threads. Kilo success can contain warnings and is separate from a formal
+GitHub `APPROVED` review. Recheck final non-draft/up-to-date state, head and gates
+immediately before coordinator merge. Record final evidence in the PR body or an
+external report without creating another source commit after final review.
 
 The user approved keeping **Skip Bots ON** and blocking unreviewed PRs. A
 bot-authored PR to `dev` without native Kilo completion remains blocked by the
