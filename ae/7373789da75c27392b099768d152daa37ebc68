@@ -1,0 +1,45 @@
+REVIEW.md
+  s_555484cd395c78::t_6236150c1e49f8 39-42,54-64
+  s_555484cd395c78::t_efd86ce4ac6e44 80-81
+  s_555484cd395c78::t_fb2b8c92962c63 65
+docs/development/progress.md
+  s_555484cd395c78::t_4763fb8e388788 3,5,8,45-70,75,80-90,173-175,178-181,193-201,240,979
+  s_555484cd395c78::t_456b4dea95c456 71-74
+  s_555484cd395c78::t_efd86ce4ac6e44 182-184,191-192
+  s_555484cd395c78::t_3935039ffba82e 76
+  s_555484cd395c78::t_85f414b90927c7 77-79
+AGENTS.md
+  s_555484cd395c78::t_efd86ce4ac6e44 184-185
+  s_555484cd395c78::t_3935039ffba82e 165-167
+  s_555484cd395c78::t_ac5beedb10a3bc 163,168-172,187-198
+CHANGELOG.md
+  s_555484cd395c78::t_efd86ce4ac6e44 30-32
+  s_555484cd395c78::t_9d5168dd733786 9-24,34-41
+.github/pull_request_template.md
+  s_555484cd395c78::t_8d9cd5b619f963 22-29,32,36,38-40,48-50
+  s_555484cd395c78::t_efd86ce4ac6e44 55
+docs/development/kilo-review.md
+  s_555484cd395c78::t_74f7eae1db0a9a 3-4,63-64,68,72,94-102,134-142,146-189,194,197,201-203,212-223,228-230,233,236-237
+  s_555484cd395c78::t_85f414b90927c7 144-145
+  s_555484cd395c78::t_456b4dea95c456 190-193
+  s_555484cd395c78::t_3935039ffba82e 143
+CONTRIBUTING.md
+  s_555484cd395c78::t_017a7879f905ae 222,232,235-244,281-302,311-318,321-324
+  s_555484cd395c78::t_3935039ffba82e 227-230
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ae7373789da75c27392b099768d152daa37ebc68",
+  "prompts": {},
+  "sessions": {
+    "s_555484cd395c78": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1a389-378f-7a50-be31-e1b68f601a96",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
