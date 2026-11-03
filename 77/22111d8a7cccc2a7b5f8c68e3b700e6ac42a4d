@@ -1,0 +1,48 @@
+CHANGELOG.md
+  s_555484cd395c78::t_9b4d6ec3e35582 9-18,22,36
+  s_555484cd395c78::t_24c77cae6bd77a 19-21
+CONTRIBUTING.md
+  s_555484cd395c78::t_24c77cae6bd77a 229-230
+  s_555484cd395c78::t_6a3c5cc3ed7b94 222-228,231
+AGENTS.md
+  s_555484cd395c78::t_88ae64ce7307c1 165-169
+.github/pull_request_template.md
+  s_555484cd395c78::t_405ed4b6cd2ff3 26
+docs/development/kilo-review.md
+  s_555484cd395c78::t_f77a503423f376 3,136-162,169-170,219-221
+  s_555484cd395c78::t_24c77cae6bd77a 14-15
+docs/development/pr-review-playbook.md
+  s_555484cd395c78::t_e4f68c022d0723 22-24
+  s_555484cd395c78::t_eede2e81e6dfe7 1-21,25-59
+docs/development/progress.md
+  s_555484cd395c78::t_e4f68c022d0723 92,97-99
+  s_555484cd395c78::t_9f1fa118a1fc3b 74-86,93-96,100-102,262,1001
+  s_555484cd395c78::t_24c77cae6bd77a 49,87-90
+  s_680ac9ebaeaf9c::t_e6130a887f6bd3 91
+REVIEW.md
+  s_555484cd395c78::t_e74dd8ccb505cb 54-59
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "7722111d8a7cccc2a7b5f8c68e3b700e6ac42a4d",
+  "prompts": {},
+  "sessions": {
+    "s_555484cd395c78": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1a389-378f-7a50-be31-e1b68f601a96",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    },
+    "s_680ac9ebaeaf9c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19d42-5370-7ae2-b626-d5727bce2dc3",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
