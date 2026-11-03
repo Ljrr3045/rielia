@@ -160,8 +160,21 @@ Keep these boundaries in both current and future code.
 4. Update progress and the unreleased changelog with actual state, decisions,
    checks, limitations, and PR evidence. Do not close another ticket by implication.
 5. Run `git diff --check` and the applicable checks in CONTRIBUTING. Open one
-   non-draft PR targeting `dev`, in English, with scope/requirements, validation,
+   **Draft** PR targeting `dev`, in English, with scope/requirements, validation,
    limitations, and remaining decisions. Use a body file for multiline CLI text.
+   GitHub PR creation is collaborators-only; the public repository remains readable.
+   Only `Ljrr3045` is currently a collaborator, with no invitations. New collaborator
+   invitations broaden review admission and require a deliberate user decision.
+   This creation gate does not cancel queued Kilo work or establish that existing
+   external PR events are blocked; report any unexpected external PR immediately.
+   Initial publication: verify no PR exists for the branch, push the prepared
+   commits, then immediately create the Draft PR. The draft-state guard applies
+   to every subsequent PR-associated push.
+   Complete every batch commit, PR URL/progress update, check and base sync while
+   Draft. Before every push to an existing PR, verify it is actually Draft; if
+   not, stop and ask the coordinator. Only the coordinator controls Draft/Ready
+   transitions: verify the complete batch and no paid Kilo during draft events,
+   freeze the head, then mark Ready once. Final review/delivery is non-draft.
 6. Core `Development — Review & CI` requires current-head successful Kilo/validate
    checks for `dev`; core `Main — Release Protection` requires validate for `main`.
    Both have no bypass actors and require PRs, an up-to-date head, resolved threads,
@@ -173,14 +186,21 @@ Keep these boundaries in both current and future code.
    policy must enforce that limit. It cannot bypass core checks/protections and
    creates no fake approval. CODEOWNERS and CI are active on dev after PR #26 and
    main after the minimal PR #27 bootstrap, whose one-off Kilo review was authorized;
-   no product promotion occurred. Preserve the main/dev reconciliation's merge
-   ancestry when integrating it into dev: use a merge commit, not squash or rebase.
+   no product promotion occurred. PR #28 integrated the main/dev reconciliation
+   through a merge commit; preserve that ancestry in later integrations.
    Kilo is not required by main
-   protection; its automatic-event exclusion remains unverified. After any push,
-   rerun affected checks and wait for current-head required evidence, including
-   completed Kilo feedback for `dev`. The coordinator triages findings, delegates
-   fixes to the assigned worker, verifies evidence and records dispositions; that
-   worker implements fixes and reruns affected checks. With Skip Bots ON, bot PRs
+   protection; its automatic-event exclusion remains unverified. Never push while
+   Ready or during a live review. After completed feedback, the coordinator triages
+   all findings and converts the same PR to Draft before corrective pushes; the
+   assigned worker batches valid fixes and affected checks. The coordinator verifies
+   evidence/dispositions, freezes the new head and marks Ready once per completed
+   batch. Any push, including docs/base updates, invalidates older acceptance.
+   Require current-head checks and completed feedback for the requested Kilo round
+   on `dev`, inspecting check summaries/annotations, comments, reviews and threads.
+   Draft does not cancel an in-flight review; same-SHA toggles can deduplicate and
+   later rounds may be incremental/rechecks. Missing/failed/cancelled/incomplete
+   evidence blocks merge; dashboard manual jobs are no substitute for the native
+   check. With Skip Bots ON, bot PRs
    to dev lacking Kilo remain blocked; do not waive the gate or claim complete
    automated bot coverage. No auto-approve action, token expansion, PAT, global admin
    bypass, legacy Kody trigger or invented Kilo command. See [ruleset identities,
