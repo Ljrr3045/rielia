@@ -48,7 +48,10 @@ The user approved Draft → complete commits/checks → coordinator Ready once f
 this T00 governance bootstrap and future development, superseding unconditional
 non-draft opening. The seven-file policy update uses `docs/kilo-review-batching`,
 isolated from `origin/dev` at `13d0029aa87262af1560e1bc1ba3312d30f6da6e`.
-Implementation PR creation is pending. All commits, PR URL/progress evidence,
+[PR #31](https://github.com/Ljrr3045/rielia/pull/31) opened **Draft** to `dev`;
+GitHub confirmed `isDraft=true` and automatic `validate` started at 22:39 UTC.
+No native Kilo check appeared in that initial readback; this snapshot does not
+prove absence of paid work or complete adoption. All commits, PR URL/progress evidence,
 applicable checks and base sync belong in Draft; workers verify actual Draft
 before each push to an existing PR and ask if not Draft. The coordinator alone
 controls transitions, freezes the batch and marks Ready once. After completed

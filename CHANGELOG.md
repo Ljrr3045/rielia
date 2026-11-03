@@ -20,7 +20,8 @@ This records repository changes. No application version has been released.
   may be incremental/rechecks. No verified native mention command or dashboard
   manual-job substitute for the required check; no dashboard/workflow/ruleset,
   product, T11, permission, secret or deployment change. Main automatic exclusion
-  remains unverified.
+  remains unverified. [Draft PR #31](https://github.com/Ljrr3045/rielia/pull/31)
+  records this bounded policy update; coordinator live-adoption/Ready gates remain open.
 
 - Reconcile the minimal main governance bootstrap into dev with a real merge
   commit. Combine the CI ownership/whitespace gates and secure checkout options
