@@ -51,6 +51,12 @@ Stay read-only. Reviewers do not merge, deploy, alter secrets or bypass gates.
 Tie results to the current PR head; old results do not cover new commits. Do not
 claim CI, formal approval or platform behavior without observed evidence.
 
+GitHub PR creation is collaborators-only; public reading remains available.
+The Nov 3 audit found only `Ljrr3045`, no invitations or outsider PRs. New
+collaborator invitations broaden admission and require a deliberate user decision.
+Kilo has no verified native human-author filter; this creation gate does not
+cancel queued jobs or establish that pre-existing outsider PR events are blocked.
+
 The approved cadence is Draft → complete commits/checks/base sync → coordinator
 Ready once at the frozen head. Workers verify actual Draft before every push to
 an existing PR and ask the coordinator if not Draft; no push while Ready or during

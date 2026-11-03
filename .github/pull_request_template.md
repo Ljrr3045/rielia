@@ -23,6 +23,7 @@
 
 - [ ] PR opened Draft; all commits, PR URL/progress, applicable checks and base sync completed while Draft.
 - [ ] Actual Draft verified before each push to the existing PR; no push while Ready or during live review.
+- GitHub collaborators-only PR admission/roster/invitation readback; any existing external PR or queued-work concern:
 - Coordinator verification of complete batch/current-head CI and no paid Kilo during draft events:
 - Frozen batch head SHA; coordinator Ready transition URL/time (pending until performed):
 

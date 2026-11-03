@@ -46,7 +46,7 @@ implementation, without completing tickets or weakening automated checks/launch 
 
 The user approved Draft → complete commits/checks → coordinator Ready once for
 this T00 governance bootstrap and future development, superseding unconditional
-non-draft opening. The seven-file policy update uses `docs/kilo-review-batching`,
+non-draft opening. The governance update uses `docs/kilo-review-batching`,
 isolated from `origin/dev` at `13d0029aa87262af1560e1bc1ba3312d30f6da6e`.
 [PR #31](https://github.com/Ljrr3045/rielia/pull/31) opened **Draft** to `dev`;
 GitHub confirmed `isDraft=true` and automatic `validate` started at 22:39 UTC.
@@ -71,16 +71,35 @@ requested-round feedback, correct Apps/SHA and effective merge-box recognition.
 Missing/cancelled/incomplete checks remain closed gates. The Nov 2 enabled setup,
 Use REVIEW.md OFF, Skip Bots ON, main validate-only protection and unverified main
 event exclusion remain unchanged; no dashboard change is needed if setup holds.
-The coordinator also holds Ready pending separate research into restricting paid
-native review to approved authors, initially `Ljrr3045`. Draft batching does not
-prevent external authors from opening ready PRs; no author/fork abuse gate is
-claimed or implemented by this update.
+The user then approved **collaborators-only PR submissions**. At 22:52:03 UTC,
+the sole repository-setting mutation changed `pull_request_creation_policy`
+from `all` to `collaborators_only`; independent 22:52:23 UTC readback confirmed
+PRs still enabled and public visibility. Before/after paginated audits found only
+`Ljrr3045` (admin), no invitations and all 31 PRs authored by him; PR #31 remained
+Draft at `ddb685d0da13f7b313f30286e062cc1cadfd0124`. Public reading remains open,
+but outsiders cannot create PRs to any base. Future collaborator invitations
+broaden the gate and need a deliberate user decision. The inspected Kilo route
+has no native human-author allowlist; this GitHub creation gate does not cancel
+queued work or establish that existing outsider PR events are blocked. No outsider
+PR was found; queued-job absence and deployed dashboard verification are separate
+coordinator checks. [Admission evidence and official sources](kilo-review.md#collaborator-only-pr-admission)
+replace the pending author-policy decision; Ready/native review proof stays open.
+The user also requested a [portable PR review playbook](pr-review-playbook.md)
+for future projects, linked from CONTRIBUTING/current policy. This eighth file
+separates a reusable admission/batching/evidence/cleanup checklist from Rielia IDs
+and requires independent repository/provider verification.
 
-Local handoff/link verification passes (47 imported files, 30 asset hashes/sizes,
-502 local links in 59 documents), with unstaged/staged whitespace and full
-seven-file diff inspection. Full remote CI and coordinator review/adoption gates
-remain pending. No product P/US/UI acceptance, full ticket, T11, product code,
-workflow, CODEOWNERS, ruleset, App, pin, permission, secret or deployment change.
+Initial handoff/link verification passed (47 imported files, 30 asset hashes/sizes,
+502 local links in 59 documents) for the initial draft batch, with whitespace and
+full seven-file diff inspection. Prior head `ddb685d0…` passed
+[full CI](https://github.com/Ljrr3045/rielia/actions/runs/41732790070/job/126254507237)
+on Nov 3 at 22:46:19 UTC; this does not accept the new admission-documentation
+head. The expanded eight-file batch passes the verifier (510 links in 60 documents,
+same 47 imported files/30 assets), whitespace and full diff inspection; its own
+final remote checks remain required. Coordinator
+review/adoption gates remain pending. No product P/US/UI acceptance, full ticket,
+T11, product code, workflow, CODEOWNERS, ruleset, App/Kilo setting, pin, token
+permission, secret or deployment change; only the approved GitHub creation setting.
 
 Separately, [PR #29](https://github.com/Ljrr3045/rielia/pull/29) and
 [PR #30](https://github.com/Ljrr3045/rielia/pull/30), dev-to-main tests, closed
@@ -240,7 +259,7 @@ also passed on `13d0029…`. These results do not approve the new batching PR.
 | T00 | Complete: [PR #1](https://github.com/Ljrr3045/rielia/pull/1) merged 2026-10-24T23:56:43Z as `8dd7c31f454c1989d017dbf7b40e6646112d2d2a` after final-head Kody SUCCESS/APPROVED |
 | T01–T35 | No full ticket complete; T01 logic and presentation are bounded partial evidence only |
 | Prior resource cleanup | Coordinator reports all prior completed worktrees removed, preview stopped and evidence preserved outside the repository; current worker never deletes its active checkout |
-| Automated review | Draft batching and coordinator-only Ready transitions approved 2026-11-03; live adoption proof pending. Core dev Kilo/validate and main validate retain no bypass. Other authors require Ljrr3045 current-head approval; his ownership exception remains own-PR only. [Cadence, activation, event exclusion and limits](kilo-review.md) preserve historical evidence |
+| Automated review | Draft batching/coordinator-only Ready and GitHub collaborators-only PR admission approved 2026-11-03; admission setting verified, Ready/native proof pending. Core dev Kilo/validate and main validate retain no bypass. Other authors require Ljrr3045 current-head approval; his exception remains own-PR only. [Cadence/admission and limits](kilo-review.md) preserve history |
 
 T00 acceptance: complete byte-identical import with links/assets/hashes/proposal
 status; practical repository instructions and docs; truthful dependency/state
@@ -979,7 +998,7 @@ actual use/demand; no launch date or public capacity has been established.
 | Principal/authorship | T35.0 implements bounded identity/membership/policy and server-derived context; delegated user and autonomous Agent remain distinct | [Scope and local evidence](principal-foundations.md); actual task/comment/export and verified credential adapters remain future work |
 | Private-project admin visibility | Ratified 2026-10-29: active human workspace owners/admins automatically read every scoped private project; delegated content keeps grant ceilings and privacy administration remains human web only | [Decision and bounded T07 contract](project-access.md); presentation must disclose automatic administrative access |
 | Operations/public service | VPS capacity, budget/date, registration policy, public obligations not established | Maintainer records decisions and measured readiness in later tickets |
-| Automated review | Approved Draft batching; coordinator verifies/freezes each complete batch and marks Ready once. Core Kilo/validate on dev and validate on main retain no bypass; ownership exception remains own-PR only | [Cadence and proof gates](kilo-review.md); live adoption pending, other authors need current-head APPROVED, main automatic exclusion remains unverified; no main promotion |
+| Automated review | Draft batching and collaborators-only GitHub PR admission adopted; admission verified with only Ljrr3045/no invitations. Coordinator Ready/native proof remains open; core checks retain no bypass and ownership exception remains own-PR only | [Cadence/admission gates](kilo-review.md); invitations need deliberate decision, existing-PR/queued-job limits apply, other authors need current-head APPROVED, main automatic exclusion unverified; no main promotion |
 | Development models | User's 2026-10-25 rule: UI/UX presentation uses OpenCode Go DeepSeek V4.1 Flash 1017 (`opencode-go/deepseek-v4.1-flash`, `max`); all logic uses Codex `gpt-6.1-sol` `xhigh`, including browser auth/data/hooks/proxy/tests | [Model evidence and limits](frontend-agent.md); verify effective sessions and isolated worktrees. User resumed bounded T01/B0 development after the model-only pause checkpoint; OpenCode development does not restore its retired review workflow |
 | Completed worktree cleanup | User explicitly requested removal after PR merge and finished delivery, without recurring confirmation | Coordinator verifies merged PR, clean tree, and preserved evidence, safely stops/settles task resources, then removes via Orca; workers never delete active/coordinator checkouts |
 | Retired reviewer | User explicitly requested full OpenCode workflow deletion, including the inherited version; no further repairs/runs or secret changes | Deletion merged in PR #1; keep it absent and preserve the historical handoff |

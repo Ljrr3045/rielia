@@ -162,6 +162,11 @@ Keep these boundaries in both current and future code.
 5. Run `git diff --check` and the applicable checks in CONTRIBUTING. Open one
    **Draft** PR targeting `dev`, in English, with scope/requirements, validation,
    limitations, and remaining decisions. Use a body file for multiline CLI text.
+   GitHub PR creation is collaborators-only; the public repository remains readable.
+   Only `Ljrr3045` is currently a collaborator, with no invitations. New collaborator
+   invitations broaden review admission and require a deliberate user decision.
+   This creation gate does not cancel queued Kilo work or establish that existing
+   external PR events are blocked; report any unexpected external PR immediately.
    Initial publication: verify no PR exists for the branch, push the prepared
    commits, then immediately create the Draft PR. The draft-state guard applies
    to every subsequent PR-associated push.

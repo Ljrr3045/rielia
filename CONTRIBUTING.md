@@ -219,6 +219,16 @@ accepted scope without a recorded decision.
 
 ## Pull requests and review
 
+PR submissions are **collaborators only**, as approved and verified on 2026-11-03.
+Rielia stays publicly readable; external users cannot open PRs to any base branch.
+The current collaborator is `Ljrr3045`, with no pending invitations. Inviting
+collaborators expands review admission and needs a deliberate user decision.
+This GitHub creation gate does not cancel Kilo jobs or prove existing outsider
+PR events are blocked; report any unexpected external PR to the coordinator.
+See the [admission evidence and limits](docs/development/kilo-review.md#collaborator-only-pr-admission).
+For future projects, adapt the [portable PR review playbook](docs/development/pr-review-playbook.md)
+and independently verify their settings/provider behavior.
+
 Open **one Draft PR targeting `dev`** for the assigned change. Use English and
 the [PR template](.github/pull_request_template.md). Include the problem/result,
 T00 or T/P/US scope, validation evidence, exclusions, risks, and pending decisions.

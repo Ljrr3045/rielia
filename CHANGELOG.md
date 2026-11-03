@@ -6,6 +6,20 @@ This records repository changes. No application version has been released.
 
 ### Review policy
 
+- Adopt the user-approved persistent GitHub **Collaborators only** PR policy.
+  On 2026-11-03 at 22:52:03 UTC, change only `pull_request_creation_policy` from
+  `all` to `collaborators_only`; independent readback confirms public visibility
+  and PRs still enabled. Before/after audits find only `Ljrr3045`, no invitations
+  and no external PR among all 31; Draft PR #31 is unaffected. Public reading
+  remains open, while outsiders cannot create PRs to any base. Invitations broaden
+  the gate and need a deliberate user decision. Kilo has no verified native
+  human-author allowlist; existing outsider PR events and queued jobs are not
+  proven blocked/cancelled by this creation setting. [Evidence and official GitHub sources](docs/development/kilo-review.md#collaborator-only-pr-admission)
+  replace the pending author-policy decision; coordinator Ready/native Kilo proof
+  remains open. Add a [portable PR review playbook](docs/development/pr-review-playbook.md)
+  for future projects, with independent repository/provider verification and links
+  from contribution/current policy. No other setting or invitation changed.
+
 - Adopt the user-approved 2026-11-03 Draft → complete commits/checks → Ready
   cadence for this governance bootstrap and future development. Batch all source,
   documentation, PR URL/progress and base updates while Draft; workers verify Draft
@@ -19,7 +33,7 @@ This records repository changes. No application version has been released.
   does not cancel live review, same-SHA toggles can deduplicate, and later rounds
   may be incremental/rechecks. No verified native mention command or dashboard
   manual-job substitute for the required check; no dashboard/workflow/ruleset,
-  product, T11, permission, secret or deployment change. Main automatic exclusion
+  product, T11, token permission, secret or deployment change. Main automatic exclusion
   remains unverified. [Draft PR #31](https://github.com/Ljrr3045/rielia/pull/31)
   records this bounded policy update; coordinator live-adoption/Ready gates remain open.
 

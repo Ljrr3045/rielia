@@ -1,6 +1,6 @@
 # Native Kilo Code Reviews
 
-Decision dates: 2026-11-02 (reviewer/protections), 2026-11-03 (draft batching).
+Decision dates: 2026-11-02 (reviewer/protections), 2026-11-03 (draft batching/PR admission).
 Scope: T00 repository-governance maintenance. No product
 P/US or UI acceptance changes; no T01–T35 ticket is completed. Native Kilo Code
 Reviews replaces Kody and the abandoned OpenCode PR integration. OpenCode Go
@@ -11,6 +11,8 @@ trigger or requirement to use Kody for future reviews in older development guide
 even when phrased as an instruction. Dated notices mark those guides for readers
 who open them directly. This supersession affects review governance only;
 historical review evidence, runtime guidance and product scope are preserved.
+The [portable PR review playbook](pr-review-playbook.md) provides a reusable
+checklist; this document remains authoritative for Rielia's settings and evidence.
 
 ## Approved layered protection
 
@@ -131,14 +133,41 @@ still has all-repository access; uninstall remains an unanswered user decision.
 Preserve historical evidence. No custom workflow, App uninstall, credential,
 variable, token permission, or product code change is included in this PR.
 
+## Collaborator-only PR admission
+
+On 2026-11-03, the user approved persistent **Collaborators only** PR submissions.
+At 22:52:03 UTC, the sole repository-setting update was
+`pull_request_creation_policy=collaborators_only`; independent GitHub readback at
+22:52:23 UTC confirmed that value, `has_pull_requests=true` and public visibility.
+The repository remains publicly readable, but external users cannot create PRs
+to any base branch. See [GitHub's access policy](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/disabling-pull-requests)
+and [REST contract](https://docs.github.com/en/rest/repos/repos#update-a-repository).
+
+Before/after paginated audits found only `Ljrr3045` (ID `98565958`, admin) as a
+collaborator, no invitations and all 31 existing PRs authored by him. PR #31
+remained Draft at `ddb685d0da13f7b313f30286e062cc1cadfd0124`. This is a
+collaborator gate, not a fixed username allowlist: future collaborator invitations
+expand who can create review-bearing PRs and require a deliberate user decision.
+Reopening external submissions or transferring ownership likewise needs a new
+decision; after revocation, inspect that person's existing PRs.
+
+The inspected [native Kilo handler](https://github.com/Kilo-Org/cloud/blob/fe50ac74d4af02555b9b1bfeab37cabb8a7d3356/apps/web/src/lib/integrations/platforms/github/webhook-handlers/pull-request-handler.ts#L74-L437)
+has no human-author allowlist. GitHub admission provides the upstream control;
+Draft batching alone does not prevent outsider PR spend. The creation setting
+does not establish that pre-existing outsider PR synchronization/Ready/reopening
+is blocked, cancel queued/running Kilo work or undo spent credits. No outsider PR
+was found in either audit, but queued-job absence was not established. Report
+unexpected external PRs immediately for coordinator containment/job inspection;
+closing a PR is not verified cancellation. No paid outsider test was performed.
+
 ## Manually controlled draft batches
 
 On 2026-11-03, the user approved **Draft → complete commits/checks → Ready** for
 this governance bootstrap and future development. This supersedes unconditional
 non-draft opening. Native automatic review stays enabled; the coordinator controls
 when its Ready event occurs. No dashboard change is needed if the documented
-enabled setup remains in place. No workflow, ruleset, CODEOWNERS, App, permission,
-secret or token change is part of this policy.
+enabled setup remains in place. Beyond the PR creation policy above, no workflow,
+ruleset, CODEOWNERS, App/Kilo setting, secret or token permission changes are included.
 
 1. For initial publication, verify no PR exists for the branch, push prepared
    commits and immediately open one **Draft** PR to `dev`. Complete all remaining
@@ -187,10 +216,9 @@ still requires coordinator observation of draft events without paid review,
 one Ready transition/native round per completed new-head batch, correct App/SHA
 checks and merge-box recognition. [Progress](progress.md) records actual versus
 pending evidence. Missing Kilo while Draft is an expected **closed merge gate**.
-This cadence controls cooperating contributors, not who can open a public ready
-PR. Restricting paid native review to approved authors (initially `Ljrr3045`) is
-an open cost-control requirement under separate research; no author/fork abuse
-protection is established here. The coordinator holds Ready pending that decision.
+The approved GitHub collaborator admission gate above replaces the pending author
+decision. Coordinator batch/dashboard verification and Ready/native review proof
+remain required; no deployed Ready/Kilo success is claimed by this update.
 
 ## Documented behavior
 
