@@ -1,0 +1,29 @@
+CHANGELOG.md
+  s_196316477ee42d::t_e4b3df02827c01 17
+docs/development/progress.md
+  s_17ff89a46abc2d::t_75078724805dbf 91-95
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f4e3a4048a65c998a3bf3f38096fa7def64961dd",
+  "prompts": {},
+  "sessions": {
+    "s_17ff89a46abc2d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1aec8-4a70-7891-9002-8014c491cfb3",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    },
+    "s_196316477ee42d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1aeca-738c-7e00-96bb-f5d7b38beeea",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
