@@ -1,5 +1,33 @@
 # Delivery progress and decisions
 
+## 2026-11-06 T36 tooling implementation — IN PROGRESS
+
+The first bounded T36.2/T36.3 implementation adds exact Prettier3.9.10,
+Husky9.1.7, commitlint CLI/config21.2.4 and lint-staged17.6.0 at the root,
+retaining existing ESLint/framework/runtime pins and backend closure. See the
+[tooling delivery guide](quality-tooling.md) and [adoption inventory](formatting-inventory.json).
+Hook checks read staged contents without modifying/stashing/staging source;
+policy/dependency inputs must match the worktree. Linked-worktree prepare skips
+shared config changes; documented per-command hooks reuse the tracked entries.
+Existing validate now independently checks formatting/prospective new nonmerge
+messages using full history; all previous suites/events/permissions/pins remain.
+No title automation is added; coordinator validates the final squash subject.
+
+Mechanical root formatting is a separate commit from semantic tooling. This
+branch is `chore/t36-quality-tooling` from `origin/dev` `1c33560`; no application
+source formatting/extraction, UI/domain/schema/auth work or T37 skills are included.
+Focused installer/staged/range regressions are implemented; full local/remote
+validation and Draft PR evidence are recorded below when complete. T36 remains
+IN PROGRESS; unit infrastructure/numerical coverage gates and extraction remain
+follow-up implementation. Parallel unit audits in the guide are experimental
+baseline evidence, not installed coverage commands or accepted gates.
+
+PR #32 status correction: [merged](https://github.com/Ljrr3045/rielia/pull/32)
+as `1c33560f2fca954cbac6d35a87881a41dd72b017`, source head
+`ef03302368dc3027492a9ae5dd9c5ff96cc04156`; coordinator verified
+[postmerge validate success](https://github.com/Ljrr3045/rielia/actions/runs/42159134226)
+on November 6. Older Draft/pending notes are historical and do not approve this slice.
+
 > Review policy updates (2026-11-02/03): Kody triggers and Kody review requirements
 > below are obsolete. [Current review policy](kilo-review.md) governs new changes.
 > New PRs open Draft for batching; only the coordinator controls Ready transitions.

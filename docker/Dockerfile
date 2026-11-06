@@ -4,7 +4,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y openssl=3.0.22-
 
 FROM node-base AS dependencies
 WORKDIR /build
-ENV NEXT_TELEMETRY_DISABLED=1
+ENV NEXT_TELEMETRY_DISABLED=1 HUSKY=0
 RUN npm install --global pnpm@12.15.0
 COPY . .
 RUN pnpm install --frozen-lockfile

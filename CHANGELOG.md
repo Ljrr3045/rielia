@@ -4,6 +4,24 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+### T36 tooling enforcement
+
+- Add exact compatible Prettier/Husky/commitlint/lint-staged development pins,
+  guarded hook preparation and read-only staged-index formatting/lint checks.
+  Preserve partially staged source without stash/auto-stage; avoid shared Git
+  configuration changes in linked worktrees and document per-command hooks.
+- Enforce adopted/changed source formatting and prospective Conventional Commits
+  independently in the existing full validate job, retaining all integration,
+  runtime, audit, pin, permission and review gates. Preserve legacy/merge ancestry;
+  final squash subjects remain coordinator-validated, with no PR-title automation.
+- Record [formatting adoption and separate unit-audit findings](docs/development/quality-tooling.md).
+  T36 remains IN PROGRESS: application unit/coverage gates, extraction and T37
+  redesign are not delivered. No application behavior or handoff bytes change.
+- Correct PR #32 history: merged as `1c33560f2fca954cbac6d35a87881a41dd72b017`
+  from `ef03302368dc3027492a9ae5dd9c5ff96cc04156`, with
+  [postmerge CI success](https://github.com/Ljrr3045/rielia/actions/runs/42159134226)
+  verified November 6; older Draft observations below are historical.
+
 ### Development quality planning
 
 - Save the user's 2026-11-05 [T36 → T37 → T11 quality roadmap](docs/development/development-quality-roadmap.md),

@@ -16,10 +16,12 @@ T01–T35 acceptance, authorize later capabilities, or reorder the remaining
 dependency graph numerically. Required regression fixes within these tickets
 remain part of their bounded batches.
 
-This documentation PR prepares T36's developer guidance, records both large
-tickets and updates future worker/landing direction. It installs no tools or
-skills, restructures no application code, redesigns no screen and scaffolds no
-Astro app. T36 and T37 remain open. Finishing documentation or reducing file sizes
+PR #32 prepared T36's developer guidance, recorded both large tickets and updated
+future worker/landing direction. The first [tooling slice](quality-tooling.md)
+now implements formatting/hooks/prospective commit enforcement with focused
+regressions; application unit coverage gates, extraction and frontend skills
+remain follow-up work. No screen is redesigned or Astro app scaffolded.
+T36 is IN PROGRESS and T37 remains open. Finishing documentation or reducing file sizes
 cannot establish universal completeness, production readiness or UI quality.
 
 Traceability: architecture §§1.4–1.5, 2–4 and 8.2/8.6; T01/T04–T10/T35; product
@@ -50,6 +52,9 @@ separates implemented foundations from the improvements planned below:
 This is source/configuration evidence, not a fresh run of application suites or
 a complete code-quality/accessibility audit. Implementation workers refresh the
 inventory after intervening merges, then attach actual checks to each bounded PR.
+The table is the historical pre-tooling snapshot. See the
+[tooling delivery guide](quality-tooling.md) for current exact pins, adoption,
+separate unit-baseline audit findings and remaining enforcement/extraction work.
 
 ## T36 — Engineering quality, tooling and structure
 
@@ -128,16 +133,17 @@ because hooks can be skipped. Decide and document the commit range, PR-title ver
 commit semantics, squash/merge commits, existing history, bots and generated
 messages before enabling commitlint; do not reject immutable legacy history or
 invent an admission/reviewer bypass. Keep current CI/review/protection gates.
-CI currently fetches two commits; full PR-range commit validation needs deliberate
-base/head history retrieval and merge handling. Preserve the main/dev merge
+The first tooling slice changes CI checkout to full history for prospective
+base/head ranges and merge handling. Preserve the main/dev merge
 ancestry rather than rewriting history to satisfy a new message convention.
 
 Ignore immutable `docs/handoff`, generated Prisma/Next files, build output,
 dependencies and lockfiles where formatting is inappropriate. Preserve handoff
 checksums and selected source notices. Make initial formatting narrowly scoped
 and separately reviewable; no repository-wide mechanical churn mixed with
-extraction or policy changes. Exact new tool pins and configurations remain
-unverified/uninstalled in this PR. Roll out formatting through explicit adopted
+extraction or policy changes. Exact formatter/hook/commit/staged pins and
+configurations are now delivered separately from application coverage tooling.
+Roll out formatting through explicit adopted
 scopes and changed/new maintained-file checks initially. T36's final inventory
 must account for all targeted maintained web/API/shared source: record completed
 coverage and deliberate generated/vendor/immutable or other justified exceptions,
@@ -209,7 +215,8 @@ available on failures without turning a failed test/gate green. Prove passing an
 failing test/threshold cases, including maintained unexecuted files and skipped
 local hooks. Preserve existing `validate` checks, integration/runtime/audit stages,
 pins, read-only permissions, protected content and review/security requirements.
-No workflow change or new test command is delivered by this documentation batch.
+The first tooling slice adds quality-tooling regressions and formatting/commit CI;
+application unit commands, coverage artifacts and numerical gates remain follow-up work.
 
 ### T36 completion, tests and exclusions
 
@@ -374,11 +381,11 @@ The [landing direction](landing-direction.md) updates existing T30–T34 with th
 Astro app proposal, broader free-software narrative and real GitHub star-link
 behavior. It adds no third prerequisite ticket and does not displace T36/T37/T11.
 
-For this docs-only preparation, verify the immutable handoff/links and unstaged,
-staged and complete proposed-diff whitespace, inspect all changes, update
+For the historical documentation preparation, checks covered immutable handoff/links
+and proposed-diff whitespace. Implementation slices also run applicable suites
+from CONTRIBUTING and retain exact evidence; inspect all changes and update
 [progress](progress.md) and [changelog](../../CHANGELOG.md), and open one Draft PR
-to `dev`. Full remote CI remains obligatory. No unrelated application tests are
-required locally for prose-only changes. Only the coordinator transitions Ready,
+to `dev`. Full remote CI remains obligatory. Only the coordinator transitions Ready,
 requests paid review, accepts the batch and merges; current-head Kilo remains a
-closed merge gate while Draft. Implementation evidence for both tickets is still
-future work.
+closed merge gate while Draft. T36 tooling delivery is bounded; application unit
+gates/extraction and T37 implementation remain open.

@@ -32,7 +32,8 @@ the bounded engineering quality work and then UI redesign before new sprint work
 The source dependency graph remains: T35 follows T04 and precedes T05/T06/T12.
 Read the scoped [web](apps/web/AGENTS.md) or [API](apps/api/AGENTS.md) developer
 rules before changing those apps. These rules describe incremental migration
-targets; this documentation does not install tools or restructure code.
+targets; the first [T36 tooling slice](docs/development/quality-tooling.md) adds
+scoped enforcement, while application structure and unit coverage gates remain open.
 Preparing these contribution documents does not
 complete T16 or its real-project validation.
 
@@ -109,11 +110,13 @@ immutable import, including its asset manifest and file inventory. Record later
 ratifications/corrections separately under `docs/development/` and link the
 affected source section. Never modify a baseline just to make a hash check pass.
 
-T36 plans an audit of existing ESLint coverage, then compatible pinned Prettier,
-Husky pre-commit/commit-msg, Conventional Commits/commitlint and suitable staged
-checks with independent CI enforcement. They are not installed/enforced by this
-docs-only preparation. Preserve immutable/generated exclusions and avoid broad
-formatting churn. T37 plans the three requested frontend-local skills, with
+T36 now reuses ESLint with exact Prettier/Husky/commitlint/lint-staged pins,
+read-only index-content pre-commit checks, commit-msg validation and independent
+CI formatting/prospective commit enforcement. In linked worktrees use
+`git -c core.hooksPath=.husky commit`; prepare does not change shared Git config.
+See the [commands, adoption inventory, policy and limitations](docs/development/quality-tooling.md).
+Preserve immutable/generated exclusions and avoid broad formatting churn.
+T37 plans the three requested frontend-local skills, with
 provenance/discovery verification and product/UX/brand authority; see the
 [roadmap](docs/development/development-quality-roadmap.md). Later T30–T34 uses the
 [Astro landing/narrative decision](docs/development/landing-direction.md), not a
@@ -131,7 +134,8 @@ coverage in PR and dev/main push CI with bounded report artifacts. Do not drop
 coverage or weaken thresholds/coverage scope to make a build green; the
 [roadmap's coverage acceptance](docs/development/development-quality-roadmap.md#unit-tests-coverage-and-ci-enforcement)
 defines baseline, nonregression and reporting requirements. No coverage value,
-threshold, new test tooling or CI enforcement is delivered by this documentation.
+threshold or application unit-coverage CI gate is delivered by this tooling slice;
+disposable audit findings are recorded separately in the tooling guide.
 After setup, this remains an ongoing developer rule: new/changed behavior ships
 with appropriate unit/regression tests, bug fixes reproduce the regression, and
 extraction preserves meaningful tests. Explain unit-test exceptions for prose,
@@ -187,6 +191,8 @@ Use Python 3.9+, Node 24.22.1, and pnpm 12.15.0. From the repository root:
 ```sh
 python3 scripts/verify-handoff.py
 pnpm install --frozen-lockfile
+pnpm format:check
+pnpm test:quality
 pnpm check
 pnpm test:prototype
 pnpm test:mcp
