@@ -22,6 +22,14 @@ import { checkCommits, checkMessage, newCommits } from './commits.mjs';
 import { changedPaths, git as repositoryGit, stagedPaths } from './git.mjs';
 import { assertPolicyStaged, excluded } from './policy.mjs';
 
+// This file runs in its own node:test process. Imported production helpers must
+// also be isolated from any Git hook/alternate-index context of the caller.
+for (const key of Object.keys(process.env)) {
+  if (key.startsWith('GIT_')) delete process.env[key];
+}
+process.env.GIT_CONFIG_NOSYSTEM = '1';
+process.env.GIT_CONFIG_GLOBAL = process.platform === 'win32' ? 'NUL' : '/dev/null';
+
 const sourceRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const cleanEnv = {
   ...Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith('GIT_'))),
@@ -188,6 +196,66 @@ test('renamed/deleted files, no-match commits and initial staging use correct ca
   git(initial, ['add', 'source.mjs']);
   // Use the source checker, avoiding unrelated unformatted fixture policy in the initial index.
   return checkFiles(initial, ['source.mjs'], { staged: true, lint: true });
+});
+
+test('quality process clears inherited Git context before imported helpers and leaves a sentinel index untouched', (t) => {
+  const sentinel = fixture(t);
+  const file = 'witness.mjs';
+  commit(sentinel, 'test: seed an unrelated sentinel', file, 'export const sentinel = 1;\n');
+  writeFileSync(join(sentinel, file), 'export const sentinel = 2;\n');
+  git(sentinel, ['add', file]);
+  writeFileSync(join(sentinel, file), 'export const sentinel=3\n');
+  const before = snapshot(sentinel, file);
+  const indexBefore = readFileSync(join(sentinel, '.git/index'));
+  const configBefore = readFileSync(join(sentinel, '.git/config'));
+  const result = command(
+    sourceRoot,
+    process.execPath,
+    ['--test', '--test-name-pattern=^renamed/deleted files', 'scripts/quality/quality.test.mjs'],
+    {
+      GIT_DIR: join(sentinel, '.git'),
+      NODE_TEST_CONTEXT: undefined,
+      GIT_WORK_TREE: sentinel,
+      GIT_INDEX_FILE: join(sentinel, '.git/index'),
+      GIT_COMMON_DIR: join(sentinel, '.git'),
+    },
+  );
+  assert.match(ok(result), /renamed\/deleted files/, result.stderr);
+  assert.deepEqual(readFileSync(join(sentinel, '.git/index')), indexBefore);
+  assert.deepEqual(readFileSync(join(sentinel, '.git/config')), configBefore);
+  assert.deepEqual(snapshot(sentinel, file), before);
+});
+
+test('production staged helpers still honor a legitimate alternate index in both directions', async (t) => {
+  const root = fixture(t);
+  const file = 'candidate.mjs';
+  commit(root, 'test: seed an alternate-index candidate', file, 'export const value = 1;\n');
+  const alternate = join(root, '.git/alternate-index');
+  cpSync(join(root, '.git/index'), alternate);
+  for (const [alt, ordinary, pass] of [
+    ['export const value = 2;\n', 'export const value=3\n', true],
+    ['export const value=4\n', 'export const value = 5;\n', false],
+  ]) {
+    writeFileSync(join(root, file), alt);
+    repositoryGit(root, ['add', file], { env: { ...cleanEnv, GIT_INDEX_FILE: alternate } });
+    writeFileSync(join(root, file), ordinary);
+    git(root, ['add', file]);
+    writeFileSync(join(root, file), 'export const value = 6;\n');
+    const before = snapshot(root, file);
+    const alternateBefore = readFileSync(alternate);
+    const previous = process.env.GIT_INDEX_FILE;
+    process.env.GIT_INDEX_FILE = alternate;
+    try {
+      const check = checkFiles(root, [file], { staged: true, lint: true });
+      if (pass) await check;
+      else await assert.rejects(check, /Format/);
+    } finally {
+      if (previous === undefined) delete process.env.GIT_INDEX_FILE;
+      else process.env.GIT_INDEX_FILE = previous;
+    }
+    assert.deepEqual(readFileSync(alternate), alternateBefore);
+    assert.deepEqual(snapshot(root, file), before);
+  }
 });
 
 test('protected/generated files are skipped and staged symlinks are rejected', async (t) => {

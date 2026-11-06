@@ -42,6 +42,14 @@ negative byte-preservation and real rejecting-hook regressions; inventory also
 names the new guide. Coordinator delta review, Draft publication/current-head
 remote CI and eventual Ready/native Kilo remain pending at this checkpoint.
 
+A later review reproduced inherited Git-context leakage through imported test
+helpers. The quality test process now clears caller Git variables before helper
+use, with a child contamination regression preserving a sentinel's raw index,
+config and working bytes. Production helpers retain legitimate alternate-index
+semantics, verified in both staged-content directions. All 15 focused cases plus
+lint/format pass after this test-only correction; app/Docker source is unchanged
+from the successful `e9cc797` validation.
+
 PR #32 status correction: [merged](https://github.com/Ljrr3045/rielia/pull/32)
 as `1c33560f2fca954cbac6d35a87881a41dd72b017`, source head
 `ef03302368dc3027492a9ae5dd9c5ff96cc04156`; coordinator verified

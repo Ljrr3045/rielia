@@ -64,7 +64,7 @@ and --no-verify may skip hooks; independent CI remains required.
 
 Pre-commit uses lint-staged's supported function task with --no-stash,
 --no-hide-partially-staged, --fail-on-changes and serial execution. It reads
-stage-0 index bytes, then calls Prettier.check and ESLint.lintText with original
+stage-0 index bytes (including a legitimate alternate Git index), then calls Prettier.check and ESLint.lintText with original
 paths. No format/fix, staging, stash, network, build or DB operation occurs.
 Renames check destinations; deletions have no content; symlink/submodule type
 changes and conflicted indexes fail closed. Spaces, quotes, brackets, dollars
@@ -173,7 +173,10 @@ artifacts. Tooling regressions do not report app coverage.
 
 Focused regressions cover formatting/lint failures, partial-stage preservation,
 paths/interruption, installer contexts, strict messages and PR/push/merge/legacy
-ranges, including skipped-hook CI failure. All 13 focused regressions, frozen
+ranges, including skipped-hook CI failure. The test process separately clears
+inherited Git context; a contaminated-caller regression preserves an unrelated
+sentinel's index/config/worktree. Production hooks retain alternate-index semantics.
+All 15 focused regressions, frozen
 install, full check, PostgreSQL identity integration and corrected Docker runtime
 passed locally; owned resources were cleaned. Draft PR/current-head evidence is
 recorded in [progress](progress.md); final current-head review/acceptance is
