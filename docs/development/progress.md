@@ -22,6 +22,26 @@ IN PROGRESS; unit infrastructure/numerical coverage gates and extraction remain
 follow-up implementation. Parallel unit audits in the guide are experimental
 baseline evidence, not installed coverage commands or accepted gates.
 
+Local validation passed on implementation checkpoint `e9cc797`: exact-runtime
+frozen install, 13 focused quality regressions, adopted formatting, preserved
+ESLint scopes, full `pnpm check` (286-package Express-free installed closure,
+logic/types/builds/MCP/HTTP smoke), real PostgreSQL identity/security/migration/
+restart integration against unchanged app code, and the corrected-installer
+Docker build/runtime suite. Runtime verified nonroot files, API/worker/migration
+deployed-store closure, failed/repeated migration gates, DB recovery, locked-worker
+shutdown and durable-job recreation/restart, then cleaned its owned resources.
+The first sandbox attempt needed loopback/DNS permissions; successful authorized
+retries retained all gates. High-level audit passes with no high/critical and one
+unchanged moderate minimatch advisory documented in the guide; this is not a
+zero-advisory claim. Handoff/asset/link and staged/unstaged/full-branch whitespace
+checks pass.
+
+Independent review of `650b6dd` found two valid issues: directory-symlink formatter
+escapes and bypass of active default Git hooks. Both are fixed in `e9cc797`, with
+negative byte-preservation and real rejecting-hook regressions; inventory also
+names the new guide. Coordinator delta review, Draft publication/current-head
+remote CI and eventual Ready/native Kilo remain pending at this checkpoint.
+
 PR #32 status correction: [merged](https://github.com/Ljrr3045/rielia/pull/32)
 as `1c33560f2fca954cbac6d35a87881a41dd72b017`, source head
 `ef03302368dc3027492a9ae5dd9c5ff96cc04156`; coordinator verified

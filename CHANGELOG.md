@@ -17,6 +17,10 @@ This records repository changes. No application version has been released.
 - Record [formatting adoption and separate unit-audit findings](docs/development/quality-tooling.md).
   T36 remains IN PROGRESS: application unit/coverage gates, extraction and T37
   redesign are not delivered. No application behavior or handoff bytes change.
+- Preserve active default Git hooks and reject formatter/check paths through
+  symlink directories after independent review. Thirteen focused regressions,
+  frozen install, full check, real PG identity and Docker runtime pass locally;
+  existing moderate lint-tool advisory remains explicit, with no high/critical.
 - Correct PR #32 history: merged as `1c33560f2fca954cbac6d35a87881a41dd72b017`
   from `ef03302368dc3027492a9ae5dd9c5ff96cc04156`, with
   [postmerge CI success](https://github.com/Ljrr3045/rielia/actions/runs/42159134226)

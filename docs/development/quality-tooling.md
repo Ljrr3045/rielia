@@ -173,7 +173,9 @@ artifacts. Tooling regressions do not report app coverage.
 
 Focused regressions cover formatting/lint failures, partial-stage preservation,
 paths/interruption, installer contexts, strict messages and PR/push/merge/legacy
-ranges, including skipped-hook CI failure. Actual validation and Draft PR evidence
-are recorded in [progress](progress.md); final current-head review/acceptance is
+ranges, including skipped-hook CI failure. All 13 focused regressions, frozen
+install, full check, PostgreSQL identity integration and corrected Docker runtime
+passed locally; owned resources were cleaned. Draft PR/current-head evidence is
+recorded in [progress](progress.md); final current-head review/acceptance is
 coordinator-owned. No UI/domain/schema/auth change, extraction, T37 skill,
 live-provider/staging request, deployment or full-ticket completion is included.
