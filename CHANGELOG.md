@@ -4,6 +4,46 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+### Development quality planning
+
+- Save the user's 2026-11-05 [T36 → T37 → T11 quality roadmap](docs/development/development-quality-roadmap.md),
+  then retain remaining dependencies. Add exactly two top-level tickets without
+  renumbering T01–T35 or changing immutable handoff. T36 starts with scoped
+  [web](apps/web/AGENTS.md)/[API](apps/api/AGENTS.md) developer rules, then plans
+  existing ESLint coverage review, compatible pinned formatting/hooks/commit/staged
+  checks with CI equivalence, and SOL-owned behavior-preserving restructuring.
+  Actual enforcement/extraction and a stable UI baseline are required before T37;
+  no installation, restructuring or ticket completion is claimed by this docs PR.
+  [Draft PR #32](https://github.com/Ljrr3045/rielia/pull/32) records this preparation.
+- Extend T36 and scoped developer rules with mandatory frontend/backend unit
+  tests, separate coverage reports and evidence-based numerical CI gates.
+  Include maintained unexecuted source, supported coverage metrics, justified
+  exclusions, baseline/nonregression policy and bounded CI artifacts; preserve
+  real PostgreSQL/integration/security/runtime checks. Runner/provider selection,
+  tests and PR/dev/main CI enforcement remain future implementation; no current
+  percentage, threshold or workflow change is claimed. Prior-head acceptance
+  does not cover this follow-up. Record the user's confirmation that Rielia is
+  active in Kilo and no PR review is visible while Draft, without a billing audit
+  or future-round claim.
+- Assign future UI/UX presentation to Codex `gpt-6-astra` `high`, replacing
+  OpenCode Go/DeepSeek while preserving historical evidence. Logic/hooks/state/
+  auth/proxies/functional tests and T36 structure remain SOL `gpt-6.1-sol` `xhigh`;
+  verify effective configuration per isolated worker. T37 plans reviewed frontend-local
+  frontend-design, impeccable and ui-ux-pro-max skills, Mobbin evidence, component
+  foundations and existing product flows with responsive/accessibility/persistence/
+  recovery parity. Kilo's external review role/settings stay unchanged.
+- Record [later T30–T34 landing direction](docs/development/landing-direction.md):
+  separate Astro app proposal, Next.js retained for the app, free ticket/project
+  management for everyone, open-source intent and self-hosting reducing subscription
+  dependence, with operating costs and undecided license explicit. Plan a real
+  GitHub star link with nonblocking cached count/plain-link fallback. No third
+  prerequisite ticket, scaffold, implementation, publication or deployment.
+- Correct current PR #31 status: [merged](https://github.com/Ljrr3045/rielia/pull/31)
+  as `63bf4c6e` on November 3 with final-source CI/Kilo and
+  [post-merge CI success](https://github.com/Ljrr3045/rielia/actions/runs/41737008709).
+  Draft/pending observations in the older review-policy entries below remain
+  historical; they do not approve this new documentation batch.
+
 ### Review policy
 
 - Adopt the user-approved persistent GitHub **Collaborators only** PR policy.

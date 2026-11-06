@@ -5,7 +5,8 @@
 > New PRs open Draft for batching; only the coordinator controls Ready transitions.
 > Historical review evidence and runtime guidance are preserved.
 
-Updated: 2026-11-03 UTC. This is repository delivery tracking, separate from the
+Updated: 2026-11-06 UTC (user decision: November 5, America/Caracas).
+This is repository delivery tracking, separate from the
 unchanged [handoff](../handoff/00-START-HERE.md). Plans describe intended outcomes,
 not completed implementation. This checkout has the T02.0 fixture, merged T02.1/
 T02.2 identity experiment, and a fictional T01/B0 task-prototype logic adapter plus
@@ -15,7 +16,7 @@ adds bounded principal/minimal workspace/membership foundations and verified
 execution. T06 adds actual task attribution; T09.0 adds bounded collaboration logic
 and T09.1 adds its presentation. T10.0 adds bounded workspace search,
 current-assignee My tasks and session invalidation logic. The T10.1 presentation
-candidate consumes that merged logic through explicit My tasks/Search entries,
+consumes that merged logic through explicit My tasks/Search entries,
 project-grouped results, live-status feedback and workspace-draft protection;
 export remains separate.
 T05.0 adds actual workspace/membership/invitation backend and frontend logic with
@@ -41,6 +42,101 @@ Real provider/staging, staging-dependent remote OAuth discovery and
 real-project/user acceptance are OPEN/DEFERRED until an advanced end-to-end slice
 and user scheduling. This overrides their immediate scheduling gate for local
 implementation, without completing tickets or weakening automated checks/launch gates.
+
+## 2026-11-05 quality reprioritization — current preparation
+
+The user adds exactly two top-level tickets, **T36 engineering quality/tooling/
+structure → T37 UI quality redesign → T11 → remaining work under existing
+dependencies**. The [saved roadmap](development-quality-roadmap.md) defines
+objectives, ordered bounded subdeliveries, ownership, acceptance, exclusions and
+test/evidence obligations. Original T01–T35 IDs and imported handoff remain unchanged;
+no full original ticket is closed. Existing real-provider/staging/user validation
+stays OPEN/DEFERRED under the prior sequencing decision.
+
+This preparation adds scoped [web AGENTS.md](../../apps/web/AGENTS.md) and
+[API AGENTS.md](../../apps/api/AGENTS.md), documenting current structure and target
+dependency/responsibility boundaries before implementation. ESLint already exists
+and is CI-enforced; the roadmap plans coverage review, compatible pinned Prettier,
+Husky pre-commit/commit-msg, Conventional Commits/commitlint and suitable staged
+checks with equivalent CI enforcement. Installation/configuration and incremental
+frontend/backend extraction belong to later SOL xhigh batches. Documentation and
+file-size reductions cannot complete T36: actual enforcement, restructuring
+evidence and a stable UI contract baseline are required before T37 starts.
+
+Future UI presentation uses **Codex `gpt-6-astra` `high`**, replacing OpenCode Go/
+DeepSeek; all logic/hooks/state/auth/data/proxies/functional tests and T36 structural
+work remain **Codex `gpt-6.1-sol` `xhigh`**. The coordinator verified these effective
+research/documentation worker configurations; this is research provenance, not
+redesign acceptance. [Current model decision and preserved history](frontend-agent.md).
+T37 plans frontend-local reviewed installation/use of frontend-design, impeccable
+and ui-ux-pro-max, real Mobbin pattern evidence, foundations/components and existing
+shell/workspace/project/task/search flows with responsive/a11y and persisted
+recovery parity. No skills/tools are installed and no UI is redesigned here.
+Kilo remains the external reviewer.
+
+The [later landing direction](landing-direction.md) updates T30–T34 with a separate
+Astro monorepo app (proposed `apps/landing`), leaving Next.js for the application.
+It leads with free ticket/project management for everyone, open-source intent and
+self-hosting reducing subscription dependence, while retaining infrastructure
+costs, undecided license/brand and real-release/launch gates. The GitHub star link
+uses a real nonblocking cached count with plain-link fallback, never fabricated
+numbers or client secrets. There is no third prerequisite ticket, Astro scaffold,
+landing implementation, public launch or deployment.
+
+Delivery branch: `docs/development-quality-roadmap`, isolated from `origin/dev`
+`63bf4c6eb0c20fd493a08442fbd337fa4a5f4187`. Initial batch at `f4e3a404` passed:
+47 imported files and 30 asset hashes/sizes unchanged, 556 local file links in
+62 documents, unstaged/staged whitespace and full nine-file scope/diff inspection.
+Root guidance at that head was 17,086 bytes. No unrelated local
+application suites or installs ran for this prose-only change.
+[Draft PR #32](https://github.com/Ljrr3045/rielia/pull/32) targets `dev`; actual
+Draft was verified before its PR-evidence push. Final-head CI and independent
+review evidence are retained in the PR/external delivery report before coordinator
+Ready; Kilo review/merge are coordinator-owned and pending. T36/T37 implementation remains open.
+
+### Explicit unit-test, coverage and CI follow-up
+
+The user additionally requires **frontend and backend unit tests and coverage**
+within T36 and its developer rules. T36.2–T36.6 now require baseline measurement,
+compatible runner/provider selection, meaningful frontend logic/controller/hook
+and appropriate component-interaction tests, backend domain/use-case tests with
+isolated boundary doubles, and separate frontend/backend coverage reports and
+numerical enforceable thresholds. Maintained unexecuted files stay in the
+denominator; supported lines/branches/functions/statements, justified exclusions
+and a comparable-baseline nonregression policy must be documented. Do not weaken
+thresholds or omit coverage to turn builds green; critical negative/error paths
+and real PostgreSQL/integration/security/runtime tests remain required.
+
+T36 must update PR/dev/main push CI to run deterministic unit suites and coverage
+gates, fail test/threshold/nonregression failures and publish bounded artifacts
+while retaining current checks, pins and security. This follow-up changes seven
+documentation files only: no tests/tools/providers/thresholds or workflow are
+implemented, no coverage percentage is claimed and T36/T37/order remain unchanged.
+Local checks pass: 47 imported files, 30 asset hashes/sizes and 557 local links in
+62 documents, whitespace and scoped diff review; current root guidance is 17,353
+bytes. These rules continue after T36 for new/changed behavior and bug regressions,
+with explained prose/styling/generated-only exceptions and relevant other checks.
+Full new-head CI remains required; the earlier
+`f4e3a404` CI/review cannot accept this added scope. Final-head evidence belongs
+in the existing PR body/external delivery report after the single Draft push.
+
+The user confirms Rielia is active in Kilo and no PR review is visible while
+PR #32 remains Draft, consistent with the GitHub no-native-review checkpoint.
+This is a user-observed current checkpoint, not an independent billing audit,
+a future-round guarantee or completed Ready/native Kilo acceptance. Coordinator
+still owns the final batch verification, Ready transition, requested review and merge.
+
+### PR #31 current status correction
+
+[PR #31](https://github.com/Ljrr3045/rielia/pull/31) **merged** on 2026-11-03 at
+23:10:25 UTC as `63bf4c6eb0c20fd493a08442fbd337fa4a5f4187`. Its final source
+head `7722111d8a7cccc2a7b5f8c68e3b700e6ac42a4d` passed
+[validate](https://github.com/Ljrr3045/rielia/actions/runs/41735208850/job/126262523972)
+and [native Kilo](https://app.kilo.ai/code-reviews/246035fd-78b7-4028-aea8-8e87597927fc);
+[post-merge CI](https://github.com/Ljrr3045/rielia/actions/runs/41737008709) also
+passed. The dated Draft/pending observations below are historical checkpoints,
+not an active PR #31 blocker. These results do not approve this new branch or
+establish every pending platform capability/dashboard-spend assertion.
 
 ## 2026-11-03 manually controlled Kilo batches
 
@@ -222,7 +318,7 @@ and dependency installation were not duplicated. Final source head
 [Post-merge validate](https://github.com/Ljrr3045/rielia/actions/runs/41486779176/job/125419130069)
 also passed on `13d0029…`. These results do not approve the new batching PR.
 
-## Current delivery
+## Historical T10.1 delivery record
 
 | Field | Evidence/state |
 | --- | --- |
@@ -907,15 +1003,13 @@ the following records preserve the original first-wave scope and acceptance:
    open. PR #9 is merged; see [runtime scope and evidence](local-runtime.md). This is a preparatory
    split of the B1 T04 ticket, without business effects, deployment or full acceptance.
 
-Current bounded product step: **T10.1** My tasks/search presentation on the merged
-T10.0 logic. T10.0 is merged in
-[PR #23](https://github.com/Ljrr3045/rielia/pull/23) at `6bde444c`; the T10.1
-presentation candidate `c1a2a1d` is in independent functional/responsive
-validation with its PR pending. The bounded slice covers workspace-authorized
-ID/title search, current-assignee My tasks, existing filters, SSE status feedback
-and context-preserving detail/recovery presentation. Invitations/guests, full
-T06/T07/T08/T09/T10/T35, labels/sprints, exports, coediting, MCP/history
-integration, real-user/staging and deployment remain incomplete.
+Current priority is the [T36 → T37 quality prerequisite](development-quality-roadmap.md)
+before T11 and remaining dependencies. The prior bounded T10.1 presentation is
+recorded in [PR #24](https://github.com/Ljrr3045/rielia/pull/24) on T10.0 logic
+[PR #23](https://github.com/Ljrr3045/rielia/pull/23). Its historical validation
+records remain above. Invitations/guests, full T06/T07/T08/T09/T10/T35,
+labels/sprints, exports, coediting, MCP/history integration, real-user/staging
+and deployment remain incomplete.
 
 Convergence: T02 + T03 → T04 → **T35** → T05 → T06. The principal/authorship model
 must precede workspaces/tasks/credentials despite T35's number. T01 supplies UI
@@ -929,7 +1023,8 @@ T02.0 is separately authorized supporting scope, not T00 expansion. Full source 
 
 `Not started` means no full-ticket implementation or acceptance evidence is
 recorded here. T02.0's fixture does not satisfy the full identity spike.
-Dependencies below reproduce the plan, not inferred completion. B labels
+Dependencies below reproduce the plan, not inferred completion; the explicit
+T36 → T37 → T11 override above governs new work before remaining dependencies. B labels
 are internal sequencing; T30–T34 form a separate future marketing track. T35 is a
 foundational prerequisite within the B1 track, not the final ticket to execute.
 
@@ -951,7 +1046,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T08 | B1b | List/Kanban, filters, ranking | T06 | [T08.0 logic](task-views.md) merged in PR #19 at `f8895709`; [T08.1 presentation](task-views-ui.md) in [PR #20](https://github.com/Ljrr3045/rielia/pull/20). Configurable workflows/labels/sprints and full US05/T08 remain open |
 | T09 | B1b | Subtasks, checklists, comments, history | T06 | T09.0 bounded collaboration logic merged in [PR #21](https://github.com/Ljrr3045/rielia/pull/21) at `76d7d31b`; T09.1 [presentation](task-collaboration-ui.md) delivered in [PR #22](https://github.com/Ljrr3045/rielia/pull/22) with standard checks and targeted functional/responsive QA passed. Exact current-head CI/Kody/merge evidence remains in GitHub/external final report. Full T09/P05/P14/P38, credentials and real-user/staging acceptance remain open |
 | T10 | B1b | Search, My tasks, responsive layout, SSE | T07–T09 | T10.0 bounded logic merged in [PR #23](https://github.com/Ljrr3045/rielia/pull/23) at `6bde444c`; T10.1 [presentation](task-discovery-ui.md) PR [#24](https://github.com/Ljrr3045/rielia/pull/24) includes exact root-reviewed SOL controller/test URL corrections and has accepted functional/responsive evidence. Full T10/P11/US05, labels/sprints, exports, coediting, credentials, real-user/staging and deployment remain open |
-| T11 | B1c | Sprint lifecycle and scope history | T08–T09 | Not started |
+| T11 | B1c | Sprint lifecycle and scope history | T08–T09; later user prerequisite T36 → T37 | Not started; follows accepted T36/T37 |
 | T12 | B1c | Personal/service credentials, explicit-subject grants | T07, T35 | Not started |
 | T13 | B1c | Local MCP catalog/client/guide | T03, T11–T12 | Not started |
 | T14 | B1d | JSON/CSV export and archive recovery | T09, T12 | Not started |
@@ -971,11 +1066,13 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T28 | B3 | GitHub and outgoing webhooks | T19, T24 | Not started |
 | T29 | B3 | Time/workload/docs/specific importers; split by capability | T24 and actual-use evidence | Not started |
 | T30 | Marketing (future) | Integrate selected brand assets/tokens | T04; kit and identity review | Not started |
-| T31 | Marketing (future) | ES/EN landing with stable CTA | T30 | Not started; implementation outside T00 |
+| T31 | Marketing (future) | Separate Astro ES/EN landing, stable CTA, resilient GitHub star link | T30; later placement under quality override | Not started; [dated direction](landing-direction.md); no scaffold |
 | T32 | Marketing (optional capture) | Confirmed leads/backend/worker/SMTP | T04, T31 | Not started; no waitlist/access staging |
 | T33 | Marketing (future) | Metadata, localized SEO, minimal measurement | T31; T32 if capture active | Not started |
 | T34 | Marketing launch gate | Verify/enable public marketing launch | T31, T33; T32 if capture active | Not started |
 | T35 | B1 foundations | Principal model, immutable authorship, autonomous memberships | T04; precedes T05/T06/T12 | T35.0 bounded storage/policy/context implemented; full authorship/domain/export/credential integration incomplete |
+| T36 | Quality prerequisite 1 | Engineering standards, compatible tool enforcement and behavior-preserving frontend/backend structure | Existing bounded foundations/contracts; approved NodeAdapter | Preparatory scoped AGENTS/roadmap documented; tooling and restructuring not implemented; [ordered acceptance](development-quality-roadmap.md#t36--engineering-quality-tooling-and-structure) |
+| T37 | Quality prerequisite 2 | Coherent redesign of existing UI using stable contracts, brand/UX and reviewed frontend-local skills | Coordinator acceptance of T36 | Planned only; Astra research is not redesign delivery; [ordered acceptance](development-quality-roadmap.md#t37--ui-quality-redesign); precedes T11 |
 
 Public release is one launch followed by continuous updates. Internal B1 readiness,
 private T15 deployment, and marketing T34 do not substitute for T24. B3 follows
@@ -993,13 +1090,13 @@ actual use/demand; no launch date or public capacity has been established.
 | Branch names | User requires `feat/**`, `fix/**`, `refactor/**`, `docs/**`, `chore/**`, `test/**` by purpose, never username prefixes | Worktree names correspond; coordinator renamed the empty Orca-created branch before development and verified `feat/t03-local-mcp` |
 | OAuth credentials/callbacks | OPEN/DEFERRED with real provider validation; no request for credentials/staging now | Installation operator configures secrets when user schedules later acceptance; no test date invented |
 | Name/logo and identity | Rielia working name and v0.1 kit remain proposals, not final approval | User/brand review; availability not recertified by import |
-| Landing | Current request is design planning for later development; no final design approved | Separate authorized design/implementation scope; use document 05 |
+| Landing | Planning only; later T30–T34 uses separate Astro app proposal and free-software/self-hosting narrative; no final design or scaffold | [Later decision](landing-direction.md) supersedes explicit Next landing location/narrower marketing emphasis; original brief otherwise retained |
 | Launch | One public launch, continuous updates; no access calendar/waitlist | Maintainer verifies T24 and applicable T34 checks before public access |
 | Principal/authorship | T35.0 implements bounded identity/membership/policy and server-derived context; delegated user and autonomous Agent remain distinct | [Scope and local evidence](principal-foundations.md); actual task/comment/export and verified credential adapters remain future work |
 | Private-project admin visibility | Ratified 2026-10-29: active human workspace owners/admins automatically read every scoped private project; delegated content keeps grant ceilings and privacy administration remains human web only | [Decision and bounded T07 contract](project-access.md); presentation must disclose automatic administrative access |
 | Operations/public service | VPS capacity, budget/date, registration policy, public obligations not established | Maintainer records decisions and measured readiness in later tickets |
-| Automated review | Draft batching and collaborators-only GitHub PR admission adopted; admission verified with only Ljrr3045/no invitations. Coordinator Ready/native proof remains open; core checks retain no bypass and ownership exception remains own-PR only | [Cadence/admission gates](kilo-review.md); invitations need deliberate decision, existing-PR/queued-job limits apply, other authors need current-head APPROVED, main automatic exclusion unverified; no main promotion |
-| Development models | User's 2026-10-25 rule: UI/UX presentation uses OpenCode Go DeepSeek V4.1 Flash 1017 (`opencode-go/deepseek-v4.1-flash`, `max`); all logic uses Codex `gpt-6.1-sol` `xhigh`, including browser auth/data/hooks/proxy/tests | [Model evidence and limits](frontend-agent.md); verify effective sessions and isolated worktrees. User resumed bounded T01/B0 development after the model-only pause checkpoint; OpenCode development does not restore its retired review workflow |
+| Automated review | Draft batching/collaborator admission adopted; PR31 merged with final-head Kilo/CI and postmerge CI success above. Every new head needs its own required gates; ownership exception remains own-PR only | [Cadence/admission gates](kilo-review.md); coordinator verifies draft spend/Ready round for each batch; existing-PR/queued-job limits and main automatic exclusion remain unresolved; no main promotion |
+| Development models | 2026-11-05: UI/UX presentation Codex `gpt-6-astra` `high`; all logic/tests and T36 structural refactoring Codex `gpt-6.1-sol` `xhigh` | [Current decision and historical evidence](frontend-agent.md); verify effective sessions and isolated worktrees; Kilo reviewer unchanged |
 | Completed worktree cleanup | User explicitly requested removal after PR merge and finished delivery, without recurring confirmation | Coordinator verifies merged PR, clean tree, and preserved evidence, safely stops/settles task resources, then removes via Orca; workers never delete active/coordinator checkouts |
 | Retired reviewer | User explicitly requested full OpenCode workflow deletion, including the inherited version; no further repairs/runs or secret changes | Deletion merged in PR #1; keep it absent and preserve the historical handoff |
 

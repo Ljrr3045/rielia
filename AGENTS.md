@@ -13,6 +13,8 @@ The English and Spanish documents are equivalent; read either language.
 | Voice and proposed tokens | [Branding](docs/handoff/03-branding.en.md) |
 | Future landing work | [Landing LPR/S/LP criteria](docs/handoff/05-landing-page-plan.en.md) and [asset inventory](docs/handoff/06-brand-assets-guide.en.md) |
 | Delivery and current state | [CONTRIBUTING.md](CONTRIBUTING.md) and [progress](docs/development/progress.md) |
+| Current priorities and scoped developer rules | [T36/T37 quality roadmap](docs/development/development-quality-roadmap.md), [web AGENTS.md](apps/web/AGENTS.md), [API AGENTS.md](apps/api/AGENTS.md) |
+| Later marketing decisions | [Astro landing direction](docs/development/landing-direction.md), supplementing the immutable landing brief |
 
 Product owns scope; UI/UX owns composition and interaction; architecture owns
 contracts and permissions; branding owns proposed identity and voice. External
@@ -28,6 +30,19 @@ or an Orca installation.
 
 ## Current scope and protected material
 
+- The user's 2026-11-05 reprioritization adds exactly two tickets: **T36 engineering
+  quality/tooling/structure → T37 UI quality redesign → T11 → remaining work under
+  existing dependencies**. [The roadmap](docs/development/development-quality-roadmap.md)
+  defines ordered subdeliveries and evidence. This preparation adds scoped
+  developer documentation only; tooling/skills installation, restructuring and
+  redesign remain future implementation. T36 must implement behavior-focused
+  frontend/backend unit tests, separate coverage reports and evidence-based
+  numerical CI coverage gates, preserving real integration/security/runtime
+  checks; these are requirements, not delivered testing infrastructure here.
+  Neither ticket is complete. Original
+  T01–T35 numbering/acceptance and immutable handoff remain unchanged. Future
+  T30–T34 landing work uses the [later Astro/narrative direction](docs/development/landing-direction.md);
+  no landing app exists or is scaffolded here.
 - T00 onboarding/governance is complete and merged in [PR #1](https://github.com/Ljrr3045/rielia/pull/1).
   T02.0 adds a runnable, bounded Next/Nest/pnpm technical fixture supporting
   T02/T03 and partial T04 tooling. It completes none of the full T01–T35 tickets.
@@ -144,16 +159,20 @@ Keep these boundaries in both current and future code.
    or `test/**` by purpose, without username prefixes; worktree names correspond
    to their branch purpose. Correct an Orca-added username prefix before development.
    In the supervised development workflow, coordinator-launched development
-   workers handling UI/UX presentation use **OpenCode Go with DeepSeek V4.1
-   Flash 1017**, model `opencode-go/deepseek-v4.1-flash`, variant **`max`**;
+   workers handling UI/UX presentation use **Codex `gpt-6-astra`, effort `high`**
+   under the 2026-11-05 decision, superseding earlier OpenCode Go/DeepSeek
+   assignments for future UI work;
    **all logic** uses **Codex `gpt-6.1-sol`, effort `xhigh`**,
    including frontend auth/session/data hooks, proxies, and functional tests.
+   T36's behavior-preserving frontend/backend structural extraction also belongs
+   to SOL xhigh, retaining appearance; T37's visual/interaction redesign belongs
+   to Astra high after T36 acceptance. Mixed files require explicit ownership.
    Each works in its own worktree, per the user's explicit rule. Verify effective
    model/effort rather than silently substituting an unavailable configuration.
    See the [model decision and verification limits](docs/development/frontend-agent.md).
    This does not prescribe tools/models
    for ordinary human contributors. Kilo Code Reviews is the external PR reviewer,
-   separate from OpenCode Go's development role.
+   separate from the development models; historical model evidence is preserved.
 3. Deliver a bounded change with relevant evidence. For UI, verify mobile/desktop,
    touch/keyboard, nonideal states, accessibility, persistence, and failure recovery.
    A screenshot alone never completes a flow. Record unavailable checks honestly.
