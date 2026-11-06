@@ -14,6 +14,7 @@ This records repository changes. No application version has been released.
   checks with CI equivalence, and SOL-owned behavior-preserving restructuring.
   Actual enforcement/extraction and a stable UI baseline are required before T37;
   no installation, restructuring or ticket completion is claimed by this docs PR.
+  [Draft PR #32](https://github.com/Ljrr3045/rielia/pull/32) records this preparation.
 - Assign future UI/UX presentation to Codex `gpt-6-astra` `high`, replacing
   OpenCode Go/DeepSeek while preserving historical evidence. Logic/hooks/state/
   auth/proxies/functional tests and T36 structure remain SOL `gpt-6.1-sol` `xhigh`;

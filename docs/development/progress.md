@@ -88,8 +88,11 @@ Delivery branch: `docs/development-quality-roadmap`, isolated from `origin/dev`
 47 imported files and 30 asset hashes/sizes unchanged, 556 local file links in
 62 documents, unstaged/staged whitespace and full nine-file scope/diff inspection.
 Root guidance is 17,086 bytes. No unrelated local
-application suites or installs ran for this prose-only change. Draft PR/current-head
-CI evidence will be recorded before coordinator review; T36/T37 implementation remains open.
+application suites or installs ran for this prose-only change.
+[Draft PR #32](https://github.com/Ljrr3045/rielia/pull/32) targets `dev`; actual
+Draft was verified before its PR-evidence push. Final-head CI and independent
+review evidence are retained in the PR/external delivery report before coordinator
+Ready; Kilo review/merge are coordinator-owned and pending. T36/T37 implementation remains open.
 
 ### PR #31 current status correction
 
