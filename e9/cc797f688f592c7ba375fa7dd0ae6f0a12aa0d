@@ -1,0 +1,52 @@
+CONTRIBUTING.md
+  s_3a926c8a5fafce::t_e62b28bba9101c 211
+scripts/quality/checks.mjs
+  s_3a926c8a5fafce::t_3229409f569a9e 1,6,11,15,25
+.husky/install.mjs
+  s_3a926c8a5fafce::t_3229409f569a9e 2-3,40-53
+  s_3a926c8a5fafce::t_b3e47b8ddcb036 11,39
+  s_3a926c8a5fafce::t_f2c067cf146cfb 54-59
+scripts/quality/quality.test.mjs
+  s_3a926c8a5fafce::t_e62b28bba9101c 22,27,35
+  s_3a926c8a5fafce::t_b3e47b8ddcb036 292-348,352
+  s_3a926c8a5fafce::t_618e872e264df1 36,349-351,353-358,367
+.prettierignore
+  s_3a926c8a5fafce::t_b3e47b8ddcb036 3
+scripts/quality/policy.mjs
+  s_3a926c8a5fafce::t_b3e47b8ddcb036 44
+  s_3a926c8a5fafce::t_3229409f569a9e 1,15-40
+  s_eef5219157f245::t_07d27193e8ca1a 41
+docs/development/quality-tooling.md
+  s_3a926c8a5fafce::t_8b5c9f2937cec8 49-52,91-94
+  s_3a926c8a5fafce::t_e62b28bba9101c 26-33,100,104-105
+docs/development/formatting-inventory.json
+  s_3a926c8a5fafce::t_b75bf71ad1fa19 228
+  s_3a926c8a5fafce::t_1880d4c2b08f5f 227
+scripts/quality/format.mjs
+  s_3a926c8a5fafce::t_3229409f569a9e 1,4,23,25,28-34
+  s_3a926c8a5fafce::t_0d319ffe231f6a 35-37
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e9cc797f688f592c7ba375fa7dd0ae6f0a12aa0d",
+  "prompts": {},
+  "sessions": {
+    "s_3a926c8a5fafce": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b2e3-a77a-7c83-ac94-9ba509ab73c8",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    },
+    "s_eef5219157f245": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3fb3e0f7-5313-4c03-a776-2e8da7c883ff",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
