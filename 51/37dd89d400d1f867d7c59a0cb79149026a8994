@@ -1,0 +1,21 @@
+eslint.config.mjs
+  s_3a926c8a5fafce::t_138ca9354649fd 1-3,8-13,19-21,24,28-29,32,34-35,40-46,48,56,58-59,62-69,76,78-79,81,87,90-100
+pnpm-workspace.yaml
+  s_3a926c8a5fafce::t_138ca9354649fd 12,17-18,21,29-31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "5137dd89d400d1f867d7c59a0cb79149026a8994",
+  "prompts": {},
+  "sessions": {
+    "s_3a926c8a5fafce": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b2e3-a77a-7c83-ac94-9ba509ab73c8",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
