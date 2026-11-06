@@ -7,6 +7,7 @@ import {
   mkdirSync,
   mkdtempSync,
   readFileSync,
+  readlinkSync,
   readdirSync,
   rmSync,
   symlinkSync,
@@ -482,6 +483,101 @@ test('single clone uses upstream Husky; custom hooks and linked per-command chec
     ]),
   );
   assert.deepEqual(readFileSync(join(root, '.git/config')), common);
+});
+
+for (const { verbose, comment } of [
+  { verbose: false },
+  { verbose: true },
+  { verbose: true, comment: ';' },
+]) {
+  test(`real editor commits accept comments and diffs (verbose=${verbose}, comment=${comment ?? '#'})`, (t) => {
+    const root = fixture(t);
+    const base = git(root, ['rev-parse', 'HEAD']).trim();
+    const candidate = 'long-'.repeat(24) + '.txt';
+    writeFileSync(join(root, candidate), 'a verbose diff line '.repeat(12) + '\n');
+    git(root, ['add', candidate]);
+    const editor = join(root, '.git/editor.cjs');
+    writeFileSync(
+      editor,
+      "const fs = require('node:fs'); const file = process.argv[2]; const text = process.env.RIELIA_TEST_COMMIT_MESSAGE + '\\n\\n' + fs.readFileSync(file, 'utf8'); fs.writeFileSync(file + '.fixture-raw', text); fs.writeFileSync(file, text);\n",
+    );
+    const quote = (value) => "'" + value.replaceAll("'", "'\\''") + "'";
+    const env = {
+      GIT_EDITOR: quote(process.execPath) + ' ' + quote(editor),
+      RIELIA_TEST_COMMIT_MESSAGE: 'feat: capture a valid editor message',
+    };
+    if (comment) git(root, ['config', 'core.commentChar', comment]);
+    const args = ['-c', 'core.hooksPath=.husky', 'commit'];
+    if (verbose) args.push('-v');
+    ok(command(root, 'git', args, env));
+    const raw = readFileSync(join(root, '.git/COMMIT_EDITMSG.fixture-raw'), 'utf8');
+    assert.ok(raw.includes(candidate), 'Git comment template was preserved by the editor');
+    if (verbose)
+      assert.ok(raw.includes('>8') && raw.includes('diff --git'), 'real verbose diff present');
+    const stored = git(root, ['show', '-s', '--format=%B', 'HEAD']);
+    assert.equal(stored.trim(), env.RIELIA_TEST_COMMIT_MESSAGE);
+    checkCommits(root, base, git(root, ['rev-parse', 'HEAD']).trim(), base);
+    for (const invalid of [
+      'invalid editor subject',
+      'feat: reject an invalid real body\n\n' + 'x'.repeat(120),
+    ]) {
+      const head = git(root, ['rev-parse', 'HEAD']).trim();
+      const rejected = command(root, 'git', [...args, '--allow-empty'], {
+        ...env,
+        RIELIA_TEST_COMMIT_MESSAGE: invalid,
+      });
+      assert.notEqual(rejected.status, 0);
+      assert.match(rejected.stdout + rejected.stderr, /Commit message rejected/);
+      assert.equal(git(root, ['rev-parse', 'HEAD']).trim(), head);
+    }
+  });
+}
+
+test('hook installation ignores executable backups and unrelated helpers that Git does not execute', (t) => {
+  const root = fixture(t);
+  for (const name of ['pre-commit.bak', 'helper-script']) {
+    writeFileSync(join(root, '.git/hooks', name), '#!/bin/sh\nexit 19\n', { mode: 0o755 });
+  }
+  writeFileSync(join(root, '.git/hooks/pre-commit'), '#!/bin/sh\nexit 29\n', { mode: 0o644 });
+  const backupBefore = readFileSync(join(root, '.git/hooks/pre-commit.bak'));
+  ok(command(root, 'git', ['commit', '--allow-empty', '-m', 'chore: backups are not hooks']));
+  ok(command(root, process.execPath, ['.husky/install.mjs']));
+  assert.equal(git(root, ['config', '--get', 'core.hooksPath']).trim(), '.husky/_');
+  assert.deepEqual(readFileSync(join(root, '.git/hooks/pre-commit.bak')), backupBefore);
+});
+
+test('hook installation ignores dangling recognized hook symlinks without a filesystem exception', (t) => {
+  const root = fixture(t);
+  symlinkSync('missing-target', join(root, '.git/hooks/pre-commit'));
+  ok(
+    command(root, 'git', ['commit', '--allow-empty', '-m', 'chore: missing targets are not hooks']),
+  );
+  ok(command(root, process.execPath, ['.husky/install.mjs']));
+  assert.equal(git(root, ['config', '--get', 'core.hooksPath']).trim(), '.husky/_');
+  assert.equal(readlinkSync(join(root, '.git/hooks/pre-commit')), 'missing-target');
+});
+
+test('hook installation preserves a real executable symlink target and its rejecting behavior', (t) => {
+  const root = fixture(t, { dependencies: false });
+  const target = join(root, '.git/real-hook');
+  writeFileSync(target, '#!/bin/sh\necho real-symlink-hook-rejected >&2\nexit 23\n', {
+    mode: 0o755,
+  });
+  symlinkSync('../real-hook', join(root, '.git/hooks/pre-commit'));
+  const before = readFileSync(join(root, '.git/config'));
+  const bytes = readFileSync(target);
+  const attempt = () =>
+    command(root, 'git', ['commit', '--allow-empty', '-m', 'chore: keep the active symlink hook']);
+  assert.notEqual(attempt().status, 0);
+  assert.match(
+    ok(command(root, process.execPath, ['.husky/install.mjs'])),
+    /Existing default Git hooks preserved/,
+  );
+  const rejected = attempt();
+  assert.notEqual(rejected.status, 0);
+  assert.match(rejected.stderr, /real-symlink-hook-rejected/);
+  assert.deepEqual(readFileSync(join(root, '.git/config')), before);
+  assert.deepEqual(readFileSync(target), bytes);
 });
 
 test('strict Conventional Commits rejects fake merges/fixups/versions/generated reverts, regardless of author', (t) => {

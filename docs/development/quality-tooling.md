@@ -50,6 +50,11 @@ A normal single-checkout clone uses upstream Husky. Custom hook paths, active
 default Git hooks, or multiple worktrees cause a skip. Existing default hooks keep
 their behavior; integrate quality checks deliberately or run the commands separately.
 No global setting or worktreeConfig extension is enabled.
+Default-hook detection uses the [documented exact Git names](https://git-scm.com/docs/githooks):
+backups, unrelated executables and nonexecutable files are not active hooks.
+Missing/dangling targets do not abort installation; executable files and valid
+symlink targets are preserved. Permission or other unexpected filesystem errors
+are not hidden by replacing hook routing.
 In linked worktrees use the same executable hook entries for one command:
 
 ```sh
@@ -119,6 +124,14 @@ autosquash them before publication. Use `revert: ...` for new reverts instead of
 Git's generated subject. Actual merges are exempt by parent count in CI and
 MERGE_HEAD locally; text merely starting with Merge is not exempt.
 
+The commit-msg file path uses pinned
+[commitlint --edit](https://commitlint.js.org/reference/cli.html), which handles
+Git comments and the verbose scissors/diff block before validation. Actual Git
+editor tests cover default comments, `-v` and configured `core.commentChar=;`;
+invalid subjects and real overlong bodies before the scissors remain rejected.
+This follows the pinned edit parser's behavior and does not rewrite the message.
+Raw stdin and CI's already-stored messages retain the same strict policy.
+
 The immutable legacy cutoff is `1c33560f2fca954cbac6d35a87881a41dd72b017`.
 PR checks select nonmerge head commits minus base and legacy ancestry; dev/main
 pushes select after minus before and legacy ancestry. Zero-before starts at the
@@ -176,9 +189,15 @@ paths/interruption, installer contexts, strict messages and PR/push/merge/legacy
 ranges, including skipped-hook CI failure. The test process separately clears
 inherited Git context; a contaminated-caller regression preserves an unrelated
 sentinel's index/config/worktree. Production hooks retain alternate-index semantics.
-All 15 focused regressions, frozen
-install, full check, PostgreSQL identity integration and corrected Docker runtime
-passed locally; owned resources were cleaned. Draft PR/current-head evidence is
+All 21 focused regressions pass after the first native-review corrective batch.
+The original frozen install, full check, PostgreSQL identity integration and
+corrected Docker runtime passed locally; owned resources were cleaned. Draft PR/current-head evidence is
 recorded in [progress](progress.md); final current-head review/acceptance is
 coordinator-owned. No UI/domain/schema/auth change, extraction, T37 skill,
 live-provider/staging request, deployment or full-ticket completion is included.
+
+PR #33's first native round at `a43ce33` completed successfully with one warning
+and one suggestion, both addressed by this batch; see
+[progress and dispositions](progress.md).
+That old check does not accept the new head. Thread resolution, Ready and the
+next native Kilo round remain coordinator-owned and pending.

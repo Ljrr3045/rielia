@@ -19,9 +19,9 @@ export function newCommits(root, base, head, legacy = legacyCommit) {
     .filter(Boolean);
 }
 
-export function checkMessage(root, message) {
+function runCommitlint(root, args, message) {
   const cli = fileURLToPath(new URL('../../node_modules/@commitlint/cli/cli.js', import.meta.url));
-  const result = spawnSync(process.execPath, [cli, '--config', 'commitlint.config.mjs'], {
+  const result = spawnSync(process.execPath, [cli, '--config', 'commitlint.config.mjs', ...args], {
     cwd: root,
     input: message,
     encoding: 'utf8',
@@ -30,6 +30,10 @@ export function checkMessage(root, message) {
   if (result.error) throw result.error;
   if (result.status !== 0)
     throw new Error(`Commit message rejected:\n${result.stdout}${result.stderr}`);
+}
+
+export function checkMessage(root, message) {
+  runCommitlint(root, [], message);
 }
 
 export function checkCommits(root, base, head, legacy = legacyCommit) {
@@ -52,7 +56,8 @@ function main() {
     } catch {
       /* Not a merge. */
     }
-    return checkMessage(root, readFileSync(args[0], 'utf8'));
+    // The pinned edit parser handles Git comments and the verbose scissors/diff block.
+    return runCommitlint(root, ['--edit', args[0]]);
   }
   if (mode === '--range' && args.length === 2) return checkCommits(root, ...args);
   throw new Error('Use --stdin, --edit <message-file>, or --range <base-sha> <head-sha>.');

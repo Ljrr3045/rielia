@@ -1,5 +1,41 @@
 # Delivery progress and decisions
 
+## PR #33 first native review — corrective Draft batch
+
+The first native Kilo round completed **SUCCESS with two findings** at
+`a43ce33d93fccb722da92757b6bc79b547ca4a50`: check `128208554186`,
+App `2193792`, 2026-11-06 23:29:55 UTC. The
+[summary](https://github.com/Ljrr3045/rielia/pull/33#issuecomment-6698522612)
+contains one warning and one suggestion; success did not mean clean feedback.
+The coordinator returned the same PR to Draft before this corrective batch.
+
+- [Editor-message warning](https://github.com/Ljrr3045/rielia/pull/33#discussion_r4498720116):
+  commit-msg now uses pinned commitlint's supported edit-file path, which handles
+  Git template comments and verbose scissors/diffs, including the tested custom
+  comment character. Raw stdin and stored-message CI ranges remain strict;
+  malformed subjects and real overlong bodies still fail. No message file is rewritten.
+- [Default-hook suggestion](https://github.com/Ljrr3045/rielia/pull/33#discussion_r4498720121):
+  prepare checks exact documented Git hook names, ignoring executable backups,
+  unrelated helpers and missing/broken targets. Genuine executable hooks and valid
+  symlink targets keep their behavior; unexpected filesystem errors still fail
+  rather than silently replacing unknown hook routing.
+
+The six new regression cases reproduced five failures before the fix and pass
+afterward; the genuine symlink-hook control passed before and after. All 21
+focused cases pass on Node24.22.1, preserving path/index/sentinel/alternate-index
+safety and strict merge/range policy. Package/runtime/CI/app/handoff scope is
+unchanged. Local Docker/PG/full app suites are not redundantly repeated: the
+modified default-hook scan runs only after the unchanged CI/container/production/
+no-Git skip guards; real disposable Git tests cover that branch, and required
+remote full validate runs again for the new head. Exact candidate/check evidence
+is retained in the PR/external delivery report.
+
+Both findings are fixed locally pending coordinator verification and a fresh
+native round; the worker does not resolve threads or transition Ready. The first
+round and earlier `a43ce33` CI are historical evidence, not acceptance of this
+changed batch. T36 remains IN PROGRESS; app unit/coverage gates and extraction
+remain separate follow-up work.
+
 ## 2026-11-06 T36 tooling implementation — IN PROGRESS
 
 The first bounded T36.2/T36.3 implementation adds exact Prettier3.9.10,

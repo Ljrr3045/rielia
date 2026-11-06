@@ -6,6 +6,13 @@ This records repository changes. No application version has been released.
 
 ### T36 tooling enforcement
 
+- Address both findings from PR #33's first completed native Kilo round:
+  validate editor message files through pinned commitlint edit cleanup, and
+  identify actual Git hook names without false backup matches or dangling-link
+  install failures. Add real editor/verbose/custom-comment and hook-preservation
+  regressions; all 21 focused cases pass. Strict stdin/CI message policy and all
+  existing path/index safeguards remain. The new head still needs coordinator
+  verification/current-head CI/native review; no second Kilo pass is claimed.
 - Add exact compatible Prettier/Husky/commitlint/lint-staged development pins,
   guarded hook preparation and read-only staged-index formatting/lint checks.
   Preserve partially staged source without stash/auto-stage; avoid shared Git
