@@ -84,15 +84,47 @@ numbers or client secrets. There is no third prerequisite ticket, Astro scaffold
 landing implementation, public launch or deployment.
 
 Delivery branch: `docs/development-quality-roadmap`, isolated from `origin/dev`
-`63bf4c6eb0c20fd493a08442fbd337fa4a5f4187`. Local documentation validation passes:
+`63bf4c6eb0c20fd493a08442fbd337fa4a5f4187`. Initial batch at `f4e3a404` passed:
 47 imported files and 30 asset hashes/sizes unchanged, 556 local file links in
 62 documents, unstaged/staged whitespace and full nine-file scope/diff inspection.
-Root guidance is 17,086 bytes. No unrelated local
+Root guidance at that head was 17,086 bytes. No unrelated local
 application suites or installs ran for this prose-only change.
 [Draft PR #32](https://github.com/Ljrr3045/rielia/pull/32) targets `dev`; actual
 Draft was verified before its PR-evidence push. Final-head CI and independent
 review evidence are retained in the PR/external delivery report before coordinator
 Ready; Kilo review/merge are coordinator-owned and pending. T36/T37 implementation remains open.
+
+### Explicit unit-test, coverage and CI follow-up
+
+The user additionally requires **frontend and backend unit tests and coverage**
+within T36 and its developer rules. T36.2–T36.6 now require baseline measurement,
+compatible runner/provider selection, meaningful frontend logic/controller/hook
+and appropriate component-interaction tests, backend domain/use-case tests with
+isolated boundary doubles, and separate frontend/backend coverage reports and
+numerical enforceable thresholds. Maintained unexecuted files stay in the
+denominator; supported lines/branches/functions/statements, justified exclusions
+and a comparable-baseline nonregression policy must be documented. Do not weaken
+thresholds or omit coverage to turn builds green; critical negative/error paths
+and real PostgreSQL/integration/security/runtime tests remain required.
+
+T36 must update PR/dev/main push CI to run deterministic unit suites and coverage
+gates, fail test/threshold/nonregression failures and publish bounded artifacts
+while retaining current checks, pins and security. This follow-up changes seven
+documentation files only: no tests/tools/providers/thresholds or workflow are
+implemented, no coverage percentage is claimed and T36/T37/order remain unchanged.
+Local checks pass: 47 imported files, 30 asset hashes/sizes and 557 local links in
+62 documents, whitespace and scoped diff review; current root guidance is 17,353
+bytes. These rules continue after T36 for new/changed behavior and bug regressions,
+with explained prose/styling/generated-only exceptions and relevant other checks.
+Full new-head CI remains required; the earlier
+`f4e3a404` CI/review cannot accept this added scope. Final-head evidence belongs
+in the existing PR body/external delivery report after the single Draft push.
+
+The user confirms Rielia is active in Kilo and no PR review is visible while
+PR #32 remains Draft, consistent with the GitHub no-native-review checkpoint.
+This is a user-observed current checkpoint, not an independent billing audit,
+a future-round guarantee or completed Ready/native Kilo acceptance. Coordinator
+still owns the final batch verification, Ready transition, requested review and merge.
 
 ### PR #31 current status correction
 

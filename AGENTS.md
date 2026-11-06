@@ -35,7 +35,11 @@ or an Orca installation.
   existing dependencies**. [The roadmap](docs/development/development-quality-roadmap.md)
   defines ordered subdeliveries and evidence. This preparation adds scoped
   developer documentation only; tooling/skills installation, restructuring and
-  redesign remain future implementation. Neither ticket is complete. Original
+  redesign remain future implementation. T36 must implement behavior-focused
+  frontend/backend unit tests, separate coverage reports and evidence-based
+  numerical CI coverage gates, preserving real integration/security/runtime
+  checks; these are requirements, not delivered testing infrastructure here.
+  Neither ticket is complete. Original
   T01–T35 numbering/acceptance and immutable handoff remain unchanged. Future
   T30–T34 landing work uses the [later Astro/narrative direction](docs/development/landing-direction.md);
   no landing app exists or is scaffolded here.

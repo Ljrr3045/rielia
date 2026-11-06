@@ -55,7 +55,8 @@ inventory after intervening merges, then attach actual checks to each bounded PR
 
 **Objective:** make the existing application easier to change safely through
 explicit developer standards, compatible automated enforcement and cohesive
-responsibility boundaries, while preserving its public and UI behavior.
+responsibility boundaries, plus meaningful frontend/backend unit tests and
+separate CI-enforced coverage, while preserving its public and UI behavior.
 **Size:** L; ordered subdeliveries below require separate bounded PRs as needed.
 **Dependencies:** merged T05–T10/T35 bounded foundations, approved Nest
 [NodeAdapter/stack decision](stack-validation-decisions.md), current contracts
@@ -67,11 +68,11 @@ accepts each batch and alone controls review transitions/merge.
 | Order | Bounded subdelivery | Acceptance and evidence |
 | --- | --- | --- |
 | T36.1 | Document actual developer architecture, patterns and standards first | Root guidance links concise [web rules](../../apps/web/AGENTS.md) and [API rules](../../apps/api/AGENTS.md). Rules distinguish present structure from target, ownership/dependency direction, DTO/error/state conventions and applicable checks. This PR supplies preparatory documentation only; it does not complete T36 |
-| T36.2 | Audit existing lint/test/build coverage and approve the enforcement plan | Inventory exact configs, commands, covered/ignored files, CI and gaps against current source. Reuse ESLint rather than add a second lint stack; identify React/hooks, typed/security and architectural checks only where useful. Record compatible versions, peer/runtime requirements, license/advisory provenance and proposed exclusions before installation |
-| T36.3 | Add compatible formatting and commit/staged enforcement | Pin Prettier, Husky, Conventional Commits/commitlint and an appropriate staged runner such as lint-staged after the audit. Provide installation/skip instructions, fast scoped checks, immutable/generated exclusions and matching CI checks that cannot be bypassed by skipping hooks. Demonstrate valid/invalid messages, staged scope and failure behavior; keep formatting batches separate from structural changes |
-| T36.4 | Extract frontend responsibilities in small behavior-preserving batches | SOL separates navigation/form/command/lifecycle concerns from presentation contracts, and separates cohesive CSS/components where justified. Preserve URLs, focus/draft return, pending/unknown outcomes, exact-key retries, sessions, SSE and authorization projections. Record before/after responsibility maps, affected regression results and remaining debt |
-| T36.5 | Extract backend responsibilities in small behavior-preserving batches | SOL separates validation/DTO mapping, application orchestration, policy and focused persistence boundaries where useful. Preserve transactions, locks, tenant filters, version/idempotency/current-authority replay, activity/outbox, SSE commit order and NodeAdapter closure. Prove behavior with real PostgreSQL/security/race/recovery checks |
-| T36.6 | Consolidate evidence and freeze the UI contract for T37 | All approved tooling is actually enforced locally and in CI; agreed extraction scope is implemented and reviewed. Publish stable hook/command/DTO/state and presentation boundaries, surface inventory, regression baseline and remaining known debt. Coordinator accepts T36 before T37 begins |
+| T36.2 | Audit lint/test/build scope and measure frontend/backend unit-coverage baselines | Inventory existing suites, maintained source and unexecuted files, gaps/exclusions and CI. Select compatible runner/coverage providers without assuming a migration; measure separate app baselines and document numerical thresholds/nonregression policy with evidence before enforcement. Reuse ESLint and record exact tool/peer/runtime/license/advisory compatibility |
+| T36.3 | Implement unit/coverage gates alongside compatible formatting and commit/staged enforcement | Establish deterministic frontend/backend unit suites, separate reports and numerical CI gates under the acceptance below. Pin selected test/coverage tools and Prettier/Husky/commitlint/staged tooling. Prove test/threshold failures block CI, publish bounded reports, preserve existing checks, and retain fast staged checks with immutable/generated exclusions. Keep formatting batches separate from structural changes |
+| T36.4 | Extract frontend responsibilities in small behavior-preserving batches | SOL separates navigation/form/command/lifecycle concerns from presentation contracts, and separates cohesive CSS/components where justified. Preserve URLs, focus/draft return, pending/unknown outcomes, exact-key retries, sessions, SSE and authorization projections. Add/update meaningful logic/controller/hook and appropriate component-interaction unit tests; record comparable coverage, affected regression results and remaining debt |
+| T36.5 | Extract backend responsibilities in small behavior-preserving batches | SOL separates validation/DTO mapping, application orchestration, policy and focused persistence boundaries where useful. Add/update domain/use-case unit tests with isolated boundary doubles and comparable coverage. Preserve transactions, locks, tenant filters, version/idempotency/current-authority replay, activity/outbox, SSE commit order and NodeAdapter closure; retain real PostgreSQL/security/race/recovery checks |
+| T36.6 | Consolidate evidence and freeze the UI contract for T37 | Tooling, deterministic unit suites and separate frontend/backend numerical coverage gates are actually enforced locally/in CI; agreed extraction scope is implemented and reviewed. Publish reports, thresholds/exclusions/nonregression evidence, stable UI contracts, surface inventory and remaining owned debt. Coordinator accepts T36 before T37 begins |
 
 ### Architecture and standards to apply
 
@@ -154,9 +155,66 @@ Primary tool references reviewed for the plan: [ESLint prerequisites](https://es
 Their mutable examples are reference material; retain repository pins and
 independently verify selected published artifacts during T36.3.
 
+### Unit tests, coverage and CI enforcement
+
+The user's explicit follow-up makes **frontend and backend unit tests, separate
+coverage and CI enforcement mandatory T36 work**. This docs PR implements none
+of that infrastructure and measures no current coverage percentage. Reuse useful
+existing `node:test` suites; select/pin any additional runner, DOM/hook test support
+and coverage provider only after proving compatibility with current Node/pnpm,
+TypeScript/ESM, React/Next and Nest pins. Do not mandate an unsupported runner
+migration or treat all current integration suites as unit tests.
+
+| Unit scope | Meaningful behavior to verify |
+| --- | --- |
+| Frontend | Pure state/validation/selection logic, controllers, hook lifecycle/state and component interactions where appropriate: user intent, pending/confirmed/error output, draft/retry/conflict, cancellation, stale responses and session cleanup. Use isolated transport/browser-boundary doubles; prefer observable outcomes over implementation mirrors or snapshots alone |
+| Backend | Domain policies and application/use-case decisions with isolated repository/clock/external-service boundary doubles: valid/invalid transitions, authorization denials, version/idempotency/retry and error outcomes. Test public behavior and collaborator contracts without duplicating implementation |
+
+Unit doubles cannot establish real SQL constraints, locking, atomic transactions,
+tenant isolation or durable recovery. Keep real PostgreSQL/HTTP/library,
+integration/security, backend closure, Docker runtime/restart and relevant browser
+checks; coverage totals do not replace those checks or critical negative/error
+paths. All unit/functional test source remains SOL xhigh-owned.
+These are ongoing development requirements after T36: new/changed behavior needs
+appropriate unit/regression tests, bug fixes reproduce the regression, and
+extraction preserves meaningful tests. Explain when prose, pure styling or
+generated-only changes make unit tests inapplicable; retain relevant other checks.
+
+Produce **separate frontend and backend unit-coverage reports**, recording
+lines, branches, functions and statements where the selected provider supports
+them; document unsupported metrics and the evidence for provider selection.
+Include all targeted maintained source, **including files no test imports or
+executes**, in the denominator. Record source globs, shared-source attribution,
+source-map handling and justified generated/vendor/immutable exclusions; do not
+hide maintained untested code with broad exclusions, ignore pragmas or imported-
+files-only collection. Label any supplemental integration coverage separately.
+
+Measure reproducible baselines before extraction, then document numerical,
+enforceable thresholds for each app and supported metric, their rationale and a
+comparable-baseline nonregression policy. T36 acceptance requires those values
+actually configured and tested; this plan invents no percentage or current result.
+CI must fail test failures, unmet thresholds and coverage regressions under that
+policy. Do not lower thresholds, remove meaningful tests/source from coverage,
+add ignores or disable gates merely to make builds green. Any legitimate source/
+provider/scope change needs reviewed evidence and comparable before/after reports;
+it cannot silently reset the baseline. Prioritize important denied/error/conflict/
+recovery paths even when aggregate coverage already passes.
+
+T36 must update CI to run deterministic unit suites and coverage gates on pull
+requests and pushes to `dev`/`main` consistently with the existing workflow.
+Use fixed fixtures and controlled time/randomness, no live service credentials.
+Publish bounded frontend/backend summaries and machine-readable coverage artifacts
+with documented size/retention limits and safe relative paths; keep diagnostics
+available on failures without turning a failed test/gate green. Prove passing and
+failing test/threshold cases, including maintained unexecuted files and skipped
+local hooks. Preserve existing `validate` checks, integration/runtime/audit stages,
+pins, read-only permissions, protected content and review/security requirements.
+No workflow change or new test command is delivered by this documentation batch.
+
 ### T36 completion, tests and exclusions
 
-Completion requires actual implemented standards/tool enforcement and reviewed
+Completion requires actual standards/tool enforcement, meaningful unit suites and
+separate frontend/backend coverage reports with numerical CI gates, reviewed
 restructuring evidence for the agreed high-risk surfaces, plus a stable UI
 contract baseline for T37. A document, green lint, coverage percentage or smaller
 file count alone is insufficient. Record unresolved debt with owner and scope;

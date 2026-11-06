@@ -15,6 +15,16 @@ This records repository changes. No application version has been released.
   Actual enforcement/extraction and a stable UI baseline are required before T37;
   no installation, restructuring or ticket completion is claimed by this docs PR.
   [Draft PR #32](https://github.com/Ljrr3045/rielia/pull/32) records this preparation.
+- Extend T36 and scoped developer rules with mandatory frontend/backend unit
+  tests, separate coverage reports and evidence-based numerical CI gates.
+  Include maintained unexecuted source, supported coverage metrics, justified
+  exclusions, baseline/nonregression policy and bounded CI artifacts; preserve
+  real PostgreSQL/integration/security/runtime checks. Runner/provider selection,
+  tests and PR/dev/main CI enforcement remain future implementation; no current
+  percentage, threshold or workflow change is claimed. Prior-head acceptance
+  does not cover this follow-up. Record the user's confirmation that Rielia is
+  active in Kilo and no PR review is visible while Draft, without a billing audit
+  or future-round claim.
 - Assign future UI/UX presentation to Codex `gpt-6-astra` `high`, replacing
   OpenCode Go/DeepSeek while preserving historical evidence. Logic/hooks/state/
   auth/proxies/functional tests and T36 structure remain SOL `gpt-6.1-sol` `xhigh`;

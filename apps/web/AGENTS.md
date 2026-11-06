@@ -57,6 +57,29 @@ documentation preparation.
 
 ## Verification
 
+New or changed behavior must ship with appropriate unit/regression tests; bug
+fixes reproduce the prevented regression. Preserve meaningful existing tests
+during extraction. Prose, pure styling or generated-only changes may explain
+why unit tests add no value; applicable visual/integration checks still apply.
+
+T36 must establish deterministic frontend unit suites for pure logic/controllers,
+hook lifecycle/state behavior and component interactions where appropriate.
+Exercise user intent and observable outcomes, especially denied/error/conflict,
+cancellation, session cleanup and draft/retry recovery, with isolated transport
+or browser-boundary doubles. Test source remains SOL-owned; unit doubles do not
+replace real API/persistence, security or browser/accessibility evidence.
+
+Require a separate frontend unit-coverage report including maintained unexecuted
+source, with lines/branches/functions/statements where supported and justified
+generated/vendor/immutable exclusions. T36 measures the baseline, selects a
+compatible runner/provider and documents numerical enforceable thresholds and
+nonregression policy; none is measured/configured by this docs PR. Run unit suites
+and coverage gates locally and in CI after implementation. Do not drop coverage,
+weaken thresholds, omit source or add ignores to make builds green; prioritize
+meaningful negative/error paths over percentage gaming. Follow the
+[coverage/CI acceptance](../../docs/development/development-quality-roadmap.md#unit-tests-coverage-and-ci-enforcement)
+for report scope, artifacts and justified changes.
+
 Tests assert observable state transitions, protocol behavior and user journeys,
 not source layout or implementation mirrors. For logic extraction run affected
 focused checks, `pnpm check`, and relevant real API/PostgreSQL/security/runtime

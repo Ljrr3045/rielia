@@ -66,6 +66,29 @@ implied by this document.
 
 ## Verification
 
+New or changed behavior must ship with appropriate unit/regression tests; bug
+fixes reproduce the prevented regression. Preserve meaningful existing tests
+during extraction. Prose or generated-only changes may explain why unit tests
+add no value; applicable integration/security checks still apply.
+
+T36 must establish deterministic backend domain-policy and application/use-case
+unit suites. Use isolated repository, clock or external-service boundary doubles
+where appropriate; assert observable decisions/outcomes, including denied access,
+invalid transitions, conflicts, retries and failure handling. Keep current
+real-library/PostgreSQL/HTTP/security/runtime tests: unit mocks cannot prove SQL
+constraints, locking, atomicity, tenant isolation or restart recovery.
+
+Require a separate backend unit-coverage report including maintained unexecuted
+source, with lines/branches/functions/statements where supported and justified
+generated/vendor/immutable exclusions. T36 measures the baseline, selects a
+compatible runner/provider and documents numerical enforceable thresholds and
+nonregression policy; none is measured/configured by this docs PR. Run unit suites
+and coverage gates locally and in CI after implementation. Do not drop coverage,
+weaken thresholds, omit source or add ignores to make builds green; prioritize
+critical negative/error paths over percentage gaming. Follow the
+[coverage/CI acceptance](../../docs/development/development-quality-roadmap.md#unit-tests-coverage-and-ci-enforcement)
+for report scope, artifacts and justified changes.
+
 Extract by behavior and responsibility without arbitrary line limits or mandatory
 layers for small operations. Tests verify transitions, invariants and observable
 HTTP/database behavior rather than private function counts or implementation

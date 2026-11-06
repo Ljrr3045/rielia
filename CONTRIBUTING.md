@@ -119,6 +119,24 @@ provenance/discovery verification and product/UX/brand authority; see the
 [Astro landing/narrative decision](docs/development/landing-direction.md), not a
 new priority ticket or permission to scaffold/publish now.
 
+T36 also requires behavior-focused frontend and backend unit suites with separate
+coverage reports and numerical CI gates. Frontend tests cover pure logic,
+controllers/hooks and appropriate component interactions; backend tests cover
+domain policies/application use cases with isolated boundary doubles. Preserve
+real PostgreSQL/integration/security/runtime checks. During T36, measure coverage
+including maintained unexecuted source, select compatible runner/provider tooling,
+document justified exclusions and evidence-based thresholds for supported
+lines/branches/functions/statements, then enforce deterministic unit tests and
+coverage in PR and dev/main push CI with bounded report artifacts. Do not drop
+coverage or weaken thresholds/coverage scope to make a build green; the
+[roadmap's coverage acceptance](docs/development/development-quality-roadmap.md#unit-tests-coverage-and-ci-enforcement)
+defines baseline, nonregression and reporting requirements. No coverage value,
+threshold, new test tooling or CI enforcement is delivered by this documentation.
+After setup, this remains an ongoing developer rule: new/changed behavior ships
+with appropriate unit/regression tests, bug fixes reproduce the regression, and
+extraction preserves meaningful tests. Explain unit-test exceptions for prose,
+pure styling or generated-only work; retain applicable checks for that change.
+
 ## Validate and record evidence
 
 The [T10.0 discovery guide](docs/development/task-discovery.md) records search,
