@@ -1,0 +1,12 @@
+docs/handoff/**
+docs/development/handoff-files.sha256
+**/.git/**
+**/node_modules/**
+**/dist/**
+**/.next/**
+**/coverage/**
+**/*.tsbuildinfo
+**/next-env.d.ts
+apps/api/src/generated/**
+pnpm-lock.yaml
+patches/**

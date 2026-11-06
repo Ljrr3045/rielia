@@ -29,9 +29,16 @@
     "test:mcp": "pnpm --filter @rielia/contracts build && pnpm --filter @rielia/api build && pnpm --filter @rielia/mcp-local build && pnpm --filter @rielia/mcp-local test",
     "test:runtime": "node scripts/test-runtime.mjs",
     "check:backend-closure": "node scripts/assert-backend-closure.mjs apps/api",
-    "check": "pnpm lint && pnpm check:backend-closure && pnpm test:smoke && pnpm test:identity:logic && pnpm test:workspaces:logic && pnpm test:projects:logic && pnpm test:prototype && pnpm typecheck && pnpm build && pnpm --filter @rielia/mcp-local test && pnpm smoke",
+    "check": "pnpm format:check && pnpm test:quality && pnpm lint && pnpm check:backend-closure && pnpm test:smoke && pnpm test:identity:logic && pnpm test:workspaces:logic && pnpm test:projects:logic && pnpm test:prototype && pnpm typecheck && pnpm build && pnpm --filter @rielia/mcp-local test && pnpm smoke",
     "dev:web": "pnpm --filter @rielia/contracts build && pnpm --filter @rielia/web dev",
-    "dev:api": "pnpm --filter @rielia/contracts build && pnpm --filter @rielia/api dev"
+    "dev:api": "pnpm --filter @rielia/contracts build && pnpm --filter @rielia/api dev",
+    "prepare": "node .husky/install.mjs",
+    "format:check": "node scripts/quality/format.mjs --check",
+    "format:write": "node scripts/quality/format.mjs --write",
+    "quality:staged": "node scripts/quality/staged.mjs",
+    "quality:ci": "node scripts/quality/ci.mjs",
+    "commit:check": "node scripts/quality/commits.mjs --stdin",
+    "test:quality": "node --test scripts/quality/quality.test.mjs"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
@@ -41,6 +48,11 @@
     "@types/node": "24.19.2",
     "eslint": "10.13.0",
     "typescript": "6.0.3",
-    "typescript-eslint": "8.72.0"
+    "typescript-eslint": "8.72.0",
+    "prettier": "3.9.10",
+    "husky": "9.1.7",
+    "@commitlint/cli": "21.2.4",
+    "@commitlint/config-conventional": "21.2.4",
+    "lint-staged": "17.6.0"
   }
 }

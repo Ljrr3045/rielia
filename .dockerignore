@@ -5,6 +5,8 @@
 !pnpm-lock.yaml
 !pnpm-workspace.yaml
 !tsconfig.base.json
+!.husky/
+!.husky/install.mjs
 !patches/
 !patches/**
 !apps/

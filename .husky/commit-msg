@@ -1,0 +1,3 @@
+#!/bin/sh
+[ "${HUSKY-}" = "0" ] && exit 0
+pnpm exec node scripts/quality/commits.mjs --edit "$1"

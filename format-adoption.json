@@ -1,0 +1,23 @@
+{
+  "files": [
+    ".github/workflows/ci.yml",
+    ".husky/install.mjs",
+    ".prettierrc.json",
+    "commitlint.config.mjs",
+    "docs/development/formatting-inventory.json",
+    "eslint.config.mjs",
+    "format-adoption.json",
+    "lint-staged.config.mjs",
+    "package.json",
+    "pnpm-workspace.yaml",
+    "scripts/quality/checks.mjs",
+    "scripts/quality/ci.mjs",
+    "scripts/quality/commits.mjs",
+    "scripts/quality/format.mjs",
+    "scripts/quality/git.mjs",
+    "scripts/quality/policy.mjs",
+    "scripts/quality/quality.test.mjs",
+    "scripts/quality/staged.mjs",
+    "tsconfig.base.json"
+  ]
+}

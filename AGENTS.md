@@ -33,12 +33,13 @@ or an Orca installation.
 - The user's 2026-11-05 reprioritization adds exactly two tickets: **T36 engineering
   quality/tooling/structure → T37 UI quality redesign → T11 → remaining work under
   existing dependencies**. [The roadmap](docs/development/development-quality-roadmap.md)
-  defines ordered subdeliveries and evidence. This preparation adds scoped
-  developer documentation only; tooling/skills installation, restructuring and
-  redesign remain future implementation. T36 must implement behavior-focused
+  defines ordered subdeliveries and evidence. T36 is IN PROGRESS: the first
+  [tooling slice](docs/development/quality-tooling.md) adds scoped formatting,
+  hooks and prospective commit checks; unit coverage gates, restructuring,
+  frontend skills and redesign remain follow-up implementation. T36 must implement behavior-focused
   frontend/backend unit tests, separate coverage reports and evidence-based
   numerical CI coverage gates, preserving real integration/security/runtime
-  checks; these are requirements, not delivered testing infrastructure here.
+  checks; application unit coverage infrastructure is not delivered by this slice.
   Neither ticket is complete. Original
   T01–T35 numbering/acceptance and immutable handoff remain unchanged. Future
   T30–T34 landing work uses the [later Astro/narrative direction](docs/development/landing-direction.md);

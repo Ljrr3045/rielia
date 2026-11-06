@@ -82,7 +82,9 @@ Require a separate backend unit-coverage report including maintained unexecuted
 source, with lines/branches/functions/statements where supported and justified
 generated/vendor/immutable exclusions. T36 measures the baseline, selects a
 compatible runner/provider and documents numerical enforceable thresholds and
-nonregression policy; none is measured/configured by this docs PR. Run unit suites
+nonregression policy; disposable audit measurements are documented in the
+[tooling guide](../../docs/development/quality-tooling.md), but application coverage
+commands/gates are not delivered by this slice. Run unit suites
 and coverage gates locally and in CI after implementation. Do not drop coverage,
 weaken thresholds, omit source or add ignores to make builds green; prioritize
 critical negative/error paths over percentage gaming. Follow the

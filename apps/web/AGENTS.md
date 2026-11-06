@@ -52,8 +52,9 @@ has happened or require an immediate directory rewrite.
 Extract by reason to change and testable responsibility, without arbitrary line
 limits, one-file-per-function rules or new abstraction/package quotas. Do not
 introduce a global store, query library or shared UI package merely because the
-handoff proposes it. Future tooling/skills are planned, not installed by T36's
-documentation preparation.
+handoff proposes it. Root [quality tooling](../../docs/development/quality-tooling.md)
+now enforces scoped formatting/commits; frontend skills and structure remain
+follow-up work.
 
 ## Verification
 
@@ -73,7 +74,8 @@ Require a separate frontend unit-coverage report including maintained unexecuted
 source, with lines/branches/functions/statements where supported and justified
 generated/vendor/immutable exclusions. T36 measures the baseline, selects a
 compatible runner/provider and documents numerical enforceable thresholds and
-nonregression policy; none is measured/configured by this docs PR. Run unit suites
+nonregression policy; disposable audit measurements are documented separately,
+but application coverage commands/gates are not delivered by the tooling slice. Run unit suites
 and coverage gates locally and in CI after implementation. Do not drop coverage,
 weaken thresholds, omit source or add ignores to make builds green; prioritize
 meaningful negative/error paths over percentage gaming. Follow the

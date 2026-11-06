@@ -1,5 +1,106 @@
 # Delivery progress and decisions
 
+## PR #33 first native review — corrective Draft batch
+
+The first native Kilo round completed **SUCCESS with two findings** at
+`a43ce33d93fccb722da92757b6bc79b547ca4a50`: check `128208554186`,
+App `2193792`, 2026-11-06 23:29:55 UTC. The
+[summary](https://github.com/Ljrr3045/rielia/pull/33#issuecomment-6698522612)
+contains one warning and one suggestion; success did not mean clean feedback.
+The coordinator returned the same PR to Draft before this corrective batch.
+
+- [Editor-message warning](https://github.com/Ljrr3045/rielia/pull/33#discussion_r4498720116):
+  commit-msg now uses pinned commitlint's supported edit-file path, which handles
+  Git template comments and verbose scissors/diffs, including the tested custom
+  comment character. Raw stdin and stored-message CI ranges remain strict;
+  malformed subjects and real overlong bodies still fail. No message file is rewritten.
+- [Default-hook suggestion](https://github.com/Ljrr3045/rielia/pull/33#discussion_r4498720121):
+  prepare checks exact documented Git hook names, ignoring executable backups,
+  unrelated helpers and missing/broken targets. Genuine executable hooks and valid
+  symlink targets keep their behavior; unexpected filesystem errors still fail
+  rather than silently replacing unknown hook routing.
+
+The six new regression cases reproduced five failures before the fix and pass
+afterward; the genuine symlink-hook control passed before and after. All 21
+focused cases pass on Node24.22.1, preserving path/index/sentinel/alternate-index
+safety and strict merge/range policy. Package/runtime/CI/app/handoff scope is
+unchanged. Local Docker/PG/full app suites are not redundantly repeated: the
+modified default-hook scan runs only after the unchanged CI/container/production/
+no-Git skip guards; real disposable Git tests cover that branch, and required
+remote full validate runs again for the new head. Exact candidate/check evidence
+is retained in the PR/external delivery report.
+
+Both findings are fixed locally pending coordinator verification and a fresh
+native round; the worker does not resolve threads or transition Ready. The first
+round and earlier `a43ce33` CI are historical evidence, not acceptance of this
+changed batch. T36 remains IN PROGRESS; app unit/coverage gates and extraction
+remain separate follow-up work.
+
+## 2026-11-06 T36 tooling implementation — IN PROGRESS
+
+The first bounded T36.2/T36.3 implementation adds exact Prettier3.9.10,
+Husky9.1.7, commitlint CLI/config21.2.4 and lint-staged17.6.0 at the root,
+retaining existing ESLint/framework/runtime pins and backend closure. See the
+[tooling delivery guide](quality-tooling.md) and [adoption inventory](formatting-inventory.json).
+Hook checks read staged contents without modifying/stashing/staging source;
+policy/dependency inputs must match the worktree. Linked-worktree prepare skips
+shared config changes; documented per-command hooks reuse the tracked entries.
+Existing validate now independently checks formatting/prospective new nonmerge
+messages using full history; all previous suites/events/permissions/pins remain.
+No title automation is added; coordinator validates the final squash subject.
+
+Mechanical root formatting is a separate commit from semantic tooling. This
+branch is `chore/t36-quality-tooling` from `origin/dev` `1c33560`; no application
+source formatting/extraction, UI/domain/schema/auth work or T37 skills are included.
+Focused installer/staged/range regressions are implemented; full local/remote
+validation and Draft PR evidence are recorded below when complete. T36 remains
+IN PROGRESS; unit infrastructure/numerical coverage gates and extraction remain
+follow-up implementation. Parallel unit audits in the guide are experimental
+baseline evidence, not installed coverage commands or accepted gates.
+
+Local validation passed on implementation checkpoint `e9cc797`: exact-runtime
+frozen install, 13 focused quality regressions, adopted formatting, preserved
+ESLint scopes, full `pnpm check` (286-package Express-free installed closure,
+logic/types/builds/MCP/HTTP smoke), real PostgreSQL identity/security/migration/
+restart integration against unchanged app code, and the corrected-installer
+Docker build/runtime suite. Runtime verified nonroot files, API/worker/migration
+deployed-store closure, failed/repeated migration gates, DB recovery, locked-worker
+shutdown and durable-job recreation/restart, then cleaned its owned resources.
+The first sandbox attempt needed loopback/DNS permissions; successful authorized
+retries retained all gates. High-level audit passes with no high/critical and one
+unchanged moderate minimatch advisory documented in the guide; this is not a
+zero-advisory claim. Handoff/asset/link and staged/unstaged/full-branch whitespace
+checks pass.
+
+Independent review of `650b6dd` found two valid issues: directory-symlink formatter
+escapes and bypass of active default Git hooks. Both are fixed in `e9cc797`, with
+negative byte-preservation and real rejecting-hook regressions; inventory also
+names the new guide. Coordinator delta review, Draft publication/current-head
+remote CI and eventual Ready/native Kilo remain pending at this checkpoint.
+
+A later review reproduced inherited Git-context leakage through imported test
+helpers. The quality test process now clears caller Git variables before helper
+use, with a child contamination regression preserving a sentinel's raw index,
+config and working bytes. Production helpers retain legitimate alternate-index
+semantics, verified in both staged-content directions. All 15 focused cases plus
+lint/format pass after this test-only correction; app/Docker source is unchanged
+from the successful `e9cc797` validation.
+
+[Draft PR #33](https://github.com/Ljrr3045/rielia/pull/33) targets `dev`; initial
+publication at `df03f6ab45e0a71014cd478a9ab33b5f8af85068` followed verification
+that no branch PR existed. GitHub confirmed Draft and automatic validate; actual
+Draft is checked before the PR-evidence push. The actual-branch local CI-policy
+command passed all six new commits and selected formatting. Final-head remote
+validate and independent delta review evidence belong in the PR/external delivery
+report after this evidence commit, without another source push. Coordinator alone
+controls Ready/native Kilo/merge; no paid review or deployment is requested here.
+
+PR #32 status correction: [merged](https://github.com/Ljrr3045/rielia/pull/32)
+as `1c33560f2fca954cbac6d35a87881a41dd72b017`, source head
+`ef03302368dc3027492a9ae5dd9c5ff96cc04156`; coordinator verified
+[postmerge validate success](https://github.com/Ljrr3045/rielia/actions/runs/42159134226)
+on November 6. Older Draft/pending notes are historical and do not approve this slice.
+
 > Review policy updates (2026-11-02/03): Kody triggers and Kody review requirements
 > below are obsolete. [Current review policy](kilo-review.md) governs new changes.
 > New PRs open Draft for batching; only the coordinator controls Ready transitions.
