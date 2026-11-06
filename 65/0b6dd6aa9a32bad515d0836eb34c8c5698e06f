@@ -1,0 +1,99 @@
+commitlint.config.mjs
+  s_3a926c8a5fafce::t_6936c230ea9a47 1-4
+lint-staged.config.mjs
+  s_3a926c8a5fafce::t_6936c230ea9a47 1-5
+scripts/quality/quality.test.mjs
+  s_3a926c8a5fafce::t_d5784d48a15cfc 4-14,26-33,36-41,56-58,61-66,69,71-84,86-95,118,129,135-137,141-145,147-151,195-197,238-241,243-251,257-270,273-282,292-299,326-333,336-345,351-366,381-399,406-409,412-440,448-451,454-480
+  s_3a926c8a5fafce::t_00b9c0337ebc81 207-233
+  s_3a926c8a5fafce::t_e0df7c86a2f0c4 1-3,15-25,34-35,42-55,59-60,67-68,70,85,96-117,119-128,130-133,138-140,146,152-194,198-200,234-237,242,252-256,271-272,283-291,300-325,334-335,346-350,367-380,400-405,410-411,441-447,452-453,481
+  s_3a926c8a5fafce::t_6cb0e72a86bd33 201-206
+  s_3a926c8a5fafce::t_b4f905abc63cc8 134
+.dockerignore
+  s_3a926c8a5fafce::t_6936c230ea9a47 8-9
+scripts/quality/checks.mjs
+  s_3a926c8a5fafce::t_00b9c0337ebc81 4-10,16-18,32,37,43-49
+  s_3a926c8a5fafce::t_6cb0e72a86bd33 33-36
+  s_3a926c8a5fafce::t_6936c230ea9a47 1-3,11-15,19-31,38-42,50-63
+scripts/quality/ci.mjs
+  s_3a926c8a5fafce::t_6936c230ea9a47 1-33
+  s_3a926c8a5fafce::t_fbc1e2e8868061 34-40
+docs/development/progress.md
+  s_3a926c8a5fafce::t_d8ba2247ae980d 3-30
+scripts/quality/git.mjs
+  s_3a926c8a5fafce::t_6936c230ea9a47 1-22,26-28,32-41
+  s_3a926c8a5fafce::t_d5784d48a15cfc 23-25,29-31
+.prettierrc.json
+  s_3a926c8a5fafce::t_6936c230ea9a47 1-10
+CONTRIBUTING.md
+  s_3a926c8a5fafce::t_dcc54ea4241700 35-36,113-119,137-138,194-195
+scripts/quality/policy.mjs
+  s_3a926c8a5fafce::t_d5784d48a15cfc 19,38-48,62
+  s_3a926c8a5fafce::t_e0df7c86a2f0c4 2,8
+  s_3a926c8a5fafce::t_6936c230ea9a47 1,3-7,9-18,20-37,49-61,63-72
+.husky/install.mjs
+  s_3a926c8a5fafce::t_6936c230ea9a47 1-31
+  s_3a926c8a5fafce::t_8efa263b6ea1c3 32-46
+.prettierignore
+  s_3a926c8a5fafce::t_d5784d48a15cfc 2
+  s_3a926c8a5fafce::t_6936c230ea9a47 1,3-11
+.husky/commit-msg
+  s_3a926c8a5fafce::t_6936c230ea9a47 1-3
+scripts/quality/staged.mjs
+  s_3a926c8a5fafce::t_465ef26fe4746c 17-22
+  s_3a926c8a5fafce::t_b4f905abc63cc8 12-14
+  s_3a926c8a5fafce::t_6936c230ea9a47 1-2,6-8,45-50
+  s_3a926c8a5fafce::t_dd1112e77cfdbe 4-5,15-16,23-24
+  s_3a926c8a5fafce::t_d5784d48a15cfc 3,9-11,25-44
+format-adoption.json
+  s_3a926c8a5fafce::t_6936c230ea9a47 1-23
+docs/development/quality-tooling.md
+  s_3a926c8a5fafce::t_246f2a714efb40 1-9,17-134,137,139-165
+  s_3a926c8a5fafce::t_6cb0e72a86bd33 10-16,135-136,138
+docs/development/formatting-inventory.json
+  s_3a926c8a5fafce::t_e052c45b44245e 1-3,24,220-228
+  s_3a926c8a5fafce::t_2be1a386b7b471 4-23,25-219
+docker/Dockerfile
+  s_3a926c8a5fafce::t_6936c230ea9a47 7
+package.json
+  s_3a926c8a5fafce::t_a3fea396fc70f1 32,34-41,51-56
+scripts/quality/format.mjs
+  s_3a926c8a5fafce::t_6936c230ea9a47 1-34
+  s_3a926c8a5fafce::t_9887fb21ac5d95 35-37
+docs/development/development-quality-roadmap.md
+  s_3a926c8a5fafce::t_d8ba2247ae980d 136-137,144-146,218-219,384-386,388,390-391
+  s_3a926c8a5fafce::t_dcc54ea4241700 19-24,55-57
+.husky/pre-commit
+  s_3a926c8a5fafce::t_6936c230ea9a47 1-3
+.github/workflows/ci.yml
+  s_3a926c8a5fafce::t_6936c230ea9a47 21,25,41-42
+  s_3a926c8a5fafce::t_4cb2fdec0dd34c 20
+CHANGELOG.md
+  s_3a926c8a5fafce::t_d8ba2247ae980d 7-24
+apps/web/AGENTS.md
+  s_3a926c8a5fafce::t_dcc54ea4241700 55-57,77-78
+AGENTS.md
+  s_3a926c8a5fafce::t_dcc54ea4241700 36-39,42
+apps/api/AGENTS.md
+  s_3a926c8a5fafce::t_dcc54ea4241700 85-87
+scripts/quality/commits.mjs
+  s_3a926c8a5fafce::t_6936c230ea9a47 1-50
+  s_3a926c8a5fafce::t_ff4516b36d3661 51-67
+pnpm-lock.yaml
+  s_3a926c8a5fafce::t_5333225c4c031a 176-181,200-205,209-211,320-327,413-497,1264-1271,1488-1494,1627-1630,1664-1667,1686-1698,1715-1723,1856-1859,1868-1870,1886-1889,2047-2050,2078-2081,2121-2125,2141-2144,2156-2159,2181-2183,2219-2222,2244-2253,2348-2355,2647-2654,2789-2793,2878-2885,3043-3046,3096-3099,3183-3186,3270-3273,3279-3286,3307-3314,3384-3500,4163-4168,4446-4449,4560-4561,4589-4594,4607-4619,4631-4639,4750-4751,4756-4759,4770-4771,4948-4949,4982-4985,5018-5019,5030-5034,5041-5042,5081-5082,5105-5106,5121-5128,5195-5204,5351-5361,5485-5486,5561-5564,5762-5763,5804-5805,5881-5882,5923-5924,5927-5937
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "650b6dd6aa9a32bad515d0836eb34c8c5698e06f",
+  "prompts": {},
+  "sessions": {
+    "s_3a926c8a5fafce": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b2e3-a77a-7c83-ac94-9ba509ab73c8",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
