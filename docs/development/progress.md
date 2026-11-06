@@ -50,6 +50,15 @@ semantics, verified in both staged-content directions. All 15 focused cases plus
 lint/format pass after this test-only correction; app/Docker source is unchanged
 from the successful `e9cc797` validation.
 
+[Draft PR #33](https://github.com/Ljrr3045/rielia/pull/33) targets `dev`; initial
+publication at `df03f6ab45e0a71014cd478a9ab33b5f8af85068` followed verification
+that no branch PR existed. GitHub confirmed Draft and automatic validate; actual
+Draft is checked before the PR-evidence push. The actual-branch local CI-policy
+command passed all six new commits and selected formatting. Final-head remote
+validate and independent delta review evidence belong in the PR/external delivery
+report after this evidence commit, without another source push. Coordinator alone
+controls Ready/native Kilo/merge; no paid review or deployment is requested here.
+
 PR #32 status correction: [merged](https://github.com/Ljrr3045/rielia/pull/32)
 as `1c33560f2fca954cbac6d35a87881a41dd72b017`, source head
 `ef03302368dc3027492a9ae5dd9c5ff96cc04156`; coordinator verified

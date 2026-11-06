@@ -23,6 +23,8 @@ This records repository changes. No application version has been released.
   existing moderate lint-tool advisory remains explicit, with no high/critical.
 - Isolate the quality test process from inherited Git context and prove unrelated
   sentinel preservation while retaining production alternate-index behavior.
+  [Draft PR #33](https://github.com/Ljrr3045/rielia/pull/33) targets `dev`; final
+  current-head CI/review evidence remains in the PR and coordinator delivery report.
 - Correct PR #32 history: merged as `1c33560f2fca954cbac6d35a87881a41dd72b017`
   from `ef03302368dc3027492a9ae5dd9c5ff96cc04156`, with
   [postmerge CI success](https://github.com/Ljrr3045/rielia/actions/runs/42159134226)
