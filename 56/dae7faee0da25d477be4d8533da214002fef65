@@ -1,0 +1,51 @@
+docs/development/frontend-agent.md
+  s_196316477ee42d::t_0464fd5afb0f25 3-38,41,56
+apps/web/AGENTS.md
+  s_196316477ee42d::t_c91a2217689496 1-29,33-67
+  s_196316477ee42d::t_3cba86f896a7d4 30-32
+docs/development/landing-direction.md
+  s_196316477ee42d::t_97579a1df05477 84-86
+  s_196316477ee42d::t_3fe07b6ba422e3 100
+  s_196316477ee42d::t_a26edc816a5633 67-71,101-106
+  s_196316477ee42d::t_1e44b9388f1c77 1-66,72-83,89-99,107-125
+  s_196316477ee42d::t_6998e11e28affb 87-88
+apps/api/AGENTS.md
+  s_196316477ee42d::t_97579a1df05477 13,51-54
+  s_196316477ee42d::t_c91a2217689496 1-12,14-50,55-58,62-80
+  s_196316477ee42d::t_3fe07b6ba422e3 59-61
+CHANGELOG.md
+  s_196316477ee42d::t_4b316e1482f668 7-35
+AGENTS.md
+  s_196316477ee42d::t_0464fd5afb0f25 16-17,33-41,158-160,163-165,171
+CONTRIBUTING.md
+  s_196316477ee42d::t_0464fd5afb0f25 29-36,85-87,89-91,100-102,112-120
+  s_196316477ee42d::t_a58aa29ad4911d 121
+docs/development/development-quality-roadmap.md
+  s_196316477ee42d::t_6d2fd134d767be 146-156
+  s_196316477ee42d::t_701a12cf666c57 274-282
+  s_196316477ee42d::t_a26edc816a5633 212-214,220-235,241-259,263,265-270
+  s_196316477ee42d::t_d666b93d99e749 296-298
+  s_196316477ee42d::t_762383c9a8a69b 36-53
+  s_196316477ee42d::t_3cba86f896a7d4 116-123,130-132,139-144
+  s_196316477ee42d::t_43ab72e9dcefa0 1-35,54-115,124-129,133-138,145,157-211,215-219,236-240,260-262,264,271-273,283-295,299-326
+docs/development/progress.md
+  s_196316477ee42d::t_3fe07b6ba422e3 8-9
+  s_196316477ee42d::t_a88c0e733855ab 87-92
+  s_196316477ee42d::t_4b316e1482f668 19,46-86,93-105,286,971-977,991-992,1014,1034,1039-1040,1058,1063-1064
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "56dae7faee0da25d477be4d8533da214002fef65",
+  "prompts": {},
+  "sessions": {
+    "s_196316477ee42d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1aeca-738c-7e00-96bb-f5d7b38beeea",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
