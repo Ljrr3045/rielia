@@ -26,8 +26,14 @@ production deployment acceptance.
 
 Agree the ticket and ownership with the coordinator. Record the internal batch,
 T/P/US requirements, applicable UXR/UX or LPR/S/LP criteria, dependencies, acceptance,
-and exclusions. Use ticket dependencies rather than numerical order: T35 follows
-T04 and precedes T05/T06/T12. Preparing these contribution documents does not
+and exclusions. The [2026-11-05 quality roadmap](docs/development/development-quality-roadmap.md)
+adds **T36 → T37 → T11 → remaining work under existing dependencies**. Complete
+the bounded engineering quality work and then UI redesign before new sprint work.
+The source dependency graph remains: T35 follows T04 and precedes T05/T06/T12.
+Read the scoped [web](apps/web/AGENTS.md) or [API](apps/api/AGENTS.md) developer
+rules before changing those apps. These rules describe incremental migration
+targets; this documentation does not install tools or restructure code.
+Preparing these contribution documents does not
 complete T16 or its real-project validation.
 
 The [2026-10-27 decision](docs/development/stack-validation-decisions.md) approves
@@ -76,11 +82,13 @@ Inside Orca, use its worktree workflow. If RTK guidance is active, prefix every
 shell command with `rtk` (`rtk proxy` for unsupported commands). Commands in this
 document use ordinary tools so contributors do not need Orca or RTK.
 
-For supervised agent development, the user's current rule is OpenCode Go with
-DeepSeek V4.1 Flash 1017 (`opencode-go/deepseek-v4.1-flash`, variant `max`)
-for UI/UX presentation only; all logic uses
+For supervised agent development, the user's 2026-11-05 rule is Codex
+`gpt-6-astra` effort `high` for UI/UX presentation, superseding OpenCode Go/DeepSeek
+for future work; all logic uses
 Codex `gpt-6.1-sol` `xhigh`, including frontend auth/session/data hooks, proxies,
-and functional tests. Verify the effective configuration and isolate each
+and functional tests. SOL also owns T36's behavior-preserving structural extraction
+of frontend/backend code while retaining appearance; Astra owns T37 visual and
+interaction redesign after T36 acceptance. Verify the effective configuration and isolate each
 worker's checkout. See the [model decision and verification limits](docs/development/frontend-agent.md).
 This remains separate from Kilo Code Reviews' external review role.
 
@@ -89,7 +97,9 @@ abandoned replacement integration. Do not restore, repair, or invoke either.
 Native Kilo Code Reviews replaces Kody as the selected external reviewer; its
 [setup status and evidence requirements](docs/development/kilo-review.md) distinguish
 verified behavior from pending configuration. Preserve historical Kody/OpenCode
-evidence and the separate OpenCode Go frontend development choice. Every legacy
+evidence and historical frontend model receipts; the current
+[frontend model decision](docs/development/frontend-agent.md) supersedes older
+development-role assignments, including older review-guide introductions. Every legacy
 Kody trigger or requirement to use Kody for future reviews in older development guides is obsolete,
 even when phrased as an instruction; the current Kilo policy governs all new
 changes. This supersedes review governance only and preserves historical evidence
@@ -98,6 +108,16 @@ review. Treat `docs/handoff/` as an
 immutable import, including its asset manifest and file inventory. Record later
 ratifications/corrections separately under `docs/development/` and link the
 affected source section. Never modify a baseline just to make a hash check pass.
+
+T36 plans an audit of existing ESLint coverage, then compatible pinned Prettier,
+Husky pre-commit/commit-msg, Conventional Commits/commitlint and suitable staged
+checks with independent CI enforcement. They are not installed/enforced by this
+docs-only preparation. Preserve immutable/generated exclusions and avoid broad
+formatting churn. T37 plans the three requested frontend-local skills, with
+provenance/discovery verification and product/UX/brand authority; see the
+[roadmap](docs/development/development-quality-roadmap.md). Later T30–T34 uses the
+[Astro landing/narrative decision](docs/development/landing-direction.md), not a
+new priority ticket or permission to scaffold/publish now.
 
 ## Validate and record evidence
 
