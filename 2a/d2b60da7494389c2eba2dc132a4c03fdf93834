@@ -1,0 +1,23 @@
+CHANGELOG.md
+  s_3a926c8a5fafce::t_5a172989db1c85 20-23
+docs/development/progress.md
+  s_3a926c8a5fafce::t_5a172989db1c85 25-44
+docs/development/quality-tooling.md
+  s_3a926c8a5fafce::t_5a172989db1c85 176-179
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2ad2b60da7494389c2eba2dc132a4c03fdf93834",
+  "prompts": {},
+  "sessions": {
+    "s_3a926c8a5fafce": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b2e3-a77a-7c83-ac94-9ba509ab73c8",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
