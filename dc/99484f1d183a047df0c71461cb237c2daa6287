@@ -1,0 +1,34 @@
+scripts/quality/commits.mjs
+  s_3a926c8a5fafce::t_f94a03cd41e3f4 22,24,35-38,59-60
+scripts/quality/quality.test.mjs
+  s_3a926c8a5fafce::t_15ab775901507d 494-499,504,509-514,517-519,524,529-532,535-540,543-545,547-551,555-556,558-562,566-568,571,576-582
+  s_3a926c8a5fafce::t_d0f1257ab6794f 493,533-534
+  s_3a926c8a5fafce::t_6e8a972af5c675 546,557
+  s_3a926c8a5fafce::t_55df614bb8e264 10,541-542
+  s_3a926c8a5fafce::t_22c1396c066fe5 488-492,500-503,505-508,515-516,520-523,525-528,552-554,563-565,569-570,572-575
+docs/development/progress.md
+  s_3a926c8a5fafce::t_a2a89b8fa45e1d 3-38
+docs/development/quality-tooling.md
+  s_3a926c8a5fafce::t_a2a89b8fa45e1d 53-57,127-134,192-194,198-203
+CHANGELOG.md
+  s_3a926c8a5fafce::t_a2a89b8fa45e1d 9-15
+.husky/install.mjs
+  s_3a926c8a5fafce::t_f94a03cd41e3f4 2,5-6,35-56,97
+  s_3a926c8a5fafce::t_22c1396c066fe5 7-34
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "dc99484f1d183a047df0c71461cb237c2daa6287",
+  "prompts": {},
+  "sessions": {
+    "s_3a926c8a5fafce": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b2e3-a77a-7c83-ac94-9ba509ab73c8",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
