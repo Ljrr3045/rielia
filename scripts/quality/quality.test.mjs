@@ -19,18 +19,20 @@ import test from 'node:test';
 import { checkFiles } from './checks.mjs';
 import { checkEvent, eventRange } from './ci.mjs';
 import { checkCommits, checkMessage, newCommits } from './commits.mjs';
-import { changedPaths, git, stagedPaths } from './git.mjs';
+import { changedPaths, git as repositoryGit, stagedPaths } from './git.mjs';
 import { assertPolicyStaged, excluded } from './policy.mjs';
 
 const sourceRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 const cleanEnv = {
-  ...process.env,
+  ...Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith('GIT_'))),
   GIT_CONFIG_NOSYSTEM: '1',
   GIT_CONFIG_GLOBAL: '/dev/null',
   HUSKY: '1',
   CI: 'false',
   NODE_ENV: 'development',
 };
+
+const git = (root, args) => repositoryGit(root, args, { env: cleanEnv });
 
 function command(root, executable, args, env = {}) {
   return spawnSync(executable, args, {
@@ -287,6 +289,73 @@ test('interrupted supported function tasks do not need stash/index recovery', as
   assert.deepEqual(snapshot(root, 'source.mjs'), before);
 });
 
+test('explicit formatting and checks reject symlink ancestors without modifying any selected/protected bytes', async (t) => {
+  const root = fixture(t);
+  const outside = mkdtempSync(join(tmpdir(), 'rielia-format-outside-'));
+  t.after(() => rmSync(outside, { recursive: true, force: true }));
+  const external = join(outside, 'witness.mjs');
+  const selected = join(root, 'selected.mjs');
+  const immutable = join(root, 'docs/handoff/witness.json');
+  mkdirSync(dirname(immutable), { recursive: true });
+  writeFileSync(external, 'export const value=1\n');
+  writeFileSync(selected, 'export const value=2\n');
+  writeFileSync(immutable, '{"value":3}');
+  symlinkSync(outside, join(root, 'external-alias'), 'dir');
+  symlinkSync(dirname(immutable), join(root, 'handoff-alias'), 'dir');
+  const original = [external, selected, immutable].map((file) => readFileSync(file));
+  for (const alias of ['external-alias/witness.mjs', 'handoff-alias/witness.json']) {
+    const result = command(root, process.execPath, [
+      'scripts/quality/format.mjs',
+      '--write',
+      'selected.mjs',
+      alias,
+    ]);
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /symlink directory/);
+    await assert.rejects(checkFiles(root, [alias]), /symlink directory/);
+    assert.deepEqual(
+      [external, selected, immutable].map((file) => readFileSync(file)),
+      original,
+    );
+  }
+  writeFileSync(join(root, 'invalid.mjs'), 'export =\n');
+  assert.notEqual(
+    command(root, process.execPath, [
+      'scripts/quality/format.mjs',
+      '--write',
+      'selected.mjs',
+      'invalid.mjs',
+    ]).status,
+    0,
+  );
+  assert.deepEqual(readFileSync(selected), original[1]);
+  ok(command(root, process.execPath, ['scripts/quality/format.mjs', '--write', 'selected.mjs']));
+  assert.equal(readFileSync(selected, 'utf8'), 'export const value = 2;\n');
+  assert.deepEqual(readFileSync(external), original[0]);
+  assert.deepEqual(readFileSync(immutable), original[2]);
+});
+
+test('installer preserves an active default Git hook and its rejecting behavior', (t) => {
+  const root = fixture(t, { dependencies: false });
+  const hook = join(root, '.git/hooks/pre-commit');
+  writeFileSync(hook, '#!/bin/sh\necho original-default-hook-rejected >&2\nexit 17\n', {
+    mode: 0o755,
+  });
+  const configBefore = readFileSync(join(root, '.git/config'));
+  const hookBefore = readFileSync(hook);
+  const attempt = () =>
+    command(root, 'git', ['commit', '--allow-empty', '-m', 'chore: retain the original hook']);
+  assert.match(attempt().stderr, /original-default-hook-rejected/);
+  const installer = command(root, process.execPath, ['.husky/install.mjs']);
+  assert.match(ok(installer), /Existing default Git hooks preserved/);
+  const after = attempt();
+  assert.notEqual(after.status, 0);
+  assert.match(after.stderr, /original-default-hook-rejected/);
+  assert.deepEqual(readFileSync(join(root, '.git/config')), configBefore);
+  assert.deepEqual(readFileSync(hook), hookBefore);
+  assert.equal(existsSync(join(root, '.husky/_')), false);
+});
+
 test('installer skips without importing missing Husky across CI/production/no-Git/linked contexts', (t) => {
   const root = fixture(t, { dependencies: false });
   for (const env of [
@@ -295,6 +364,7 @@ test('installer skips without importing missing Husky across CI/production/no-Gi
     { CI: '1' },
     { NODE_ENV: 'production' },
     { npm_config_production: 'true' },
+    { npm_config_only: 'production' },
     { npm_config_omit: 'dev' },
   ]) {
     ok(command(root, process.execPath, ['.husky/install.mjs'], env));

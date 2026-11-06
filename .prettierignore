@@ -1,5 +1,6 @@
 docs/handoff/**
 docs/development/handoff-files.sha256
+**/.git/**
 **/node_modules/**
 **/dist/**
 **/.next/**

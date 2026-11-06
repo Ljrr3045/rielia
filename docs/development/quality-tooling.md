@@ -23,6 +23,14 @@ packages' source-maintenance prepare scripts do not justify enabling builds.
 The scratch tool graph's advisory query found no vulnerabilities; repository
 validation is recorded below. These licenses do not select Rielia's license.
 
+The repository high/critical audit passes with **one existing moderate**:
+[minimatch globparts amplification](https://github.com/advisories/GHSA-g3hv-75wg-m249),
+version 10.2.6 through the ESLint/typescript-eslint/Next lint development graph.
+Its base/current lock blocks and integrity are identical; no advisory path uses
+the five new tools. Fixed version 11.0.1 is a new major, so this slice preserves
+approved lint pins without an unverified override. Globs remain reviewed repository
+configuration; the exposure remains explicit follow-up, not a zero-advisory claim.
+
 Node24.22.1/pnpm12.15.0, TS6.0.3, ESLint10.13.0/typescript-eslint8.72.0,
 Next16.4.3/React19.3.1 and Nest12.3.2 remain pinned. Strict peers, disabled
 auto-peers, Prisma approvals, patches/qs override and backend closure are retained.
@@ -38,8 +46,10 @@ pnpm test:quality
 Prepare exits before importing Husky for CI, HUSKY=0, production/no-dev,
 no-Git and linked-worktree contexts. Docker copies only the installer from
 `.husky` and sets HUSKY=0 before root install; final runtimes need no hooks.
-A normal single-checkout clone uses upstream Husky. Custom hooks or multiple
-worktrees cause a skip. No global setting or worktreeConfig extension is enabled.
+A normal single-checkout clone uses upstream Husky. Custom hook paths, active
+default Git hooks, or multiple worktrees cause a skip. Existing default hooks keep
+their behavior; integrate quality checks deliberately or run the commands separately.
+No global setting or worktreeConfig extension is enabled.
 In linked worktrees use the same executable hook entries for one command:
 
 ```sh
@@ -78,17 +88,21 @@ pnpm quality:staged
 
 Replace the example with an intended file. This writes its whole content, so
 review and restage deliberately when partially staging. Directories, protected
-files and whole-tree writes are rejected.
+files and paths through symlink directories are rejected. Every selected path
+and parser input is validated before the first write; checks use the same path
+protection. Negative tests preserve both external and immutable fixture bytes.
+Whole-tree writes are rejected.
 
 [format-adoption.json](../../format-adoption.json) names 19 tooling files checked
 every run. CI also checks changed/new maintained JS/MJS/TS/TSX/CSS/JSON/YAML.
 Staged checks use the same selection/options and existing lint/import boundaries;
 no formatter ESLint plugin or new style-rule family is introduced.
-The [exact inventory](formatting-inventory.json) accounts for 200 supported paths:
+The [exact inventory](formatting-inventory.json) accounts for 201 supported paths:
 adopted files, remaining source and legacy Markdown follow-up. At the pre-tooling
 base, 157 of 186 supported files needed formatting. This slice formats only root
 tooling configuration. Legacy Markdown is manually reviewed and explicitly
-pending adoption; app source and large historical documents are not normalized.
+pending adoption; this new formatted guide is recorded separately. App source and
+large historical documents are not normalized.
 
 Handoff/hash inventories, generated Prisma/Next/build/coverage, dependencies,
 lockfile, patches/notices and supplied assets are excluded. SQL, Prisma, Python,

@@ -1,8 +1,7 @@
-import { lstatSync, readFileSync, writeFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { checkFiles } from './checks.mjs';
 import { changedPaths, fail, isMain, repositoryRoot } from './git.mjs';
-import { formatEligible, formattingPolicy, relativePath } from './policy.mjs';
+import { formatEligible, formattingPolicy, relativePath, regularFile } from './policy.mjs';
 
 export async function checkFormatting(root, changed = []) {
   const { adopted } = formattingPolicy(root);
@@ -21,16 +20,21 @@ async function main() {
   }
   const { options } = formattingPolicy(root);
   const prettier = await import('prettier');
-  for (const input of args) {
+  const targets = args.map((input) => {
     const file = relativePath(root, input);
-    const target = resolve(root, file);
-    if (!formatEligible(file) || !lstatSync(target).isFile()) {
+    if (!formatEligible(file)) {
       throw new Error(`Formatting requires an eligible regular file: ${JSON.stringify(file)}`);
     }
-    writeFileSync(
-      target,
-      await prettier.format(readFileSync(target, 'utf8'), { ...options, filepath: target }),
-    );
+    return { file, target: regularFile(root, file) };
+  });
+  // Validate every path and parse every input before the first explicit write.
+  const output = await Promise.all(
+    targets.map(({ target }) =>
+      prettier.format(readFileSync(target, 'utf8'), { ...options, filepath: target }),
+    ),
+  );
+  for (const [index, { file }] of targets.entries()) {
+    writeFileSync(regularFile(root, file), output[index]);
   }
 }
 

@@ -1,15 +1,18 @@
-import { lstatSync, readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { git, repositoryRoot } from './git.mjs';
 import {
   assertPolicyStaged,
+  checkedPath,
   formatEligible,
   formattingPolicy,
   lintEligible,
   relativePath,
+  regularFile,
 } from './policy.mjs';
 
 function source(root, file, staged) {
+  checkedPath(root, file);
   if (staged) {
     const entry = git(root, ['ls-files', '--stage', '-z', '--', file]);
     if (!/^100(?:644|755) [a-f0-9]+ 0\t/.test(entry)) {
@@ -19,10 +22,7 @@ function source(root, file, staged) {
     }
     return git(root, ['show', `:${file}`]);
   }
-  if (!lstatSync(resolve(root, file)).isFile()) {
-    throw new Error(`Cannot check a nonregular file: ${JSON.stringify(file)}`);
-  }
-  return readFileSync(resolve(root, file), 'utf8');
+  return readFileSync(regularFile(root, file), 'utf8');
 }
 
 export async function checkFiles(root, files, { staged = false, lint = false } = {}) {

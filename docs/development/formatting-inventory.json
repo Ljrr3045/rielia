@@ -224,5 +224,6 @@
     "shellAndDocker": "Executable hooks, Dockerfile and ignore files: direct regressions/runtime/review",
     "toml": "Prisma migration lock metadata: preserve generator format"
   },
-  "excluded": "Immutable handoff/hash inventory; generated Prisma/Next/build/coverage; dependencies; lockfile; patches; source notices and supplied assets"
+  "excluded": "Immutable handoff/hash inventory; generated Prisma/Next/build/coverage; dependencies; lockfile; patches; source notices and supplied assets",
+  "newFormattedDocuments": ["docs/development/quality-tooling.md"]
 }

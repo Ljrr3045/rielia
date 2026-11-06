@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { lstatSync, readFileSync, realpathSync } from 'node:fs';
 import { isAbsolute, relative, resolve, sep } from 'node:path';
 import { git, paths } from './git.mjs';
 
@@ -12,9 +12,36 @@ export function relativePath(root, file) {
   return name;
 }
 
+export function checkedPath(root, file) {
+  const name = relativePath(root, file);
+  const canonicalRoot = realpathSync(root);
+  let directory = canonicalRoot;
+  for (const part of name.split('/').slice(0, -1)) {
+    directory = resolve(directory, part);
+    try {
+      if (lstatSync(directory).isSymbolicLink()) {
+        throw new Error(`Refusing a path through a symlink directory: ${JSON.stringify(name)}`);
+      }
+    } catch (error) {
+      // A staged file can have an unstaged deletion; no absent ancestor can redirect a read.
+      if (error.code === 'ENOENT') break;
+      throw error;
+    }
+  }
+  return resolve(canonicalRoot, name);
+}
+
+export function regularFile(root, file) {
+  const target = checkedPath(root, file);
+  if (!lstatSync(target).isFile()) {
+    throw new Error(`Expected a regular file without symlink ancestors: ${JSON.stringify(file)}`);
+  }
+  return target;
+}
+
 export function excluded(file) {
   return (
-    /(^|\/)(node_modules|dist|\.next|coverage)(\/|$)/.test(file) ||
+    /(^|\/)(\.git|node_modules|dist|\.next|coverage)(\/|$)/.test(file) ||
     /^(docs\/handoff\/|patches\/|apps\/api\/src\/generated\/)/.test(file) ||
     file === 'docs/development/handoff-files.sha256' ||
     file === 'pnpm-lock.yaml' ||

@@ -208,7 +208,7 @@ comparison. Review the actual diff for unintended changes and credentials. Link
 new files with portable relative paths; keep English/Spanish filenames intact.
 The verifier checks local file targets, not remote sites or heading fragments.
 
-`pnpm check` runs lint, the backend dependency-closure guard, the focused smoke-process cleanup regression, identity
+`pnpm check` runs adopted formatting, quality-tooling regressions, lint, the backend dependency-closure guard, the focused smoke-process cleanup regression, identity
 logic/client and task-prototype tests, strict typechecks, production builds, and
 the local MCP subprocess/official Inspector suite plus HTTP smoke. `pnpm test:mcp`
 builds its prerequisites and runs that suite alone (about 10 seconds after build,

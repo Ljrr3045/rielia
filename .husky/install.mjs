@@ -1,6 +1,6 @@
 import { spawnSync } from 'node:child_process';
-import { existsSync, lstatSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { existsSync, lstatSync, readdirSync, statSync } from 'node:fs';
+import { join, resolve } from 'node:path';
 
 async function install() {
   const enabled = (value) => value && value !== 'false' && value !== '0';
@@ -8,6 +8,7 @@ async function install() {
     process.env.HUSKY === '0' ||
     enabled(process.env.CI) ||
     process.env.NODE_ENV === 'production' ||
+    ['prod', 'production'].includes(process.env.npm_config_only) ||
     enabled(process.env.npm_config_production) ||
     process.env.npm_config_omit?.split(/[ ,]+/).includes('dev') ||
     !existsSync('.git')
@@ -35,6 +36,27 @@ async function install() {
     return;
   }
   if (!existsSync('.husky/pre-commit') || !existsSync('.husky/commit-msg')) return;
+  if (hooks.status !== 0 && hooks.status !== 1)
+    throw new Error('Cannot verify existing Git hook configuration.');
+  if (hooks.status === 1) {
+    const defaultPath = query(['rev-parse', '--git-path', 'hooks']);
+    if (defaultPath.status !== 0) throw new Error('Cannot verify existing default Git hooks.');
+    const directory = defaultPath.stdout.trim();
+    if (
+      existsSync(directory) &&
+      (lstatSync(directory).isSymbolicLink() ||
+        readdirSync(directory).some((name) => {
+          if (name.endsWith('.sample')) return false;
+          const entry = statSync(join(directory, name));
+          return entry.isFile() && (process.platform === 'win32' || (entry.mode & 0o111) !== 0);
+        }))
+    ) {
+      console.log(
+        'Existing default Git hooks preserved. Run quality:staged and commit:check separately or integrate hooks deliberately.',
+      );
+      return;
+    }
+  }
   const husky = (await import('husky')).default;
   const message = husky();
   if (message) throw new Error(message);
