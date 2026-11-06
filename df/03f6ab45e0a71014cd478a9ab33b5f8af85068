@@ -1,0 +1,28 @@
+scripts/quality/quality.test.mjs
+  s_3a926c8a5fafce::t_f8950fc378838d 217,223
+  s_3a926c8a5fafce::t_82f91ca863abda 25-32,201-210,224-259
+  s_3a926c8a5fafce::t_d77da1f45d41c1 211-216,218-222
+  s_3a926c8a5fafce::t_f18925419b7b9e 260
+docs/development/progress.md
+  s_3a926c8a5fafce::t_35582159818d27 45-52
+CHANGELOG.md
+  s_3a926c8a5fafce::t_35582159818d27 21,24-25
+docs/development/quality-tooling.md
+  s_3a926c8a5fafce::t_82f91ca863abda 67,176-179
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "df03f6ab45e0a71014cd478a9ab33b5f8af85068",
+  "prompts": {},
+  "sessions": {
+    "s_3a926c8a5fafce": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b2e3-a77a-7c83-ac94-9ba509ab73c8",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
