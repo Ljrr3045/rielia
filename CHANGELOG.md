@@ -12,10 +12,10 @@ This records repository changes. No application version has been released.
 - Add 19 actual React hook lifecycle cases and 74 real-service API invitation,
   collaboration, discovery and SSE lifecycle cases. Correct the independently
   found late-success fixture and retain focused disposable regression witnesses.
-- Ratchet measured API/web coverage with all101 maintained inputs and legacy
+- Ratchet measured API/web coverage with all 101 maintained inputs and legacy
   tests retained. Explicitly review formatting's controller line-map change;
   preserve per-file/exact-ratio/uncovered/source/test gates and six other baselines.
-- Retain passing269 unit/20 infrastructure cases and actual serial application
+- Retain 269 passing unit cases and 20 infrastructure cases and actual serial application
   checks, with the owned validation-cache guard disposition and runtime/browser
   limits recorded in the [delivery guide](docs/development/project-refresh-lifecycle.md).
   T36 remains in progress; further structure/UI acceptance precedes T37 and T11.

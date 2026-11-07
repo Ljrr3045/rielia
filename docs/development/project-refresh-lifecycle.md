@@ -82,7 +82,7 @@ for the corrected late-success case.
 | Prototype, unchanged |  199/805 |    269/984 |    87/368 |   194/954 |
 
 The coordinator explicitly accepted one mapped-line migration after independent
-review. The controller's line counts are A351/363 → B501/544 → C504/548 → D510/548.
+review. The controller's line counts are A 351/363 → B 501/544 → C 504/548 → D 510/548.
 A/B have identical emitted JavaScript and exactly equal statement/function/branch
 counters. Splitting dense physical lines exposes existing uncovered statements
 as additional line units: 12 uncovered lines become 43 under formatting alone;
@@ -125,8 +125,9 @@ as an inference, with the failed guard preserved. Before cache bytes were not
 captured, so an exact field delta or timestamp-only proof is not claimed. No
 install, repair, restoration or check rerun followed that guard.
 
-The reviewed production core `f5a26f9` and this integration have identical web/API/
-contracts/Prisma trees. Its real PG 103 reported tests plus database restart,
+Maintained production source in `apps/web/src`, `apps/api/src` and
+`packages/contracts/src`, plus schema/migrations in `apps/api/prisma`, is byte-identical
+to the reviewed `f5a26f9` core. Its 103 reported real PostgreSQL tests plus database restart,
 Docker build/closure/readiness/job recovery and browser evidence are retained
 with that exact mapping. Browser checks include quiet zero-request observation,
 114-row retention, real two-session SSE, dirty draft defer/discard, a lost actual
