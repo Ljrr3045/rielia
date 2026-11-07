@@ -1,0 +1,45 @@
+apps/api/test/unit/principal-policy.test.mjs
+  s_cd38fe5b1413ea::t_879adb4a147c8a 19-20,65-68,71,83-86
+  s_cd38fe5b1413ea::t_e2ffef7f0b2adc 48-54,72-76,266-290,453-454
+scripts/unit/mirror-loader.mjs
+  s_cd38fe5b1413ea::t_a4d7244b115b56 9-10,31
+  s_cd38fe5b1413ea::t_09dbffed9fefac 32
+scripts/unit/infrastructure.test.mjs
+  s_cd38fe5b1413ea::t_782ae845e02fed 504
+  s_cd38fe5b1413ea::t_d0dc13deb51a51 8-9,44-63
+  s_cd38fe5b1413ea::t_96fac61d1e4ba9 64-68,110-112,355-503,505-509
+scripts/unit/process.mjs
+  s_cd38fe5b1413ea::t_a4d7244b115b56 22,26-29,48
+scripts/unit/pipeline.mjs
+  s_cd38fe5b1413ea::t_a4d7244b115b56 35-36,241-242,244
+  s_cd38fe5b1413ea::t_5a776591eed968 7-14
+apps/web/test/unit/workspace-hook.test.mjs
+  s_cd38fe5b1413ea::t_a4d7244b115b56 290,304-306,308
+scripts/unit/artifacts.mjs
+  s_cd38fe5b1413ea::t_a4d7244b115b56 4,100
+apps/web/test/unit/mutation-witness.mjs
+  s_cd38fe5b1413ea::t_9b2327b6157b78 69-71,76,79,140
+  s_cd38fe5b1413ea::t_ac43f69f463079 72-75,77-78
+scripts/unit/config.mjs
+  s_cd38fe5b1413ea::t_a4d7244b115b56 3-9
+scripts/unit/run.mjs
+  s_cd38fe5b1413ea::t_a4d7244b115b56 4,9
+package.json
+  s_cd38fe5b1413ea::t_a4d7244b115b56 49
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "067675b21bef199e21b5b411df82c0d028352758",
+  "prompts": {},
+  "sessions": {
+    "s_cd38fe5b1413ea": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b369-4dc0-7a52-ae15-1cd16031eb12",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
