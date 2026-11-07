@@ -50,6 +50,15 @@ const cases = [
       /not ok \d+ - sign-in pending control announces progress and ignores repeated activation/,
   },
   {
+    name: 'identity-load-cleanup',
+    source: 'apps/web/src/lib/use-identity.ts',
+    before: 'return controller.cancelPendingLoads;',
+    after: 'return () => {};',
+    test: 'apps/web/test/unit/identity-hook.test.mjs',
+    failure:
+      /not ok \d+ - StrictMode cleanup invalidates old loads, and unmount prevents late publication/,
+  },
+  {
     name: 'listener-cleanup',
     source: 'apps/web/src/lib/use-workspaces.ts',
     before: "window.removeEventListener('pageshow', refresh);",
@@ -117,7 +126,7 @@ try {
     JSON.stringify({ baselinePassed: true, results }, null, 2) + '\n',
   );
   console.log(
-    `Unmodified DOM suites passed; pending guard and listener cleanup mutations rejected. Evidence: ${evidence}`,
+    `Unmodified DOM suites passed; pending guard, identity load cleanup and listener cleanup mutations rejected. Evidence: ${evidence}`,
   );
 } finally {
   rmSync(scratch, { recursive: true, force: true });

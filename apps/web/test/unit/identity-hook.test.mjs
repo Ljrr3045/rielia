@@ -108,5 +108,20 @@ test(
     assert.equal(hook.renders.length, renders);
     assert.equal(hook.state.session, null);
     assert.equal(browser.container.textContent, '');
+    const requests = fetch.calls.length;
+    let signOut;
+    await act(async () => {
+      signOut = hook.state.signOut();
+    });
+    const afterAction = fetch.calls.length;
+    if (afterAction > requests) {
+      await fetch.reply(requests, { message: 'Synthetic rejected sign-out' }, 500);
+    }
+    await signOut;
+    assert.equal(
+      afterAction,
+      requests,
+      'late session must not enable even a retained sign-out action',
+    );
   },
 );
