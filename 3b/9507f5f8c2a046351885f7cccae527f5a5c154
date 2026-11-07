@@ -1,0 +1,53 @@
+apps/api/test/unit/task-discovery-policy.test.mjs
+  s_cd38fe5b1413ea::t_2c6c7d4ba1445c 1-325
+docs/development/formatting-inventory.json
+  s_cd38fe5b1413ea::t_909e668eee9c7e 54-57,64-65,397-398,487-500
+docs/development/project-refresh-lifecycle.md
+  s_cd38fe5b1413ea::t_2c6c7d4ba1445c 1-145
+docs/development/unit-coverage.md
+  s_cd38fe5b1413ea::t_2c6c7d4ba1445c 9-12,109-110
+apps/web/src/lib/project-task-controller.ts
+  s_cd38fe5b1413ea::t_2c6c7d4ba1445c 1-29,32-39,41-47,50-54,56-75,78-90,92-102,105-115,117-122,124-128,130-132,134-138,141-182,191-192,196-202,210-212,214-260,267-299,304-352,354-364,367-368,370-378,381-391,394-413,416-444,448-458,460-464,466-474,476-480,485-487,489-496,499-506,508-517,520-537,541-548,554-560,562-567,569-588,590-595,597-611,613-619,622-635,638-642,644-645,647-653,657-664,667-684,687-703,707-712,714-718,722-723,725-731,733-748,750-763,768-773,776-784,787-800,804-815,818-820,823-831,833-834,838-856,859-861,865-869,872-874,878-881,883-916,921-922,924-934,936-937,942-959,967-970,972-982,986-987,990-1000,1003-1013,1019-1022,1024-1035,1038-1083,1085-1089,1093-1112,1114-1122,1124-1138,1141-1145,1149-1158,1163-1188,1193-1207,1209-1213,1217-1242,1247-1282,1286-1321,1323-1331,1333-1341,1345-1350,1354-1373,1377-1378,1382-1398,1402-1415,1419-1431,1434-1447,1454-1511,1513-1525,1527-1531,1533-1547,1551-1565,1568-1569,1575-1579,1583-1585,1588-1601,1603-1621,1623-1633,1637-1638,1642-1664,1668-1669,1672-1686,1690-1697,1703-1707,1711-1784,1789-1794,1797-1834
+scripts/unit/infrastructure.test.mjs
+  s_cd38fe5b1413ea::t_2c6c7d4ba1445c 73,82-84
+apps/api/test/unit/task-events-lifecycle.test.mjs
+  s_cd38fe5b1413ea::t_2c6c7d4ba1445c 1-432
+apps/web/src/lib/use-project-tasks.ts
+  s_cd38fe5b1413ea::t_2c6c7d4ba1445c 3-19,26-37,42-57,60-68,70-85,87-94,97-105,108-109,113-119,124-142,144-151,154-167,169-182,184-190
+CHANGELOG.md
+  s_cd38fe5b1413ea::t_2c6c7d4ba1445c 7-25
+apps/web/test/unit/project-hook-harness.mjs
+  s_cd38fe5b1413ea::t_2c6c7d4ba1445c 1-284
+docs/development/progress.md
+  s_cd38fe5b1413ea::t_2c6c7d4ba1445c 3-49
+format-adoption.json
+  s_cd38fe5b1413ea::t_909e668eee9c7e 52-55,62-63
+apps/api/test/unit/task-collaboration-policy.test.mjs
+  s_cd38fe5b1413ea::t_2c6c7d4ba1445c 1-411
+apps/web/test/unit/project-hook.test.mjs
+  s_cd38fe5b1413ea::t_2c6c7d4ba1445c 1-529
+apps/api/test/unit/workspace-invitation.test.mjs
+  s_cd38fe5b1413ea::t_2c6c7d4ba1445c 1-371
+scripts/unit/baselines/api.json
+  s_cd38fe5b1413ea::t_2c6c7d4ba1445c 275,279,283,287,311,315,319,323,347,351,355,359,365,369,373,377,527,531,535,539,545-548,614-617,625,629,633,637
+scripts/unit/pipeline.mjs
+  s_cd38fe5b1413ea::t_2c6c7d4ba1445c 90
+scripts/unit/baselines/web.json
+  s_cd38fe5b1413ea::t_2c6c7d4ba1445c 689,697,701,707-708,711-712,715-716,719-720,779,791,815-816,819,823-824,827,923-926,986,992,1012-1013,1028-1029,1032-1033,1036-1037,1040-1041
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3b9507f5f8c2a046351885f7cccae527f5a5c154",
+  "prompts": {},
+  "sessions": {
+    "s_cd38fe5b1413ea": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b369-4dc0-7a52-ae15-1cd16031eb12",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
