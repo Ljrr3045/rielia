@@ -1,5 +1,44 @@
 # Delivery progress and decisions
 
+## 2026-11-07 T36 lifecycle/recovery contribution — IN PROGRESS
+
+PR #34 is now merged as `969480a7c27762cc74fa4290389fab89f0757776` from
+reviewed source `ceafc42`; the coordinator verified native Kilo 128301109580
+SUCCESS/no issues and current CI before merge. Earlier Draft observations below
+are historical. This follow-up preserves that base and the reviewed `f5a26f9`
+production core, then integrates the four-file API74 contribution exactly once.
+
+The bounded correction stops invented project refreshes and retains 114 loaded
+rows while quiet, preserves genuine queued invalidations/deferred drafts/exact-key
+commands, and exposes recoverable failed-read UI. Nineteen actual React hook cases
+and 74 API behavior cases extend the retained suites. Independent review corrected
+a malformed late-response fixture; valid old task successes now fail the intended
+assertions when only the success-generation guard is removed. See the
+[lifecycle evidence and limits](project-refresh-lifecycle.md).
+
+Independent/coordinator review accepted the explicit controller line-map migration
+351/363→format-only501/544→corrected-D510/548 with unchanged format-only semantic
+counters and improved final semantic coverage. All 101 inputs and legacy test/helper
+hashes remain; only measured API/web baselines change. Current floors L/S/F/B:
+API 41.91/40.44/35.35/38.19; web 28.15/30.36/22.07/25.03. Contracts/prototype and
+all historical pre-unit baselines remain exact. Unexecuted view AST witnesses and
+positive real-hook coverage are enforced alongside all existing failure gates.
+
+Local gated 269 tests and 20 infrastructure/upload cases pass. Actual serial
+`pnpm check` passes in 85.141s with 286/noExpress closure, real HTTP/MCP and smoke.
+The extra metadata-preservation wrapper failed on an owned generated workspace
+cache refresh; critical modules/store-lock and all borrowed graph hashes stayed
+exact. The coordinator accepted the cache explanation as inference with before
+bytes unavailable, preserving guard failure evidence and performing no repair or
+rerun. Prior actual PG 103/restart, Docker and browser results map to identical
+`f5a26f9` production trees; no redundant local runtime repetition is claimed.
+
+All local processes/listeners are stopped. No dependency/runtime pin, schema,
+public policy, source handoff or appearance changed through integration. The
+English Draft body and final committed batch remain publication-review gated;
+current-head hosted CI and coordinator-controlled review/merge remain required.
+T36 is still in progress; extraction, T37 and T11 remain separate work.
+
 ## 2026-11-06 first T36 unit/coverage slice — IN PROGRESS
 
 The first native Kilo round at `cf1e7b6` completed successfully with one warning

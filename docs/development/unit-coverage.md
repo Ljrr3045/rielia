@@ -6,6 +6,10 @@ PR #33 (`465d9e4`), without production source, policy, schema or appearance chan
 T36 remains **IN PROGRESS**: later lifecycle/recovery coverage, formatting adoption,
 structural extraction and acceptance precede T37, then T11.
 
+This page records the first delivery and its historical starting floors. The
+[lifecycle follow-up](project-refresh-lifecycle.md) records the later measured
+API/web ratchet, reviewed line-map migration and current enforced floors.
+
 Traceability: P01–P11/P33/P38; US01–US08/US11–US12/US24–US25; T01/T04–T10/T35;
 existing UXR01–04/06 and UX01–03/05–07/09/11. No sprint/product expansion, UI
 redesign, real-provider/staging validation, deployment or protected-settings change.
@@ -102,8 +106,8 @@ Inputs are sorted before execution: all maintained API `src/**/*.ts` except gene
 Prisma, plus `prisma.config.ts`; all web `src/**/*.{ts,tsx}` plus `next.config.ts`;
 and all four contracts sources. Prototype route/library files form a separate scope.
 API bootstrap, worker, migration, unused components, hooks and route wrappers stay
-in the denominator. `use-project-tasks.ts` and `task-detail.tsx` are named unexecuted
-AST witnesses. Prisma config retains its two branch-only counters.
+in the denominator. `projects-view.tsx` and `task-detail.tsx` are named unexecuted
+AST witnesses; the lifecycle follow-up now executes `use-project-tasks.ts`. Prisma config retains its two branch-only counters.
 
 API JavaScript comes from the real production `tsc` build with legacy decorators
 and constructor metadata. An instrumented-mirror assertion verifies Nest's actual
