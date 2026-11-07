@@ -10,20 +10,33 @@ export function createIdentity(config: IdentityConfig) {
     throw new Error('Identity requires validated database, origin, and secret configuration.');
   }
   const prisma = new PrismaClient({
-    adapter: new PrismaPg({ connectionString: config.databaseUrl, connectionTimeoutMillis: 5000, max: 5 }),
+    adapter: new PrismaPg({
+      connectionString: config.databaseUrl,
+      connectionTimeoutMillis: 5000,
+      max: 5,
+    }),
     // Errors can contain connection details. The boundary emits a fixed message.
     log: [],
   });
   const googleCredentials = config.providers.google;
-  const googleOptions: GoogleOptions | undefined = googleCredentials ? {
-    ...googleCredentials,
-    // In 1.7.12 the redirect callback profile mapper decodes the ID token.
-    // Apply the library's exported verifier before its built-in profile mapper.
-    getUserInfo: async tokens => {
-      if (!tokens.idToken || !await verifyGoogleIdToken({ token: tokens.idToken, audience: googleCredentials.clientId })) return null;
-      return google(googleCredentials).getUserInfo(tokens);
-    },
-  } : undefined;
+  const googleOptions: GoogleOptions | undefined = googleCredentials
+    ? {
+        ...googleCredentials,
+        // In 1.7.12 the redirect callback profile mapper decodes the ID token.
+        // Apply the library's exported verifier before its built-in profile mapper.
+        getUserInfo: async (tokens) => {
+          if (
+            !tokens.idToken ||
+            !(await verifyGoogleIdToken({
+              token: tokens.idToken,
+              audience: googleCredentials.clientId,
+            }))
+          )
+            return null;
+          return google(googleCredentials).getUserInfo(tokens);
+        },
+      }
+    : undefined;
   const auth = betterAuth({
     appName: 'Rielia identity spike',
     baseURL: config.origin,
@@ -32,14 +45,20 @@ export function createIdentity(config: IdentityConfig) {
     database: prismaAdapter(prisma, { provider: 'postgresql', transaction: true }),
     socialProviders: {
       ...(googleOptions ? { google: googleOptions } : {}),
-      ...(config.providers.github ? { github: { ...config.providers.github, scope: ['read:user', 'user:email'] } } : {}),
+      ...(config.providers.github
+        ? { github: { ...config.providers.github, scope: ['read:user', 'user:email'] } }
+        : {}),
     },
     emailAndPassword: { enabled: false },
     account: {
       accountLinking: { enabled: false, disableImplicitLinking: true, trustedProviders: [] },
       encryptOAuthTokens: true,
     },
-    session: { expiresIn: 60 * 60 * 24 * 7, updateAge: 60 * 60 * 24, cookieCache: { enabled: false } },
+    session: {
+      expiresIn: 60 * 60 * 24 * 7,
+      updateAge: 60 * 60 * 24,
+      cookieCache: { enabled: false },
+    },
     trustedOrigins: [config.origin],
     advanced: {
       disableOriginCheck: false,

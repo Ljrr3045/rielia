@@ -7,16 +7,25 @@ const abort = new AbortController();
 const stop = () => abort.abort();
 process.once('SIGTERM', stop);
 process.once('SIGINT', stop);
-const deadline = setTimeout(() => { stop(); process.exit(1); }, 90000);
+const deadline = setTimeout(() => {
+  stop();
+  process.exit(1);
+}, 90000);
 // Schema DDL has a separate bounded budget from interactive readiness/queue work.
 const pool = databasePool('rielia-runtime-migrate', 30000);
 const boss = diagnosticBoss(pool, true);
 
 try {
   // Exactly one deployment process owns migrations. API/worker never run this.
-  await promisify(execFile)(process.execPath, ['node_modules/prisma/build/index.js', 'migrate', 'deploy'], {
-    timeout: 60000, signal: abort.signal, maxBuffer: 1024 * 1024,
-  });
+  await promisify(execFile)(
+    process.execPath,
+    ['node_modules/prisma/build/index.js', 'migrate', 'deploy'],
+    {
+      timeout: 60000,
+      signal: abort.signal,
+      maxBuffer: 1024 * 1024,
+    },
+  );
   await assertIdentitySchema(pool);
   abort.signal.throwIfAborted();
   await boss.start();
@@ -25,7 +34,9 @@ try {
   await assertRuntimeReady(pool);
   console.log('Identity migrations and diagnostic queue are ready.');
 } catch {
-  console.error('Local migration failed; dependent services must remain stopped. Inspect database and migration history.');
+  console.error(
+    'Local migration failed; dependent services must remain stopped. Inspect database and migration history.',
+  );
   process.exitCode = 1;
 } finally {
   await boss.stop({ graceful: false });

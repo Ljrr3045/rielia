@@ -4,6 +4,24 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+### T36 API/shared/MCP mechanical formatting adoption
+
+- Adopt 56 maintained API/shared/MCP inputs with 50 mechanical changes and six
+  original adoption-only files; retain six additional lifecycle test/helper files
+  unchanged. Account for 208 eligible paths: 123 adopted and 85 remaining.
+- Preserve complete semantic/literal/comment proof and exact statement/function/
+  branch counters with the same 269 tests and all 101 measured inputs. Explicitly
+  review API line floor 41.91→40.41 as physical mapping only and contracts 78/78→99/99;
+  preserve all other floors and six untouched baselines, with immutable old refs.
+- Record failed native prebuild attempts, approved real-compiler paired evidence,
+  source-map precision and metadata-isolation limits in the
+  [formatting guide](docs/development/source-format-adoption.md). Local formatting,
+  24 tooling regressions, lint/closure/handoff, eight saved gate checks,
+  20 infrastructure/upload cases and actual MCP compilation/17 cases pass.
+  [Draft PR #36](https://github.com/Ljrr3045/rielia/pull/36) targets `dev`;
+  final-head full hosted CI remains pending. T36, broader adoption/extraction,
+  T37 and T11 remain incomplete.
+
 ### T36 project refresh lifecycle and expanded units
 
 - Stop quiet project refresh loops and loaded-page resets while preserving real

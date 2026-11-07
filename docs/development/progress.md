@@ -1,5 +1,48 @@
 # Delivery progress and decisions
 
+## 2026-11-07 T36 API/shared/MCP formatting adoption — IN PROGRESS
+
+PR #35 is merged at `be777b434b249fd039da1519d0146177b8e0d1c9`; its native
+Kilo 128317759966 completed SUCCESS/no issues and validate 128315255776 passed.
+The formatting branch preserves that actual merge ancestry and historical PR34
+formatting/132-comment evidence. Source head `3b9507f` selects 56 API/shared/MCP
+inputs: 50 mechanical byte changes, six original adoption-only inputs and six
+additional byte-identical lifecycle unit/helper adoptions. Inventory is 208 eligible,
+123 adopted and 85 remaining; broad web/scripts, extraction, T37 and T11 stay open.
+
+Fresh same-source/test/provider/compiler A/B/repeat measurements each pass 269 cases
+with all 101 inputs retained. All 32 formatted measured inputs preserve identical
+full S/F/B counters/topology; all 69 unchanged inputs retain full maps/counters.
+The coordinator independently accepted the documented physical-line exception:
+API 459/1095→597/1477 and line floor 41.91→40.41; contracts 78/78→99/99 stays 100%.
+Only current API/contracts baselines migrate; all S/F/B floors and current
+web/prototype/four historical pre-unit baselines remain exact. The
+[formatting guide](source-format-adoption.md) records four per-file declines,
+244 extra uncovered physical lines (28 split from covered dense lines), source-map
+precision limits, 22 fresh author semantic controls and 8 aggregate controls.
+
+Both fail-closed native pnpm prebuild attempts remain preserved. The authorized
+direct installed Prisma/real-tsc route records owned source/schema/compiler/emits;
+all90 frozen-host guards and actual owned cache/tool metadata bytes remain exact.
+Native local `pnpm check` is blocked, not passed. The serial affected batch passes:
+adopted formatting, 24 tooling regressions, ESLint, 286-package Express-free closure,
+handoff/link verification, all eight saved B/repeat scope pairs through existing
+gates, 20 infrastructure/upload cases, actual MCP compilation and 17 subprocess/
+Inspector cases. An initial owned inventory-layout failure was corrected with
+pinned Prettier; its evidence remains preserved. No paired measurement is rerun.
+All frozen-host guards, owned cache bytes, tool metadata and exact B build/source
+provenance remain unchanged. Fresh full current-head hosted validate is pending,
+including native full check, real PG/security/runtime and unchanged high audits.
+[Draft PR #36](https://github.com/Ljrr3045/rielia/pull/36) targets `dev`. Initial
+publication at `ff3b8268b024dc907b556d861aa0944151528bd4` verified live merged base
+`be777b4`, clean status and no existing branch PR, then pushed and immediately
+created the Draft with the reviewed English body. GitHub confirmed Draft and
+initial validate run 42349231881; no Kilo check appeared. Actual Draft is rechecked
+before the final URL/evidence push. The final head and full hosted CI/artifact
+result are recorded in the PR and external delivery report after this commit;
+the initial run is not final-head acceptance. No Ready transition, merge,
+deployment or completed T36 is claimed.
+
 ## 2026-11-07 T36 lifecycle/recovery contribution — IN PROGRESS
 
 PR #34 is now merged as `969480a7c27762cc74fa4290389fab89f0757776` from

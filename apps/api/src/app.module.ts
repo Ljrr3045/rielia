@@ -17,5 +17,27 @@ import { TaskDiscoveryController } from './projects/task-discovery.controller.js
 import { TaskDiscoveryService } from './projects/task-discovery.service.js';
 import { TaskEventsService } from './projects/task-events.service.js';
 
-@Module({ controllers: [HealthController, IdentityController, ReadinessController, PrincipalController, WorkspaceController, ProjectTaskController, TaskCollaborationController, TaskDiscoveryController], providers: [IdentityService, RuntimeService, PrincipalService, WorkspaceService, ProjectTaskService, ProjectTaskHttp, TaskCollaborationService, TaskDiscoveryService, TaskEventsService] })
+@Module({
+  controllers: [
+    HealthController,
+    IdentityController,
+    ReadinessController,
+    PrincipalController,
+    WorkspaceController,
+    ProjectTaskController,
+    TaskCollaborationController,
+    TaskDiscoveryController,
+  ],
+  providers: [
+    IdentityService,
+    RuntimeService,
+    PrincipalService,
+    WorkspaceService,
+    ProjectTaskService,
+    ProjectTaskHttp,
+    TaskCollaborationService,
+    TaskDiscoveryService,
+    TaskEventsService,
+  ],
+})
 export class AppModule {}

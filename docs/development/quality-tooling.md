@@ -87,6 +87,11 @@ now assert that borrowed dependency metadata stays unchanged.
 
 ## Staged content and formatting adoption
 
+The later [API/shared/MCP adoption](source-format-adoption.md) supersedes the
+first-slice counts below: 208 eligible paths, 123 adopted and 85 remaining. It
+records 50 mechanical changes, 12 adoption-only inputs and the explicit reviewed
+coverage-line migration; broad web/scripts adoption and T36 acceptance stay open.
+
 Pre-commit uses lint-staged's supported function task with --no-stash,
 --no-hide-partially-staged, --fail-on-changes and serial execution. It reads
 stage-0 index bytes (including a legitimate alternate Git index), then calls Prettier.check and ESLint.lintText with original

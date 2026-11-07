@@ -8,7 +8,9 @@ structural extraction and acceptance precede T37, then T11.
 
 This page records the first delivery and its historical starting floors. The
 [lifecycle follow-up](project-refresh-lifecycle.md) records the later measured
-API/web ratchet, reviewed line-map migration and current enforced floors.
+API/web ratchet and reviewed line-map migration. The subsequent
+[mechanical API/contracts formatting](source-format-adoption.md) records the
+explicit physical-line baseline migration and current enforced floors.
 
 Traceability: P01–P11/P33/P38; US01–US08/US11–US12/US24–US25; T01/T04–T10/T35;
 existing UXR01–04/06 and UX01–03/05–07/09/11. No sprint/product expansion, UI
