@@ -1,0 +1,40 @@
+scripts/unit/baselines/pre-unit-contracts.json
+  s_cd38fe5b1413ea::t_cca17f7a0c80cc 116
+scripts/unit/baselines/pre-unit-web.json
+  s_cd38fe5b1413ea::t_cca17f7a0c80cc 1013
+CHANGELOG.md
+  s_cd38fe5b1413ea::t_61b2acea9b5236 7-11
+docs/development/progress.md
+  s_cd38fe5b1413ea::t_875788278516bd 29-30
+  s_cd38fe5b1413ea::t_61b2acea9b5236 14-15,18-28,31-32,49,56
+docs/development/unit-coverage.md
+  s_cd38fe5b1413ea::t_61b2acea9b5236 68,80,94,96,139,152,157,168-192,266
+scripts/unit/baselines/pre-unit-api.json
+  s_cd38fe5b1413ea::t_cca17f7a0c80cc 610
+scripts/unit/baselines/pre-unit-prototype.json
+  s_cd38fe5b1413ea::t_cca17f7a0c80cc 344
+scripts/unit/baselines/api.json
+  s_cd38fe5b1413ea::t_d20c3a01f62b18 221,225,229,233,545-548,612,614,621,625,629,633
+scripts/unit/baselines/contracts.json
+  s_cd38fe5b1413ea::t_3fa2f292a80397 116
+scripts/unit/baselines/prototype.json
+  s_cd38fe5b1413ea::t_2624a1eaab3bd0 344
+scripts/unit/baselines/web.json
+  s_cd38fe5b1413ea::t_93d4077ac21e0c 1010-1012,1018
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "48c63a40f8e91bd7aaca68aa3f79202b96a73622",
+  "prompts": {},
+  "sessions": {
+    "s_cd38fe5b1413ea": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b369-4dc0-7a52-ae15-1cd16031eb12",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
