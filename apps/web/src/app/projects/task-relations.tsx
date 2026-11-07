@@ -5,7 +5,7 @@ import type { ProjectCommand, Task, TaskReference } from '@rielia/contracts';
 import { FeedbackPanel } from './feedback';
 import { Badge, ConfirmBox, IconArrowLeft, StatusMark, useLocale } from './project-ui';
 import { copy, statusName } from './strings';
-import type { ProjectTasksHook } from './task-collaboration-shared';
+import type { TaskRelationsPort } from './task-collaboration-view';
 import styles from './projects.module.css';
 
 function referenceLink(
@@ -50,7 +50,7 @@ export function TaskRelations({
   projectArchived,
   task,
 }: {
-  hook: ProjectTasksHook;
+  hook: TaskRelationsPort;
   onDiscard: () => void;
   onStage: (command: ProjectCommand) => void;
   onSubmit: () => void;

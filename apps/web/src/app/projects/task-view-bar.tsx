@@ -11,7 +11,8 @@ import {
   type TaskView,
 } from '@rielia/contracts';
 import type { TaskSummary } from '../../lib/project-task-controller';
-import { IconArchive, useIsNarrow, useLocale, cx } from './project-ui';
+import { IconArchive, useLocale, cx } from './project-ui';
+import { useIsNarrow } from './project-dom-hooks';
 import { copy, priorityName, statusName } from './strings';
 import styles from './projects.module.css';
 

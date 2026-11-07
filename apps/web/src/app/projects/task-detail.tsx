@@ -15,9 +15,9 @@ import {
   IconRestore,
   PriorityMark,
   StatusMark,
-  useFocusTrap,
   useLocale,
 } from './project-ui';
+import { useFocusTrap } from './project-dom-hooks';
 import { copy, priorityName, statusName, typeName, type Bilingual, type Lang } from './strings';
 import styles from './projects.module.css';
 

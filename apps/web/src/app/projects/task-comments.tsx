@@ -5,11 +5,8 @@ import { FeedbackPanel } from './feedback';
 import { AgentBadge, IconEdit, useLocale } from './project-ui';
 import { TaskDescription } from './task-description';
 import { copy } from './strings';
-import {
-  formatTimestamp,
-  provenanceLabel,
-  type ProjectTasksHook,
-} from './task-collaboration-shared';
+import { formatTimestamp, provenanceLabel } from './task-collaboration-shared';
+import type { TaskCommentsPort } from './task-collaboration-view';
 import styles from './projects.module.css';
 
 export function TaskComments({
@@ -20,7 +17,7 @@ export function TaskComments({
   projectArchived,
   task,
 }: {
-  hook: ProjectTasksHook;
+  hook: TaskCommentsPort;
   onDiscard: () => void;
   onStage: (command: ProjectCommand) => void;
   onSubmit: () => void;

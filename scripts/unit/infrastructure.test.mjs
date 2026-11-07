@@ -7,7 +7,7 @@ import { createRequire } from 'node:module';
 import { Buffer } from 'node:buffer';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { setImmediate } from 'node:timers/promises';
-import { scopes, metrics } from './config.mjs';
+import { scopes, metrics, zeroUnits } from './config.mjs';
 import { tree, inventory, write, json, freshOutput } from './files.mjs';
 import { assertGate, baselineFor, normalizeReport, assertComparable } from './report.mjs';
 import { packageArtifacts } from './artifacts.mjs';
@@ -260,21 +260,34 @@ test(
     const newRaw = JSON.parse(
       fs.readFileSync(path.join(after, 'report/coverage-final.json'), 'utf8'),
     );
-    const oldReport = normalizeReport(before, 'web', ['source/choice.ts'], oldRaw, coverage);
+    // This isolated witness still includes every declared zero-unit owner.
+    for (const directory of [before, after])
+      for (const file of zeroUnits.web)
+        write(directory, file, fs.readFileSync(path.join(root, file)));
+    const oldReport = normalizeReport(
+      before,
+      'web',
+      ['source/choice.ts', ...zeroUnits.web],
+      oldRaw,
+      coverage,
+    );
     const newReport = normalizeReport(
       after,
       'web',
-      ['source/choice.ts', 'source/never.ts'],
+      ['source/choice.ts', 'source/never.ts', ...zeroUnits.web],
       newRaw,
       coverage,
     );
+    for (const file of zeroUnits.web)
+      for (const metric of metrics)
+        assert.deepEqual(newReport.summary.files[file][metric], { covered: 0, total: 0 });
     const baseline = baselineFor(oldReport.summary, {});
     assert.throws(
       () =>
         normalizeReport(
           after,
           'web',
-          ['source/choice.ts', 'source/never.ts', 'source/missing.ts'],
+          ['source/choice.ts', 'source/never.ts', 'source/missing.ts', ...zeroUnits.web],
           newRaw,
           coverage,
         ),

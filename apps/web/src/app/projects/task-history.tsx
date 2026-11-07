@@ -4,11 +4,8 @@ import type { ActivityChange, TaskActivity } from '@rielia/contracts';
 import { FeedbackPanel } from './feedback';
 import { Badge, useLocale } from './project-ui';
 import { copy, formatDateOnly, priorityName, statusName, typeName } from './strings';
-import {
-  formatTimestamp,
-  provenanceLabel,
-  type ProjectTasksHook,
-} from './task-collaboration-shared';
+import { formatTimestamp, provenanceLabel } from './task-collaboration-shared';
+import type { TaskHistoryPort } from './task-collaboration-view';
 import styles from './projects.module.css';
 
 function changeValue(change: ActivityChange, lang: 'es' | 'en'): string {
@@ -51,7 +48,7 @@ function activityLine(entry: TaskActivity, lang: 'es' | 'en'): string {
   return details.length > 0 ? `${action[lang]} · ${details}` : action[lang];
 }
 
-export function TaskHistory({ hook }: { hook: ProjectTasksHook }) {
+export function TaskHistory({ hook }: { hook: TaskHistoryPort }) {
   const lang = useLocale();
   const slot = hook.collaboration.history;
   const data = slot.data;

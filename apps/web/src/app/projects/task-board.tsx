@@ -18,10 +18,9 @@ import {
   PriorityMark,
   StatusMark,
   cx,
-  useIsNarrow,
   useLocale,
-  useMediaQuery,
 } from './project-ui';
+import { useIsNarrow, useMediaQuery } from './project-dom-hooks';
 import { copy, priorityName, statusName, typeName } from './strings';
 import styles from './projects.module.css';
 

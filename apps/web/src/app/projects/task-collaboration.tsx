@@ -10,7 +10,7 @@ import { TaskComments } from './task-comments';
 import { TaskDescription } from './task-description';
 import { TaskHistory } from './task-history';
 import { TaskRelations } from './task-relations';
-import type { ProjectTasksHook } from './task-collaboration-shared';
+import type { TaskCollaborationPort } from './task-collaboration-view';
 import styles from './projects.module.css';
 
 type SuccessKind = 'comment' | 'commentEdit' | 'checklist' | 'parent' | 'child' | null;
@@ -52,7 +52,7 @@ export function TaskCollaboration({
   projectArchived,
   task,
 }: {
-  hook: ProjectTasksHook;
+  hook: TaskCollaborationPort;
   onDiscard: () => void;
   onReloadConflict: () => void;
   onRetry: () => void;
@@ -428,7 +428,22 @@ export function TaskCollaboration({
       )}
 
       <TaskRelations
-        hook={hook}
+        hook={{
+          collaboration: {
+            relations: hook.collaboration['relations'],
+            'parent-candidates': hook.collaboration['parent-candidates'],
+          },
+          mutationPending: hook.mutationPending,
+          collaborationDraft: hook.collaborationDraft,
+          collaborationRetryTarget: hook.collaborationRetryTarget,
+          draftGuard: hook.draftGuard,
+          refresh: hook.refresh,
+          draft: hook.draft,
+          retryTarget: hook.retryTarget,
+          setParentCandidatesWanted: hook.setParentCandidatesWanted,
+          loadCollaborationMore: hook.loadCollaborationMore,
+          selectTask: hook.selectTask,
+        }}
         onDiscard={onDiscard}
         onStage={onStage}
         onSubmit={submitWithSuccess}
@@ -436,7 +451,15 @@ export function TaskCollaboration({
         task={task}
       />
       <TaskChecklist
-        hook={hook}
+        hook={{
+          collaboration: { checklist: hook.collaboration['checklist'] },
+          mutationPending: hook.mutationPending,
+          collaborationDraft: hook.collaborationDraft,
+          collaborationRetryTarget: hook.collaborationRetryTarget,
+          draftGuard: hook.draftGuard,
+          refresh: hook.refresh,
+          loadCollaborationMore: hook.loadCollaborationMore,
+        }}
         onDiscard={onDiscard}
         onStage={onStage}
         onSubmit={submitWithSuccess}
@@ -444,19 +467,34 @@ export function TaskCollaboration({
         task={task}
       />
       <TaskComments
-        hook={hook}
+        hook={{
+          collaboration: { comments: hook.collaboration['comments'] },
+          mutationPending: hook.mutationPending,
+          collaborationDraft: hook.collaborationDraft,
+          collaborationRetryTarget: hook.collaborationRetryTarget,
+          draftGuard: hook.draftGuard,
+          refresh: hook.refresh,
+          loadCollaborationMore: hook.loadCollaborationMore,
+        }}
         onDiscard={onDiscard}
         onStage={onStage}
         onSubmit={submitWithSuccess}
         projectArchived={projectArchived}
         task={task}
       />
-      <TaskHistory hook={hook} />
+      <TaskHistory
+        hook={{
+          collaboration: { history: hook.collaboration['history'] },
+          mutationPending: hook.mutationPending,
+          refresh: hook.refresh,
+          loadCollaborationMore: hook.loadCollaborationMore,
+        }}
+      />
     </>
   );
 }
 
-function taskKeyForCommand(command: ProjectCommand, hook: ProjectTasksHook): string | null {
+function taskKeyForCommand(command: ProjectCommand, hook: TaskCollaborationPort): string | null {
   const targetId =
     'taskId' in command
       ? command.taskId
@@ -475,7 +513,7 @@ function taskKeyForCommand(command: ProjectCommand, hook: ProjectTasksHook): str
 
 function draftLabel(
   command: ProjectCommand | null,
-  hook: ProjectTasksHook,
+  hook: TaskCollaborationPort,
   lang: 'es' | 'en',
 ): string | null {
   if (command === null) return null;
