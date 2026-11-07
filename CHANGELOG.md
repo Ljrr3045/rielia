@@ -4,6 +4,23 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+### T36 scoped project reads and cohesive commands
+
+Delivery: [PR #41](https://github.com/Ljrr3045/rielia/pull/41).
+
+- Separate existing scoped reads/hydration, mutation/replay/journal protocol and
+  real command callbacks while retaining facade/DI/composition contracts, current
+  fenced authority, exact query/lock/await order and all policy/data behavior.
+- Preserve all 148 API cases and independently reconcile 786 retained raw outcomes
+  including 407 zeros; account for 40 new wrapper S/F units separately from test
+  gains. Add 68 focused cases/subtests and pass 216 API/356 total over 107 inputs.
+  C measures L782/1491 S859/1637 F202/416 B645/1228; other scope reports stay exact.
+- Adopt four new formatted paths at 216/216 and document the
+  [extraction and unit limits](docs/development/project-flow-extraction.md).
+  The exact current API baseline, normal check, infrastructure 20, saved-C gates,
+  artifacts, handoff and whitespace pass. Current-head hosted CI/Kilo remain
+  delivery gates; T36, T37 and T11 stay open.
+
 ### T36 first backend values, policy and DTO extraction
 
 Delivery: [PR #40](https://github.com/Ljrr3045/rielia/pull/40).

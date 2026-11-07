@@ -29,6 +29,12 @@ records separately accepted retained-test equivalence and 19 targeted additions:
 below remain evidence of their original delivery; current gates remain in the
 reviewed baseline files.
 
+The subsequent [scoped project read/command extraction](project-flow-extraction.md)
+retains those 148 API cases through a separately reconciled split and adds 68
+focused cases/subtests: 216 API/356 total, 36 API/107 total inputs. Its accepted
+current API floors are L52.44/S52.47/F48.55/B52.52 percent after exact numerical
+acceptance. Other scopes/history and the normal comparator remain unchanged.
+
 Traceability: P01–P11/P33/P38; US01–US08/US11–US12/US24–US25; T01/T04–T10/T35;
 existing UXR01–04/06 and UX01–03/05–07/09/11. No sprint/product expansion, UI
 redesign, real-provider/staging validation, deployment or protected-settings change.
