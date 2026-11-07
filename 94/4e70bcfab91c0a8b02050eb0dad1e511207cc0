@@ -1,0 +1,41 @@
+apps/web/test/unit/mutation-witness.mjs
+  s_8691a07f071c2f::t_bff913c616f278 65-71
+  s_8691a07f071c2f::t_3262b506fae8de 15,40-41
+  s_8691a07f071c2f::t_03e9a1f564c2fb 1-2,13-14,16-18,20-21,28-30,34,42-48,51-57,59-62,80-97,103-107,109-114,122-124
+  s_8691a07f071c2f::t_0efaaba5bd08ed 8,19
+  s_8691a07f071c2f::t_442a508118a6c1 49-50
+  s_8691a07f071c2f::t_4fa68eb6725de0 58,108
+  s_8691a07f071c2f::t_e59c949cf92074 3-7,9-12,22-27,31-33,35-39,63-64,72-79,98-102,115-121
+apps/web/test/unit/dom-harness.mjs
+  s_8691a07f071c2f::t_54bf19f1e23ca1 1,3-6,12-25,32-55,65-67,73,85,94-102,107,112-135,140-152,162-164,171-212,222
+  s_8691a07f071c2f::t_bff913c616f278 7-9
+  s_8691a07f071c2f::t_3262b506fae8de 2,10-11
+  s_8691a07f071c2f::t_9eaeb1332eda70 26-31,56-64,69-72,74-84,86-93,103-106,108-111,136-139,153-161,165-170,213-221
+  s_8691a07f071c2f::t_23a5c2f2b3a652 68
+apps/web/test/unit/identity-hook.test.mjs
+  s_8691a07f071c2f::t_54bf19f1e23ca1 1-84
+  s_8691a07f071c2f::t_e5f35d8fd73657 85-112
+apps/web/test/unit/identity-view.test.mjs
+  s_8691a07f071c2f::t_3262b506fae8de 5,21-52,58-97,105-114,124-127,132-149,151-169,171-186
+  s_8691a07f071c2f::t_088c1ac8932317 1-4,6-20,53-57,98-104,115-123,128-131,150,170
+apps/web/test/unit/workspace-hook.test.mjs
+  s_8691a07f071c2f::t_852dfc7e64b700 244-287
+  s_8691a07f071c2f::t_23a5c2f2b3a652 1-3,14-24,27-36,94,117,158,212,243,288
+  s_8691a07f071c2f::t_92b9270faefd55 4-13,25-26,37-93,95-116,118-157,159-211,213-242,289-310
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "944e70bcfab91c0a8b02050eb0dad1e511207cc0",
+  "prompts": {},
+  "sessions": {
+    "s_8691a07f071c2f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b36a-06f8-7002-9555-020e3c485adb",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
