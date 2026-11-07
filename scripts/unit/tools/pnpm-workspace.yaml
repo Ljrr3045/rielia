@@ -1,0 +1,7 @@
+packages: []
+saveExact: true
+strictPeerDependencies: true
+autoInstallPeers: false
+allowBuilds:
+  # The locked platform optional binary works without install.js/download fallback.
+  'esbuild@0.28.2': false

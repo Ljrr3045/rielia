@@ -45,6 +45,7 @@ export function excluded(file) {
     /^(docs\/handoff\/|patches\/|apps\/api\/src\/generated\/)/.test(file) ||
     file === 'docs/development/handoff-files.sha256' ||
     file === 'pnpm-lock.yaml' ||
+    file === 'scripts/unit/tools/pnpm-lock.yaml' ||
     /(^|\/)next-env\.d\.ts$|\.tsbuildinfo$/.test(file)
   );
 }
