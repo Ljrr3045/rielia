@@ -1,0 +1,47 @@
+apps/web/test/unit/project-content-forms.test.mjs
+  s_ed11e3f14f856d::t_f07d8e61e9d7e6 37
+docs/development/project-interactions-extraction.md
+  s_ed11e3f14f856d::t_b645d44f18bd52 54,166-195,199-200,203-207
+  s_ed11e3f14f856d::t_90bc2f1eff233e 201-202
+  s_ed11e3f14f856d::t_8bbf3d851978bc 196-198
+  s_ed11e3f14f856d::t_61ce86e46da26e 208-215
+apps/web/test/unit/project-content-model.test.mjs
+  s_ed11e3f14f856d::t_f07d8e61e9d7e6 25
+CHANGELOG.md
+  s_ed11e3f14f856d::t_b645d44f18bd52 24-26,29
+  s_ed11e3f14f856d::t_90bc2f1eff233e 27-28
+apps/web/test/unit/task-result-focus.test.mjs
+  s_ed11e3f14f856d::t_f07d8e61e9d7e6 64-75,81,89-100,105,110-111
+  s_ed11e3f14f856d::t_e5d5ca22caabfb 76,80,82-88,101-104,106-109
+  s_ed11e3f14f856d::t_0d609bf5cbd940 77-79
+docs/development/formatting-inventory.json
+  s_ed11e3f14f856d::t_b645d44f18bd52 1232
+  s_ed11e3f14f856d::t_90bc2f1eff233e 1230
+apps/web/test/unit/project-navigation-focus.test.mjs
+  s_ed11e3f14f856d::t_f07d8e61e9d7e6 24-25,29-30,49-72
+apps/web/test/unit/project-interaction-harness.mjs
+  s_ed11e3f14f856d::t_e5d5ca22caabfb 75-83,134-136
+  s_ed11e3f14f856d::t_f07d8e61e9d7e6 28,88-90,101
+docs/development/progress.md
+  s_ed11e3f14f856d::t_b645d44f18bd52 36-44,46,50
+  s_ed11e3f14f856d::t_90bc2f1eff233e 45
+  s_ed11e3f14f856d::t_61ce86e46da26e 47-49
+scripts/unit/baselines/web.json
+  s_ed11e3f14f856d::t_90bc2f1eff233e 247,251,671,675,679,683,689,697,701,725,733,737,1121-1124,1221-1222,1226-1228,1243,1247,1251,1255
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3b3c18cdd5020960b9024883aa6d62fca27de894",
+  "prompts": {},
+  "sessions": {
+    "s_ed11e3f14f856d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b6c3-1555-7981-a608-217976ebe160",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
