@@ -1,5 +1,36 @@
 # Delivery progress and decisions
 
+## 2026-11-07 T36 workspace feature-administration extraction — IN PROGRESS
+
+Merged PR #42 at `3fb40583dc0a212faf7d38e02348565df729bf78` is the actual base.
+The [bounded workspace extraction](workspace-interactions-extraction.md) separates
+screen action/display binding, feedback, entry, invitations, members and Agent
+administration. It retains one locale/hook lifetime, original JSX/keys/effects,
+controller/session/key/token authority, current member-version/cache behavior and
+all CSS. The obsolete admin module is removed. T36.6/T36/T37/T11 remain open.
+
+One retained B passes 380 cases with every web covered count unchanged. One C adds
+seven actual-hook cases and passes 145 web / 387 total cases over 124 inputs
+(68 web): L1567/3793 S1734/4269 F323/1051 B1588/5192. All existing tests remain.
+Independent review retains all 1,192 affected old raw zero outcomes and explicitly
+owns three new wrapper units, 47 implicit arms and null/UTF-16/empty endpoints.
+Raw unknowns 162→163→163 and 797 normalized nulls remain explicit. Only current-web
+baseline `15fd5321…b36fc35` is coordinator-accepted, with floors
+4131/4061/3073/3058; seven other baselines remain exact.
+
+Six paired browser schedules and four emitted CSS assets/order match BEFORE
+exactly; 24 AFTER-only language/theme/responsive observations pass. Native
+confirmation/copy/recovery evidence is bounded; HTTP fixtures do not establish
+persistence/security/SSE. Physical-device/AT/provider/user checks remain deferred.
+Supported paths reach 242/242; CSS cohesion remains owned debt.
+
+All normal-check constituents pass with the single final web build/typecheck
+reused; no duplicate whole `pnpm check` is claimed. All 20 infrastructure cases,
+four saved-C comparable/numerical gates and four bounded artifact sets pass.
+Final formatting/link/handoff/whitespace and commit-hook evidence are retained
+in the external delivery report. Current-head hosted CI/Kilo and Draft/Ready/merge
+remain coordinator-owned; real persisted/security/runtime checks remain required.
+
 ## 2026-11-07 T36 project interaction/render ownership — IN PROGRESS
 
 Delivery: [PR #42](https://github.com/Ljrr3045/rielia/pull/42).

@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useId, useRef } from 'react';
 import type { ReactNode } from 'react';
+import type { LimitedRole, MemberState, Page, WorkspaceMember } from '@rielia/contracts';
 import type { Bilingual } from './strings';
 import { copy } from './strings';
 import styles from './workspace.module.css';
@@ -99,4 +100,25 @@ export function ConfirmBox({
       </div>
     </div>
   );
+}
+
+export const limitedRoles: readonly LimitedRole[] = ['admin', 'member', 'viewer'];
+
+export function stateTone(state: MemberState): 'neutral' | 'warning' | 'danger' | 'success' {
+  if (state === 'active') return 'success';
+  if (state === 'suspended') return 'warning';
+  return 'danger';
+}
+
+export function memberName(
+  members: Page<WorkspaceMember> | null,
+  principalId: string | null,
+): string | null {
+  if (principalId === null || members === null) return null;
+  return members.items.find((member) => member.principalId === principalId)?.name ?? null;
+}
+
+export function BilingualOption({ value }: { value: { es: string; en: string } }) {
+  const lang = useLocale();
+  return <>{value[lang]}</>;
 }

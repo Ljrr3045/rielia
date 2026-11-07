@@ -4,6 +4,22 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+### T36 workspace feature-administration extraction
+
+- Separate existing screen actions/display, feedback, workspace entry, invitations,
+  members and Agent administration. Preserve controller/key/token authority,
+  one locale/hook lifetime, JSX/keys/effects, current version/cache behavior and CSS.
+- Retain 380 cases and add seven actual-hook cases: 145 web / 387 total cases
+  over 124 inputs. Independently retain covered/zero/raw ownership and accept only
+  the exact current-web numerical baseline; seven other baselines remain unchanged.
+- Preserve six paired browser observations and emitted CSS/order; 24 additional
+  responsive language/theme observations pass, with declared fixture/device/AT limits.
+  Adopt nine new paths and remove the obsolete admin path, reaching 242/242.
+  See [owners, evidence and remaining debt](docs/development/workspace-interactions-extraction.md).
+  Normal constituents, 20 infrastructure cases and saved-C gates/artifacts pass.
+  Hosted review and coordinator acceptance remain open; this completes no
+  T36.6/T36/T37/T11 acceptance or deployment.
+
 ### T36 project interaction and rendering ownership
 
 Delivery: [PR #42](https://github.com/Ljrr3045/rielia/pull/42).
