@@ -4,6 +4,27 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+### T36 first unit and coverage slice
+
+- Add isolated backend authority/error/use-case units and real React identity/
+  workspace hook/component tests, plus shared-contract guard tests. Retain all
+  nineteen fictional prototype cases and separate all six real HTTP checks.
+- Enforce measured API/web/contracts/prototype all-source four-metric floors,
+  exact/per-file nonregression and fail-closed source/provider manifests. Preserve
+  real tsc Nest metadata and all existing PG/security/Docker/closure checks.
+- Isolate pinned coverage/DOM tools outside runtime peer graphs; preserve the
+  root lock and 286-package Express-free backend closure. Record two retained
+  moderate dev-tool advisories without suppression or new lifecycle approval.
+- Add failure/threshold/scope/process-tree/artifact witnesses and bounded seven-day
+  CI JSON/LCOV artifacts. Reject stale reports, symlink escapes and oversized
+  diagnostics after independent review. See the [delivery guide](docs/development/unit-coverage.md).
+- Upload through a bounded local JavaScript Action using the frozen official
+  artifact SDK and runner capability. Reject the advisory-affected prebuilt bundle;
+  retain only the documented moderate tool findings with no permission expansion.
+- Record the user's prospective **Permissions: Approve for me** requirement and
+  effective-session verification for coordinator-launched agents. T36 remains
+  IN PROGRESS; expanded recovery coverage, extraction, T37 and T11 remain later work.
+
 ### T36 tooling enforcement
 
 - Address both findings from PR #33's first completed native Kilo round:

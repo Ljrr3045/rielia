@@ -157,6 +157,12 @@ Draft/Ready/current-head CI/Kilo and coordinator-only merge rules remain.
 
 ## Separate unit-baseline audits and limits
 
+The following audits are historical pre-implementation evidence. The subsequent
+[first unit/coverage delivery](unit-coverage.md) now reproduces these baselines,
+adds behavior units and enforces measured app/shared/prototype gates through an
+isolated dev-tool install. Its guide owns current commands, advisory disposition,
+artifact safeguards and remaining acceptance; T36 remains open.
+
 Parallel disposable audits measured base `1c33560`:
 
 | Scope                               | Lines             | Statements         | Functions         | Branches           |

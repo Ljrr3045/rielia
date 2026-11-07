@@ -1,5 +1,78 @@
 # Delivery progress and decisions
 
+## 2026-11-06 first T36 unit/coverage slice — IN PROGRESS
+
+Branch `test/t36-unit-coverage` starts from merged PR #33 at
+`465d9e44e480c5f115d92bc294e913d2fb599330`; username prefix was corrected before
+editing. Effective Orca launch receipt verifies Codex `gpt-6.1-sol` / `xhigh`.
+Independent API/web authors retained separate checkouts and exclusive unit paths;
+only coordinator-routed scoped commits were integrated. No production source,
+schema, UI appearance, root lock/workspace/runtime pin or imported handoff changed.
+See [scope, commands, counters and limitations](unit-coverage.md).
+
+The new entrypoints retain node:test and provide separate all-maintained-source
+API/web/contracts/prototype reports, real tsc Nest metadata, four measured numerical
+floors and exact/per-file/source/provider/test-manifest nonregression. Six loopback
+HTTP cases remain explicit integration checks; all nineteen prototype cases remain
+isolated. Selected test/helper hashes reject critical-case removal even with equal
+coverage. Reviewable baseline migration added only these fingerprints, with all
+eight pre/current covered/total counts, source hashes and floors unchanged.
+
+Current totals: API L219/1095 S284/1617 F58/396 B214/1228; web L761/3251
+S1215/4251 F210/1041 B1230/5185; contracts L78/78 S113/113 F64/64 B355/363;
+prototype L199/805 S269/984 F87/368 B194/954. Fresh compilation/mirror repetition
+produced identical canonical counts, source/test hashes and digest
+`530527c8145783425933039f6964b6e39c26556058fd341907c3535de599da5f`.
+Prior API/web/prototype audit numbers were reproduced exactly on merged base.
+
+Local validation passes: root and isolated-tools frozen installs; 54 API cases
+(53 behavior + compiler metadata), 95 production web cases (79 existing +16 DOM),
+7 contracts and 19 prototype; all 11 coverage-infrastructure and 5 upload-boundary proofs; full `pnpm check`;
+real PostgreSQL identity/principal/workspace/task/collaboration/discovery/security,
+double migrations and persistence across restart; Docker build/deployed-store/
+nonroot/migration-failure/DB/locked-worker/durable-job restart and owned-resource
+cleanup; separate root/tools high audits; normalized bounded artifact packaging.
+Root audit retains 1 moderate, isolated tools 2 moderate, no high/critical; the
+documented coordinator disposition is bounded dev tooling, not a vulnerability fix.
+Installed backend closure remains 286/no Express. Optional additional image inspection
+after smoke cleanup could not run because owned tags were already removed; no
+extra image-tool assertion is claimed. Existing deployed runtime evidence passed.
+
+Measured local log wall spans: full check about 139 s; real PG 118 s; Docker runtime 164 s;
+fresh unit build/run 19 s; infrastructure 5 s. The added unit/proof work is below the
+proposed 180 s local budget. Actual hosted CI timing/artifact behavior remains to be
+measured on the Draft PR; validate keeps its 25-minute budget and all existing checks.
+
+Independent API review reports no actionable findings, verifies actual tsc metadata,
+53 cases twice, Date/UUID cleanup and current-authority/current-content-replay/
+swallowed-outbox mutation rejection. Independent infrastructure/web review verifies
+101 source hashes, exact scope 30/51/4/16, 44,568 mapped endpoints, AST-identical moved
+HTTP assertions and identity retained-action cleanup. It reproduced three valid
+artifact findings: stale results, ancestor symlink escape and unbounded failure JSON.
+All are fixed with targeted regressions. Critical-test fingerprints were added after
+its additional evidence question. Final delta acceptance is coordinator-owned;
+reviewer full independent installs were unavailable after automatic approval review
+rejected its exact scratch commands, so those rechecks are explicitly builtin/static.
+The integration owner executed full suites and repeated coverage successfully.
+The later published-manifest collision is fixed: selected paths use `selectedTests`,
+while `tests` preserves exact test/helper fingerprints; every-scope published hashes
+must equal the accepted baseline. The proposed official upload-action bundle was
+rejected before use after actual shipped XML/undici versions matched high advisories.
+Coordinator authorized the official artifact SDK 6.3.1 with fresh compatible locked
+transitives, explicit-file local JS action, runner-provided artifact capability,
+no `GITHUB_TOKEN` forwarding and a 90-second process-group deadline. Its frozen
+install and high audit pass with only the same two moderate families. Numerical
+baselines remain unchanged; provider-lock fingerprints migrate explicitly. Actual
+upload/download and retention evidence still require the Draft CI run.
+
+The prospective user rule **Permissions: Approve for me** is now recorded in
+root/model/contributor guidance with effective-session verification and no global
+setting changes. Initial Draft publication, current-head remote validate and PR URL
+will be recorded before the batch freezes. Only the coordinator may transition
+Ready, request Kilo or merge. No paid/native review has been requested by this worker.
+T36 remains IN PROGRESS: further lifecycle/recovery coverage, formatting/extraction,
+frontend skills and stable behavior/UI acceptance remain before T37 → T11.
+
 ## PR #33 first native review — corrective Draft batch
 
 The first native Kilo round completed **SUCCESS with two findings** at
@@ -1172,7 +1245,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T33 | Marketing (future) | Metadata, localized SEO, minimal measurement | T31; T32 if capture active | Not started |
 | T34 | Marketing launch gate | Verify/enable public marketing launch | T31, T33; T32 if capture active | Not started |
 | T35 | B1 foundations | Principal model, immutable authorship, autonomous memberships | T04; precedes T05/T06/T12 | T35.0 bounded storage/policy/context implemented; full authorship/domain/export/credential integration incomplete |
-| T36 | Quality prerequisite 1 | Engineering standards, compatible tool enforcement and behavior-preserving frontend/backend structure | Existing bounded foundations/contracts; approved NodeAdapter | Preparatory scoped AGENTS/roadmap documented; tooling and restructuring not implemented; [ordered acceptance](development-quality-roadmap.md#t36--engineering-quality-tooling-and-structure) |
+| T36 | Quality prerequisite 1 | Engineering standards, compatible tool enforcement and behavior-preserving frontend/backend structure | Existing bounded foundations/contracts; approved NodeAdapter | IN PROGRESS: scoped guidance/tooling merged; first unit/coverage slice adds measured gates and behavior units pending Draft/current-head acceptance; expanded coverage/structure/skills remain; [ordered acceptance](development-quality-roadmap.md#t36--engineering-quality-tooling-and-structure) |
 | T37 | Quality prerequisite 2 | Coherent redesign of existing UI using stable contracts, brand/UX and reviewed frontend-local skills | Coordinator acceptance of T36 | Planned only; Astra research is not redesign delivery; [ordered acceptance](development-quality-roadmap.md#t37--ui-quality-redesign); precedes T11 |
 
 Public release is one launch followed by continuous updates. Internal B1 readiness,
