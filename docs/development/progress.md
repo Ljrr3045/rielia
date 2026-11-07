@@ -33,7 +33,14 @@ pinned Prettier; its evidence remains preserved. No paired measurement is rerun.
 All frozen-host guards, owned cache bytes, tool metadata and exact B build/source
 provenance remain unchanged. Fresh full current-head hosted validate is pending,
 including native full check, real PG/security/runtime and unchanged high audits.
-Publication is still pending the final Draft batch; no Ready transition, merge,
+[Draft PR #36](https://github.com/Ljrr3045/rielia/pull/36) targets `dev`. Initial
+publication at `ff3b8268b024dc907b556d861aa0944151528bd4` verified live merged base
+`be777b4`, clean status and no existing branch PR, then pushed and immediately
+created the Draft with the reviewed English body. GitHub confirmed Draft and
+initial validate run 42349231881; no Kilo check appeared. Actual Draft is rechecked
+before the final URL/evidence push. The final head and full hosted CI/artifact
+result are recorded in the PR and external delivery report after this commit;
+the initial run is not final-head acceptance. No Ready transition, merge,
 deployment or completed T36 is claimed.
 
 ## 2026-11-07 T36 lifecycle/recovery contribution — IN PROGRESS

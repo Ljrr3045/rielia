@@ -18,7 +18,8 @@ This records repository changes. No application version has been released.
   [formatting guide](docs/development/source-format-adoption.md). Local formatting,
   24 tooling regressions, lint/closure/handoff, eight saved gate checks,
   20 infrastructure/upload cases and actual MCP compilation/17 cases pass.
-  Full hosted CI and publication remain pending; T36, broader adoption/extraction,
+  [Draft PR #36](https://github.com/Ljrr3045/rielia/pull/36) targets `dev`;
+  final-head full hosted CI remains pending. T36, broader adoption/extraction,
   T37 and T11 remain incomplete.
 
 ### T36 project refresh lifecycle and expanded units

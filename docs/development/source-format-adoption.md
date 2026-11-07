@@ -131,6 +131,7 @@ coverage/infrastructure, real PG/security/runtime and both high audits within th
 existing 25-minute budget. The documented root one-moderate and isolated two-moderate
 dev-tool risk dispositions remain; no new audit or advisory fix is claimed.
 
-[Progress](progress.md) records publication and current-head CI evidence.
-Hosted validate and external review remain pending; this local batch does not
-complete T36. Only the coordinator controls Ready and merge.
+[Draft PR #36](https://github.com/Ljrr3045/rielia/pull/36) targets `dev`;
+[progress](progress.md) records publication and current-head CI evidence.
+Hosted final-head validate and external review remain pending; this local batch
+does not complete T36. Only the coordinator controls Ready and merge.
