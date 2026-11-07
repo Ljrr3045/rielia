@@ -37,9 +37,15 @@ results map to byte-identical maintained `apps/web/src`, `apps/api/src` and
 
 All task-owned local processes/listeners are stopped. No dependency/runtime pin, schema,
 public policy, source handoff or appearance changed through integration. The
-English Draft body and final committed batch remain publication-review gated;
-current-head hosted CI and coordinator-controlled review/merge remain required.
-T36 is still in progress; extraction, T37 and T11 remain separate work.
+[Draft PR #35](https://github.com/Ljrr3045/rielia/pull/35) targets `dev`.
+Initial publication at `61d04b00231ee3b77939d5dd100e202aa543cd03` followed
+coordinator batch approval, verification of remote base `969480a` and no existing
+branch PR, then push and immediate Draft creation. GitHub confirmed Draft and
+automatic validate; actual Draft is rechecked before this URL/evidence push.
+Final-head hosted CI and the exact final head are recorded in the PR/external
+delivery report after this documentation commit. Only the coordinator may
+transition Ready, request Kilo or merge. T36 is still in progress; extraction,
+T37 and T11 remain separate work.
 
 ## 2026-11-06 first T36 unit/coverage slice — IN PROGRESS
 
