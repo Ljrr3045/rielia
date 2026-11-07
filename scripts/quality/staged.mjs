@@ -2,11 +2,12 @@ import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { sep } from 'node:path';
 import { fail, git, isMain, repositoryRoot, stagedPaths } from './git.mjs';
-import { assertPolicyStaged, formatEligible, lintEligible } from './policy.mjs';
+import { assertPolicyStaged, assertRuntime, formatEligible, lintEligible } from './policy.mjs';
 
 if (isMain(import.meta.url)) {
   try {
     const root = repositoryRoot();
+    assertRuntime(root);
     assertPolicyStaged(root);
     if (sep !== '\\' && stagedPaths(root).some((file) => file.includes('\\'))) {
       throw new Error(

@@ -2,6 +2,22 @@
 
 ## Current decision — 2026-11-05
 
+The user's additional **2026-11-06** rule requires all subsequently
+coordinator-launched agents, including reused sessions before each new dispatch,
+to use **Permissions: Approve for me**. Verify the
+effective session's `approvals_reviewer=auto_review` and workspace-write/on-request
+profile before task execution, alongside the model/effort receipt. Automatic
+review retains sandbox/network boundaries; it is not Full Access or `never`.
+See the [official OpenAI configuration reference](https://learn.chatgpt.com/docs/config-file/config-reference).
+
+The current Orca launch interface does not expose a permissions flag. Configure
+the idle session through its supported selector, verify the effective result,
+then dispatch; an unverified requested setting is insufficient. Report missing
+support instead of silently substituting a mode. Never invent an Orca argument
+or modify global settings. In the unit-integration session, runtime-injected
+instructions explicitly confirmed automatic review and workspace-write after the
+user selected that mode; this is session evidence, not proof of future launches.
+
 The user assigns future UI/UX presentation development to **Codex `gpt-6-astra`,
 effort `high`**, replacing OpenCode Go/DeepSeek. All logic remains **Codex
 `gpt-6.1-sol`, effort `xhigh`**, including frontend hooks/state/data/auth/session,

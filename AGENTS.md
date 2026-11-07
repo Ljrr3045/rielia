@@ -35,11 +35,11 @@ or an Orca installation.
   existing dependencies**. [The roadmap](docs/development/development-quality-roadmap.md)
   defines ordered subdeliveries and evidence. T36 is IN PROGRESS: the first
   [tooling slice](docs/development/quality-tooling.md) adds scoped formatting,
-  hooks and prospective commit checks; unit coverage gates, restructuring,
-  frontend skills and redesign remain follow-up implementation. T36 must implement behavior-focused
-  frontend/backend unit tests, separate coverage reports and evidence-based
-  numerical CI coverage gates, preserving real integration/security/runtime
-  checks; application unit coverage infrastructure is not delivered by this slice.
+  hooks and prospective commit checks. The first [unit/coverage slice](docs/development/unit-coverage.md)
+  adds behavior-focused frontend/backend units, separate all-source reports and
+  measured numerical/nonregression CI gates while retaining real integration/security/runtime
+  checks. Expanded lifecycle coverage, restructuring, frontend skills and redesign
+  remain follow-up implementation; this does not complete T36.
   Neither ticket is complete. Original
   T01–T35 numbering/acceptance and immutable handoff remain unchanged. Future
   T30–T34 landing work uses the [later Astro/narrative direction](docs/development/landing-direction.md);
@@ -171,6 +171,14 @@ Keep these boundaries in both current and future code.
    Each works in its own worktree, per the user's explicit rule. Verify effective
    model/effort rather than silently substituting an unavailable configuration.
    See the [model decision and verification limits](docs/development/frontend-agent.md).
+   For every subsequently coordinator-launched agent, the user's 2026-11-06 rule
+   requires **Permissions: Approve for me**, including reused sessions before a
+   new dispatch. Verify effective automatic review
+   (`approvals_reviewer=auto_review`) and the workspace-write/on-request permission
+   profile before task execution, as well as model/effort. If the launch interface
+   lacks that setting, use its supported idle-session selector and verify the
+   resulting session before dispatch; no invented launch flag, silent fallback,
+   Full Access/never replacement or global configuration change.
    This does not prescribe tools/models
    for ordinary human contributors. Kilo Code Reviews is the external PR reviewer,
    separate from the development models; historical model evidence is preserved.

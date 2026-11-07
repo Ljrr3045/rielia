@@ -1,0 +1,1037 @@
+{
+  "files": {
+    "apps/web/next.config.ts": {
+      "branches": {
+        "covered": 0,
+        "total": 0
+      },
+      "functions": {
+        "covered": 0,
+        "total": 0
+      },
+      "lines": {
+        "covered": 0,
+        "total": 1
+      },
+      "statements": {
+        "covered": 0,
+        "total": 1
+      }
+    },
+    "apps/web/src/app/api/auth/[...path]/route.ts": {
+      "branches": {
+        "covered": 0,
+        "total": 0
+      },
+      "functions": {
+        "covered": 0,
+        "total": 0
+      },
+      "lines": {
+        "covered": 0,
+        "total": 3
+      },
+      "statements": {
+        "covered": 0,
+        "total": 3
+      }
+    },
+    "apps/web/src/app/api/v1/identity/[action]/route.ts": {
+      "branches": {
+        "covered": 0,
+        "total": 3
+      },
+      "functions": {
+        "covered": 0,
+        "total": 1
+      },
+      "lines": {
+        "covered": 0,
+        "total": 4
+      },
+      "statements": {
+        "covered": 0,
+        "total": 4
+      }
+    },
+    "apps/web/src/app/api/v1/workspace-invitations/accept/route.ts": {
+      "branches": {
+        "covered": 0,
+        "total": 0
+      },
+      "functions": {
+        "covered": 0,
+        "total": 0
+      },
+      "lines": {
+        "covered": 0,
+        "total": 2
+      },
+      "statements": {
+        "covered": 0,
+        "total": 2
+      }
+    },
+    "apps/web/src/app/api/v1/workspaces/[[...path]]/route.ts": {
+      "branches": {
+        "covered": 0,
+        "total": 4
+      },
+      "functions": {
+        "covered": 0,
+        "total": 1
+      },
+      "lines": {
+        "covered": 0,
+        "total": 4
+      },
+      "statements": {
+        "covered": 0,
+        "total": 5
+      }
+    },
+    "apps/web/src/app/identity/identity-view.tsx": {
+      "branches": {
+        "covered": 0,
+        "total": 45
+      },
+      "functions": {
+        "covered": 0,
+        "total": 9
+      },
+      "lines": {
+        "covered": 0,
+        "total": 24
+      },
+      "statements": {
+        "covered": 0,
+        "total": 27
+      }
+    },
+    "apps/web/src/app/identity/page.tsx": {
+      "branches": {
+        "covered": 0,
+        "total": 2
+      },
+      "functions": {
+        "covered": 0,
+        "total": 4
+      },
+      "lines": {
+        "covered": 0,
+        "total": 5
+      },
+      "statements": {
+        "covered": 0,
+        "total": 5
+      }
+    },
+    "apps/web/src/app/layout.tsx": {
+      "branches": {
+        "covered": 0,
+        "total": 0
+      },
+      "functions": {
+        "covered": 0,
+        "total": 1
+      },
+      "lines": {
+        "covered": 0,
+        "total": 2
+      },
+      "statements": {
+        "covered": 0,
+        "total": 2
+      }
+    },
+    "apps/web/src/app/page.tsx": {
+      "branches": {
+        "covered": 0,
+        "total": 9
+      },
+      "functions": {
+        "covered": 0,
+        "total": 2
+      },
+      "lines": {
+        "covered": 0,
+        "total": 10
+      },
+      "statements": {
+        "covered": 0,
+        "total": 11
+      }
+    },
+    "apps/web/src/app/projects/feedback.tsx": {
+      "branches": {
+        "covered": 0,
+        "total": 24
+      },
+      "functions": {
+        "covered": 0,
+        "total": 9
+      },
+      "lines": {
+        "covered": 0,
+        "total": 14
+      },
+      "statements": {
+        "covered": 0,
+        "total": 17
+      }
+    },
+    "apps/web/src/app/projects/page.tsx": {
+      "branches": {
+        "covered": 0,
+        "total": 0
+      },
+      "functions": {
+        "covered": 0,
+        "total": 1
+      },
+      "lines": {
+        "covered": 0,
+        "total": 2
+      },
+      "statements": {
+        "covered": 0,
+        "total": 2
+      }
+    },
+    "apps/web/src/app/projects/project-access.tsx": {
+      "branches": {
+        "covered": 0,
+        "total": 159
+      },
+      "functions": {
+        "covered": 0,
+        "total": 29
+      },
+      "lines": {
+        "covered": 0,
+        "total": 97
+      },
+      "statements": {
+        "covered": 0,
+        "total": 127
+      }
+    },
+    "apps/web/src/app/projects/project-forms.tsx": {
+      "branches": {
+        "covered": 0,
+        "total": 50
+      },
+      "functions": {
+        "covered": 0,
+        "total": 7
+      },
+      "lines": {
+        "covered": 0,
+        "total": 29
+      },
+      "statements": {
+        "covered": 0,
+        "total": 31
+      }
+    },
+    "apps/web/src/app/projects/project-ui.tsx": {
+      "branches": {
+        "covered": 0,
+        "total": 93
+      },
+      "functions": {
+        "covered": 0,
+        "total": 54
+      },
+      "lines": {
+        "covered": 0,
+        "total": 109
+      },
+      "statements": {
+        "covered": 0,
+        "total": 123
+      }
+    },
+    "apps/web/src/app/projects/projects-view.tsx": {
+      "branches": {
+        "covered": 0,
+        "total": 1372
+      },
+      "functions": {
+        "covered": 0,
+        "total": 243
+      },
+      "lines": {
+        "covered": 0,
+        "total": 876
+      },
+      "statements": {
+        "covered": 0,
+        "total": 1036
+      }
+    },
+    "apps/web/src/app/projects/strings.ts": {
+      "branches": {
+        "covered": 0,
+        "total": 83
+      },
+      "functions": {
+        "covered": 0,
+        "total": 73
+      },
+      "lines": {
+        "covered": 0,
+        "total": 76
+      },
+      "statements": {
+        "covered": 0,
+        "total": 82
+      }
+    },
+    "apps/web/src/app/projects/task-board.tsx": {
+      "branches": {
+        "covered": 0,
+        "total": 152
+      },
+      "functions": {
+        "covered": 0,
+        "total": 24
+      },
+      "lines": {
+        "covered": 0,
+        "total": 94
+      },
+      "statements": {
+        "covered": 0,
+        "total": 106
+      }
+    },
+    "apps/web/src/app/projects/task-checklist.tsx": {
+      "branches": {
+        "covered": 0,
+        "total": 136
+      },
+      "functions": {
+        "covered": 0,
+        "total": 27
+      },
+      "lines": {
+        "covered": 0,
+        "total": 66
+      },
+      "statements": {
+        "covered": 0,
+        "total": 76
+      }
+    },
+    "apps/web/src/app/projects/task-collaboration-shared.tsx": {
+      "branches": {
+        "covered": 0,
+        "total": 12
+      },
+      "functions": {
+        "covered": 0,
+        "total": 3
+      },
+      "lines": {
+        "covered": 0,
+        "total": 12
+      },
+      "statements": {
+        "covered": 0,
+        "total": 16
+      }
+    },
+    "apps/web/src/app/projects/task-collaboration.tsx": {
+      "branches": {
+        "covered": 0,
+        "total": 147
+      },
+      "functions": {
+        "covered": 0,
+        "total": 20
+      },
+      "lines": {
+        "covered": 0,
+        "total": 85
+      },
+      "statements": {
+        "covered": 0,
+        "total": 97
+      }
+    },
+    "apps/web/src/app/projects/task-comments.tsx": {
+      "branches": {
+        "covered": 0,
+        "total": 94
+      },
+      "functions": {
+        "covered": 0,
+        "total": 18
+      },
+      "lines": {
+        "covered": 0,
+        "total": 46
+      },
+      "statements": {
+        "covered": 0,
+        "total": 53
+      }
+    },
+    "apps/web/src/app/projects/task-description.tsx": {
+      "branches": {
+        "covered": 0,
+        "total": 16
+      },
+      "functions": {
+        "covered": 0,
+        "total": 5
+      },
+      "lines": {
+        "covered": 0,
+        "total": 21
+      },
+      "statements": {
+        "covered": 0,
+        "total": 27
+      }
+    },
+    "apps/web/src/app/projects/task-detail.tsx": {
+      "branches": {
+        "covered": 0,
+        "total": 56
+      },
+      "functions": {
+        "covered": 0,
+        "total": 8
+      },
+      "lines": {
+        "covered": 0,
+        "total": 23
+      },
+      "statements": {
+        "covered": 0,
+        "total": 23
+      }
+    },
+    "apps/web/src/app/projects/task-discovery.tsx": {
+      "branches": {
+        "covered": 0,
+        "total": 200
+      },
+      "functions": {
+        "covered": 0,
+        "total": 36
+      },
+      "lines": {
+        "covered": 0,
+        "total": 109
+      },
+      "statements": {
+        "covered": 0,
+        "total": 125
+      }
+    },
+    "apps/web/src/app/projects/task-forms.tsx": {
+      "branches": {
+        "covered": 0,
+        "total": 60
+      },
+      "functions": {
+        "covered": 0,
+        "total": 16
+      },
+      "lines": {
+        "covered": 0,
+        "total": 49
+      },
+      "statements": {
+        "covered": 0,
+        "total": 51
+      }
+    },
+    "apps/web/src/app/projects/task-history.tsx": {
+      "branches": {
+        "covered": 0,
+        "total": 47
+      },
+      "functions": {
+        "covered": 0,
+        "total": 12
+      },
+      "lines": {
+        "covered": 0,
+        "total": 29
+      },
+      "statements": {
+        "covered": 0,
+        "total": 34
+      }
+    },
+    "apps/web/src/app/projects/task-list.tsx": {
+      "branches": {
+        "covered": 0,
+        "total": 57
+      },
+      "functions": {
+        "covered": 0,
+        "total": 9
+      },
+      "lines": {
+        "covered": 0,
+        "total": 27
+      },
+      "statements": {
+        "covered": 0,
+        "total": 29
+      }
+    },
+    "apps/web/src/app/projects/task-move.tsx": {
+      "branches": {
+        "covered": 0,
+        "total": 23
+      },
+      "functions": {
+        "covered": 0,
+        "total": 9
+      },
+      "lines": {
+        "covered": 0,
+        "total": 28
+      },
+      "statements": {
+        "covered": 0,
+        "total": 32
+      }
+    },
+    "apps/web/src/app/projects/task-relations.tsx": {
+      "branches": {
+        "covered": 0,
+        "total": 151
+      },
+      "functions": {
+        "covered": 0,
+        "total": 34
+      },
+      "lines": {
+        "covered": 0,
+        "total": 87
+      },
+      "statements": {
+        "covered": 0,
+        "total": 99
+      }
+    },
+    "apps/web/src/app/projects/task-view-bar.tsx": {
+      "branches": {
+        "covered": 0,
+        "total": 73
+      },
+      "functions": {
+        "covered": 0,
+        "total": 15
+      },
+      "lines": {
+        "covered": 0,
+        "total": 42
+      },
+      "statements": {
+        "covered": 0,
+        "total": 45
+      }
+    },
+    "apps/web/src/app/workspaces/page.tsx": {
+      "branches": {
+        "covered": 0,
+        "total": 0
+      },
+      "functions": {
+        "covered": 0,
+        "total": 1
+      },
+      "lines": {
+        "covered": 0,
+        "total": 2
+      },
+      "statements": {
+        "covered": 0,
+        "total": 2
+      }
+    },
+    "apps/web/src/app/workspaces/strings.ts": {
+      "branches": {
+        "covered": 0,
+        "total": 2
+      },
+      "functions": {
+        "covered": 0,
+        "total": 1
+      },
+      "lines": {
+        "covered": 0,
+        "total": 15
+      },
+      "statements": {
+        "covered": 0,
+        "total": 15
+      }
+    },
+    "apps/web/src/app/workspaces/workspace-admin.tsx": {
+      "branches": {
+        "covered": 0,
+        "total": 257
+      },
+      "functions": {
+        "covered": 0,
+        "total": 73
+      },
+      "lines": {
+        "covered": 0,
+        "total": 214
+      },
+      "statements": {
+        "covered": 0,
+        "total": 234
+      }
+    },
+    "apps/web/src/app/workspaces/workspace-ui.tsx": {
+      "branches": {
+        "covered": 0,
+        "total": 8
+      },
+      "functions": {
+        "covered": 0,
+        "total": 9
+      },
+      "lines": {
+        "covered": 0,
+        "total": 16
+      },
+      "statements": {
+        "covered": 0,
+        "total": 18
+      }
+    },
+    "apps/web/src/app/workspaces/workspace-view.tsx": {
+      "branches": {
+        "covered": 0,
+        "total": 297
+      },
+      "functions": {
+        "covered": 0,
+        "total": 48
+      },
+      "lines": {
+        "covered": 0,
+        "total": 179
+      },
+      "statements": {
+        "covered": 0,
+        "total": 201
+      }
+    },
+    "apps/web/src/lib/identity-client.ts": {
+      "branches": {
+        "covered": 3,
+        "total": 14
+      },
+      "functions": {
+        "covered": 1,
+        "total": 7
+      },
+      "lines": {
+        "covered": 2,
+        "total": 17
+      },
+      "statements": {
+        "covered": 2,
+        "total": 21
+      }
+    },
+    "apps/web/src/lib/identity-controller.ts": {
+      "branches": {
+        "covered": 42,
+        "total": 45
+      },
+      "functions": {
+        "covered": 13,
+        "total": 15
+      },
+      "lines": {
+        "covered": 43,
+        "total": 45
+      },
+      "statements": {
+        "covered": 58,
+        "total": 65
+      }
+    },
+    "apps/web/src/lib/identity-proxy.ts": {
+      "branches": {
+        "covered": 0,
+        "total": 8
+      },
+      "functions": {
+        "covered": 0,
+        "total": 1
+      },
+      "lines": {
+        "covered": 0,
+        "total": 16
+      },
+      "statements": {
+        "covered": 0,
+        "total": 19
+      }
+    },
+    "apps/web/src/lib/project-task-client.ts": {
+      "branches": {
+        "covered": 148,
+        "total": 198
+      },
+      "functions": {
+        "covered": 21,
+        "total": 22
+      },
+      "lines": {
+        "covered": 60,
+        "total": 73
+      },
+      "statements": {
+        "covered": 103,
+        "total": 141
+      }
+    },
+    "apps/web/src/lib/project-task-controller.ts": {
+      "branches": {
+        "covered": 718,
+        "total": 840
+      },
+      "functions": {
+        "covered": 82,
+        "total": 90
+      },
+      "lines": {
+        "covered": 351,
+        "total": 363
+      },
+      "statements": {
+        "covered": 546,
+        "total": 624
+      }
+    },
+    "apps/web/src/lib/project-task-proxy.ts": {
+      "branches": {
+        "covered": 53,
+        "total": 77
+      },
+      "functions": {
+        "covered": 6,
+        "total": 7
+      },
+      "lines": {
+        "covered": 40,
+        "total": 41
+      },
+      "statements": {
+        "covered": 58,
+        "total": 65
+      }
+    },
+    "apps/web/src/lib/safe-markdown.ts": {
+      "branches": {
+        "covered": 40,
+        "total": 43
+      },
+      "functions": {
+        "covered": 5,
+        "total": 5
+      },
+      "lines": {
+        "covered": 34,
+        "total": 34
+      },
+      "statements": {
+        "covered": 65,
+        "total": 68
+      }
+    },
+    "apps/web/src/lib/task-collaboration-state.ts": {
+      "branches": {
+        "covered": 0,
+        "total": 0
+      },
+      "functions": {
+        "covered": 1,
+        "total": 1
+      },
+      "lines": {
+        "covered": 1,
+        "total": 1
+      },
+      "statements": {
+        "covered": 1,
+        "total": 1
+      }
+    },
+    "apps/web/src/lib/task-events-client.ts": {
+      "branches": {
+        "covered": 33,
+        "total": 43
+      },
+      "functions": {
+        "covered": 11,
+        "total": 12
+      },
+      "lines": {
+        "covered": 39,
+        "total": 39
+      },
+      "statements": {
+        "covered": 91,
+        "total": 102
+      }
+    },
+    "apps/web/src/lib/use-identity.ts": {
+      "branches": {
+        "covered": 0,
+        "total": 1
+      },
+      "functions": {
+        "covered": 0,
+        "total": 3
+      },
+      "lines": {
+        "covered": 0,
+        "total": 7
+      },
+      "statements": {
+        "covered": 0,
+        "total": 9
+      }
+    },
+    "apps/web/src/lib/use-project-tasks.ts": {
+      "branches": {
+        "covered": 0,
+        "total": 68
+      },
+      "functions": {
+        "covered": 0,
+        "total": 18
+      },
+      "lines": {
+        "covered": 0,
+        "total": 29
+      },
+      "statements": {
+        "covered": 0,
+        "total": 63
+      }
+    },
+    "apps/web/src/lib/use-workspaces.ts": {
+      "branches": {
+        "covered": 0,
+        "total": 4
+      },
+      "functions": {
+        "covered": 0,
+        "total": 11
+      },
+      "lines": {
+        "covered": 0,
+        "total": 16
+      },
+      "statements": {
+        "covered": 0,
+        "total": 30
+      }
+    },
+    "apps/web/src/lib/workspace-client.ts": {
+      "branches": {
+        "covered": 1,
+        "total": 61
+      },
+      "functions": {
+        "covered": 1,
+        "total": 10
+      },
+      "lines": {
+        "covered": 1,
+        "total": 33
+      },
+      "statements": {
+        "covered": 3,
+        "total": 58
+      }
+    },
+    "apps/web/src/lib/workspace-controller.ts": {
+      "branches": {
+        "covered": 102,
+        "total": 139
+      },
+      "functions": {
+        "covered": 24,
+        "total": 31
+      },
+      "lines": {
+        "covered": 103,
+        "total": 109
+      },
+      "statements": {
+        "covered": 156,
+        "total": 189
+      }
+    },
+    "apps/web/src/lib/workspace-invitation-location.ts": {
+      "branches": {
+        "covered": 0,
+        "total": 1
+      },
+      "functions": {
+        "covered": 3,
+        "total": 3
+      },
+      "lines": {
+        "covered": 8,
+        "total": 8
+      },
+      "statements": {
+        "covered": 9,
+        "total": 10
+      }
+    },
+    "apps/web/src/lib/workspace-proxy.ts": {
+      "branches": {
+        "covered": 0,
+        "total": 11
+      },
+      "functions": {
+        "covered": 0,
+        "total": 3
+      },
+      "lines": {
+        "covered": 0,
+        "total": 18
+      },
+      "statements": {
+        "covered": 0,
+        "total": 25
+      }
+    }
+  },
+  "floors": {
+    "branches": 2198,
+    "functions": 1613,
+    "lines": 2097,
+    "statements": 2568
+  },
+  "manifest": {
+    "compiler": {
+      "api": "real apps/api/tsconfig.json tsc output; experimentalDecorators + emitDecoratorMetadata",
+      "contracts": "real packages/contracts/tsconfig.json tsc with sourceMap + inlineSources",
+      "version": "6.0.3",
+      "web": {
+        "jsx": "react-jsx",
+        "module": "ESNext",
+        "target": "ES2023",
+        "verbatimModuleSyntax": true
+      }
+    },
+    "configs": {
+      "apps/api/tsconfig.json": "b0fa28f9606b6c4394aad0a86c71a17b03d13fe0be5488d4bccc5600d93c4b50",
+      "apps/web/tsconfig.json": "74f227fda9c92459d96cc0a0ad4af47c6549fb985970f85dd2873e03674e2697",
+      "packages/contracts/tsconfig.json": "b95a19f4e24c335474fa4b20b329216a8bfed97eb1429ba2188705f38de6503b",
+      "tsconfig.base.json": "cb1df8b236cca5a668abf94b5657d200094c3b338e66bfc2ea6a19e699ad7dff"
+    },
+    "inputs": {
+      "apps/web/next.config.ts": "1ece5ae7fa66c5012b8831bdcb281cd00955326324b12b24449abbdd53077a65",
+      "apps/web/src/app/api/auth/[...path]/route.ts": "39cd477d5ec9ef2f02b6e3ef46942ad30ca3a043ce38c37daaa07a302ac50ffd",
+      "apps/web/src/app/api/v1/identity/[action]/route.ts": "23d976d48fcf3f370066a20ad9f2e4db9b4e8c355d721953bff037caa4bf4402",
+      "apps/web/src/app/api/v1/workspace-invitations/accept/route.ts": "354133c5cac33fa656bf2250aeae5b0cf16c8e0d660a149b89196e9310d91cae",
+      "apps/web/src/app/api/v1/workspaces/[[...path]]/route.ts": "36364d00d4294d23339476b8ae259395d97a0184a6919933eea4eb26fe433ec7",
+      "apps/web/src/app/identity/identity-view.tsx": "b9501cfae1121acb2c7e63e3f558585ce128562565a54998f4405f8d96be501d",
+      "apps/web/src/app/identity/page.tsx": "ddeef697ada83143d10b37732ee43ededdb304cba70b5e0a5bd33ffe8e3228e4",
+      "apps/web/src/app/layout.tsx": "6f92142a95848adf6ac2f963163f6dcc0178d49f169ae56c2ddb5aa48359d91e",
+      "apps/web/src/app/page.tsx": "240d9dad4eba7db792729ee3b882a0d0406022310aea5663c28c0939e09cd3cf",
+      "apps/web/src/app/projects/feedback.tsx": "1ca91acc8602d915bb0bf134ffbb26f92cb1dfe1de0765704ab21d7e2115dd11",
+      "apps/web/src/app/projects/page.tsx": "855fa6bf45171ec8ccdbb6a6cbda7124780ab7f708d43e1023dc18517e961713",
+      "apps/web/src/app/projects/project-access.tsx": "1abd7f63d9f3a75985e49cca4d4db92515d3f584c4c0c5409c50fdf908f5bd1b",
+      "apps/web/src/app/projects/project-forms.tsx": "163580e141ae1da4cdb208acabd8e8a0480bea9c4279cf80fca814fe9d3b688b",
+      "apps/web/src/app/projects/project-ui.tsx": "0ef5108768aa0bc86d6b23bc9021d2d3344ad12236980fecb7f073469cb3932e",
+      "apps/web/src/app/projects/projects-view.tsx": "50916e94a89055783a154d989fdf8ff37ced7fa52c0ca81b6e62788bbd6e8177",
+      "apps/web/src/app/projects/strings.ts": "fc6c539bb5fa460ffc9ffac10561cccddde54ac4ea4922d2f766d69694b2d9e9",
+      "apps/web/src/app/projects/task-board.tsx": "481e1faa80ccd6a51618f3a8297458c51a604dd7ffc52f1fa66da689ba9a196b",
+      "apps/web/src/app/projects/task-checklist.tsx": "034c182e5f44e958f3134a1ee25c3f2c4084ef47122d1e96b9125beb067c98ae",
+      "apps/web/src/app/projects/task-collaboration-shared.tsx": "70e878b0d90908a550b0de2cc9fd35e77ef2e2c84905fede5bbbf0606627822f",
+      "apps/web/src/app/projects/task-collaboration.tsx": "a40a4629daba0f7da4469709847768b3b9564e7e7fd18af93f3a775bd93f89c9",
+      "apps/web/src/app/projects/task-comments.tsx": "2c8cea6b6f01254cb4769ebf402c05fb276a35f111e32a9a2c56afddf4a7d4ec",
+      "apps/web/src/app/projects/task-description.tsx": "76f5b6ebd48c179d999e858a878fc01f7b21c7a524821176164f50048c3238d1",
+      "apps/web/src/app/projects/task-detail.tsx": "cca0b8ba1cab0e4dc94b24f81e153083689a462b1147920e1a9bd05d845a6c19",
+      "apps/web/src/app/projects/task-discovery.tsx": "cc4d93b7817fbbf301f591567633e0be8bffbf864022494b5439d969ee179bd6",
+      "apps/web/src/app/projects/task-forms.tsx": "4818fccee79383cdf702c7268c84c9b01a31732a7ef8fabab6a5a61ca39b881d",
+      "apps/web/src/app/projects/task-history.tsx": "3e13fa5ec6ecdfbf398e39f5dc252e5a85d091412658a6d2a121dc0f93c06348",
+      "apps/web/src/app/projects/task-list.tsx": "6aaefe89f2546a5b4a2e63002d82f8cb1b33e399cdfbc1a608b6c03ea32801c6",
+      "apps/web/src/app/projects/task-move.tsx": "1cec0911b058af39259b5924ab3eed5d47446c532ce557c2983e014ad0c8d90d",
+      "apps/web/src/app/projects/task-relations.tsx": "bdf95789094019f235b025747c7a8cd1e9ac51245eb477764b5010ae8ae81bb0",
+      "apps/web/src/app/projects/task-view-bar.tsx": "2b26edb87b426261d8c7951b0bd890785d6037867124e92b1afdd612b0f614e2",
+      "apps/web/src/app/workspaces/page.tsx": "5f5c19520524a2ed0eff398e8e8e5bf362c9189232a871d91afc4c9296ed2f82",
+      "apps/web/src/app/workspaces/strings.ts": "2967748ed4e9c6ebb16bd1b4e10e0c5219c48502f510edc98ec73d0f6cc16904",
+      "apps/web/src/app/workspaces/workspace-admin.tsx": "f57775a05750a8550948e558125902bb0cd0af8e39213405cae5ee71198778ce",
+      "apps/web/src/app/workspaces/workspace-ui.tsx": "389a1114c8cb83ba5115a96b9611a936a71968a491c3130e146a1e10cdb8f0b2",
+      "apps/web/src/app/workspaces/workspace-view.tsx": "8ba313a3dc67ad99d7e44af53af4f7f1561f3ef24fe65dc7824c50a251bcd6f1",
+      "apps/web/src/lib/identity-client.ts": "075adb2b24a3a7317bac095d9f73b537fb9d3f3bbb6d9a7e3f649b3ba89f570f",
+      "apps/web/src/lib/identity-controller.ts": "b11b766b820dff5c8db120cf48a0dd67f506e16dc2c7be5a2446072a137b87fa",
+      "apps/web/src/lib/identity-proxy.ts": "21bf0ee30d6551935a97f066735e2f608a72753fae30467a382970d1d521a323",
+      "apps/web/src/lib/project-task-client.ts": "19f2ada3909ae6ab867d650a7bede34695566536e065d89042e5a870eafa7709",
+      "apps/web/src/lib/project-task-controller.ts": "267e895a16158e64addbfdb5c96736b385a836ef2a38d9fd319f5132ac88354b",
+      "apps/web/src/lib/project-task-proxy.ts": "1eda283ff900b790b65d76e5043ee0003a1b13d7bcb14bb53cd7d886f107a902",
+      "apps/web/src/lib/safe-markdown.ts": "b7c8fc60c17ecd97f0add3709b8a3278de5734f483fe6e8ef16583dbc20c9445",
+      "apps/web/src/lib/task-collaboration-state.ts": "504bab8091338394208ae3696a4339ac88541316ad58d260af42b609365f9d84",
+      "apps/web/src/lib/task-events-client.ts": "76a62d17d0e452b9159b1c34768ac8bf4b28794220be1d3dc264481f4069ee04",
+      "apps/web/src/lib/use-identity.ts": "2ea08fedd407fdce7105b0de447a71bf09188af28c9004c9d7445b4be4d17aa8",
+      "apps/web/src/lib/use-project-tasks.ts": "17229fd37df714ebcd2564c60ef2803abb780b8986107b5ca11426239d792b02",
+      "apps/web/src/lib/use-workspaces.ts": "8f65ff01a30a889b51488a7b067c2c86e0cc60a9ba085b0505d52a3d6b4fcb1a",
+      "apps/web/src/lib/workspace-client.ts": "94748585f74bbb68df144c04291adf93016b3c0d04a71772ae6b481873161ed0",
+      "apps/web/src/lib/workspace-controller.ts": "0f8e6c141f6224c14c73de864d4b612549aaa8399c2c0f8208b191241c201678",
+      "apps/web/src/lib/workspace-invitation-location.ts": "b275d224309f55ac23b35f7f8a8117b9711ffc534894e55d7177fcb904defa6f",
+      "apps/web/src/lib/workspace-proxy.ts": "b447f279628d49b94dfebc3acfec47fa7de4239d5fab1a50b930c53f06a00670"
+    },
+    "pnpm": "12.15.0",
+    "provider": {
+      "istanbul-lib-coverage": "3.2.2",
+      "istanbul-lib-instrument": "6.0.3",
+      "istanbul-lib-source-maps": "4.0.1",
+      "nyc": "18.0.0"
+    },
+    "runtime": "24.22.1",
+    "tests": {
+      "scripts/identity-client.test.mjs": "9961a136c2a4e7009dfc1504cabdf9e0c0c6f62e09a5c79df5a276f793869dfc",
+      "scripts/identity-logic.test.mjs": "9b9d2ffb48647b26c933f5538e0c2f710593e5f2d061a945356988a680fc9a4e",
+      "scripts/project-task-client.test.mjs": "3737f5a943829b50e887a2a9537053872628e99fa2f0e83f9133de1883c5e2a5",
+      "scripts/project-task-logic.test.mjs": "ff80d868431cdd57d32065cdf1cd323edaaecc868a2b31c2197a5d931e1c1670",
+      "scripts/task-events-client.test.mjs": "fcccc420d3f06d180ff1be03ce2021ad64abfdbf93805cc43270edc4c2a6839f",
+      "scripts/unit/mirror-loader.mjs": "b3ef9e50e56ee2fa0079c794c044efbc6b953d75890b97889bc635e233d93115",
+      "scripts/workspace-logic.test.mjs": "3519bf33e2901163b975c8466b1049ccec581c2960f95ea3686c7edeb1b09e4f"
+    },
+    "toolsLock": "8c4e6232dbeb14b7067dd5a6a8be95256893dc915a8972f759e46b06deee7634"
+  },
+  "scope": "web",
+  "total": {
+    "branches": {
+      "covered": 1140,
+      "total": 5185
+    },
+    "functions": {
+      "covered": 168,
+      "total": 1041
+    },
+    "lines": {
+      "covered": 682,
+      "total": 3251
+    },
+    "statements": {
+      "covered": 1092,
+      "total": 4251
+    }
+  }
+}

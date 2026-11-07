@@ -38,11 +38,27 @@ jobs:
           version: 12.15.0
           run_install: false
       - run: pnpm install --frozen-lockfile
+      - name: Install isolated unit tooling (outside runtime workspace)
+        run: pnpm --dir scripts/unit/tools install --frozen-lockfile
       - name: Formatting and prospective commit policy
         run: pnpm quality:ci
       - run: pnpm check
+      - name: Separate unit coverage and nonregression gates
+        run: pnpm unit:coverage -- --built
+      - name: Unit infrastructure failure witnesses
+        run: pnpm test:unit-infrastructure
       - name: Real PostgreSQL identity integration (simulated provider HTTP)
         run: pnpm test:identity
       - name: Local Docker runtime, migration failure and durable job restart
         run: pnpm test:runtime
       - run: pnpm audit --audit-level=high
+      - name: Audit isolated development tooling
+        run: pnpm --dir scripts/unit/tools audit --audit-level=high
+      - name: Package bounded unit reports and failure status
+        id: unit_artifacts
+        if: ${{ always() }}
+        run: pnpm unit:artifacts
+      - name: Upload bounded unit reports
+        if: ${{ always() && steps.unit_artifacts.outcome == 'success' }}
+        timeout-minutes: 2
+        uses: ./.github/actions/unit-artifacts
