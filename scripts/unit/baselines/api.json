@@ -272,19 +272,19 @@
     },
     "apps/api/src/projects/project-task.service.ts": {
       "branches": {
-        "covered": 121,
+        "covered": 156,
         "total": 371
       },
       "functions": {
-        "covered": 36,
+        "covered": 54,
         "total": 99
       },
       "lines": {
-        "covered": 105,
+        "covered": 136,
         "total": 271
       },
       "statements": {
-        "covered": 143,
+        "covered": 192,
         "total": 401
       }
     },
@@ -308,19 +308,19 @@
     },
     "apps/api/src/projects/task-collaboration.service.ts": {
       "branches": {
-        "covered": 0,
+        "covered": 75,
         "total": 184
       },
       "functions": {
-        "covered": 0,
+        "covered": 17,
         "total": 26
       },
       "lines": {
-        "covered": 0,
+        "covered": 61,
         "total": 100
       },
       "statements": {
-        "covered": 0,
+        "covered": 89,
         "total": 155
       }
     },
@@ -344,37 +344,37 @@
     },
     "apps/api/src/projects/task-discovery.service.ts": {
       "branches": {
-        "covered": 0,
+        "covered": 40,
         "total": 43
       },
       "functions": {
-        "covered": 0,
+        "covered": 11,
         "total": 14
       },
       "lines": {
-        "covered": 0,
+        "covered": 31,
         "total": 32
       },
       "statements": {
-        "covered": 0,
+        "covered": 42,
         "total": 45
       }
     },
     "apps/api/src/projects/task-events.service.ts": {
       "branches": {
-        "covered": 0,
+        "covered": 40,
         "total": 47
       },
       "functions": {
-        "covered": 0,
+        "covered": 15,
         "total": 15
       },
       "lines": {
-        "covered": 0,
+        "covered": 50,
         "total": 50
       },
       "statements": {
-        "covered": 0,
+        "covered": 102,
         "total": 109
       }
     },
@@ -524,28 +524,28 @@
     },
     "apps/api/src/workspaces/workspace.service.ts": {
       "branches": {
-        "covered": 0,
+        "covered": 54,
         "total": 116
       },
       "functions": {
-        "covered": 0,
+        "covered": 17,
         "total": 49
       },
       "lines": {
-        "covered": 0,
+        "covered": 56,
         "total": 113
       },
       "statements": {
-        "covered": 0,
+        "covered": 76,
         "total": 155
       }
     }
   },
   "floors": {
-    "branches": 1832,
-    "functions": 1565,
-    "lines": 2100,
-    "statements": 1830
+    "branches": 3819,
+    "functions": 3535,
+    "lines": 4191,
+    "statements": 4044
   },
   "manifest": {
     "compiler": {
@@ -611,6 +611,10 @@
       "apps/api/test/unit/principal-errors.test.mjs": "dfd3b88fbff72aa314928fa691bbf1e5964fbe07bc03702c4e3440e081daad18",
       "apps/api/test/unit/principal-policy.test.mjs": "ff1f49ef39e6610841666ce51b983914f608009462dd59a26e9cb80fb13c6c05",
       "apps/api/test/unit/project-task-failures.test.mjs": "83863a73e26776fb3794d09684e5bdc1ea154f1651e529b9739c27457a9fe4a8",
+      "apps/api/test/unit/task-collaboration-policy.test.mjs": "8fe51b43438e8782044dd3b52d4ccbdb665e7bce2505a3d1f80a7a75960f6f33",
+      "apps/api/test/unit/task-discovery-policy.test.mjs": "36f59eef992cc398bf035ef525726af0ec0dd300fbc7bf0a4233bd6fac87ec14",
+      "apps/api/test/unit/task-events-lifecycle.test.mjs": "7f950e50e7a2da4fddae7c367378fe07d922fa20b134d24c684c93fc5a42947e",
+      "apps/api/test/unit/workspace-invitation.test.mjs": "ddaea707b6729915df105616b21807502f8310ccce9600d82a8483600efbfecb",
       "scripts/unit/mirror-loader.mjs": "b3ef9e50e56ee2fa0079c794c044efbc6b953d75890b97889bc635e233d93115"
     },
     "toolsLock": "8c4e6232dbeb14b7067dd5a6a8be95256893dc915a8972f759e46b06deee7634"
@@ -618,19 +622,19 @@
   "scope": "api",
   "total": {
     "branches": {
-      "covered": 225,
+      "covered": 469,
       "total": 1228
     },
     "functions": {
-      "covered": 62,
+      "covered": 140,
       "total": 396
     },
     "lines": {
-      "covered": 230,
+      "covered": 459,
       "total": 1095
     },
     "statements": {
-      "covered": 296,
+      "covered": 654,
       "total": 1617
     }
   }

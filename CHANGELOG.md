@@ -4,6 +4,25 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+### T36 project refresh lifecycle and expanded units
+
+- Stop quiet project refresh loops and loaded-page resets while preserving real
+  invalidations, deferred drafts, original-key retries and session cleanup; expose
+  the existing recoverable load-error state after a failed full background read.
+- Add 19 actual React hook lifecycle cases and 74 real-service API invitation,
+  collaboration, discovery and SSE lifecycle cases. Correct the independently
+  found late-success fixture and retain focused disposable regression witnesses.
+- Ratchet measured API/web coverage with all 101 maintained inputs and legacy
+  tests retained. Explicitly review formatting's controller line-map change;
+  preserve per-file/exact-ratio/uncovered/source/test gates and six other baselines.
+- Retain 269 passing unit cases and 20 infrastructure cases and actual serial application
+  checks, with the owned validation-cache guard disposition and runtime/browser
+  limits recorded in the [delivery guide](docs/development/project-refresh-lifecycle.md).
+  T36 remains in progress; further structure/UI acceptance precedes T37 and T11.
+- PR #34 is merged at `969480a` from reviewed source `ceafc42`; earlier Draft observations
+  below are historical. This follow-up's publication and current-head CI remain
+  coordinator-gated.
+
 - Correct PR #34's nine native unit/tooling findings with fail-closed CI modes,
   complete mirror guards, portable artifact entry, safe process cleanup and
   observable behavior witnesses; retain all source and ratchet only API coverage

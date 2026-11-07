@@ -1,5 +1,52 @@
 # Delivery progress and decisions
 
+## 2026-11-07 T36 lifecycle/recovery contribution — IN PROGRESS
+
+PR #34 is now merged as `969480a7c27762cc74fa4290389fab89f0757776` from
+reviewed source `ceafc42`; the coordinator verified native Kilo check 128301109580
+SUCCESS/no issues and current CI before merge. Earlier Draft observations below
+are historical. This follow-up preserves that base and the reviewed `f5a26f9`
+production core, then integrates the four-file contribution with 74 API cases exactly once.
+
+The bounded correction stops invented project refreshes and retains 114 loaded
+rows while quiet, preserves genuine queued invalidations/deferred drafts/exact-key
+commands, and exposes recoverable failed-read UI. Nineteen actual React hook cases
+and 74 API behavior cases extend the retained suites. Independent review corrected
+a malformed late-response fixture; valid old task successes now fail the intended
+assertions when only the success-generation guard is removed. See the
+[lifecycle evidence and limits](project-refresh-lifecycle.md).
+
+Independent/coordinator review accepted the explicit controller line-map migration
+351/363 → format-only 501/544 → corrected D 510/548 with unchanged format-only semantic
+counters and improved final semantic coverage. All 101 inputs and legacy test/helper
+hashes remain; only measured API/web baselines change. Current floors L/S/F/B:
+API 41.91/40.44/35.35/38.19; web 28.15/30.36/22.07/25.03. Contracts/prototype and
+all historical pre-unit baselines remain exact. Unexecuted view AST witnesses and
+positive real-hook coverage are enforced alongside all existing failure gates.
+
+Local gated 269 tests and 20 infrastructure/upload cases pass. Actual serial
+`pnpm check` passes in 85.141 seconds with the 286-package Express-free closure, real HTTP/MCP and smoke.
+The extra metadata-preservation wrapper failed on an owned generated workspace
+cache refresh; critical modules/store-lock and all borrowed graph hashes stayed
+exact. The coordinator accepted the cache explanation as inference with before
+bytes unavailable, preserving guard failure evidence and performing no repair or
+rerun. Prior real PostgreSQL (103 reported tests and restart), Docker and browser
+results map to byte-identical maintained `apps/web/src`, `apps/api/src` and
+`packages/contracts/src`, plus schema/migrations in `apps/api/prisma`, at
+`f5a26f9`; no redundant local runtime repetition is claimed.
+
+All task-owned local processes/listeners are stopped. No dependency/runtime pin, schema,
+public policy, source handoff or appearance changed through integration. The
+[Draft PR #35](https://github.com/Ljrr3045/rielia/pull/35) targets `dev`.
+Initial publication at `61d04b00231ee3b77939d5dd100e202aa543cd03` followed
+coordinator batch approval, verification of remote base `969480a` and no existing
+branch PR, then push and immediate Draft creation. GitHub confirmed Draft and
+automatic validate; actual Draft is rechecked before this URL/evidence push.
+Final-head hosted CI and the exact final head are recorded in the PR/external
+delivery report after this documentation commit. Only the coordinator may
+transition Ready, request Kilo or merge. T36 is still in progress; extraction,
+T37 and T11 remain separate work.
+
 ## 2026-11-06 first T36 unit/coverage slice — IN PROGRESS
 
 The first native Kilo round at `cf1e7b6` completed successfully with one warning

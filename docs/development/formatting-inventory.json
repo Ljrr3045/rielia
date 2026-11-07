@@ -51,12 +51,18 @@
     "apps/api/test/unit/principal-errors.test.mjs",
     "apps/api/test/unit/principal-policy.test.mjs",
     "apps/api/test/unit/project-task-failures.test.mjs",
+    "apps/api/test/unit/task-collaboration-policy.test.mjs",
+    "apps/api/test/unit/task-discovery-policy.test.mjs",
+    "apps/api/test/unit/task-events-lifecycle.test.mjs",
+    "apps/api/test/unit/workspace-invitation.test.mjs",
     "apps/api/test/workspaces.test.mjs",
     "apps/api/tsconfig.json",
     "apps/web/test/unit/dom-harness.mjs",
     "apps/web/test/unit/identity-hook.test.mjs",
     "apps/web/test/unit/identity-view.test.mjs",
     "apps/web/test/unit/mutation-witness.mjs",
+    "apps/web/test/unit/project-hook-harness.mjs",
+    "apps/web/test/unit/project-hook.test.mjs",
     "apps/web/test/unit/workspace-hook.test.mjs",
     "commitlint.config.mjs",
     "docs/development/formatting-inventory.json",
@@ -388,8 +394,8 @@
   },
   "currentSourceAccounting": {
     "owner": "T36 mechanical formatting integration; later web and scripts/config batches",
-    "eligibleCount": 202,
-    "adoptedCount": 117,
+    "eligibleCount": 208,
+    "adoptedCount": 123,
     "remainingCount": 85,
     "remaining": [
       "apps/web/next.config.ts",
@@ -478,5 +484,19 @@
       "scripts/workspace-client.test.mjs",
       "scripts/workspace-logic.test.mjs"
     ]
+  },
+  "sourceFormattingLifecycleTestAdoption": {
+    "mergedBase": "be777b434b249fd039da1519d0146177b8e0d1c9",
+    "files": [
+      "apps/api/test/unit/task-collaboration-policy.test.mjs",
+      "apps/api/test/unit/task-discovery-policy.test.mjs",
+      "apps/api/test/unit/task-events-lifecycle.test.mjs",
+      "apps/api/test/unit/workspace-invitation.test.mjs",
+      "apps/web/test/unit/project-hook-harness.mjs",
+      "apps/web/test/unit/project-hook.test.mjs"
+    ],
+    "changedFiles": 0,
+    "adoptionOnly": 6,
+    "evidence": "Existing lifecycle test/helper bytes retained; pinned Prettier3.9.10 check passes; no source edit or additional test coverage claimed"
   }
 }

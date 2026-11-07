@@ -686,7 +686,7 @@
     },
     "apps/web/src/lib/project-task-client.ts": {
       "branches": {
-        "covered": 148,
+        "covered": 151,
         "total": 198
       },
       "functions": {
@@ -694,30 +694,30 @@
         "total": 22
       },
       "lines": {
-        "covered": 60,
+        "covered": 61,
         "total": 73
       },
       "statements": {
-        "covered": 103,
+        "covered": 107,
         "total": 141
       }
     },
     "apps/web/src/lib/project-task-controller.ts": {
       "branches": {
-        "covered": 718,
-        "total": 840
+        "covered": 730,
+        "total": 845
       },
       "functions": {
-        "covered": 82,
-        "total": 90
+        "covered": 86,
+        "total": 91
       },
       "lines": {
-        "covered": 351,
-        "total": 363
+        "covered": 510,
+        "total": 548
       },
       "statements": {
-        "covered": 546,
-        "total": 624
+        "covered": 559,
+        "total": 628
       }
     },
     "apps/web/src/lib/project-task-proxy.ts": {
@@ -776,7 +776,7 @@
     },
     "apps/web/src/lib/task-events-client.ts": {
       "branches": {
-        "covered": 33,
+        "covered": 35,
         "total": 43
       },
       "functions": {
@@ -788,7 +788,7 @@
         "total": 39
       },
       "statements": {
-        "covered": 91,
+        "covered": 92,
         "total": 102
       }
     },
@@ -812,19 +812,19 @@
     },
     "apps/web/src/lib/use-project-tasks.ts": {
       "branches": {
-        "covered": 0,
-        "total": 68
+        "covered": 53,
+        "total": 70
       },
       "functions": {
-        "covered": 0,
+        "covered": 16,
         "total": 18
       },
       "lines": {
-        "covered": 0,
-        "total": 29
+        "covered": 54,
+        "total": 56
       },
       "statements": {
-        "covered": 0,
+        "covered": 59,
         "total": 63
       }
     },
@@ -920,10 +920,10 @@
     }
   },
   "floors": {
-    "branches": 2372,
-    "functions": 2017,
-    "lines": 2340,
-    "statements": 2858
+    "branches": 2503,
+    "functions": 2207,
+    "lines": 2815,
+    "statements": 3036
   },
   "manifest": {
     "compiler": {
@@ -983,13 +983,13 @@
       "apps/web/src/lib/identity-controller.ts": "b11b766b820dff5c8db120cf48a0dd67f506e16dc2c7be5a2446072a137b87fa",
       "apps/web/src/lib/identity-proxy.ts": "21bf0ee30d6551935a97f066735e2f608a72753fae30467a382970d1d521a323",
       "apps/web/src/lib/project-task-client.ts": "19f2ada3909ae6ab867d650a7bede34695566536e065d89042e5a870eafa7709",
-      "apps/web/src/lib/project-task-controller.ts": "267e895a16158e64addbfdb5c96736b385a836ef2a38d9fd319f5132ac88354b",
+      "apps/web/src/lib/project-task-controller.ts": "af196b0b75f08b2fe7b1e5bae03dfe92dfb35f40610b211cefcbcf32f064dac3",
       "apps/web/src/lib/project-task-proxy.ts": "1eda283ff900b790b65d76e5043ee0003a1b13d7bcb14bb53cd7d886f107a902",
       "apps/web/src/lib/safe-markdown.ts": "b7c8fc60c17ecd97f0add3709b8a3278de5734f483fe6e8ef16583dbc20c9445",
       "apps/web/src/lib/task-collaboration-state.ts": "504bab8091338394208ae3696a4339ac88541316ad58d260af42b609365f9d84",
       "apps/web/src/lib/task-events-client.ts": "76a62d17d0e452b9159b1c34768ac8bf4b28794220be1d3dc264481f4069ee04",
       "apps/web/src/lib/use-identity.ts": "2ea08fedd407fdce7105b0de447a71bf09188af28c9004c9d7445b4be4d17aa8",
-      "apps/web/src/lib/use-project-tasks.ts": "17229fd37df714ebcd2564c60ef2803abb780b8986107b5ca11426239d792b02",
+      "apps/web/src/lib/use-project-tasks.ts": "6527ec8f6f0e2ef58891ba3d0922de10e963a8e3094e30d790ecdbe4f960a515",
       "apps/web/src/lib/use-workspaces.ts": "8f65ff01a30a889b51488a7b067c2c86e0cc60a9ba085b0505d52a3d6b4fcb1a",
       "apps/web/src/lib/workspace-client.ts": "94748585f74bbb68df144c04291adf93016b3c0d04a71772ae6b481873161ed0",
       "apps/web/src/lib/workspace-controller.ts": "0f8e6c141f6224c14c73de864d4b612549aaa8399c2c0f8208b191241c201678",
@@ -1009,6 +1009,8 @@
       "apps/web/test/unit/identity-hook.test.mjs": "c9b0ae7bd603ab0e6cb375bb65106ff466bbfa46ebafa3803fdec0db6266ff2a",
       "apps/web/test/unit/identity-view.test.mjs": "5906ae34ba9b93abc070879303bebc326bc51853c6fb31366d4a03d8417d620a",
       "apps/web/test/unit/mutation-witness.mjs": "ad5ea2e60af38550c56dab4bd4cdcf33d4a8cd74319c02a311aacaa9501fc268",
+      "apps/web/test/unit/project-hook-harness.mjs": "38a71f869ecd8f77c18d682db3d544a3b4cbf1036a12093bee67d419fe2933a5",
+      "apps/web/test/unit/project-hook.test.mjs": "cff85875be43335646360b36bdb5b2b9a03c0075ccf77bf72a75459302026cfc",
       "apps/web/test/unit/workspace-hook.test.mjs": "d77c03576e8e3340d40a1a30f79b82cc77b1533cc751be0f9646dc7c9ca5da0b",
       "scripts/identity-client.test.mjs": "fc1230e800c33efbfbe3327c54e5a2fb996b60dc6744749e71d325e64dd9e3c7",
       "scripts/identity-logic.test.mjs": "82533a455dbb578dde8a090a9d5f5dc56c74863bd0716410236c2f1c4e2f819a",
@@ -1023,20 +1025,20 @@
   "scope": "web",
   "total": {
     "branches": {
-      "covered": 1230,
-      "total": 5185
+      "covered": 1300,
+      "total": 5192
     },
     "functions": {
-      "covered": 210,
-      "total": 1041
+      "covered": 230,
+      "total": 1042
     },
     "lines": {
-      "covered": 761,
-      "total": 3251
+      "covered": 975,
+      "total": 3463
     },
     "statements": {
-      "covered": 1215,
-      "total": 4251
+      "covered": 1292,
+      "total": 4255
     }
   }
 }
