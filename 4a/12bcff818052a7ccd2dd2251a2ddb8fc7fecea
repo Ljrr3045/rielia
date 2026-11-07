@@ -1,0 +1,43 @@
+scripts/unit/pipeline.mjs
+  s_cd38fe5b1413ea::t_d71747e7cbcb07 421
+  s_cd38fe5b1413ea::t_2e6e762e9b6741 18-24,399-407,411-413
+scripts/unit/report.mjs
+  s_cd38fe5b1413ea::t_d71747e7cbcb07 94,100-101
+  s_cd38fe5b1413ea::t_2e6e762e9b6741 95-99
+scripts/unit/infrastructure.test.mjs
+  s_cd38fe5b1413ea::t_d71747e7cbcb07 11
+  s_cd38fe5b1413ea::t_2e6e762e9b6741 91-105,107-108
+  s_cd38fe5b1413ea::t_4028ab190f312c 106,109
+scripts/unit/baselines/api.json
+  s_cd38fe5b1413ea::t_e9d3bdafcb67e4 608-615
+scripts/unit/baselines/contracts.json
+  s_cd38fe5b1413ea::t_8c8ceecda4c95b 114-117
+scripts/unit/baselines/pre-unit-api.json
+  s_cd38fe5b1413ea::t_9ad6abc4c74837 608-611
+scripts/unit/baselines/pre-unit-contracts.json
+  s_cd38fe5b1413ea::t_6375f3a2890460 114-117
+scripts/unit/baselines/pre-unit-prototype.json
+  s_cd38fe5b1413ea::t_9a81100062fabf 342-345
+scripts/unit/baselines/pre-unit-web.json
+  s_cd38fe5b1413ea::t_7c1829420fed89 1007-1015
+scripts/unit/baselines/prototype.json
+  s_cd38fe5b1413ea::t_baa5998917ab6c 342-345
+scripts/unit/baselines/web.json
+  s_cd38fe5b1413ea::t_cd4400f9a77ebe 1007-1020
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4a12bcff818052a7ccd2dd2251a2ddb8fc7fecea",
+  "prompts": {},
+  "sessions": {
+    "s_cd38fe5b1413ea": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b369-4dc0-7a52-ae15-1cd16031eb12",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
