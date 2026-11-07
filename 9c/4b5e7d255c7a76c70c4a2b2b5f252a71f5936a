@@ -1,0 +1,55 @@
+apps/api/src/projects/project-task-dto.ts
+  s_26934462ecd437::t_48f25150945123 1-131
+docs/development/unit-coverage.md
+  s_26934462ecd437::t_d02011bc240427 26-31
+docs/development/formatting-inventory.json
+  s_26934462ecd437::t_5bcb4c3ff19b48 1160-1161
+  s_26934462ecd437::t_d02011bc240427 3,24,26-27,57,488-489,511-512,1148-1159,1162
+apps/api/src/projects/task-collaboration.service.ts
+  s_26934462ecd437::t_48f25150945123 24-25
+format-adoption.json
+  s_26934462ecd437::t_d02011bc240427 22,24-25,55
+CHANGELOG.md
+  s_26934462ecd437::t_d02011bc240427 7-8,21-22
+  s_26934462ecd437::t_5bcb4c3ff19b48 9-18
+  s_26934462ecd437::t_2bc3aaee7a779a 19-20
+apps/api/src/projects/project-task-policy.ts
+  s_26934462ecd437::t_48f25150945123 1-9
+docs/development/progress.md
+  s_26934462ecd437::t_d02011bc240427 3-6,13,23,34
+  s_26934462ecd437::t_2bc3aaee7a779a 24-33
+  s_26934462ecd437::t_5bcb4c3ff19b48 7-12,14-22
+docs/development/project-values-policy-extraction.md
+  s_26934462ecd437::t_2bc3aaee7a779a 96-103
+  s_26934462ecd437::t_d02011bc240427 1-54,56-66,74-90,92-95,104-107
+  s_26934462ecd437::t_5bcb4c3ff19b48 55,67-73,91
+apps/api/src/projects/task-discovery.service.ts
+  s_26934462ecd437::t_48f25150945123 16-17
+scripts/unit/baselines/api.json
+  s_26934462ecd437::t_e3bb2ca6013f6d 671
+  s_26934462ecd437::t_5bcb4c3ff19b48 237-254,273-308,329-330,333-334,337-338,341-342,599-602,636,638-639,641,643,645,683,687,691,695
+apps/api/test/unit/project-task-values-policy.test.mjs
+  s_26934462ecd437::t_e3bb2ca6013f6d 84,86,212,223,268
+  s_26934462ecd437::t_75f547d27bf244 242
+  s_26934462ecd437::t_e5ad923f1e646d 1-83,85,87-211,213-222,224-241,243-267,269-550
+apps/api/src/projects/project-task-input.ts
+  s_26934462ecd437::t_48f25150945123 1-104
+apps/api/src/projects/project-task.service.ts
+  s_26934462ecd437::t_48f25150945123 34-51,73,79,150,214,233,292-293,394,513,794,839
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9c4b5e7d255c7a76c70c4a2b2b5f252a71f5936a",
+  "prompts": {},
+  "sessions": {
+    "s_26934462ecd437": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b5f6-10bc-7862-b675-ea0182ca85b5",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
