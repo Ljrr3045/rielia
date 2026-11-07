@@ -2,7 +2,7 @@ import { spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { git, fail, isMain, repositoryRoot } from './git.mjs';
-import { assertPolicyStaged, legacyCommit } from './policy.mjs';
+import { assertPolicyStaged, assertRuntime, legacyCommit } from './policy.mjs';
 
 export function verifyCommit(root, sha) {
   if (!/^[a-f0-9]{40}$/.test(sha) || /^0+$/.test(sha))
@@ -20,6 +20,7 @@ export function newCommits(root, base, head, legacy = legacyCommit) {
 }
 
 function runCommitlint(root, args, message) {
+  assertRuntime(root);
   const cli = fileURLToPath(new URL('../../node_modules/@commitlint/cli/cli.js', import.meta.url));
   const result = spawnSync(process.execPath, [cli, '--config', 'commitlint.config.mjs', ...args], {
     cwd: root,

@@ -75,7 +75,9 @@ source, with lines/branches/functions/statements where supported and justified
 generated/vendor/immutable exclusions. T36 measures the baseline, selects a
 compatible runner/provider and documents numerical enforceable thresholds and
 nonregression policy; disposable audit measurements are documented separately,
-but application coverage commands/gates are not delivered by the tooling slice. Run unit suites
+and the subsequent first [unit/coverage slice](../../docs/development/unit-coverage.md)
+supplies measured commands/gates. Broader lifecycle/recovery coverage remains
+follow-up. Run unit suites
 and coverage gates locally and in CI after implementation. Do not drop coverage,
 weaken thresholds, omit source or add ignores to make builds green; prioritize
 meaningful negative/error paths over percentage gaming. Follow the

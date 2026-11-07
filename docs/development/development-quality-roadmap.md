@@ -19,8 +19,10 @@ remain part of their bounded batches.
 PR #32 prepared T36's developer guidance, recorded both large tickets and updated
 future worker/landing direction. The first [tooling slice](quality-tooling.md)
 now implements formatting/hooks/prospective commit enforcement with focused
-regressions; application unit coverage gates, extraction and frontend skills
-remain follow-up work. No screen is redesigned or Astro app scaffolded.
+regressions. The first [unit/coverage delivery](unit-coverage.md) adds isolated
+behavior units and measured separate all-source CI gates; expanded lifecycle
+coverage, extraction and frontend skills remain follow-up work. No screen is
+redesigned or Astro app scaffolded.
 T36 is IN PROGRESS and T37 remains open. Finishing documentation or reducing file sizes
 cannot establish universal completeness, production readiness or UI quality.
 
