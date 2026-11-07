@@ -8,7 +8,7 @@ import { Buffer } from 'node:buffer';
 import { fileURLToPath } from 'node:url';
 import { scopes, metrics } from './config.mjs';
 import { tree, inventory, write, json, freshOutput } from './files.mjs';
-import { assertGate, baselineFor, normalizeReport } from './report.mjs';
+import { assertGate, baselineFor, normalizeReport, assertComparable } from './report.mjs';
 import { packageArtifacts } from './artifacts.mjs';
 import { runProcess } from './process.mjs';
 
@@ -85,6 +85,25 @@ test(
       () => normalizeReport(root, 'web', ['apps/web/src/lib/use-project-tasks.ts'], {}, coverage),
       /mismatch/,
     );
+  },
+);
+
+test(
+  'critical test/helper omission or content change fails even with identical coverage totals',
+  { timeout: 5000 },
+  () => {
+    for (const scope of scopes) {
+      const baseline = read(`scripts/unit/baselines/${scope}.json`);
+      const key = Object.keys(baseline.manifest.tests).find((file) => file.endsWith('.test.mjs'));
+      assert.ok(key, 'Explicit selected test inventory required');
+      for (const remove of [true, false]) {
+        const changed = clone(baseline.manifest);
+        if (remove) delete changed.tests[key];
+        else changed.tests[key] = '0'.repeat(64);
+        assert.throws(() => assertComparable(changed, baseline.manifest), /test manifest changed/);
+        assertGate(baseline, baseline);
+      }
+    }
   },
 );
 

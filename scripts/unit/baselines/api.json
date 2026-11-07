@@ -605,6 +605,14 @@
       "nyc": "18.0.0"
     },
     "runtime": "24.22.1",
+    "tests": {
+      "apps/api/test/unit/compiler-metadata.test.mjs": "72c8ec673105459a42fe0830381cc9d2e4e407729cac1b55ab68ec4029b3d599",
+      "apps/api/test/unit/identity-config.test.mjs": "ea22ecd243d229ab423cd5dbba35f97d30f44fe60340081cda7820a8a4a06fa3",
+      "apps/api/test/unit/principal-errors.test.mjs": "dfd3b88fbff72aa314928fa691bbf1e5964fbe07bc03702c4e3440e081daad18",
+      "apps/api/test/unit/principal-policy.test.mjs": "0059a005c21a89ed49a80061c44a29ab2ae57f124aeff0c648b454ed8b62d5c2",
+      "apps/api/test/unit/project-task-failures.test.mjs": "83863a73e26776fb3794d09684e5bdc1ea154f1651e529b9739c27457a9fe4a8",
+      "scripts/unit/mirror-loader.mjs": "afd53e413c310762471e28826e60cbf23b0711543724b2f13dccd5dba8fde947"
+    },
     "toolsLock": "bd92a07729f2d75df7de616df385835d59980b26a9c9e91ebfd94057af4e7e4b"
   },
   "scope": "api",

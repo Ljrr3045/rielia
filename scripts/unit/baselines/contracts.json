@@ -111,6 +111,10 @@
       "nyc": "18.0.0"
     },
     "runtime": "24.22.1",
+    "tests": {
+      "packages/contracts/test/guards.test.mjs": "9766fbac5823cac987ba6c7eef12b6ba9fda9a7b0870c2be85ef4e3f33cdf2c7",
+      "scripts/unit/mirror-loader.mjs": "afd53e413c310762471e28826e60cbf23b0711543724b2f13dccd5dba8fde947"
+    },
     "toolsLock": "bd92a07729f2d75df7de616df385835d59980b26a9c9e91ebfd94057af4e7e4b"
   },
   "scope": "contracts",

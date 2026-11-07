@@ -339,6 +339,10 @@
       "nyc": "18.0.0"
     },
     "runtime": "24.22.1",
+    "tests": {
+      "scripts/task-prototype.test.mjs": "cec2ddeb2fe2e56041dc3bbf2d7f02d3ed9ed965fd165dd2d078ffa7a7a06ac0",
+      "scripts/unit/mirror-loader.mjs": "afd53e413c310762471e28826e60cbf23b0711543724b2f13dccd5dba8fde947"
+    },
     "toolsLock": "bd92a07729f2d75df7de616df385835d59980b26a9c9e91ebfd94057af4e7e4b"
   },
   "scope": "prototype",

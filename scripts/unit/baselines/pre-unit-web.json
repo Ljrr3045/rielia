@@ -1004,6 +1004,15 @@
       "nyc": "18.0.0"
     },
     "runtime": "24.22.1",
+    "tests": {
+      "scripts/identity-client.test.mjs": "9961a136c2a4e7009dfc1504cabdf9e0c0c6f62e09a5c79df5a276f793869dfc",
+      "scripts/identity-logic.test.mjs": "9b9d2ffb48647b26c933f5538e0c2f710593e5f2d061a945356988a680fc9a4e",
+      "scripts/project-task-client.test.mjs": "3737f5a943829b50e887a2a9537053872628e99fa2f0e83f9133de1883c5e2a5",
+      "scripts/project-task-logic.test.mjs": "ff80d868431cdd57d32065cdf1cd323edaaecc868a2b31c2197a5d931e1c1670",
+      "scripts/task-events-client.test.mjs": "fcccc420d3f06d180ff1be03ce2021ad64abfdbf93805cc43270edc4c2a6839f",
+      "scripts/unit/mirror-loader.mjs": "afd53e413c310762471e28826e60cbf23b0711543724b2f13dccd5dba8fde947",
+      "scripts/workspace-logic.test.mjs": "3519bf33e2901163b975c8466b1049ccec581c2960f95ea3686c7edeb1b09e4f"
+    },
     "toolsLock": "bd92a07729f2d75df7de616df385835d59980b26a9c9e91ebfd94057af4e7e4b"
   },
   "scope": "web",

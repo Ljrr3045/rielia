@@ -91,6 +91,14 @@ function counts(summary) {
   );
 }
 
+export function assertComparable(actual, accepted) {
+  assert.deepEqual(
+    actual,
+    accepted,
+    'Source/provider/test manifest changed; reviewed comparable before/after evidence required',
+  );
+}
+
 export function assertGate(actual, baseline) {
   assert.ok(actual && baseline && actual.scope === baseline.scope, 'Missing/wrong baseline scope');
   assert.deepEqual(

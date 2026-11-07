@@ -15,7 +15,13 @@ import {
   regular,
   coverageDirectory,
 } from './files.mjs';
-import { normalizeReport, normalizeLcov, assertGate, baselineFor } from './report.mjs';
+import {
+  normalizeReport,
+  normalizeLcov,
+  assertGate,
+  baselineFor,
+  assertComparable,
+} from './report.mjs';
 import { runProcess } from './process.mjs';
 
 const root = fs.realpathSync(fileURLToPath(new URL('../../', import.meta.url)));
@@ -390,9 +396,21 @@ try {
       fs.readFileSync(path.join(work, `${scope}-report/coverage-final.json`), 'utf8'),
     );
     const report = normalizeReport(root, scope, sources[scope], raw, coverage);
+    const helpers =
+      scope === 'web' && !before
+        ? tree(root, 'apps/web/test/unit').filter(
+            (f) => f.endsWith('.mjs') && !f.endsWith('.test.mjs'),
+          )
+        : [];
+    const testInputs = [
+      ...new Set([...tests, ...helpers, 'scripts/unit/mirror-loader.mjs']),
+    ].sort();
     const manifest = {
       ...providerManifest,
       inputs: Object.fromEntries(sources[scope].map((f) => [f, hashFile(root, f)])),
+      tests: Object.fromEntries(
+        testInputs.map((f) => [f, sha256(fs.readFileSync(path.join(mirror, f)))]),
+      ),
     };
     const baseline = baselineFor(report.summary, manifest);
     baselines[scope] = baseline;
@@ -400,11 +418,7 @@ try {
       const accepted = JSON.parse(
         fs.readFileSync(path.join(root, `scripts/unit/baselines/${scope}.json`), 'utf8'),
       );
-      assert.deepEqual(
-        manifest,
-        accepted.manifest,
-        'Source/provider manifest changed; reviewed comparable before/after evidence required',
-      );
+      assertComparable(manifest, accepted.manifest);
       assertGate(report.summary, accepted);
     }
     for (const [file, body] of Object.entries({
