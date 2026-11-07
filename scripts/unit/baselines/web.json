@@ -774,58 +774,166 @@
         "total": 15
       }
     },
-    "apps/web/src/app/workspaces/workspace-admin.tsx": {
+    "apps/web/src/app/workspaces/use-workspace-screen-actions.ts": {
+      "branches": {
+        "covered": 53,
+        "total": 58
+      },
+      "functions": {
+        "covered": 12,
+        "total": 12
+      },
+      "lines": {
+        "covered": 52,
+        "total": 52
+      },
+      "statements": {
+        "covered": 58,
+        "total": 59
+      }
+    },
+    "apps/web/src/app/workspaces/workspace-agents.tsx": {
       "branches": {
         "covered": 0,
-        "total": 257
+        "total": 102
       },
       "functions": {
         "covered": 0,
-        "total": 73
+        "total": 26
       },
       "lines": {
         "covered": 0,
-        "total": 215
+        "total": 79
       },
       "statements": {
         "covered": 0,
-        "total": 234
+        "total": 84
+      }
+    },
+    "apps/web/src/app/workspaces/workspace-entry.tsx": {
+      "branches": {
+        "covered": 0,
+        "total": 36
+      },
+      "functions": {
+        "covered": 0,
+        "total": 15
+      },
+      "lines": {
+        "covered": 0,
+        "total": 42
+      },
+      "statements": {
+        "covered": 0,
+        "total": 45
+      }
+    },
+    "apps/web/src/app/workspaces/workspace-feedback.tsx": {
+      "branches": {
+        "covered": 0,
+        "total": 131
+      },
+      "functions": {
+        "covered": 0,
+        "total": 6
+      },
+      "lines": {
+        "covered": 0,
+        "total": 85
+      },
+      "statements": {
+        "covered": 0,
+        "total": 88
+      }
+    },
+    "apps/web/src/app/workspaces/workspace-invitations.tsx": {
+      "branches": {
+        "covered": 0,
+        "total": 38
+      },
+      "functions": {
+        "covered": 0,
+        "total": 20
+      },
+      "lines": {
+        "covered": 0,
+        "total": 62
+      },
+      "statements": {
+        "covered": 0,
+        "total": 69
+      }
+    },
+    "apps/web/src/app/workspaces/workspace-members.tsx": {
+      "branches": {
+        "covered": 0,
+        "total": 100
+      },
+      "functions": {
+        "covered": 0,
+        "total": 18
+      },
+      "lines": {
+        "covered": 0,
+        "total": 39
+      },
+      "statements": {
+        "covered": 0,
+        "total": 41
+      }
+    },
+    "apps/web/src/app/workspaces/workspace-screen-model.ts": {
+      "branches": {
+        "covered": 10,
+        "total": 18
+      },
+      "functions": {
+        "covered": 4,
+        "total": 5
+      },
+      "lines": {
+        "covered": 9,
+        "total": 12
+      },
+      "statements": {
+        "covered": 13,
+        "total": 19
       }
     },
     "apps/web/src/app/workspaces/workspace-ui.tsx": {
       "branches": {
         "covered": 0,
-        "total": 8
+        "total": 15
       },
       "functions": {
         "covered": 0,
-        "total": 9
+        "total": 13
       },
       "lines": {
         "covered": 0,
-        "total": 17
+        "total": 25
       },
       "statements": {
         "covered": 0,
-        "total": 18
+        "total": 30
       }
     },
     "apps/web/src/app/workspaces/workspace-view.tsx": {
       "branches": {
         "covered": 0,
-        "total": 297
+        "total": 64
       },
       "functions": {
         "covered": 0,
-        "total": 48
+        "total": 16
       },
       "lines": {
         "covered": 0,
-        "total": 182
+        "total": 20
       },
       "statements": {
         "covered": 0,
-        "total": 201
+        "total": 20
       }
     },
     "apps/web/src/lib/identity-client.ts": {
@@ -1046,7 +1154,7 @@
     },
     "apps/web/src/lib/workspace-client.ts": {
       "branches": {
-        "covered": 29,
+        "covered": 43,
         "total": 61
       },
       "functions": {
@@ -1054,29 +1162,29 @@
         "total": 10
       },
       "lines": {
-        "covered": 35,
+        "covered": 42,
         "total": 54
       },
       "statements": {
-        "covered": 37,
+        "covered": 44,
         "total": 58
       }
     },
     "apps/web/src/lib/workspace-controller.ts": {
       "branches": {
-        "covered": 112,
+        "covered": 116,
         "total": 139
       },
       "functions": {
-        "covered": 29,
+        "covered": 31,
         "total": 31
       },
       "lines": {
-        "covered": 148,
+        "covered": 153,
         "total": 162
       },
       "statements": {
-        "covered": 167,
+        "covered": 173,
         "total": 189
       }
     },
@@ -1118,10 +1226,10 @@
     }
   },
   "floors": {
-    "branches": 2902,
-    "functions": 2904,
-    "lines": 3940,
-    "statements": 3866
+    "branches": 3058,
+    "functions": 3073,
+    "lines": 4131,
+    "statements": 4061
   },
   "manifest": {
     "compiler": {
@@ -1185,9 +1293,15 @@
       "apps/web/src/app/projects/use-task-result-focus.ts": "69e9b94356674fba3f6e0ca19e4d5829730dc8a37e78ca24340dc956e60014e7",
       "apps/web/src/app/workspaces/page.tsx": "b17f0cef9233707a457278663b06e9fc94b54f048826cc3471da2c50812dd9b7",
       "apps/web/src/app/workspaces/strings.ts": "4353dee79fbb8d069f1067bb29d90254eb4912cb5f6b2d2d6a9a348349de3263",
-      "apps/web/src/app/workspaces/workspace-admin.tsx": "5bc331625385604fe749b3fe8904a05b45db5e600d4f98b6b94b0c56b58685b0",
-      "apps/web/src/app/workspaces/workspace-ui.tsx": "aa6fbc43ebee23056e7a460a008d99553fa356d38b0b8ff42dc044c94e2d9a1c",
-      "apps/web/src/app/workspaces/workspace-view.tsx": "45a1e6b39eb305ce90732d8449e562c488e94654545204aa4dec775708a54e02",
+      "apps/web/src/app/workspaces/use-workspace-screen-actions.ts": "9a39d2ef23a4c6bf4e78282b83d4d33e80e6e0d691ae08b15247ec063e944386",
+      "apps/web/src/app/workspaces/workspace-agents.tsx": "a08a4b2228deaa5c809060b1f13aac40913ef0981eb2544609da7f43e496dc6b",
+      "apps/web/src/app/workspaces/workspace-entry.tsx": "54926574e58aa572e2ac62daae26c812b7fee11e5757b71e9b2183834f55ceb3",
+      "apps/web/src/app/workspaces/workspace-feedback.tsx": "807e74503b69b8033bb18f19af519e5bbe264aea27982a1f28d46745e3ed156c",
+      "apps/web/src/app/workspaces/workspace-invitations.tsx": "a4b0697c2f17dc8daf67a8a1403c873fd2513fe8100b20edf70cc7d934da5172",
+      "apps/web/src/app/workspaces/workspace-members.tsx": "1d87f38773ba84ec4117e5cdfd3b26238b693722abe7a8eb3a7b5b64e11bbaa5",
+      "apps/web/src/app/workspaces/workspace-screen-model.ts": "9d07f6ab34b09a7452605bc12dd9b2d4034873cdb7c63d115cc82f944be959fb",
+      "apps/web/src/app/workspaces/workspace-ui.tsx": "abde77c8163904955c076c99d7cff6575ada4a209ca1d0ca82a97906837692a2",
+      "apps/web/src/app/workspaces/workspace-view.tsx": "b54227a77c0c24f1d5cc98f3a997bcda71bff98c421e0fa1d4c21a692c89b9b8",
       "apps/web/src/lib/identity-client.ts": "7271ac3c35ee04af5d42791166dc52fcf3e2e227a0d8ebb1b9d174b342a26b56",
       "apps/web/src/lib/identity-controller.ts": "75bdfeca7ec1ad50a38c4a560c9e249719aa1a726cfb2a90895984170f480ef7",
       "apps/web/src/lib/identity-proxy.ts": "d3bfab1aea9ab2ba4e9803b58d343361f325e519bbfb9e92ad01b0933cae997c",
@@ -1227,6 +1341,8 @@
       "apps/web/test/unit/project-navigation-focus.test.mjs": "735d3a714873f43c3df6f3515a42c7bd9f4580c193842da078cac2b96ce4192f",
       "apps/web/test/unit/task-result-focus.test.mjs": "28c4019099eb4d5bea66b3fd430a87b027d31154a34c8af8383f9cf0766018e8",
       "apps/web/test/unit/workspace-hook.test.mjs": "d77c03576e8e3340d40a1a30f79b82cc77b1533cc751be0f9646dc7c9ca5da0b",
+      "apps/web/test/unit/workspace-screen-actions.test.mjs": "84c154c347b3283e050e549b2313ee89c037840fdb233cd2971357605294889f",
+      "apps/web/test/unit/workspace-screen-fixtures.mjs": "8efe4663a94fbeda0c98895b6b1040333c5e2fa975806f404eb1d8d221a4c0ff",
       "scripts/identity-client.test.mjs": "fc1230e800c33efbfbe3327c54e5a2fb996b60dc6744749e71d325e64dd9e3c7",
       "scripts/identity-logic.test.mjs": "82533a455dbb578dde8a090a9d5f5dc56c74863bd0716410236c2f1c4e2f819a",
       "scripts/project-task-client.test.mjs": "0dbf25bb574d3898935adcc3ecfaf02e31b21323a97a10f5b9d52aed44a5e7bb",
@@ -1240,20 +1356,20 @@
   "scope": "web",
   "total": {
     "branches": {
-      "covered": 1507,
+      "covered": 1588,
       "total": 5192
     },
     "functions": {
-      "covered": 305,
-      "total": 1050
+      "covered": 323,
+      "total": 1051
     },
     "lines": {
-      "covered": 1494,
-      "total": 3791
+      "covered": 1567,
+      "total": 3793
     },
     "statements": {
-      "covered": 1650,
-      "total": 4267
+      "covered": 1734,
+      "total": 4269
     }
   }
 }

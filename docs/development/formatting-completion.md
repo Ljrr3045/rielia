@@ -2,11 +2,16 @@
 
 This T36.3 batch adopts the final 43 maintained source/config/script inputs:
 38 approved byte changes and five unchanged adoptions. Permanent enforcement
-reaches **208/208** currently eligible inputs, with zero remaining. Existing
+reached **208/208** eligible inputs at that delivery, with zero remaining. Existing
 rendering, lifecycle, policy, test behavior, notices, directives, source literals
 and ordered CSS remain intact. No extraction, new test, redesign, dependency,
 provider, pipeline or product capability is added. T36 remains in progress;
 frontend/backend extraction and stable UI contract acceptance precede T37, then T11.
+
+Current maintained-source adoption is **242/242** after the
+[workspace extraction](workspace-interactions-extraction.md), delivered through
+[PR #43](https://github.com/Ljrr3045/rielia/pull/43). This updates current inventory
+accounting; the 208-input formatting proof and historical figures below remain unchanged.
 
 Traceability remains P01–P11/P33/P38, US01–US08/US11–US12/US24–US25,
 UXR01–04/06 and UX01–03/05–07/09/11. The fictional prototype stays isolated.

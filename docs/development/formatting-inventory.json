@@ -1,6 +1,6 @@
 {
   "baseline": "1c33560f2fca954cbac6d35a87881a41dd72b017",
-  "policy": "All 234 currently eligible maintained source/config/tooling inputs are adopted; changed/new supported inputs remain prospectively enforced. Legacy Markdown adoption and unsupported formats retain explicit owners and checks.",
+  "policy": "All 242 currently eligible maintained source/config/tooling inputs are adopted; changed/new supported inputs remain prospectively enforced. Legacy Markdown adoption and unsupported formats retain explicit owners and checks.",
   "adopted": [
     ".github/actions/unit-artifacts/action.yml",
     ".github/actions/unit-artifacts/index.mjs",
@@ -123,7 +123,13 @@
     "apps/web/src/app/prototype/ui.tsx",
     "apps/web/src/app/workspaces/page.tsx",
     "apps/web/src/app/workspaces/strings.ts",
-    "apps/web/src/app/workspaces/workspace-admin.tsx",
+    "apps/web/src/app/workspaces/use-workspace-screen-actions.ts",
+    "apps/web/src/app/workspaces/workspace-agents.tsx",
+    "apps/web/src/app/workspaces/workspace-entry.tsx",
+    "apps/web/src/app/workspaces/workspace-feedback.tsx",
+    "apps/web/src/app/workspaces/workspace-invitations.tsx",
+    "apps/web/src/app/workspaces/workspace-members.tsx",
+    "apps/web/src/app/workspaces/workspace-screen-model.ts",
     "apps/web/src/app/workspaces/workspace-ui.tsx",
     "apps/web/src/app/workspaces/workspace-view.tsx",
     "apps/web/src/app/workspaces/workspace.module.css",
@@ -162,6 +168,8 @@
     "apps/web/test/unit/project-navigation-focus.test.mjs",
     "apps/web/test/unit/task-result-focus.test.mjs",
     "apps/web/test/unit/workspace-hook.test.mjs",
+    "apps/web/test/unit/workspace-screen-actions.test.mjs",
+    "apps/web/test/unit/workspace-screen-fixtures.mjs",
     "apps/web/tsconfig.json",
     "commitlint.config.mjs",
     "compose.local.yml",
@@ -507,8 +515,8 @@
   },
   "currentSourceAccounting": {
     "owner": "T36 mechanical formatting integration; all current maintained inputs adopted, future inputs prospective; coordinator owns remaining structural acceptance",
-    "eligibleCount": 234,
-    "adoptedCount": 234,
+    "eligibleCount": 242,
+    "adoptedCount": 242,
     "remainingCount": 0,
     "remaining": []
   },
@@ -533,7 +541,8 @@
     "docs/development/formatting-completion.md",
     "docs/development/project-values-policy-extraction.md",
     "docs/development/project-flow-extraction.md",
-    "docs/development/project-interactions-extraction.md"
+    "docs/development/project-interactions-extraction.md",
+    "docs/development/workspace-interactions-extraction.md"
   ],
   "webTransportFormattingAdoption": {
     "owner": "T36.3 web transport/controller/hook mechanical formatting",
@@ -1230,5 +1239,17 @@
     "measurement": "Accepted A114web/356total; one retained B114web/356total and C136web/378total at62web/118totalinputs. All5257 retained raw outcomes plus20 new wrapper units independently reconciled;12 nonweb reports byte-identical. Only exact accepted current-web baseline L1469/3791 S1625/4267 F303/1050 B1487/5192, floors3874/3808/2885/2864; seven other baselines exact. PR42 test-fidelity corrected C138web/380total on identical118sources/prebuild/62maps retains3415 normalized covered S/F/B outcomes and adds47; L1494/3791 S1650/4267 F305/1050 B1507/5192. Exact lean corrected baseline proposal floors3940/3866/2904/2902 accepted by coordinator; seven other baselines remain exact.",
     "guide": "docs/development/project-interactions-extraction.md",
     "validation": "All normal-check constituents pass with one web build reused (no whole pnpm check invocation); infrastructure20, exact17 actual-C comparable/numerical gates and bounded artifacts pass. Paired7 browser/17 responsive/4 focused native outcomes and exact emittedCSS/order are documented with partial-board/device/AT/zoom/persistence limits. Original baseline shape/format and zero-owner witness diagnostics retained; hosted CI/nativeKilo remain coordinator gates. Five affected test files formatted/linted;17 affected cases pass across initial16 and corrected new canonical1. One corrected C19.63s; original failure retained, no build/browser/A/B/control/unchangedinfra repeats."
+  },
+  "workspaceInteractionsExtraction": {
+    "owner": "T36.4 workspace feature-administration extraction; coordinator owns CSS debt and T36.6 acceptance",
+    "base": "3fb40583dc0a212faf7d38e02348565df729bf78",
+    "newAdopted": 9,
+    "obsoleteAdoptionRemoved": "apps/web/src/app/workspaces/workspace-admin.tsx",
+    "eligibleCountAfter": 242,
+    "remainingEligibleCount": 0,
+    "formatting": "Pinned Prettier3.9.10; seven new production owners and two real-hook test/helper files, plus two retained owner files. Original candidates preserved except one independently reviewed unused destructure removal; CSS unchanged.",
+    "measurement": "Accepted corrected PR42 A138web/380total; one B retains380 cases and all covered counts; one C145web/387total at68web/124totalinputs. Independent1192oldrawzero retention, explicit1F/2S wrappers, normalized3462retained+183new and raw3761retained+194new;47implicit arms/rawunknown162->163->163/797normalizednulls explicit. Coordinator accepts only exact formatted15fd current-web baseline L1567/3793 S1734/4269 F323/1051 B1588/5192, floors4131/4061/3073/3058; seven other baselines and12other reports exact.",
+    "guide": "docs/development/workspace-interactions-extraction.md",
+    "validation": "Focused source formatting/lint/types, seven actual-hook cases and one web build pass. All normal-check constituents pass reusing that web build/typecheck; infrastructure20, actual17saved-C comparable/numerical gates and4complete bounded artifacts pass. Six paired browser schedules and4emittedCSSassets/order are exact;24additional responsive observations pass. Final portable-link/whitespace/clean-commit receipts are in external delivery evidence; hosted current-head CI/nativeKilo remain required."
   }
 }
