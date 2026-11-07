@@ -4,6 +4,19 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+### T36.6 stable contract and current guidance — proposed closure
+
+- Consolidate delivered surfaces/source owners, lifecycle/recovery/version/token
+  contracts, CSS ancestry and explicit tooling/coverage/device debt for T37.
+- Correct stale delivered-unit/extraction status and ratified human private-access
+  wording without changing runtime, permissions, models or delivery protections.
+- Record current 387-case/124-input/242-adoption evidence and keep targeted official
+  metadata distinct from count-only CI audits; retained moderate risk is not patched
+  or called audit-clean.
+- Propose T36.6 closure pending this head's CI/native review, merge and coordinator
+  acceptance. No app/audit/install, source/test/baseline/dependency, skill, T37/T11
+  implementation or deployment change is included.
+
 ### T36 workspace feature-administration extraction
 
 Delivery: [PR #43](https://github.com/Ljrr3045/rielia/pull/43).

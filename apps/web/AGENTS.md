@@ -9,10 +9,13 @@ Read the [UI/UX guide](../../docs/handoff/04-ui-ux-development-guide.en.md),
 
 The Next.js app already separates route presentation in `src/app`, production
 hooks/controllers/transports in `src/lib`, and the fictional adapter in
-`src/lib/task-prototype`. Some views still combine rendering, local form state,
-navigation guards and command preparation. T36 will extract cohesive
-responsibilities with evidence; these instructions do not assert that migration
-has happened or require an immediate directory rewrite.
+`src/lib/task-prototype`. Delivered [project owners](../../docs/development/project-interactions-extraction.md)
+and [workspace owners](../../docs/development/workspace-interactions-extraction.md)
+separate DOM/form/effect/composition and action/display/administration concerns
+while retaining one controller/locale lifetime and canonical transports.
+The [stable contract](../../docs/development/t36-stable-ui-contract.md) records
+current surfaces, version/recovery semantics, CSS consumers and explicit debt.
+T36.6 final acceptance remains pending; no universal frontend migration is claimed.
 
 - Route files compose screens. Feature components render typed public data and
   emit explicit user intents. Keep related components, styles and copy together;
@@ -53,8 +56,9 @@ Extract by reason to change and testable responsibility, without arbitrary line
 limits, one-file-per-function rules or new abstraction/package quotas. Do not
 introduce a global store, query library or shared UI package merely because the
 handoff proposes it. Root [quality tooling](../../docs/development/quality-tooling.md)
-now enforces scoped formatting/commits; frontend skills and structure remain
-follow-up work.
+now enforces formatting/commits over all 242 eligible maintained inputs. The
+agreed structural batches are delivered; T36.6 acceptance and explicit debt remain
+open. Frontend-local skill adoption belongs to T37.1 after accepted T36.
 
 ## Verification
 
@@ -63,22 +67,17 @@ fixes reproduce the prevented regression. Preserve meaningful existing tests
 during extraction. Prose, pure styling or generated-only changes may explain
 why unit tests add no value; applicable visual/integration checks still apply.
 
-T36 must establish deterministic frontend unit suites for pure logic/controllers,
-hook lifecycle/state behavior and component interactions where appropriate.
-Exercise user intent and observable outcomes, especially denied/error/conflict,
-cancellation, session cleanup and draft/retry recovery, with isolated transport
-or browser-boundary doubles. Test source remains SOL-owned; unit doubles do not
-replace real API/persistence, security or browser/accessibility evidence.
-
-Require a separate frontend unit-coverage report including maintained unexecuted
-source, with lines/branches/functions/statements where supported and justified
-generated/vendor/immutable exclusions. T36 measures the baseline, selects a
-compatible runner/provider and documents numerical enforceable thresholds and
-nonregression policy; disposable audit measurements are documented separately,
-and the subsequent first [unit/coverage slice](../../docs/development/unit-coverage.md)
-supplies measured commands/gates. Broader lifecycle/recovery coverage remains
-follow-up. Run unit suites
-and coverage gates locally and in CI after implementation. Do not drop coverage,
+Deterministic frontend controller/real-hook/component units and separate
+all-source L/S/F/B reports/gates are delivered through `pnpm unit:web` and
+`pnpm unit:coverage`; [unit tooling](../../docs/development/unit-coverage.md)
+records the exact provider, source/test selection, thresholds and exclusions.
+Extend observable user-intent, denied/error/conflict, cancellation, session and
+draft/retry outcomes using established transport/browser-boundary seams. Keep
+maintained unexecuted owners in the denominator, including explicit type-only
+zero-unit N/A inputs; new helpers require reviewed comparable baseline migration.
+Existing lifecycle/coverage gaps remain explicit. Run units and numerical/per-file/
+nonregression gates locally and in CI. Test source remains SOL-owned; doubles do
+not replace real API/persistence/security or native browser/accessibility evidence. Do not drop coverage,
 weaken thresholds, omit source or add ignores to make builds green; prioritize
 meaningful negative/error paths over percentage gaming. Follow the
 [coverage/CI acceptance](../../docs/development/development-quality-roadmap.md#unit-tests-coverage-and-ci-enforcement)

@@ -12,10 +12,12 @@ All implementation and functional/security tests use Codex `gpt-6.1-sol`, effort
 
 One `AppModule` currently wires the Nest backend's identity, principals, workspaces,
 projects and runtime code in `src`, with Prisma schema/migrations inside this
-app. Some services combine validation, policy, transaction orchestration,
-queries and DTO mapping. T36 will extract responsibilities incrementally; no
-shared database package, universal repository layer or completed migration is
-implied by this document.
+app. The project feature now separates existing values/input, pure policy, DTO,
+scoped reads/hydration, cohesive commands and mutation/replay/journal operations;
+[delivery evidence](../../docs/development/project-flow-extraction.md) records the
+retained facade/DI, same PrincipalService transaction and query/lock/await order.
+Other services retain coupling and explicit debt. No shared database package,
+universal repository layer or complete source migration is implied.
 
 - Keep Nest modules/providers/guards and the official NodeAdapter. Preserve exact
   approved runtime pins, patches and API/worker/migration dependency-closure
@@ -71,22 +73,19 @@ fixes reproduce the prevented regression. Preserve meaningful existing tests
 during extraction. Prose or generated-only changes may explain why unit tests
 add no value; applicable integration/security checks still apply.
 
-T36 must establish deterministic backend domain-policy and application/use-case
-unit suites. Use isolated repository, clock or external-service boundary doubles
-where appropriate; assert observable decisions/outcomes, including denied access,
-invalid transitions, conflicts, retries and failure handling. Keep current
-real-library/PostgreSQL/HTTP/security/runtime tests: unit mocks cannot prove SQL
-constraints, locking, atomicity, tenant isolation or restart recovery.
-
-Require a separate backend unit-coverage report including maintained unexecuted
-source, with lines/branches/functions/statements where supported and justified
-generated/vendor/immutable exclusions. T36 measures the baseline, selects a
-compatible runner/provider and documents numerical enforceable thresholds and
-nonregression policy; disposable audit measurements are documented in the
-[tooling guide](../../docs/development/quality-tooling.md). The subsequent first
-[unit/coverage slice](../../docs/development/unit-coverage.md) supplies measured
-commands/gates; broader lifecycle and structural coverage remain follow-up. Run unit suites
-and coverage gates locally and in CI after implementation. Do not drop coverage,
+Deterministic backend policy/application units and the separate all-source
+report/gates are delivered through `pnpm unit:api` and `pnpm unit:coverage`;
+[unit tooling](../../docs/development/unit-coverage.md),
+[values/policy/DTO owners](../../docs/development/project-values-policy-extraction.md)
+and [reads/commands](../../docs/development/project-flow-extraction.md) record
+provider pins, comparable baselines and real limitations. Extend meaningful
+observable denied/invalid/conflict/retry/failure cases using isolated boundary
+doubles where appropriate; keep maintained unexecuted files in L/S/F/B denominators
+and the existing justified generated/vendor/immutable exclusions. Inherited unit
+gaps and remaining coupling stay owned debt, not completed coverage. Run units and
+numerical/per-file/nonregression gates locally and in CI. Retain real-library/
+PostgreSQL/HTTP/security/runtime checks: doubles cannot prove constraints, locks,
+atomicity, tenant isolation or restart recovery. Do not drop coverage,
 weaken thresholds, omit source or add ignores to make builds green; prioritize
 critical negative/error paths over percentage gaming. Follow the
 [coverage/CI acceptance](../../docs/development/development-quality-roadmap.md#unit-tests-coverage-and-ci-enforcement)

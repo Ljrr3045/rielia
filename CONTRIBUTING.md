@@ -32,9 +32,11 @@ the bounded engineering quality work and then UI redesign before new sprint work
 The source dependency graph remains: T35 follows T04 and precedes T05/T06/T12.
 Read the scoped [web](apps/web/AGENTS.md) or [API](apps/api/AGENTS.md) developer
 rules before changing those apps. These rules describe incremental migration
-targets; the first [T36 tooling slice](docs/development/quality-tooling.md) adds
-scoped enforcement. The first [unit/coverage slice](docs/development/unit-coverage.md)
-adds measured app gates; expanded coverage and application structure remain open.
+targets. Delivered [tooling](docs/development/quality-tooling.md),
+[unit gates](docs/development/unit-coverage.md) and scoped frontend/backend owners
+are consolidated in the [stable contract](docs/development/t36-stable-ui-contract.md).
+T36.6 acceptance and owned coverage/coupling/CSS debt remain open; no universal
+architecture migration or T37 implementation is claimed.
 Preparing these contribution documents does not
 complete T16 or its real-project validation.
 
@@ -135,24 +137,21 @@ provenance/discovery verification and product/UX/brand authority; see the
 [Astro landing/narrative decision](docs/development/landing-direction.md), not a
 new priority ticket or permission to scaffold/publish now.
 
-T36 also requires behavior-focused frontend and backend unit suites with separate
-coverage reports and numerical CI gates. Frontend tests cover pure logic,
-controllers/hooks and appropriate component interactions; backend tests cover
-domain policies/application use cases with isolated boundary doubles. Preserve
-real PostgreSQL/integration/security/runtime checks. During T36, measure coverage
-including maintained unexecuted source, select compatible runner/provider tooling,
-document justified exclusions and evidence-based thresholds for supported
-lines/branches/functions/statements, then enforce deterministic unit tests and
-coverage in PR and dev/main push CI with bounded report artifacts. Do not drop
-coverage or weaken thresholds/coverage scope to make a build green; the
-[roadmap's coverage acceptance](docs/development/development-quality-roadmap.md#unit-tests-coverage-and-ci-enforcement)
-defines baseline, nonregression and reporting requirements. No coverage value,
-threshold or application unit-coverage CI gate is delivered by this tooling slice;
-disposable audit findings are recorded separately in the tooling guide.
-After setup, this remains an ongoing developer rule: new/changed behavior ships
-with appropriate unit/regression tests, bug fixes reproduce the regression, and
-extraction preserves meaningful tests. Explain unit-test exceptions for prose,
-pure styling or generated-only work; retain applicable checks for that change.
+Behavior-focused frontend/backend units, separate maintained-source coverage
+reports and numerical CI gates are delivered. Frontend suites exercise pure
+logic, controllers, real-hook lifecycle and appropriate component interactions;
+backend suites exercise domain/application decisions with isolated boundaries.
+The [unit guide](docs/development/unit-coverage.md) records providers, source/test
+scope, baselines, exclusions and bounded artifacts. Keep unexecuted maintained
+source and type-only N/A inputs in supported line/branch/function/statement
+accounting. Source/provider changes need reviewed comparable migrations.
+
+Do not lower coverage, remove meaningful tests/source, add ignores or weaken
+gates to make builds green. Preserve critical negative/error paths and real
+PostgreSQL/integration/security/runtime checks. New or changed behavior needs
+meaningful unit/regression cases; bug fixes reproduce regressions and extraction
+retains existing tests. Explain prose/styling/generated-only unit exceptions and
+retain applicable checks. These requirements continue after T36 acceptance.
 
 ## Validate and record evidence
 
