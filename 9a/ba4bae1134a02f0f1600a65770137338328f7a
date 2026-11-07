@@ -1,0 +1,24 @@
+apps/web/test/unit/project-hook-harness.mjs
+  s_8691a07f071c2f::t_255f68b43a0f5f 4-12,18-38,44-65,72-75,110-112,127-132,147-150,153-160,166-175,184-192,203-204,206-207,210-223,227-232,239-244
+  s_8691a07f071c2f::t_3a279304521cc2 1,13-17,39-43,66-71,76-109,113-126,133-146,151-152,161-165,176-183,193-202,205,208-209,224-226,233-238,245-247
+  s_8691a07f071c2f::t_e83374239188b6 2-3
+apps/web/test/unit/project-hook.test.mjs
+  s_8691a07f071c2f::t_255f68b43a0f5f 9-32
+  s_8691a07f071c2f::t_3a279304521cc2 1-8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9aba4bae1134a02f0f1600a65770137338328f7a",
+  "prompts": {},
+  "sessions": {
+    "s_8691a07f071c2f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b36a-06f8-7002-9555-020e3c485adb",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
