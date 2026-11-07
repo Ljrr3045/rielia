@@ -1,5 +1,55 @@
 # Delivery progress and decisions
 
+## 2026-11-07 T36 scoped project reads and cohesive commands — IN PROGRESS
+
+Delivery: [PR #41](https://github.com/Ljrr3045/rielia/pull/41).
+
+Merged PR #40 at `3d2354575399dd81d366736ee6630424c750c7e0` is the base.
+The [bounded T36.5 continuation](project-flow-extraction.md) extracts feature-local
+reads/hydration, the current authorization-before-receipt mutation protocol and
+real project/access/task/move callbacks. All 40 named groups and 20 facade
+delegates preserve public/DI/composition signatures, one current PrincipalService
+transaction/fence, query/lock order, replay/version/archive/assignment/parent/rank
+semantics and awaited activity → outbox → receipt. Accepted values/policy/DTO and
+neighbor kernels, UI/schema/provider/pins/config remain unchanged.
+
+Accepted A retains 148 API/288 total cases. One B preserves them with 36 API/107
+total inputs; independent review joins all 786 raw outcomes, including 407 zeros,
+60 implicit-if arms and 52 compiler units, with exact hits. Forty new S/F units
+belong to 20 delegates (16 zero outcomes retained). B L648/1491 S710/1637 F168/416
+B523/1228 separates structural wrapper/line accounting from actual new coverage.
+One C adds 68 focused actual-service cases/subtests and passes 216 API/356 total:
+L782/1491 S859/1637 F202/416 B645/1228. Source/maps and existing covered outcomes
+stay exact from B to C; 32 unchanged API full maps remain exact in B and all 12
+other-scope reports remain byte-identical across A/B/C. Global null endpoint fields
+remain explicit at 149→142; actual UTF-16 bounds pass without invented precision.
+
+Fresh contracts/API builds, source lint and focused 68 cases pass. Initial test
+lint caught a missing explicit Buffer import before C; the corrected affected
+lint/focused checks and original failure are retained. B/C take 14.4/14.8 seconds;
+actual capture/cleanup and owned/frozen dependency guards pass with legitimate
+native task transitions recorded. Four new supported paths reach 216/216 adoption.
+The coordinator accepts only the exact current API baseline at floors
+L52.44/S52.47/F48.55/B52.52 percent; seven other baselines remain unchanged.
+The normal `pnpm check` passes in 76.25 seconds, infrastructure passes 20 cases,
+and all four normal gates accept the actual C reports without remeasurement.
+Artifacts, handoff (47 files/30 assets/620 links in 71 documents), whitespace,
+process-group cleanup, source-frame and owned/frozen dependency guards pass.
+Legitimate native task transitions remain recorded; no cache/task restoration.
+Current-head hosted CI/native Kilo and publication remain coordinator-owned. No local Docker/staging/provider/device
+result or T36/T37/T11 completion is claimed.
+
+PR #41 correction batch strengthens both completed Kilo test suggestions: inspect
+the historical-assignee lookup workspace/project/assignee scope and the actual
+eligible-assignee page membership/principal/private-project predicates, replacing
+the tautological active assertion. No production source, loaded-answer or case
+change. Independent/root acceptance migrates only the suite fingerprint in the
+current API baseline. One actual final gated `--built` run passes 216 API/356 total
+in 14.54 seconds; infrastructure20/artifacts pass and 16 reports stay byte-identical
+to C, with only the API manifest test fingerprint changed. All metrics/maps/floors,
+seven other baselines and original raw evidence remain unchanged; no normal build
+or B/control replay. Root owns both thread dispositions and new-head CI/Kilo.
+
 ## 2026-11-07 T36 first backend values/policy/DTO extraction — IN PROGRESS
 
 Merged PR #39 at `c9a742618a7b1d7734daf1d98c31f33245304120` is the base.
