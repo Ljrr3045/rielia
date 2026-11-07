@@ -38,6 +38,14 @@ under ignored `coverage/.unit-*` for local diagnosis. They are never uploaded.
 
 The six real loopback HTTP cases have an explicit `test:web:integration` entrypoint
 and remain in `pnpm check`. Only their test declarations moved; assertions remain.
+The first final-head CI exposed an inherited 30 ms admission race in the HTTP
+deadline case: a timeout before headers correctly returns a 503 body, whose read
+resolves. The corrected real-HTTP case proves that control, admits a 200 response
+before firing a controlled body deadline, releases a late body that must reject,
+and observes close on the actual SSE response after caller abort. No production
+semantics or duration was relaxed. `pnpm exec node scripts/unit/http-deadline-witness.mjs`
+retains a positive run and rejects a disposable missing-body-deadline mutation;
+it remains separate from offline unit infrastructure.
 The shared discovery-validator case moved once to contracts. The original API
 integration config callback remains intact to preserve that legacy control without
 a formatting sweep; its isolated unit uses fixed fictional settings and retains all

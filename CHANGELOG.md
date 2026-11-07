@@ -21,6 +21,9 @@ This records repository changes. No application version has been released.
 - Upload through a bounded local JavaScript Action using the frozen official
   artifact SDK and runner capability. Reject the advisory-affected prebuilt bundle;
   retain only the documented moderate tool findings with no permission expansion.
+- Correct the inherited HTTP deadline test's pre-header timing assumption using
+  controlled real-fetch admission, late-body rejection and actual SSE close;
+  a disposable missing-body-deadline mutation fails without changing production.
 - Record the user's prospective **Permissions: Approve for me** requirement and
   effective-session verification for coordinator-launched agents. T36 remains
   IN PROGRESS; expanded recovery coverage, extraction, T37 and T11 remain later work.

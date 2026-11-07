@@ -64,6 +64,15 @@ no `GITHUB_TOKEN` forwarding and a 90-second process-group deadline. Its frozen
 install and high audit pass with only the same two moderate families. Numerical
 baselines remain unchanged; provider-lock fingerprints migrate explicitly. Actual
 upload/download and retention evidence still require the Draft CI run.
+The initial final-head validate failed in the relocated real-HTTP deadline test:
+its inherited 30 ms clock could expire before headers, yielding legitimate 503
+JSON rather than an admitted body's rejection. The test now controls that boundary,
+asserts pre-header 503 and admitted 200 separately, releases a late body after
+deadline, and observes the actual SSE response closing. All six HTTP cases pass;
+a bounded disposable mutation dropping the live JSON deadline fails with the
+intended missing-rejection assertion. Production source and all unit baselines
+are unchanged. The failed run still uploaded explicit missing/partial status;
+only the new corrected-head full CI can establish acceptance.
 
 The prospective user rule **Permissions: Approve for me** is now recorded in
 root/model/contributor guidance with effective-session verification and no global

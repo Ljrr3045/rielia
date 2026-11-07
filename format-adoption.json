@@ -47,6 +47,7 @@
     "scripts/unit/baselines/web.json",
     "scripts/unit/config.mjs",
     "scripts/unit/files.mjs",
+    "scripts/unit/http-deadline-witness.mjs",
     "scripts/unit/infrastructure.test.mjs",
     "scripts/unit/mirror-loader.mjs",
     "scripts/unit/pipeline.mjs",
