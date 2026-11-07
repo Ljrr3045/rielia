@@ -1,0 +1,41 @@
+CHANGELOG.md
+  s_1bc0747682b950::t_472c45d27eec81 7-21
+apps/api/src/projects/project-task-command.ts
+  s_1bc0747682b950::t_38c43f390e620f 1-615
+apps/api/src/projects/project-task-mutation.ts
+  s_1bc0747682b950::t_9a9c6cc7f31a2a 1-130
+apps/api/src/projects/project-task-read.ts
+  s_1bc0747682b950::t_032e9c35141fba 1-612
+apps/api/src/projects/project-task.service.ts
+  s_1bc0747682b950::t_104566ab9ae6aa 1,12,14,20-23,42,45,51,54,71,74,91,94,101,103,118-119,122,128-129,132,153-154,157,174-175,178-179,184,187,196,198,208-209,212-213,216,230-231,234,241-243,245,252-254,256,265-266,269,272,275,285-286,289-290,293,304,306,316-317,320,324,327,336-337,340,343,346,357-358,361-362,366
+apps/api/test/unit/project-task-flows.test.mjs
+  s_1bc0747682b950::t_f32ac332d509f9 1-1044
+docs/development/formatting-inventory.json
+  s_1bc0747682b950::t_4b2dd791e15326 3,24,28,30,60,492-493,516-517,1168-1183
+docs/development/progress.md
+  s_1bc0747682b950::t_7b341c1115095e 3-39
+docs/development/project-flow-extraction.md
+  s_1bc0747682b950::t_63f30651cecce0 1-116
+docs/development/unit-coverage.md
+  s_1bc0747682b950::t_fbe7b950d433cd 32-37
+format-adoption.json
+  s_1bc0747682b950::t_89a1b808f6a4d8 22,26,28,58
+scripts/unit/baselines/api.json
+  s_1bc0747682b950::t_19bd70462c6c8b 237-254,309-326,345-362,383-384,387-388,391-392,395-396,653-656,690,694,696,698,728,741,745-746,749-750,753-754
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "05940fe5ac67e351a44355784905d551285b5fe1",
+  "prompts": {},
+  "sessions": {
+    "s_1bc0747682b950": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b6ad-d693-7630-97de-7f1fa205b376",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
