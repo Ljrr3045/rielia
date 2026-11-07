@@ -461,3 +461,54 @@ for (const queuedBeforeFailure of [false, true]) {
     },
   );
 }
+
+test(
+  'unmount cancels an owed coalesced refresh before its queued timer can run',
+  { timeout: 30_000 },
+  async (t) => {
+    const { browser, hook } = await mounted(t);
+    const snapshot = browser.server.taskPage();
+    const held = browser.server.holdNext(tasksPath);
+    await emit(browser, hint(2));
+    await emit(browser, hint(3));
+    await act(async () => held.resolve(Response.json(snapshot)));
+    assert.equal(hook.state.refreshRequired, true);
+    await browser.unmount();
+    assert.equal(browser.clock.timers.size, 0, 'unmount must cancel the queued refresh timer');
+    const count = browser.requests.length;
+    await browser.clock.advance(1000);
+    assert.equal(browser.requests.length, count);
+  },
+);
+
+test(
+  'persistent task-page failures retry only in response to a genuine new hint',
+  { timeout: 30_000 },
+  async (t) => {
+    const { browser, hook } = await mounted(t);
+    const before = browser.reads(tasksPath).length;
+    for (let index = 0; index < 12; index++) {
+      browser.server
+        .holdNext(tasksPath)
+        .resolve(Response.json({ code: 'unavailable' }, { status: 503 }));
+    }
+    await emit(browser, hint(2));
+    await browser.clock.advance(1000);
+    assert.equal(
+      browser.reads(tasksPath).length,
+      before + 1,
+      'persistent errors cannot invent background retries',
+    );
+    assert.equal(hook.state.status, 'error');
+    assert.equal(hook.state.refreshRequired, true);
+    await emit(browser, hint(3));
+    await browser.clock.advance(1000);
+    assert.equal(
+      browser.reads(tasksPath).length,
+      before + 2,
+      'one genuine hint permits exactly one further failed read',
+    );
+    assert.equal(hook.state.status, 'error');
+    assert.equal(hook.state.tasks, null);
+  },
+);
