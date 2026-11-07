@@ -87,6 +87,7 @@ const unitEnv = Object.fromEntries(
     ['PATH', 'HOME', 'TMPDIR', 'TMP', 'TEMP', 'PNPM_HOME'].includes(key),
   ),
 );
+unitEnv.PNPM_CONFIG_VERIFY_DEPS_BEFORE_RUN = 'error';
 unitEnv.NODE_ENV = 'test';
 unitEnv.FORCE_COLOR = '0';
 async function run(command, argv, cwd = root, env = process.env) {
