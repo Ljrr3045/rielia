@@ -1,0 +1,20 @@
+apps/web/test/unit/project-hook.test.mjs
+  s_8691a07f071c2f::t_3a83b9f8944ae9 227-230
+  s_8691a07f071c2f::t_b3de55958d138c 3,6,222,226,231-232,251,254-263
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a4ab59ea4b6ba17c33e69689db17c69250534fb6",
+  "prompts": {},
+  "sessions": {
+    "s_8691a07f071c2f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b36a-06f8-7002-9555-020e3c485adb",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
