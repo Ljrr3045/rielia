@@ -1,5 +1,32 @@
 # Delivery progress and decisions
 
+## 2026-11-07 T36 web transport formatting W1 — IN PROGRESS
+
+PR #36 is merged at `2340ba788be7ab4fe13c62248e3287dd579db94e`.
+This disjoint 20-file web logic batch changes 15 files mechanically and adopts
+five unchanged inputs, preserving both PR #35 lifecycle modules exactly.
+Inventory becomes 143/208 adopted, 65 remaining. No TSX/CSS/prototype/test,
+dependency, pipeline, behavior or structural extraction change is included.
+
+Three fresh same-provider A/B/repeat runs each pass all 269 cases and retain all
+101 inputs. Exact S/F/B topology/hits and all unchanged maps remain equal.
+The coordinator accepted only the current web physical-line migration
+975/3463→1177/3721 and floor 28.15→31.63; all S/F/B floors and seven other
+baselines remain exact. The [W1 guide](web-transport-formatting.md) records five
+per-file line-ratio decreases, eight uncovered increases, 56 extra uncovered
+line units and the exact 43 new unknown END-column precision limitation.
+Both saved B/repeat reports pass all four existing comparable/nonregression
+gates. Mechanical formatting is not semantic coverage gain.
+
+All 20 infrastructure/upload cases, handoff/link and whitespace checks pass.
+One actual native `pnpm check` passes, including formatting, 24 tooling cases,
+lint/286-package closure, retained logic/HTTP checks, typechecks, optimized builds,
+17 MCP cases and final smoke. Frozen-host/immutable dependency metadata remain
+exact; legitimate owned task-record updates are recorded without restoration.
+Independent final review, publication, hosted CI and coordinator-controlled
+Ready/Kilo/merge remain later gates. Historical entries below retain their original status and
+evidence. T36, remaining formatting/extraction, T37 and T11 stay incomplete.
+
 ## 2026-11-07 T36 API/shared/MCP formatting adoption — IN PROGRESS
 
 PR #35 is merged at `be777b434b249fd039da1519d0146177b8e0d1c9`; its native

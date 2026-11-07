@@ -83,7 +83,7 @@
       },
       "lines": {
         "covered": 0,
-        "total": 4
+        "total": 5
       },
       "statements": {
         "covered": 0,
@@ -658,8 +658,8 @@
         "total": 15
       },
       "lines": {
-        "covered": 44,
-        "total": 45
+        "covered": 54,
+        "total": 55
       },
       "statements": {
         "covered": 63,
@@ -677,7 +677,7 @@
       },
       "lines": {
         "covered": 0,
-        "total": 16
+        "total": 17
       },
       "statements": {
         "covered": 0,
@@ -694,8 +694,8 @@
         "total": 22
       },
       "lines": {
-        "covered": 61,
-        "total": 73
+        "covered": 99,
+        "total": 130
       },
       "statements": {
         "covered": 107,
@@ -730,8 +730,8 @@
         "total": 7
       },
       "lines": {
-        "covered": 40,
-        "total": 41
+        "covered": 55,
+        "total": 61
       },
       "statements": {
         "covered": 58,
@@ -748,8 +748,8 @@
         "total": 5
       },
       "lines": {
-        "covered": 34,
-        "total": 34
+        "covered": 59,
+        "total": 59
       },
       "statements": {
         "covered": 65,
@@ -784,8 +784,8 @@
         "total": 12
       },
       "lines": {
-        "covered": 39,
-        "total": 39
+        "covered": 88,
+        "total": 92
       },
       "statements": {
         "covered": 92,
@@ -802,8 +802,8 @@
         "total": 3
       },
       "lines": {
-        "covered": 7,
-        "total": 7
+        "covered": 8,
+        "total": 8
       },
       "statements": {
         "covered": 9,
@@ -838,8 +838,8 @@
         "total": 11
       },
       "lines": {
-        "covered": 16,
-        "total": 16
+        "covered": 26,
+        "total": 26
       },
       "statements": {
         "covered": 30,
@@ -856,8 +856,8 @@
         "total": 10
       },
       "lines": {
-        "covered": 25,
-        "total": 33
+        "covered": 35,
+        "total": 54
       },
       "statements": {
         "covered": 37,
@@ -874,8 +874,8 @@
         "total": 31
       },
       "lines": {
-        "covered": 104,
-        "total": 109
+        "covered": 148,
+        "total": 162
       },
       "statements": {
         "covered": 167,
@@ -911,7 +911,7 @@
       },
       "lines": {
         "covered": 0,
-        "total": 18
+        "total": 24
       },
       "statements": {
         "covered": 0,
@@ -922,7 +922,7 @@
   "floors": {
     "branches": 2503,
     "functions": 2207,
-    "lines": 2815,
+    "lines": 3163,
     "statements": 3036
   },
   "manifest": {
@@ -948,7 +948,7 @@
       "apps/web/src/app/api/auth/[...path]/route.ts": "39cd477d5ec9ef2f02b6e3ef46942ad30ca3a043ce38c37daaa07a302ac50ffd",
       "apps/web/src/app/api/v1/identity/[action]/route.ts": "23d976d48fcf3f370066a20ad9f2e4db9b4e8c355d721953bff037caa4bf4402",
       "apps/web/src/app/api/v1/workspace-invitations/accept/route.ts": "354133c5cac33fa656bf2250aeae5b0cf16c8e0d660a149b89196e9310d91cae",
-      "apps/web/src/app/api/v1/workspaces/[[...path]]/route.ts": "36364d00d4294d23339476b8ae259395d97a0184a6919933eea4eb26fe433ec7",
+      "apps/web/src/app/api/v1/workspaces/[[...path]]/route.ts": "e8a0e1760131370e13e34bc61562e7b6678afc63f2fde26ac3c5762f28bb2415",
       "apps/web/src/app/identity/identity-view.tsx": "b9501cfae1121acb2c7e63e3f558585ce128562565a54998f4405f8d96be501d",
       "apps/web/src/app/identity/page.tsx": "ddeef697ada83143d10b37732ee43ededdb304cba70b5e0a5bd33ffe8e3228e4",
       "apps/web/src/app/layout.tsx": "6f92142a95848adf6ac2f963163f6dcc0178d49f169ae56c2ddb5aa48359d91e",
@@ -979,22 +979,22 @@
       "apps/web/src/app/workspaces/workspace-admin.tsx": "f57775a05750a8550948e558125902bb0cd0af8e39213405cae5ee71198778ce",
       "apps/web/src/app/workspaces/workspace-ui.tsx": "389a1114c8cb83ba5115a96b9611a936a71968a491c3130e146a1e10cdb8f0b2",
       "apps/web/src/app/workspaces/workspace-view.tsx": "8ba313a3dc67ad99d7e44af53af4f7f1561f3ef24fe65dc7824c50a251bcd6f1",
-      "apps/web/src/lib/identity-client.ts": "075adb2b24a3a7317bac095d9f73b537fb9d3f3bbb6d9a7e3f649b3ba89f570f",
-      "apps/web/src/lib/identity-controller.ts": "b11b766b820dff5c8db120cf48a0dd67f506e16dc2c7be5a2446072a137b87fa",
-      "apps/web/src/lib/identity-proxy.ts": "21bf0ee30d6551935a97f066735e2f608a72753fae30467a382970d1d521a323",
-      "apps/web/src/lib/project-task-client.ts": "19f2ada3909ae6ab867d650a7bede34695566536e065d89042e5a870eafa7709",
+      "apps/web/src/lib/identity-client.ts": "7271ac3c35ee04af5d42791166dc52fcf3e2e227a0d8ebb1b9d174b342a26b56",
+      "apps/web/src/lib/identity-controller.ts": "75bdfeca7ec1ad50a38c4a560c9e249719aa1a726cfb2a90895984170f480ef7",
+      "apps/web/src/lib/identity-proxy.ts": "d3bfab1aea9ab2ba4e9803b58d343361f325e519bbfb9e92ad01b0933cae997c",
+      "apps/web/src/lib/project-task-client.ts": "b6fa3d76ed6912c785197c5ec63eaae9a86d7ab17a190c344c2bb4e9e88eeb61",
       "apps/web/src/lib/project-task-controller.ts": "af196b0b75f08b2fe7b1e5bae03dfe92dfb35f40610b211cefcbcf32f064dac3",
-      "apps/web/src/lib/project-task-proxy.ts": "1eda283ff900b790b65d76e5043ee0003a1b13d7bcb14bb53cd7d886f107a902",
-      "apps/web/src/lib/safe-markdown.ts": "b7c8fc60c17ecd97f0add3709b8a3278de5734f483fe6e8ef16583dbc20c9445",
-      "apps/web/src/lib/task-collaboration-state.ts": "504bab8091338394208ae3696a4339ac88541316ad58d260af42b609365f9d84",
-      "apps/web/src/lib/task-events-client.ts": "76a62d17d0e452b9159b1c34768ac8bf4b28794220be1d3dc264481f4069ee04",
-      "apps/web/src/lib/use-identity.ts": "2ea08fedd407fdce7105b0de447a71bf09188af28c9004c9d7445b4be4d17aa8",
+      "apps/web/src/lib/project-task-proxy.ts": "faeada1455c85f11c2410929abff7ac3421a3ee7c84376531a57403ec9819a8a",
+      "apps/web/src/lib/safe-markdown.ts": "ec1344cc57dade02d9e351aa78b7f8d85bd4fd2addd0540a552d407196dec244",
+      "apps/web/src/lib/task-collaboration-state.ts": "e9d4b011349e9f35fb0ae64fcafb1c7c8a1ed1cb94cdbf1373b4f6da21177723",
+      "apps/web/src/lib/task-events-client.ts": "fa19799acddb06cbd979bf3562916fa4dcaa4bc3963fb48c8da0e9cf775c8490",
+      "apps/web/src/lib/use-identity.ts": "390c04926405c545257cd3f13555dd54281e9908230b1127447da05161adb4d9",
       "apps/web/src/lib/use-project-tasks.ts": "6527ec8f6f0e2ef58891ba3d0922de10e963a8e3094e30d790ecdbe4f960a515",
-      "apps/web/src/lib/use-workspaces.ts": "8f65ff01a30a889b51488a7b067c2c86e0cc60a9ba085b0505d52a3d6b4fcb1a",
-      "apps/web/src/lib/workspace-client.ts": "94748585f74bbb68df144c04291adf93016b3c0d04a71772ae6b481873161ed0",
-      "apps/web/src/lib/workspace-controller.ts": "0f8e6c141f6224c14c73de864d4b612549aaa8399c2c0f8208b191241c201678",
-      "apps/web/src/lib/workspace-invitation-location.ts": "b275d224309f55ac23b35f7f8a8117b9711ffc534894e55d7177fcb904defa6f",
-      "apps/web/src/lib/workspace-proxy.ts": "b447f279628d49b94dfebc3acfec47fa7de4239d5fab1a50b930c53f06a00670"
+      "apps/web/src/lib/use-workspaces.ts": "d5fa3c82053dd8811b9f2e41f6cc30fd5cbb635e3810f10fc7a99d309025fcec",
+      "apps/web/src/lib/workspace-client.ts": "b07137e3ef8433e24e8a4409ebc2447181aee9e36132654d203be5163fb4946c",
+      "apps/web/src/lib/workspace-controller.ts": "fddb5ea22ea19adaac2f4c1d538ba457a0a8f0ec1996fbfe70b8c86f804b1615",
+      "apps/web/src/lib/workspace-invitation-location.ts": "42e6ef8a2074a3b2064df13b009a22cf0fac22267834209e052f7e85f9d0a85b",
+      "apps/web/src/lib/workspace-proxy.ts": "28599000621aa11f815f22886591a404c86cbdc87593cd695f585dbb6e9aea6e"
     },
     "pnpm": "12.15.0",
     "provider": {
@@ -1033,8 +1033,8 @@
       "total": 1042
     },
     "lines": {
-      "covered": 975,
-      "total": 3463
+      "covered": 1177,
+      "total": 3721
     },
     "statements": {
       "covered": 1292,

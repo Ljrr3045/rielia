@@ -4,6 +4,20 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+### T36 web transport/controller/hook mechanical formatting
+
+- Adopt exactly 20 web logic inputs with 15 mechanical changes and five
+  byte-identical adoptions; preserve both project refresh lifecycle modules.
+  Account for 143/208 adopted paths and 65 remaining without UI or policy changes.
+- Preserve the same 269 cases, all 101 inputs and exact S/F/B counters/topology.
+  Explicitly migrate only current web physical lines 975/3463→1177/3721 and
+  line floor 28.15→31.63; retain seven other baselines and all S/F/B floors.
+- Record per-file declines/uncovered splits, 67 semantic controls and the
+  enumerated 43 new unknown END-column precision limit in the
+  [W1 guide](docs/development/web-transport-formatting.md). Infrastructure20,
+  handoff/whitespace and one actual full native `pnpm check` pass; independent
+  final review and hosted CI remain pending. T36 remains in progress.
+
 ### T36 API/shared/MCP mechanical formatting adoption
 
 - Adopt 56 maintained API/shared/MCP inputs with 50 mechanical changes and six
