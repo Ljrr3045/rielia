@@ -50,9 +50,11 @@ Independent review retains all 1,192 affected old raw zero outcomes through
 1,191 scoped exact-AST pairs and one finite screen-root disposition. One new
 function and two statement wrapper units are explicit. B→C retains all 3,462
 covered normalized S/F/B outcomes and adds 183, with 6,867 still zero; emitted raw
-coverage retains 3,761 and adds 194, with 7,246 still zero. All 59 unaffected web
-maps/counters and twelve nonweb report files remain exact. Twenty-two remaining
-model/hook raw zero outcomes are explicitly owned debt, not omitted source.
+coverage retains 3,761 and adds 194, with 7,246 still zero. Across A→B, all 59
+untouched web maps/counters remain exact. Across B→C, all 68 web maps remain exact
+while counters retain covered outcomes and add the stated gains. Twelve nonweb
+report files remain exact across all phases. Twenty-two remaining model/hook raw
+zero outcomes are explicitly owned debt, not omitted source.
 
 Raw unknown positions are 162→163→163; all 797 normalized null endpoints and
 47 implicit raw arms remain individually bound. Type-only inputs, UTF-16 bounds,
