@@ -225,5 +225,49 @@
     "toml": "Prisma migration lock metadata: preserve generator format"
   },
   "excluded": "Immutable handoff/hash inventory; generated Prisma/Next/build/coverage; dependencies; lockfile; patches; source notices and supplied assets",
-  "newFormattedDocuments": ["docs/development/quality-tooling.md"]
+  "newFormattedDocuments": ["docs/development/quality-tooling.md"],
+  "unitCoverageAdoption": {
+    "owner": "T36.2/T36.3 unit integration",
+    "files": [
+      "apps/api/test/unit/identity-config.test.mjs",
+      "apps/api/test/unit/principal-errors.test.mjs",
+      "apps/api/test/unit/principal-policy.test.mjs",
+      "apps/api/test/unit/project-task-failures.test.mjs",
+      "apps/web/test/unit/dom-harness.mjs",
+      "apps/web/test/unit/identity-hook.test.mjs",
+      "apps/web/test/unit/identity-view.test.mjs",
+      "apps/web/test/unit/mutation-witness.mjs",
+      "apps/web/test/unit/workspace-hook.test.mjs",
+      "packages/contracts/test/guards.test.mjs",
+      "scripts/identity-client.integration.test.mjs",
+      "scripts/identity-client.test.mjs",
+      "scripts/identity-logic.test.mjs",
+      "scripts/identity-proxy.integration.test.mjs",
+      "scripts/task-events-client.test.mjs",
+      "scripts/task-events-proxy.integration.test.mjs",
+      "scripts/unit/artifacts.mjs",
+      "scripts/unit/baselines/api.json",
+      "scripts/unit/baselines/contracts.json",
+      "scripts/unit/baselines/pre-unit-api.json",
+      "scripts/unit/baselines/pre-unit-contracts.json",
+      "scripts/unit/baselines/pre-unit-prototype.json",
+      "scripts/unit/baselines/pre-unit-web.json",
+      "scripts/unit/baselines/prototype.json",
+      "scripts/unit/baselines/web.json",
+      "scripts/unit/config.mjs",
+      "scripts/unit/files.mjs",
+      "scripts/unit/infrastructure.test.mjs",
+      "scripts/unit/mirror-loader.mjs",
+      "scripts/unit/pipeline.mjs",
+      "scripts/unit/process.mjs",
+      "scripts/unit/report.mjs",
+      "scripts/unit/run.mjs",
+      "scripts/unit/tools/package.json",
+      "scripts/unit/tools/pnpm-workspace.yaml"
+    ],
+    "exclusions": [
+      "scripts/unit/tools/pnpm-lock.yaml (frozen dependency resolution, not formatting input)",
+      "coverage/** (generated disposable reports, maps and mirrors)"
+    ]
+  }
 }
