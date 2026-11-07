@@ -1,0 +1,36 @@
+scripts/unit/tools/package.json
+  s_cd38fe5b1413ea::t_475862546e1f2c 1-5,10-16
+  s_cd38fe5b1413ea::t_e87b1793f02cc6 6-9
+scripts/quality/policy.mjs
+  s_cd38fe5b1413ea::t_3930fe61ffc13c 48
+eslint.config.mjs
+  s_cd38fe5b1413ea::t_3930fe61ffc13c 11
+scripts/unit/tools/pnpm-workspace.yaml
+  s_cd38fe5b1413ea::t_475862546e1f2c 1-7
+scripts/unit/tools/pnpm-lock.yaml
+  s_680ac9ebaeaf9c::t_55d58529ec9210 1-1897
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "220cd1a51db3aee5cf5f2704a8770334495977a1",
+  "prompts": {},
+  "sessions": {
+    "s_680ac9ebaeaf9c": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19d42-5370-7ae2-b626-d5727bce2dc3",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    },
+    "s_cd38fe5b1413ea": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b369-4dc0-7a52-ae15-1cd16031eb12",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
