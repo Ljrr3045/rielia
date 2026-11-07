@@ -1,0 +1,69 @@
+apps/web/src/lib/use-identity.ts
+  s_8691a07f071c2f::t_3235b265c51b43 10-14,16-17,21-27
+docs/development/progress.md
+  s_8691a07f071c2f::t_3c789ebf6e48be 3-20,28-29
+  s_8691a07f071c2f::t_e1a25321576aa8 21-27
+docs/development/web-transport-formatting.md
+  s_8691a07f071c2f::t_3c789ebf6e48be 1-50,57-73,88-92,97-112,119-124,128-134
+  s_8691a07f071c2f::t_5db0cd1c28b300 51-56,74-87
+  s_8691a07f071c2f::t_e1a25321576aa8 93-96,113-118,125-127
+format-adoption.json
+  s_8691a07f071c2f::t_e3053b41fa6e91 58-77
+apps/web/src/lib/task-events-client.ts
+  s_8691a07f071c2f::t_3235b265c51b43 2-3,5-16,18-31,36-43,47-86,88-91,95-101,103-115,117-122,124-128,133-143,145-150,154-158
+apps/web/src/lib/workspace-proxy.ts
+  s_8691a07f071c2f::t_3235b265c51b43 4-8,12-38,41-42,44-52,54-59,61-63
+docs/development/quality-tooling.md
+  s_8691a07f071c2f::t_3c789ebf6e48be 7-9
+apps/web/src/lib/workspace-client.ts
+  s_8691a07f071c2f::t_3235b265c51b43 1-13,17-21,26-35,38-40,42-63,65-69,72-77,86-87,89-97,100-101,103-144,150-157,159-169
+apps/web/src/lib/identity-proxy.ts
+  s_8691a07f071c2f::t_3235b265c51b43 6-9,11-20,25-30,39-40,43-46
+apps/web/src/lib/project-task-client.ts
+  s_8691a07f071c2f::t_3235b265c51b43 1-38,41-44,47-61,65-76,78-85,87-104,106-120,123-147,149-171,177-181,183-191,193-199,205-212,214-239,243-253,257-268,271-277,280-281,283-301,305-317,321-332,337-344,348-349,351-456,459-471,474-480,484-493
+apps/web/src/lib/project-task-proxy.ts
+  s_8691a07f071c2f::t_3235b265c51b43 4-8,10-11,13-15,17-22,24-40,43-45,47-105,107-118,120-132,134-169,172-174
+apps/web/src/lib/use-workspaces.ts
+  s_8691a07f071c2f::t_3235b265c51b43 10-28,32-42,46-52,55-64,66-69
+apps/web/src/lib/safe-markdown.ts
+  s_8691a07f071c2f::t_3235b265c51b43 4-11,13-20,27-29,32-35,41-45,54-67,70-98,102-103
+CHANGELOG.md
+  s_8691a07f071c2f::t_e1a25321576aa8 17-19
+  s_8691a07f071c2f::t_3c789ebf6e48be 7-16,20
+apps/web/src/lib/identity-controller.ts
+  s_8691a07f071c2f::t_3235b265c51b43 24-38,42-64,69-75,78-81,91-96,98-99,104-105,132-150
+docs/development/formatting-inventory.json
+  s_8691a07f071c2f::t_3c789ebf6e48be 504-507,558-559,561-587,591-615
+  s_8691a07f071c2f::t_5db0cd1c28b300 560,588-590
+  s_8691a07f071c2f::t_e3053b41fa6e91 60-79,418,420-421,508-557,616
+apps/web/src/app/api/v1/workspaces/[[...path]]/route.ts
+  s_8691a07f071c2f::t_3235b265c51b43 4-9
+apps/web/src/lib/workspace-controller.ts
+  s_8691a07f071c2f::t_3235b265c51b43 1-14,26-33,40-43,50-54,56-71,75-83,85-110,112-122,124-127,129-134,136-143,148-157,160-162,165-177,179-180,185-189,191-197,199-201,204-213,216-219,221-235,238-242,246-249,252-253,257-264,267-273,282-286,288-296,302-303,305-315,317-323,326-330,334-338,341-343,346-354,357-360,362-373,379-381,386-388,390-404,408-409,413-446
+docs/development/unit-coverage.md
+  s_8691a07f071c2f::t_3c789ebf6e48be 14-16
+apps/web/src/lib/identity-client.ts
+  s_8691a07f071c2f::t_3235b265c51b43 5-7,12-13,21-25,33-37
+apps/web/src/lib/task-collaboration-state.ts
+  s_8691a07f071c2f::t_3235b265c51b43 3-10,12-18
+scripts/unit/baselines/web.json
+  s_8691a07f071c2f::t_3cc64e32a236c5 86,661-662,680,697-698,733-734,751-752,787-788,805-806,841-842,859-860,877-878,914,925,951,982-985,987-991,993-997,1036-1037
+apps/web/src/lib/workspace-invitation-location.ts
+  s_8691a07f071c2f::t_3235b265c51b43 10-13,18-22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a60f84f76ce95ee3fa456e0efd740122a4ba1a95",
+  "prompts": {},
+  "sessions": {
+    "s_8691a07f071c2f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b36a-06f8-7002-9555-020e3c485adb",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
