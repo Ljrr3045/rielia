@@ -2,6 +2,8 @@
 
 ## 2026-11-07 T36 project interaction/render ownership — IN PROGRESS
 
+Delivery: [PR #42](https://github.com/Ljrr3045/rielia/pull/42).
+
 Merged PR #41 at `26f6c57d46b280ecb196d0920f73ed2312e88002` is the base.
 The [bounded T36.4 frontend batch](project-interactions-extraction.md) separates
 DOM/media/focus/body-lock, content model/forms, one ordered effect lifecycle and

@@ -6,6 +6,8 @@ This records repository changes. No application version has been released.
 
 ### T36 project interaction and rendering ownership
 
+Delivery: [PR #42](https://github.com/Ljrr3045/rielia/pull/42).
+
 - Separate existing DOM/focus/media/body-lock, content model/forms, one ordered
   interaction lifecycle and rendering composition; use narrow collaboration
   ports and actual projections while retaining one controller and all behavior.
