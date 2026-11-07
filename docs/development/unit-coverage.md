@@ -111,7 +111,8 @@ escapes to original app source. It does not transform API code with tsx/esbuild.
 Shared contracts are reported separately, never duplicated in app numerators.
 
 Report keys and LCOV source paths are repository-relative and sorted; upload counters
-contain no maps or source content. Mapped statement/function/branch endpoints are
+contain no source maps or source content; coverage location maps are retained.
+Mapped statement/function/branch endpoints are
 validated against original source bounds. Mapper 4 retains unknown/null columns
 (API 86, web 577, prototype 98); this is documented precision loss, not perfect mapping.
 Two prototype files (type declarations and reexport barrel) have empty maps and are
