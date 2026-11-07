@@ -4,6 +4,10 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Correct real hooks to run installed local Node/tools with an exact runtime
+  guard and no package-manager fallback; add real pass/fail and borrowed-metadata
+  safety regressions. PR #34's native findings remain in a Draft corrective batch.
+
 ### T36 first unit and coverage slice
 
 - Add isolated backend authority/error/use-case units and real React identity/

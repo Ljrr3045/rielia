@@ -2,6 +2,19 @@
 
 ## 2026-11-06 first T36 unit/coverage slice — IN PROGRESS
 
+The first native Kilo round at `cf1e7b6` completed successfully with one warning
+and eight suggestions; its success does not dispose of those findings. The
+coordinator returned [PR #34](https://github.com/Ljrr3045/rielia/pull/34) to Draft
+for one corrective batch. A distinct prerequisite removes package-manager calls
+from real hooks: installed local Node, exact runtime guard and direct tool CLIs
+retain fast checks without automatic installation. All 24 tooling regressions
+pass, including real hook pass/fail, absent/wrong runtime, a safe former-hook
+poison control and unchanged borrowed dependency metadata. The earlier accidental
+dependency-metadata mutation and authorized zero-download offline restoration are
+recorded in [tooling evidence](quality-tooling.md). The nine unit/tooling findings,
+new-head coverage/CI and independent review remain pending this batch; no Ready
+transition, merge or T36 completion is claimed.
+
 Branch `test/t36-unit-coverage` starts from merged PR #33 at
 `465d9e44e480c5f115d92bc294e913d2fb599330`; username prefix was corrected before
 editing. Effective Orca launch receipt verifies Codex `gpt-6.1-sol` / `xhigh`.
