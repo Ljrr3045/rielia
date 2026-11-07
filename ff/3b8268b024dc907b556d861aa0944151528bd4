@@ -1,0 +1,34 @@
+docs/development/formatting-inventory.json
+  s_cd38fe5b1413ea::t_2c784a8bb1e178 392-393
+  s_cd38fe5b1413ea::t_cb40d9adf9ce07 394-395,503-504
+CHANGELOG.md
+  s_cd38fe5b1413ea::t_7e956746df069b 7-23
+docs/development/progress.md
+  s_cd38fe5b1413ea::t_a7dfafd587e4c9 3-38
+docs/development/quality-tooling.md
+  s_cd38fe5b1413ea::t_7d13dd0082b942 90-94
+docs/development/source-format-adoption.md
+  s_cd38fe5b1413ea::t_e94a4e83502000 1-136
+docs/development/unit-coverage.md
+  s_cd38fe5b1413ea::t_493b1e0b72978c 11-13
+scripts/unit/baselines/api.json
+  s_cd38fe5b1413ea::t_4918fd7d6bf61c 50,86,103-104,176,193-194,212,229-230,248,266,283-284,302,319-320,338,355-356,373-374,392,410,428,446,464,500,518,535-536,547,570-571,573-598,633-634
+scripts/unit/baselines/contracts.json
+  s_cd38fe5b1413ea::t_b9486fe0550afa 13-14,31-32,49-50,67-68,101-104,131-132
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ff3b8268b024dc907b556d861aa0944151528bd4",
+  "prompts": {},
+  "sessions": {
+    "s_cd38fe5b1413ea": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b369-4dc0-7a52-ae15-1cd16031eb12",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
