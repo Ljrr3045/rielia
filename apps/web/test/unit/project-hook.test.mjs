@@ -1,8 +1,9 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
+import { isTask } from '@rielia/contracts';
 import { useProjectTasks } from '../../src/lib/use-project-tasks.ts';
 import { act, mountHook, identitySession, workspace } from './dom-harness.mjs';
-import { projectBrowser, createDraft, project } from './project-hook-harness.mjs';
+import { projectBrowser, createDraft, project, task } from './project-hook-harness.mjs';
 
 const tasksPath = '/api/v1/workspaces/a/projects/p/tasks';
 
@@ -218,11 +219,17 @@ test(
 
 for (const differentAccount of [false, true]) {
   test(
-    `${differentAccount ? 'account' : 'same-human session'} replacement clears pending private state and rejects the old late result`,
+    `${differentAccount ? 'account' : 'same-human session'} replacement clears pending private state and ignores a valid old late success`,
     { timeout: 30_000 },
     async (t) => {
       const { browser, hook } = await mounted(t);
-      await act(async () => hook.state.stage(createDraft()));
+      const command = createDraft();
+      const lateSuccess = {
+        ...task(115, command.workspaceId, command.projectId),
+        ...command.fields,
+      };
+      assert.ok(isTask(lateSuccess), 'late success fixture must satisfy the public task contract');
+      await act(async () => hook.state.stage(command));
       const held = browser.server.holdNext((request) => request.options.method === 'POST');
       let saving;
       await act(async () => {
@@ -241,11 +248,19 @@ for (const differentAccount of [false, true]) {
       assert.equal(held.request.options.signal.aborted, true);
       const reads = browser.requests.length;
       await act(async () => {
-        held.resolve(Response.json(project('old-private', 'a'), { status: 201 }));
+        held.resolve(Response.json(lateSuccess, { status: 201 }));
         await saving;
       });
-      assert.equal(hook.state.selection.workspaceId, 'b');
-      assert.equal(hook.state.result, null);
+      assert.equal(
+        hook.state.selection.workspaceId,
+        'b',
+        'late successful old task must not replace the current workspace',
+      );
+      assert.equal(
+        hook.state.result,
+        null,
+        'late successful old task must not publish a stale private result',
+      );
       assert.equal(
         browser.requests.length,
         reads,
