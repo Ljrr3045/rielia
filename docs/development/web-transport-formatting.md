@@ -12,6 +12,13 @@ UX01–03/05–07/09/11 contracts; it adds no product behavior or coverage.
 The actual base is merged [PR #36](https://github.com/Ljrr3045/rielia/pull/36),
 `2340ba788be7ab4fe13c62248e3287dd579db94e`. All 20 before sources match the
 captured PR #35 merge `be777b434b249fd039da1519d0146177b8e0d1c9` exactly.
+[PR #37](https://github.com/Ljrr3045/rielia/pull/37) was opened Draft at
+`a60f84f76ce95ee3fa456e0efd740122a4ba1a95` after independent review found no
+open finding. Live readback confirms Draft, the exact merged base and no native
+Kilo check/review/comment on the inspected GitHub surfaces. This does not claim
+visibility into billing or hidden review queues. Final-head hosted CI and
+coordinator-controlled Ready/Kilo/merge remain pending.
+
 The eligible denominator remains 208: adoption moves 123→143 and remaining
 work 85→65. Presentation/prototype and scripts/config formatting, structural
 extraction and T36 acceptance remain open before T37, then T11.
@@ -130,5 +137,6 @@ No new local PostgreSQL, Docker, browser, provider or physical-device run is
 claimed for this mechanical batch. Existing integration evidence is retained;
 mandatory current-head hosted CI must still run native check, real identity/
 security/PostgreSQL/runtime checks and audits and publish the validated coverage
-artifacts. Independent final review, Draft publication and coordinator-controlled
-Ready/Kilo/merge remain pending. This does not complete T36.
+artifacts. Independent source review and initial Draft publication are complete;
+final-head hosted CI and coordinator-controlled Ready/Kilo/merge remain pending.
+This does not complete T36.

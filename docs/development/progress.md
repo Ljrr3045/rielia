@@ -23,7 +23,12 @@ One actual native `pnpm check` passes, including formatting, 24 tooling cases,
 lint/286-package closure, retained logic/HTTP checks, typechecks, optimized builds,
 17 MCP cases and final smoke. Frozen-host/immutable dependency metadata remain
 exact; legitimate owned task-record updates are recorded without restoration.
-Independent final review, publication, hosted CI and coordinator-controlled
+Independent source review accepted `a60f84f` with no open finding. Publication
+opened [Draft PR #37](https://github.com/Ljrr3045/rielia/pull/37) at that exact
+source head, based on merged `2340ba7`. Live readback confirms Draft and no
+native Kilo check/review/comment on the inspected surfaces; hidden queues and
+billing are not independently observed. One bounded URL/status-only commit
+records this evidence; final-head hosted CI/artifacts and coordinator-controlled
 Ready/Kilo/merge remain later gates. Historical entries below retain their original status and
 evidence. T36, remaining formatting/extraction, T37 and T11 stay incomplete.
 

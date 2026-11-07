@@ -15,8 +15,9 @@ This records repository changes. No application version has been released.
 - Record per-file declines/uncovered splits, 67 semantic controls and the
   enumerated 43 new unknown END-column precision limit in the
   [W1 guide](docs/development/web-transport-formatting.md). Infrastructure20,
-  handoff/whitespace and one actual full native `pnpm check` pass; independent
-  final review and hosted CI remain pending. T36 remains in progress.
+  handoff/whitespace and one actual full native `pnpm check` pass. Independent
+  source review accepted `a60f84f`; [Draft PR #37](https://github.com/Ljrr3045/rielia/pull/37)
+  targets `dev`, with final-head hosted CI/artifacts pending. T36 remains in progress.
 
 ### T36 API/shared/MCP mechanical formatting adoption
 
