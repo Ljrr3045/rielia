@@ -1,0 +1,48 @@
+docs/development/frontend-agent.md
+  s_cd38fe5b1413ea::t_2921dd0e6d966a 6-7
+  s_cd38fe5b1413ea::t_9f729f744f3280 11
+  s_cd38fe5b1413ea::t_bbab100abae275 5,8-10,12-20
+docs/development/quality-tooling.md
+  s_cd38fe5b1413ea::t_bbab100abae275 160-165
+CHANGELOG.md
+  s_cd38fe5b1413ea::t_6ee763cfa15f1a 21-23
+  s_cd38fe5b1413ea::t_bbab100abae275 7-20,24-27
+docs/development/progress.md
+  s_cd38fe5b1413ea::t_6ee763cfa15f1a 57-66
+  s_cd38fe5b1413ea::t_3bd4f220576de5 25,30
+  s_cd38fe5b1413ea::t_161fd7cb0896eb 3-24,26-29,31-34,36,38-40,45-48,50-56,67-75,1248
+  s_cd38fe5b1413ea::t_ab5ebd1ba47d09 35,37,41-44,49
+docs/development/unit-coverage.md
+  s_cd38fe5b1413ea::t_ab5ebd1ba47d09 103,115-116,165,169,172,180-181,190,203,210-211
+  s_cd38fe5b1413ea::t_f21e928e284322 57-64,70-75
+  s_cd38fe5b1413ea::t_3bd4f220576de5 143,149-151,162-164,166,183-185,212-229,232
+  s_cd38fe5b1413ea::t_dcc269117696f9 1-51,56,65-69,76-102,104-114,117-142,144-145,148,152-161,167-168,170-171,173-179,182,186-189,191-202,204-209,230-231,233-236
+  s_cd38fe5b1413ea::t_81ce512511cd76 52-55,146-147
+apps/api/AGENTS.md
+  s_cd38fe5b1413ea::t_81ce512511cd76 86-88
+AGENTS.md
+  s_cd38fe5b1413ea::t_bbab100abae275 38-42,174,177-181
+  s_cd38fe5b1413ea::t_2921dd0e6d966a 175-176
+apps/web/AGENTS.md
+  s_cd38fe5b1413ea::t_81ce512511cd76 78-80
+docs/development/development-quality-roadmap.md
+  s_cd38fe5b1413ea::t_bbab100abae275 22-25
+CONTRIBUTING.md
+  s_cd38fe5b1413ea::t_bbab100abae275 36-37,96-107
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "798c42453b0f7cd16762701bfa336f91aa0341a6",
+  "prompts": {},
+  "sessions": {
+    "s_cd38fe5b1413ea": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b369-4dc0-7a52-ae15-1cd16031eb12",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
