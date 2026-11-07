@@ -65,7 +65,7 @@ Other scopes use adjacent named JSON files.
 | Scope                          | Maintained inputs |    Lines | Statements | Functions |  Branches |
 | ------------------------------ | ----------------: | -------: | ---------: | --------: | --------: |
 | API before                     |                30 |  38/1095 |    45/1617 |     3/396 |   36/1228 |
-| API after                      |                30 | 219/1095 |   284/1617 |    58/396 |  214/1228 |
+| API after                      |                30 | 230/1095 |   296/1617 |    62/396 |  225/1228 |
 | Web production before          |                51 | 682/3251 |  1092/4251 |  168/1041 | 1140/5185 |
 | Web production after           |                51 | 761/3251 |  1215/4251 |  210/1041 | 1230/5185 |
 | Shared contracts after         |                 4 |    78/78 |    113/113 |     64/64 |   355/363 |
@@ -77,7 +77,7 @@ they do not establish a separately measured pre-unit contracts percentage.
 
 | Enforced starting floor (%) |  Lines | Statements | Functions | Branches |
 | --------------------------- | -----: | ---------: | --------: | -------: |
-| API                         |  20.00 |      17.56 |     14.64 |    17.42 |
+| API                         |  21.00 |      18.30 |     15.65 |    18.32 |
 | Web production              |  23.40 |      28.58 |     20.17 |    23.72 |
 | Shared contracts            | 100.00 |     100.00 |    100.00 |    97.79 |
 | Fictional prototype         |  24.72 |      27.33 |     23.64 |    20.33 |
@@ -91,9 +91,9 @@ before/after evidence. No ignores, omitted source, lowered floor or automatic CI
 baseline update may regain green. Metrics with zero units are N/A, not 100%.
 
 For an explicitly reviewed baseline update, `pnpm unit:coverage -- --write-baseline`
-writes measured JSON; CI refuses this flag. `--pre-unit --write-baseline` reproduces
+writes measured JSON; CI refuses all maintenance modes (`--measure`, `--write-baseline` and `--pre-unit`) before output/build work. `--pre-unit --write-baseline` reproduces
 the exact original test selection from merged base `465d9e4`, not new behavior.
-These maintenance modes are not CI shortcuts. Baseline changes require a reviewed
+`--measure` emits local candidate reports without accepting gates; complete execution status is not gate acceptance in that mode. These maintenance modes are not CI shortcuts. Baseline changes require a reviewed
 diff and critical-case evidence even when percentages increase.
 
 ## Compiler, mapping and attribution
@@ -136,7 +136,7 @@ API units cover fixed identity config, nested/cyclic storage-error classificatio
 copied/foreign verification rejection, current authority/session/grant expiry,
 read-only/admin denials, sanitized failures, invalid task fields/dates, access denial,
 conflict/no-write, replay reauthorization, idempotency mismatch and failed collaborator
-effects. There are 53 cases/subtests plus one compiler-metadata infrastructure case.
+effects. There are 54 behavior cases/subtests plus one compiler-metadata infrastructure case.
 Repository doubles cannot prove SQL rollback, isolation, locks or concurrency.
 
 Web runs 79 existing isolated production cases and 16 actual React/hook DOM cases:
@@ -149,12 +149,12 @@ All nineteen prototype cases remain separate.
 
 Disposable behavior mutations remove current-authority verification, pending guards,
 identity-load invalidation or listener cleanup and fail the intended assertions.
-No mutation is shipped. Eleven coverage-infrastructure cases verify actual four-metric gates,
+No mutation is shipped. Fifteen coverage-infrastructure cases verify actual four-metric gates,
 same-aggregate protected-file rejection, passing/failed/unawaited-rejection NYC children,
 a new never-imported two-branch input, missing/malformed inputs, wrong runtime/config,
 source bounds/symlinks, descendant termination, test/helper omission or changes at
 equal coverage and bounded/current artifact packaging.
-At an already-100% metric, an impossible >100% floor fails configuration validation.
+At an already-100% metric, a valid 100% floor rejects a well-formed partial synthetic report; an impossible >100% floor separately proves configuration rejection.
 Five additional upload-boundary cases verify the actual SDK module loads, explicit
 file/options success, missing capability, sanitized failure/deadline, and rejected
 paths/symlinks/size before SDK effects. Publication itself needs Draft CI evidence.
@@ -164,6 +164,31 @@ symlink escape and unbounded failure JSON. The corrected parent clears owned out
 before execution, per-scope completion status controls packaging, every directory is
 checked for symlinks, and failure diagnostics have a narrow phase/exit schema plus
 the same size/path budget as successful reports. Focused regressions cover all three.
+
+## Native-review corrective evidence
+
+The first PR #34 native round produced one warning and eight suggestions. Its
+corrective batch adds the standalone contracts-build prerequisite, rejects all CI
+maintenance modes, handles encoded checkout paths, guards every maintained input
+while allowing public contracts runtime imports outside their own scope, and
+preserves ENOENT without invalid process-group kills. Real negative/positive
+controls exercise those boundaries; existing descendant deadlines remain required.
+
+Weak assertions now observe actual effects: principal/membership creates are absent
+on administration denial and present in a real human-admin control; an aborted
+workspace read cannot persist private selection after unmount. A disposable missing
+generation guard fails that storage assertion. The detached Retry click was removed;
+connected pending controls, status and focus evidence remain. No production source
+or test-file selection changed. One new API positive control raises only
+PrincipalService coverage from L219/S284/F58/B214 to L230/S296/F62/B225 at identical
+denominators. Every other file/scope remains equal, and no floor is lowered.
+
+All eight pre/current manifests migrate exact helper/test hashes explicitly. Fresh
+pre-unit runs retain every historical count/floor; current runs retain identical
+source/compiler/config/provider/tool-lock identities. The coordinator accepted the
+upward API ratchet contingent on repeated identical measurements and independent
+review. Hook safety is a distinct prerequisite, documented in [quality tooling](quality-tooling.md).
+Current-head full CI and review evidence remain in progress/PR body.
 
 ## Isolated tool graph and retained advisory risk
 
@@ -238,7 +263,7 @@ baseline manifests explicitly migrate their provider-lock hash with measured
 covered/total values, floors and maintained-source hashes unchanged.
 
 Fresh final count/source digest is
-`530527c8145783425933039f6964b6e39c26556058fd341907c3535de599da5f`.
+`400c9a600f09809f39749bf879b4fdad6b13e0e8f686d1ef733f56c7c42c863e`.
 Current-head local/remote checks, actual CI duration and Draft PR evidence are in
 [progress](progress.md). Real-device/assistive-technology/provider/staging/user checks
 remain deferred; DOM evidence does not replace them. Further project-task hook/SSE

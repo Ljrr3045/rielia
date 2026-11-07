@@ -218,19 +218,19 @@
     },
     "apps/api/src/principals/principal.service.ts": {
       "branches": {
-        "covered": 48,
+        "covered": 59,
         "total": 184
       },
       "functions": {
-        "covered": 16,
+        "covered": 20,
         "total": 43
       },
       "lines": {
-        "covered": 61,
+        "covered": 72,
         "total": 134
       },
       "statements": {
-        "covered": 73,
+        "covered": 85,
         "total": 178
       }
     },
@@ -542,10 +542,10 @@
     }
   },
   "floors": {
-    "branches": 1742,
-    "functions": 1464,
-    "lines": 2000,
-    "statements": 1756
+    "branches": 1832,
+    "functions": 1565,
+    "lines": 2100,
+    "statements": 1830
   },
   "manifest": {
     "compiler": {
@@ -609,28 +609,28 @@
       "apps/api/test/unit/compiler-metadata.test.mjs": "72c8ec673105459a42fe0830381cc9d2e4e407729cac1b55ab68ec4029b3d599",
       "apps/api/test/unit/identity-config.test.mjs": "ea22ecd243d229ab423cd5dbba35f97d30f44fe60340081cda7820a8a4a06fa3",
       "apps/api/test/unit/principal-errors.test.mjs": "dfd3b88fbff72aa314928fa691bbf1e5964fbe07bc03702c4e3440e081daad18",
-      "apps/api/test/unit/principal-policy.test.mjs": "0059a005c21a89ed49a80061c44a29ab2ae57f124aeff0c648b454ed8b62d5c2",
+      "apps/api/test/unit/principal-policy.test.mjs": "ff1f49ef39e6610841666ce51b983914f608009462dd59a26e9cb80fb13c6c05",
       "apps/api/test/unit/project-task-failures.test.mjs": "83863a73e26776fb3794d09684e5bdc1ea154f1651e529b9739c27457a9fe4a8",
-      "scripts/unit/mirror-loader.mjs": "afd53e413c310762471e28826e60cbf23b0711543724b2f13dccd5dba8fde947"
+      "scripts/unit/mirror-loader.mjs": "b3ef9e50e56ee2fa0079c794c044efbc6b953d75890b97889bc635e233d93115"
     },
     "toolsLock": "8c4e6232dbeb14b7067dd5a6a8be95256893dc915a8972f759e46b06deee7634"
   },
   "scope": "api",
   "total": {
     "branches": {
-      "covered": 214,
+      "covered": 225,
       "total": 1228
     },
     "functions": {
-      "covered": 58,
+      "covered": 62,
       "total": 396
     },
     "lines": {
-      "covered": 219,
+      "covered": 230,
       "total": 1095
     },
     "statements": {
-      "covered": 284,
+      "covered": 296,
       "total": 1617
     }
   }

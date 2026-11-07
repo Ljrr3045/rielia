@@ -113,7 +113,7 @@
     "runtime": "24.22.1",
     "tests": {
       "packages/contracts/test/guards.test.mjs": "9766fbac5823cac987ba6c7eef12b6ba9fda9a7b0870c2be85ef4e3f33cdf2c7",
-      "scripts/unit/mirror-loader.mjs": "afd53e413c310762471e28826e60cbf23b0711543724b2f13dccd5dba8fde947"
+      "scripts/unit/mirror-loader.mjs": "b3ef9e50e56ee2fa0079c794c044efbc6b953d75890b97889bc635e233d93115"
     },
     "toolsLock": "8c4e6232dbeb14b7067dd5a6a8be95256893dc915a8972f759e46b06deee7634"
   },

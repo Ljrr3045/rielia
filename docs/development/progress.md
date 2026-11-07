@@ -11,9 +11,24 @@ retain fast checks without automatic installation. All 24 tooling regressions
 pass, including real hook pass/fail, absent/wrong runtime, a safe former-hook
 poison control and unchanged borrowed dependency metadata. The earlier accidental
 dependency-metadata mutation and authorized zero-download offline restoration are
-recorded in [tooling evidence](quality-tooling.md). The nine unit/tooling findings,
-new-head coverage/CI and independent review remain pending this batch; no Ready
+recorded in [tooling evidence](quality-tooling.md). The nine unit/tooling corrections are committed separately; new-head full CI and
+independent review remain pending this batch; no Ready
 transition, merge or T36 completion is claimed.
+
+Corrective core `067675b` closes all nine findings with 20 infrastructure/upload
+cases, actual standalone six-case HTTP evidence and meaningful semantic mutants.
+Fresh corrected totals are API L230/1095 S296/1617 F62/396 B225/1228 (55 cases,
+including metadata); web/contracts/prototype remain identical (95/7/19 cases).
+Only PrincipalService gains coverage through the new administration positive control;
+all 101 source hashes, denominators and compiler/config/provider/tool-lock identities
+remain unchanged. Eight manifests explicitly migrate reviewed test/helper hashes;
+all pre-unit counts/floors remain exact and API floors ratchet upward to
+21.00/18.30/15.65/18.32. No floor is lowered or production code formatted/refactored.
+Current measured digest is
+`400c9a600f09809f39749bf879b4fdad6b13e0e8f686d1ef733f56c7c42c863e`;
+gated repetition, 20 infrastructure/upload cases, full local `pnpm check` and both
+high audits pass. Hosted corrective-head CI and independent review remain pending.
+The separate API/shared/MCP formatting commit is parked outside this PR.
 
 Branch `test/t36-unit-coverage` starts from merged PR #33 at
 `465d9e44e480c5f115d92bc294e913d2fb599330`; username prefix was corrected before
@@ -31,14 +46,14 @@ isolated. Selected test/helper hashes reject critical-case removal even with equ
 coverage. Reviewable baseline migration added only these fingerprints, with all
 eight pre/current covered/total counts, source hashes and floors unchanged.
 
-Current totals: API L219/1095 S284/1617 F58/396 B214/1228; web L761/3251
+Initial pre-review totals: API L219/1095 S284/1617 F58/396 B214/1228; web L761/3251
 S1215/4251 F210/1041 B1230/5185; contracts L78/78 S113/113 F64/64 B355/363;
 prototype L199/805 S269/984 F87/368 B194/954. Fresh compilation/mirror repetition
 produced identical canonical counts, source/test hashes and digest
 `530527c8145783425933039f6964b6e39c26556058fd341907c3535de599da5f`.
 Prior API/web/prototype audit numbers were reproduced exactly on merged base.
 
-Local validation passes: root and isolated-tools frozen installs; 54 API cases
+Initial pre-review local validation passed: root and isolated-tools frozen installs; 54 API cases
 (53 behavior + compiler metadata), 95 production web cases (79 existing +16 DOM),
 7 contracts and 19 prototype; all 11 coverage-infrastructure and 5 upload-boundary proofs; full `pnpm check`;
 real PostgreSQL identity/principal/workspace/task/collaboration/discovery/security,

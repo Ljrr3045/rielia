@@ -4,6 +4,11 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Correct PR #34's nine native unit/tooling findings with fail-closed CI modes,
+  complete mirror guards, portable artifact entry, safe process cleanup and
+  observable behavior witnesses; retain all source and ratchet only API coverage
+  upward through a new administration positive control.
+
 - Correct real hooks to run installed local Node/tools with an exact runtime
   guard and no package-manager fallback; add real pass/fail and borrowed-metadata
   safety regressions. PR #34's native findings remain in a Draft corrective batch.

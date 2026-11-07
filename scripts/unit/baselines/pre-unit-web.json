@@ -1010,7 +1010,7 @@
       "scripts/project-task-client.test.mjs": "3737f5a943829b50e887a2a9537053872628e99fa2f0e83f9133de1883c5e2a5",
       "scripts/project-task-logic.test.mjs": "ff80d868431cdd57d32065cdf1cd323edaaecc868a2b31c2197a5d931e1c1670",
       "scripts/task-events-client.test.mjs": "fcccc420d3f06d180ff1be03ce2021ad64abfdbf93805cc43270edc4c2a6839f",
-      "scripts/unit/mirror-loader.mjs": "afd53e413c310762471e28826e60cbf23b0711543724b2f13dccd5dba8fde947",
+      "scripts/unit/mirror-loader.mjs": "b3ef9e50e56ee2fa0079c794c044efbc6b953d75890b97889bc635e233d93115",
       "scripts/workspace-logic.test.mjs": "3519bf33e2901163b975c8466b1049ccec581c2960f95ea3686c7edeb1b09e4f"
     },
     "toolsLock": "8c4e6232dbeb14b7067dd5a6a8be95256893dc915a8972f759e46b06deee7634"

@@ -1007,15 +1007,15 @@
     "tests": {
       "apps/web/test/unit/dom-harness.mjs": "b2d1333d126484b0fd327298cf5a7d7539800ce6265cc9b03d863895fae219af",
       "apps/web/test/unit/identity-hook.test.mjs": "c9b0ae7bd603ab0e6cb375bb65106ff466bbfa46ebafa3803fdec0db6266ff2a",
-      "apps/web/test/unit/identity-view.test.mjs": "5d00c9e18596d979315414d2bafcf0c5e67be01ef5768345a991b6283b4f18dc",
-      "apps/web/test/unit/mutation-witness.mjs": "f04198f6df4fc1882d6889883a525ba3bfe675ababa3b9ddb16eae03225500f4",
-      "apps/web/test/unit/workspace-hook.test.mjs": "0d35f43a04ba0f94d29714c4550f82cde8d1adeb1dce5950441e4fa39570ecae",
+      "apps/web/test/unit/identity-view.test.mjs": "5906ae34ba9b93abc070879303bebc326bc51853c6fb31366d4a03d8417d620a",
+      "apps/web/test/unit/mutation-witness.mjs": "ad5ea2e60af38550c56dab4bd4cdcf33d4a8cd74319c02a311aacaa9501fc268",
+      "apps/web/test/unit/workspace-hook.test.mjs": "d77c03576e8e3340d40a1a30f79b82cc77b1533cc751be0f9646dc7c9ca5da0b",
       "scripts/identity-client.test.mjs": "fc1230e800c33efbfbe3327c54e5a2fb996b60dc6744749e71d325e64dd9e3c7",
       "scripts/identity-logic.test.mjs": "82533a455dbb578dde8a090a9d5f5dc56c74863bd0716410236c2f1c4e2f819a",
       "scripts/project-task-client.test.mjs": "3737f5a943829b50e887a2a9537053872628e99fa2f0e83f9133de1883c5e2a5",
       "scripts/project-task-logic.test.mjs": "ff80d868431cdd57d32065cdf1cd323edaaecc868a2b31c2197a5d931e1c1670",
       "scripts/task-events-client.test.mjs": "75b9b1caa1e031a58d744f949b11d34c5b88a21ff7d6fa4b152e0f32c1838fd8",
-      "scripts/unit/mirror-loader.mjs": "afd53e413c310762471e28826e60cbf23b0711543724b2f13dccd5dba8fde947",
+      "scripts/unit/mirror-loader.mjs": "b3ef9e50e56ee2fa0079c794c044efbc6b953d75890b97889bc635e233d93115",
       "scripts/workspace-logic.test.mjs": "3519bf33e2901163b975c8466b1049ccec581c2960f95ea3686c7edeb1b09e4f"
     },
     "toolsLock": "8c4e6232dbeb14b7067dd5a6a8be95256893dc915a8972f759e46b06deee7634"
