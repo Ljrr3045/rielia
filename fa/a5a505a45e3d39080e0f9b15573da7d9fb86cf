@@ -1,0 +1,23 @@
+scripts/unit/baselines/web.json
+  s_8691a07f071c2f::t_2f5a342fbf152b 689,697,701,707-708,711-712,715-716,719-720,779,791,815-816,819,823-824,827,923-926,986,992,1012-1013,1028-1029,1032-1033,1036-1037,1040-1041
+scripts/unit/baselines/api.json
+  s_8691a07f071c2f::t_2f5a342fbf152b 275,279,283,287,311,315,319,323,347,351,355,359,365,369,373,377,527,531,535,539,545-548,614-617,625,629,633,637
+scripts/unit/infrastructure.test.mjs
+  s_8691a07f071c2f::t_c8768885acbff7 73,82-84
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "faa5a505a45e3d39080e0f9b15573da7d9fb86cf",
+  "prompts": {},
+  "sessions": {
+    "s_8691a07f071c2f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b36a-06f8-7002-9555-020e3c485adb",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
