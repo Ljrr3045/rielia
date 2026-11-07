@@ -1,0 +1,146 @@
+scripts/quality/staged.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 5,10
+scripts/unit/pipeline.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-495
+scripts/unit/report.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-184
+scripts/unit/tools/package.json
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-17
+apps/web/test/unit/mutation-witness.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-144
+docs/development/unit-coverage.md
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-272
+AGENTS.md
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 38-42,174-181
+docs/development/frontend-agent.md
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 5-20
+scripts/task-events-proxy.integration.test.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-108
+scripts/identity-proxy.integration.test.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-58
+scripts/quality/quality.test.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 17,74,128-228
+  s_cd38fe5b1413ea::t_c77bb932e43252 229
+apps/web/test/unit/workspace-hook.test.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-310
+apps/api/test/unit/principal-errors.test.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-85
+scripts/unit/upload-worker.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-12
+scripts/unit/artifacts.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-122
+eslint.config.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 11
+scripts/identity-client.integration.test.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-75
+scripts/unit/baselines/pre-unit-prototype.json
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-367
+.github/workflows/ci.yml
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 41-42,46-49,55-64
+scripts/unit/process.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-59
+scripts/task-events-client.test.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 4,7-13,15-57,61-77,79-111
+.husky/pre-commit
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 3-9
+apps/web/test/unit/dom-harness.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-222
+scripts/unit/infrastructure.test.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-592
+docs/development/formatting-inventory.json
+  s_cd38fe5b1413ea::t_988d640296b563 5-6,50-53,56-60,72,83-86,95-120,267-321,391-393
+scripts/unit/http-deadline-witness.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-60
+.github/actions/unit-artifacts/index.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-14
+docs/development/development-quality-roadmap.md
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 22-25
+format-adoption.json
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 3-4,48-51,54-58,81-84,93-118
+  s_cd38fe5b1413ea::t_988d640296b563 70
+scripts/unit/baselines/prototype.json
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-367
+scripts/unit/baselines/web.json
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-1042
+scripts/unit/run.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-36
+scripts/unit/files.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-117
+scripts/unit/baselines/pre-unit-api.json
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-633
+package.json
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 32,41-49
+scripts/unit/upload.test.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-138
+scripts/unit/baselines/contracts.json
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-139
+scripts/unit/baselines/pre-unit-web.json
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-1037
+scripts/quality/policy.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 7-15,57
+scripts/unit/mirror-loader.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-46
+apps/web/test/unit/identity-hook.test.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-127
+apps/api/test/unit/principal-policy.test.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-482
+docs/development/quality-tooling.md
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 65-86,180-184
+  s_cd38fe5b1413ea::t_09247978e2af83 185
+apps/api/AGENTS.md
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 86-88
+scripts/unit/baselines/pre-unit-contracts.json
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-139
+apps/api/test/unit/identity-config.test.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-175
+scripts/quality/commits.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 5,23
+CONTRIBUTING.md
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 36-37,96-107
+scripts/unit/baselines/api.json
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-637
+docs/development/progress.md
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 3-118,1291
+scripts/unit/upload.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-117
+.github/actions/unit-artifacts/action.yml
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-5
+.husky/commit-msg
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 3-9
+apps/web/AGENTS.md
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 78-80
+scripts/unit/tools/artifact-client.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-4
+apps/web/test/unit/identity-view.test.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-184
+scripts/unit/tools/pnpm-workspace.yaml
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-7
+packages/contracts/test/guards.test.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-533
+scripts/unit/config.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-40
+apps/api/test/unit/project-task-failures.test.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 1-442
+CHANGELOG.md
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 7-42
+scripts/identity-logic.test.mjs
+  s_cd38fe5b1413ea::t_1f7ab88ad06ea9 5-8,10-16,20-22,28-35,39-44,50-52,60-69,80-81,92-100,105-106,108-121,129-131,135-136,144-145
+scripts/unit/tools/pnpm-lock.yaml
+  s_cd38fe5b1413ea::t_0cb9d08d6aa561 1-3977
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c5f90a841430b5bc800c3a82422bedfe11f14980",
+  "prompts": {},
+  "sessions": {
+    "s_cd38fe5b1413ea": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b369-4dc0-7a52-ae15-1cd16031eb12",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
