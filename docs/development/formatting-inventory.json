@@ -383,7 +383,7 @@
     ],
     "changedFiles": 50,
     "unchangedAdoptionOnly": 6,
-    "semantics": "Pinned Prettier3.9.10 only; TypeScript6.0.3 normalized AST/JSON equality, ordered131comments retained; two method-chain layouts require the verified stable second formatter pass",
+    "semantics": "Pinned Prettier3.9.10 only; TypeScript6.0.3 normalized AST/JSON equality, ordered132comments retained; two method-chain layouts require the verified stable second formatter pass",
     "coverage": "Paired accepted-pipeline measurements and explicit reviewed numerical/source-manifest migration pending PR34 merge; formatting is not new behavior coverage"
   },
   "currentSourceAccounting": {
