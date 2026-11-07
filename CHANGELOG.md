@@ -4,6 +4,21 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+### T36 mechanical project-surface formatting
+
+- Adopt exactly 22 project files with 21 pinned mechanical changes and one
+  unchanged adoption; preserve existing UI/behavior/contracts and all tests.
+  Account for 165/208 adopted inputs and 43 remaining.
+- Retain all 269 cases/101 sources and every S/F/B unit/hit. Explicitly review
+  current web physical lines 1177/3721→1177/3774 and floor 31.63→31.18, with all
+  seven other baselines unchanged; no behavioral coverage gain is claimed.
+- Record exact finite CSS proof, 53 extra prior-zero groups and 106 new unknown
+  END fields/one recovered END/zero new START in the
+  [project formatting guide](docs/development/project-surface-formatting.md).
+  Local infrastructure20, handoff/whitespace and one actual full native
+  `pnpm check` pass; independent final review and final-head hosted evidence
+  remain pending. T36, remaining formatting/extraction, T37 and T11 stay incomplete.
+
 ### T36 web transport/controller/hook mechanical formatting
 
 - Adopt exactly 20 web logic inputs with 15 mechanical changes and five

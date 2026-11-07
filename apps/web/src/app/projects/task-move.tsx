@@ -48,20 +48,24 @@ export function TaskMoveControl({
 
   return (
     <div className={cx(styles.moveControls, variant === 'card' && styles.moveControlsCard)}>
-      <label className={styles.srOnly} htmlFor={selectId}>{copy.move.statusLabel[lang](task.key)}</label>
+      <label className={styles.srOnly} htmlFor={selectId}>
+        {copy.move.statusLabel[lang](task.key)}
+      </label>
       <select
         aria-label={copy.move.statusLabel[lang](task.key)}
         className={styles.moveStatusSelect}
         disabled={disabled}
         id={selectId}
-        onChange={event => {
+        onChange={(event) => {
           const next = event.currentTarget.value as TaskStatus;
           if (next !== task.status) onMove(next);
         }}
         value={task.status}
       >
-        {taskStatuses.map(status => (
-          <option key={status} value={status}>{statusName(status)[lang]}</option>
+        {taskStatuses.map((status) => (
+          <option key={status} value={status}>
+            {statusName(status)[lang]}
+          </option>
         ))}
       </select>
 
@@ -70,7 +74,7 @@ export function TaskMoveControl({
           <summary
             aria-label={copy.move.menuLabel[lang](task.key)}
             className={styles.moveMenuSummary}
-            onKeyDown={event => {
+            onKeyDown={(event) => {
               if (event.key !== 'Enter' && event.key !== ' ') return;
               event.preventDefault();
               const details = event.currentTarget.closest('details');
@@ -82,7 +86,7 @@ export function TaskMoveControl({
           </summary>
           <div
             className={styles.moveMenuPanel}
-            onKeyDown={event => {
+            onKeyDown={(event) => {
               if (event.key !== 'Escape') return;
               const details = event.currentTarget.closest('details');
               const summary = details?.querySelector<HTMLElement>('summary') ?? null;
@@ -93,7 +97,7 @@ export function TaskMoveControl({
             {previous !== null && (
               <button
                 className={styles.moveMenuItem}
-                onClick={event => {
+                onClick={(event) => {
                   closeMenu(event);
                   onMoveBefore(previous.id);
                 }}
@@ -105,7 +109,7 @@ export function TaskMoveControl({
             {nextNext !== null && (
               <button
                 className={styles.moveMenuItem}
-                onClick={event => {
+                onClick={(event) => {
                   closeMenu(event);
                   onMoveBefore(nextNext.id);
                 }}
@@ -116,7 +120,7 @@ export function TaskMoveControl({
             )}
             <button
               className={styles.moveMenuItem}
-              onClick={event => {
+              onClick={(event) => {
                 closeMenu(event);
                 onMoveEnd();
               }}
@@ -128,7 +132,11 @@ export function TaskMoveControl({
         </details>
       )}
 
-      {pending && <span className={styles.movePending} role="status">{copy.move.pendingShort[lang]}</span>}
+      {pending && (
+        <span className={styles.movePending} role="status">
+          {copy.move.pendingShort[lang]}
+        </span>
+      )}
     </div>
   );
 }

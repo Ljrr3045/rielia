@@ -5,7 +5,11 @@ import { FeedbackPanel } from './feedback';
 import { AgentBadge, IconEdit, useLocale } from './project-ui';
 import { TaskDescription } from './task-description';
 import { copy } from './strings';
-import { formatTimestamp, provenanceLabel, type ProjectTasksHook } from './task-collaboration-shared';
+import {
+  formatTimestamp,
+  provenanceLabel,
+  type ProjectTasksHook,
+} from './task-collaboration-shared';
 import styles from './projects.module.css';
 
 export function TaskComments({
@@ -30,7 +34,8 @@ export function TaskComments({
   const archived = projectArchived || task.archivedAt !== null;
   const stale = slot.status === 'changed';
   const retrying = hook.collaborationRetryTarget !== null;
-  const collaborationDraft = hook.collaborationDraft?.taskId === task.id ? hook.collaborationDraft : null;
+  const collaborationDraft =
+    hook.collaborationDraft?.taskId === task.id ? hook.collaborationDraft : null;
   const addDraft = collaborationDraft?.type === 'add-comment' ? collaborationDraft : null;
   const editDraft = collaborationDraft?.type === 'edit-comment' ? collaborationDraft : null;
   const otherDraft = hook.draftGuard.kind !== 'none' && addDraft === null && editDraft === null;
@@ -54,7 +59,8 @@ export function TaskComments({
   }
 
   function startEdit(commentId: string, body: string) {
-    if (archived || pending || stale || otherDraft || editDraft !== null || addDraft !== null) return;
+    if (archived || pending || stale || otherDraft || editDraft !== null || addDraft !== null)
+      return;
     onStage({
       type: 'edit-comment',
       workspaceId: task.workspaceId,
@@ -62,7 +68,7 @@ export function TaskComments({
       taskId: task.id,
       expectedVersion: task.version,
       commentId,
-      expectedCommentVersion: data?.items.find(comment => comment.id === commentId)?.version ?? 1,
+      expectedCommentVersion: data?.items.find((comment) => comment.id === commentId)?.version ?? 1,
       body,
     });
   }
@@ -93,21 +99,31 @@ export function TaskComments({
   if (data === null) {
     return (
       <section aria-labelledby="collab-comments-heading" className={styles.collabSection}>
-        <h3 className={styles.detailSectionTitle} id="collab-comments-heading" tabIndex={-1}>{copy.collaboration.comments[lang]}</h3>
-        {slot.status === 'error'
-          ? (
-            <FeedbackPanel
-              actions={(
-                <button className={styles.secondary} onClick={() => { void hook.loadCollaborationMore('comments'); }} type="button">
-                  {copy.collaboration.sectionRetry[lang]}
-                </button>
-              )}
-              body={copy.collaboration.sectionErrorBody}
-              title={copy.collaboration.sectionErrorTitle}
-              tone="warning"
-            />
-          )
-          : <p className={styles.collabMuted} role="status">{copy.collaboration.sectionLoading[lang]}</p>}
+        <h3 className={styles.detailSectionTitle} id="collab-comments-heading" tabIndex={-1}>
+          {copy.collaboration.comments[lang]}
+        </h3>
+        {slot.status === 'error' ? (
+          <FeedbackPanel
+            actions={
+              <button
+                className={styles.secondary}
+                onClick={() => {
+                  void hook.loadCollaborationMore('comments');
+                }}
+                type="button"
+              >
+                {copy.collaboration.sectionRetry[lang]}
+              </button>
+            }
+            body={copy.collaboration.sectionErrorBody}
+            title={copy.collaboration.sectionErrorTitle}
+            tone="warning"
+          />
+        ) : (
+          <p className={styles.collabMuted} role="status">
+            {copy.collaboration.sectionLoading[lang]}
+          </p>
+        )}
       </section>
     );
   }
@@ -117,18 +133,28 @@ export function TaskComments({
   return (
     <section aria-labelledby="collab-comments-heading" className={styles.collabSection}>
       <div className={styles.collabHeader}>
-        <h3 className={styles.detailSectionTitle} id="collab-comments-heading" tabIndex={-1}>{copy.collaboration.comments[lang]}</h3>
-        <span className={styles.collabCount}>{copy.collaboration.commentsCount[lang](data.total)}</span>
+        <h3 className={styles.detailSectionTitle} id="collab-comments-heading" tabIndex={-1}>
+          {copy.collaboration.comments[lang]}
+        </h3>
+        <span className={styles.collabCount}>
+          {copy.collaboration.commentsCount[lang](data.total)}
+        </span>
       </div>
       <p className={styles.collabHint}>{copy.collaboration.commentsHint[lang]}</p>
 
       {slot.status === 'changed' && (
         <FeedbackPanel
-          actions={(
-            <button className={styles.secondary} onClick={() => { void hook.refresh(); }} type="button">
+          actions={
+            <button
+              className={styles.secondary}
+              onClick={() => {
+                void hook.refresh();
+              }}
+              type="button"
+            >
               {copy.collaboration.sectionRefresh[lang]}
             </button>
-          )}
+          }
           body={copy.collaboration.sectionStale}
           title={copy.collaboration.sectionChangedTitle}
           tone="warning"
@@ -136,11 +162,17 @@ export function TaskComments({
       )}
       {slot.status === 'error' && (
         <FeedbackPanel
-          actions={(
-            <button className={styles.secondary} onClick={() => { void hook.loadCollaborationMore('comments'); }} type="button">
+          actions={
+            <button
+              className={styles.secondary}
+              onClick={() => {
+                void hook.loadCollaborationMore('comments');
+              }}
+              type="button"
+            >
               {copy.collaboration.sectionRetry[lang]}
             </button>
-          )}
+          }
           body={copy.collaboration.sectionErrorBody}
           title={copy.collaboration.sectionErrorTitle}
           tone="warning"
@@ -150,27 +182,40 @@ export function TaskComments({
       {canCreate && editDraft === null && (
         <form
           className={styles.collabCommentForm}
-          onSubmit={event => {
+          onSubmit={(event) => {
             event.preventDefault();
             if (addDraft !== null && addDraft.body.trim().length > 0) onSubmit();
           }}
         >
-          <label className={styles.collabLabel} htmlFor="collab-comment-body">{copy.collaboration.commentPlaceholder[lang]}</label>
+          <label className={styles.collabLabel} htmlFor="collab-comment-body">
+            {copy.collaboration.commentPlaceholder[lang]}
+          </label>
           <textarea
             disabled={disabled}
             id="collab-comment-body"
             maxLength={10000}
-            onChange={event => stageAdd(event.currentTarget.value)}
+            onChange={(event) => stageAdd(event.currentTarget.value)}
             placeholder={copy.collaboration.commentPlaceholder[lang]}
             rows={3}
             value={addDraft?.body ?? ''}
           />
           <div className={styles.collabRowActions}>
-            <button className={styles.primary} disabled={pending || addDraft === null || addDraft.body.trim().length === 0} type="submit">
-              {pending && addDraft !== null ? copy.collaboration.commentAdding[lang] : copy.collaboration.commentAdd[lang]}
+            <button
+              className={styles.primary}
+              disabled={pending || addDraft === null || addDraft.body.trim().length === 0}
+              type="submit"
+            >
+              {pending && addDraft !== null
+                ? copy.collaboration.commentAdding[lang]
+                : copy.collaboration.commentAdd[lang]}
             </button>
             {addDraft !== null && (
-              <button className={styles.ghostButton} disabled={pending} onClick={onDiscard} type="button">
+              <button
+                className={styles.ghostButton}
+                disabled={pending}
+                onClick={onDiscard}
+                type="button"
+              >
                 {copy.common.cancel[lang]}
               </button>
             )}
@@ -190,22 +235,27 @@ export function TaskComments({
         <>
           <p className={styles.collabHint}>{copy.collaboration.commentsMostRecent[lang]}</p>
           <ol className={styles.commentList} aria-label={copy.collaboration.comments[lang]}>
-            {comments.map(comment => {
+            {comments.map((comment) => {
               const editing = editDraft?.commentId === comment.id;
               return (
                 <li className={styles.commentItem} key={comment.id}>
                   <div className={styles.commentHeader}>
                     <span className={styles.commentAuthor}>{comment.author.name}</span>
                     {comment.author.kind === 'agent' && <AgentBadge />}
-                    <span className={styles.collabMuted}>{provenanceLabel(comment.provenance, lang)}</span>
+                    <span className={styles.collabMuted}>
+                      {provenanceLabel(comment.provenance, lang)}
+                    </span>
                     <span className={styles.commentTime}>
-                      <time dateTime={comment.createdAt}>{formatTimestamp(comment.createdAt, lang)}</time>
+                      <time dateTime={comment.createdAt}>
+                        {formatTimestamp(comment.createdAt, lang)}
+                      </time>
                     </span>
                     {comment.editedAt !== null && (
                       <span className={styles.commentEdited}>
-                        {copy.collaboration.commentEdited[lang]}
-                        {' '}
-                        <time dateTime={comment.editedAt}>{formatTimestamp(comment.editedAt, lang)}</time>
+                        {copy.collaboration.commentEdited[lang]}{' '}
+                        <time dateTime={comment.editedAt}>
+                          {formatTimestamp(comment.editedAt, lang)}
+                        </time>
                       </span>
                     )}
                     {comment.capabilities.canEdit && !archived && !editing && (
@@ -222,41 +272,50 @@ export function TaskComments({
                       </button>
                     )}
                   </div>
-                  {editing
-                    ? (
-                      <form
-                        className={styles.collabCommentForm}
-                        onSubmit={event => {
-                          event.preventDefault();
-                          if ((editDraft?.body ?? '').trim().length > 0) onSubmit();
-                        }}
-                      >
-                        <label className={styles.collabLabel} htmlFor={`comment-edit-${comment.id}`}>{copy.collaboration.editCommentHint[lang]}</label>
-                        <textarea
-                          autoFocus
-                          disabled={disabled}
-                          id={`comment-edit-${comment.id}`}
-                          maxLength={10000}
-                          onChange={event => stageEdit(comment.id, event.currentTarget.value)}
-                          rows={4}
-                          value={editDraft?.body ?? ''}
-                        />
-                        <div className={styles.collabRowActions}>
-                          <button className={styles.primary} disabled={pending || (editDraft?.body ?? '').trim().length === 0} type="submit">
-                            {copy.collaboration.saveComment[lang]}
-                          </button>
-                          <button className={styles.ghostButton} disabled={pending} onClick={() => cancelEdit(comment.id)} type="button">
-                            {copy.collaboration.cancelComment[lang]}
-                          </button>
-                        </div>
-                        <p className={styles.collabHint}>{copy.collaboration.commentLimit[lang]}</p>
-                      </form>
-                    )
-                    : (
-                      <div className={styles.commentBody}>
-                        <TaskDescription source={comment.body} />
+                  {editing ? (
+                    <form
+                      className={styles.collabCommentForm}
+                      onSubmit={(event) => {
+                        event.preventDefault();
+                        if ((editDraft?.body ?? '').trim().length > 0) onSubmit();
+                      }}
+                    >
+                      <label className={styles.collabLabel} htmlFor={`comment-edit-${comment.id}`}>
+                        {copy.collaboration.editCommentHint[lang]}
+                      </label>
+                      <textarea
+                        autoFocus
+                        disabled={disabled}
+                        id={`comment-edit-${comment.id}`}
+                        maxLength={10000}
+                        onChange={(event) => stageEdit(comment.id, event.currentTarget.value)}
+                        rows={4}
+                        value={editDraft?.body ?? ''}
+                      />
+                      <div className={styles.collabRowActions}>
+                        <button
+                          className={styles.primary}
+                          disabled={pending || (editDraft?.body ?? '').trim().length === 0}
+                          type="submit"
+                        >
+                          {copy.collaboration.saveComment[lang]}
+                        </button>
+                        <button
+                          className={styles.ghostButton}
+                          disabled={pending}
+                          onClick={() => cancelEdit(comment.id)}
+                          type="button"
+                        >
+                          {copy.collaboration.cancelComment[lang]}
+                        </button>
                       </div>
-                    )}
+                      <p className={styles.collabHint}>{copy.collaboration.commentLimit[lang]}</p>
+                    </form>
+                  ) : (
+                    <div className={styles.commentBody}>
+                      <TaskDescription source={comment.body} />
+                    </div>
+                  )}
                 </li>
               );
             })}
@@ -265,7 +324,9 @@ export function TaskComments({
             <button
               className={styles.loadMoreButton}
               disabled={pending}
-              onClick={() => { void hook.loadCollaborationMore('comments'); }}
+              onClick={() => {
+                void hook.loadCollaborationMore('comments');
+              }}
               type="button"
             >
               {copy.collaboration.loadOlderComments[lang]}

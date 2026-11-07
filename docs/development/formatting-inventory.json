@@ -61,6 +61,28 @@
     "apps/web/src/app/api/v1/identity/[action]/route.ts",
     "apps/web/src/app/api/v1/workspace-invitations/accept/route.ts",
     "apps/web/src/app/api/v1/workspaces/[[...path]]/route.ts",
+    "apps/web/src/app/projects/feedback.tsx",
+    "apps/web/src/app/projects/page.tsx",
+    "apps/web/src/app/projects/project-access.tsx",
+    "apps/web/src/app/projects/project-forms.tsx",
+    "apps/web/src/app/projects/project-ui.tsx",
+    "apps/web/src/app/projects/projects-view.tsx",
+    "apps/web/src/app/projects/projects.module.css",
+    "apps/web/src/app/projects/strings.ts",
+    "apps/web/src/app/projects/task-board.tsx",
+    "apps/web/src/app/projects/task-checklist.tsx",
+    "apps/web/src/app/projects/task-collaboration-shared.tsx",
+    "apps/web/src/app/projects/task-collaboration.tsx",
+    "apps/web/src/app/projects/task-comments.tsx",
+    "apps/web/src/app/projects/task-description.tsx",
+    "apps/web/src/app/projects/task-detail.tsx",
+    "apps/web/src/app/projects/task-discovery.tsx",
+    "apps/web/src/app/projects/task-forms.tsx",
+    "apps/web/src/app/projects/task-history.tsx",
+    "apps/web/src/app/projects/task-list.tsx",
+    "apps/web/src/app/projects/task-move.tsx",
+    "apps/web/src/app/projects/task-relations.tsx",
+    "apps/web/src/app/projects/task-view-bar.tsx",
     "apps/web/src/lib/identity-client.ts",
     "apps/web/src/lib/identity-controller.ts",
     "apps/web/src/lib/identity-proxy.ts",
@@ -417,8 +439,8 @@
   "currentSourceAccounting": {
     "owner": "T36 mechanical formatting integration; remaining web presentation/prototype and scripts/config batches",
     "eligibleCount": 208,
-    "adoptedCount": 143,
-    "remainingCount": 65,
+    "adoptedCount": 165,
+    "remainingCount": 43,
     "remaining": [
       "apps/web/next.config.ts",
       "apps/web/package.json",
@@ -427,28 +449,6 @@
       "apps/web/src/app/identity/page.tsx",
       "apps/web/src/app/layout.tsx",
       "apps/web/src/app/page.tsx",
-      "apps/web/src/app/projects/feedback.tsx",
-      "apps/web/src/app/projects/page.tsx",
-      "apps/web/src/app/projects/project-access.tsx",
-      "apps/web/src/app/projects/project-forms.tsx",
-      "apps/web/src/app/projects/project-ui.tsx",
-      "apps/web/src/app/projects/projects-view.tsx",
-      "apps/web/src/app/projects/projects.module.css",
-      "apps/web/src/app/projects/strings.ts",
-      "apps/web/src/app/projects/task-board.tsx",
-      "apps/web/src/app/projects/task-checklist.tsx",
-      "apps/web/src/app/projects/task-collaboration-shared.tsx",
-      "apps/web/src/app/projects/task-collaboration.tsx",
-      "apps/web/src/app/projects/task-comments.tsx",
-      "apps/web/src/app/projects/task-description.tsx",
-      "apps/web/src/app/projects/task-detail.tsx",
-      "apps/web/src/app/projects/task-discovery.tsx",
-      "apps/web/src/app/projects/task-forms.tsx",
-      "apps/web/src/app/projects/task-history.tsx",
-      "apps/web/src/app/projects/task-list.tsx",
-      "apps/web/src/app/projects/task-move.tsx",
-      "apps/web/src/app/projects/task-relations.tsx",
-      "apps/web/src/app/projects/task-view-bar.tsx",
       "apps/web/src/app/prototype/board-view.tsx",
       "apps/web/src/app/prototype/filters.tsx",
       "apps/web/src/app/prototype/loading.tsx",
@@ -503,7 +503,8 @@
   },
   "manualReviewedDocuments": [
     "docs/development/source-format-adoption.md",
-    "docs/development/web-transport-formatting.md"
+    "docs/development/web-transport-formatting.md",
+    "docs/development/project-surface-formatting.md"
   ],
   "webTransportFormattingAdoption": {
     "owner": "T36.3 web transport/controller/hook mechanical formatting",
@@ -613,5 +614,207 @@
       ]
     },
     "sourceMapPrecisionLimit": "Only these43 new unknown END-column fields across10files accepted for this migration; zero new unknown START columns, no lost unit/hit/start-line; null positions retained, not fabricated; no general exception"
+  },
+  "projectSurfaceFormattingAdoption": {
+    "owner": "T36.3 mechanical project-surface formatting; no extraction or UI redesign",
+    "base": "ec257ea3b2d76be0b73a0d17278be592d3a23e2c",
+    "files": [
+      "apps/web/src/app/projects/feedback.tsx",
+      "apps/web/src/app/projects/page.tsx",
+      "apps/web/src/app/projects/project-access.tsx",
+      "apps/web/src/app/projects/project-forms.tsx",
+      "apps/web/src/app/projects/project-ui.tsx",
+      "apps/web/src/app/projects/strings.ts",
+      "apps/web/src/app/projects/task-board.tsx",
+      "apps/web/src/app/projects/task-checklist.tsx",
+      "apps/web/src/app/projects/task-collaboration-shared.tsx",
+      "apps/web/src/app/projects/task-collaboration.tsx",
+      "apps/web/src/app/projects/task-comments.tsx",
+      "apps/web/src/app/projects/task-description.tsx",
+      "apps/web/src/app/projects/task-detail.tsx",
+      "apps/web/src/app/projects/task-discovery.tsx",
+      "apps/web/src/app/projects/task-forms.tsx",
+      "apps/web/src/app/projects/task-history.tsx",
+      "apps/web/src/app/projects/task-list.tsx",
+      "apps/web/src/app/projects/task-move.tsx",
+      "apps/web/src/app/projects/task-relations.tsx",
+      "apps/web/src/app/projects/task-view-bar.tsx",
+      "apps/web/src/app/projects/projects-view.tsx",
+      "apps/web/src/app/projects/projects.module.css"
+    ],
+    "changedFiles": [
+      "apps/web/src/app/projects/feedback.tsx",
+      "apps/web/src/app/projects/page.tsx",
+      "apps/web/src/app/projects/project-access.tsx",
+      "apps/web/src/app/projects/project-forms.tsx",
+      "apps/web/src/app/projects/project-ui.tsx",
+      "apps/web/src/app/projects/strings.ts",
+      "apps/web/src/app/projects/task-board.tsx",
+      "apps/web/src/app/projects/task-checklist.tsx",
+      "apps/web/src/app/projects/task-collaboration.tsx",
+      "apps/web/src/app/projects/task-comments.tsx",
+      "apps/web/src/app/projects/task-description.tsx",
+      "apps/web/src/app/projects/task-detail.tsx",
+      "apps/web/src/app/projects/task-discovery.tsx",
+      "apps/web/src/app/projects/task-forms.tsx",
+      "apps/web/src/app/projects/task-history.tsx",
+      "apps/web/src/app/projects/task-list.tsx",
+      "apps/web/src/app/projects/task-move.tsx",
+      "apps/web/src/app/projects/task-relations.tsx",
+      "apps/web/src/app/projects/task-view-bar.tsx",
+      "apps/web/src/app/projects/projects-view.tsx",
+      "apps/web/src/app/projects/projects.module.css"
+    ],
+    "unchangedAdoptionOnly": ["apps/web/src/app/projects/task-collaboration-shared.tsx"],
+    "semantics": "Exact default pinned Prettier3.9.10; fresh22 sealed TypeScript/TSX runtime/source/literal/comment comparisons and idempotence; exact finite projectsCSS pair/capsule only; no manual JSX representations",
+    "sealedHelperSHA256": "986042f0c484d6b1eeb2ba96a419d7868738fc288bcddb061d131af07f0106de",
+    "finiteCSSCapsuleSHA256": "c668142127878bbbbef744337ba8d04129e5b6bf8adc4fb138f1b9b9a2bda928",
+    "coverage": "Reviewed same269 cases/all101 inputs; selected21 remain entirely unexecuted; web lines1177/3721->1177/3774, current line floor3163->3118 physical-line exception; all S/F/B units/hits/floors and seven other baselines exact; no semantic coverage gain",
+    "newUnknownEndColumnFields": {
+      "apps/web/src/app/projects/feedback.tsx": [
+        "branchMap.12.loc.end",
+        "branchMap.12.locations.1.end",
+        "branchMap.7.loc.end",
+        "branchMap.7.locations.1.end",
+        "branchMap.8.loc.end",
+        "branchMap.9.loc.end",
+        "branchMap.9.locations.1.end"
+      ],
+      "apps/web/src/app/projects/project-access.tsx": [
+        "branchMap.46.loc.end",
+        "branchMap.50.loc.end",
+        "branchMap.50.locations.1.end",
+        "branchMap.51.locations.2.end",
+        "branchMap.59.loc.end",
+        "branchMap.60.loc.end",
+        "branchMap.62.loc.end",
+        "branchMap.76.loc.end",
+        "branchMap.76.locations.0.end",
+        "branchMap.76.locations.1.end",
+        "branchMap.77.loc.end",
+        "branchMap.77.locations.0.end",
+        "branchMap.77.locations.1.end"
+      ],
+      "apps/web/src/app/projects/project-forms.tsx": [
+        "branchMap.13.loc.end",
+        "branchMap.17.loc.end",
+        "branchMap.20.loc.end"
+      ],
+      "apps/web/src/app/projects/project-ui.tsx": [
+        "branchMap.23.loc.end",
+        "branchMap.23.locations.1.end",
+        "branchMap.5.loc.end",
+        "branchMap.5.locations.1.end",
+        "statementMap.35.end"
+      ],
+      "apps/web/src/app/projects/projects-view.tsx": [
+        "branchMap.133.loc.end",
+        "branchMap.133.locations.1.end",
+        "branchMap.177.locations.0.end",
+        "branchMap.185.locations.0.end",
+        "branchMap.507.loc.end",
+        "branchMap.508.loc.end",
+        "branchMap.528.loc.end",
+        "branchMap.528.locations.1.end",
+        "branchMap.555.loc.end",
+        "branchMap.563.locations.1.end",
+        "branchMap.573.locations.1.end",
+        "branchMap.577.loc.end",
+        "branchMap.584.locations.0.end",
+        "branchMap.585.locations.0.end",
+        "branchMap.610.loc.end",
+        "branchMap.611.loc.end",
+        "branchMap.613.loc.end",
+        "branchMap.613.locations.1.end",
+        "branchMap.619.loc.end",
+        "branchMap.622.loc.end",
+        "branchMap.628.locations.0.end",
+        "branchMap.630.locations.2.end",
+        "branchMap.675.locations.1.end",
+        "branchMap.76.loc.end",
+        "branchMap.76.locations.1.end",
+        "fnMap.135.decl.end",
+        "statementMap.111.end",
+        "statementMap.133.end",
+        "statementMap.140.end",
+        "statementMap.188.end",
+        "statementMap.210.end",
+        "statementMap.290.end",
+        "statementMap.321.end",
+        "statementMap.486.end",
+        "statementMap.631.end"
+      ],
+      "apps/web/src/app/projects/task-board.tsx": [
+        "branchMap.71.loc.end",
+        "branchMap.71.locations.1.end"
+      ],
+      "apps/web/src/app/projects/task-checklist.tsx": [
+        "branchMap.28.loc.end",
+        "branchMap.28.locations.1.end",
+        "branchMap.29.loc.end",
+        "branchMap.29.locations.1.end",
+        "branchMap.37.loc.end",
+        "branchMap.37.locations.1.end"
+      ],
+      "apps/web/src/app/projects/task-comments.tsx": [
+        "branchMap.19.loc.end",
+        "branchMap.19.locations.1.end"
+      ],
+      "apps/web/src/app/projects/task-detail.tsx": [
+        "branchMap.20.locations.1.end",
+        "branchMap.21.loc.end",
+        "branchMap.21.locations.1.end"
+      ],
+      "apps/web/src/app/projects/task-discovery.tsx": [
+        "branchMap.22.loc.end",
+        "branchMap.49.locations.0.end",
+        "branchMap.50.locations.0.end",
+        "branchMap.60.locations.0.end",
+        "branchMap.61.locations.0.end",
+        "branchMap.67.loc.end",
+        "branchMap.67.locations.1.end",
+        "branchMap.72.locations.1.end",
+        "branchMap.8.locations.1.end",
+        "statementMap.45.end",
+        "statementMap.50.end"
+      ],
+      "apps/web/src/app/projects/task-forms.tsx": [
+        "branchMap.15.loc.end",
+        "branchMap.23.locations.1.end",
+        "branchMap.35.loc.end",
+        "branchMap.35.locations.0.end",
+        "branchMap.35.locations.1.end"
+      ],
+      "apps/web/src/app/projects/task-history.tsx": [
+        "branchMap.15.loc.end",
+        "branchMap.15.locations.1.end",
+        "branchMap.20.loc.end",
+        "branchMap.21.loc.end"
+      ],
+      "apps/web/src/app/projects/task-move.tsx": [
+        "branchMap.13.loc.end",
+        "branchMap.13.locations.1.end"
+      ],
+      "apps/web/src/app/projects/task-relations.tsx": [
+        "branchMap.2.loc.end",
+        "branchMap.31.loc.end",
+        "branchMap.31.locations.1.end",
+        "branchMap.33.locations.1.end",
+        "branchMap.55.locations.2.end"
+      ],
+      "apps/web/src/app/projects/task-view-bar.tsx": [
+        "branchMap.16.loc.end",
+        "branchMap.19.locations.1.end",
+        "branchMap.27.loc.end"
+      ]
+    },
+    "recoveredEndColumnFields": [
+      {
+        "field": "branchMap.79.loc.end",
+        "file": "apps/web/src/app/projects/task-discovery.tsx"
+      }
+    ],
+    "precisionLimit": "Only these106 enumerated new unknownEND fields (12statement/1function-declaration/93branch), zero new unknownSTART and one recoveredEND accepted; known starts/hits retained, exact end spans/highlighting degraded; no fabricated positions or general waiver",
+    "evidence": "project-surface-formatting.md"
   }
 }

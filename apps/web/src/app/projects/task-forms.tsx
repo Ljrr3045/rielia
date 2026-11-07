@@ -62,7 +62,8 @@ export function TaskEditForm({
   const titleErrorId = useId();
   const [localError, setLocalError] = useState<'title' | null>(null);
   const titleError = errorField === 'title' || localError === 'title';
-  const titleMessage = errorField === 'title' && errorMessage !== null ? errorMessage : copy.task.titleRequired[lang];
+  const titleMessage =
+    errorField === 'title' && errorMessage !== null ? errorMessage : copy.task.titleRequired[lang];
   const blocked = pending || disabled;
   const assigneeUnavailable = assigneesLoading || (assigneesError && assigneesPageMissing);
 
@@ -87,7 +88,8 @@ export function TaskEditForm({
       <div className={styles.formGrid}>
         <div className={styles.fieldWide}>
           <label className={styles.fieldLabel} htmlFor={titleId}>
-            {copy.task.titleLabel[lang]} <span className={styles.requiredMark}>{copy.form.requiredMark[lang]}</span>
+            {copy.task.titleLabel[lang]}{' '}
+            <span className={styles.requiredMark}>{copy.form.requiredMark[lang]}</span>
           </label>
           <input
             aria-describedby={titleError ? titleErrorId : undefined}
@@ -96,7 +98,7 @@ export function TaskEditForm({
             disabled={blocked}
             id={titleId}
             maxLength={300}
-            onChange={event => {
+            onChange={(event) => {
               if (localError === 'title') setLocalError(null);
               onChange({ title: event.currentTarget.value });
             }}
@@ -104,20 +106,23 @@ export function TaskEditForm({
             type="text"
             value={value.title}
           />
-          {titleError
-            ? <FieldError id={titleErrorId}>{titleMessage}</FieldError>
-            : <p className={styles.fieldHint}>{copy.task.titleHint[lang]}</p>}
+          {titleError ? (
+            <FieldError id={titleErrorId}>{titleMessage}</FieldError>
+          ) : (
+            <p className={styles.fieldHint}>{copy.task.titleHint[lang]}</p>
+          )}
         </div>
 
         <div className={styles.fieldWide}>
           <label className={styles.fieldLabel} htmlFor={descriptionId}>
-            {copy.task.descriptionLabel[lang]} <span className={styles.optionalMark}>{copy.form.optionalMark[lang]}</span>
+            {copy.task.descriptionLabel[lang]}{' '}
+            <span className={styles.optionalMark}>{copy.form.optionalMark[lang]}</span>
           </label>
           <textarea
             disabled={blocked}
             id={descriptionId}
             maxLength={20000}
-            onChange={event => onChange({ description: event.currentTarget.value })}
+            onChange={(event) => onChange({ description: event.currentTarget.value })}
             placeholder={copy.task.descriptionPlaceholder[lang]}
             rows={6}
             value={value.description}
@@ -126,53 +131,71 @@ export function TaskEditForm({
         </div>
 
         <div className={styles.field}>
-          <label className={styles.fieldLabel} htmlFor={statusId}>{copy.task.statusLabel[lang]}</label>
+          <label className={styles.fieldLabel} htmlFor={statusId}>
+            {copy.task.statusLabel[lang]}
+          </label>
           <select
             disabled={blocked}
             id={statusId}
-            onChange={event => onChange({ status: event.currentTarget.value as TaskStatus })}
+            onChange={(event) => onChange({ status: event.currentTarget.value as TaskStatus })}
             value={value.status}
           >
-            {taskStatuses.map(status => (
-              <option key={status} value={status}>{statusName(status)[lang]}</option>
+            {taskStatuses.map((status) => (
+              <option key={status} value={status}>
+                {statusName(status)[lang]}
+              </option>
             ))}
           </select>
         </div>
 
         <div className={styles.field}>
-          <label className={styles.fieldLabel} htmlFor={typeId}>{copy.task.typeLabel[lang]}</label>
+          <label className={styles.fieldLabel} htmlFor={typeId}>
+            {copy.task.typeLabel[lang]}
+          </label>
           <select
             disabled={blocked}
             id={typeId}
-            onChange={event => onChange({ type: event.currentTarget.value as TaskType })}
+            onChange={(event) => onChange({ type: event.currentTarget.value as TaskType })}
             value={value.type}
           >
-            {taskTypes.map(type => (
-              <option key={type} value={type}>{typeName(type)[lang]}</option>
+            {taskTypes.map((type) => (
+              <option key={type} value={type}>
+                {typeName(type)[lang]}
+              </option>
             ))}
           </select>
         </div>
 
         <div className={styles.field}>
-          <label className={styles.fieldLabel} htmlFor={priorityId}>{copy.task.priorityLabel[lang]}</label>
+          <label className={styles.fieldLabel} htmlFor={priorityId}>
+            {copy.task.priorityLabel[lang]}
+          </label>
           <select
             disabled={blocked}
             id={priorityId}
-            onChange={event => onChange({ priority: event.currentTarget.value as TaskPriority })}
+            onChange={(event) => onChange({ priority: event.currentTarget.value as TaskPriority })}
             value={value.priority}
           >
-            {taskPriorities.map(priority => (
-              <option key={priority} value={priority}>{priorityName(priority)[lang]}</option>
+            {taskPriorities.map((priority) => (
+              <option key={priority} value={priority}>
+                {priorityName(priority)[lang]}
+              </option>
             ))}
           </select>
         </div>
 
         <div className={styles.field}>
-          <label className={styles.fieldLabel} htmlFor={dueId}>{copy.task.dueDateLabel[lang]}</label>
+          <label className={styles.fieldLabel} htmlFor={dueId}>
+            {copy.task.dueDateLabel[lang]}
+          </label>
           <input
             disabled={blocked}
             id={dueId}
-            onChange={event => onChange({ dueDate: event.currentTarget.value.length === 0 ? null : event.currentTarget.value })}
+            onChange={(event) =>
+              onChange({
+                dueDate: event.currentTarget.value.length === 0 ? null : event.currentTarget.value,
+              })
+            }
             type="date"
             value={value.dueDate ?? ''}
           />
@@ -180,15 +203,22 @@ export function TaskEditForm({
         </div>
 
         <div className={styles.fieldWide}>
-          <label className={styles.fieldLabel} htmlFor={assigneeId}>{copy.task.assigneeLabel[lang]}</label>
+          <label className={styles.fieldLabel} htmlFor={assigneeId}>
+            {copy.task.assigneeLabel[lang]}
+          </label>
           <select
             disabled={blocked || assigneeUnavailable}
             id={assigneeId}
-            onChange={event => onChange({ assigneePrincipalId: event.currentTarget.value.length === 0 ? null : event.currentTarget.value })}
+            onChange={(event) =>
+              onChange({
+                assigneePrincipalId:
+                  event.currentTarget.value.length === 0 ? null : event.currentTarget.value,
+              })
+            }
             value={value.assigneePrincipalId ?? ''}
           >
             <option value="">{copy.task.unassigned[lang]}</option>
-            {assignees.map(member => (
+            {assignees.map((member) => (
               <option key={member.principalId} value={member.principalId}>
                 {member.name}
                 {member.kind === 'agent' ? ` · ${copy.task.agentBadge[lang]}` : ''}
@@ -198,18 +228,30 @@ export function TaskEditForm({
           </select>
           <p className={styles.fieldHint}>{copy.task.assigneeHint[lang]}</p>
           {assigneesLoading && (
-            <p className={styles.fieldHint} role="status">{copy.access.loadingPeople[lang]}</p>
+            <p className={styles.fieldHint} role="status">
+              {copy.access.loadingPeople[lang]}
+            </p>
           )}
           {assigneesError && (
             <div className={styles.fieldRecovery} role="alert">
               <p className={styles.fieldError}>{copy.access.pageErrorBody[lang]}</p>
-              <button className={styles.secondary} disabled={blocked} onClick={onLoadMoreAssignees} type="button">
+              <button
+                className={styles.secondary}
+                disabled={blocked}
+                onClick={onLoadMoreAssignees}
+                type="button"
+              >
                 {copy.access.retryPeople[lang]}
               </button>
             </div>
           )}
           {assigneesNext && (
-            <button className={styles.loadMoreButton} disabled={blocked} onClick={onLoadMoreAssignees} type="button">
+            <button
+              className={styles.loadMoreButton}
+              disabled={blocked}
+              onClick={onLoadMoreAssignees}
+              type="button"
+            >
               {copy.access.loadMorePeople[lang]}
             </button>
           )}
@@ -267,7 +309,9 @@ export function TaskCaptureForm({
     <div className={styles.capturePanel}>
       <form className={styles.captureForm} noValidate onSubmit={submit}>
         <div className={styles.captureInputWrap}>
-          <label className={styles.srOnly} htmlFor={inputId}>{copy.task.captureLabel[lang]}</label>
+          <label className={styles.srOnly} htmlFor={inputId}>
+            {copy.task.captureLabel[lang]}
+          </label>
           <input
             aria-describedby={showError ? errorId : hintId}
             aria-invalid={showError}
@@ -276,7 +320,7 @@ export function TaskCaptureForm({
             disabled={blocked}
             id={inputId}
             maxLength={300}
-            onChange={event => {
+            onChange={(event) => {
               if (localError) setLocalError(false);
               onChange(event.currentTarget.value);
             }}
@@ -286,13 +330,23 @@ export function TaskCaptureForm({
             value={value}
           />
         </div>
-        <button className={styles.primary + ' ' + styles.captureSubmit} disabled={blocked} type="submit">
+        <button
+          className={styles.primary + ' ' + styles.captureSubmit}
+          disabled={blocked}
+          type="submit"
+        >
           {pending ? copy.task.capturing[lang] : copy.task.captureSubmit[lang]}
         </button>
       </form>
-      {showError
-        ? <p className={styles.captureHint + ' ' + styles.captureHintError} id={errorId} role="alert">{copy.task.titleRequired[lang]}</p>
-        : <p className={styles.captureHint} id={hintId}>{copy.task.captureHint[lang]}</p>}
+      {showError ? (
+        <p className={styles.captureHint + ' ' + styles.captureHintError} id={errorId} role="alert">
+          {copy.task.titleRequired[lang]}
+        </p>
+      ) : (
+        <p className={styles.captureHint} id={hintId}>
+          {copy.task.captureHint[lang]}
+        </p>
+      )}
     </div>
   );
 }

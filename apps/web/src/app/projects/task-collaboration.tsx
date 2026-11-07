@@ -17,12 +17,18 @@ type SuccessKind = 'comment' | 'commentEdit' | 'checklist' | 'parent' | 'child' 
 
 function successCopy(kind: SuccessKind): Bilingual {
   switch (kind) {
-    case 'comment': return copy.collaboration.commentSuccess;
-    case 'commentEdit': return copy.collaboration.commentUpdated;
-    case 'checklist': return copy.collaboration.checklistSuccess;
-    case 'parent': return copy.collaboration.parentSuccess;
-    case 'child': return copy.collaboration.childSuccess;
-    default: return copy.collaboration.saveSuccess;
+    case 'comment':
+      return copy.collaboration.commentSuccess;
+    case 'commentEdit':
+      return copy.collaboration.commentUpdated;
+    case 'checklist':
+      return copy.collaboration.checklistSuccess;
+    case 'parent':
+      return copy.collaboration.parentSuccess;
+    case 'child':
+      return copy.collaboration.childSuccess;
+    default:
+      return copy.collaboration.saveSuccess;
   }
 }
 
@@ -60,27 +66,32 @@ export function TaskCollaboration({
   const [successKind, setSuccessKind] = useState<SuccessKind>(null);
   const conflictRef = useRef<HTMLDivElement>(null);
   const draft = hook.collaborationDraft;
-  const anyChildDraft = hook.draft?.type === 'create-task' && hook.draft.fields.parentTaskId !== undefined
-    ? hook.draft
-    : null;
-  const anyChildRetry = hook.retryTarget?.type === 'create-task' && hook.retryTarget.fields.parentTaskId !== undefined
-    ? hook.retryTarget
-    : null;
+  const anyChildDraft =
+    hook.draft?.type === 'create-task' && hook.draft.fields.parentTaskId !== undefined
+      ? hook.draft
+      : null;
+  const anyChildRetry =
+    hook.retryTarget?.type === 'create-task' && hook.retryTarget.fields.parentTaskId !== undefined
+      ? hook.retryTarget
+      : null;
   const activeDraft = draft ?? anyChildDraft;
   const retry = hook.collaborationRetryTarget ?? anyChildRetry;
   const conflict = hook.outcome === 'conflict' ? hook.conflict : null;
-  const childTargetMismatch = anyChildDraft !== null && anyChildDraft.fields.parentTaskId !== task.id;
-  const offTarget = (hook.draftGuard.kind !== 'none' && !hook.draftGuard.atTarget) || childTargetMismatch;
+  const childTargetMismatch =
+    anyChildDraft !== null && anyChildDraft.fields.parentTaskId !== task.id;
+  const offTarget =
+    (hook.draftGuard.kind !== 'none' && !hook.draftGuard.atTarget) || childTargetMismatch;
   const canReturnToDraft = hook.draftGuard.canReturn || childTargetMismatch;
   const checklistDraft = draft?.type.includes('checklist') ? draft : null;
   const closeWarning = hook.closeWarning;
-  const successResult = collaborationSource
-    && hook.outcome === 'success'
-    && hook.result !== null
-    && 'title' in hook.result
-    && (hook.result.id === task.id || hook.result.parentTaskId === task.id)
-    ? hook.result
-    : null;
+  const successResult =
+    collaborationSource &&
+    hook.outcome === 'success' &&
+    hook.result !== null &&
+    'title' in hook.result &&
+    (hook.result.id === task.id || hook.result.parentTaskId === task.id)
+      ? hook.result
+      : null;
 
   useEffect(() => {
     setSuccessKind(null);
@@ -93,12 +104,16 @@ export function TaskCollaboration({
   }, [hook.outcome]);
 
   function submitWithSuccess() {
-    setSuccessKind(kindForCommand(hook.collaborationDraft) ?? (hook.draft?.type === 'create-task' ? 'child' : null));
+    setSuccessKind(
+      kindForCommand(hook.collaborationDraft) ??
+        (hook.draft?.type === 'create-task' ? 'child' : null),
+    );
     onSubmit();
   }
 
   function returnToDraftContext() {
-    const parentId = anyChildDraft?.fields.parentTaskId ?? anyChildRetry?.fields.parentTaskId ?? null;
+    const parentId =
+      anyChildDraft?.fields.parentTaskId ?? anyChildRetry?.fields.parentTaskId ?? null;
     if (parentId !== null) {
       void hook.selectTask(parentId);
       return;
@@ -118,19 +133,25 @@ export function TaskCollaboration({
   function canRebase(): boolean {
     if (draft === null) return false;
     if (draft.type === 'edit-comment') {
-      return hook.commentConflict !== null
-        && hook.commentConflict.id === draft.commentId
-        && hook.commentConflict.capabilities.canEdit;
+      return (
+        hook.commentConflict !== null &&
+        hook.commentConflict.id === draft.commentId &&
+        hook.commentConflict.capabilities.canEdit
+      );
     }
     if (draft.type === 'add-checklist-item') {
-      return hook.checklistConflict !== null
-        && hook.checklistConflict.capabilities.canEdit
-        && hook.checklistConflict.capabilities.canCreate;
+      return (
+        hook.checklistConflict !== null &&
+        hook.checklistConflict.capabilities.canEdit &&
+        hook.checklistConflict.capabilities.canCreate
+      );
     }
     if (draft.type === 'edit-checklist-item' || draft.type === 'remove-checklist-item') {
-      return hook.checklistConflict !== null
-        && hook.checklistConflict.capabilities.canEdit
-        && hook.checklistConflict.items.some(item => item.id === draft.itemId);
+      return (
+        hook.checklistConflict !== null &&
+        hook.checklistConflict.capabilities.canEdit &&
+        hook.checklistConflict.items.some((item) => item.id === draft.itemId)
+      );
     }
     return false;
   }
@@ -160,11 +181,11 @@ export function TaskCollaboration({
         return (
           <FeedbackPanel
             autoFocus
-            actions={(
+            actions={
               <button className={styles.secondary} onClick={reviewConflict} type="button">
                 {copy.collaboration.conflictReview[lang]}
               </button>
-            )}
+            }
             body={copy.collaboration.conflictCommentBody}
             title={copy.collaboration.conflictTitle}
             tone="warning"
@@ -178,11 +199,15 @@ export function TaskCollaboration({
           <div className={styles.collabConflictGrid}>
             <div>
               <p className={styles.collabLabel}>{copy.collaboration.conflictCurrentLabel[lang]}</p>
-              <div className={styles.commentBody}><TaskDescription source={hook.commentConflict.body} /></div>
+              <div className={styles.commentBody}>
+                <TaskDescription source={hook.commentConflict.body} />
+              </div>
             </div>
             <div>
               <p className={styles.collabLabel}>{copy.collaboration.conflictDraftLabel[lang]}</p>
-              <div className={styles.commentBody}><TaskDescription source={activeDraft.body} /></div>
+              <div className={styles.commentBody}>
+                <TaskDescription source={activeDraft.body} />
+              </div>
             </div>
           </div>
           <div className={styles.collabRowActions}>
@@ -203,11 +228,11 @@ export function TaskCollaboration({
         return (
           <FeedbackPanel
             autoFocus
-            actions={(
+            actions={
               <button className={styles.secondary} onClick={reviewConflict} type="button">
                 {copy.collaboration.conflictReview[lang]}
               </button>
-            )}
+            }
             body={copy.collaboration.conflictChecklistBody}
             title={copy.collaboration.conflictTitle}
             tone="warning"
@@ -220,7 +245,7 @@ export function TaskCollaboration({
           <p className={styles.feedbackBody}>{copy.collaboration.conflictChecklistBody[lang]}</p>
           <p className={styles.collabLabel}>{copy.collaboration.conflictCurrentLabel[lang]}</p>
           <ul className={styles.collabConflictList}>
-            {hook.checklistConflict.items.map(item => (
+            {hook.checklistConflict.items.map((item) => (
               <li className={item.completed ? styles.collabConflictDone : undefined} key={item.id}>
                 <span aria-hidden="true">{item.completed ? '✓' : '○'}</span>
                 {item.text}
@@ -235,7 +260,8 @@ export function TaskCollaboration({
               : activeDraft.type === 'edit-checklist-item' && activeDraft.text !== undefined
                 ? activeDraft.text
                 : 'itemId' in activeDraft
-                  ? hook.checklistConflict.items.find(item => item.id === activeDraft.itemId)?.text ?? copy.collaboration.noValue[lang]
+                  ? (hook.checklistConflict.items.find((item) => item.id === activeDraft.itemId)
+                      ?.text ?? copy.collaboration.noValue[lang])
                   : copy.collaboration.noValue[lang]}
           </p>
           <div className={styles.collabRowActions}>
@@ -273,9 +299,14 @@ export function TaskCollaboration({
     <>
       {retry !== null && (
         <FeedbackPanel
-          actions={(
+          actions={
             <>
-              <button className={styles.secondary} disabled={hook.mutationPending !== null} onClick={onRetry} type="button">
+              <button
+                className={styles.secondary}
+                disabled={hook.mutationPending !== null}
+                onClick={onRetry}
+                type="button"
+              >
                 {copy.collaboration.retry[lang]}
               </button>
               {canReturnToDraft && (
@@ -287,7 +318,7 @@ export function TaskCollaboration({
                 {copy.collaboration.discard[lang]}
               </button>
             </>
-          )}
+          }
           autoFocus
           body={copy.collaboration.unknownBody}
           target={draftLabel(activeDraft, hook, lang)}
@@ -298,7 +329,7 @@ export function TaskCollaboration({
 
       {retry === null && activeDraft !== null && offTarget && (
         <FeedbackPanel
-          actions={(
+          actions={
             <>
               {canReturnToDraft && (
                 <button className={styles.secondary} onClick={returnToDraftContext} type="button">
@@ -311,7 +342,7 @@ export function TaskCollaboration({
                 </button>
               )}
             </>
-          )}
+          }
           autoFocus
           body={copy.collaboration.draftBody}
           target={draftLabel(activeDraft, hook, lang)}
@@ -331,7 +362,7 @@ export function TaskCollaboration({
 
       {successResult !== null && (
         <FeedbackPanel
-          actions={(
+          actions={
             <button
               className={styles.secondary}
               onClick={() => {
@@ -342,7 +373,7 @@ export function TaskCollaboration({
             >
               {copy.common.dismiss[lang]}
             </button>
-          )}
+          }
           autoFocus
           target={`${successResult.key} · ${successResult.title}`}
           title={successCopy(successKind)}
@@ -350,15 +381,19 @@ export function TaskCollaboration({
         />
       )}
 
-      {hook.outcome === 'conflict' && !closeWarning && !offTarget && activeDraft !== null && conflictBody()}
+      {hook.outcome === 'conflict' &&
+        !closeWarning &&
+        !offTarget &&
+        activeDraft !== null &&
+        conflictBody()}
 
       {hook.outcome === 'error' && retry === null && activeDraft !== null && (
         <FeedbackPanel
-          actions={(
+          actions={
             <button className={styles.ghostButton} onClick={onDiscard} type="button">
               {copy.collaboration.discard[lang]}
             </button>
-          )}
+          }
           body={copy.collaboration.unknownBody}
           target={draftLabel(activeDraft, hook, lang)}
           title={copy.collaboration.unknownTitle}
@@ -368,11 +403,11 @@ export function TaskCollaboration({
 
       {hook.outcome === 'invalid' && activeDraft !== null && (
         <FeedbackPanel
-          actions={(
+          actions={
             <button className={styles.ghostButton} onClick={onDiscard} type="button">
               {copy.collaboration.discard[lang]}
             </button>
-          )}
+          }
           body={copy.collaboration.invalidBody}
           title={copy.collaboration.invalidTitle}
           tone="warning"
@@ -381,11 +416,11 @@ export function TaskCollaboration({
 
       {hook.outcome === 'forbidden' && activeDraft !== null && (
         <FeedbackPanel
-          actions={(
+          actions={
             <button className={styles.ghostButton} onClick={onDiscard} type="button">
               {copy.collaboration.discard[lang]}
             </button>
-          )}
+          }
           body={copy.collaboration.forbiddenBody}
           title={copy.collaboration.forbiddenTitle}
           tone="danger"
@@ -422,22 +457,27 @@ export function TaskCollaboration({
 }
 
 function taskKeyForCommand(command: ProjectCommand, hook: ProjectTasksHook): string | null {
-  const targetId = 'taskId' in command
-    ? command.taskId
-    : command.type === 'create-task' && command.fields.parentTaskId !== undefined
-      ? command.fields.parentTaskId
-      : null;
+  const targetId =
+    'taskId' in command
+      ? command.taskId
+      : command.type === 'create-task' && command.fields.parentTaskId !== undefined
+        ? command.fields.parentTaskId
+        : null;
   if (targetId === null) return null;
   if (hook.task?.id === targetId) return hook.task.key;
   const pages = [hook.tasks, ...Object.values(hook.taskColumns)];
   for (const page of pages) {
-    const found = page?.items.find(item => item.id === targetId);
+    const found = page?.items.find((item) => item.id === targetId);
     if (found !== undefined) return found.key;
   }
   return null;
 }
 
-function draftLabel(command: ProjectCommand | null, hook: ProjectTasksHook, lang: 'es' | 'en'): string | null {
+function draftLabel(
+  command: ProjectCommand | null,
+  hook: ProjectTasksHook,
+  lang: 'es' | 'en',
+): string | null {
   if (command === null) return null;
   const action = copy.collaboration.activityActions[command.type];
   const label = action === undefined ? command.type : action[lang];

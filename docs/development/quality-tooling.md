@@ -7,6 +7,9 @@ The [roadmap](development-quality-roadmap.md) retains T36 → T37 → T11 orderi
 The later [web transport W1 adoption](web-transport-formatting.md) adds 20
 maintained logic inputs to formatting enforcement, with a separately reviewed
 physical-line coverage migration and no behavior or UI changes.
+The later [project-surface adoption](project-surface-formatting.md) adds 22
+existing files, taking permanent adoption to 165/208 with 43 inputs remaining;
+it preserves behavior and separates physical mapping from test coverage.
 
 ## Tools and installation
 

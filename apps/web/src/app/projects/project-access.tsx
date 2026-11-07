@@ -28,7 +28,11 @@ function accessExplanation(member: ProjectAccessMember, visibility: ProjectVisib
   return copy.access.noAccess;
 }
 
-function requestedExplanation(member: ProjectAccessMember, visibility: ProjectVisibility, state: 'active' | 'revoked'): Bilingual {
+function requestedExplanation(
+  member: ProjectAccessMember,
+  visibility: ProjectVisibility,
+  state: 'active' | 'revoked',
+): Bilingual {
   if (!member.active) return copy.access.inactiveMember;
   if (member.implicitAccess) return copy.access.adminAutomatic;
   if (visibility === 'workspace') return copy.access.workspaceAccess;
@@ -42,14 +46,18 @@ function explicitText(value: 'active' | 'revoked' | null): Bilingual {
   return copy.access.explicitNone;
 }
 
-function retainedLabel(member: ProjectAccessMember, visibility: ProjectVisibility): Bilingual | null {
+function retainedLabel(
+  member: ProjectAccessMember,
+  visibility: ProjectVisibility,
+): Bilingual | null {
   if (member.explicitAccess === 'revoked') return copy.access.retainedRevoked;
-  if (member.explicitAccess === 'active' && (visibility === 'workspace' || member.implicitAccess)) return copy.access.retainedActive;
+  if (member.explicitAccess === 'active' && (visibility === 'workspace' || member.implicitAccess))
+    return copy.access.retainedActive;
   return null;
 }
 
 function join(parts: string[]): string {
-  return parts.filter(part => part.length > 0).join(' ');
+  return parts.filter((part) => part.length > 0).join(' ');
 }
 
 export function ProjectAccessPanel({
@@ -124,9 +132,17 @@ export function ProjectAccessPanel({
     requestAnimationFrame(() => visibilityHeadingRef.current?.focus());
   }
 
-  function confirmTarget(): { member: ProjectAccessMember | null; state: 'active' | 'revoked'; name: string } | null {
+  function confirmTarget(): {
+    member: ProjectAccessMember | null;
+    state: 'active' | 'revoked';
+    name: string;
+  } | null {
     if (draftAccess === null) return null;
-    return { member: policyMember, state: draftAccess.state, name: policyMember?.name ?? copy.access.selectedMember[lang] };
+    return {
+      member: policyMember,
+      state: draftAccess.state,
+      name: policyMember?.name ?? copy.access.selectedMember[lang],
+    };
   }
 
   function grantConsequence(member: ProjectAccessMember | null): Bilingual {
@@ -161,9 +177,12 @@ export function ProjectAccessPanel({
     }
     return { es: copy.access.revokeTitle.es(name), en: copy.access.revokeTitle.en(name) };
   })();
-  const targetConfirmLabel: Bilingual = target?.state === 'active'
-    ? (target.member?.explicitAccess === 'revoked' ? copy.access.regrant : copy.access.grant)
-    : copy.access.revoke;
+  const targetConfirmLabel: Bilingual =
+    target?.state === 'active'
+      ? target.member?.explicitAccess === 'revoked'
+        ? copy.access.regrant
+        : copy.access.grant
+      : copy.access.revoke;
   const targetPendingLabel = copy.access.changingAccess;
 
   const visibilityConfirm = draftVisibility !== null;
@@ -171,15 +190,26 @@ export function ProjectAccessPanel({
   return (
     <div className={styles.accessPanel}>
       <section aria-labelledby={accessHeadingId} className={styles.accessIntro}>
-        <h3 className={styles.accessSectionTitle} id={accessHeadingId}>{copy.access.introTitle[lang]}</h3>
-        <p className={styles.accessBody}>{project.visibility === 'workspace' ? copy.access.workspaceNote[lang] : copy.access.introBody[lang]}</p>
+        <h3 className={styles.accessSectionTitle} id={accessHeadingId}>
+          {copy.access.introTitle[lang]}
+        </h3>
+        <p className={styles.accessBody}>
+          {project.visibility === 'workspace'
+            ? copy.access.workspaceNote[lang]
+            : copy.access.introBody[lang]}
+        </p>
       </section>
 
       {feedback}
 
       <section aria-labelledby={visibilityHeadingId} className={styles.accessSection}>
         <div className={styles.accessSectionHeader}>
-          <h3 className={styles.accessSectionTitle} id={visibilityHeadingId} ref={visibilityHeadingRef} tabIndex={-1}>
+          <h3
+            className={styles.accessSectionTitle}
+            id={visibilityHeadingId}
+            ref={visibilityHeadingRef}
+            tabIndex={-1}
+          >
             {copy.access.visibilitySection[lang]}
           </h3>
           <Badge tone={project.visibility === 'private' ? 'warning' : 'neutral'}>
@@ -204,20 +234,36 @@ export function ProjectAccessPanel({
             <ConfirmBox
               busy={pending}
               disabled={unknown}
-              consequence={draftVisibility.visibility === 'private' ? copy.access.toPrivateConsequence : copy.access.toWorkspaceConsequence}
+              consequence={
+                draftVisibility.visibility === 'private'
+                  ? copy.access.toPrivateConsequence
+                  : copy.access.toWorkspaceConsequence
+              }
               confirmLabel={copy.access.visibilityChange}
               danger={draftVisibility.visibility === 'private'}
               onCancel={cancelVisibility}
               onConfirm={onSubmitVisibility}
               pendingLabel={copy.access.changingVisibility}
-              title={draftVisibility.visibility === 'private' ? copy.access.toPrivateTitle : copy.access.toWorkspaceTitle}
+              title={
+                draftVisibility.visibility === 'private'
+                  ? copy.access.toPrivateTitle
+                  : copy.access.toWorkspaceTitle
+              }
             />
           </div>
         ) : (
           <div className={styles.visibilityEditor}>
-            {draftAccess !== null && <p className={styles.fieldHint}>{copy.access.finishAccessDraft[lang]}</p>}
-            <p className={styles.fieldLabel} id={visibilityGroupId}>{copy.access.visibilityCurrent[lang]}</p>
-            <div aria-labelledby={visibilityGroupId} className={styles.choiceGroup} role="radiogroup">
+            {draftAccess !== null && (
+              <p className={styles.fieldHint}>{copy.access.finishAccessDraft[lang]}</p>
+            )}
+            <p className={styles.fieldLabel} id={visibilityGroupId}>
+              {copy.access.visibilityCurrent[lang]}
+            </p>
+            <div
+              aria-labelledby={visibilityGroupId}
+              className={styles.choiceGroup}
+              role="radiogroup"
+            >
               <label className={styles.choice} htmlFor={visibilityGroupId + '-workspace'}>
                 <input
                   checked={visibilityChoice === 'workspace'}
@@ -229,8 +275,12 @@ export function ProjectAccessPanel({
                   value="workspace"
                 />
                 <span>
-                  <span className={styles.choiceTitle}>{copy.project.visibilityWorkspace[lang]}</span>
-                  <span className={styles.fieldHint}>{copy.project.visibilityWorkspaceHint[lang]}</span>
+                  <span className={styles.choiceTitle}>
+                    {copy.project.visibilityWorkspace[lang]}
+                  </span>
+                  <span className={styles.fieldHint}>
+                    {copy.project.visibilityWorkspaceHint[lang]}
+                  </span>
                 </span>
               </label>
               <label className={styles.choice} htmlFor={visibilityGroupId + '-private'}>
@@ -245,14 +295,20 @@ export function ProjectAccessPanel({
                 />
                 <span>
                   <span className={styles.choiceTitle}>{copy.project.visibilityPrivate[lang]}</span>
-                  <span className={styles.fieldHint}>{copy.project.visibilityPrivateHint[lang]}</span>
+                  <span className={styles.fieldHint}>
+                    {copy.project.visibilityPrivateHint[lang]}
+                  </span>
                 </span>
               </label>
             </div>
             <div className={styles.formActions}>
               <button
                 className={styles.secondary}
-                disabled={controlsDisabled || draftAccess !== null || visibilityChoice === project.visibility}
+                disabled={
+                  controlsDisabled ||
+                  draftAccess !== null ||
+                  visibilityChoice === project.visibility
+                }
                 onClick={() => onStageVisibility(visibilityChoice)}
                 type="button"
               >
@@ -265,27 +321,51 @@ export function ProjectAccessPanel({
 
       <section aria-labelledby={peopleHeadingId} className={styles.accessSection}>
         <div className={styles.accessSectionHeader}>
-          <h3 className={styles.accessSectionTitle} id={peopleHeadingId}>{copy.access.peopleSection[lang]}</h3>
-          {access !== null && <span className={styles.accessCount}>{copy.access.peopleCount[lang](access.total)}</span>}
+          <h3 className={styles.accessSectionTitle} id={peopleHeadingId}>
+            {copy.access.peopleSection[lang]}
+          </h3>
+          {access !== null && (
+            <span className={styles.accessCount}>
+              {copy.access.peopleCount[lang](access.total)}
+            </span>
+          )}
         </div>
         {access === null && accessError === null && (
-          <p className={styles.accessLoading} role="status">{copy.access.loadingPeople[lang]}</p>
+          <p className={styles.accessLoading} role="status">
+            {copy.access.loadingPeople[lang]}
+          </p>
         )}
         {access === null && accessError !== null && (
           <FeedbackPanel
-            actions={accessError.reason === 'changed'
-              ? (
-                <button className={styles.secondary} disabled={controlsDisabled} onClick={onRefresh} type="button">
+            actions={
+              accessError.reason === 'changed' ? (
+                <button
+                  className={styles.secondary}
+                  disabled={controlsDisabled}
+                  onClick={onRefresh}
+                  type="button"
+                >
                   {copy.access.refreshPeople[lang]}
                 </button>
-              )
-              : (
-                <button className={styles.secondary} disabled={controlsDisabled} onClick={onLoadMore} type="button">
+              ) : (
+                <button
+                  className={styles.secondary}
+                  disabled={controlsDisabled}
+                  onClick={onLoadMore}
+                  type="button"
+                >
                   {copy.access.retryPeople[lang]}
                 </button>
-              )}
-            body={accessError.reason === 'changed' ? copy.access.changedBody : copy.access.pageErrorBody}
-            title={accessError.reason === 'changed' ? copy.access.changedTitle : copy.feedback.pageErrorTitle}
+              )
+            }
+            body={
+              accessError.reason === 'changed' ? copy.access.changedBody : copy.access.pageErrorBody
+            }
+            title={
+              accessError.reason === 'changed'
+                ? copy.access.changedTitle
+                : copy.feedback.pageErrorTitle
+            }
             tone="warning"
           />
         )}
@@ -294,45 +374,54 @@ export function ProjectAccessPanel({
         )}
         {access !== null && access.items.length > 0 && (
           <ul className={styles.accessList}>
-            {access.items.map(member => {
+            {access.items.map((member) => {
               const explanation = accessExplanation(member, project.visibility);
               const retained = retainedLabel(member, project.visibility);
               const showGrant = member.capabilities.canGrant;
               const showRevoke = member.capabilities.canRevoke;
-              const rowConfirmState: 'active' | 'revoked' | null = draftAccess?.principalId === member.principalId
-                ? draftAccess.state
-                : null;
+              const rowConfirmState: 'active' | 'revoked' | null =
+                draftAccess?.principalId === member.principalId ? draftAccess.state : null;
               return (
                 <li className={styles.accessRow} key={member.principalId}>
                   <div className={styles.accessRowMain}>
                     <div className={styles.accessNameLine}>
                       <span className={styles.accessName}>{member.name}</span>
-                      {member.kind === 'agent' && <Badge tone="brand">{copy.task.agentBadge[lang]}</Badge>}
+                      {member.kind === 'agent' && (
+                        <Badge tone="brand">{copy.task.agentBadge[lang]}</Badge>
+                      )}
                       <Badge tone="neutral">{roleName(member.role)[lang]}</Badge>
-                      {!member.active && <Badge tone="archived">{copy.access.inactiveMember[lang]}</Badge>}
+                      {!member.active && (
+                        <Badge tone="archived">{copy.access.inactiveMember[lang]}</Badge>
+                      )}
                     </div>
                     <p className={styles.accessRights}>{explanation[lang]}</p>
                     {retained !== null && <p className={styles.accessRetained}>{retained[lang]}</p>}
-                    {!member.active && <p className={styles.fieldHint}>{copy.access.inactiveHint[lang]}</p>}
+                    {!member.active && (
+                      <p className={styles.fieldHint}>{copy.access.inactiveHint[lang]}</p>
+                    )}
                   </div>
                   {(showGrant || showRevoke) && (
                     <div className={styles.accessActions}>
                       {showGrant && (
                         <button
-                          aria-label={member.explicitAccess === 'revoked'
-                            ? copy.access.regrantActionLabel[lang](member.name)
-                            : copy.access.grantActionLabel[lang](member.name)}
+                          aria-label={
+                            member.explicitAccess === 'revoked'
+                              ? copy.access.regrantActionLabel[lang](member.name)
+                              : copy.access.grantActionLabel[lang](member.name)
+                          }
                           className={styles.secondary}
                           data-access-action={member.principalId}
                           disabled={controlsDisabled || reachedConfirm}
                           onClick={() => onReviewAccess(member, 'active')}
-                          ref={button => {
+                          ref={(button) => {
                             if (button === null) rowButtons.current.delete(member.principalId);
                             else rowButtons.current.set(member.principalId, button);
                           }}
                           type="button"
                         >
-                          {member.explicitAccess === 'revoked' ? copy.access.regrant[lang] : copy.access.grant[lang]}
+                          {member.explicitAccess === 'revoked'
+                            ? copy.access.regrant[lang]
+                            : copy.access.grant[lang]}
                         </button>
                       )}
                       {showRevoke && (
@@ -342,7 +431,7 @@ export function ProjectAccessPanel({
                           data-access-action={member.principalId}
                           disabled={controlsDisabled || reachedConfirm}
                           onClick={() => onReviewAccess(member, 'revoked')}
-                          ref={button => {
+                          ref={(button) => {
                             if (button === null) rowButtons.current.delete(member.principalId);
                             else rowButtons.current.set(member.principalId, button);
                           }}
@@ -358,19 +447,38 @@ export function ProjectAccessPanel({
                       <ConfirmBox
                         busy={pending}
                         disabled={unknown}
-                        consequence={rowConfirmState === 'active' ? grantConsequence(member) : revokeConsequence(member)}
-                        confirmLabel={rowConfirmState === 'active'
-                          ? (member.explicitAccess === 'revoked' ? copy.access.regrant : copy.access.grant)
-                          : copy.access.revoke}
+                        consequence={
+                          rowConfirmState === 'active'
+                            ? grantConsequence(member)
+                            : revokeConsequence(member)
+                        }
+                        confirmLabel={
+                          rowConfirmState === 'active'
+                            ? member.explicitAccess === 'revoked'
+                              ? copy.access.regrant
+                              : copy.access.grant
+                            : copy.access.revoke
+                        }
                         danger={rowConfirmState === 'revoked'}
                         onCancel={() => cancelAccess(member.principalId)}
                         onConfirm={onSubmit}
                         pendingLabel={copy.access.changingAccess}
-                        title={rowConfirmState === 'active'
-                          ? (member.explicitAccess === 'revoked'
-                            ? { es: copy.access.regrantTitle.es(member.name), en: copy.access.regrantTitle.en(member.name) }
-                            : { es: copy.access.grantTitle.es(member.name), en: copy.access.grantTitle.en(member.name) })
-                          : { es: copy.access.revokeTitle.es(member.name), en: copy.access.revokeTitle.en(member.name) }}
+                        title={
+                          rowConfirmState === 'active'
+                            ? member.explicitAccess === 'revoked'
+                              ? {
+                                  es: copy.access.regrantTitle.es(member.name),
+                                  en: copy.access.regrantTitle.en(member.name),
+                                }
+                              : {
+                                  es: copy.access.grantTitle.es(member.name),
+                                  en: copy.access.grantTitle.en(member.name),
+                                }
+                            : {
+                                es: copy.access.revokeTitle.es(member.name),
+                                en: copy.access.revokeTitle.en(member.name),
+                              }
+                        }
                       />
                     </div>
                   )}
@@ -381,45 +489,73 @@ export function ProjectAccessPanel({
         )}
         {access !== null && accessError !== null && (
           <FeedbackPanel
-            actions={accessError.reason === 'changed'
-              ? (
-                <button className={styles.secondary} disabled={controlsDisabled} onClick={onRefresh} type="button">
+            actions={
+              accessError.reason === 'changed' ? (
+                <button
+                  className={styles.secondary}
+                  disabled={controlsDisabled}
+                  onClick={onRefresh}
+                  type="button"
+                >
                   {copy.access.refreshPeople[lang]}
                 </button>
-              )
-              : (
-                <button className={styles.secondary} disabled={controlsDisabled} onClick={onLoadMore} type="button">
+              ) : (
+                <button
+                  className={styles.secondary}
+                  disabled={controlsDisabled}
+                  onClick={onLoadMore}
+                  type="button"
+                >
                   {copy.access.retryPeople[lang]}
                 </button>
-              )}
-            body={accessError.reason === 'changed' ? copy.access.changedBody : copy.access.pageErrorBody}
-            title={accessError.reason === 'changed' ? copy.access.changedTitle : copy.feedback.pageErrorTitle}
+              )
+            }
+            body={
+              accessError.reason === 'changed' ? copy.access.changedBody : copy.access.pageErrorBody
+            }
+            title={
+              accessError.reason === 'changed'
+                ? copy.access.changedTitle
+                : copy.feedback.pageErrorTitle
+            }
             tone="warning"
           />
         )}
         {access !== null && access.nextCursor !== null && accessError?.reason !== 'changed' && (
-          <button className={styles.loadMoreButton} disabled={controlsDisabled} onClick={onLoadMore} type="button">
+          <button
+            className={styles.loadMoreButton}
+            disabled={controlsDisabled}
+            onClick={onLoadMore}
+            type="button"
+          >
             {copy.access.loadMorePeople[lang]}
           </button>
         )}
       </section>
 
-      {draftAccess !== null && target !== null && !access?.items.some(member => member.principalId === draftAccess.principalId) && (
-        <section aria-label={copy.access.targetMember[lang]} className={styles.accessSection} data-access-confirm>
-          <ConfirmBox
-            busy={pending}
-            disabled={unknown}
-            consequence={draftAccess.state === 'active' ? targetGrantConsequence : targetRevokeConsequence}
-            confirmLabel={targetConfirmLabel}
-            danger={draftAccess.state === 'revoked'}
-            onCancel={() => cancelAccess(draftAccess.principalId)}
-            onConfirm={onSubmit}
-            pendingLabel={targetPendingLabel}
-            title={targetTitle}
-          />
-        </section>
-      )}
-
+      {draftAccess !== null &&
+        target !== null &&
+        !access?.items.some((member) => member.principalId === draftAccess.principalId) && (
+          <section
+            aria-label={copy.access.targetMember[lang]}
+            className={styles.accessSection}
+            data-access-confirm
+          >
+            <ConfirmBox
+              busy={pending}
+              disabled={unknown}
+              consequence={
+                draftAccess.state === 'active' ? targetGrantConsequence : targetRevokeConsequence
+              }
+              confirmLabel={targetConfirmLabel}
+              danger={draftAccess.state === 'revoked'}
+              onCancel={() => cancelAccess(draftAccess.principalId)}
+              onConfirm={onSubmit}
+              pendingLabel={targetPendingLabel}
+              title={targetTitle}
+            />
+          </section>
+        )}
     </div>
   );
 }

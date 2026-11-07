@@ -42,11 +42,17 @@ export function TaskDescription({ source }: { source: string }) {
           return <h5 key={index}>{inlineNodes(block.content)}</h5>;
         }
         if (block.type === 'code') {
-          return <pre key={index}><code>{block.text}</code></pre>;
+          return (
+            <pre key={index}>
+              <code>{block.text}</code>
+            </pre>
+          );
         }
         return (
           <ul key={index}>
-            {block.items.map((item, itemIndex) => <li key={itemIndex}>{inlineNodes(item)}</li>)}
+            {block.items.map((item, itemIndex) => (
+              <li key={itemIndex}>{inlineNodes(item)}</li>
+            ))}
           </ul>
         );
       })}

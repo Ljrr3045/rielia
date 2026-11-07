@@ -121,7 +121,12 @@ export function TaskDetail({
       >
         <header className={styles.detailHeader}>
           <div className={styles.detailHeaderLeft}>
-            <button aria-label={backLabel[lang]} className={styles.ghostButton} onClick={onClose} type="button">
+            <button
+              aria-label={backLabel[lang]}
+              className={styles.ghostButton}
+              onClick={onClose}
+              type="button"
+            >
               <IconArrowLeft size={18} />
               <span>{copy.common.back[lang]}</span>
             </button>
@@ -130,11 +135,21 @@ export function TaskDetail({
           </div>
           <div className={styles.detailHeaderRight}>
             {!readOnly && (
-              <button className={styles.secondary} disabled={actionsDisabled} onClick={event => onEdit(event.currentTarget)} type="button">
+              <button
+                className={styles.secondary}
+                disabled={actionsDisabled}
+                onClick={(event) => onEdit(event.currentTarget)}
+                type="button"
+              >
                 {copy.common.edit[lang]}
               </button>
             )}
-            <button aria-label={copy.task.closeDetail[lang]} className={styles.iconButton} onClick={onClose} type="button">
+            <button
+              aria-label={copy.task.closeDetail[lang]}
+              className={styles.iconButton}
+              onClick={onClose}
+              type="button"
+            >
               <IconClose size={18} />
             </button>
           </div>
@@ -143,7 +158,14 @@ export function TaskDetail({
         <div className={styles.detailBody}>
           {feedback}
 
-          <h2 className={styles.detailTitle} data-autofocus data-detail-heading id={headingId} ref={headingRef} tabIndex={-1}>
+          <h2
+            className={styles.detailTitle}
+            data-autofocus
+            data-detail-heading
+            id={headingId}
+            ref={headingRef}
+            tabIndex={-1}
+          >
             {task.title}
           </h2>
 
@@ -158,13 +180,20 @@ export function TaskDetail({
           )}
 
           <div className={styles.detailDescription}>
-            {description ?? (task.description.length > 0
-              ? <span>{task.description}</span>
-              : <span className={styles.detailDescriptionMuted}>{copy.task.noDescription[lang]}</span>)}
+            {description ??
+              (task.description.length > 0 ? (
+                <span>{task.description}</span>
+              ) : (
+                <span className={styles.detailDescriptionMuted}>
+                  {copy.task.noDescription[lang]}
+                </span>
+              ))}
           </div>
 
           <section aria-labelledby={propertiesId} className={styles.detailSection}>
-            <h3 className={styles.detailSectionTitle} id={propertiesId}>{copy.task.properties[lang]}</h3>
+            <h3 className={styles.detailSectionTitle} id={propertiesId}>
+              {copy.task.properties[lang]}
+            </h3>
             <dl className={styles.propertyList}>
               <div className={styles.propertyRow}>
                 <dt className={styles.propertyLabel}>{copy.task.statusLabel[lang]}</dt>
@@ -190,7 +219,9 @@ export function TaskDetail({
               </div>
               <div className={styles.propertyRow}>
                 <dt className={styles.propertyLabel}>{copy.task.dueDateLabel[lang]}</dt>
-                <dd className={styles.propertyValue}><DueDate value={task.dueDate} /></dd>
+                <dd className={styles.propertyValue}>
+                  <DueDate value={task.dueDate} />
+                </dd>
               </div>
               <div className={styles.propertyRow}>
                 <dt className={styles.propertyLabel}>{copy.common.project[lang]}</dt>
@@ -202,7 +233,9 @@ export function TaskDetail({
           </section>
 
           <section aria-labelledby={provenanceId} className={styles.detailSection}>
-            <h3 className={styles.detailSectionTitle} id={provenanceId}>{copy.task.provenanceLabel[lang]}</h3>
+            <h3 className={styles.detailSectionTitle} id={provenanceId}>
+              {copy.task.provenanceLabel[lang]}
+            </h3>
             <div className={styles.provenanceCard}>
               <CreatorLine task={task} />
               <p className={styles.sectionHint}>{copy.task.creatorHint[lang]}</p>
@@ -218,23 +251,32 @@ export function TaskDetail({
             </div>
           )}
 
-          {!projectArchived && (taskArchived ? task.capabilities.canRestore : task.capabilities.canArchive) && (
-            <div className={styles.detailFooter}>
-              {taskArchived
-                ? (
-                  <button className={styles.secondary} disabled={actionsDisabled} onClick={event => onRestore(event.currentTarget)} type="button">
+          {!projectArchived &&
+            (taskArchived ? task.capabilities.canRestore : task.capabilities.canArchive) && (
+              <div className={styles.detailFooter}>
+                {taskArchived ? (
+                  <button
+                    className={styles.secondary}
+                    disabled={actionsDisabled}
+                    onClick={(event) => onRestore(event.currentTarget)}
+                    type="button"
+                  >
                     <IconRestore size={16} />
                     {copy.task.restore[lang]}
                   </button>
-                )
-                : (
-                  <button className={styles.secondary} disabled={actionsDisabled} onClick={event => onArchive(event.currentTarget)} type="button">
+                ) : (
+                  <button
+                    className={styles.secondary}
+                    disabled={actionsDisabled}
+                    onClick={(event) => onArchive(event.currentTarget)}
+                    type="button"
+                  >
                     <IconArchive size={16} />
                     {copy.task.archive[lang]}
                   </button>
                 )}
-            </div>
-          )}
+              </div>
+            )}
         </div>
       </aside>
     </div>

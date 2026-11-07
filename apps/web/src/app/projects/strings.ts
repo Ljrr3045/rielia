@@ -128,7 +128,10 @@ export const copy = {
       es: 'El espacio todavía no tiene proyectos visibles. Tu rol actual es de solo lectura; pide a un administrador que cree el primero.',
       en: 'The workspace has no visible projects yet. Your current role is read-only; ask an administrator to create the first one.',
     },
-    emptyTasksTitle: { es: 'Este proyecto aún no tiene tareas', en: 'This project has no tasks yet' },
+    emptyTasksTitle: {
+      es: 'Este proyecto aún no tiene tareas',
+      en: 'This project has no tasks yet',
+    },
     emptyTasksBody: {
       es: 'Captura la primera tarea con un título. Puedes completar el resto de propiedades después.',
       en: 'Capture the first task with a title. You can complete the other properties later.',
@@ -167,10 +170,16 @@ export const copy = {
     all: { es: 'Todos', en: 'All' },
     unassigned: { es: 'Sin asignar', en: 'Unassigned' },
     assigneeLoading: { es: 'Cargando responsable…', en: 'Loading assignee…' },
-    assigneeUnavailable: { es: 'Responsable seleccionado (no disponible)', en: 'Selected assignee (unavailable)' },
+    assigneeUnavailable: {
+      es: 'Responsable seleccionado (no disponible)',
+      en: 'Selected assignee (unavailable)',
+    },
     assigneeSelected: { es: 'Responsable seleccionado', en: 'Selected assignee' },
     peopleLoading: { es: 'Cargando personas del proyecto…', en: 'Loading project people…' },
-    peopleError: { es: 'No se pudieron cargar todas las personas.', en: 'Not all people could be loaded.' },
+    peopleError: {
+      es: 'No se pudieron cargar todas las personas.',
+      en: 'Not all people could be loaded.',
+    },
     retryPeople: { es: 'Reintentar personas', en: 'Retry people' },
     loadMorePeople: { es: 'Cargar más personas', en: 'Load more people' },
     countLoading: { es: 'Cargando tareas…', en: 'Loading tasks…' },
@@ -178,8 +187,14 @@ export const copy = {
       es: (count: number) => (count === 1 ? '1 tarea' : `${count} tareas`),
       en: (count: number) => (count === 1 ? '1 task' : `${count} tasks`),
     },
-    countPartial: { es: 'Conteo parcial: actualiza las columnas que fallaron', en: 'Partial count: refresh the failed columns' },
-    countChanged: { es: 'Conteo desactualizado: actualiza antes de mover', en: 'Count is out of date: refresh before moving' },
+    countPartial: {
+      es: 'Conteo parcial: actualiza las columnas que fallaron',
+      en: 'Partial count: refresh the failed columns',
+    },
+    countChanged: {
+      es: 'Conteo desactualizado: actualiza antes de mover',
+      en: 'Count is out of date: refresh before moving',
+    },
     countUnavailable: { es: 'Conteo no disponible', en: 'Count unavailable' },
     listChangedTitle: { es: 'La lista cambió', en: 'The list changed' },
     listChangedBody: {
@@ -190,8 +205,14 @@ export const copy = {
       es: (loaded: number, total: number) => `Mostrando ${loaded} de ${total}`,
       en: (loaded: number, total: number) => `Showing ${loaded} of ${total}`,
     },
-    noResultsTitle: { es: 'Ninguna tarea coincide con los filtros', en: 'No tasks match these filters' },
-    noResultsBody: { es: 'Limpia los filtros o crea una tarea en este proyecto.', en: 'Clear the filters or create a task in this project.' },
+    noResultsTitle: {
+      es: 'Ninguna tarea coincide con los filtros',
+      en: 'No tasks match these filters',
+    },
+    noResultsBody: {
+      es: 'Limpia los filtros o crea una tarea en este proyecto.',
+      en: 'Clear the filters or create a task in this project.',
+    },
     archiveShort: { es: 'Archivadas', en: 'Archived' },
     activeShort: { es: 'Activas', en: 'Active' },
   },
@@ -283,7 +304,10 @@ export const copy = {
       en: 'The 1,000 loaded-result limit was reached. Narrow the search or refresh to start again.',
     },
     loadMore: { es: 'Cargar más resultados', en: 'Load more results' },
-    createDisclosure: { es: 'Elegir proyecto para crear una tarea', en: 'Choose a project to create a task' },
+    createDisclosure: {
+      es: 'Elegir proyecto para crear una tarea',
+      en: 'Choose a project to create a task',
+    },
     createBody: {
       es: 'La captura rápida necesita un proyecto visible con permiso de edición. Se abrirá la captura de ese proyecto y la tarea no se asignará automáticamente.',
       en: 'Quick capture needs a visible project you can edit. It opens that project’s capture, and the task is not assigned automatically.',
@@ -303,7 +327,10 @@ export const copy = {
       es: 'Actualizaciones en vivo conectadas · hay cambios pendientes de actualizar.',
       en: 'Live updates connected · changes are pending refresh.',
     },
-    connecting: { es: 'Conectando con las actualizaciones en vivo…', en: 'Connecting to live updates…' },
+    connecting: {
+      es: 'Conectando con las actualizaciones en vivo…',
+      en: 'Connecting to live updates…',
+    },
     reconnecting: {
       es: 'Las actualizaciones en vivo se interrumpieron. Reconectando…',
       en: 'Live updates were interrupted. Reconnecting…',
@@ -322,10 +349,15 @@ export const copy = {
     },
   },
   workspaceGuard: {
-    title: { es: 'Cambiar de espacio con trabajo pendiente', en: 'Switch workspace with pending work' },
+    title: {
+      es: 'Cambiar de espacio con trabajo pendiente',
+      en: 'Switch workspace with pending work',
+    },
     body: {
-      es: (target: string) => `El borrador, guardado o recuperación actual pertenece a este espacio. Si cambias a ${target}, se descartará ese estado local no guardado; no se deshace un guardado que el servidor ya haya aceptado. Los permisos actuales se siguen aplicando en el servidor.`,
-      en: (target: string) => `The current draft, pending save, or recovery belongs to this workspace. Switching to ${target} discards that unsaved local state; it does not undo a save the server already accepted. Current permissions still apply on the server.`,
+      es: (target: string) =>
+        `El borrador, guardado o recuperación actual pertenece a este espacio. Si cambias a ${target}, se descartará ese estado local no guardado; no se deshace un guardado que el servidor ya haya aceptado. Los permisos actuales se siguen aplicando en el servidor.`,
+      en: (target: string) =>
+        `The current draft, pending save, or recovery belongs to this workspace. Switching to ${target} discards that unsaved local state; it does not undo a save the server already accepted. Current permissions still apply on the server.`,
     },
     targetFallback: { es: 'el otro espacio', en: 'the other workspace' },
     pending: {
@@ -347,7 +379,10 @@ export const copy = {
       es: 'Si no ves todos los estados, desplázate horizontalmente dentro del tablero o enfócalo y usa las flechas.',
       en: 'If you do not see every status, scroll horizontally inside the board or focus it and use the arrow keys.',
     },
-    scrollLabel: { es: 'Tablero de tareas con desplazamiento horizontal', en: 'Task board with horizontal scrolling' },
+    scrollLabel: {
+      es: 'Tablero de tareas con desplazamiento horizontal',
+      en: 'Task board with horizontal scrolling',
+    },
     countUnavailable: { es: 'No disponible', en: 'Unavailable' },
     addTaskTo: {
       es: (status: string) => `Añadir tarea a ${status}`,
@@ -370,7 +405,10 @@ export const copy = {
       es: (status: string) => `Cargando ${status}…`,
       en: (status: string) => `Loading ${status}…`,
     },
-    emptyFiltered: { es: 'Ninguna tarea coincide con los filtros.', en: 'No tasks match the filters.' },
+    emptyFiltered: {
+      es: 'Ninguna tarea coincide con los filtros.',
+      en: 'No tasks match the filters.',
+    },
     emptyColumn: {
       es: (status: string) => `No hay tareas en ${status}.`,
       en: (status: string) => `No tasks in ${status}.`,
@@ -418,7 +456,10 @@ export const copy = {
       es: 'La tarea de referencia ya no sirve como destino. Descarta este movimiento, actualiza y elige otro destino.',
       en: 'The reference task no longer works as a destination. Discard this move, refresh, and choose another destination.',
     },
-    unknownTitle: { es: 'No se pudo confirmar el movimiento', en: 'The move could not be confirmed' },
+    unknownTitle: {
+      es: 'No se pudo confirmar el movimiento',
+      en: 'The move could not be confirmed',
+    },
     unknownBody: {
       es: 'La conexión se interrumpió. Reintenta con la misma clave para no duplicar el movimiento o descártalo.',
       en: 'The connection was interrupted. Retry with the same key so the move is not duplicated, or discard it.',
@@ -434,23 +475,53 @@ export const copy = {
       en: 'Your current access or project state no longer permits moving it. Refresh to review the current state.',
     },
     draftTitle: { es: 'Movimiento preparado', en: 'Move ready' },
-    draftBody: { es: 'Hay un movimiento sin enviar. Reanúdalo o descártalo.', en: 'A move has not been sent. Resume or discard it.' },
+    draftBody: {
+      es: 'Hay un movimiento sin enviar. Reanúdalo o descártalo.',
+      en: 'A move has not been sent. Resume or discard it.',
+    },
     blockedTitle: { es: 'No se puede mover ahora', en: 'Cannot move right now' },
     blockedReasons: {
-      pending: { es: 'Hay otra operación en curso. Espera a que termine.', en: 'Another operation is in progress. Wait for it to finish.' },
-      recovery: { es: 'Un movimiento anterior sigue pendiente. Reinténtalo o descártalo.', en: 'A previous move is still unresolved. Retry or discard it.' },
-      draft: { es: 'Hay un borrador sin resolver. Termínalo o descártalo antes de mover.', en: 'An unresolved draft exists. Finish or discard it before moving.' },
-      changed: { es: 'Las columnas cambiaron. Actualiza antes de mover.', en: 'The columns changed. Refresh before moving.' },
-      unavailable: { es: 'El destino no está disponible. Actualiza o carga esa columna.', en: 'The destination is unavailable. Refresh or load that column.' },
-      forbidden: { es: 'No tienes permiso para mover esta tarea.', en: 'You do not have permission to move this task.' },
-      'invalid-destination': { es: 'El destino ya no es válido. Elige otro.', en: 'The destination is no longer valid. Choose another.' },
-      'different-detail': { es: 'Cierra la tarea abierta antes de mover otra.', en: 'Close the open task before moving another one.' },
+      pending: {
+        es: 'Hay otra operación en curso. Espera a que termine.',
+        en: 'Another operation is in progress. Wait for it to finish.',
+      },
+      recovery: {
+        es: 'Un movimiento anterior sigue pendiente. Reinténtalo o descártalo.',
+        en: 'A previous move is still unresolved. Retry or discard it.',
+      },
+      draft: {
+        es: 'Hay un borrador sin resolver. Termínalo o descártalo antes de mover.',
+        en: 'An unresolved draft exists. Finish or discard it before moving.',
+      },
+      changed: {
+        es: 'Las columnas cambiaron. Actualiza antes de mover.',
+        en: 'The columns changed. Refresh before moving.',
+      },
+      unavailable: {
+        es: 'El destino no está disponible. Actualiza o carga esa columna.',
+        en: 'The destination is unavailable. Refresh or load that column.',
+      },
+      forbidden: {
+        es: 'No tienes permiso para mover esta tarea.',
+        en: 'You do not have permission to move this task.',
+      },
+      'invalid-destination': {
+        es: 'El destino ya no es válido. Elige otro.',
+        en: 'The destination is no longer valid. Choose another.',
+      },
+      'different-detail': {
+        es: 'Cierra la tarea abierta antes de mover otra.',
+        en: 'Close the open task before moving another one.',
+      },
     },
     selectedTask: { es: 'Tarea seleccionada', en: 'Selected task' },
     requestedTarget: { es: 'Destino solicitado', en: 'Requested destination' },
     currentTarget: { es: 'Tarea actual', en: 'Current task' },
     placementEnd: { es: 'al final de la columna completa', en: 'at the end of the full column' },
-    placementBefore: { es: 'antes de la tarea elegida anteriormente', en: 'before the previously selected task' },
+    placementBefore: {
+      es: 'antes de la tarea elegida anteriormente',
+      en: 'before the previously selected task',
+    },
     discard: { es: 'Descartar movimiento', en: 'Discard move' },
     chooseDestination: { es: 'Elegir otro destino', en: 'Choose another destination' },
     closeCurrentTask: { es: 'Cerrar tarea actual', en: 'Close current task' },
@@ -473,14 +544,23 @@ export const copy = {
     nameHint: { es: 'Entre 1 y 200 caracteres.', en: 'Between 1 and 200 characters.' },
     nameRequired: { es: 'Escribe un nombre para el proyecto.', en: 'Enter a project name.' },
     keyLabel: { es: 'Clave', en: 'Key' },
-    keyHint: { es: 'De 2 a 10 letras mayúsculas o números, empieza por una letra. Por ejemplo, RIE.', en: 'Two to ten uppercase letters or numbers, starting with a letter. For example, RIE.' },
+    keyHint: {
+      es: 'De 2 a 10 letras mayúsculas o números, empieza por una letra. Por ejemplo, RIE.',
+      en: 'Two to ten uppercase letters or numbers, starting with a letter. For example, RIE.',
+    },
     keyImmutableHint: {
       es: 'La clave identifica las tareas del proyecto y no se puede cambiar después de crearlo.',
       en: 'The key identifies the project’s tasks and cannot be changed after creation.',
     },
-    keyRequired: { es: 'Escribe una clave válida para el proyecto.', en: 'Enter a valid project key.' },
+    keyRequired: {
+      es: 'Escribe una clave válida para el proyecto.',
+      en: 'Enter a valid project key.',
+    },
     descriptionLabel: { es: 'Descripción', en: 'Description' },
-    descriptionHint: { es: 'Opcional. Resume el objetivo del proyecto.', en: 'Optional. Summarize the project objective.' },
+    descriptionHint: {
+      es: 'Opcional. Resume el objetivo del proyecto.',
+      en: 'Optional. Summarize the project objective.',
+    },
     visibilityLabel: { es: 'Visibilidad', en: 'Visibility' },
     visibilityWorkspace: { es: 'Visible en el espacio', en: 'Visible in the workspace' },
     visibilityPrivate: { es: 'Privado', en: 'Private' },
@@ -552,8 +632,14 @@ export const copy = {
       es: 'El proyecto volverá a las vistas activas. Las tareas que archivaste por separado seguirán archivadas.',
       en: 'The project will return to active views. Tasks you archived separately will remain archived.',
     },
-    taskCount: { es: (count: number) => (count === 1 ? '1 tarea' : `${count} tareas`), en: (count: number) => (count === 1 ? '1 task' : `${count} tasks`) },
-    archivedTaskCount: { es: (count: number) => (count === 1 ? '1 tarea archivada' : `${count} tareas archivadas`), en: (count: number) => (count === 1 ? '1 archived task' : `${count} archived tasks`) },
+    taskCount: {
+      es: (count: number) => (count === 1 ? '1 tarea' : `${count} tareas`),
+      en: (count: number) => (count === 1 ? '1 task' : `${count} tasks`),
+    },
+    archivedTaskCount: {
+      es: (count: number) => (count === 1 ? '1 tarea archivada' : `${count} tareas archivadas`),
+      en: (count: number) => (count === 1 ? '1 archived task' : `${count} archived tasks`),
+    },
     open: { es: 'Abrir proyecto', en: 'Open project' },
     viewActive: { es: 'Ver proyectos activos', en: 'View active projects' },
     viewArchived: { es: 'Ver proyectos archivados', en: 'View archived projects' },
@@ -578,8 +664,14 @@ export const copy = {
     titleRequired: { es: 'Escribe un título para la tarea.', en: 'Enter a task title.' },
     titleHint: { es: 'Entre 1 y 300 caracteres.', en: 'Between 1 and 300 characters.' },
     descriptionLabel: { es: 'Descripción', en: 'Description' },
-    descriptionHint: { es: 'Opcional. Se conserva el texto tal como lo escribes.', en: 'Optional. Text is kept as you write it.' },
-    descriptionPlaceholder: { es: 'Añade contexto, criterios o enlaces.', en: 'Add context, acceptance criteria, or links.' },
+    descriptionHint: {
+      es: 'Opcional. Se conserva el texto tal como lo escribes.',
+      en: 'Optional. Text is kept as you write it.',
+    },
+    descriptionPlaceholder: {
+      es: 'Añade contexto, criterios o enlaces.',
+      en: 'Add context, acceptance criteria, or links.',
+    },
     statusLabel: { es: 'Estado', en: 'Status' },
     priorityLabel: { es: 'Prioridad', en: 'Priority' },
     typeLabel: { es: 'Tipo', en: 'Type' },
@@ -645,7 +737,10 @@ export const copy = {
     },
     showArchived: { es: 'Ver tareas archivadas', en: 'View archived tasks' },
     hideArchived: { es: 'Ver tareas activas', en: 'View active tasks' },
-    listCount: { es: (count: number) => (count === 1 ? '1 tarea' : `${count} tareas`), en: (count: number) => (count === 1 ? '1 task' : `${count} tasks`) },
+    listCount: {
+      es: (count: number) => (count === 1 ? '1 tarea' : `${count} tareas`),
+      en: (count: number) => (count === 1 ? '1 task' : `${count} tasks`),
+    },
     openTask: { es: 'Abrir tarea', en: 'Open task' },
     closeDetail: { es: 'Cerrar detalle de la tarea', en: 'Close task detail' },
     missingTask: { es: 'La tarea ya no está disponible.', en: 'The task is no longer available.' },
@@ -669,8 +764,10 @@ export const copy = {
     partOf: { es: 'Forma parte de', en: 'Part of' },
     noParent: { es: 'Sin tarea principal', en: 'No parent task' },
     subtaskCount: {
-      es: (total: number, open: number) => `${total} ${total === 1 ? 'subtarea' : 'subtareas'} · ${open} abierta${open === 1 ? '' : 's'}`,
-      en: (total: number, open: number) => `${total} ${total === 1 ? 'subtask' : 'subtasks'} · ${open} open`,
+      es: (total: number, open: number) =>
+        `${total} ${total === 1 ? 'subtarea' : 'subtareas'} · ${open} abierta${open === 1 ? '' : 's'}`,
+      en: (total: number, open: number) =>
+        `${total} ${total === 1 ? 'subtask' : 'subtasks'} · ${open} open`,
     },
     noSubtasksTitle: { es: 'Todavía no hay subtareas', en: 'No subtasks yet' },
     noSubtasksBody: {
@@ -703,10 +800,16 @@ export const copy = {
     linking: { es: 'Vinculando…', en: 'Linking…' },
     noCandidates: { es: 'No hay tareas principales disponibles.', en: 'No eligible parent tasks.' },
     candidatesLoadMore: { es: 'Cargar más tareas', en: 'Load more tasks' },
-    candidateError: { es: 'No se pudieron cargar las tareas disponibles.', en: 'Eligible tasks could not be loaded.' },
+    candidateError: {
+      es: 'No se pudieron cargar las tareas disponibles.',
+      en: 'Eligible tasks could not be loaded.',
+    },
     candidateRetry: { es: 'Reintentar tareas', en: 'Retry tasks' },
     candidateLoading: { es: 'Cargando tareas disponibles…', en: 'Loading eligible tasks…' },
-    closeCandidatePicker: { es: 'Cerrar selector de tarea principal', en: 'Close parent task picker' },
+    closeCandidatePicker: {
+      es: 'Cerrar selector de tarea principal',
+      en: 'Close parent task picker',
+    },
     childCentricHint: {
       es: 'Para vincular una tarea existente, ábrela y usa “Vincular a una tarea principal”.',
       en: 'To link an existing task, open it and use “Link to a parent task”.',
@@ -730,7 +833,10 @@ export const copy = {
     checklistPlaceholder: { es: 'Añadir un paso', en: 'Add a step' },
     checklistAdd: { es: 'Añadir paso', en: 'Add item' },
     checklistAdding: { es: 'Añadiendo…', en: 'Adding…' },
-    checklistHint: { es: 'Texto de una línea, hasta 500 caracteres.', en: 'Single-line text, up to 500 characters.' },
+    checklistHint: {
+      es: 'Texto de una línea, hasta 500 caracteres.',
+      en: 'Single-line text, up to 500 characters.',
+    },
     checklistEdit: { es: 'Editar elemento', en: 'Edit item' },
     checklistSave: { es: 'Guardar', en: 'Save' },
     checklistCancel: { es: 'Cancelar edición', en: 'Cancel edit' },
@@ -806,7 +912,10 @@ export const copy = {
       'add-checklist-item': { es: 'añadió un elemento a la lista', en: 'added a checklist item' },
       'edit-checklist-item': { es: 'editó un elemento de la lista', en: 'edited a checklist item' },
       'move-checklist-item': { es: 'reordenó la lista', en: 'reordered the checklist' },
-      'remove-checklist-item': { es: 'quitó un elemento de la lista', en: 'removed a checklist item' },
+      'remove-checklist-item': {
+        es: 'quitó un elemento de la lista',
+        en: 'removed a checklist item',
+      },
       'add-comment': { es: 'añadió un comentario', en: 'added a comment' },
       'edit-comment': { es: 'editó un comentario', en: 'edited a comment' },
     } as Record<string, Bilingual>,
@@ -854,7 +963,10 @@ export const copy = {
     checklistSuccess: { es: 'Lista actualizada.', en: 'Checklist updated.' },
     parentSuccess: { es: 'Tarea principal actualizada.', en: 'Parent task updated.' },
     childSuccess: { es: 'Subtarea creada.', en: 'Subtask created.' },
-    unknownTitle: { es: 'No se pudo confirmar el resultado', en: 'The outcome could not be confirmed' },
+    unknownTitle: {
+      es: 'No se pudo confirmar el resultado',
+      en: 'The outcome could not be confirmed',
+    },
     unknownBody: {
       es: 'El cambio pudo guardarse o no. Reintenta con la misma clave o descarta el borrador; no se sobrescribe nada en silencio.',
       en: 'The change may or may not have saved. Retry with the same key or discard the draft; nothing is silently overwritten.',
@@ -866,7 +978,10 @@ export const copy = {
       es: 'Hay otro borrador o el destino no es válido. Revisa la sección y vuelve a intentarlo.',
       en: 'Another draft exists or the destination is invalid. Review the section and try again.',
     },
-    forbiddenTitle: { es: 'No puedes modificar esta colaboración', en: 'You cannot change this collaboration' },
+    forbiddenTitle: {
+      es: 'No puedes modificar esta colaboración',
+      en: 'You cannot change this collaboration',
+    },
     forbiddenBody: {
       es: 'El acceso actual es de solo lectura. El contenido existente se conserva.',
       en: 'Current access is read-only. Existing content is preserved.',
@@ -877,8 +992,14 @@ export const copy = {
       en: 'Review the current content before deciding. A new version is not adopted without your confirmation.',
     },
     conflictReview: { es: 'Revisar versión actual', en: 'Review current version' },
-    conflictKeep: { es: 'Usar mi texto sobre la versión actual', en: 'Use my text on the current version' },
-    conflictKeepChange: { es: 'Usar mi cambio sobre la versión actual', en: 'Use my change on the current version' },
+    conflictKeep: {
+      es: 'Usar mi texto sobre la versión actual',
+      en: 'Use my text on the current version',
+    },
+    conflictKeepChange: {
+      es: 'Usar mi cambio sobre la versión actual',
+      en: 'Use my change on the current version',
+    },
     conflictDiscard: { es: 'Descartar y actualizar', en: 'Discard and refresh' },
     conflictCurrentLabel: { es: 'Versión actual', en: 'Current version' },
     conflictDraftLabel: { es: 'Tu texto', en: 'Your text' },
@@ -899,23 +1020,34 @@ export const copy = {
       es: 'El comentario cambió. Revisa el texto actual antes de volver a guardar.',
       en: 'The comment changed. Review the current text before saving again.',
     },
-    closeWarningTitle: { es: 'La tarea principal tiene subtareas abiertas', en: 'The parent task has open subtasks' },
+    closeWarningTitle: {
+      es: 'La tarea principal tiene subtareas abiertas',
+      en: 'The parent task has open subtasks',
+    },
     closeWarningBody: {
-      es: (open: number, archivedOpen: number) => archivedOpen > 0
-        ? `Hay ${open} subtarea${open === 1 ? '' : 's'} abierta${open === 1 ? '' : 's'}, incluida${archivedOpen === 1 ? '' : 's'} ${archivedOpen} archivada${archivedOpen === 1 ? '' : 's'}. Se mantendrán abiertas y visibles; cerrar la tarea principal no las modifica.`
-        : `Hay ${open} subtarea${open === 1 ? '' : 's'} abierta${open === 1 ? '' : 's'}. Se mantendrán abiertas y visibles; cerrar la tarea principal no las modifica.`,
-      en: (open: number, archivedOpen: number) => archivedOpen > 0
-        ? `${open} ${open === 1 ? 'subtask is' : 'subtasks are'} open, including ${archivedOpen} archived. They remain open and visible; closing the parent does not change them.`
-        : `${open} ${open === 1 ? 'subtask is' : 'subtasks are'} open. They remain open and visible; closing the parent does not change them.`,
+      es: (open: number, archivedOpen: number) =>
+        archivedOpen > 0
+          ? `Hay ${open} subtarea${open === 1 ? '' : 's'} abierta${open === 1 ? '' : 's'}, incluida${archivedOpen === 1 ? '' : 's'} ${archivedOpen} archivada${archivedOpen === 1 ? '' : 's'}. Se mantendrán abiertas y visibles; cerrar la tarea principal no las modifica.`
+          : `Hay ${open} subtarea${open === 1 ? '' : 's'} abierta${open === 1 ? '' : 's'}. Se mantendrán abiertas y visibles; cerrar la tarea principal no las modifica.`,
+      en: (open: number, archivedOpen: number) =>
+        archivedOpen > 0
+          ? `${open} ${open === 1 ? 'subtask is' : 'subtasks are'} open, including ${archivedOpen} archived. They remain open and visible; closing the parent does not change them.`
+          : `${open} ${open === 1 ? 'subtask is' : 'subtasks are'} open. They remain open and visible; closing the parent does not change them.`,
     },
     closeWarningTarget: { es: 'Cerrar como', en: 'Close as' },
-    closeWarningConfirm: { es: 'Cerrar la tarea principal', en: 'Close parent and keep children open' },
+    closeWarningConfirm: {
+      es: 'Cerrar la tarea principal',
+      en: 'Close parent and keep children open',
+    },
     closeWarningCancel: { es: 'Cancelar cierre', en: 'Cancel close' },
     closeWarningHint: {
       es: 'La decisión se vuelve a comprobar con la versión actual de las subtareas.',
       en: 'The decision is rechecked against the current subtask version.',
     },
-    closeWarningChildrenUnchanged: { es: 'Las subtareas no cambian.', en: 'Subtasks are not changed.' },
+    closeWarningChildrenUnchanged: {
+      es: 'Las subtareas no cambian.',
+      en: 'Subtasks are not changed.',
+    },
     emptyValue: { es: 'Sin valor', en: 'No value' },
   },
   form: {
@@ -979,7 +1111,10 @@ export const copy = {
       en: (count: number) => (count === 1 ? '1 person or Agent' : `${count} people and Agents`),
     },
     loadingPeople: { es: 'Cargando personas y agentes…', en: 'Loading people and Agents…' },
-    emptyPeople: { es: 'No hay membresías en este espacio.', en: 'There are no memberships in this workspace.' },
+    emptyPeople: {
+      es: 'No hay membresías en este espacio.',
+      en: 'There are no memberships in this workspace.',
+    },
     loadMorePeople: { es: 'Cargar más personas', en: 'Load more people' },
     retryPeople: { es: 'Reintentar carga', en: 'Retry loading' },
     refreshPeople: { es: 'Actualizar lista', en: 'Refresh list' },
@@ -992,8 +1127,14 @@ export const copy = {
       es: 'No se pudo cargar esta lista. El contenido del proyecto sigue disponible; reintenta solo esta carga.',
       en: 'This list could not load. Project content remains available; retry only this load.',
     },
-    adminAutomatic: { es: 'Acceso por su rol de administrador', en: 'Access through their administrator role' },
-    workspaceAccess: { es: 'Acceso por pertenencia al espacio', en: 'Access through workspace membership' },
+    adminAutomatic: {
+      es: 'Acceso por su rol de administrador',
+      en: 'Access through their administrator role',
+    },
+    workspaceAccess: {
+      es: 'Acceso por pertenencia al espacio',
+      en: 'Access through workspace membership',
+    },
     grantedAccess: { es: 'Acceso concedido', en: 'Access granted' },
     noAccess: { es: 'Sin acceso', en: 'No access' },
     inactiveMember: { es: 'Miembro inactivo', en: 'Inactive member' },
@@ -1001,7 +1142,10 @@ export const copy = {
       es: 'La membresía está inactiva. Se conserva el registro histórico; no puede recibir acceso nuevo.',
       en: 'The membership is inactive. The historical record is retained; it cannot receive new access.',
     },
-    retainedActive: { es: 'Acceso explícito activo, conservado', en: 'Explicit access active, retained' },
+    retainedActive: {
+      es: 'Acceso explícito activo, conservado',
+      en: 'Explicit access active, retained',
+    },
     retainedRevoked: { es: 'Acceso explícito revocado', en: 'Explicit access revoked' },
     grant: { es: 'Conceder acceso', en: 'Grant access' },
     regrant: { es: 'Volver a conceder', en: 'Re-grant access' },
@@ -1066,7 +1210,10 @@ export const copy = {
       es: 'Dejará de ver el contenido privado y no podrá trabajar en él. La autoría y las asignaciones históricas se conservan; no se reasignan tareas.',
       en: 'They will no longer see or work on private content. Authorship and historical assignments are retained; tasks are not reassigned.',
     },
-    successVisibility: { es: 'Visibilidad del proyecto actualizada.', en: 'Project visibility updated.' },
+    successVisibility: {
+      es: 'Visibilidad del proyecto actualizada.',
+      en: 'Project visibility updated.',
+    },
     successGrant: { es: 'Permiso explícito concedido.', en: 'Explicit permission granted.' },
     successRevoke: { es: 'Permiso explícito revocado.', en: 'Explicit permission revoked.' },
     successAdminRetained: {
@@ -1090,13 +1237,19 @@ export const copy = {
     targetVisibility: { es: 'Visibilidad', en: 'Visibility' },
     targetMember: { es: 'Persona o agente', en: 'Person or Agent' },
     selectedMember: { es: 'la persona o agente seleccionado', en: 'the selected person or Agent' },
-    draftTitle: { es: 'Tienes un cambio de acceso sin guardar', en: 'You have an unsaved access change' },
+    draftTitle: {
+      es: 'Tienes un cambio de acceso sin guardar',
+      en: 'You have an unsaved access change',
+    },
     draftBody: {
       es: 'El cambio conserva su versión y su clave. Vuelve a Acceso para revisarlo o descártalo explícitamente.',
       en: 'The change keeps its captured version and key. Return to Access to review it, or discard it explicitly.',
     },
     draftResume: { es: 'Volver a Acceso', en: 'Return to Access' },
-    conflictAccessTitle: { es: 'El acceso de esta persona cambió', en: 'This person’s access changed' },
+    conflictAccessTitle: {
+      es: 'El acceso de esta persona cambió',
+      en: 'This person’s access changed',
+    },
     conflictAccessBody: {
       es: 'Otra operación actualizó el proyecto o el acceso de esta persona. Revisa el estado actual exacto antes de volver a guardar.',
       en: 'Another operation updated the project or this person’s access. Review the exact current state before saving again.',
@@ -1150,7 +1303,10 @@ export const copy = {
       es: 'La sesión actual no puede realizar este cambio. Comprueba tu rol o pide acceso a un administrador del espacio.',
       en: 'The current session cannot make this change. Check your role or ask a workspace administrator for access.',
     },
-    conflictTitle: { es: 'El registro cambió mientras lo editabas', en: 'The record changed while you were editing' },
+    conflictTitle: {
+      es: 'El registro cambió mientras lo editabas',
+      en: 'The record changed while you were editing',
+    },
     conflictBody: {
       es: 'Hay una versión más reciente y el guardado se detuvo para no sobrescribirla. Tu borrador sigue intacto. Revisa la versión actual antes de volver a guardar.',
       en: 'A newer version exists, so the save stopped rather than overwrite it. Your draft is intact. Review the current version before saving again.',
@@ -1162,7 +1318,10 @@ export const copy = {
     conflictReview: { es: 'Revisar versión actual', en: 'Review current version' },
     conflictReload: { es: 'Cargar la versión actual', en: 'Load the current version' },
     conflictKeepDraft: { es: 'Conservar mi borrador', en: 'Keep my draft' },
-    unknownTitle: { es: 'No sabemos si el cambio se guardó', en: 'We do not know whether the change was saved' },
+    unknownTitle: {
+      es: 'No sabemos si el cambio se guardó',
+      en: 'We do not know whether the change was saved',
+    },
     unknownBody: {
       es: 'La conexión se interrumpió después de enviar la operación. Reintenta para confirmar el resultado sin duplicarla, o descarta el borrador si prefieres revisar antes.',
       en: 'The connection was interrupted after the operation was sent. Retry to confirm the result without duplicating it, or discard the draft if you prefer to review first.',
@@ -1174,7 +1333,10 @@ export const copy = {
       es: 'La operación no llegó a confirmarse. Comprueba la conexión y vuelve a intentarlo; el borrador se conserva.',
       en: 'The operation was not confirmed. Check the connection and try again; the draft is preserved.',
     },
-    errorTitle: { es: 'No se pudo completar la operación', en: 'The operation could not be completed' },
+    errorTitle: {
+      es: 'No se pudo completar la operación',
+      en: 'The operation could not be completed',
+    },
     errorBody: {
       es: 'No se pudo completar la operación. El borrador se conserva; puedes reintentar o revisar los datos.',
       en: 'The operation could not be completed. The draft is preserved; you can retry or review the information.',
@@ -1201,7 +1363,10 @@ export const copy = {
     },
     draftReturn: { es: 'Volver al borrador', en: 'Return to draft' },
     draftReview: { es: 'Revisar registro', en: 'Review record' },
-    draftContextTitle: { es: 'Tienes un borrador en otro contexto', en: 'You have a draft in another context' },
+    draftContextTitle: {
+      es: 'Tienes un borrador en otro contexto',
+      en: 'You have a draft in another context',
+    },
     draftContextBody: {
       es: 'Vuelve al proyecto o tarea donde empezaste el borrador, o descártalo antes de continuar. Así evitamos aplicar datos al proyecto equivocado.',
       en: 'Return to the project or task where you started the draft, or discard it before continuing. This avoids applying data to the wrong project.',
@@ -1214,7 +1379,10 @@ export const copy = {
       en: 'Wait for the current operation to finish before changing project or task.',
     },
     dismissed: { es: 'Aviso cerrado.', en: 'Notice dismissed.' },
-    pageErrorTitle: { es: 'No se pudo cargar más contenido', en: 'More content could not be loaded' },
+    pageErrorTitle: {
+      es: 'No se pudo cargar más contenido',
+      en: 'More content could not be loaded',
+    },
     pageErrorBody: {
       es: 'Lo que ya estaba cargado sigue disponible. Reintenta para continuar desde donde lo dejaste.',
       en: 'What was already loaded remains available. Retry to continue where you left off.',

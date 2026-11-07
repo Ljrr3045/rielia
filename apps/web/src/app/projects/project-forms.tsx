@@ -70,7 +70,8 @@ export function ProjectForm({
       <div className={styles.formGrid}>
         <div className={styles.field}>
           <label className={styles.fieldLabel} htmlFor={nameId}>
-            {copy.project.nameLabel[lang]} <span className={styles.requiredMark}>{copy.form.requiredMark[lang]}</span>
+            {copy.project.nameLabel[lang]}{' '}
+            <span className={styles.requiredMark}>{copy.form.requiredMark[lang]}</span>
           </label>
           <input
             aria-describedby={nameError ? nameErrorId : undefined}
@@ -80,7 +81,7 @@ export function ProjectForm({
             disabled={blocked}
             id={nameId}
             maxLength={200}
-            onChange={event => {
+            onChange={(event) => {
               if (localError === 'name') setLocalError(null);
               onChange({ name: event.currentTarget.value });
             }}
@@ -88,15 +89,18 @@ export function ProjectForm({
             type="text"
             value={value.name}
           />
-          {nameError
-            ? <FieldError id={nameErrorId}>{message}</FieldError>
-            : <p className={styles.fieldHint}>{copy.project.nameHint[lang]}</p>}
+          {nameError ? (
+            <FieldError id={nameErrorId}>{message}</FieldError>
+          ) : (
+            <p className={styles.fieldHint}>{copy.project.nameHint[lang]}</p>
+          )}
         </div>
 
         {mode === 'create' && (
           <div className={styles.field}>
             <label className={styles.fieldLabel} htmlFor={keyId}>
-              {copy.project.keyLabel[lang]} <span className={styles.requiredMark}>{copy.form.requiredMark[lang]}</span>
+              {copy.project.keyLabel[lang]}{' '}
+              <span className={styles.requiredMark}>{copy.form.requiredMark[lang]}</span>
             </label>
             <input
               aria-describedby={keyError ? keyErrorId : undefined}
@@ -105,7 +109,7 @@ export function ProjectForm({
               disabled={blocked}
               id={keyId}
               maxLength={10}
-              onChange={event => {
+              onChange={(event) => {
                 if (localError === 'key') setLocalError(null);
                 onChange({ key: event.currentTarget.value.toUpperCase() });
               }}
@@ -114,9 +118,11 @@ export function ProjectForm({
               type="text"
               value={value.key}
             />
-            {keyError
-              ? <FieldError id={keyErrorId}>{copy.project.keyRequired[lang]}</FieldError>
-              : <p className={styles.fieldHint}>{copy.project.keyHint[lang]}</p>}
+            {keyError ? (
+              <FieldError id={keyErrorId}>{copy.project.keyRequired[lang]}</FieldError>
+            ) : (
+              <p className={styles.fieldHint}>{copy.project.keyHint[lang]}</p>
+            )}
           </div>
         )}
 
@@ -124,7 +130,9 @@ export function ProjectForm({
           <div className={styles.fieldWide}>
             <div className={styles.fixedContext}>
               <span>{copy.project.keyLabel[lang]}</span>
-              <span className={styles.fixedContextValue}><span className={styles.taskKey}>{value.key}</span></span>
+              <span className={styles.fixedContextValue}>
+                <span className={styles.taskKey}>{value.key}</span>
+              </span>
               <span className={styles.fieldHint}>{copy.project.keyImmutableHint[lang]}</span>
             </div>
           </div>
@@ -132,7 +140,8 @@ export function ProjectForm({
 
         <div className={styles.fieldWide}>
           <label className={styles.fieldLabel} htmlFor={descriptionId}>
-            {copy.project.descriptionLabel[lang]} <span className={styles.optionalMark}>{copy.form.optionalMark[lang]}</span>
+            {copy.project.descriptionLabel[lang]}{' '}
+            <span className={styles.optionalMark}>{copy.form.optionalMark[lang]}</span>
           </label>
           <textarea
             aria-describedby={errorField === 'description' ? descriptionId + '-error' : undefined}
@@ -140,19 +149,22 @@ export function ProjectForm({
             disabled={blocked}
             id={descriptionId}
             maxLength={20000}
-            onChange={event => onChange({ description: event.currentTarget.value })}
+            onChange={(event) => onChange({ description: event.currentTarget.value })}
             rows={4}
             value={value.description}
           />
-          {errorField === 'description'
-            ? <FieldError id={descriptionId + '-error'}>{message}</FieldError>
-            : <p className={styles.fieldHint}>{copy.project.descriptionHint[lang]}</p>}
+          {errorField === 'description' ? (
+            <FieldError id={descriptionId + '-error'}>{message}</FieldError>
+          ) : (
+            <p className={styles.fieldHint}>{copy.project.descriptionHint[lang]}</p>
+          )}
         </div>
 
         {mode === 'create' && (
           <fieldset className={styles.choiceFieldset}>
             <legend className={styles.fieldLabel}>
-              {copy.project.visibilityLabel[lang]} <span className={styles.requiredMark}>{copy.form.requiredMark[lang]}</span>
+              {copy.project.visibilityLabel[lang]}{' '}
+              <span className={styles.requiredMark}>{copy.form.requiredMark[lang]}</span>
             </legend>
             {canCreatePrivate ? (
               <>
@@ -168,8 +180,12 @@ export function ProjectForm({
                       value="workspace"
                     />
                     <span>
-                      <span className={styles.choiceTitle}>{copy.project.visibilityWorkspace[lang]}</span>
-                      <span className={styles.fieldHint}>{copy.project.visibilityWorkspaceHint[lang]}</span>
+                      <span className={styles.choiceTitle}>
+                        {copy.project.visibilityWorkspace[lang]}
+                      </span>
+                      <span className={styles.fieldHint}>
+                        {copy.project.visibilityWorkspaceHint[lang]}
+                      </span>
                     </span>
                   </label>
                   <label className={styles.choice} htmlFor={visibilityId + '-private'}>
@@ -183,8 +199,12 @@ export function ProjectForm({
                       value="private"
                     />
                     <span>
-                      <span className={styles.choiceTitle}>{copy.project.visibilityPrivate[lang]}</span>
-                      <span className={styles.fieldHint}>{copy.project.visibilityPrivateHint[lang]}</span>
+                      <span className={styles.choiceTitle}>
+                        {copy.project.visibilityPrivate[lang]}
+                      </span>
+                      <span className={styles.fieldHint}>
+                        {copy.project.visibilityPrivateHint[lang]}
+                      </span>
                     </span>
                   </label>
                 </div>
@@ -195,7 +215,9 @@ export function ProjectForm({
             ) : (
               <div className={styles.fixedContext}>
                 <Badge tone="neutral">{copy.project.visibilityWorkspace[lang]}</Badge>
-                <span className={styles.fieldHint}>{copy.project.visibilityUnavailableHint[lang]}</span>
+                <span className={styles.fieldHint}>
+                  {copy.project.visibilityUnavailableHint[lang]}
+                </span>
               </div>
             )}
           </fieldset>
@@ -205,7 +227,9 @@ export function ProjectForm({
           <div className={styles.fieldWide}>
             <div className={styles.fixedContext}>
               <span>{copy.project.visibilityLabel[lang]}</span>
-              <Badge tone={value.visibility === 'private' ? 'warning' : 'neutral'}>{visibilityName(value.visibility)[lang]}</Badge>
+              <Badge tone={value.visibility === 'private' ? 'warning' : 'neutral'}>
+                {visibilityName(value.visibility)[lang]}
+              </Badge>
               <span className={styles.fieldHint}>{copy.project.visibilityManageHint[lang]}</span>
             </div>
           </div>
@@ -215,8 +239,12 @@ export function ProjectForm({
       <div className={styles.formActions}>
         <button className={styles.primary} disabled={blocked} type="submit">
           {pending
-            ? (mode === 'create' ? copy.project.creating[lang] : copy.common.saving[lang])
-            : (mode === 'create' ? copy.project.create[lang] : copy.project.saveSettings[lang])}
+            ? mode === 'create'
+              ? copy.project.creating[lang]
+              : copy.common.saving[lang]
+            : mode === 'create'
+              ? copy.project.create[lang]
+              : copy.project.saveSettings[lang]}
         </button>
         <button className={styles.secondary} disabled={pending} onClick={onCancel} type="button">
           {copy.common.cancel[lang]}
