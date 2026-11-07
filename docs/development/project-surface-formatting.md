@@ -11,17 +11,24 @@ UX01–03/05–07/09/11. T36 remains in progress before T37, then T11.
 The actual base is merged [PR #37](https://github.com/Ljrr3045/rielia/pull/37),
 `ec257ea3b2d76be0b73a0d17278be592d3a23e2c`, whose tree equals its accepted
 `93d3565` head. All 22 original blobs, hashes and 0644 modes match that base.
-[PR #38](https://github.com/Ljrr3045/rielia/pull/38) opened Draft at
-`7223ce92335536c58634318bcc059b32e1b34544` after independent review found no open
-finding. Actual readback confirms Draft at that source head/base, with no native
-Kilo check/review/comment on inspected surfaces. Hidden queues/billing are not
-independently visible. Final-head hosted evidence and coordinator-controlled
-Ready/Kilo/merge remain pending.
+[PR #38](https://github.com/Ljrr3045/rielia/pull/38) is merged at
+`fbc9fad8bb431d6dcadcaddcb137f33bebceee78` on November 7, 2026, 10:26:37 UTC.
+Final reviewed head `f16dfac199128aff86874624e21b8cafb24cb434` has successful
+[validate 128372042941](https://github.com/Ljrr3045/rielia/actions/runs/42361939493)
+and native Kilo 128375942393 (App 2193792). Its
+[29-file summary](https://github.com/Ljrr3045/rielia/pull/38#issuecomment-6705555677)
+reports No Issues Found; reviews, inline comments, threads and Kilo check annotations
+were empty in the final coordinator receipt. Postmerge validate 128378024516
+[also succeeds](https://github.com/Ljrr3045/rielia/actions/runs/42363974810) on the
+actual merged base. This evidence applies to PR #38, not the subsequent completion batch.
 
 The [inventory](formatting-inventory.json) records the exact targets and sole
 unchanged `task-collaboration-shared.tsx`. Adoption moves 143→165 of 208 eligible
 paths, with 43 remaining. Existing identity/workspace/prototype/scripts work and
 structural extraction remain later scopes. The fictional prototype stays isolated.
+The subsequent [formatting completion](formatting-completion.md) records adoption
+of the remaining 43 inputs and its separate reviewed migration; this page retains
+the earlier 22-file evidence.
 
 ## Mechanical proof
 
@@ -140,8 +147,11 @@ host mutation or redundant measurement run occurred.
 
 No fresh local browser, PostgreSQL, Docker, provider, device/touch or assistive-
 technology result is claimed. Static parity is not visual/accessibility
-certification. Full final-head hosted CI with native check, real identity/security/
-PostgreSQL/runtime, audits and bounded artifacts remains mandatory. Independent
-source/evidence review and initial Draft publication are complete; final-head
-hosted evidence and coordinator-controlled Ready/Kilo/merge remain pending.
-This batch does not complete T36 or implement T37/T11.
+certification. Final-head hosted validate passed the native check, all 269 unit
+cases/gates, infrastructure 20, real PG/security 103 cases, Docker/runtime/restart,
+closure and both high audits. The exact 17-report artifact (324,033 ZIP bytes,
+SHA256 `f4f9e2987b0e3a9400b589b0cb2d5a31631d3d10d965724c2664565afeced2da`)
+matches accepted local B byte-for-byte, with seven-day retention. Root audit
+retains one moderate and isolated tooling two moderate findings; high-threshold
+success does not mean zero advisories. Coordinator review/merge is complete for
+PR #38. This batch does not complete T36 or implement T37/T11.

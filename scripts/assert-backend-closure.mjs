@@ -4,7 +4,12 @@ import { createRequire } from 'node:module';
 import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-const forbidden = new Set(['express', '@nestjs/platform-express', '@types/express', '@types/express-serve-static-core']);
+const forbidden = new Set([
+  'express',
+  '@nestjs/platform-express',
+  '@types/express',
+  '@types/express-serve-static-core',
+]);
 
 // Follow actual Node resolution, including installed optional peers. Merely
 // deleting a manifest entry misses pnpm's retained peer bindings.
@@ -19,12 +24,19 @@ export function assertBackendClosure(directory, { deployed = false } = {}) {
     assert(!forbidden.has(manifest.name), `Forbidden backend package: ${manifest.name}`);
     names.add(`${manifest.name}@${manifest.version}`);
     const required = manifest.dependencies ?? {};
-    const dependencies = new Set(Object.keys({ ...required, ...manifest.optionalDependencies,
-      ...(root ? {} : manifest.peerDependencies) }));
+    const dependencies = new Set(
+      Object.keys({
+        ...required,
+        ...manifest.optionalDependencies,
+        ...(root ? {} : manifest.peerDependencies),
+      }),
+    );
     const require = createRequire(join(current, 'package.json'));
     for (const name of dependencies) {
-      const dependency = require.resolve.paths(name)?.map(path => join(path, name))
-        .find(path => existsSync(join(path, 'package.json')));
+      const dependency = require.resolve
+        .paths(name)
+        ?.map((path) => join(path, name))
+        .find((path) => existsSync(join(path, 'package.json')));
       if (dependency) inspect(dependency);
       else assert(!Object.hasOwn(required, name), `Missing required backend package: ${name}`);
     }
@@ -53,10 +65,17 @@ export function assertBackendClosure(directory, { deployed = false } = {}) {
     }
     scan(join(resolve(directory), 'node_modules'));
   }
-  assert([...names].some(name => name === '@nestjs/platform-node@12.3.2'), 'Node adapter missing');
-  console.log(`Backend closure verified: ${names.size} resolved packages; no Express${deployed ? ' in deployed store' : ''}.`);
+  assert(
+    [...names].some((name) => name === '@nestjs/platform-node@12.3.2'),
+    'Node adapter missing',
+  );
+  console.log(
+    `Backend closure verified: ${names.size} resolved packages; no Express${deployed ? ' in deployed store' : ''}.`,
+  );
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
-  assertBackendClosure(process.argv[2] ?? 'apps/api', { deployed: process.argv.includes('--deployed') });
+  assertBackendClosure(process.argv[2] ?? 'apps/api', {
+    deployed: process.argv.includes('--deployed'),
+  });
 }

@@ -4,6 +4,25 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+### T36 maintained-source formatting completion
+
+- Adopt the final 43 eligible inputs with 38 approved changes/five unchanged,
+  reaching 208/208 without extraction, redesign, test behavior or provider changes.
+  Disclose nine reviewed JSX text representations and three exact finite CSS pairs.
+- Retain 269 cases/all 101 sources and exact semantic hits. Accept only 44 current
+  baseline fingerprint/physical-line values, including shared config in all four
+  scopes, four selected test hashes, web line floor 31.18→31.14 and prototype
+  24.72→27.90; preserve all four historical files and existing gates, which pass
+  eight saved pairs.
+- Record 88 exact new END-column losses, including 14 hit-bearing fields and actual
+  range-highlighting debt, plus controller zero-return physical grouping in the
+  [completion guide](docs/development/formatting-completion.md). Actual native
+  `pnpm check`, infrastructure 20, handoff/whitespace and independent review pass.
+  Preserve the private post-success spec/TAP summary assertion failure separately
+  from the accepted raw command/guard results; no command is rerun. Remove only the
+  verified temporary tooling link. Current-head hosted CI/publication remains
+  pending; T36 structure/acceptance, T37 and T11 stay open.
+
 ### T36 mechanical project-surface formatting
 
 - Adopt exactly 22 project files with 21 pinned mechanical changes and one
@@ -17,9 +36,10 @@ This records repository changes. No application version has been released.
   [project formatting guide](docs/development/project-surface-formatting.md).
   Local infrastructure20, handoff/whitespace and one actual full native
   `pnpm check` pass. Independent review accepted `7223ce9` and
-  [Draft PR #38](https://github.com/Ljrr3045/rielia/pull/38) targets `dev`;
-  final-head hosted evidence remains pending. T36, remaining formatting/extraction,
-  T37 and T11 stay incomplete.
+  [PR #38](https://github.com/Ljrr3045/rielia/pull/38) is merged at `fbc9fad`
+  after exact-head validate/Kilo success and 29-file No Issues Found feedback.
+  All 17 hosted artifact reports equal accepted local B; final real PG/security/
+  runtime/high-audit checks pass. T36/extraction, T37 and T11 stay incomplete.
 
 ### T36 web transport/controller/hook mechanical formatting
 

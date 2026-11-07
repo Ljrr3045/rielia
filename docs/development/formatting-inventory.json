@@ -1,6 +1,6 @@
 {
   "baseline": "1c33560f2fca954cbac6d35a87881a41dd72b017",
-  "policy": "Adopted files checked every run; changed/new supported source and config checked prospectively. Markdown adoption and unsupported formats remain explicit follow-up.",
+  "policy": "All 208 currently eligible maintained source/config/tooling inputs are adopted; changed/new supported inputs remain prospectively enforced. Legacy Markdown adoption and unsupported formats retain explicit owners and checks.",
   "adopted": [
     ".github/actions/unit-artifacts/action.yml",
     ".github/actions/unit-artifacts/index.mjs",
@@ -57,10 +57,17 @@
     "apps/api/test/unit/workspace-invitation.test.mjs",
     "apps/api/test/workspaces.test.mjs",
     "apps/api/tsconfig.json",
+    "apps/web/next.config.ts",
+    "apps/web/package.json",
     "apps/web/src/app/api/auth/[...path]/route.ts",
     "apps/web/src/app/api/v1/identity/[action]/route.ts",
     "apps/web/src/app/api/v1/workspace-invitations/accept/route.ts",
     "apps/web/src/app/api/v1/workspaces/[[...path]]/route.ts",
+    "apps/web/src/app/globals.css",
+    "apps/web/src/app/identity/identity-view.tsx",
+    "apps/web/src/app/identity/page.tsx",
+    "apps/web/src/app/layout.tsx",
+    "apps/web/src/app/page.tsx",
     "apps/web/src/app/projects/feedback.tsx",
     "apps/web/src/app/projects/page.tsx",
     "apps/web/src/app/projects/project-access.tsx",
@@ -83,6 +90,24 @@
     "apps/web/src/app/projects/task-move.tsx",
     "apps/web/src/app/projects/task-relations.tsx",
     "apps/web/src/app/projects/task-view-bar.tsx",
+    "apps/web/src/app/prototype/board-view.tsx",
+    "apps/web/src/app/prototype/filters.tsx",
+    "apps/web/src/app/prototype/loading.tsx",
+    "apps/web/src/app/prototype/page.tsx",
+    "apps/web/src/app/prototype/prototype-app.tsx",
+    "apps/web/src/app/prototype/prototype.module.css",
+    "apps/web/src/app/prototype/sprint-view.tsx",
+    "apps/web/src/app/prototype/strings.ts",
+    "apps/web/src/app/prototype/task-detail.tsx",
+    "apps/web/src/app/prototype/task-form.tsx",
+    "apps/web/src/app/prototype/task-views.tsx",
+    "apps/web/src/app/prototype/ui.tsx",
+    "apps/web/src/app/workspaces/page.tsx",
+    "apps/web/src/app/workspaces/strings.ts",
+    "apps/web/src/app/workspaces/workspace-admin.tsx",
+    "apps/web/src/app/workspaces/workspace-ui.tsx",
+    "apps/web/src/app/workspaces/workspace-view.tsx",
+    "apps/web/src/app/workspaces/workspace.module.css",
     "apps/web/src/lib/identity-client.ts",
     "apps/web/src/lib/identity-controller.ts",
     "apps/web/src/lib/identity-proxy.ts",
@@ -92,6 +117,11 @@
     "apps/web/src/lib/safe-markdown.ts",
     "apps/web/src/lib/task-collaboration-state.ts",
     "apps/web/src/lib/task-events-client.ts",
+    "apps/web/src/lib/task-prototype/controller.ts",
+    "apps/web/src/lib/task-prototype/index.ts",
+    "apps/web/src/lib/task-prototype/seed.ts",
+    "apps/web/src/lib/task-prototype/types.ts",
+    "apps/web/src/lib/task-prototype/use-task-prototype.ts",
     "apps/web/src/lib/use-identity.ts",
     "apps/web/src/lib/use-project-tasks.ts",
     "apps/web/src/lib/use-workspaces.ts",
@@ -106,7 +136,9 @@
     "apps/web/test/unit/project-hook-harness.mjs",
     "apps/web/test/unit/project-hook.test.mjs",
     "apps/web/test/unit/workspace-hook.test.mjs",
+    "apps/web/tsconfig.json",
     "commitlint.config.mjs",
+    "compose.local.yml",
     "docs/development/formatting-inventory.json",
     "eslint.config.mjs",
     "format-adoption.json",
@@ -128,10 +160,13 @@
     "packages/mcp-local/test/upstream-lifecycle.test.mjs",
     "packages/mcp-local/tsconfig.json",
     "pnpm-workspace.yaml",
+    "scripts/assert-backend-closure.mjs",
     "scripts/identity-client.integration.test.mjs",
     "scripts/identity-client.test.mjs",
     "scripts/identity-logic.test.mjs",
     "scripts/identity-proxy.integration.test.mjs",
+    "scripts/project-task-client.test.mjs",
+    "scripts/project-task-logic.test.mjs",
     "scripts/quality/checks.mjs",
     "scripts/quality/ci.mjs",
     "scripts/quality/commits.mjs",
@@ -140,8 +175,14 @@
     "scripts/quality/policy.mjs",
     "scripts/quality/quality.test.mjs",
     "scripts/quality/staged.mjs",
+    "scripts/smoke-process.mjs",
+    "scripts/smoke-process.test.mjs",
+    "scripts/smoke.mjs",
     "scripts/task-events-client.test.mjs",
     "scripts/task-events-proxy.integration.test.mjs",
+    "scripts/task-prototype.test.mjs",
+    "scripts/test-identity.mjs",
+    "scripts/test-runtime.mjs",
     "scripts/unit/artifacts.mjs",
     "scripts/unit/baselines/api.json",
     "scripts/unit/baselines/contracts.json",
@@ -166,10 +207,12 @@
     "scripts/unit/upload-worker.mjs",
     "scripts/unit/upload.mjs",
     "scripts/unit/upload.test.mjs",
+    "scripts/workspace-client.test.mjs",
+    "scripts/workspace-logic.test.mjs",
     "tsconfig.base.json"
   ],
   "sourceFollowUp": {
-    "owner": "T36 source-formatting batches before related extraction",
+    "owner": "Historical pre-tooling source inventory; current maintained-source adoption is complete below. T36 structural extraction remains separate.",
     "formattedAtBaseline": [
       "apps/web/next.config.ts",
       "apps/web/package.json",
@@ -437,55 +480,11 @@
     "measurementSourceHead": "3b9507f5f8c2a046351885f7cccae527f5a5c154"
   },
   "currentSourceAccounting": {
-    "owner": "T36 mechanical formatting integration; remaining web presentation/prototype and scripts/config batches",
+    "owner": "T36 mechanical formatting integration; all current maintained inputs adopted, future inputs prospective; coordinator owns remaining structural acceptance",
     "eligibleCount": 208,
-    "adoptedCount": 165,
-    "remainingCount": 43,
-    "remaining": [
-      "apps/web/next.config.ts",
-      "apps/web/package.json",
-      "apps/web/src/app/globals.css",
-      "apps/web/src/app/identity/identity-view.tsx",
-      "apps/web/src/app/identity/page.tsx",
-      "apps/web/src/app/layout.tsx",
-      "apps/web/src/app/page.tsx",
-      "apps/web/src/app/prototype/board-view.tsx",
-      "apps/web/src/app/prototype/filters.tsx",
-      "apps/web/src/app/prototype/loading.tsx",
-      "apps/web/src/app/prototype/page.tsx",
-      "apps/web/src/app/prototype/prototype-app.tsx",
-      "apps/web/src/app/prototype/prototype.module.css",
-      "apps/web/src/app/prototype/sprint-view.tsx",
-      "apps/web/src/app/prototype/strings.ts",
-      "apps/web/src/app/prototype/task-detail.tsx",
-      "apps/web/src/app/prototype/task-form.tsx",
-      "apps/web/src/app/prototype/task-views.tsx",
-      "apps/web/src/app/prototype/ui.tsx",
-      "apps/web/src/app/workspaces/page.tsx",
-      "apps/web/src/app/workspaces/strings.ts",
-      "apps/web/src/app/workspaces/workspace-admin.tsx",
-      "apps/web/src/app/workspaces/workspace-ui.tsx",
-      "apps/web/src/app/workspaces/workspace-view.tsx",
-      "apps/web/src/app/workspaces/workspace.module.css",
-      "apps/web/src/lib/task-prototype/controller.ts",
-      "apps/web/src/lib/task-prototype/index.ts",
-      "apps/web/src/lib/task-prototype/seed.ts",
-      "apps/web/src/lib/task-prototype/types.ts",
-      "apps/web/src/lib/task-prototype/use-task-prototype.ts",
-      "apps/web/tsconfig.json",
-      "compose.local.yml",
-      "scripts/assert-backend-closure.mjs",
-      "scripts/project-task-client.test.mjs",
-      "scripts/project-task-logic.test.mjs",
-      "scripts/smoke-process.mjs",
-      "scripts/smoke-process.test.mjs",
-      "scripts/smoke.mjs",
-      "scripts/task-prototype.test.mjs",
-      "scripts/test-identity.mjs",
-      "scripts/test-runtime.mjs",
-      "scripts/workspace-client.test.mjs",
-      "scripts/workspace-logic.test.mjs"
-    ]
+    "adoptedCount": 208,
+    "remainingCount": 0,
+    "remaining": []
   },
   "sourceFormattingLifecycleTestAdoption": {
     "mergedBase": "be777b434b249fd039da1519d0146177b8e0d1c9",
@@ -504,7 +503,8 @@
   "manualReviewedDocuments": [
     "docs/development/source-format-adoption.md",
     "docs/development/web-transport-formatting.md",
-    "docs/development/project-surface-formatting.md"
+    "docs/development/project-surface-formatting.md",
+    "docs/development/formatting-completion.md"
   ],
   "webTransportFormattingAdoption": {
     "owner": "T36.3 web transport/controller/hook mechanical formatting",
@@ -816,5 +816,329 @@
     ],
     "precisionLimit": "Only these106 enumerated new unknownEND fields (12statement/1function-declaration/93branch), zero new unknownSTART and one recoveredEND accepted; known starts/hits retained, exact end spans/highlighting degraded; no fabricated positions or general waiver",
     "evidence": "project-surface-formatting.md"
+  },
+  "formattingCompletionAdoption": {
+    "owner": "T36.3 mechanical formatting completion; tooling/integration owns exact mapping debt, coordinator owns later extraction/acceptance",
+    "base": "fbc9fad8bb431d6dcadcaddcb137f33bebceee78",
+    "files": [
+      "apps/web/next.config.ts",
+      "apps/web/package.json",
+      "apps/web/src/app/globals.css",
+      "apps/web/src/app/identity/identity-view.tsx",
+      "apps/web/src/app/identity/page.tsx",
+      "apps/web/src/app/layout.tsx",
+      "apps/web/src/app/page.tsx",
+      "apps/web/src/app/prototype/board-view.tsx",
+      "apps/web/src/app/prototype/filters.tsx",
+      "apps/web/src/app/prototype/loading.tsx",
+      "apps/web/src/app/prototype/page.tsx",
+      "apps/web/src/app/prototype/prototype-app.tsx",
+      "apps/web/src/app/prototype/prototype.module.css",
+      "apps/web/src/app/prototype/sprint-view.tsx",
+      "apps/web/src/app/prototype/strings.ts",
+      "apps/web/src/app/prototype/task-detail.tsx",
+      "apps/web/src/app/prototype/task-form.tsx",
+      "apps/web/src/app/prototype/task-views.tsx",
+      "apps/web/src/app/prototype/ui.tsx",
+      "apps/web/src/app/workspaces/page.tsx",
+      "apps/web/src/app/workspaces/strings.ts",
+      "apps/web/src/app/workspaces/workspace-admin.tsx",
+      "apps/web/src/app/workspaces/workspace-ui.tsx",
+      "apps/web/src/app/workspaces/workspace-view.tsx",
+      "apps/web/src/app/workspaces/workspace.module.css",
+      "apps/web/src/lib/task-prototype/controller.ts",
+      "apps/web/src/lib/task-prototype/index.ts",
+      "apps/web/src/lib/task-prototype/seed.ts",
+      "apps/web/src/lib/task-prototype/types.ts",
+      "apps/web/src/lib/task-prototype/use-task-prototype.ts",
+      "apps/web/tsconfig.json",
+      "compose.local.yml",
+      "scripts/assert-backend-closure.mjs",
+      "scripts/project-task-client.test.mjs",
+      "scripts/project-task-logic.test.mjs",
+      "scripts/smoke-process.mjs",
+      "scripts/smoke-process.test.mjs",
+      "scripts/smoke.mjs",
+      "scripts/task-prototype.test.mjs",
+      "scripts/test-identity.mjs",
+      "scripts/test-runtime.mjs",
+      "scripts/workspace-client.test.mjs",
+      "scripts/workspace-logic.test.mjs"
+    ],
+    "changedFiles": [
+      "apps/web/src/app/globals.css",
+      "apps/web/src/app/identity/identity-view.tsx",
+      "apps/web/src/app/identity/page.tsx",
+      "apps/web/src/app/layout.tsx",
+      "apps/web/src/app/page.tsx",
+      "apps/web/src/app/prototype/board-view.tsx",
+      "apps/web/src/app/prototype/filters.tsx",
+      "apps/web/src/app/prototype/page.tsx",
+      "apps/web/src/app/prototype/prototype-app.tsx",
+      "apps/web/src/app/prototype/prototype.module.css",
+      "apps/web/src/app/prototype/sprint-view.tsx",
+      "apps/web/src/app/prototype/strings.ts",
+      "apps/web/src/app/prototype/task-detail.tsx",
+      "apps/web/src/app/prototype/task-form.tsx",
+      "apps/web/src/app/prototype/task-views.tsx",
+      "apps/web/src/app/prototype/ui.tsx",
+      "apps/web/src/app/workspaces/page.tsx",
+      "apps/web/src/app/workspaces/strings.ts",
+      "apps/web/src/app/workspaces/workspace-admin.tsx",
+      "apps/web/src/app/workspaces/workspace-ui.tsx",
+      "apps/web/src/app/workspaces/workspace-view.tsx",
+      "apps/web/src/app/workspaces/workspace.module.css",
+      "apps/web/src/lib/task-prototype/controller.ts",
+      "apps/web/src/lib/task-prototype/seed.ts",
+      "apps/web/src/lib/task-prototype/types.ts",
+      "apps/web/tsconfig.json",
+      "compose.local.yml",
+      "scripts/assert-backend-closure.mjs",
+      "scripts/project-task-client.test.mjs",
+      "scripts/project-task-logic.test.mjs",
+      "scripts/smoke-process.mjs",
+      "scripts/smoke-process.test.mjs",
+      "scripts/smoke.mjs",
+      "scripts/task-prototype.test.mjs",
+      "scripts/test-identity.mjs",
+      "scripts/test-runtime.mjs",
+      "scripts/workspace-client.test.mjs",
+      "scripts/workspace-logic.test.mjs"
+    ],
+    "unchangedAdoptionOnly": [
+      "apps/web/next.config.ts",
+      "apps/web/package.json",
+      "apps/web/src/app/prototype/loading.tsx",
+      "apps/web/src/lib/task-prototype/index.ts",
+      "apps/web/src/lib/task-prototype/use-task-prototype.ts"
+    ],
+    "eligibleCountAfter": 208,
+    "remainingEligibleCount": 0,
+    "semantics": "38 approved byte changes and five unchanged adoptions; exact pinned default formatting except nine explicitly reviewed JSX text string-expression representations in four files. Strict sealed source/runtime/literal/directive/comment proof and idempotence; three exact finite CSS pairs only. No new tests or test-behavior/extraction/redesign/dependency/provider/pipeline change.",
+    "sealedHelperSHA256": "986042f0c484d6b1eeb2ba96a419d7868738fc288bcddb061d131af07f0106de",
+    "finiteCSSCapsuleSHA256": "c668142127878bbbbef744337ba8d04129e5b6bf8adc4fb138f1b9b9a2bda928",
+    "explicitJSXRepresentations": {
+      "apps/web/src/app/identity/page.tsx": 2,
+      "apps/web/src/app/page.tsx": 2,
+      "apps/web/src/app/workspaces/workspace-admin.tsx": 4,
+      "apps/web/src/app/prototype/sprint-view.tsx": 1
+    },
+    "finiteCSS": {
+      "files": [
+        "apps/web/src/app/globals.css",
+        "apps/web/src/app/workspaces/workspace.module.css",
+        "apps/web/src/app/prototype/prototype.module.css"
+      ],
+      "orderedNodes": 2514,
+      "fieldEnrollments": 27,
+      "rawLayoutDispositions": 103,
+      "notGenericAcceptance": true
+    },
+    "coverage": "Same269 cases and101 maintained inputs; all S/F/B IDs/topology/full hits exact,79 unchanged full maps exact. Accepted only44 baseline scalar replacements:30 finite fingerprints+14 physical line/floor values across four current files; four historical files exact. No semantic coverage gain.",
+    "finiteManifestMigration": {
+      "sharedConfig": {
+        "path": "apps/web/tsconfig.json",
+        "beforeSHA256": "74f227fda9c92459d96cc0a0ad4af47c6549fb985970f85dd2873e03674e2697",
+        "afterSHA256": "54e8c2f2b85df307026caea6d88f8c5d8b71d8ce9224a4f652abbad4f2c5f773",
+        "scopes": ["api", "web", "contracts", "prototype"],
+        "parsedJSONSemanticsExact": true
+      },
+      "sourceFingerprints": {
+        "web": 9,
+        "prototype": 13
+      },
+      "selectedTestFingerprints": {
+        "web": [
+          "scripts/workspace-logic.test.mjs",
+          "scripts/project-task-logic.test.mjs",
+          "scripts/project-task-client.test.mjs"
+        ],
+        "prototype": ["scripts/task-prototype.test.mjs"]
+      },
+      "allOtherPublishedManifestFieldsTypeExact": true,
+      "applicationGatesUnchanged": true
+    },
+    "lineMigration": {
+      "web": {
+        "before": {
+          "covered": 1177,
+          "total": 3774
+        },
+        "after": {
+          "covered": 1177,
+          "total": 3779
+        },
+        "floorBasisPointsBefore": 3118,
+        "floorBasisPointsAfter": 3114
+      },
+      "prototype": {
+        "before": {
+          "covered": 199,
+          "total": 805
+        },
+        "after": {
+          "covered": 238,
+          "total": 853
+        },
+        "floorBasisPointsBefore": 2472,
+        "floorBasisPointsAfter": 2790
+      },
+      "controller": {
+        "before": {
+          "covered": 184,
+          "total": 188
+        },
+        "after": {
+          "covered": 223,
+          "total": 231
+        },
+        "uncoveredBefore": 4,
+        "uncoveredAfter": 8,
+        "newZeroFromOldCoveredStatementIDs": ["117", "123", "127"],
+        "oldLines": [146, 149, 152],
+        "newLines": [282, 288, 292],
+        "semanticHitsUnchanged": true,
+        "reason": "Physical grouping exposes existing zero-hit returns; no old-zero origins lost or mixed; other extra zero group splits prior zero."
+      }
+    },
+    "newUnknownEndColumnFieldNamespace": "statement.* / function.* / branch.* map to statementMap / fnMap / branchMap endpoints",
+    "newUnknownEndColumnFields": {
+      "apps/web/src/app/identity/identity-view.tsx": [
+        "branch.10.locations.2.end",
+        "branch.11.locations.3.end",
+        "branch.12.locations.3.end",
+        "branch.14.locations.1.end",
+        "branch.6.loc.end",
+        "branch.6.locations.1.end",
+        "branch.7.loc.end",
+        "branch.7.locations.1.end",
+        "branch.8.loc.end",
+        "branch.8.locations.2.end"
+      ],
+      "apps/web/src/app/page.tsx": [
+        "branch.3.loc.end",
+        "branch.3.locations.0.end",
+        "branch.3.locations.1.end",
+        "branch.4.loc.end",
+        "branch.4.locations.1.end"
+      ],
+      "apps/web/src/app/prototype/prototype-app.tsx": [
+        "branch.67.loc.end",
+        "branch.74.loc.end",
+        "branch.75.locations.1.end",
+        "branch.76.locations.1.end",
+        "branch.77.locations.1.end",
+        "branch.83.loc.end",
+        "branch.83.locations.1.end",
+        "branch.85.locations.1.end"
+      ],
+      "apps/web/src/app/prototype/sprint-view.tsx": [
+        "branch.101.loc.end",
+        "branch.28.loc.end",
+        "branch.64.loc.end",
+        "branch.65.loc.end",
+        "branch.66.loc.end",
+        "branch.67.loc.end",
+        "branch.72.loc.end",
+        "statement.113.end"
+      ],
+      "apps/web/src/app/prototype/task-detail.tsx": ["branch.23.loc.end"],
+      "apps/web/src/app/prototype/task-form.tsx": [
+        "branch.29.loc.end",
+        "branch.30.loc.end",
+        "branch.31.loc.end",
+        "branch.35.loc.end",
+        "branch.36.loc.end",
+        "branch.39.loc.end",
+        "branch.42.loc.end",
+        "branch.44.loc.end"
+      ],
+      "apps/web/src/app/prototype/task-views.tsx": [
+        "branch.10.loc.end",
+        "branch.10.locations.1.end"
+      ],
+      "apps/web/src/app/prototype/ui.tsx": [
+        "branch.49.loc.end",
+        "branch.52.loc.end",
+        "branch.54.loc.end"
+      ],
+      "apps/web/src/app/workspaces/workspace-admin.tsx": [
+        "branch.105.loc.end",
+        "branch.106.loc.end",
+        "branch.106.locations.1.end",
+        "branch.107.locations.2.end",
+        "branch.114.locations.1.end",
+        "branch.125.locations.1.end",
+        "branch.126.locations.0.end",
+        "branch.20.loc.end",
+        "branch.20.locations.1.end",
+        "branch.21.loc.end",
+        "branch.21.locations.1.end",
+        "branch.30.locations.0.end",
+        "branch.52.locations.1.end",
+        "branch.53.locations.2.end",
+        "branch.54.locations.2.end",
+        "branch.55.locations.3.end",
+        "branch.72.loc.end",
+        "branch.74.loc.end",
+        "branch.74.locations.1.end",
+        "branch.75.locations.0.end",
+        "branch.86.locations.0.end",
+        "function.69.loc.end",
+        "statement.196.end",
+        "statement.227.end"
+      ],
+      "apps/web/src/app/workspaces/workspace-view.tsx": [
+        "branch.100.loc.end",
+        "branch.100.locations.1.end",
+        "branch.21.locations.2.end",
+        "branch.22.locations.5.end",
+        "branch.66.locations.1.end",
+        "branch.67.loc.end",
+        "branch.67.locations.1.end",
+        "branch.72.locations.2.end",
+        "branch.77.locations.1.end",
+        "branch.78.locations.1.end",
+        "branch.79.locations.2.end",
+        "branch.91.locations.0.end",
+        "function.29.loc.end",
+        "statement.165.end"
+      ],
+      "apps/web/src/lib/task-prototype/controller.ts": [
+        "branch.108.locations.0.end",
+        "branch.68.loc.end",
+        "branch.68.locations.1.end",
+        "branch.69.locations.0.end",
+        "statement.9.end"
+      ]
+    },
+    "newUnknownEndColumnFieldsWithNonzeroHits": {
+      "apps/web/src/app/identity/identity-view.tsx": [
+        "branch.11.locations.3.end",
+        "branch.12.locations.3.end",
+        "branch.14.locations.1.end",
+        "branch.6.loc.end",
+        "branch.6.locations.1.end",
+        "branch.7.loc.end",
+        "branch.7.locations.1.end",
+        "branch.8.loc.end",
+        "branch.8.locations.2.end"
+      ],
+      "apps/web/src/lib/task-prototype/controller.ts": [
+        "branch.108.locations.0.end",
+        "branch.68.loc.end",
+        "branch.68.locations.1.end",
+        "branch.69.locations.0.end",
+        "statement.9.end"
+      ]
+    },
+    "precisionDisposition": "Explicitly accepted only these88 new END fields across11 files, including14 fields with nonzero hits; zero new START/recovered fields. All44596 endpoint bounds and affected starts valid. Unknown columns stay null; real end-span/range-highlighting precision loss remains tooling/integration-owned debt, with no general future waiver.",
+    "remainingDebt": {
+      "structure": "T36.4/T36.5 frontend/backend extraction and meaningful interaction/policy coverage remain coordinator-scoped and open",
+      "acceptance": "T36.6 stable UI contract and overall T36 acceptance remain open before T37, then T11",
+      "markdown": "Legacy Markdown remains separately owned by T36 documentation adoption; no bulk rewrite",
+      "manualAndExcluded": "Retain existing manualFormats/excluded inventories and checks unchanged"
+    },
+    "guide": "docs/development/formatting-completion.md"
   }
 }

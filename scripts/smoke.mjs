@@ -19,7 +19,9 @@ async function freePort() {
   const address = server.address();
   assert(address && typeof address === 'object');
   const port = address.port;
-  await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
+  await new Promise((resolve, reject) =>
+    server.close((error) => (error ? reject(error) : resolve())),
+  );
   return port;
 }
 
@@ -38,7 +40,9 @@ async function ready(entry, url) {
     try {
       const response = await fetch(url, { signal: AbortSignal.timeout(1000) });
       if (response.ok) return;
-    } catch { /* Retry until startup deadline. */ }
+    } catch {
+      /* Retry until startup deadline. */
+    }
     await delay(100);
   }
   throw new Error(`${entry.name} startup timed out.\n${entry.log}`);
@@ -50,7 +54,11 @@ try {
   while (webPort === apiPort) webPort = await freePort();
   const apiUrl = `http://127.0.0.1:${apiPort}`;
   const webUrl = `http://127.0.0.1:${webPort}`;
-  const api = start('API', ['apps/api/dist/main.js'], root, { HOST: '127.0.0.1', PORT: String(apiPort), IDENTITY_ENABLED: 'false' });
+  const api = start('API', ['apps/api/dist/main.js'], root, {
+    HOST: '127.0.0.1',
+    PORT: String(apiPort),
+    IDENTITY_ENABLED: 'false',
+  });
   await ready(api, `${apiUrl}/api/v1/health`);
   const health = await fetch(`${apiUrl}/api/v1/health`, { signal: AbortSignal.timeout(3000) });
   assert.equal(health.status, 200);
@@ -59,9 +67,25 @@ try {
   const body = await health.json();
   assert(isHealthResponse(body), 'API response must satisfy the public contract');
   assert.deepEqual(body, { status: 'ok', service: 'rielia-api' });
-  assert.equal((await fetch(`${apiUrl}/api/v1/tasks`)).status, 404, 'Product routes must not be claimed');
+  assert.equal(
+    (await fetch(`${apiUrl}/api/v1/tasks`)).status,
+    404,
+    'Product routes must not be claimed',
+  );
 
-  const web = start('Web', [webRequire.resolve('next/dist/bin/next'), 'start', '--hostname', '127.0.0.1', '--port', String(webPort)], webDirectory, { API_BASE_URL: apiUrl });
+  const web = start(
+    'Web',
+    [
+      webRequire.resolve('next/dist/bin/next'),
+      'start',
+      '--hostname',
+      '127.0.0.1',
+      '--port',
+      String(webPort),
+    ],
+    webDirectory,
+    { API_BASE_URL: apiUrl },
+  );
   await ready(web, webUrl);
   const response = await fetch(webUrl, { signal: AbortSignal.timeout(5000) });
   assert.equal(response.status, 200);
@@ -84,8 +108,14 @@ try {
     assert.equal(response.status, 503);
     assert.equal(response.headers.get('cache-control'), 'no-store');
   }
-  const acceptance = await fetch(`${webUrl}/api/v1/workspace-invitations/accept`, { method: 'POST',
-    headers: { 'content-type': 'application/json', 'idempotency-key': '00000000-0000-4000-8000-000000000000' }, body: JSON.stringify({ token: 'x'.repeat(43) }) });
+  const acceptance = await fetch(`${webUrl}/api/v1/workspace-invitations/accept`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'idempotency-key': '00000000-0000-4000-8000-000000000000',
+    },
+    body: JSON.stringify({ token: 'x'.repeat(43) }),
+  });
   assert.equal(acceptance.status, 403, 'Next acceptance route must reach the backend origin guard');
   assert.equal((await fetch(`${webUrl}/api/v1/identity/unknown`)).status, 404);
   assert.equal((await fetch(`${webUrl}/api/auth/ok`)).status, 404);
@@ -97,7 +127,9 @@ try {
   const unavailableIdentity = await fetch(`${webUrl}/api/v1/identity/session`);
   assert.equal(unavailableIdentity.status, 503);
   assert.equal(unavailableIdentity.headers.get('cache-control'), 'no-store');
-  console.log('Smoke passed: API contract/404, web ES/EN HTTP, identity proxy/disabled state, API-down fallback.');
+  console.log(
+    'Smoke passed: API contract/404, web ES/EN HTTP, identity proxy/disabled state, API-down fallback.',
+  );
 } catch (error) {
   console.error(error);
   for (const entry of children) console.error(`${entry.name}:\n${entry.log}`);

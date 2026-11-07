@@ -11,7 +11,7 @@
       },
       "lines": {
         "covered": 0,
-        "total": 47
+        "total": 48
       },
       "statements": {
         "covered": 0,
@@ -83,7 +83,7 @@
       },
       "lines": {
         "covered": 0,
-        "total": 140
+        "total": 142
       },
       "statements": {
         "covered": 0,
@@ -101,7 +101,7 @@
       },
       "lines": {
         "covered": 0,
-        "total": 110
+        "total": 111
       },
       "statements": {
         "covered": 0,
@@ -191,7 +191,7 @@
       },
       "lines": {
         "covered": 0,
-        "total": 103
+        "total": 104
       },
       "statements": {
         "covered": 0,
@@ -208,8 +208,8 @@
         "total": 87
       },
       "lines": {
-        "covered": 184,
-        "total": 188
+        "covered": 223,
+        "total": 231
       },
       "statements": {
         "covered": 254,
@@ -292,7 +292,7 @@
   "floors": {
     "branches": 2033,
     "functions": 2364,
-    "lines": 2472,
+    "lines": 2790,
     "statements": 2733
   },
   "manifest": {
@@ -309,26 +309,26 @@
     },
     "configs": {
       "apps/api/tsconfig.json": "b0fa28f9606b6c4394aad0a86c71a17b03d13fe0be5488d4bccc5600d93c4b50",
-      "apps/web/tsconfig.json": "74f227fda9c92459d96cc0a0ad4af47c6549fb985970f85dd2873e03674e2697",
+      "apps/web/tsconfig.json": "54e8c2f2b85df307026caea6d88f8c5d8b71d8ce9224a4f652abbad4f2c5f773",
       "packages/contracts/tsconfig.json": "b95a19f4e24c335474fa4b20b329216a8bfed97eb1429ba2188705f38de6503b",
       "tsconfig.base.json": "cb1df8b236cca5a668abf94b5657d200094c3b338e66bfc2ea6a19e699ad7dff"
     },
     "inputs": {
-      "apps/web/src/app/prototype/board-view.tsx": "0ee79bf8a6e6ce9265296bafdca9c343b54028ee71b8e8da7b9e6144e14c79ff",
-      "apps/web/src/app/prototype/filters.tsx": "1badf5b5a4408317a8c9947b8462d02ca78d406d0847f6348eda2d6e79b5e20a",
+      "apps/web/src/app/prototype/board-view.tsx": "ee3d07585573ca565a5129e7f0ca0815eca54b15dad40615bde13963838b147c",
+      "apps/web/src/app/prototype/filters.tsx": "001709c30ca9746fb4288b90c10bc03c6246324378a88c179e4c76962db20073",
       "apps/web/src/app/prototype/loading.tsx": "5a14612c5a8a23a0fb1cf4f51abe9ea1b1ba37fedef271c03924eaf1da3d8289",
-      "apps/web/src/app/prototype/page.tsx": "8ca0fbdb380ef8d78e082d3561b329aea08931bc04f86fe3d0563df94514d89c",
-      "apps/web/src/app/prototype/prototype-app.tsx": "5da07aaa9ee27b7842b3be73ff1ce10ae5ad5605b69de2c4dda83291e012d1a7",
-      "apps/web/src/app/prototype/sprint-view.tsx": "9e7af7881c791a1a3ff74d0fbc7459b24d1c3aaef7ef0ae1aabdcd4cc984b19e",
-      "apps/web/src/app/prototype/strings.ts": "e94eab698c96edd419039515717e7c00ec95ee7a06b2f5877ba5e1dd0f3e1033",
-      "apps/web/src/app/prototype/task-detail.tsx": "1ba7f3a3924c07251cabd5dc336e5ea55a68dec904b78aca1236b61e71e5329c",
-      "apps/web/src/app/prototype/task-form.tsx": "8851f811c71f815329bccfb6ef25e14d7020403fe8444b00d3831fc7473496e3",
-      "apps/web/src/app/prototype/task-views.tsx": "8f48419954503eee416c352bcd86a7dba1b59328d51ca82fc085d72f54c8c284",
-      "apps/web/src/app/prototype/ui.tsx": "a240ab1fb4c4b9309e0364582e70a04aaa59f7eb3a577b923c8c2f216f4770b5",
-      "apps/web/src/lib/task-prototype/controller.ts": "af61bdc83f878afad2ead0075819e5cac04546fcc4c42caff2fa1d80113eb94b",
+      "apps/web/src/app/prototype/page.tsx": "906cea0044b8306b87e40fc158dedd2c09d13d6807c2a2118d9fbc606524e4dc",
+      "apps/web/src/app/prototype/prototype-app.tsx": "ec8ff3857a7ff3a7ed1ba32b99fa8c195cce351b0b9045c147e170f6d3c32368",
+      "apps/web/src/app/prototype/sprint-view.tsx": "ad9d93c2d2ddcc70938f6d4011255297215c759766cbe2be3c56ef5d72f83672",
+      "apps/web/src/app/prototype/strings.ts": "b93496fe1273205e95d36bf4d083d4abebf1d696bd7328fba561d98178fa063b",
+      "apps/web/src/app/prototype/task-detail.tsx": "50580ecbece3467c5a9642fa09524650c157c3f5e2dc6af5fb274ea456067bde",
+      "apps/web/src/app/prototype/task-form.tsx": "2df476257ad833cfd6a16a1d66c6436daeabc2fd3a0063f51c003012450fe6d0",
+      "apps/web/src/app/prototype/task-views.tsx": "6596254a64732960f55e3b9fb3f68a48280c880ed3fc6a66063a32f372a31417",
+      "apps/web/src/app/prototype/ui.tsx": "8483e3284f25e3d69e466f66930993b0911c218bcda9ce88d7228ba425932cb2",
+      "apps/web/src/lib/task-prototype/controller.ts": "50fd4355f307a82466836098b3d8754a418f0de8da77848a95e3ed135135f130",
       "apps/web/src/lib/task-prototype/index.ts": "f192f7275c039b49f76b9fe9d3cb915fe5bdc4c75bc25a678f4433c665e2a95d",
-      "apps/web/src/lib/task-prototype/seed.ts": "ba322cdaf4305d469f73a6c7c8ab525d67e39d7aafc49b3826490d6af0ba7dcb",
-      "apps/web/src/lib/task-prototype/types.ts": "2dc7073bfe54b734c3314403528bd472b06016f64e1f36bcd33269e607dccaf9",
+      "apps/web/src/lib/task-prototype/seed.ts": "d1b762d8bbdf547fabe1fd12180e0d2b2b80792f6507ec90d55d899323210fac",
+      "apps/web/src/lib/task-prototype/types.ts": "1e8c0af894efb2432b298cfaed8395d21a546d1f3458ab5ee2e2627687e54f5b",
       "apps/web/src/lib/task-prototype/use-task-prototype.ts": "da04dc274b34e0215834a07c2038f584641173463e6b24aad882fb77634521ec"
     },
     "pnpm": "12.15.0",
@@ -340,7 +340,7 @@
     },
     "runtime": "24.22.1",
     "tests": {
-      "scripts/task-prototype.test.mjs": "cec2ddeb2fe2e56041dc3bbf2d7f02d3ed9ed965fd165dd2d078ffa7a7a06ac0",
+      "scripts/task-prototype.test.mjs": "1774e77d1cd9382f08b1fdc8585a3b42c533d22ba58a976afd7e4b72a61247ce",
       "scripts/unit/mirror-loader.mjs": "b3ef9e50e56ee2fa0079c794c044efbc6b953d75890b97889bc635e233d93115"
     },
     "toolsLock": "8c4e6232dbeb14b7067dd5a6a8be95256893dc915a8972f759e46b06deee7634"
@@ -356,8 +356,8 @@
       "total": 368
     },
     "lines": {
-      "covered": 199,
-      "total": 805
+      "covered": 238,
+      "total": 853
     },
     "statements": {
       "covered": 269,

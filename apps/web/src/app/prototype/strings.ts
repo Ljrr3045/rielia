@@ -255,9 +255,9 @@ const es: Copy = {
   throughWeb: 'Desde la web',
   throughClient: 'Mediante Cursor (demo)',
   autonomousAgent: 'Agente autónomo',
-  changeStatusFor: key => `Cambiar estado de ${key}`,
-  addTaskTo: name => `Añadir tarea a ${name}`,
-  openTaskDetail: key => `Abrir ${key}`,
+  changeStatusFor: (key) => `Cambiar estado de ${key}`,
+  addTaskTo: (name) => `Añadir tarea a ${name}`,
+  openTaskDetail: (key) => `Abrir ${key}`,
   boardColumn: 'Columna',
   emptyColumn: 'No hay tareas en esta columna.',
   addTask: 'Añadir tarea',
@@ -275,7 +275,8 @@ const es: Copy = {
   emptyProjectTitle: 'El proyecto empieza con una tarea',
   emptyProjectBody: 'Añade lo primero que quieras mover. Solo necesitas un título.',
   emptyMyTasksTitle: 'No tienes tareas asignadas',
-  emptyMyTasksBody: 'Las tareas asignadas a ti aparecerán aquí. Puedes ver todo el proyecto o crear una tarea.',
+  emptyMyTasksBody:
+    'Las tareas asignadas a ti aparecerán aquí. Puedes ver todo el proyecto o crear una tarea.',
   noResultsTitle: 'No hay tareas que coincidan',
   noResultsBody: 'Prueba otra búsqueda o quita algunos filtros.',
   viewAllTasks: 'Ver todas las tareas',
@@ -326,7 +327,8 @@ const es: Copy = {
   sprintDates: 'Fechas',
   sprintScope: 'Alcance',
   retainedTasksTitle: 'Tareas que permanecen en este sprint',
-  retainedTasksHint: 'Solo quedan tareas terminadas o canceladas; las pendientes se movieron al cerrar.',
+  retainedTasksHint:
+    'Solo quedan tareas terminadas o canceladas; las pendientes se movieron al cerrar.',
   noRetainedTasks: 'No quedan tareas en este sprint.',
   editPlan: 'Editar plan',
   startSprint: 'Iniciar sprint',
@@ -352,7 +354,8 @@ const es: Copy = {
   endDateHint: 'La fecha de fin es exclusiva.',
   scopeLabel: 'Alcance',
   scopeHint: 'Elige tareas del backlog o de este sprint.',
-  scopeSelected: count => `${count} ${count === 1 ? 'tarea seleccionada' : 'tareas seleccionadas'}`,
+  scopeSelected: (count) =>
+    `${count} ${count === 1 ? 'tarea seleccionada' : 'tareas seleccionadas'}`,
   scopeEmpty: 'No hay tareas disponibles para añadir.',
   saveSprint: 'Guardar sprint',
   createSprint: 'Crear sprint',
@@ -367,11 +370,11 @@ const es: Copy = {
   retryFrozenDestination: 'El reintento usará el destino ya elegido.',
   canceledNotDelivered: 'Las tareas canceladas no cuentan como entrega.',
   closedDestinationBacklog: 'Las tareas pendientes volvieron al backlog.',
-  closedDestinationSprint: name => `Las tareas pendientes pasaron a ${name}.`,
-  filtersCount: count => `${count} ${count === 1 ? 'filtro activo' : 'filtros activos'}`,
-  taskCount: count => `${count} ${count === 1 ? 'tarea' : 'tareas'}`,
-  pointsTotal: count => `${count} ${count === 1 ? 'punto' : 'puntos'}`,
-  unestimatedCount: count => `${count} sin estimar`,
+  closedDestinationSprint: (name) => `Las tareas pendientes pasaron a ${name}.`,
+  filtersCount: (count) => `${count} ${count === 1 ? 'filtro activo' : 'filtros activos'}`,
+  taskCount: (count) => `${count} ${count === 1 ? 'tarea' : 'tareas'}`,
+  pointsTotal: (count) => `${count} ${count === 1 ? 'punto' : 'puntos'}`,
+  unestimatedCount: (count) => `${count} sin estimar`,
 };
 
 const en: Copy = {
@@ -437,9 +440,9 @@ const en: Copy = {
   throughWeb: 'From web',
   throughClient: 'Through Cursor (demo)',
   autonomousAgent: 'Autonomous agent',
-  changeStatusFor: key => `Change status for ${key}`,
-  addTaskTo: name => `Add task to ${name}`,
-  openTaskDetail: key => `Open ${key}`,
+  changeStatusFor: (key) => `Change status for ${key}`,
+  addTaskTo: (name) => `Add task to ${name}`,
+  openTaskDetail: (key) => `Open ${key}`,
   boardColumn: 'Column',
   emptyColumn: 'No tasks in this column.',
   addTask: 'Add task',
@@ -457,7 +460,8 @@ const en: Copy = {
   emptyProjectTitle: 'The project starts with a task',
   emptyProjectBody: 'Add the first thing you want to move forward. A title is enough.',
   emptyMyTasksTitle: 'You have no assigned tasks',
-  emptyMyTasksBody: 'Tasks assigned to you will appear here. You can view the whole project or create a task.',
+  emptyMyTasksBody:
+    'Tasks assigned to you will appear here. You can view the whole project or create a task.',
   noResultsTitle: 'No matching tasks',
   noResultsBody: 'Try another search or clear some filters.',
   viewAllTasks: 'View all tasks',
@@ -508,7 +512,8 @@ const en: Copy = {
   sprintDates: 'Dates',
   sprintScope: 'Scope',
   retainedTasksTitle: 'Tasks still in this sprint',
-  retainedTasksHint: 'Only done or canceled tasks remain; unfinished work moved when the sprint closed.',
+  retainedTasksHint:
+    'Only done or canceled tasks remain; unfinished work moved when the sprint closed.',
   noRetainedTasks: 'No tasks remain in this sprint.',
   editPlan: 'Edit plan',
   startSprint: 'Start sprint',
@@ -534,7 +539,7 @@ const en: Copy = {
   endDateHint: 'The end date is exclusive.',
   scopeLabel: 'Scope',
   scopeHint: 'Choose backlog tasks or tasks already in this sprint.',
-  scopeSelected: count => `${count} ${count === 1 ? 'task selected' : 'tasks selected'}`,
+  scopeSelected: (count) => `${count} ${count === 1 ? 'task selected' : 'tasks selected'}`,
   scopeEmpty: 'No tasks are available to add.',
   saveSprint: 'Save sprint',
   createSprint: 'Create sprint',
@@ -549,16 +554,19 @@ const en: Copy = {
   retryFrozenDestination: 'Retry will use the destination already chosen.',
   canceledNotDelivered: 'Canceled tasks do not count as delivery.',
   closedDestinationBacklog: 'Unfinished tasks returned to the backlog.',
-  closedDestinationSprint: name => `Unfinished tasks moved to ${name}.`,
-  filtersCount: count => `${count} active ${count === 1 ? 'filter' : 'filters'}`,
-  taskCount: count => `${count} ${count === 1 ? 'task' : 'tasks'}`,
-  pointsTotal: count => `${count} ${count === 1 ? 'point' : 'points'}`,
-  unestimatedCount: count => `${count} unestimated`,
+  closedDestinationSprint: (name) => `Unfinished tasks moved to ${name}.`,
+  filtersCount: (count) => `${count} active ${count === 1 ? 'filter' : 'filters'}`,
+  taskCount: (count) => `${count} ${count === 1 ? 'task' : 'tasks'}`,
+  pointsTotal: (count) => `${count} ${count === 1 ? 'point' : 'points'}`,
+  unestimatedCount: (count) => `${count} unestimated`,
 };
 
 export const copy: Record<Lang, Copy> = { es, en };
 
-export const VIEW_LABELS: Record<Lang, Record<PrototypeView, { title: string; subtitle: string }>> = {
+export const VIEW_LABELS: Record<
+  Lang,
+  Record<PrototypeView, { title: string; subtitle: string }>
+> = {
   es: {
     'my-tasks': { title: 'Mis tareas', subtitle: 'Asignadas a ti en el proyecto de demostración' },
     list: { title: 'Lista', subtitle: 'Todas las tareas del proyecto' },
@@ -574,8 +582,20 @@ export const VIEW_LABELS: Record<Lang, Record<PrototypeView, { title: string; su
 };
 
 const STATUS_LABELS: Record<Lang, Record<TaskStatus, string>> = {
-  es: { backlog: 'Backlog', todo: 'Por hacer', in_progress: 'En curso', done: 'Terminada', canceled: 'Cancelada' },
-  en: { backlog: 'Backlog', todo: 'To do', in_progress: 'In progress', done: 'Done', canceled: 'Canceled' },
+  es: {
+    backlog: 'Backlog',
+    todo: 'Por hacer',
+    in_progress: 'En curso',
+    done: 'Terminada',
+    canceled: 'Cancelada',
+  },
+  en: {
+    backlog: 'Backlog',
+    todo: 'To do',
+    in_progress: 'In progress',
+    done: 'Done',
+    canceled: 'Canceled',
+  },
 };
 
 const PRIORITY_LABELS: Record<Lang, Record<TaskPriority, string>> = {
@@ -600,8 +620,34 @@ export function sprintStateLabel(state: 'planned' | 'active' | 'closed', lang: L
   return SPRINT_STATE_LABELS[lang][state];
 }
 
-const MONTHS_ES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sept', 'oct', 'nov', 'dic'] as const;
-const MONTHS_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] as const;
+const MONTHS_ES = [
+  'ene',
+  'feb',
+  'mar',
+  'abr',
+  'may',
+  'jun',
+  'jul',
+  'ago',
+  'sept',
+  'oct',
+  'nov',
+  'dic',
+] as const;
+const MONTHS_EN = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+] as const;
 
 export function formatDate(value: string | null, lang: Lang): string {
   if (value === null) return copy[lang].noDueDate;
@@ -610,13 +656,13 @@ export function formatDate(value: string | null, lang: Lang): string {
   const month = Number(parts[1]);
   const day = Number(parts[2]);
   if (
-    !Number.isInteger(year)
-    || !Number.isInteger(month)
-    || !Number.isInteger(day)
-    || month < 1
-    || month > 12
-    || day < 1
-    || day > 31
+    !Number.isInteger(year) ||
+    !Number.isInteger(month) ||
+    !Number.isInteger(day) ||
+    month < 1 ||
+    month > 12 ||
+    day < 1 ||
+    day > 31
   ) {
     return value;
   }
@@ -630,32 +676,77 @@ export function formatSprintRange(startsOn: string, endsOn: string, lang: Lang):
 
 const ES_ERRORS = new Map<string, string>([
   ['Enter a title between 1 and 200 characters.', 'Introduce un título de 1 a 200 caracteres.'],
-  ['Keep the description within 5,000 characters.', 'La descripción no puede superar los 5.000 caracteres.'],
+  [
+    'Keep the description within 5,000 characters.',
+    'La descripción no puede superar los 5.000 caracteres.',
+  ],
   ['Choose a demo status.', 'Elige un estado de la demo.'],
   ['Choose a demo priority.', 'Elige una prioridad de la demo.'],
-  ['Choose a demo human or agent, or leave unassigned.', 'Elige una persona o agente de la demo, o deja la tarea sin asignar.'],
+  [
+    'Choose a demo human or agent, or leave unassigned.',
+    'Elige una persona o agente de la demo, o deja la tarea sin asignar.',
+  ],
   ['Choose demo labels.', 'Elige etiquetas de la demo.'],
-  ['Labels must be a list of demo label IDs.', 'Las etiquetas deben ser una lista de identificadores de la demo.'],
-  ['Task scope must be a list of demo task IDs.', 'El alcance debe ser una lista de identificadores de tareas de la demo.'],
+  [
+    'Labels must be a list of demo label IDs.',
+    'Las etiquetas deben ser una lista de identificadores de la demo.',
+  ],
+  [
+    'Task scope must be a list of demo task IDs.',
+    'El alcance debe ser una lista de identificadores de tareas de la demo.',
+  ],
   ['Use a valid date (YYYY-MM-DD).', 'Usa una fecha válida (AAAA-MM-DD).'],
-  ['Use whole points from 0 to 100, or leave unestimated.', 'Usa puntos enteros de 0 a 100, o deja la tarea sin estimar.'],
+  [
+    'Use whole points from 0 to 100, or leave unestimated.',
+    'Usa puntos enteros de 0 a 100, o deja la tarea sin estimar.',
+  ],
   ['Save or discard the current draft first.', 'Guarda o descarta el borrador actual primero.'],
-  ['Only planned sprint details and scope can be edited.', 'Solo se pueden editar los detalles y el alcance de un sprint planificado.'],
-  ['Enter a sprint name within 100 characters.', 'Introduce un nombre de sprint de hasta 100 caracteres.'],
-  ['Enter a sprint goal within 500 characters.', 'Introduce un objetivo de sprint de hasta 500 caracteres.'],
+  [
+    'Only planned sprint details and scope can be edited.',
+    'Solo se pueden editar los detalles y el alcance de un sprint planificado.',
+  ],
+  [
+    'Enter a sprint name within 100 characters.',
+    'Introduce un nombre de sprint de hasta 100 caracteres.',
+  ],
+  [
+    'Enter a sprint goal within 500 characters.',
+    'Introduce un objetivo de sprint de hasta 500 caracteres.',
+  ],
   ['Enter a valid start date.', 'Introduce una fecha de inicio válida.'],
-  ['End date must be after start (exclusive end).', 'La fecha de fin debe ser posterior al inicio (fin exclusivo).'],
+  [
+    'End date must be after start (exclusive end).',
+    'La fecha de fin debe ser posterior al inicio (fin exclusivo).',
+  ],
   ['Select each task once.', 'Selecciona cada tarea una sola vez.'],
-  ['Scope can include only backlog tasks or tasks already in this sprint.', 'El alcance solo puede incluir tareas del backlog o de este sprint.'],
+  [
+    'Scope can include only backlog tasks or tasks already in this sprint.',
+    'El alcance solo puede incluir tareas del backlog o de este sprint.',
+  ],
   ['This demo task already exists.', 'Esta tarea de la demo ya existe.'],
-  ['The task changed. Keep your draft, then discard and reopen to review current data.', 'La tarea cambió. Conserva tu borrador y, después, descártalo y vuelve a abrirla para revisar los datos actuales.'],
+  [
+    'The task changed. Keep your draft, then discard and reopen to review current data.',
+    'La tarea cambió. Conserva tu borrador y, después, descártalo y vuelve a abrirla para revisar los datos actuales.',
+  ],
   ['The task changed. Review its current state.', 'La tarea cambió. Revisa su estado actual.'],
-  ['Demo save failed. Your draft is retained; retry when ready.', 'No se pudo guardar. Tu borrador se conserva; reintenta cuando quieras.'],
-  ['Simulated save failure. Nothing was saved; your draft is retained.', 'Fallo de guardado simulado. No se guardó nada; tu borrador se conserva.'],
+  [
+    'Demo save failed. Your draft is retained; retry when ready.',
+    'No se pudo guardar. Tu borrador se conserva; reintenta cuando quieras.',
+  ],
+  [
+    'Simulated save failure. Nothing was saved; your draft is retained.',
+    'Fallo de guardado simulado. No se guardó nada; tu borrador se conserva.',
+  ],
   ['Only a planned sprint can start.', 'Solo puede iniciarse un sprint planificado.'],
-  ['Close the active sprint before starting another.', 'Cierra el sprint activo antes de iniciar otro.'],
+  [
+    'Close the active sprint before starting another.',
+    'Cierra el sprint activo antes de iniciar otro.',
+  ],
   ['Only an active sprint can close.', 'Solo puede cerrarse un sprint activo.'],
-  ['Choose an explicit destination for unfinished tasks.', 'Elige un destino explícito para las tareas pendientes.'],
+  [
+    'Choose an explicit destination for unfinished tasks.',
+    'Elige un destino explícito para las tareas pendientes.',
+  ],
   ['Choose another planned sprint or backlog.', 'Elige otro sprint planificado o el backlog.'],
   ['Demo task was not found.', 'No se encontró la tarea de la demo.'],
   ['Choose a planned demo sprint.', 'Elige un sprint planificado de la demo.'],
@@ -673,12 +764,15 @@ export function contextTargetLabel(
 ): string | null {
   if (context === null) return null;
   if (context.kind === 'task' || context.kind === 'status') {
-    return tasks.find(task => task.id === context.taskId)?.key ?? context.taskId;
+    return tasks.find((task) => task.id === context.taskId)?.key ?? context.taskId;
   }
-  return sprints.find(sprint => sprint.id === context.sprintId)?.name ?? context.sprintId;
+  return sprints.find((sprint) => sprint.id === context.sprintId)?.name ?? context.sprintId;
 }
 
-export function savePendingLabel(kind: 'task' | 'status' | 'sprint' | 'start-sprint' | 'close-sprint', lang: Lang): string {
+export function savePendingLabel(
+  kind: 'task' | 'status' | 'sprint' | 'start-sprint' | 'close-sprint',
+  lang: Lang,
+): string {
   const c = copy[lang];
   if (kind === 'task') return c.savingTask;
   if (kind === 'status') return c.savingStatus;
@@ -687,7 +781,10 @@ export function savePendingLabel(kind: 'task' | 'status' | 'sprint' | 'start-spr
   return c.closingSprint;
 }
 
-export function saveSavedLabel(kind: 'task' | 'status' | 'sprint' | 'start-sprint' | 'close-sprint', lang: Lang): string {
+export function saveSavedLabel(
+  kind: 'task' | 'status' | 'sprint' | 'start-sprint' | 'close-sprint',
+  lang: Lang,
+): string {
   const c = copy[lang];
   if (kind === 'task') return c.savedTask;
   if (kind === 'status') return c.savedStatus;

@@ -1,6 +1,11 @@
 'use client';
 
-import type { DemoTask, PrototypeState, TaskPrototypeActions, TaskStatus } from '../../lib/task-prototype/types';
+import type {
+  DemoTask,
+  PrototypeState,
+  TaskPrototypeActions,
+  TaskStatus,
+} from '../../lib/task-prototype/types';
 import { copy, formatDate, type Lang } from './strings';
 import { activeFilterCount } from './filters';
 import {
@@ -49,9 +54,9 @@ function TaskRow({
   onOpen: (taskId: string) => void;
 }) {
   const c = copy[lang];
-  const assignee = state.principals.find(principal => principal.id === task.assigneeId) ?? null;
+  const assignee = state.principals.find((principal) => principal.id === task.assigneeId) ?? null;
   const labels = task.labelIds
-    .map(labelId => state.labels.find(label => label.id === labelId))
+    .map((labelId) => state.labels.find((label) => label.id === labelId))
     .filter((label): label is { id: string; name: string } => label !== undefined);
   const pending = state.save.status === 'pending';
 
@@ -76,7 +81,7 @@ function TaskRow({
         </button>
         <div className={styles.taskMeta}>
           <span className={styles.taskKey}>{task.key}</span>
-          {labels.map(label => (
+          {labels.map((label) => (
             <LabelChip key={label.id} name={label.name} />
           ))}
           <span className={styles.metaItem}>
@@ -104,12 +109,18 @@ function TaskRow({
 export function TaskListView({ state, actions, lang, mode, onOpen }: TaskListProps) {
   const c = copy[lang];
   const filtersActive = activeFilterCount(state.filters) > 0;
-  const createDisabled = state.save.status === 'pending' || state.taskDraft !== null || state.sprintDraft !== null;
+  const createDisabled =
+    state.save.status === 'pending' || state.taskDraft !== null || state.sprintDraft !== null;
 
   if (state.tasks.length === 0) {
     return (
       <EmptyState body={c.emptyProjectBody} title={c.emptyProjectTitle}>
-        <button className={styles.primaryButton} disabled={createDisabled} onClick={() => actions.beginCreateTask('backlog')} type="button">
+        <button
+          className={styles.primaryButton}
+          disabled={createDisabled}
+          onClick={() => actions.beginCreateTask('backlog')}
+          type="button"
+        >
           {c.createFirstTask}
         </button>
       </EmptyState>
@@ -120,10 +131,19 @@ export function TaskListView({ state, actions, lang, mode, onOpen }: TaskListPro
     if (mode === 'my-tasks' && !filtersActive) {
       return (
         <EmptyState body={c.emptyMyTasksBody} title={c.emptyMyTasksTitle}>
-          <button className={styles.primaryButton} onClick={() => actions.setView('list')} type="button">
+          <button
+            className={styles.primaryButton}
+            onClick={() => actions.setView('list')}
+            type="button"
+          >
             {c.viewAllTasks}
           </button>
-          <button className={styles.secondaryButton} disabled={createDisabled} onClick={() => actions.beginCreateTask('backlog')} type="button">
+          <button
+            className={styles.secondaryButton}
+            disabled={createDisabled}
+            onClick={() => actions.beginCreateTask('backlog')}
+            type="button"
+          >
             {c.newTask}
           </button>
         </EmptyState>
@@ -131,10 +151,19 @@ export function TaskListView({ state, actions, lang, mode, onOpen }: TaskListPro
     }
     return (
       <EmptyState body={c.noResultsBody} title={c.noResultsTitle}>
-        <button className={styles.secondaryButton} onClick={() => actions.clearFilters()} type="button">
+        <button
+          className={styles.secondaryButton}
+          onClick={() => actions.clearFilters()}
+          type="button"
+        >
           {c.clearFilters}
         </button>
-        <button className={styles.primaryButton} disabled={createDisabled} onClick={() => actions.beginCreateTask('backlog')} type="button">
+        <button
+          className={styles.primaryButton}
+          disabled={createDisabled}
+          onClick={() => actions.beginCreateTask('backlog')}
+          type="button"
+        >
           {c.newTask}
         </button>
       </EmptyState>
@@ -146,10 +175,14 @@ export function TaskListView({ state, actions, lang, mode, onOpen }: TaskListPro
       <div className={styles.listSummary} aria-live="polite">
         <IconList size={16} />
         <span>{c.taskCount(state.visibleTasks.length)}</span>
-        {filtersActive && <span className={styles.summaryMuted}>· {c.filtersCount(activeFilterCount(state.filters))}</span>}
+        {filtersActive && (
+          <span className={styles.summaryMuted}>
+            · {c.filtersCount(activeFilterCount(state.filters))}
+          </span>
+        )}
       </div>
       <ul aria-label={c.taskList} className={cx(styles.taskList)}>
-        {state.visibleTasks.map(task => (
+        {state.visibleTasks.map((task) => (
           <TaskRow
             actions={actions}
             key={task.id}
