@@ -1013,7 +1013,7 @@
       "scripts/unit/mirror-loader.mjs": "afd53e413c310762471e28826e60cbf23b0711543724b2f13dccd5dba8fde947",
       "scripts/workspace-logic.test.mjs": "3519bf33e2901163b975c8466b1049ccec581c2960f95ea3686c7edeb1b09e4f"
     },
-    "toolsLock": "bd92a07729f2d75df7de616df385835d59980b26a9c9e91ebfd94057af4e7e4b"
+    "toolsLock": "8c4e6232dbeb14b7067dd5a6a8be95256893dc915a8972f759e46b06deee7634"
   },
   "scope": "web",
   "total": {

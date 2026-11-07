@@ -1,0 +1,5 @@
+name: Bounded unit artifacts
+description: Upload validated unit reports through the frozen official SDK
+runs:
+  using: node24
+  main: index.mjs

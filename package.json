@@ -44,7 +44,7 @@
     "unit:contracts": "node scripts/unit/run.mjs contracts",
     "unit:prototype": "node scripts/unit/run.mjs prototype",
     "unit:coverage": "node scripts/unit/run.mjs",
-    "test:unit-infrastructure": "node --test --test-timeout=60000 scripts/unit/infrastructure.test.mjs",
+    "test:unit-infrastructure": "node --test --test-timeout=60000 scripts/unit/infrastructure.test.mjs scripts/unit/upload.test.mjs",
     "unit:artifacts": "node scripts/unit/artifacts.mjs",
     "test:web:integration": "node --test scripts/identity-proxy.integration.test.mjs scripts/identity-client.integration.test.mjs scripts/workspace-client.test.mjs scripts/task-events-proxy.integration.test.mjs"
   },

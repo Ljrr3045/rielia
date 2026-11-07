@@ -1,5 +1,7 @@
 {
   "files": [
+    ".github/actions/unit-artifacts/action.yml",
+    ".github/actions/unit-artifacts/index.mjs",
     ".github/workflows/ci.yml",
     ".husky/install.mjs",
     ".prettierrc.json",
@@ -51,8 +53,12 @@
     "scripts/unit/process.mjs",
     "scripts/unit/report.mjs",
     "scripts/unit/run.mjs",
+    "scripts/unit/tools/artifact-client.mjs",
     "scripts/unit/tools/package.json",
     "scripts/unit/tools/pnpm-workspace.yaml",
+    "scripts/unit/upload-worker.mjs",
+    "scripts/unit/upload.mjs",
+    "scripts/unit/upload.test.mjs",
     "tsconfig.base.json"
   ]
 }

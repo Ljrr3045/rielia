@@ -425,7 +425,7 @@ try {
       'summary.json': json(report.summary),
       'manifest.json': json({
         ...manifest,
-        tests,
+        selectedTests: tests,
         exclusions: [
           'generated Prisma',
           'dependencies/vendor',

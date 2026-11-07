@@ -29,6 +29,13 @@ test(
     for (const scope of scopes) {
       const summary = read(`coverage/unit/${scope}/summary.json`);
       const baseline = read(`scripts/unit/baselines/${scope}.json`);
+      const published = read(`coverage/unit/${scope}/manifest.json`);
+      assert.deepEqual(
+        published.tests,
+        baseline.manifest.tests,
+        'Published manifest must retain exact selected test/helper fingerprints',
+      );
+      assert.ok(Array.isArray(published.selectedTests) && published.selectedTests.length > 0);
       assert.deepEqual(Object.keys(summary.files).sort(), inputs[scope]);
       assertGate(summary, baseline);
       for (const metric of metrics) {
