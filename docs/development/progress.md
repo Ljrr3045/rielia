@@ -1,5 +1,53 @@
 # Delivery progress and decisions
 
+## 2026-11-07 T36 project interaction/render ownership — IN PROGRESS
+
+Delivery: [PR #42](https://github.com/Ljrr3045/rielia/pull/42).
+
+Merged PR #41 at `26f6c57d46b280ecb196d0920f73ed2312e88002` is the base.
+The [bounded T36.4 frontend batch](project-interactions-extraction.md) separates
+DOM/media/focus/body-lock, content model/forms, one ordered effect lifecycle and
+shell/workarea/recovery/dialog composition. Eight explicit owner call ports and
+five actual collaboration projections retain one controller, URLs/drafts/keys/targets/versions,
+session/tenant fences and current DTO/author/candidate/recovery behavior. CSS,
+transport/contracts/policy/schema/pins and workspace/prototype/identity stay unchanged.
+
+Accepted A114web/356total is reused at exact web identity. One B retains all 114
+with unchanged covered counts; independent review accounts 5,257 affected old zero units,
+six finite dispositions and 20 new wrapper units with no unresolved outcomes.
+One C adds 22 actual-hook/model/effect cases and passes 136 web/378 total over 118
+inputs: L1469/3791 S1625/4267 F303/1050 B1487/5192. All 38 untouched web counter
+maps and 12 nonweb report files remain exact. The coordinator accepts only the exact
+current-web numerical baseline; other 7 baselines stay unchanged. The type-only
+collaboration port remains included with explicit zero-unit N/A accounting.
+
+Seven paired production-browser schedules pass; both recovery observations match
+BEFORE exactly. All 4 emitted CSS files and project stylesheet order are byte/exact
+order equal, and 17 AFTER responsive scenarios have no page overflow. Existing 403
+form removal and post-success 503 hidden success remain explicitly accepted T37
+debt. Enlarged text/touch/emulation are not physical-device/AT/desktop-zoom or
+persistence proof. Source typecheck/lint, 378 cases and one web build pass; 18 new
+supported paths reach 234/234. All normal-check constituents pass with the single web build reused;
+infrastructure20, exact actual-C comparable/numerical gates and bounded artifacts
+pass after preserving/correcting finite baseline-shape/format and zero-owner
+witness diagnostics. Handoff47files/30assets/622links in72documents and whitespace pass. Hosted
+CI/native Kilo and coordinator delivery remain pending. T36.6/workspace/CSS debt and T36/T37/T11 stay open.
+
+
+PR #42 first native review found five valid test-fidelity issues; the coordinator
+returned it to Draft for one bounded correction. The actual selected-detail target,
+explicit replacement-anchor identity, honest Stay unit name, projected-parent
+absence and immediate canonical move focus now have meaningful assertions; a
+separate project-only fallback retains its legitimate coverage. One corrected C
+passes 138 web/380 total with unchanged 118 production inputs/maps/prebuild:
+L1494/3791 S1650/4267 F305/1050 B1507/5192. All 3,415 prior covered normalized
+S/F/B outcomes remain, with 47 new; 12 nonweb reports/seven other baselines stay
+exact. The coordinator accepts the exact corrected web baseline; new-head CI/Kilo remain pending. Source,
+B/browser/CSS/normal checks are reused; only affected tests/lint/C and closing
+checks pass, with failed finite-fixture/private-wrapper evidence preserved.
+All four actual corrected-C comparable/numerical gates, bounded artifacts and
+protected-baseline checks pass; no unchanged infrastructure or application replay.
+
 ## 2026-11-07 T36 scoped project reads and cohesive commands — IN PROGRESS
 
 Delivery: [PR #41](https://github.com/Ljrr3045/rielia/pull/41).

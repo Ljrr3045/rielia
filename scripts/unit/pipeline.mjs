@@ -11,6 +11,7 @@ import {
   compiler,
   artifactLimits,
   assertRunMode,
+  zeroUnits,
 } from './config.mjs';
 import {
   inventory,
@@ -356,15 +357,10 @@ try {
       mirror,
       unitEnv,
     );
-    for (const file of emittedInputs) {
+    for (const [index, file] of emittedInputs.entries()) {
       const code = fs.readFileSync(path.join(mirror, file), 'utf8');
       // Empty/type-only modules are reconciled explicitly after remapping.
-      if (
-        ![
-          'apps/web/src/lib/task-prototype/index.js',
-          'apps/web/src/lib/task-prototype/types.js',
-        ].includes(file)
-      )
+      if (!zeroUnits[scope].includes(sources[scope][index]))
         assert.match(code, /function cov_/, `Input not instrumented: ${file}`);
     }
     phase = `${scope}:tests`;

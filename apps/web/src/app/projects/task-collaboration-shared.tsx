@@ -1,9 +1,6 @@
 'use client';
 
-import type { useProjectTasks } from '../../lib/use-project-tasks';
 import { copy, type Lang } from './strings';
-
-export type ProjectTasksHook = ReturnType<typeof useProjectTasks>;
 
 type ProvenanceLike = {
   executionMode: 'human' | 'delegated' | 'autonomous' | 'system';

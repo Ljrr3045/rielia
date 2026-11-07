@@ -4,6 +4,29 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+### T36 project interaction and rendering ownership
+
+Delivery: [PR #42](https://github.com/Ljrr3045/rielia/pull/42).
+
+- Separate existing DOM/focus/media/body-lock, content model/forms, one ordered
+  interaction lifecycle and rendering composition; use narrow collaboration
+  ports and actual projections while retaining one controller and all behavior.
+- Preserve 114 web cases and add 22 actual hook/model/effect cases, passing378 total
+  over 118 maintained inputs. Independently reconcile retained covered/zero units
+  and 20 new wrapper units; accept only the exact current-web baseline, keeping
+  seven other baselines and 12 nonweb reports unchanged.
+- Retain seven paired real-browser outcomes, exact emitted CSS/order and actual
+  responsive/native observations with declared device/AT/persistence limits.
+  Adopt 18 new supported files at234/234; record the [owners, proof and remaining
+  debt](docs/development/project-interactions-extraction.md). Current-head hosted
+  CI/Kilo and coordinator delivery remain required; T36/T37/T11 stay open.
+
+- Strengthen all five completed Kilo test-fidelity findings in one test-only batch,
+  including real selected-detail/fallback and immediate canonical move-focus
+  outcomes. Corrected C passes 138 web/380 total with all prior covered outcomes,
+  production source/maps/build and unrelated reports/baselines retained. The exact
+  corrected web baseline is accepted; new-head CI/Kilo remain required.
+
 ### T36 scoped project reads and cohesive commands
 
 Delivery: [PR #41](https://github.com/Ljrr3045/rielia/pull/41).

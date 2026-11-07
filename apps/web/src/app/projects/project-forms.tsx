@@ -2,17 +2,11 @@
 
 import { useId, useState } from 'react';
 import type { FormEvent } from 'react';
-import type { ProjectVisibility } from '@rielia/contracts';
 import { Badge, FieldError, useLocale } from './project-ui';
 import { copy, visibilityName } from './strings';
 import styles from './projects.module.css';
 
-export interface ProjectFormValue {
-  name: string;
-  key: string;
-  description: string;
-  visibility: ProjectVisibility;
-}
+import type { ProjectFormValue } from './project-content-model';
 
 export function ProjectForm({
   mode,

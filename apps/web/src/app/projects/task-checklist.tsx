@@ -12,7 +12,7 @@ import {
   useLocale,
 } from './project-ui';
 import { copy } from './strings';
-import type { ProjectTasksHook } from './task-collaboration-shared';
+import type { TaskChecklistPort } from './task-collaboration-view';
 import styles from './projects.module.css';
 
 export function TaskChecklist({
@@ -23,7 +23,7 @@ export function TaskChecklist({
   projectArchived,
   task,
 }: {
-  hook: ProjectTasksHook;
+  hook: TaskChecklistPort;
   onDiscard: () => void;
   onStage: (command: ProjectCommand) => void;
   onSubmit: () => void;

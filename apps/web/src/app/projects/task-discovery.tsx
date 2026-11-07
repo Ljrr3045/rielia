@@ -28,9 +28,9 @@ import {
   Spinner,
   StatusMark,
   cx,
-  useIsNarrow,
   useLocale,
 } from './project-ui';
+import { useIsNarrow } from './project-dom-hooks';
 import { copy, priorityName, statusName, typeName } from './strings';
 import styles from './projects.module.css';
 
