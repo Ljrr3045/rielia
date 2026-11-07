@@ -2,6 +2,12 @@
 
 ## 2026-11-07 T36.6 stable-contract closure — PROPOSED
 
+Delivery and authoritative final decision: [PR #44](https://github.com/Ljrr3045/rielia/pull/44).
+The proposal/pending statements below describe this batch before review. After
+successful current-head gates, the coordinator records the reviewed head, checks,
+merge and explicit T36 acceptance decision in that PR; its final record governs
+closure without rewriting this historical snapshot.
+
 Agreed T36.1–T36.5 implementation is delivered through PR43, merged at
 `05e9defe645ed9c238f61c5be00ed9c67f50f56d`. This docs-only batch updates current
 guidance and proposes the [stable UI contract](t36-stable-ui-contract.md), owners

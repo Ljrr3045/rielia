@@ -6,6 +6,11 @@ This records repository changes. No application version has been released.
 
 ### T36.6 stable contract and current guidance — proposed closure
 
+Delivery and authoritative final acceptance record: [PR #44](https://github.com/Ljrr3045/rielia/pull/44).
+Proposed/pending wording describes the pre-review snapshot. After successful
+gates, that PR records the final reviewed head, checks, merge and explicit
+coordinator decision governing T36 closure.
+
 - Consolidate delivered surfaces/source owners, lifecycle/recovery/version/token
   contracts, CSS ancestry and explicit tooling/coverage/device debt for T37.
 - Correct stale delivered-unit/extraction status and ratified human private-access
