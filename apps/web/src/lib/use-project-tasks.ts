@@ -105,7 +105,7 @@ export function useProjectTasks() {
   }, [controller, workspaceId, userId, sessionId, streamAllowed, streamEpoch]);
   useEffect(() => {
     if (state.refreshRequired && !state.refreshDeferred && state.status === 'ready')
-      void controller.backgroundRefresh();
+      void controller.flushBackgroundRefresh();
   }, [controller, state.refreshRequired, state.refreshDeferred, state.status]);
   useEffect(() => {
     if (!state.session) return;

@@ -354,7 +354,7 @@ export function createProjectTaskController(options: {
     if (releaseRefresh) {
       clearTimeout(backgroundTimer);
       backgroundTimer = setTimeout(() => {
-        void backgroundRefresh();
+        void flushBackgroundRefresh();
       }, 100);
     }
   };
@@ -918,10 +918,16 @@ export function createProjectTaskController(options: {
   }
   async function backgroundRefresh(reset = false): Promise<void> {
     if (disposed) return;
-    const epoch = ++backgroundEpoch;
+    backgroundEpoch++;
     resetWanted ||= reset;
     publish({ ...state, refreshRequired: true });
-    if (backgroundPending || state.status === 'loading') return;
+    await flushBackgroundRefresh();
+  }
+  // React readiness and queued timers resume recorded work, not a new hint.
+  async function flushBackgroundRefresh(): Promise<void> {
+    if (disposed || !state.refreshRequired || backgroundPending || state.status === 'loading')
+      return;
+    const epoch = backgroundEpoch;
     if (!fresh()) {
       expire();
       return;
@@ -997,7 +1003,7 @@ export function createProjectTaskController(options: {
       ) {
         clearTimeout(backgroundTimer);
         backgroundTimer = setTimeout(() => {
-          void backgroundRefresh();
+          void flushBackgroundRefresh();
         }, 100);
       }
     }
@@ -1536,6 +1542,7 @@ export function createProjectTaskController(options: {
       await navigate?.();
     },
     backgroundRefresh,
+    flushBackgroundRefresh,
     setStreamStatus(streamStatus: TaskStreamStatus) {
       publish({ ...state, streamStatus });
     },
