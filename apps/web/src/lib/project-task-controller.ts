@@ -994,7 +994,8 @@ export function createProjectTaskController(options: {
         readFailure(error);
       else {
         // A failed full load must leave loading so a later hint can retry it.
-        if (state.status === 'loading') readFailure(error);
+        // load() can publish loading across the await despite the entry guard's narrowing.
+        if ((state as ProjectTaskState).status === 'loading') readFailure(error);
         publish({ ...state, refreshRequired: true });
       }
     } finally {
