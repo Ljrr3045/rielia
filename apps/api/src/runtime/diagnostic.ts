@@ -11,10 +11,17 @@ const abort = new AbortController();
 const stop = () => abort.abort();
 process.once('SIGTERM', stop);
 process.once('SIGINT', stop);
-const deadlineTimer = setTimeout(() => { stop(); process.exit(1); }, 45000);
+const deadlineTimer = setTimeout(() => {
+  stop();
+  process.exit(1);
+}, 45000);
 
 try {
-  if (!['enqueue', 'status', 'wait'].includes(action ?? '') || extra.length || !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)) {
+  if (
+    !['enqueue', 'status', 'wait'].includes(action ?? '') ||
+    extra.length ||
+    !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)
+  ) {
     throw new Error('Invalid diagnostic command.');
   }
   await assertRuntimeReady(pool);
@@ -31,15 +38,24 @@ try {
       const job = await boss.getJobById(DIAGNOSTIC_QUEUE, id);
       if (!job || !isDiagnosticPayload(job.data)) throw new Error('Diagnostic job is unavailable.');
       if (action === 'status' || job.state === 'completed') {
-        console.log(JSON.stringify({ id, state: job.state, output: job.state === 'completed' ? job.output : null }));
+        console.log(
+          JSON.stringify({
+            id,
+            state: job.state,
+            output: job.state === 'completed' ? job.output : null,
+          }),
+        );
         break;
       }
-      if (job.state === 'failed' || Date.now() >= deadline) throw new Error('Diagnostic consumption failed or timed out.');
+      if (job.state === 'failed' || Date.now() >= deadline)
+        throw new Error('Diagnostic consumption failed or timed out.');
       await delay(250, undefined, { signal: abort.signal });
     }
   }
 } catch {
-  console.error('Diagnostic command failed. Usage: enqueue [UUIDv4] | status UUIDv4 | wait UUIDv4; check local migrations and database.');
+  console.error(
+    'Diagnostic command failed. Usage: enqueue [UUIDv4] | status UUIDv4 | wait UUIDv4; check local migrations and database.',
+  );
   process.exitCode = 1;
 } finally {
   await boss.stop({ graceful: false });

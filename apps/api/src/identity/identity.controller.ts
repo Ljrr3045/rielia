@@ -9,7 +9,10 @@ export class IdentityController {
   @Get('config')
   @Header('Cache-Control', 'no-store')
   configuration() {
-    return { enabled: this.identity.config.enabled, providers: Object.keys(this.identity.config.providers) };
+    return {
+      enabled: this.identity.config.enabled,
+      providers: Object.keys(this.identity.config.providers),
+    };
   }
 
   @Get('session')

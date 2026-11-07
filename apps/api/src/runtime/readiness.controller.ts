@@ -8,7 +8,8 @@ export class ReadinessController {
   @Get()
   @Header('Cache-Control', 'no-store')
   async readiness(): Promise<{ status: 'ready' }> {
-    if (!await this.runtime.ready()) throw new ServiceUnavailableException('Local runtime is unavailable.');
+    if (!(await this.runtime.ready()))
+      throw new ServiceUnavailableException('Local runtime is unavailable.');
     return { status: 'ready' };
   }
 }

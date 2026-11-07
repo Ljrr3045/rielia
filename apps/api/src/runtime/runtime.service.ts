@@ -12,9 +12,15 @@ export class RuntimeService implements OnModuleInit, OnModuleDestroy {
 
   async ready(): Promise<boolean> {
     if (!this.pool) return false;
-    try { await assertRuntimeReady(this.pool); return true; }
-    catch { return false; }
+    try {
+      await assertRuntimeReady(this.pool);
+      return true;
+    } catch {
+      return false;
+    }
   }
 
-  async onModuleDestroy(): Promise<void> { await this.pool?.end(); }
+  async onModuleDestroy(): Promise<void> {
+    await this.pool?.end();
+  }
 }

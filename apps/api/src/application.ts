@@ -1,4 +1,9 @@
-import { NodeAdapter, type NestNodeApplication, type NodeRequest, type NodeResponse } from '@nestjs/platform-node';
+import {
+  NodeAdapter,
+  type NestNodeApplication,
+  type NodeRequest,
+  type NodeResponse,
+} from '@nestjs/platform-node';
 import { toNodeHandler } from 'better-auth/node';
 import { IdentityService } from './identity/identity.service.js';
 import { readIdentityConfig } from './identity/config.js';
@@ -16,7 +21,8 @@ export function configureApplication(app: NestNodeApplication): void {
     // Install before parsers so rejected/oversized JSON and unmatched domain
     // routes have the same no-store/correlation boundary as controller results.
     if (/^\/api\/v1\/workspaces\/[^/]+\/projects(?:\/|\?|$)/.test(req.originalUrl)) {
-      res.setHeader('Cache-Control', 'no-store'); res.setHeader('X-Request-Id', randomUUID());
+      res.setHeader('Cache-Control', 'no-store');
+      res.setHeader('X-Request-Id', randomUUID());
     }
     next();
   });
@@ -25,7 +31,10 @@ export function configureApplication(app: NestNodeApplication): void {
     // Auth must never independently trust client-supplied forwarding headers.
     const ip = req.ip ?? req.socket.remoteAddress;
     for (const name of Object.keys(req.headers)) {
-      if (name.startsWith('x-forwarded-') || ['forwarded', 'x-real-ip', 'x-rielia-client-ip'].includes(name)) {
+      if (
+        name.startsWith('x-forwarded-') ||
+        ['forwarded', 'x-real-ip', 'x-rielia-client-ip'].includes(name)
+      ) {
         delete req.headers[name];
       }
     }
@@ -50,8 +59,12 @@ export function configureApplication(app: NestNodeApplication): void {
       // Social sign-in without an existing cookie is not covered by every
       // library CSRF branch. Browser mutations always require our exact origin.
       // Provider callbacks instead authenticate the library's state/PKCE flow.
-      if (req.method !== 'GET' && req.method !== 'HEAD'
-        && !callbacks.has(pathname) && req.headers.origin !== identity.config.origin) {
+      if (
+        req.method !== 'GET' &&
+        req.method !== 'HEAD' &&
+        !callbacks.has(pathname) &&
+        req.headers.origin !== identity.config.origin
+      ) {
         res.status(403).json({ message: 'Untrusted identity request origin.' });
         return;
       }
