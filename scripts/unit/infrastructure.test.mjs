@@ -70,7 +70,7 @@ test(
     }
     const web = read('coverage/unit/web/summary.json');
     for (const file of [
-      'apps/web/src/lib/use-project-tasks.ts',
+      'apps/web/src/app/projects/projects-view.tsx',
       'apps/web/src/app/projects/task-detail.tsx',
     ]) {
       assert.equal(web.files[file].functions.covered, 0);
@@ -79,6 +79,9 @@ test(
         'Unimported functions must have actual AST counters',
       );
     }
+    const hook = web.files['apps/web/src/lib/use-project-tasks.ts'];
+    assert.ok(hook.functions.covered > 0, 'The actual project hook must execute in React units');
+    assert.ok(hook.branches.covered > 0, 'Project hook lifecycle decisions must retain coverage');
     const api = read('coverage/unit/api/summary.json');
     assert.equal(api.files['apps/api/src/main.ts'].statements.covered, 0);
     assert.equal(api.files['apps/api/prisma.config.ts'].branches.total, 2);
