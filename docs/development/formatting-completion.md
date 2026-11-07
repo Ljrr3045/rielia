@@ -169,10 +169,18 @@ that summary. The wrapper's generic failure boolean is not a changed-source resu
 The exact owned temporary tooling symlink is removed only after inode/device/text/
 target verification; the frozen target tree, metadata and caches stay untouched.
 
-Local hook-enabled commit evidence and the portable PR body are retained with
-delivery receipts. Draft publication and current-head hosted CI/Kilo/Ready/merge
-remain coordinator-owned gates. This is no new PR, deployment or full T36
-acceptance. Real local PostgreSQL/Docker/browser/provider/device/touch/assistive-
-technology validation is not rerun or inferred from static parity. T36.4/T36.5
-extraction, unexecuted interaction coverage and T36.6 UI-contract/overall acceptance
-remain open. T37/T11 and later product work remain excluded.
+Local hook-enabled source commit `f6f8758745d916f33006f421cb9b6d5f9536644d`
+is published in [Draft PR #39](https://github.com/Ljrr3045/rielia/pull/39), targeting
+`dev` at the actual merged base above. The November 7, 11:31 UTC readback confirms
+OPEN/Draft at that source head, with initial validate 128391243315 (App 15368) in
+progress. Check runs, issue/review/inline comments and threads show no native Kilo
+evidence while Draft; hidden queues/billing are unavailable. This bounded PR-link/
+status update is completed locally before the coordinator's next Draft push.
+Final-head hosted CI/artifacts and coordinator-controlled Ready/Kilo/merge remain
+pending.
+
+No deployment or full T36 acceptance is claimed. Real local PostgreSQL/Docker/
+browser/provider/device/touch/assistive-technology validation is not rerun or
+inferred from static parity. T36.4/T36.5 extraction, unexecuted interaction coverage
+and T36.6 UI-contract/overall acceptance remain open. T37/T11 and later product work
+remain excluded.

@@ -20,8 +20,10 @@ This records repository changes. No application version has been released.
   `pnpm check`, infrastructure 20, handoff/whitespace and independent review pass.
   Preserve the private post-success spec/TAP summary assertion failure separately
   from the accepted raw command/guard results; no command is rerun. Remove only the
-  verified temporary tooling link. Current-head hosted CI/publication remains
-  pending; T36 structure/acceptance, T37 and T11 stay open.
+  verified temporary tooling link. [Draft PR #39](https://github.com/Ljrr3045/rielia/pull/39)
+  opens at `f6f8758`, with actual Draft readback/no observed Kilo and initial
+  validate in progress. Final-head hosted CI/artifacts and coordinator review/
+  merge remain pending; T36 structure/acceptance, T37 and T11 stay open.
 
 ### T36 mechanical project-surface formatting
 

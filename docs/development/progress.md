@@ -45,6 +45,17 @@ Draft publication/current-head hosted CI/Kilo remain coordinator-owned gates.
 The worker performs no GitHub write or Ready/merge transition. No fresh local
 PG/Docker/browser/provider/device/accessibility result or complete T36 is claimed.
 
+[Draft PR #39](https://github.com/Ljrr3045/rielia/pull/39) targets `dev` and
+opened at exact source head `f6f8758745d916f33006f421cb9b6d5f9536644d` after root
+verified the remote base/no existing branch PR, pushed and immediately created
+Draft. November 7, 11:31 UTC readback confirms OPEN/Draft at that head, validate
+128391243315 in progress and no native Kilo check/comment on inspected surfaces;
+reviews, inline comments and threads are empty, with hidden queues/billing
+unavailable. This bounded PR URL/status-only batch is prepared before the next
+coordinator Draft push. Final-head hosted CI/artifacts and Ready/Kilo/merge remain
+coordinator gates; initial-head evidence does not accept the later documentation
+head. No app or infrastructure command is rerun for this metadata update.
+
 ## 2026-11-07 T36 mechanical project-surface formatting — MERGED
 
 PR #37 is merged at `ec257ea3b2d76be0b73a0d17278be592d3a23e2c`.
