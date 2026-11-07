@@ -1,0 +1,56 @@
+apps/web/src/app/workspaces/workspace-entry.tsx
+  s_b9a431f9c0846a::t_09e9964f85df82 1-258
+apps/web/src/app/workspaces/workspace-feedback.tsx
+  s_b9a431f9c0846a::t_09e9964f85df82 1-408
+apps/web/src/app/workspaces/workspace-view.tsx
+  s_b9a431f9c0846a::t_09e9964f85df82 4,6-13,34-61
+apps/web/src/app/workspaces/use-workspace-screen-actions.ts
+  s_b9a431f9c0846a::t_09e9964f85df82 1-164
+format-adoption.json
+  s_b9a431f9c0846a::t_94838c63512392 124-130,169-170
+docs/development/formatting-inventory.json
+  s_b9a431f9c0846a::t_94838c63512392 3,126-132,171-172,518-519,544-545,1242-1250,1252
+  s_b9a431f9c0846a::t_7240050e20269a 1251,1253
+docs/development/progress.md
+  s_b9a431f9c0846a::t_94838c63512392 3-7,9,11,20,33
+  s_b9a431f9c0846a::t_c5dc803e549218 8,10,12-18,21-26,28-32
+  s_b9a431f9c0846a::t_c4a3de4fc6b0c6 19,27
+CHANGELOG.md
+  s_b9a431f9c0846a::t_c5dc803e549218 10,12-15,17,19-21
+  s_b9a431f9c0846a::t_94838c63512392 7-9,11,16,18,22
+apps/web/src/app/workspaces/workspace-screen-model.ts
+  s_b9a431f9c0846a::t_09e9964f85df82 1-53
+apps/web/src/app/workspaces/workspace-members.tsx
+  s_b9a431f9c0846a::t_09e9964f85df82 1-471
+docs/development/workspace-interactions-extraction.md
+  s_b9a431f9c0846a::t_94838c63512392 1-48,56-87,95,99
+  s_b9a431f9c0846a::t_cbb6eb50e9faa9 49-55,88-94,96-98
+apps/web/src/app/workspaces/workspace-invitations.tsx
+  s_b9a431f9c0846a::t_09e9964f85df82 1-405
+apps/web/src/app/workspaces/workspace-agents.tsx
+  s_b9a431f9c0846a::t_09e9964f85df82 1-574
+apps/web/src/app/workspaces/workspace-ui.tsx
+  s_b9a431f9c0846a::t_09e9964f85df82 5,104-124
+apps/web/test/unit/workspace-screen-actions.test.mjs
+  s_b9a431f9c0846a::t_b0ab2e53487a9a 1-272
+apps/web/test/unit/workspace-screen-fixtures.mjs
+  s_b9a431f9c0846a::t_bc12a0ee1bd300 1-28
+scripts/unit/baselines/web.json
+  s_b9a431f9c0846a::t_fffd6ded1bdf38 777-795,798,802,806,810,813,816,820,824-878,882-887,889-918,924,928,932,936,1157,1165,1169,1175,1179,1183,1187,1229-1232,1296-1304,1344-1345,1359,1363-1364,1367-1368,1371-1372
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "12435bbd6430729c54912a2658c09691522b3826",
+  "prompts": {},
+  "sessions": {
+    "s_b9a431f9c0846a": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b754-be56-77c0-8664-120d87cf6aa2",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
