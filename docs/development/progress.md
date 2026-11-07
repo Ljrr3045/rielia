@@ -28,8 +28,8 @@ with the accepted final fingerprint and unchanged C counts. Infrastructure passe
 whitespace, cleanup and owned/frozen dependency guards pass. Original C and the
 resolved lint/stale-report failures remain private evidence; legitimate native
 task transitions are retained. The local commit uses tracked quality hooks.
-Draft publication/current-head hosted CI/Kilo and coordinator delivery acceptance
-remain pending. No new local PG/Docker/browser/provider/staging result or completed
+Published as Draft [PR #40](https://github.com/Ljrr3045/rielia/pull/40).
+Current-head hosted CI/Kilo and coordinator delivery acceptance remain pending. No new local PG/Docker/browser/provider/staging result or completed
 T36 is claimed.
 
 ## 2026-11-07 T36 maintained-source formatting completion — IN PROGRESS

@@ -6,6 +6,8 @@ This records repository changes. No application version has been released.
 
 ### T36 first backend values, policy and DTO extraction
 
+Delivery: [PR #40](https://github.com/Ljrr3045/rielia/pull/40).
+
 - Separate existing project/task input values, pure human-management policy and
   loaded DTO projections; retain facade contracts, scoped reads and the command/
   transaction/receipt boundary without behavior or runtime pin changes.
