@@ -1,0 +1,39 @@
+scripts/quality/policy.mjs
+  s_cd38fe5b1413ea::t_55ccfb33fd0be6 7-15
+.husky/pre-commit
+  s_cd38fe5b1413ea::t_55ccfb33fd0be6 3-9
+CHANGELOG.md
+  s_cd38fe5b1413ea::t_6e30fb5d1c197d 7-10
+docs/development/progress.md
+  s_cd38fe5b1413ea::t_6e30fb5d1c197d 5-17
+scripts/quality/staged.mjs
+  s_cd38fe5b1413ea::t_55ccfb33fd0be6 5,10
+scripts/quality/quality.test.mjs
+  s_cd38fe5b1413ea::t_55ccfb33fd0be6 17,74
+  s_cd38fe5b1413ea::t_c06cd7b8e0263c 128-153,160-229
+  s_cd38fe5b1413ea::t_e557ed6a21a079 154-159
+.husky/commit-msg
+  s_cd38fe5b1413ea::t_55ccfb33fd0be6 3-9
+scripts/quality/commits.mjs
+  s_cd38fe5b1413ea::t_55ccfb33fd0be6 5,23
+docs/development/quality-tooling.md
+  s_cd38fe5b1413ea::t_6e30fb5d1c197d 65-66
+  s_cd38fe5b1413ea::t_228c116224af90 68-86
+  s_cd38fe5b1413ea::t_46c9c11a7d77d2 67
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "abe1b70d3b971f29599ea309d45a141bc7f05d4e",
+  "prompts": {},
+  "sessions": {
+    "s_cd38fe5b1413ea": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b369-4dc0-7a52-ae15-1cd16031eb12",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
