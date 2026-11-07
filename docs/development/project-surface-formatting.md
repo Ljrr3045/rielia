@@ -11,6 +11,13 @@ UX01–03/05–07/09/11. T36 remains in progress before T37, then T11.
 The actual base is merged [PR #37](https://github.com/Ljrr3045/rielia/pull/37),
 `ec257ea3b2d76be0b73a0d17278be592d3a23e2c`, whose tree equals its accepted
 `93d3565` head. All 22 original blobs, hashes and 0644 modes match that base.
+[PR #38](https://github.com/Ljrr3045/rielia/pull/38) opened Draft at
+`7223ce92335536c58634318bcc059b32e1b34544` after independent review found no open
+finding. Actual readback confirms Draft at that source head/base, with no native
+Kilo check/review/comment on inspected surfaces. Hidden queues/billing are not
+independently visible. Final-head hosted evidence and coordinator-controlled
+Ready/Kilo/merge remain pending.
+
 The [inventory](formatting-inventory.json) records the exact targets and sole
 unchanged `task-collaboration-shared.tsx`. Adoption moves 143→165 of 208 eligible
 paths, with 43 remaining. Existing identity/workspace/prototype/scripts work and
@@ -135,5 +142,6 @@ No fresh local browser, PostgreSQL, Docker, provider, device/touch or assistive-
 technology result is claimed. Static parity is not visual/accessibility
 certification. Full final-head hosted CI with native check, real identity/security/
 PostgreSQL/runtime, audits and bounded artifacts remains mandatory. Independent
-final review and coordinator-owned Draft publication/Ready/Kilo/merge remain
-pending; this batch does not complete T36 or implement T37/T11.
+source/evidence review and initial Draft publication are complete; final-head
+hosted evidence and coordinator-controlled Ready/Kilo/merge remain pending.
+This batch does not complete T36 or implement T37/T11.

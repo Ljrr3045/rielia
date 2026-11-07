@@ -16,8 +16,10 @@ This records repository changes. No application version has been released.
   END fields/one recovered END/zero new START in the
   [project formatting guide](docs/development/project-surface-formatting.md).
   Local infrastructure20, handoff/whitespace and one actual full native
-  `pnpm check` pass; independent final review and final-head hosted evidence
-  remain pending. T36, remaining formatting/extraction, T37 and T11 stay incomplete.
+  `pnpm check` pass. Independent review accepted `7223ce9` and
+  [Draft PR #38](https://github.com/Ljrr3045/rielia/pull/38) targets `dev`;
+  final-head hosted evidence remains pending. T36, remaining formatting/extraction,
+  T37 and T11 stay incomplete.
 
 ### T36 web transport/controller/hook mechanical formatting
 
