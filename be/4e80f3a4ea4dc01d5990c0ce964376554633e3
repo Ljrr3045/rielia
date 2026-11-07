@@ -1,0 +1,23 @@
+CHANGELOG.md
+  s_cd38fe5b1413ea::t_f99580d7a73cc3 21-22
+docs/development/progress.md
+  s_cd38fe5b1413ea::t_570c9c8ad9d337 36-43
+docs/development/source-format-adoption.md
+  s_cd38fe5b1413ea::t_42f940991f1aae 134-137
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "be4e80f3a4ea4dc01d5990c0ce964376554633e3",
+  "prompts": {},
+  "sessions": {
+    "s_cd38fe5b1413ea": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b369-4dc0-7a52-ae15-1cd16031eb12",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
