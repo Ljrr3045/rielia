@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { Buffer } from 'node:buffer';
 import { scopes, artifactLimits } from './config.mjs';
 import { regular, tree, write, json, coverageDirectory } from './files.mjs';
@@ -96,7 +97,7 @@ export function packageArtifacts(root) {
   return status;
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === new URL(import.meta.url).pathname) {
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   try {
     const status = packageArtifacts(process.cwd());
     console.log(status);

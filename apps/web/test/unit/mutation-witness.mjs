@@ -66,6 +66,17 @@ const cases = [
     test: 'apps/web/test/unit/workspace-hook.test.mjs',
     failure: /not ok \d+ - StrictMode captures and scrubs mount\/hashchange invitations/,
   },
+  {
+    name: 'workspace-late-selection',
+    source: 'apps/web/src/lib/workspace-controller.ts',
+    before:
+      "if (!current(request)) return;\n    publish({ ...state, status: 'ready', workspace, members, invitations",
+    after:
+      "/* Deliberately permit a stale result in this disposable fixture. */\n    publish({ ...state, status: 'ready', workspace, members, invitations",
+    test: 'apps/web/test/unit/workspace-hook.test.mjs',
+    failure:
+      /not ok \d+ - unmount aborts a pending read and its late result cannot persist private selection/,
+  },
 ];
 
 function run(name, files) {
@@ -126,7 +137,7 @@ try {
     JSON.stringify({ baselinePassed: true, results }, null, 2) + '\n',
   );
   console.log(
-    `Unmodified DOM suites passed; pending guard, identity load cleanup and listener cleanup mutations rejected. Evidence: ${evidence}`,
+    `Unmodified DOM suites passed; pending guard, identity load cleanup, listener cleanup and late private-selection mutations rejected. Evidence: ${evidence}`,
   );
 } finally {
   rmSync(scratch, { recursive: true, force: true });

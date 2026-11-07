@@ -1,5 +1,12 @@
 export const scopes = ['api', 'web', 'contracts', 'prototype'];
 export const metrics = ['lines', 'statements', 'functions', 'branches'];
+export function assertRunMode(args, env = process.env) {
+  if (
+    (env.CI || env.GITHUB_ACTIONS) &&
+    args.some((arg) => ['--measure', '--write-baseline', '--pre-unit'].includes(arg))
+  )
+    throw new Error('CI cannot run unit maintenance modes');
+}
 export const limits = Object.freeze({ files: 1500, bytes: 20 * 1024 * 1024, depth: 16 });
 export const artifactLimits = Object.freeze({ total: 10 * 1024 * 1024, file: 2 * 1024 * 1024 });
 export const providerVersions = Object.freeze({

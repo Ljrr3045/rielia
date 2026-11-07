@@ -287,7 +287,7 @@ test(
 );
 
 test(
-  'unmount aborts a pending workspace read and its late result cannot render',
+  'unmount aborts a pending read and its late result cannot persist private selection',
   { timeout: 30_000 },
   async (t) => {
     const browser = browserFixture(t, 'https://app.example.test/workspaces');
@@ -301,10 +301,10 @@ test(
     assert.equal(request.options.signal.aborted, true);
     assert.equal(browser.timers.size, 0);
     assert.ok([...browser.listeners.values()].every((listeners) => listeners.size === 0));
-    const count = hook.renders.length;
+    assert.equal(browser.window.sessionStorage.getItem('rielia.workspace.human'), null);
+    // This fetch boundary deliberately resolves despite abort. Observe the
+    // controller's persistence effect, which remains observable after React unmount.
     await act(async () => old.resolve(Response.json(workspace('a'))));
-    assert.equal(hook.renders.length, count);
-    assert.equal(hook.state.workspace, null);
-    assert.equal(browser.container.textContent, '');
+    assert.equal(browser.window.sessionStorage.getItem('rielia.workspace.human'), null);
   },
 );

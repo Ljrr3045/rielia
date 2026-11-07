@@ -19,11 +19,14 @@ export function runProcess(
     let output = '';
     let size = 0;
     let failure;
+    const hasPid = () => Number.isSafeInteger(child.pid) && child.pid > 0;
     function stop(reason) {
       failure ??= reason;
       try {
-        if (group) process.kill(-child.pid, 'SIGKILL');
-        else child.kill('SIGKILL');
+        if (hasPid()) {
+          if (group) process.kill(-child.pid, 'SIGKILL');
+          else child.kill('SIGKILL');
+        }
       } catch (error) {
         if (error.code !== 'ESRCH') reject(error);
       }
@@ -42,7 +45,7 @@ export function runProcess(
     });
     child.once('close', (code, signal) => {
       clearTimeout(timer);
-      if (group) {
+      if (group && hasPid()) {
         try {
           process.kill(-child.pid, 'SIGKILL');
         } catch (error) {

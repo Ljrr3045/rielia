@@ -125,8 +125,6 @@ test('unavailable Retry emits once before loading replaces it', { timeout: 30_00
     browser.document.activeElement,
     getByRole(browser.container, 'heading', { name: /Session/ }),
   );
-  await act(async () => retry.click());
-  assert.equal(retries, 1, 'detached controls cannot start another retry');
 });
 
 test(

@@ -6,6 +6,8 @@ import { resolve } from 'node:path';
 const config = JSON.parse(readFileSync(new URL('./mirror-paths.json', import.meta.url), 'utf8'));
 const mirror = `${config.mirror}/`;
 const original = `${config.root}/`;
+if (!Array.isArray(config.inputs)) throw new Error('Missing maintained mirror input inventory');
+const maintained = new Set(config.inputs.map((file) => resolve(config.root, file)));
 registerHooks({
   resolve(specifier, context, nextResolve) {
     let target = specifier;
@@ -26,7 +28,8 @@ registerHooks({
       if (
         name.startsWith(original) &&
         !name.startsWith(mirror) &&
-        /apps\/(web\/src|api\/(src|dist))\//.test(name.slice(original.length))
+        (maintained.has(name) ||
+          /apps\/(web\/src|api\/(src|dist))\//.test(name.slice(original.length)))
       ) {
         throw new Error('Application source escaped the instrumented mirror');
       }

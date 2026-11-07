@@ -5,7 +5,8 @@ import os from 'node:os';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 import { Buffer } from 'node:buffer';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+import { setImmediate } from 'node:timers/promises';
 import { scopes, metrics } from './config.mjs';
 import { tree, inventory, write, json, freshOutput } from './files.mjs';
 import { assertGate, baselineFor, normalizeReport, assertComparable } from './report.mjs';
@@ -40,13 +41,31 @@ test(
       assertGate(summary, baseline);
       for (const metric of metrics) {
         const raised = clone(baseline);
-        raised.floors[metric] =
-          Math.floor((summary.total[metric].covered * 10000) / summary.total[metric].total) + 1;
-        assert.throws(
-          () => assertGate(summary, raised),
-          /floor/,
-          `${scope} ${metric} raised gate must reject`,
-        );
+        const units = summary.total[metric];
+        if (units.covered === units.total) {
+          // A saturated real metric cannot have a valid higher floor. Exercise
+          // a valid 100% threshold against a well-formed partial synthetic report.
+          const partial = clone(summary);
+          const file = Object.keys(partial.files).find(
+            (name) => partial.files[name][metric].covered > 0,
+          );
+          partial.total[metric].covered--;
+          partial.files[file][metric].covered--;
+          const comparable = baselineFor(partial, baseline.manifest);
+          comparable.floors[metric] = 10000;
+          assert.throws(
+            () => assertGate(partial, comparable),
+            new RegExp(`${metric} floor failed`),
+          );
+        } else {
+          raised.floors[metric] = Math.floor((units.covered * 10000) / units.total) + 1;
+          assert.ok(raised.floors[metric] <= 10000);
+          assert.throws(
+            () => assertGate(summary, raised),
+            new RegExp(`${metric} floor failed`),
+            `${scope} ${metric} valid raised gate must reject`,
+          );
+        }
       }
     }
     const web = read('coverage/unit/web/summary.json');
@@ -88,6 +107,9 @@ test(
     const missing = clone(baseline);
     delete missing.files[policy];
     assert.throws(() => assertGate(missing, baseline), /inventory/);
+    const invalidFloor = clone(baseline);
+    invalidFloor.floors.lines = 10001;
+    assert.throws(() => assertGate(baseline, invalidFloor), /Invalid metric floor/);
     assert.throws(
       () => normalizeReport(root, 'web', ['apps/web/src/lib/use-project-tasks.ts'], {}, coverage),
       /mismatch/,
@@ -327,6 +349,161 @@ test(
       deadline: 1000,
     });
     assert.equal(fs.existsSync(marker), false);
+  },
+);
+
+test(
+  'CI rejects every maintenance mode before clearing or measuring reports',
+  { timeout: 5000 },
+  async () => {
+    const status = fs.readFileSync(path.join(root, 'coverage/unit/status.json'));
+    for (const entry of ['run.mjs', 'pipeline.mjs']) {
+      for (const flag of ['--measure', '--pre-unit', '--write-baseline']) {
+        for (const marker of ['CI', 'GITHUB_ACTIONS']) {
+          const result = await runProcess(process.execPath, [`scripts/unit/${entry}`, flag], {
+            cwd: root,
+            env: { PATH: process.env.PATH, [marker]: '1' },
+            deadline: 3000,
+            group: true,
+          });
+          assert.equal(result.code, 1);
+          assert.match(result.output, /CI cannot run unit maintenance modes/);
+          assert.deepEqual(fs.readFileSync(path.join(root, 'coverage/unit/status.json')), status);
+        }
+      }
+    }
+  },
+);
+
+test(
+  'spawn failure preserves ENOENT without attempting to kill a missing process group',
+  { timeout: 5000 },
+  async (t) => {
+    const directory = scratch();
+    t.after(() => fs.rmSync(directory, { recursive: true }));
+    const calls = [];
+    const kill = process.kill;
+    t.mock.method(process, 'kill', (...args) => {
+      calls.push(args);
+      return kill(...args);
+    });
+    await assert.rejects(
+      runProcess(path.join(directory, 'missing-command'), [], { cwd: directory, group: true }),
+      (error) => error.code === 'ENOENT',
+    );
+    await setImmediate();
+    assert.deepEqual(calls, [], 'No process group exists after ENOENT');
+  },
+);
+
+test(
+  'artifact CLI executes in paths with spaces, URL punctuation and Unicode',
+  { timeout: 5000 },
+  async (t) => {
+    const directory = path.join(scratch(), 'space # percent% ñ');
+    fs.mkdirSync(directory);
+    t.after(() => fs.rmSync(path.dirname(directory), { recursive: true }));
+    write(directory, 'package.json', '{"type":"module"}\n');
+    for (const file of ['artifacts.mjs', 'files.mjs', 'config.mjs'])
+      write(
+        directory,
+        `scripts/unit/${file}`,
+        fs.readFileSync(path.join(root, 'scripts/unit', file)),
+      );
+    const result = await runProcess(process.execPath, ['scripts/unit/artifacts.mjs'], {
+      cwd: directory,
+      env: { PATH: process.env.PATH },
+      deadline: 3000,
+    });
+    assert.equal(result.code, 0, result.output);
+    assert.deepEqual(
+      JSON.parse(fs.readFileSync(path.join(directory, 'coverage/artifacts/status.json'))),
+      Object.fromEntries(scopes.map((scope) => [scope, 'missing or partial'])),
+    );
+  },
+);
+
+test(
+  'mirror inventory rejects maintained config/shared escapes and permits scoped public contracts',
+  { timeout: 10000 },
+  async (t) => {
+    const directory = scratch();
+    t.after(() => fs.rmSync(directory, { recursive: true }));
+    const original = path.join(directory, 'original');
+    const mirror = path.join(directory, 'mirror');
+    fs.mkdirSync(original);
+    fs.mkdirSync(mirror);
+    write(original, 'package.json', '{"type":"module"}\n');
+    write(mirror, 'package.json', '{"type":"module"}\n');
+    const inputs = [
+      'apps/api/prisma.config.ts',
+      'apps/web/next.config.ts',
+      'packages/contracts/src/index.ts',
+      'apps/web/src/lib/unimported.ts',
+    ];
+    for (const file of inputs) write(original, file, 'export const value = "original";\n');
+    write(
+      original,
+      'packages/contracts/package.json',
+      JSON.stringify({ name: '@rielia/contracts', type: 'module', exports: './dist/index.js' }),
+    );
+    write(
+      original,
+      'packages/contracts/dist/index.js',
+      'export const value = "public-contract";\n',
+    );
+    write(mirror, 'apps/api/prisma.config.js', 'export const value = "mirror";\n');
+    write(
+      mirror,
+      'scripts/unit/mirror-loader.mjs',
+      fs.readFileSync(path.join(root, 'scripts/unit/mirror-loader.mjs')),
+    );
+    fs.mkdirSync(path.join(mirror, 'node_modules/@rielia'), { recursive: true });
+    fs.symlinkSync(
+      path.join(original, 'packages/contracts'),
+      path.join(mirror, 'node_modules/@rielia/contracts'),
+      'dir',
+    );
+    const configure = (scope) =>
+      write(
+        mirror,
+        'scripts/unit/mirror-paths.json',
+        json({ root: original, mirror, scope, inputs }),
+      );
+    const run = async (code) => {
+      write(mirror, 'case.mjs', code);
+      return runProcess(
+        process.execPath,
+        ['--import', './scripts/unit/mirror-loader.mjs', 'case.mjs'],
+        {
+          cwd: mirror,
+          env: { PATH: process.env.PATH },
+          deadline: 3000,
+        },
+      );
+    };
+    configure('web');
+    for (const file of inputs) {
+      const result = await run(
+        `import ${JSON.stringify(pathToFileURL(path.join(original, file)).href)};`,
+      );
+      assert.equal(result.code, 1, file);
+      assert.match(result.output, /escaped the instrumented mirror/);
+    }
+    const compiled = await run(
+      'import {value} from "./apps/api/prisma.config.ts"; console.log(value);',
+    );
+    assert.equal(compiled.code, 0, compiled.output);
+    assert.match(compiled.output, /mirror/);
+    const publicContract = await run(
+      'import {value} from "@rielia/contracts"; console.log(value);',
+    );
+    assert.equal(publicContract.code, 0, publicContract.output);
+    assert.match(publicContract.output, /public-contract/);
+    configure('contracts');
+    const sharedEscape = await run('import "@rielia/contracts";');
+    assert.equal(sharedEscape.code, 1);
+    assert.match(sharedEscape.output, /Shared source escaped instrumented mirror/);
   },
 );
 

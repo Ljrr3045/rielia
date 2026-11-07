@@ -4,7 +4,14 @@ import path from 'node:path';
 import { createRequire } from 'node:module';
 import { Buffer } from 'node:buffer';
 import { fileURLToPath } from 'node:url';
-import { scopes, webSuites, providerVersions, compiler, artifactLimits } from './config.mjs';
+import {
+  scopes,
+  webSuites,
+  providerVersions,
+  compiler,
+  artifactLimits,
+  assertRunMode,
+} from './config.mjs';
 import {
   inventory,
   tree,
@@ -25,6 +32,8 @@ import {
 import { runProcess } from './process.mjs';
 
 const root = fs.realpathSync(fileURLToPath(new URL('../../', import.meta.url)));
+const args = process.argv.slice(2);
+assertRunMode(args);
 const require = createRequire(path.join(root, 'package.json'));
 const ts = require('typescript');
 let tools;
@@ -39,13 +48,10 @@ try {
 const nyc = tools.resolve('nyc/bin/nyc.js');
 const provider = createRequire(nyc);
 const coverage = provider('istanbul-lib-coverage');
-const args = process.argv.slice(2);
 const selected = scopes.filter((scope) => args.includes(scope));
 const requested = selected.length ? selected : scopes;
 const before = args.includes('--pre-unit');
 const update = args.includes('--write-baseline');
-if (update && (process.env.CI || process.env.GITHUB_ACTIONS))
-  throw new Error('CI cannot write reviewed baselines');
 assert.equal(process.versions.node, '24.22.1', 'Use the pinned runtime: pnpm exec node');
 assert.equal(ts.version, compiler.version, 'Wrong TypeScript provider');
 for (const [name, version] of Object.entries(providerVersions))
@@ -232,9 +238,10 @@ try {
     const mirror = path.join(work, scope);
     fs.mkdirSync(mirror, { mode: 0o700 });
     write(mirror, 'package.json', '{"type":"module"}\n');
-    write(mirror, 'mirror-paths.json', json({ root, mirror, scope }));
+    const mirrorPaths = { root, mirror, scope, inputs: Object.values(sources).flat() };
+    write(mirror, 'mirror-paths.json', json(mirrorPaths));
     copy(mirror, 'scripts/unit/mirror-loader.mjs');
-    write(mirror, 'scripts/unit/mirror-paths.json', json({ root, mirror, scope }));
+    write(mirror, 'scripts/unit/mirror-paths.json', json(mirrorPaths));
     link(mirror, 'node_modules', path.join(root, 'node_modules'));
     link(
       mirror,

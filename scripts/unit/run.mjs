@@ -1,11 +1,12 @@
 import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
 import { runProcess } from './process.mjs';
-import { scopes } from './config.mjs';
+import { scopes, assertRunMode } from './config.mjs';
 import { freshOutput } from './files.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const args = process.argv.slice(2).filter((arg) => arg !== '--');
+assertRunMode(args);
 if (
   args.some(
     (arg) => ![...scopes, '--measure', '--write-baseline', '--pre-unit', '--built'].includes(arg),

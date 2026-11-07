@@ -16,8 +16,8 @@ const freeze = (value) => {
 };
 const copy = (value) => freeze(globalThis.structuredClone(value));
 
-// Only the identity/session and repository operations used by public verification
-// and domainOperation exist here. This does not emulate SQL, locks or rollback.
+// Only identity/session and repository boundaries used by public verification and
+// administration exist here. This does not emulate SQL, locks or rollback.
 function fixture(
   t,
   { mode = 'human', role = 'member', allowedOperations = ['read', 'write'] } = {},
@@ -45,7 +45,13 @@ function fixture(
     storageFailure: null,
     authenticated: true,
   };
-  const calls = { transactions: 0, work: 0, identity: 0 };
+  const calls = {
+    transactions: 0,
+    work: 0,
+    identity: 0,
+    principalCreates: [],
+    membershipCreates: [],
+  };
   const tx = {
     $queryRaw: async () => [{ singleton: true }],
     $executeRaw: async () => 1,
@@ -56,16 +62,28 @@ function fixture(
       },
     },
     principal: {
+      create: async ({ data }) => {
+        calls.principalCreates.push(data);
+        return { id: 'created-agent', ...data };
+      },
       findUnique: async ({ where }) => {
         if (where.userId !== undefined) {
-          assert.equal(where.userId, 'user-unit');
-          return copy(state.human);
+          assert.ok(['user-unit', 'new-user'].includes(where.userId));
+          return copy(
+            where.userId === 'new-user'
+              ? { ...state.human, id: 'new-human', userId: 'new-user' }
+              : state.human,
+          );
         }
         assert.ok([humanId, agentId].includes(where.id), 'unexpected principal lookup');
         return copy(where.id === humanId ? state.human : state.agent);
       },
     },
     membership: {
+      create: async ({ data }) => {
+        calls.membershipCreates.push(data);
+        return data;
+      },
       findUnique: async ({ where }) => {
         const scope = where.workspaceId_principalId;
         assert.equal(scope.workspaceId, workspaceId);
@@ -246,6 +264,31 @@ test(
 );
 
 test(
+  'human admin control reaches actual principal and membership collaborators',
+  { timeout: 5000 },
+  async (t) => {
+    const f = fixture(t, { role: 'admin' });
+    const context = await f.verify();
+    assert.equal(
+      await f.service.registerAgent(context, {
+        name: 'Unit Agent',
+        custodianPrincipalId: humanId,
+        role: 'member',
+      }),
+      'created-agent',
+    );
+    assert.equal(await f.service.addHumanMember(context, 'new-user', 'member'), 'new-human');
+    assert.deepEqual(f.calls.principalCreates, [
+      { kind: 'agent', displayName: 'Unit Agent', workspaceId, custodianPrincipalId: humanId },
+    ]);
+    assert.deepEqual(f.calls.membershipCreates, [
+      { workspaceId, principalId: 'created-agent', role: 'member' },
+      { workspaceId, principalId: 'new-human', role: 'member' },
+    ]);
+  },
+);
+
+test(
   'current role demotion is reflected on reads and blocks viewer writes',
   { timeout: 5000 },
   async (t) => {
@@ -407,7 +450,8 @@ test(
           f.service.addHumanMember(context, 'new-user', 'member'),
           status(403, 'Operation is not granted.'),
         );
-        assert.equal(f.calls.work, 0);
+        assert.deepEqual(f.calls.principalCreates, []);
+        assert.deepEqual(f.calls.membershipCreates, []);
       });
     }
   },
