@@ -1,0 +1,26 @@
+docs/development/project-refresh-lifecycle.md
+  s_8691a07f071c2f::t_3e0f51938affad 45-105
+  s_8691a07f071c2f::t_1f7cbacf4470c5 1-44,106-144
+CHANGELOG.md
+  s_8691a07f071c2f::t_9b4f0db7b7017e 7-25
+docs/development/progress.md
+  s_8691a07f071c2f::t_e90282790839d0 3-41
+docs/development/unit-coverage.md
+  s_8691a07f071c2f::t_c12909048a5a08 9-12,109-110
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9d4dc382c1d6bcaaec6c56dda20f32025b95a643",
+  "prompts": {},
+  "sessions": {
+    "s_8691a07f071c2f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b36a-06f8-7002-9555-020e3c485adb",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
