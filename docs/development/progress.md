@@ -2,6 +2,8 @@
 
 ## 2026-11-07 T36 scoped project reads and cohesive commands — IN PROGRESS
 
+Delivery: [PR #41](https://github.com/Ljrr3045/rielia/pull/41).
+
 Merged PR #40 at `3d2354575399dd81d366736ee6630424c750c7e0` is the base.
 The [bounded T36.5 continuation](project-flow-extraction.md) extracts feature-local
 reads/hydration, the current authorization-before-receipt mutation protocol and

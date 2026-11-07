@@ -6,6 +6,8 @@ This records repository changes. No application version has been released.
 
 ### T36 scoped project reads and cohesive commands
 
+Delivery: [PR #41](https://github.com/Ljrr3045/rielia/pull/41).
+
 - Separate existing scoped reads/hydration, mutation/replay/journal protocol and
   real command callbacks while retaining facade/DI/composition contracts, current
   fenced authority, exact query/lock/await order and all policy/data behavior.
