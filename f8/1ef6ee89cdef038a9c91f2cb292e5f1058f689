@@ -1,0 +1,23 @@
+docs/development/progress.md
+  s_b793587f063690::t_90bb2b7a6dfb9c 48-58
+docs/development/formatting-completion.md
+  s_b793587f063690::t_90bb2b7a6dfb9c 172-186
+CHANGELOG.md
+  s_b793587f063690::t_90bb2b7a6dfb9c 23-26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f81ef6ee89cdef038a9c91f2cb292e5f1058f689",
+  "prompts": {},
+  "sessions": {
+    "s_b793587f063690": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b58c-f436-7012-96f8-0712e00974e7",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
