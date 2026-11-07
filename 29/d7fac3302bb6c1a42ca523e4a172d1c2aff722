@@ -1,0 +1,21 @@
+CHANGELOG.md
+  s_3eaafd3639f963::t_a8ce66a83047b7 9-10
+docs/development/progress.md
+  s_3eaafd3639f963::t_379f0c60648fc2 31-32
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "29d7fac3302bb6c1a42ca523e4a172d1c2aff722",
+  "prompts": {},
+  "sessions": {
+    "s_3eaafd3639f963": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b404-75a6-7420-b1c8-5faf969954de",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
