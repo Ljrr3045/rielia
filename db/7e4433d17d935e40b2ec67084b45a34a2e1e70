@@ -1,0 +1,105 @@
+package.json
+  s_cd38fe5b1413ea::t_11117f867dd743 32,41-49
+scripts/unit/report.mjs
+  s_cd38fe5b1413ea::t_11117f867dd743 13-23,36-40,42-46,50-53,64-66,75-77,83-91,96-100,108-115,121-122,127-148,155-162,167-175
+  s_cd38fe5b1413ea::t_9cccdfda528070 166
+  s_cd38fe5b1413ea::t_e29b4fec3e67a4 1-12,24-35,41,47-49,54-63,67-74,78-82,92-95,101-107,116-120,123-126,149-154,163-165,176
+scripts/unit/baselines/contracts.json
+  s_cd38fe5b1413ea::t_1f7e02a65902b7 1-135
+packages/contracts/test/guards.test.mjs
+  s_cd38fe5b1413ea::t_11117f867dd743 4-28,33-38,40-113,117-125,128-202,204-507,509-532
+  s_cd38fe5b1413ea::t_305407ea6b14d2 1-3,29-32,39,114,116,126-127
+  s_cd38fe5b1413ea::t_9504b892f0b77b 115
+  s_cd38fe5b1413ea::t_de65739ae54d13 203,508,533
+scripts/unit/mirror-loader.mjs
+  s_cd38fe5b1413ea::t_95547ca8694afc 1-11,16-17,22-25,31-32,40-43
+  s_cd38fe5b1413ea::t_11117f867dd743 12-15,18-21,26-30,33-39
+scripts/unit/pipeline.mjs
+  s_cd38fe5b1413ea::t_8c022fff09f366 1-4,6-7,18-24,33-40,43-44,47-52,57,66,69-72,82-94,98-102,108-111,120-121,126,130-135,141-147,161,180-191,198-205,210,221-223,226-232,238-249,257-265,268-275,282-283,287,296-297,317-319,345-347,355-356,388,392,397-399,408-411,427,434,439-440,454-456,465-474
+  s_cd38fe5b1413ea::t_11117f867dd743 8-17,25-32,41-42,45-46,53-56,58-65,73-77,95-97,103-107,112-119,122-125,127-129,136-140,148-160,162-179,192-197,211-220,233-237,250-256,266-267,276-281,284-286,289-293,298-316,320-344,348-354,357-387,389-391,393-396,400-407,412-426,428-433,435-438,441-446,449-453,457-464
+  s_cd38fe5b1413ea::t_e7c21dd2bed36e 67-68,224-225,447-448
+  s_cd38fe5b1413ea::t_839b56b7db5121 78-81
+  s_cd38fe5b1413ea::t_e518dad8ff1207 206-209,288,294-295
+  s_cd38fe5b1413ea::t_9df23b68f2f9ec 5
+scripts/identity-logic.test.mjs
+  s_cd38fe5b1413ea::t_11117f867dd743 5-8,10-16,20-22,28-35,39-44,50-52,60-69,80-81,92-100,105-106,108-121,129-131,135-136,144-145
+scripts/task-events-proxy.integration.test.mjs
+  s_cd38fe5b1413ea::t_11117f867dd743 7-13,15-80
+  s_cd38fe5b1413ea::t_de65739ae54d13 1-6,14,81
+scripts/unit/baselines/prototype.json
+  s_cd38fe5b1413ea::t_1f7e02a65902b7 1-363
+scripts/unit/baselines/pre-unit-contracts.json
+  s_cd38fe5b1413ea::t_909a016381c43f 1-135
+scripts/unit/process.mjs
+  s_cd38fe5b1413ea::t_95547ca8694afc 1-4,12,19-23,30-38,43-44,52-56
+  s_cd38fe5b1413ea::t_52ad6fe7fa4933 45,51
+  s_cd38fe5b1413ea::t_11117f867dd743 5-11,13-18,24-29,39-42,46-50
+scripts/unit/baselines/pre-unit-web.json
+  s_cd38fe5b1413ea::t_dfabd3a560626d 1-1028
+format-adoption.json
+  s_cd38fe5b1413ea::t_ac59100796b59b 6-14,21,23-26,35-55
+scripts/unit/files.mjs
+  s_cd38fe5b1413ea::t_e29b4fec3e67a4 1,11-42,45-47,50-66,72-75,104-105,109-117
+  s_cd38fe5b1413ea::t_11117f867dd743 2-10,43-44,48-49,67-71,78-79,92-97,106-108
+  s_cd38fe5b1413ea::t_e7c21dd2bed36e 76-77,80-91,98-103
+scripts/unit/artifacts.mjs
+  s_cd38fe5b1413ea::t_4f8037f7941478 20-24,26,60,67
+  s_cd38fe5b1413ea::t_47ed331d110cdb 28-36
+  s_cd38fe5b1413ea::t_55c3318cd25d4a 4
+  s_cd38fe5b1413ea::t_b0fab0ea64bf54 1-3,5,7-9,13-19,37,50-51,59,61,63-66,94,96-99,121
+  s_cd38fe5b1413ea::t_11117f867dd743 25,27,44-47,52-58,68-93,108-110,112-115,117-119
+  s_cd38fe5b1413ea::t_0d1a4548a69607 6,10-12,38-43,48-49,62,95
+  s_cd38fe5b1413ea::t_bb6a66956475aa 100-107,111,116,120
+scripts/task-events-client.test.mjs
+  s_cd38fe5b1413ea::t_de65739ae54d13 4
+  s_cd38fe5b1413ea::t_11117f867dd743 7-13,15-57,61-77,79-111
+scripts/unit/infrastructure.test.mjs
+  s_cd38fe5b1413ea::t_55c3318cd25d4a 10,94,327,353
+  s_cd38fe5b1413ea::t_9df23b68f2f9ec 7,19,93,95,114
+  s_cd38fe5b1413ea::t_11117f867dd743 24-43,45-62,64-89,96-113,115-131,135-157,159-174,179-192,194-240,242-260,262-280,282-305,307-326,328-352,354-389
+  s_cd38fe5b1413ea::t_044ff59aeaa4cf 1-6,8-9,11-18,20-23,44,63,90-92,132-134,158,175-178,193,241,261,281,306
+scripts/identity-client.integration.test.mjs
+  s_cd38fe5b1413ea::t_de65739ae54d13 1-7,9-14,22,40-42,45-47,64-66,69-70,75
+  s_cd38fe5b1413ea::t_11117f867dd743 8,15-21,23-39,43-44,48-63,67-68,71-74
+scripts/identity-proxy.integration.test.mjs
+  s_cd38fe5b1413ea::t_de65739ae54d13 1-6,8-14,17,23-24,32,46-50,56-58
+  s_cd38fe5b1413ea::t_11117f867dd743 7,15-16,18-22,25-31,33-45,51-55
+scripts/unit/baselines/web.json
+  s_cd38fe5b1413ea::t_49cdb5ea925678 653,665,923,926,1012,1024
+  s_cd38fe5b1413ea::t_1f7e02a65902b7 1-652,654-664,666-922,924-925,927-1011,1013-1023,1025-1028
+docs/development/formatting-inventory.json
+  s_cd38fe5b1413ea::t_ac59100796b59b 229-272
+  s_cd38fe5b1413ea::t_11117f867dd743 228
+scripts/unit/baselines/pre-unit-api.json
+  s_cd38fe5b1413ea::t_11117f867dd743 1-629
+scripts/unit/run.mjs
+  s_cd38fe5b1413ea::t_e518dad8ff1207 8
+  s_cd38fe5b1413ea::t_e7c21dd2bed36e 5,19
+  s_cd38fe5b1413ea::t_11117f867dd743 9-16,20-29
+  s_cd38fe5b1413ea::t_95547ca8694afc 1-4,6-7,17-18,30-35
+scripts/unit/baselines/api.json
+  s_cd38fe5b1413ea::t_1f7e02a65902b7 1-629
+scripts/unit/baselines/pre-unit-prototype.json
+  s_cd38fe5b1413ea::t_909a016381c43f 1-363
+scripts/unit/config.mjs
+  s_cd38fe5b1413ea::t_e29b4fec3e67a4 1-14,19-33
+  s_cd38fe5b1413ea::t_11117f867dd743 15-18
+.github/workflows/ci.yml
+  s_cd38fe5b1413ea::t_bb6a66956475aa 41-42,46-49,55-69
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "db7e4433d17d935e40b2ec67084b45a34a2e1e70",
+  "prompts": {},
+  "sessions": {
+    "s_cd38fe5b1413ea": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b369-4dc0-7a52-ae15-1cd16031eb12",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
