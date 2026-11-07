@@ -410,3 +410,54 @@ test(
     assert.equal(browser.server.streams.at(-1).request.options.signal.aborted, true);
   },
 );
+
+for (const queuedBeforeFailure of [false, true]) {
+  test(
+    `task-page refresh failure is disclosed and ${queuedBeforeFailure ? 'an already queued' : 'a later'} hint can recover`,
+    { timeout: 30_000 },
+    async (t) => {
+      const { browser, hook } = await mounted(t);
+      const held = browser.server.holdNext(tasksPath);
+      await emit(browser, hint(2));
+      assert.ok(held.request);
+      if (queuedBeforeFailure) await emit(browser, hint(3));
+      await act(async () => held.resolve(Response.json({ code: 'unavailable' }, { status: 503 })));
+      assert.equal(
+        hook.state.status,
+        'error',
+        'failed task-page refresh exposes recoverable error instead of loading',
+      );
+      assert.equal(
+        hook.state.tasks,
+        null,
+        'a failed full read is not presented as fresh task data',
+      );
+      assert.equal(hook.state.refreshRequired, true);
+      assert.equal(
+        browser.server.streams.at(-1).request.options.signal.aborted,
+        false,
+        'transient refresh failure keeps invalidation recovery available',
+      );
+      browser.server.title = 'Recovered task page';
+      browser.server.version = 3;
+      if (!queuedBeforeFailure) {
+        const count = browser.requests.length;
+        await browser.clock.advance(1000);
+        assert.equal(
+          browser.requests.length,
+          count,
+          'failed read alone cannot cause a retry hot loop',
+        );
+        await emit(browser, hint(3));
+      }
+      await browser.clock.advance(500);
+      assert.equal(hook.state.status, 'ready');
+      assert.equal(hook.state.tasks.items[0].title, 'Recovered task page 1');
+      assert.equal(hook.state.tasks.items[0].version, 3);
+      assert.equal(hook.state.refreshRequired, false);
+      const count = browser.requests.length;
+      await browser.clock.advance(500);
+      assert.equal(browser.requests.length, count);
+    },
+  );
+}
