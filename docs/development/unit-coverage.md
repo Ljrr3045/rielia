@@ -179,9 +179,11 @@ on administration denial and present in a real human-admin control; an aborted
 workspace read cannot persist private selection after unmount. A disposable missing
 generation guard fails that storage assertion. The detached Retry click was removed;
 connected pending controls, status and focus evidence remain. No production source
-or test-file selection changed. One new API positive control raises only
-PrincipalService coverage from L219/S284/F58/B214 to L230/S296/F62/B225 at identical
-denominators. Every other file/scope remains equal, and no floor is lowered.
+or test-file selection changed. One new API positive control changes coverage only
+within PrincipalService, raising the API aggregate from L219/S284/F58/B214 to
+L230/S296/F62/B225 at identical denominators. The file itself rises from 61 to 72/134
+lines, 73 to 85/178 statements, 16 to 20/43 functions and 48 to 59/184 branches.
+Every other file/scope remains equal, and no floor is lowered.
 
 All eight pre/current manifests migrate exact helper/test hashes explicitly. Fresh
 pre-unit runs retain every historical count/floor; current runs retain identical
