@@ -90,7 +90,8 @@ export function useProjectTasks() {
   const streamAllowed =
     !!workspaceId &&
     !!sessionId &&
-    !['forbidden', 'signed-out', 'disabled', 'error'].includes(state.status);
+    !['forbidden', 'signed-out', 'disabled'].includes(state.status) &&
+    (state.status !== 'error' || state.refreshRequired);
   useEffect(() => {
     if (!streamAllowed || !workspaceId) return;
     return connectTaskEvents({

@@ -992,14 +992,19 @@ export function createProjectTaskController(options: {
         [401, 403].includes(error.status)
       )
         readFailure(error);
-      else publish({ ...state, refreshRequired: true });
+      else {
+        // A failed full load must leave loading so a later hint can retry it.
+        if (state.status === 'loading') readFailure(error);
+        publish({ ...state, refreshRequired: true });
+      }
     } finally {
       backgroundPending = false;
       if (
         !disposed &&
         backgroundEpoch !== epoch &&
         fresh() &&
-        !['forbidden', 'signed-out', 'error'].includes(state.status)
+        !['forbidden', 'signed-out'].includes(state.status) &&
+        (state.status !== 'error' || state.refreshRequired)
       ) {
         clearTimeout(backgroundTimer);
         backgroundTimer = setTimeout(() => {
