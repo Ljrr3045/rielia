@@ -62,8 +62,28 @@ git -c core.hooksPath=.husky commit -m "chore: describe the change"
 ```
 
 Plain Git/GUI commits in linked worktrees do not automatically activate hooks.
-Hooks need Node/pnpm on PATH; no GUI version-manager setup is installed. HUSKY=0
-and --no-verify may skip hooks; independent CI remains required.
+Hooks require the installed runtime/tools; no GUI version-manager setup is
+installed. HUSKY=0 and --no-verify may skip hooks; independent CI remains required.
+
+The corrective hook path executes the already-installed local
+`node_modules/.bin/node` (or `.exe`) and verifies `.node-version` before loading
+tools. Missing or mismatched runtime fails with an explicit-install instruction;
+there is no global runtime fallback. lint-staged and commitlint run through that
+same Node executable. Hooks never invoke a package manager, install or use network.
+The shell entries require Git's shell environment; Windows execution has not been
+independently verified by this correction.
+
+pnpm 12 defaults to [automatic dependency installation before run/exec](https://pnpm.io/settings/build#verifydepsbeforerun).
+That path was observed during this delivery, including inside old real-hook test
+fixtures borrowing a dependency tree. The affected task-owned graph was restored
+once with an explicitly authorized offline/frozen/ignore-scripts command: zero
+downloads, exact tracked locks and 286-package backend identities retained. Rebuilt
+metadata is recorded as regenerated, not byte-identical. There was no network trace
+for the earlier attempts, so zero network is not claimed for them. Direct installed
+executables avoid the path; per-command `PNPM_CONFIG_VERIFY_DEPS_BEFORE_RUN=error`
+fails closed for manual pnpm commands without changing repository/global settings.
+Real hook success/failure, missing/wrong-runtime and safe poison-command controls
+now assert that borrowed dependency metadata stays unchanged.
 
 ## Staged content and formatting adoption
 
@@ -156,6 +176,12 @@ immediately before merge; native required checks do not establish title validity
 Draft/Ready/current-head CI/Kilo and coordinator-only merge rules remain.
 
 ## Separate unit-baseline audits and limits
+
+The following audits are historical pre-implementation evidence. The subsequent
+[first unit/coverage delivery](unit-coverage.md) now reproduces these baselines,
+adds behavior units and enforces measured app/shared/prototype gates through an
+isolated dev-tool install. Its guide owns current commands, advisory disposition,
+artifact safeguards and remaining acceptance; T36 remains open.
 
 Parallel disposable audits measured base `1c33560`:
 

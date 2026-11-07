@@ -1,3 +1,9 @@
 #!/bin/sh
 [ "${HUSKY-}" = "0" ] && exit 0
-pnpm quality:staged
+node_bin=./node_modules/.bin/node
+[ -x "$node_bin" ] || node_bin=./node_modules/.bin/node.exe
+if [ ! -x "$node_bin" ]; then
+  printf '%s\n' 'Quality hooks require an installed local Node runtime. Run the reviewed frozen install explicitly, then retry.' >&2
+  exit 1
+fi
+exec "$node_bin" scripts/quality/staged.mjs

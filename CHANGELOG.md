@@ -4,6 +4,42 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Correct PR #34's nine native unit/tooling findings with fail-closed CI modes,
+  complete mirror guards, portable artifact entry, safe process cleanup and
+  observable behavior witnesses; retain all source and ratchet only API coverage
+  upward through a new administration positive control.
+
+- Correct real hooks to run installed local Node/tools with an exact runtime
+  guard and no package-manager fallback; add real pass/fail and borrowed-metadata
+  safety regressions. PR #34's native findings remain in a Draft corrective batch.
+
+### T36 first unit and coverage slice
+
+- Add isolated backend authority/error/use-case units and real React identity/
+  workspace hook/component tests, plus shared-contract guard tests. Retain all
+  nineteen fictional prototype cases and separate all six real HTTP checks.
+- Enforce measured API/web/contracts/prototype all-source four-metric floors,
+  exact/per-file nonregression and fail-closed source/provider manifests. Preserve
+  real tsc Nest metadata and all existing PG/security/Docker/closure checks.
+- Isolate pinned coverage/DOM tools outside runtime peer graphs; preserve the
+  root lock and 286-package Express-free backend closure. Record two retained
+  moderate dev-tool advisories without suppression or new lifecycle approval.
+- Add failure/threshold/scope/process-tree/artifact witnesses and bounded seven-day
+  CI JSON/LCOV artifacts. Reject stale reports, symlink escapes and oversized
+  diagnostics after independent review. See the [delivery guide](docs/development/unit-coverage.md).
+- Upload through a bounded local JavaScript Action using the frozen official
+  artifact SDK and runner capability. Reject the advisory-affected prebuilt bundle;
+  retain only the documented moderate tool findings with no permission expansion.
+- Correct the inherited HTTP deadline test's pre-header timing assumption using
+  controlled real-fetch admission, late-body rejection and actual SSE close;
+  a disposable missing-body-deadline mutation fails without changing production.
+- Record the user's prospective **Permissions: Approve for me** requirement and
+  effective-session verification for coordinator-launched agents. T36 remains
+  IN PROGRESS; expanded recovery coverage, extraction, T37 and T11 remain later work.
+- [Draft PR #34](https://github.com/Ljrr3045/rielia/pull/34) targets `dev`; actual
+  Draft is checked before each push and final current-head CI/review remains
+  coordinator-gated. No Ready transition or merge is performed by this worker.
+
 ### T36 tooling enforcement
 
 - Address both findings from PR #33's first completed native Kilo round:

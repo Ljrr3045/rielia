@@ -14,7 +14,7 @@ import {
   writeFileSync,
 } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { dirname, join, resolve } from 'node:path';
+import { delimiter, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
 import { checkFiles } from './checks.mjs';
@@ -71,6 +71,7 @@ function fixture(t, { initial = true, dependencies = true } = {}) {
   }
   for (const file of [
     '.husky',
+    '.node-version',
     '.prettierrc.json',
     'commitlint.config.mjs',
     'lint-staged.config.mjs',
@@ -123,6 +124,108 @@ function snapshot(root, file) {
     stash: git(root, ['stash', 'list', '--format=%H']),
   };
 }
+
+function borrowedMetadata() {
+  return ['.modules.yaml', '.pnpm/lock.yaml', '.pnpm-workspace-state-v1.json'].map((file) => {
+    const target = join(sourceRoot, 'node_modules', file);
+    return { file, bytes: existsSync(target) ? readFileSync(target) : null };
+  });
+}
+
+function poisonPackageManager(root) {
+  const directory = join(root, '.git', 'poison-bin');
+  const marker = join(root, '.git', 'package-manager-called');
+  mkdirSync(directory);
+  const quote = (value) => "'" + value.replaceAll("'", "'\\''") + "'";
+  writeFileSync(
+    join(directory, 'pnpm'),
+    `#!/bin/sh\nprintf '%s\\n' 'package-manager-called' >> ${quote(marker)}\nexit 97\n`,
+    { mode: 0o755 },
+  );
+  return { marker, env: { PATH: `${directory}${delimiter}${cleanEnv.PATH}` } };
+}
+
+test('real hooks never call a package manager or change borrowed metadata on success or failure', (t) => {
+  const root = fixture(t);
+  const before = borrowedMetadata();
+  t.after(() => assert.deepEqual(borrowedMetadata(), before));
+  const { marker, env } = poisonPackageManager(root);
+  const attempt = (message) =>
+    command(
+      root,
+      'git',
+      ['-c', 'core.hooksPath=.husky', 'commit', '--allow-empty', '-m', message],
+      env,
+    );
+  writeFileSync(join(root, 'source.mjs'), 'export const value = 1;\n');
+  git(root, ['add', 'source.mjs']);
+  ok(attempt('chore: run installed tools without package manager'));
+  assert.equal(existsSync(marker), false);
+  writeFileSync(join(root, 'source.mjs'), 'export const value=2\n');
+  git(root, ['add', 'source.mjs']);
+  const formatting = attempt('chore: reject malformed formatting');
+  assert.notEqual(formatting.status, 0);
+  assert.match(formatting.stdout + formatting.stderr, /Format/);
+  writeFileSync(join(root, 'source.mjs'), 'export const value = 2;\n');
+  git(root, ['add', 'source.mjs']);
+  const message = attempt('invalid message');
+  assert.notEqual(message.status, 0);
+  assert.match(message.stdout + message.stderr, /Commit message rejected/);
+  assert.equal(existsSync(marker), false);
+  assert.deepEqual(borrowedMetadata(), before);
+
+  // The former hook is detected by a safe poison command, never a real installer.
+  const hook = join(root, '.husky/pre-commit');
+  const original = readFileSync(hook);
+  try {
+    writeFileSync(hook, '#!/bin/sh\npnpm quality:staged\n');
+    assert.notEqual(attempt('chore: detect former package manager path').status, 0);
+    assert.equal(readFileSync(marker, 'utf8'), 'package-manager-called\n');
+  } finally {
+    writeFileSync(hook, original);
+  }
+  assert.deepEqual(borrowedMetadata(), before);
+});
+
+test('both hooks reject missing local runtime without falling back to global shims', (t) => {
+  const root = fixture(t, { dependencies: false });
+  const before = borrowedMetadata();
+  const { marker, env } = poisonPackageManager(root);
+  const actual = command(
+    root,
+    'git',
+    ['-c', 'core.hooksPath=.husky', 'commit', '--allow-empty', '-m', 'chore: missing runtime'],
+    env,
+  );
+  assert.notEqual(actual.status, 0);
+  assert.match(actual.stderr, /installed local Node runtime/);
+  const message = command(root, 'sh', ['.husky/commit-msg', '.git/COMMIT_EDITMSG'], env);
+  assert.notEqual(message.status, 0);
+  assert.match(message.stderr, /installed local Node runtime/);
+  assert.equal(existsSync(marker), false);
+  assert.deepEqual(borrowedMetadata(), before);
+});
+
+test('both hooks reject a runtime pin mismatch before loading installed tools', (t) => {
+  const root = fixture(t);
+  const before = borrowedMetadata();
+  const { marker, env } = poisonPackageManager(root);
+  writeFileSync(join(root, '.node-version'), '0.0.0\n');
+  git(root, ['add', '.node-version']);
+  const actual = command(
+    root,
+    'git',
+    ['-c', 'core.hooksPath=.husky', 'commit', '--allow-empty', '-m', 'chore: wrong runtime'],
+    env,
+  );
+  assert.notEqual(actual.status, 0);
+  assert.match(actual.stderr, /Quality checks require Node 0\.0\.0/);
+  const message = command(root, 'sh', ['.husky/commit-msg', '.git/COMMIT_EDITMSG'], env);
+  assert.notEqual(message.status, 0);
+  assert.match(message.stderr, /Quality checks require Node 0\.0\.0/);
+  assert.equal(existsSync(marker), false);
+  assert.deepEqual(borrowedMetadata(), before);
+});
 
 test('staged formatting/lint inspect index bytes and preserve both sides of partial staging', (t) => {
   const root = fixture(t);

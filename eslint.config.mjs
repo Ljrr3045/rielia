@@ -8,6 +8,7 @@ export default [
       '**/dist/**',
       '**/.next/**',
       '**/node_modules/**',
+      '**/coverage/**',
       '**/next-env.d.ts',
       'apps/api/src/generated/**',
       'docs/handoff/**',

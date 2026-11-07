@@ -33,7 +33,8 @@ The source dependency graph remains: T35 follows T04 and precedes T05/T06/T12.
 Read the scoped [web](apps/web/AGENTS.md) or [API](apps/api/AGENTS.md) developer
 rules before changing those apps. These rules describe incremental migration
 targets; the first [T36 tooling slice](docs/development/quality-tooling.md) adds
-scoped enforcement, while application structure and unit coverage gates remain open.
+scoped enforcement. The first [unit/coverage slice](docs/development/unit-coverage.md)
+adds measured app gates; expanded coverage and application structure remain open.
 Preparing these contribution documents does not
 complete T16 or its real-project validation.
 
@@ -92,6 +93,18 @@ of frontend/backend code while retaining appearance; Astra owns T37 visual and
 interaction redesign after T36 acceptance. Verify the effective configuration and isolate each
 worker's checkout. See the [model decision and verification limits](docs/development/frontend-agent.md).
 This remains separate from Kilo Code Reviews' external review role.
+The user's 2026-11-06 rule also requires every subsequent coordinator-launched
+agent to use **Permissions: Approve for me**, verified from the effective session
+before task execution. Preserve workspace-write/on-request boundaries and report
+unavailable verification; do not silently substitute Full Access or change global
+configuration. See the same decision guide for exact evidence and limits.
+
+For unit work, explicitly install the isolated dev-tool graph with
+`pnpm --dir scripts/unit/tools install --frozen-lockfile`, then run
+`pnpm unit:coverage` and `pnpm test:unit-infrastructure` in addition to applicable
+existing checks. This separate install prevents test tooling from entering deployed
+optional-peer graphs. [The unit guide](docs/development/unit-coverage.md) documents
+scope commands, source accounting, numerical gates, retained advisories and artifacts.
 
 The user retired OpenCode PR review, including the inherited workflow and the
 abandoned replacement integration. Do not restore, repair, or invoke either.

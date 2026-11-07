@@ -4,6 +4,15 @@ import { git, paths } from './git.mjs';
 
 export const legacyCommit = '1c33560f2fca954cbac6d35a87881a41dd72b017';
 
+export function assertRuntime(root) {
+  const expected = readFileSync(resolve(root, '.node-version'), 'utf8').trim();
+  if (!/^\d+\.\d+\.\d+$/.test(expected) || process.versions.node !== expected) {
+    throw new Error(
+      `Quality checks require Node ${expected}; running ${process.versions.node}. Install the reviewed runtime explicitly; hooks never install dependencies.`,
+    );
+  }
+}
+
 export function relativePath(root, file) {
   const name = relative(root, resolve(root, file)).split(sep).join('/');
   if (!name || name === '..' || name.startsWith('../') || isAbsolute(name)) {
@@ -45,6 +54,7 @@ export function excluded(file) {
     /^(docs\/handoff\/|patches\/|apps\/api\/src\/generated\/)/.test(file) ||
     file === 'docs/development/handoff-files.sha256' ||
     file === 'pnpm-lock.yaml' ||
+    file === 'scripts/unit/tools/pnpm-lock.yaml' ||
     /(^|\/)next-env\.d\.ts$|\.tsbuildinfo$/.test(file)
   );
 }
