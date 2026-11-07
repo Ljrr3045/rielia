@@ -1,0 +1,26 @@
+docs/development/unit-coverage.md
+  s_b9a431f9c0846a::t_25aa5e31fb1217 323-325
+  s_b9a431f9c0846a::t_5d433356331482 326
+docs/development/progress.md
+  s_b9a431f9c0846a::t_25aa5e31fb1217 79-80
+docs/development/t36-stable-ui-contract.md
+  s_b9a431f9c0846a::t_25aa5e31fb1217 121
+AGENTS.md
+  s_b9a431f9c0846a::t_25aa5e31fb1217 38-39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "37f2a8ccfcb021dab859432c48b1fc4107e33f15",
+  "prompts": {},
+  "sessions": {
+    "s_b9a431f9c0846a": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b754-be56-77c0-8664-120d87cf6aa2",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
