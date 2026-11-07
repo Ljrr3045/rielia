@@ -1,6 +1,6 @@
 {
   "baseline": "1c33560f2fca954cbac6d35a87881a41dd72b017",
-  "policy": "All 208 currently eligible maintained source/config/tooling inputs are adopted; changed/new supported inputs remain prospectively enforced. Legacy Markdown adoption and unsupported formats retain explicit owners and checks.",
+  "policy": "All 212 currently eligible maintained source/config/tooling inputs are adopted; changed/new supported inputs remain prospectively enforced. Legacy Markdown adoption and unsupported formats retain explicit owners and checks.",
   "adopted": [
     ".github/actions/unit-artifacts/action.yml",
     ".github/actions/unit-artifacts/index.mjs",
@@ -21,7 +21,10 @@
     "apps/api/src/principals/principal-errors.ts",
     "apps/api/src/principals/principal.controller.ts",
     "apps/api/src/principals/principal.service.ts",
+    "apps/api/src/projects/project-task-dto.ts",
     "apps/api/src/projects/project-task-http.ts",
+    "apps/api/src/projects/project-task-input.ts",
+    "apps/api/src/projects/project-task-policy.ts",
     "apps/api/src/projects/project-task.controller.ts",
     "apps/api/src/projects/project-task.service.ts",
     "apps/api/src/projects/task-collaboration.controller.ts",
@@ -51,6 +54,7 @@
     "apps/api/test/unit/principal-errors.test.mjs",
     "apps/api/test/unit/principal-policy.test.mjs",
     "apps/api/test/unit/project-task-failures.test.mjs",
+    "apps/api/test/unit/project-task-values-policy.test.mjs",
     "apps/api/test/unit/task-collaboration-policy.test.mjs",
     "apps/api/test/unit/task-discovery-policy.test.mjs",
     "apps/api/test/unit/task-events-lifecycle.test.mjs",
@@ -481,8 +485,8 @@
   },
   "currentSourceAccounting": {
     "owner": "T36 mechanical formatting integration; all current maintained inputs adopted, future inputs prospective; coordinator owns remaining structural acceptance",
-    "eligibleCount": 208,
-    "adoptedCount": 208,
+    "eligibleCount": 212,
+    "adoptedCount": 212,
     "remainingCount": 0,
     "remaining": []
   },
@@ -504,7 +508,8 @@
     "docs/development/source-format-adoption.md",
     "docs/development/web-transport-formatting.md",
     "docs/development/project-surface-formatting.md",
-    "docs/development/formatting-completion.md"
+    "docs/development/formatting-completion.md",
+    "docs/development/project-values-policy-extraction.md"
   ],
   "webTransportFormattingAdoption": {
     "owner": "T36.3 web transport/controller/hook mechanical formatting",
@@ -1140,5 +1145,20 @@
       "manualAndExcluded": "Retain existing manualFormats/excluded inventories and checks unchanged"
     },
     "guide": "docs/development/formatting-completion.md"
+  },
+  "projectValuesPolicyExtraction": {
+    "owner": "T36.5 bounded first backend extraction; coordinator owns remaining restructuring/acceptance",
+    "base": "c9a742618a7b1d7734daf1d98c31f33245304120",
+    "newAdopted": [
+      "apps/api/src/projects/project-task-dto.ts",
+      "apps/api/src/projects/project-task-input.ts",
+      "apps/api/src/projects/project-task-policy.ts",
+      "apps/api/test/unit/project-task-values-policy.test.mjs"
+    ],
+    "eligibleCountAfter": 212,
+    "remainingEligibleCount": 0,
+    "formatting": "All six exact B source candidates already match pinned Prettier 3.9.10; the new 19-case suite is formatted. No source-format delta or new formatting policy.",
+    "measurement": "A/B/repeat: 129 API / 269 total cases with exact moved raw outcomes; C: 148 API / 288 total cases, 33 API / 104 total inputs. Other scopes byte-identical. Coordinator accepts only the exact current API baseline; no pipeline/provider/gate/exclusion change.",
+    "guide": "docs/development/project-values-policy-extraction.md"
   }
 }

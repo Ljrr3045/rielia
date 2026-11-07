@@ -8,11 +8,7 @@ import {
 import { createHash, randomUUID } from 'node:crypto';
 import {
   isTaskFilters,
-  projectURL,
-  taskURL,
   taskStatuses,
-  taskTypes,
-  taskPriorities,
   type TaskFilters,
   type TaskStatus,
   type TaskPage,
@@ -21,7 +17,6 @@ import {
   type DomainPage,
   type DomainPerson,
   type ExecutionContextResponse,
-  type Project,
   type ProjectTaskResult,
   type Task,
   type ProjectAccessPage,
@@ -36,113 +31,25 @@ import {
   type VerifiedExecution,
 } from '../principals/principal.service.js';
 import type { TaskDiscoveryItem } from '@rielia/contracts';
-export type ReadableTaskProject = Pick<
-  ProjectRow,
-  'id' | 'workspaceId' | 'key' | 'name' | 'version' | 'taskRevision' | 'visibility' | 'archivedAt'
->;
+import {
+  identifier,
+  object,
+  text,
+  expected,
+  taskFields,
+  taskProperties,
+  canonical,
+} from './project-task-input.js';
+import { administrator, canManage } from './project-task-policy.js';
+import {
+  attribution,
+  projectDto,
+  taskDto,
+  accessDto,
+  type ReadableTaskProject,
+} from './project-task-dto.js';
+export type { ReadableTaskProject } from './project-task-dto.js';
 
-const identifier = (value: unknown): value is string =>
-  typeof value === 'string' && /^[A-Za-z0-9_-]{1,128}$/.test(value);
-export function object(
-  value: unknown,
-  allowed: string[],
-  required: string[] = [],
-): Record<string, unknown> {
-  if (
-    !value ||
-    typeof value !== 'object' ||
-    Array.isArray(value) ||
-    Object.keys(value).some((key) => !allowed.includes(key)) ||
-    required.some((key) => !(key in value))
-  )
-    throw new BadRequestException('Invalid project/task request.');
-  return { ...(value as Record<string, unknown>) };
-}
-export function text(value: unknown, limit: number, required = false): string {
-  if (
-    typeof value !== 'string' ||
-    value.includes('\0') ||
-    value.length > limit ||
-    (required && (!value.trim() || /[\r\n\t]/.test(value)))
-  )
-    throw new BadRequestException('Invalid text.');
-  return required ? value.trim() : value;
-}
-export function expected(value: unknown): number {
-  if (!Number.isSafeInteger(value) || Number(value) < 1)
-    throw new BadRequestException('A positive expectedVersion is required.');
-  return Number(value);
-}
-function taskFields(input: Record<string, unknown>, create: boolean) {
-  const result: {
-    title?: string;
-    description?: string;
-    type?: string;
-    priority?: string;
-    status?: string;
-    assigneePrincipalId?: string | null;
-    dueDate?: Date | null;
-  } = {};
-  if (create || 'title' in input) result.title = text(input['title'], 300, true);
-  if (create || 'description' in input)
-    result.description = text(input['description'] ?? (create ? '' : undefined), 20000);
-  for (const [key, choices, fallback] of [
-    ['type', taskTypes, 'task'],
-    ['priority', taskPriorities, 'none'],
-    ['status', taskStatuses, 'backlog'],
-  ] as const) {
-    if (create || key in input) {
-      const value = input[key] === undefined && create ? fallback : input[key];
-      if (typeof value !== 'string' || !(choices as readonly string[]).includes(value))
-        throw new BadRequestException('Invalid task property.');
-      result[key] = value;
-    }
-  }
-  if ('assigneePrincipalId' in input || create) {
-    const value = input['assigneePrincipalId'] ?? null;
-    if (value !== null && !identifier(value)) throw new BadRequestException('Invalid assignee.');
-    result.assigneePrincipalId = value;
-  }
-  if ('dueDate' in input || create) {
-    const value = input['dueDate'] ?? null;
-    if (value === null) result.dueDate = null;
-    else {
-      if (
-        typeof value !== 'string' ||
-        !/^\d{4}-\d{2}-\d{2}$/.test(value) ||
-        value.startsWith('0000')
-      )
-        throw new BadRequestException('Invalid date-only due date.');
-      const date = new Date(`${value}T00:00:00.000Z`);
-      if (!Number.isFinite(date.getTime()) || date.toISOString().slice(0, 10) !== value)
-        throw new BadRequestException('Invalid date-only due date.');
-      result.dueDate = date;
-    }
-  }
-  return result;
-}
-const taskProperties = [
-  'title',
-  'description',
-  'type',
-  'priority',
-  'status',
-  'assigneePrincipalId',
-  'dueDate',
-];
-const provenance = (row: ProjectRow | TaskRow) => ({
-  actorPrincipalId: row.createdByPrincipalId,
-  executionMode: row.creationMode as 'human' | 'delegated' | 'autonomous',
-  source: row.creationSource as 'web' | 'mcp',
-  grantId: row.creationGrantId,
-});
-const attribution = (current: ExecutionContextResponse) => ({
-  createdByPrincipalId: current.actorPrincipalId,
-  creationMode: current.executionMode,
-  creationSource: current.source,
-  creationGrantId: current.grantId,
-});
-const iso = (date: Date | null) => date?.toISOString() ?? null;
 function page<T>(
   rows: T[],
   total: number,
@@ -157,36 +64,19 @@ function page<T>(
     capabilities: { canCreate },
   };
 }
-function canonical(value: unknown): unknown {
-  if (value instanceof Date) return value.toISOString();
-  if (Array.isArray(value)) return value.map(canonical);
-  if (value !== null && typeof value === 'object')
-    return Object.fromEntries(
-      Object.entries(value)
-        .sort(([a], [b]) => a.localeCompare(b))
-        .map(([key, item]) => [key, canonical(item)]),
-    );
-  return value;
-}
 
 @Injectable()
 export class ProjectTaskService {
   constructor(@Inject(PrincipalService) private readonly principals: PrincipalService) {}
 
-  private administrator(actor: Pick<ExecutionContextResponse, 'principalKind' | 'role'>) {
-    return actor.principalKind === 'human' && ['owner', 'admin'].includes(actor.role);
-  }
-  private canManage(actor: ExecutionContextResponse) {
-    return actor.executionMode === 'human' && this.administrator(actor);
-  }
   private requireManagement(actor: ExecutionContextResponse) {
-    if (!this.canManage(actor))
+    if (!canManage(actor))
       throw new ForbiddenException('Human project administration is required.');
   }
   private readable(actor: ExecutionContextResponse): Prisma.ProjectWhereInput {
     return {
       workspaceId: actor.workspaceId,
-      ...(this.administrator(actor)
+      ...(administrator(actor)
         ? {}
         : {
             OR: [
@@ -251,86 +141,13 @@ export class ProjectTaskService {
       ]),
     );
   }
-  private projectDto(
-    row: ProjectRow,
-    people: Map<string, DomainPerson>,
-    canWrite: boolean,
-    actor: ExecutionContextResponse,
-  ): Project {
-    return {
-      id: row.id,
-      workspaceId: row.workspaceId,
-      key: row.key,
-      name: row.name,
-      description: row.description,
-      visibility: row.visibility as Project['visibility'],
-      version: row.version,
-      archivedAt: iso(row.archivedAt),
-      createdAt: row.createdAt.toISOString(),
-      updatedAt: row.updatedAt.toISOString(),
-      creator: people.get(row.createdByPrincipalId)!,
-      provenance: provenance(row),
-      capabilities: {
-        canEdit: canWrite && !row.archivedAt,
-        canArchive: canWrite && !row.archivedAt,
-        canRestore: canWrite && !!row.archivedAt,
-        canManageAccess: this.canManage(actor),
-        canChangeVisibility: this.canManage(actor) && !row.archivedAt,
-        canGrantAccess: this.canManage(actor) && !row.archivedAt,
-        canRevokeAccess: this.canManage(actor),
-      },
-      url: projectURL(row.workspaceId, row.id),
-    };
-  }
-  private taskDto(
-    row: TaskRow,
-    project: ReadableTaskProject,
-    people: Map<string, DomainPerson>,
-    canWrite: boolean,
-    eligible: Set<string>,
-  ): Task {
-    const active = !project.archivedAt && !row.archivedAt;
-    return {
-      id: row.id,
-      workspaceId: row.workspaceId,
-      projectId: row.projectId,
-      projectKey: project.key,
-      number: row.number,
-      key: `${project.key}-${row.number}`,
-      title: row.title,
-      description: row.description,
-      type: row.type as Task['type'],
-      priority: row.priority as Task['priority'],
-      status: row.status as Task['status'],
-      assigneePrincipalId: row.assigneePrincipalId,
-      assignee: row.assigneePrincipalId
-        ? { ...people.get(row.assigneePrincipalId)!, active: eligible.has(row.assigneePrincipalId) }
-        : null,
-      parentTaskId: row.parentTaskId,
-      dueDate: row.dueDate?.toISOString().slice(0, 10) ?? null,
-      version: row.version,
-      orderVersion: project.taskRevision,
-      archivedAt: iso(row.archivedAt),
-      projectArchivedAt: iso(project.archivedAt),
-      createdAt: row.createdAt.toISOString(),
-      updatedAt: row.updatedAt.toISOString(),
-      creator: people.get(row.createdByPrincipalId)!,
-      provenance: provenance(row),
-      capabilities: {
-        canEdit: canWrite && active,
-        canArchive: canWrite && active,
-        canRestore: canWrite && !project.archivedAt && !!row.archivedAt,
-      },
-      url: taskURL(row.workspaceId, row.projectId, row.id),
-    };
-  }
   private async projectView(
     tx: Transaction,
     row: ProjectRow,
     canWrite: boolean,
     actor: ExecutionContextResponse,
   ) {
-    return this.projectDto(
+    return projectDto(
       row,
       await this.people(tx, row.workspaceId, [row.createdByPrincipalId]),
       canWrite,
@@ -394,7 +211,7 @@ export class ProjectTaskService {
         continue;
       if (
         project.visibility !== 'workspace' &&
-        !this.administrator({
+        !administrator({
           principalKind: member.principal.kind as 'human' | 'agent',
           role: member.role as MembershipRole,
         }) &&
@@ -413,7 +230,7 @@ export class ProjectTaskService {
       where: { workspaceId_id: { workspaceId: project.workspaceId, id: project.id } },
     });
     const { people, eligible } = await this.taskPeople(tx, current, [row]);
-    return this.taskDto(row, current, people, canWrite, eligible);
+    return taskDto(row, current, people, canWrite, eligible);
   }
   private conflict(current: ProjectTaskResult, version: number) {
     if (version !== current.version)
@@ -472,8 +289,8 @@ export class ProjectTaskService {
         const result = page(rows, await tx.project.count({ where }), (row) => row.id, canWrite);
         return {
           ...result,
-          capabilities: { ...result.capabilities, canCreatePrivate: this.canManage(actor) },
-          items: result.items.map((row) => this.projectDto(row, people, canWrite, actor)),
+          capabilities: { ...result.capabilities, canCreatePrivate: canManage(actor) },
+          items: result.items.map((row) => projectDto(row, people, canWrite, actor)),
         };
       },
     );
@@ -574,7 +391,7 @@ export class ProjectTaskService {
       const project = byProject.get(row.projectId)!;
       const item = Object.fromEntries(
         Object.entries(
-          this.taskDto(row, project, people, canWrite, eligible.get(project.id) ?? new Set()),
+          taskDto(row, project, people, canWrite, eligible.get(project.id) ?? new Set()),
         ).filter(([key]) => key !== 'description'),
       ) as Omit<Task, 'description'>;
       return { ...item, projectName: project.name };
@@ -693,7 +510,7 @@ export class ProjectTaskService {
         }
         const items = rows
           .slice(0, 100)
-          .map((row) => this.taskDto(row, project, people, canWrite, eligible));
+          .map((row) => taskDto(row, project, people, canWrite, eligible));
         return {
           items,
           total: Object.values(counts).reduce((sum, n) => sum + n, 0),
@@ -968,38 +785,13 @@ export class ProjectTaskService {
     )
       throw new BadRequestException('Invalid page cursor.');
   }
-  private accessDto(
-    row: Prisma.MembershipGetPayload<{ include: { principal: true; projectAccesses: true } }>,
-    project: ProjectRow,
-  ) {
-    const active = row.state === 'active' && row.principal.state === 'active';
-    const explicitAccess = row.projectAccesses[0]?.state as 'active' | 'revoked' | undefined;
-    const implicitAccess =
-      active && row.principal.kind === 'human' && ['owner', 'admin'].includes(row.role);
-    return {
-      principalId: row.principalId,
-      name: row.principal.displayName,
-      kind: row.principal.kind as 'human' | 'agent',
-      active,
-      role: row.role as MembershipRole,
-      explicitAccess: explicitAccess ?? null,
-      implicitAccess,
-      effectiveAccess:
-        active &&
-        (project.visibility === 'workspace' || implicitAccess || explicitAccess === 'active'),
-      capabilities: {
-        canGrant: active && !project.archivedAt && explicitAccess !== 'active',
-        canRevoke: explicitAccess === 'active',
-      },
-    };
-  }
   private async accessMember(tx: Transaction, project: ProjectRow, principalId: string) {
     const row = await tx.membership.findUnique({
       where: { workspaceId_principalId: { workspaceId: project.workspaceId, principalId } },
       include: { principal: true, projectAccesses: { where: { projectId: project.id } } },
     });
     if (!row) throw new ForbiddenException('Project access is denied.');
-    return this.accessDto(row, project);
+    return accessDto(row, project);
   }
   accessReview(
     context: VerifiedExecution,
@@ -1044,7 +836,7 @@ export class ProjectTaskService {
         total: await tx.membership.count({ where }),
         nextCursor: rows.length > 100 ? rows[99]!.principalId : null,
         projectVersion: project.version,
-        items: rows.slice(0, 100).map((row) => this.accessDto(row, project)),
+        items: rows.slice(0, 100).map((row) => accessDto(row, project)),
       };
     });
   }

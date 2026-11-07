@@ -23,6 +23,12 @@ floors to 31.14%/27.90%, all four shared-config manifests and four selected-test
 fingerprints. Semantic hits/S/F/B gates and all historical baselines remain exact;
 88 enumerated new END-column losses include 14 fields with hits and remain debt.
 
+The first [backend values/policy/DTO extraction](project-values-policy-extraction.md)
+records separately accepted retained-test equivalence and 19 targeted additions:
+148 API cases/33 inputs, 288 cases/104 inputs overall. Historical starting values
+below remain evidence of their original delivery; current gates remain in the
+reviewed baseline files.
+
 Traceability: P01–P11/P33/P38; US01–US08/US11–US12/US24–US25; T01/T04–T10/T35;
 existing UXR01–04/06 and UX01–03/05–07/09/11. No sprint/product expansion, UI
 redesign, real-provider/staging validation, deployment or protected-settings change.

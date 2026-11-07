@@ -4,6 +4,24 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+### T36 first backend values, policy and DTO extraction
+
+Delivery: [PR #40](https://github.com/Ljrr3045/rielia/pull/40).
+
+- Separate existing project/task input values, pure human-management policy and
+  loaded DTO projections; retain facade contracts, scoped reads and the command/
+  transaction/receipt boundary without behavior or runtime pin changes.
+- Add 19 public-behavior regression cases and pass 148 API / 288 total cases over
+  104 inputs. Accepted A/B evidence preserves 996 raw outcomes including zeros;
+  separate C coverage reaches L638/1477 S698/1617 F156/396 B523/1228. Ratchet only
+  the reviewed current API baseline; other scopes and historical baselines remain
+  unchanged.
+- Adopt four new formatted paths at 212/212 maintained inputs and record the
+  [extraction boundaries and unit limits](docs/development/project-values-policy-extraction.md).
+  Local normal checks, final coverage gates, infrastructure, artifacts and
+  handoff pass. Current-head hosted CI/Kilo remain delivery gates; T36, later
+  restructuring, T37 and T11 stay open.
+
 ### T36 maintained-source formatting completion
 
 - Adopt the final 43 eligible inputs with 38 approved changes/five unchanged,
