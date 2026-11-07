@@ -24,6 +24,9 @@ This records repository changes. No application version has been released.
 - Record the user's prospective **Permissions: Approve for me** requirement and
   effective-session verification for coordinator-launched agents. T36 remains
   IN PROGRESS; expanded recovery coverage, extraction, T37 and T11 remain later work.
+- [Draft PR #34](https://github.com/Ljrr3045/rielia/pull/34) targets `dev`; actual
+  Draft is checked before each push and final current-head CI/review remains
+  coordinator-gated. No Ready transition or merge is performed by this worker.
 
 ### T36 tooling enforcement
 

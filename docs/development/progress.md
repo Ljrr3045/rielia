@@ -67,8 +67,14 @@ upload/download and retention evidence still require the Draft CI run.
 
 The prospective user rule **Permissions: Approve for me** is now recorded in
 root/model/contributor guidance with effective-session verification and no global
-setting changes. Initial Draft publication, current-head remote validate and PR URL
-will be recorded before the batch freezes. Only the coordinator may transition
+setting changes. [Draft PR #34](https://github.com/Ljrr3045/rielia/pull/34) targets
+`dev`; initial publication at `798c42453b0f7cd16762701bfa336f91aa0341a6` followed
+verification that no PR existed for the branch and immediate Draft creation after
+push. GitHub confirmed Draft and automatic validate; actual Draft is rechecked
+before this URL/evidence push. Base `465d9e4` is current and remains an ancestor.
+Final-head hosted CI, artifact upload/download/retention and review evidence are
+recorded in the PR/external delivery report after the last source commit, without
+another evidence-only source push. Only the coordinator may transition
 Ready, request Kilo or merge. No paid/native review has been requested by this worker.
 T36 remains IN PROGRESS: further lifecycle/recovery coverage, formatting/extraction,
 frontend skills and stable behavior/UI acceptance remain before T37 → T11.
