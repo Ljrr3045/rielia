@@ -1,0 +1,25 @@
+apps/web/test/unit/identity-hook.test.mjs
+  s_8691a07f071c2f::t_e34c794065b818 116-120,122
+  s_8691a07f071c2f::t_b1c1009b2a2aca 111-115
+  s_8691a07f071c2f::t_cc07182b33225e 121,123-125
+apps/web/test/unit/mutation-witness.mjs
+  s_8691a07f071c2f::t_f8c110d335a9b5 58-59
+  s_8691a07f071c2f::t_e34c794065b818 53-57,60,129
+  s_8691a07f071c2f::t_829d2a071c6796 52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b2a9acd2cecacf0bfd7b1cd396c6d53971265797",
+  "prompts": {},
+  "sessions": {
+    "s_8691a07f071c2f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b36a-06f8-7002-9555-020e3c485adb",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
