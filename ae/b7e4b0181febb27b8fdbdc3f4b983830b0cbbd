@@ -1,0 +1,27 @@
+CHANGELOG.md
+  s_1bc0747682b950::t_69c79c11a52866 24-28
+apps/api/test/unit/project-task-flows.test.mjs
+  s_1bc0747682b950::t_ad31a9d2dd75ef 486-499,541,543-553,564-570
+docs/development/progress.md
+  s_1bc0747682b950::t_b072c4c3e0e2d4 42-52
+docs/development/project-flow-extraction.md
+  s_1bc0747682b950::t_6f41109085ea14 117-135
+scripts/unit/baselines/api.json
+  s_1bc0747682b950::t_86be3a708edd35 728
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "aeb7e4b0181febb27b8fdbdc3f4b983830b0cbbd",
+  "prompts": {},
+  "sessions": {
+    "s_1bc0747682b950": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b6ad-d693-7630-97de-7f1fa205b376",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
