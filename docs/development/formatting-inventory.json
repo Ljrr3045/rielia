@@ -389,8 +389,10 @@
     ],
     "changedFiles": 50,
     "unchangedAdoptionOnly": 6,
-    "semantics": "Pinned Prettier3.9.10 only; TypeScript6.0.3 normalized AST/JSON equality, ordered132comments retained; two method-chain layouts require the verified stable second formatter pass",
-    "coverage": "Paired accepted-pipeline measurements and explicit reviewed numerical/source-manifest migration pending PR34 merge; formatting is not new behavior coverage"
+    "semantics": "Pinned Prettier 3.9.10 only; TypeScript 6.0.3 AST/scalar/literal/JSON equality; all 132 parser-token-gap comments retained; fresh author 20 semantic plus 2 inline-comment negative controls; two method chains use the verified stable second formatter pass",
+    "coverage": "Coordinator-reviewed same 269 tests and all 101 inputs in A/B/repeat; exact S/F/B counters/topology unchanged; explicit API line floor 4191->4041 physical-line exception and contracts 78/78->99/99; current API/contracts only, six other baselines preserved; source-format-adoption.md records old/new ledger and limits",
+    "measurementBase": "be777b434b249fd039da1519d0146177b8e0d1c9",
+    "measurementSourceHead": "3b9507f5f8c2a046351885f7cccae527f5a5c154"
   },
   "currentSourceAccounting": {
     "owner": "T36 mechanical formatting integration; later web and scripts/config batches",
@@ -498,5 +500,6 @@
     "changedFiles": 0,
     "adoptionOnly": 6,
     "evidence": "Existing lifecycle test/helper bytes retained; pinned Prettier3.9.10 check passes; no source edit or additional test coverage claimed"
-  }
+  },
+  "manualReviewedDocuments": ["docs/development/source-format-adoption.md"]
 }

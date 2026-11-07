@@ -47,7 +47,7 @@
       },
       "lines": {
         "covered": 0,
-        "total": 33
+        "total": 34
       },
       "statements": {
         "covered": 0,
@@ -83,7 +83,7 @@
       },
       "lines": {
         "covered": 0,
-        "total": 9
+        "total": 10
       },
       "statements": {
         "covered": 0,
@@ -100,8 +100,8 @@
         "total": 3
       },
       "lines": {
-        "covered": 38,
-        "total": 38
+        "covered": 43,
+        "total": 43
       },
       "statements": {
         "covered": 45,
@@ -173,7 +173,7 @@
       },
       "lines": {
         "covered": 0,
-        "total": 23
+        "total": 25
       },
       "statements": {
         "covered": 0,
@@ -190,8 +190,8 @@
         "total": 3
       },
       "lines": {
-        "covered": 14,
-        "total": 14
+        "covered": 17,
+        "total": 17
       },
       "statements": {
         "covered": 21,
@@ -209,7 +209,7 @@
       },
       "lines": {
         "covered": 0,
-        "total": 11
+        "total": 13
       },
       "statements": {
         "covered": 0,
@@ -226,8 +226,8 @@
         "total": 43
       },
       "lines": {
-        "covered": 72,
-        "total": 134
+        "covered": 79,
+        "total": 168
       },
       "statements": {
         "covered": 85,
@@ -245,7 +245,7 @@
       },
       "lines": {
         "covered": 0,
-        "total": 22
+        "total": 36
       },
       "statements": {
         "covered": 0,
@@ -263,7 +263,7 @@
       },
       "lines": {
         "covered": 0,
-        "total": 21
+        "total": 56
       },
       "statements": {
         "covered": 0,
@@ -280,8 +280,8 @@
         "total": 99
       },
       "lines": {
-        "covered": 136,
-        "total": 271
+        "covered": 174,
+        "total": 365
       },
       "statements": {
         "covered": 192,
@@ -299,7 +299,7 @@
       },
       "lines": {
         "covered": 0,
-        "total": 20
+        "total": 36
       },
       "statements": {
         "covered": 0,
@@ -316,8 +316,8 @@
         "total": 26
       },
       "lines": {
-        "covered": 61,
-        "total": 100
+        "covered": 78,
+        "total": 133
       },
       "statements": {
         "covered": 89,
@@ -335,7 +335,7 @@
       },
       "lines": {
         "covered": 0,
-        "total": 6
+        "total": 10
       },
       "statements": {
         "covered": 0,
@@ -352,8 +352,8 @@
         "total": 14
       },
       "lines": {
-        "covered": 31,
-        "total": 32
+        "covered": 37,
+        "total": 38
       },
       "statements": {
         "covered": 42,
@@ -370,8 +370,8 @@
         "total": 15
       },
       "lines": {
-        "covered": 50,
-        "total": 50
+        "covered": 94,
+        "total": 96
       },
       "statements": {
         "covered": 102,
@@ -389,7 +389,7 @@
       },
       "lines": {
         "covered": 0,
-        "total": 26
+        "total": 31
       },
       "statements": {
         "covered": 0,
@@ -407,7 +407,7 @@
       },
       "lines": {
         "covered": 0,
-        "total": 36
+        "total": 39
       },
       "statements": {
         "covered": 0,
@@ -425,7 +425,7 @@
       },
       "lines": {
         "covered": 0,
-        "total": 7
+        "total": 8
       },
       "statements": {
         "covered": 0,
@@ -443,7 +443,7 @@
       },
       "lines": {
         "covered": 0,
-        "total": 5
+        "total": 6
       },
       "statements": {
         "covered": 0,
@@ -461,7 +461,7 @@
       },
       "lines": {
         "covered": 0,
-        "total": 7
+        "total": 9
       },
       "statements": {
         "covered": 0,
@@ -497,7 +497,7 @@
       },
       "lines": {
         "covered": 0,
-        "total": 52
+        "total": 57
       },
       "statements": {
         "covered": 0,
@@ -515,7 +515,7 @@
       },
       "lines": {
         "covered": 0,
-        "total": 29
+        "total": 62
       },
       "statements": {
         "covered": 0,
@@ -532,8 +532,8 @@
         "total": 49
       },
       "lines": {
-        "covered": 56,
-        "total": 113
+        "covered": 74,
+        "total": 149
       },
       "statements": {
         "covered": 76,
@@ -544,7 +544,7 @@
   "floors": {
     "branches": 3819,
     "functions": 3535,
-    "lines": 4191,
+    "lines": 4041,
     "statements": 4044
   },
   "manifest": {
@@ -567,35 +567,35 @@
     },
     "inputs": {
       "apps/api/prisma.config.ts": "53cbf762a0463000e7ca81d3809d69dbae06e62bd0897a46665061ad338454ac",
-      "apps/api/src/app.module.ts": "f9087ff48d9bca9acdd3635567e05e4653a5a4daa388f69bcdc5f818b1b13b0c",
-      "apps/api/src/application.ts": "cfc25af1a39f2b18b96c0735dda827f44f269c21e8e6147603667c6bae367b45",
+      "apps/api/src/app.module.ts": "e4b7ca739c0376240d5151c31b8593f677980715abeb91a419c6f71508daaa6b",
+      "apps/api/src/application.ts": "ef6442b81a7b509ce8ec89a2c7f299ac72ac97daed4daace3b45862a88817370",
       "apps/api/src/health.controller.ts": "6f9ac5386a4460d21eec89ebd508292e2bd6f0fcaad21fb06a3a0e01319ed6c2",
-      "apps/api/src/identity/auth.ts": "6f90a1531c4a6193151040aa00c16b23846e0d4a313b060be0f253b56b27e2f4",
-      "apps/api/src/identity/config.ts": "a5b4975e901a6e53421b84f7082820c06501ef5783041488f61855e7347239dc",
-      "apps/api/src/identity/identity.controller.ts": "3bc759568b2530b24b6804f6b3fa55f70f5ecb42d337d2d97ad8234a6716bc14",
-      "apps/api/src/identity/identity.service.ts": "0c8e5422bdc2ed9347b1803b72e8a2f1101beabd913091757701a1c7a50e87d9",
-      "apps/api/src/main.ts": "8f2d08577c01ca9fe47af0568ff9afd4105764917c4e889648bf2b7bfa1a6c7f",
-      "apps/api/src/migrate.ts": "6d0b8e98740f7e6732d2c0190b35d2f265945d878540c17b2f8a6527c03c92db",
-      "apps/api/src/principals/principal-errors.ts": "5ce9ffc43ed27650d5d99117077c782648c9748a8e6a00e1bdc21c5fb11988fb",
-      "apps/api/src/principals/principal.controller.ts": "221761c6cf3154b94a6072825c90c245d1e90a7fc8ac80a2001fecf4483697b9",
-      "apps/api/src/principals/principal.service.ts": "5609739f2a16b846683f24a4b7e0403da8425443136ae9d4fbda2e39af88b6a5",
-      "apps/api/src/projects/project-task-http.ts": "39885639d6783a781d175e91386c10cb76bc4d22fd5b56b4678b5967c269749d",
-      "apps/api/src/projects/project-task.controller.ts": "d037420b4d905bb001ec8028258b6d984340c57437fb4ccf852f0678dec1aedd",
-      "apps/api/src/projects/project-task.service.ts": "fb3f5da83bbdf75ad996f5bce057b9b69b5c6468b36ba5d32918192a448176a0",
-      "apps/api/src/projects/task-collaboration.controller.ts": "4b4c1f055de0c1d8437181b9afbccf84e776150ad5b5f6f740623c9b91b00eb5",
-      "apps/api/src/projects/task-collaboration.service.ts": "b8adcb318f4476b02b7811a5239827e08aae6154345a7dc70efc691595b332cf",
-      "apps/api/src/projects/task-discovery.controller.ts": "af686e60909969b3e9f3ec08947679d685fcc4694cb86448cd563ea453823f56",
-      "apps/api/src/projects/task-discovery.service.ts": "755cdabb47f60727cbf00418141c84fb4dce04a2a07181d056d3289c23512be1",
-      "apps/api/src/projects/task-events.service.ts": "6b94aba955f1c836dbcff083384fbc7da89b7c4d81846037bda7d4d036ad5b02",
-      "apps/api/src/runtime/database.ts": "769d029564bd582047ce65d2cad599ca0f9889288ec4789df382b9350ed1a3bc",
-      "apps/api/src/runtime/diagnostic.ts": "4e7e90da524f2dfef124a89e4e86b7cfbcd3f0342cf65b4eb67b8d448895b251",
-      "apps/api/src/runtime/queue.ts": "fc2b040461d48c49dee3b92dee6f3d8ae3defd3bf2bee897765b12e3a3867fc2",
-      "apps/api/src/runtime/readiness.controller.ts": "df7af434ce212b297bc575707c78c25cb431d389ea1c389273a29d8eceaac86f",
-      "apps/api/src/runtime/runtime.service.ts": "47d0af6c297649a7e4e30a8fab15b44aa201b20fb918319684e073685516f678",
-      "apps/api/src/runtime/worker-health.ts": "2c033abefe0eb8b60c25c35e867c65d8eecf67186f082638d061148e41ba4b4b",
-      "apps/api/src/worker.ts": "683d519e3113ffb70adb92a8b8acf63b91682d29b1a148bf9b2c98ade03cac6e",
-      "apps/api/src/workspaces/workspace.controller.ts": "9309d28dcf1af99f0ef9d619fe7ce6c1d99457bedeb0a90d98a02075eda3b482",
-      "apps/api/src/workspaces/workspace.service.ts": "7cf35bcdbe8fd182e6e5f35899a656bc6369316b1ead0f773839828da76d1c56"
+      "apps/api/src/identity/auth.ts": "c566156b6ff4ea8f1061e286f7307e717e86a527589dc29194927774edfd6ce9",
+      "apps/api/src/identity/config.ts": "0830f2035f870dfca1986b82dc255874c40042d2db688e5932d39a0ce5da79b2",
+      "apps/api/src/identity/identity.controller.ts": "3257cecddf9b396d6321d7a07e2415ba47391e41009cbfd8c2589f652bbfec94",
+      "apps/api/src/identity/identity.service.ts": "930514e66f5af59d1093d88d97e5ab30acbe226e8b6cd5eececeb4326a21ca8e",
+      "apps/api/src/main.ts": "52f068a5d4657e1aee06b3626d3508402ad7f3c626d28f9d05725a1998781f35",
+      "apps/api/src/migrate.ts": "9539d656cda0784ca0cd381f99341a6c37d68d9d0dd3fba92f381c25bef7963a",
+      "apps/api/src/principals/principal-errors.ts": "605d0ea5cde062a6b865ce1e7e23bba3e9d26705afeba5d99dd66fbbcca4253f",
+      "apps/api/src/principals/principal.controller.ts": "9a16129583c07875d4b20aecf0e1e87862c29d232e0f3ac3b70be686e6d8796d",
+      "apps/api/src/principals/principal.service.ts": "1c5992e97938420aacdfa6ba6586981b345e668954b73bf7c2c1f260778c20b0",
+      "apps/api/src/projects/project-task-http.ts": "8364873105c7c9390d7ba5bc97f80bac468f618a17924f7525cf3a91a93ddb81",
+      "apps/api/src/projects/project-task.controller.ts": "66b7d6fbffe43094af10c9200cadce90b50d54141908b704bd54bf3da6f29487",
+      "apps/api/src/projects/project-task.service.ts": "69b396b0b74b9b515130a886510b723661f45ad5cb780a7bacb7b1bdc049c4f8",
+      "apps/api/src/projects/task-collaboration.controller.ts": "c045032d97a3b8649c3313c0e083697b97216b3ec22ed180c4e778da457794f7",
+      "apps/api/src/projects/task-collaboration.service.ts": "450c82b428c848b6d5b1ce5d4ac6384c39ccbca192d2bbacfab13c28ff95995a",
+      "apps/api/src/projects/task-discovery.controller.ts": "25105d0f0c93e5f85c1a7b94b299fd937fc07a25b8dfdf269fb5f1e722887d7b",
+      "apps/api/src/projects/task-discovery.service.ts": "6e039b2b880566d48af3af7ed917a2a0a5345ae3a72c9d1168e5ba184d296b3b",
+      "apps/api/src/projects/task-events.service.ts": "dce56972e773ffb4fa1e5590eb08d06a167b512c8b3815a012fe4d1fffec99fe",
+      "apps/api/src/runtime/database.ts": "9ce00d1c3ba9468746cea760295bbff3e450c1ca95f1c1814693114f12d36b8d",
+      "apps/api/src/runtime/diagnostic.ts": "d597f96627f6ba63fac36321ae2c79f9d9187256f87f19c9e694a95a2fe2da89",
+      "apps/api/src/runtime/queue.ts": "d2055ebd340e1db0b84df80825b4f142a630f4c0faead8e343ad1200a478f885",
+      "apps/api/src/runtime/readiness.controller.ts": "322771b2ed9dc922d2aa476e0c9ae7dc21661d5b6ece73814c56b097ff38cb31",
+      "apps/api/src/runtime/runtime.service.ts": "513b8cdd9a9832040e4a2eb0572026b37d7dd76101c1e6b44ea45e0a896ca7f1",
+      "apps/api/src/runtime/worker-health.ts": "b86d95cea7895a01b7e73ccc9391ee63e84b9b127a8ecddb47106b9befde8db2",
+      "apps/api/src/worker.ts": "bcae6a2f016d587b0e803a75ff7dc079b2aa50d2ed5246fa31ac9d15fb0fb2e6",
+      "apps/api/src/workspaces/workspace.controller.ts": "ca5ff5113dc068240ee8f8b3699bf44ee5e6fe98231f26b4145b94bf0fa06aa2",
+      "apps/api/src/workspaces/workspace.service.ts": "1266f52642f07d9aa3f04f2d1bb77cfd252e4930e0124154cfe73ffd30fd2361"
     },
     "pnpm": "12.15.0",
     "provider": {
@@ -630,8 +630,8 @@
       "total": 396
     },
     "lines": {
-      "covered": 459,
-      "total": 1095
+      "covered": 597,
+      "total": 1477
     },
     "statements": {
       "covered": 654,

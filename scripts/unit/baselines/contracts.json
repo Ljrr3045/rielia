@@ -10,8 +10,8 @@
         "total": 11
       },
       "lines": {
-        "covered": 11,
-        "total": 11
+        "covered": 12,
+        "total": 12
       },
       "statements": {
         "covered": 16,
@@ -28,8 +28,8 @@
         "total": 19
       },
       "lines": {
-        "covered": 24,
-        "total": 24
+        "covered": 27,
+        "total": 27
       },
       "statements": {
         "covered": 30,
@@ -46,8 +46,8 @@
         "total": 20
       },
       "lines": {
-        "covered": 28,
-        "total": 28
+        "covered": 37,
+        "total": 37
       },
       "statements": {
         "covered": 42,
@@ -64,8 +64,8 @@
         "total": 14
       },
       "lines": {
-        "covered": 15,
-        "total": 15
+        "covered": 23,
+        "total": 23
       },
       "statements": {
         "covered": 25,
@@ -98,10 +98,10 @@
       "tsconfig.base.json": "cb1df8b236cca5a668abf94b5657d200094c3b338e66bfc2ea6a19e699ad7dff"
     },
     "inputs": {
-      "packages/contracts/src/index.ts": "b0772c9d939161d9d9248955c52c4768507261ace798e9c8d10e3b328b61f6ec",
-      "packages/contracts/src/project-tasks.ts": "094107cbde42c80be2f7493e2a48114638b20baade498ff347f6e2bd4ac4c706",
-      "packages/contracts/src/task-collaboration.ts": "03ea6196c730bda4c3868e69a8aa05e04c92204f106f7cd4e6a27b70fd63d490",
-      "packages/contracts/src/task-discovery.ts": "2a0c5379cfbc2535651a9fa0482ad32ec3049ff5e0892204e1a06e52e2c41d43"
+      "packages/contracts/src/index.ts": "b178e259eedfdacb9e8c1e08406859bc94617ccffc469b9183c27b86517dcb3e",
+      "packages/contracts/src/project-tasks.ts": "7975408b8b81e188688d12d7dfc54d5fcab7ce3d7378a2c741ce3800270dd364",
+      "packages/contracts/src/task-collaboration.ts": "89a888be278672661b5a89cf617b6b0cd0b47c3eee9970373fdafa32935067f4",
+      "packages/contracts/src/task-discovery.ts": "10c0daa197091b9ba183f3d3671ad5c600b40867c2cb574dd393a11e572aa1d0"
     },
     "pnpm": "12.15.0",
     "provider": {
@@ -128,8 +128,8 @@
       "total": 64
     },
     "lines": {
-      "covered": 78,
-      "total": 78
+      "covered": 99,
+      "total": 99
     },
     "statements": {
       "covered": 113,
