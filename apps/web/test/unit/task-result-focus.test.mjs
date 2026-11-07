@@ -61,3 +61,51 @@ test(
     assert.equal(b.document.activeElement.hasAttribute('data-task-view-bar'), true);
   },
 );
+
+test(
+  'canonical moved row and page revision restore immediate focus without the 4000ms fallback',
+  { timeout: 30_000 },
+  async (t) => {
+    const b = await mountProjectInteractions(t);
+    const previousPage = b.server.taskPage.bind(b.server);
+    b.server.mutate = () => {
+      b.server.taskPage = (workspaceId, cursor) => {
+        const page = previousPage(workspaceId, cursor);
+        return {
+          ...page,
+          items: page.items.map((row) =>
+            row.id === 't1'
+              ? { ...row, status: 'todo', version: 2, orderVersion: 2 }
+              : { ...row, orderVersion: 2 },
+          ),
+          orderVersion: 2,
+          columnCounts: {
+            backlog: b.server.rows - 1,
+            todo: 1,
+            in_progress: 0,
+            done: 0,
+            canceled: 0,
+          },
+        };
+      };
+      return Response.json({ ...task(1, 'a', 'p', 2), status: 'todo', orderVersion: 2 });
+    };
+    await act(async () => {
+      b.state.result.setMoveFocusId('t1');
+      assert.equal(b.state.canonical.stageMove('t1', 'todo', null), 'ready');
+      await b.state.canonical.submit();
+    });
+    assert.equal(b.state.canonical.outcome, 'success');
+    assert.equal(b.state.canonical.tasks.orderVersion, 2);
+    assert.equal(b.state.canonical.tasks.items.find((row) => row.id === 't1').status, 'todo');
+    assert.equal(
+      b.document.activeElement,
+      b.container.querySelector('[data-task-id="t1"] [data-task-open]'),
+    );
+    assert.equal(b.state.result.moveFocusId, null);
+    assert.equal(
+      [...b.timers.values()].some((timer) => timer.delay === 4000),
+      false,
+    );
+  },
+);

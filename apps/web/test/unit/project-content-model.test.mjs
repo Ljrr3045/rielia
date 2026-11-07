@@ -22,7 +22,7 @@ test('editable task fields exclude immutable creator, provenance, version, ident
   ]);
   assert.equal(fields.description, 'Public description');
   assert.equal(fields.assigneePrincipalId, 'agent');
-  assert.equal(dto.parentTaskId, 'parent');
+  assert.equal('parentTaskId' in fields, false);
 });
 
 test('content target matching keeps workspace, project and task identities distinct', () => {

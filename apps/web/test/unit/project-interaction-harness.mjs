@@ -25,6 +25,7 @@ export async function mountProjectInteractions(
   let latest;
   function Harness() {
     const canonical = useProjectTasks();
+    const [rowEpoch, setRowEpoch] = useState(0);
     const captureRef = useRef(null);
     const projectHeadingRef = useRef(null);
     const lastCommandRef = useRef(null);
@@ -71,11 +72,22 @@ export async function mountProjectInteractions(
       overlayOpen: false,
       sidebarDrawer,
     });
-    latest = { canonical, content, navigation, result, moveNotice, lastCommandRef };
+    latest = {
+      canonical,
+      content,
+      navigation,
+      result,
+      moveNotice,
+      lastCommandRef,
+      remountTaskRows: () => setRowEpoch((epoch) => epoch + 1),
+    };
     return createElement(
       'main',
       { id: 'projects-main', tabIndex: -1 },
       createElement('h1', { ref: projectHeadingRef, tabIndex: -1 }, 'Project heading'),
+      canonical.task !== null
+        ? createElement('h2', { 'data-detail-heading': true, tabIndex: -1 }, canonical.task.title)
+        : null,
       createElement('input', { ref: captureRef, 'aria-label': 'Capture' }),
       createElement(
         'aside',
@@ -86,7 +98,7 @@ export async function mountProjectInteractions(
       ...(canonical.tasks?.items ?? []).map((task) =>
         createElement(
           'section',
-          { key: task.id },
+          { key: `${rowEpoch}:${task.id}` },
           createElement('h2', { 'data-column-heading': task.status, tabIndex: -1 }, task.status),
           createElement(
             'div',
@@ -119,6 +131,9 @@ export async function mountProjectInteractions(
       return latest;
     },
     frames,
+    remountTaskRows() {
+      latest.remountTaskRows();
+    },
     async framesUntilIdle() {
       for (let count = 0; frames.size > 0; count++) {
         if (count > 10) throw new Error('Focus frames did not converge');

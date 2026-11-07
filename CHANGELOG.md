@@ -21,6 +21,12 @@ Delivery: [PR #42](https://github.com/Ljrr3045/rielia/pull/42).
   debt](docs/development/project-interactions-extraction.md). Current-head hosted
   CI/Kilo and coordinator delivery remain required; T36/T37/T11 stay open.
 
+- Strengthen all five completed Kilo test-fidelity findings in one test-only batch,
+  including real selected-detail/fallback and immediate canonical move-focus
+  outcomes. Corrected C passes 138 web/380 total with all prior covered outcomes,
+  production source/maps/build and unrelated reports/baselines retained. The exact
+  corrected web baseline is accepted; new-head CI/Kilo remain required.
+
 ### T36 scoped project reads and cohesive commands
 
 Delivery: [PR #41](https://github.com/Ljrr3045/rielia/pull/41).

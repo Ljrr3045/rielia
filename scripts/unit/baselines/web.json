@@ -244,11 +244,11 @@
         "total": 8
       },
       "lines": {
-        "covered": 8,
+        "covered": 9,
         "total": 42
       },
       "statements": {
-        "covered": 12,
+        "covered": 13,
         "total": 46
       }
     },
@@ -668,25 +668,25 @@
     },
     "apps/web/src/app/projects/use-project-content-forms.ts": {
       "branches": {
-        "covered": 53,
+        "covered": 68,
         "total": 196
       },
       "functions": {
-        "covered": 16,
+        "covered": 18,
         "total": 41
       },
       "lines": {
-        "covered": 81,
+        "covered": 99,
         "total": 205
       },
       "statements": {
-        "covered": 86,
+        "covered": 104,
         "total": 230
       }
     },
     "apps/web/src/app/projects/use-project-interaction-effects.ts": {
       "branches": {
-        "covered": 90,
+        "covered": 92,
         "total": 140
       },
       "functions": {
@@ -694,11 +694,11 @@
         "total": 36
       },
       "lines": {
-        "covered": 109,
+        "covered": 111,
         "total": 157
       },
       "statements": {
-        "covered": 129,
+        "covered": 131,
         "total": 189
       }
     },
@@ -722,7 +722,7 @@
     },
     "apps/web/src/app/projects/use-task-result-focus.ts": {
       "branches": {
-        "covered": 11,
+        "covered": 14,
         "total": 26
       },
       "functions": {
@@ -730,11 +730,11 @@
         "total": 10
       },
       "lines": {
-        "covered": 19,
+        "covered": 23,
         "total": 34
       },
       "statements": {
-        "covered": 23,
+        "covered": 27,
         "total": 41
       }
     },
@@ -1118,10 +1118,10 @@
     }
   },
   "floors": {
-    "branches": 2864,
-    "functions": 2885,
-    "lines": 3874,
-    "statements": 3808
+    "branches": 2902,
+    "functions": 2904,
+    "lines": 3940,
+    "statements": 3866
   },
   "manifest": {
     "compiler": {
@@ -1218,14 +1218,14 @@
       "apps/web/test/unit/identity-hook.test.mjs": "c9b0ae7bd603ab0e6cb375bb65106ff466bbfa46ebafa3803fdec0db6266ff2a",
       "apps/web/test/unit/identity-view.test.mjs": "5906ae34ba9b93abc070879303bebc326bc51853c6fb31366d4a03d8417d620a",
       "apps/web/test/unit/mutation-witness.mjs": "ad5ea2e60af38550c56dab4bd4cdcf33d4a8cd74319c02a311aacaa9501fc268",
-      "apps/web/test/unit/project-content-forms.test.mjs": "d8ee7d25018a9a3e36fdce77ebdbfc6b3efab0190d6e351439f3c06ddf4925f9",
-      "apps/web/test/unit/project-content-model.test.mjs": "e85013dc5f6b1e7f89961944744a8041dc4211b13a78c76f899d5e4e44975bd7",
+      "apps/web/test/unit/project-content-forms.test.mjs": "30f550bf29f31aa82147ef53e57f2173d4381dee63dfe881429649921f2b2d81",
+      "apps/web/test/unit/project-content-model.test.mjs": "ded751e8601f571d4536bdbeeb017752d5175e1723fbf7ee5bc7547423c2bd01",
       "apps/web/test/unit/project-dom-hooks.test.mjs": "fed7602ba90530cc2463794b6cf1beabfbada2704224cb30230f508faf756ed0",
       "apps/web/test/unit/project-hook-harness.mjs": "38a71f869ecd8f77c18d682db3d544a3b4cbf1036a12093bee67d419fe2933a5",
       "apps/web/test/unit/project-hook.test.mjs": "cff85875be43335646360b36bdb5b2b9a03c0075ccf77bf72a75459302026cfc",
-      "apps/web/test/unit/project-interaction-harness.mjs": "877a09a1ecce91f9170c9201532ff2266acaee44e6e0729674a4e2f9b5311036",
-      "apps/web/test/unit/project-navigation-focus.test.mjs": "eecfd4e3e00c0ea2fdf46fd7f519313f843de020acf23070c33d82cda0ba5b6f",
-      "apps/web/test/unit/task-result-focus.test.mjs": "795b68d21145e9898357d0b886e95e08cbd3102905a663df65174931d9ecef2c",
+      "apps/web/test/unit/project-interaction-harness.mjs": "0592454f57ab40250c04bfded397620fc2856f21b11822b597281605001c1b61",
+      "apps/web/test/unit/project-navigation-focus.test.mjs": "735d3a714873f43c3df6f3515a42c7bd9f4580c193842da078cac2b96ce4192f",
+      "apps/web/test/unit/task-result-focus.test.mjs": "28c4019099eb4d5bea66b3fd430a87b027d31154a34c8af8383f9cf0766018e8",
       "apps/web/test/unit/workspace-hook.test.mjs": "d77c03576e8e3340d40a1a30f79b82cc77b1533cc751be0f9646dc7c9ca5da0b",
       "scripts/identity-client.test.mjs": "fc1230e800c33efbfbe3327c54e5a2fb996b60dc6744749e71d325e64dd9e3c7",
       "scripts/identity-logic.test.mjs": "82533a455dbb578dde8a090a9d5f5dc56c74863bd0716410236c2f1c4e2f819a",
@@ -1240,19 +1240,19 @@
   "scope": "web",
   "total": {
     "branches": {
-      "covered": 1487,
+      "covered": 1507,
       "total": 5192
     },
     "functions": {
-      "covered": 303,
+      "covered": 305,
       "total": 1050
     },
     "lines": {
-      "covered": 1469,
+      "covered": 1494,
       "total": 3791
     },
     "statements": {
-      "covered": 1625,
+      "covered": 1650,
       "total": 4267
     }
   }

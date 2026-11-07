@@ -33,6 +33,21 @@ pass after preserving/correcting finite baseline-shape/format and zero-owner
 witness diagnostics. Handoff47files/30assets/622links in72documents and whitespace pass. Hosted
 CI/native Kilo and coordinator delivery remain pending. T36.6/workspace/CSS debt and T36/T37/T11 stay open.
 
+
+PR #42 first native review found five valid test-fidelity issues; the coordinator
+returned it to Draft for one bounded correction. The actual selected-detail target,
+explicit replacement-anchor identity, honest Stay unit name, projected-parent
+absence and immediate canonical move focus now have meaningful assertions; a
+separate project-only fallback retains its legitimate coverage. One corrected C
+passes 138 web/380 total with unchanged 118 production inputs/maps/prebuild:
+L1494/3791 S1650/4267 F305/1050 B1507/5192. All 3,415 prior covered normalized
+S/F/B outcomes remain, with 47 new; 12 nonweb reports/seven other baselines stay
+exact. The coordinator accepts the exact corrected web baseline; new-head CI/Kilo remain pending. Source,
+B/browser/CSS/normal checks are reused; only affected tests/lint/C and closing
+checks pass, with failed finite-fixture/private-wrapper evidence preserved.
+All four actual corrected-C comparable/numerical gates, bounded artifacts and
+protected-baseline checks pass; no unchanged infrastructure or application replay.
+
 ## 2026-11-07 T36 scoped project reads and cohesive commands — IN PROGRESS
 
 Delivery: [PR #41](https://github.com/Ljrr3045/rielia/pull/41).

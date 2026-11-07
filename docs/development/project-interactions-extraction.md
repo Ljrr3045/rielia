@@ -51,6 +51,7 @@ failed attempts remain evidence. They do not modify application behavior.
 | A: accepted unchanged web | 114 / 356 | 51 / 107 | 1177/3779 | 1292/4255 | 230/1042 | 1300/5192 |
 | B: extraction, retained selection | 114 / 356 | 62 / 118 | 1177/3791 | 1292/4267 | 230/1050 | 1300/5192 |
 | C: same application, targeted additions | 136 / 378 | 62 / 118 | 1469/3791 | 1625/4267 | 303/1050 | 1487/5192 |
+| Corrected C: Kilo test-fidelity batch | 138 / 380 | 62 / 118 | 1494/3791 | 1650/4267 | 305/1050 | 1507/5192 |
 
 A reuses accepted PR #41 web raw/maps and corrected final reports. The original
 global capture's API suite identity predates that PR's final test-only correction;
@@ -162,3 +163,53 @@ source, test, provider or floor change. Both candidates/failure evidence remain.
 47 imported files, 30 assets and 622 local links in 72 documents; whitespace passes. Hosted final-head CI/native Kilo, coordinator
 publication and delivery acceptance remain required. Workspace extraction, CSS
 ownership debt, T36.6 and full T36/T37/T11 acceptance remain open.
+
+
+## PR #42 test-fidelity correction
+
+The completed first native Kilo round found five valid test-fidelity issues and
+reported faithful production extraction. The coordinator returned the same PR to
+Draft before this test-only batch; all production inputs, effect/JSX ownership,
+provider/configuration and original 114 web cases/helpers remain unchanged.
+
+The actual hook fixture now renders the selected task's detail heading, so resumed
+edit dismissal asserts that preferred current target. A separate no-selected-task
+project-settings draft verifies the legitimate project-heading fallback. The row
+replacement case explicitly remounts React rows and asserts the disconnected old
+opener differs from the exact current focused anchor. The workspace Stay unit is
+renamed to the retained form-state/destination-read contract it actually tests;
+real dialog mounting remains the already accepted browser schedule. The model
+case asserts parent linkage is absent from the actual projection. A new canonical
+move case supplies matching returned row/page revisions and asserts immediate
+row-link focus/reset without firing the 4000ms timer; delayed and outside-focus
+cancellation cases remain.
+
+Sixteen affected cases passed initially. The new canonical move fixture first
+failed the real page validator because its row revisions differed from the page
+revision; the finite response was corrected and only that case reran, passing.
+Five-file lint/format pass and original diagnostics are retained. One corrected
+maintained C run passes 138 web/380 total cases in 19.63 seconds: 24 frontend
+additions in total, including four navigation and four result-focus cases.
+
+All 118 application inputs, prebuilt bytes and 62 normalized source maps are
+exact to original C. Every 3,415 previously covered normalized S/F/B outcome stays
+covered; 47 additional outcomes are covered. Independent emitted-raw comparison
+retains all 3,708 covered units and adds 53, with all 62 emitted texts/maps exact.
+Twelve nonweb report files and seven
+other baselines remain byte-identical. The corrected eight-key lean production
+baseline proposal has L/S/F/B floors 39.40/38.66/29.04/29.02 percent, with only five
+affected test/helper fingerprints changed; the coordinator accepted the exact
+formatted candidate before its tracked write.
+Original A/B/C/raw/browser/CSS/normal-check evidence remains preserved. No build,
+browser, A/B, negative-control or unchanged infrastructure run repeats; only
+corrected-C comparable/numerical/artifact and affected documentation/format/
+whitespace checks are required. New-head hosted CI and completed native Kilo
+feedback remain coordinator delivery gates.
+
+Affected closing format/lint, all four production comparable/nonregression gates
+against the exact 17 corrected-C reports, bounded artifacts and protected-baseline
+checks pass. A private closing-wrapper receipt-path error occurred after passing
+format/gates; only that private path and remaining artifact closure were corrected,
+with no format/application replay. The fresh task-owned tools link is removed by
+its recorded identity; the frozen tooling host is untouched. Handoff/whitespace
+and tracked hooks govern the correction commit. Current-head CI/Kilo remain open.

@@ -34,7 +34,7 @@ for (const strict of [false, true]) {
 }
 
 test(
-  'workspace Stay hides and remounts the dialog without clearing controlled fields or reading the destination',
+  'workspace Stay retains controlled form state and suppresses destination reads',
   { timeout: 30_000 },
   async (t) => {
     const b = await mountProjectInteractions(t, { search: '?workspace=a&project=p&task=t1' });
