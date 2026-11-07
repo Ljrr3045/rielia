@@ -209,7 +209,7 @@
       },
       "lines": {
         "covered": 0,
-        "total": 97
+        "total": 98
       },
       "statements": {
         "covered": 0,
@@ -245,7 +245,7 @@
       },
       "lines": {
         "covered": 0,
-        "total": 109
+        "total": 112
       },
       "statements": {
         "covered": 0,
@@ -263,7 +263,7 @@
       },
       "lines": {
         "covered": 0,
-        "total": 876
+        "total": 913
       },
       "statements": {
         "covered": 0,
@@ -281,7 +281,7 @@
       },
       "lines": {
         "covered": 0,
-        "total": 76
+        "total": 79
       },
       "statements": {
         "covered": 0,
@@ -299,7 +299,7 @@
       },
       "lines": {
         "covered": 0,
-        "total": 94
+        "total": 96
       },
       "statements": {
         "covered": 0,
@@ -371,7 +371,7 @@
       },
       "lines": {
         "covered": 0,
-        "total": 46
+        "total": 47
       },
       "statements": {
         "covered": 0,
@@ -425,7 +425,7 @@
       },
       "lines": {
         "covered": 0,
-        "total": 109
+        "total": 112
       },
       "statements": {
         "covered": 0,
@@ -461,7 +461,7 @@
       },
       "lines": {
         "covered": 0,
-        "total": 29
+        "total": 30
       },
       "statements": {
         "covered": 0,
@@ -479,7 +479,7 @@
       },
       "lines": {
         "covered": 0,
-        "total": 27
+        "total": 28
       },
       "statements": {
         "covered": 0,
@@ -515,7 +515,7 @@
       },
       "lines": {
         "covered": 0,
-        "total": 87
+        "total": 88
       },
       "statements": {
         "covered": 0,
@@ -922,7 +922,7 @@
   "floors": {
     "branches": 2503,
     "functions": 2207,
-    "lines": 3163,
+    "lines": 3118,
     "statements": 3036
   },
   "manifest": {
@@ -953,27 +953,27 @@
       "apps/web/src/app/identity/page.tsx": "ddeef697ada83143d10b37732ee43ededdb304cba70b5e0a5bd33ffe8e3228e4",
       "apps/web/src/app/layout.tsx": "6f92142a95848adf6ac2f963163f6dcc0178d49f169ae56c2ddb5aa48359d91e",
       "apps/web/src/app/page.tsx": "240d9dad4eba7db792729ee3b882a0d0406022310aea5663c28c0939e09cd3cf",
-      "apps/web/src/app/projects/feedback.tsx": "1ca91acc8602d915bb0bf134ffbb26f92cb1dfe1de0765704ab21d7e2115dd11",
-      "apps/web/src/app/projects/page.tsx": "855fa6bf45171ec8ccdbb6a6cbda7124780ab7f708d43e1023dc18517e961713",
-      "apps/web/src/app/projects/project-access.tsx": "1abd7f63d9f3a75985e49cca4d4db92515d3f584c4c0c5409c50fdf908f5bd1b",
-      "apps/web/src/app/projects/project-forms.tsx": "163580e141ae1da4cdb208acabd8e8a0480bea9c4279cf80fca814fe9d3b688b",
-      "apps/web/src/app/projects/project-ui.tsx": "0ef5108768aa0bc86d6b23bc9021d2d3344ad12236980fecb7f073469cb3932e",
-      "apps/web/src/app/projects/projects-view.tsx": "50916e94a89055783a154d989fdf8ff37ced7fa52c0ca81b6e62788bbd6e8177",
-      "apps/web/src/app/projects/strings.ts": "fc6c539bb5fa460ffc9ffac10561cccddde54ac4ea4922d2f766d69694b2d9e9",
-      "apps/web/src/app/projects/task-board.tsx": "481e1faa80ccd6a51618f3a8297458c51a604dd7ffc52f1fa66da689ba9a196b",
-      "apps/web/src/app/projects/task-checklist.tsx": "034c182e5f44e958f3134a1ee25c3f2c4084ef47122d1e96b9125beb067c98ae",
+      "apps/web/src/app/projects/feedback.tsx": "6b7d62e9dfbe1aa1431e6f08d5f6e273a3e0f791c05746b18ff222609d72332a",
+      "apps/web/src/app/projects/page.tsx": "91a38ea3d2bda72bbdfdd0fd4dc2965764b854eb7d08c985dbf938472ae8bcea",
+      "apps/web/src/app/projects/project-access.tsx": "19615611600e046d98b47588fbbbc221be78fa792642764513727c1a87d3ed26",
+      "apps/web/src/app/projects/project-forms.tsx": "ac297402f943c00d9ffb978f4cb5279c64ca07e9a8ac657be664a20007c7d73e",
+      "apps/web/src/app/projects/project-ui.tsx": "324f891946a9a34a5bff4eb25141536975df3838796b16f22f58146c2cfff499",
+      "apps/web/src/app/projects/projects-view.tsx": "afebab7ed1580565f9857c5b52feccb1ea1245637c8dc3d05b96edb0259d1b7e",
+      "apps/web/src/app/projects/strings.ts": "529560ffa3baf12590e9510c7ccf9fcf76e086dfee503eb45d9ba46327df44b4",
+      "apps/web/src/app/projects/task-board.tsx": "86dedf82868284ebb7318542a96ad397ac5457f26c6b5b8ecb6ceb2cb91e7e4e",
+      "apps/web/src/app/projects/task-checklist.tsx": "606ac4b03be4432780c8c9d0ce9f08b143f26d15cb2d49ab6b8463c41d7cbfe9",
       "apps/web/src/app/projects/task-collaboration-shared.tsx": "70e878b0d90908a550b0de2cc9fd35e77ef2e2c84905fede5bbbf0606627822f",
-      "apps/web/src/app/projects/task-collaboration.tsx": "a40a4629daba0f7da4469709847768b3b9564e7e7fd18af93f3a775bd93f89c9",
-      "apps/web/src/app/projects/task-comments.tsx": "2c8cea6b6f01254cb4769ebf402c05fb276a35f111e32a9a2c56afddf4a7d4ec",
-      "apps/web/src/app/projects/task-description.tsx": "76f5b6ebd48c179d999e858a878fc01f7b21c7a524821176164f50048c3238d1",
-      "apps/web/src/app/projects/task-detail.tsx": "cca0b8ba1cab0e4dc94b24f81e153083689a462b1147920e1a9bd05d845a6c19",
-      "apps/web/src/app/projects/task-discovery.tsx": "cc4d93b7817fbbf301f591567633e0be8bffbf864022494b5439d969ee179bd6",
-      "apps/web/src/app/projects/task-forms.tsx": "4818fccee79383cdf702c7268c84c9b01a31732a7ef8fabab6a5a61ca39b881d",
-      "apps/web/src/app/projects/task-history.tsx": "3e13fa5ec6ecdfbf398e39f5dc252e5a85d091412658a6d2a121dc0f93c06348",
-      "apps/web/src/app/projects/task-list.tsx": "6aaefe89f2546a5b4a2e63002d82f8cb1b33e399cdfbc1a608b6c03ea32801c6",
-      "apps/web/src/app/projects/task-move.tsx": "1cec0911b058af39259b5924ab3eed5d47446c532ce557c2983e014ad0c8d90d",
-      "apps/web/src/app/projects/task-relations.tsx": "bdf95789094019f235b025747c7a8cd1e9ac51245eb477764b5010ae8ae81bb0",
-      "apps/web/src/app/projects/task-view-bar.tsx": "2b26edb87b426261d8c7951b0bd890785d6037867124e92b1afdd612b0f614e2",
+      "apps/web/src/app/projects/task-collaboration.tsx": "a2b088677db6b18ff6cad162405cdcade61f8bae3efa278e14d27c0d6326c8b3",
+      "apps/web/src/app/projects/task-comments.tsx": "1cea6f75472936259654ef5e9446ce0aaf048da4c93ad5ea45001f003d1c8ac2",
+      "apps/web/src/app/projects/task-description.tsx": "108eddc51e6e177a736cae622e4b94e83f426d621d5fd124d65c4a456331a8fb",
+      "apps/web/src/app/projects/task-detail.tsx": "b39b2a9ff8663bc7b64d8907e5f214e448182cbccc2676d9756e996607ab7d31",
+      "apps/web/src/app/projects/task-discovery.tsx": "8cd3f11a1a65c91b6cfda7a74626732da0b3e9a13ec350a5e050b8594cb032a6",
+      "apps/web/src/app/projects/task-forms.tsx": "1c920bec7a8fd5480252fe67ea0ce9ebb84ce84df9d4c4927094e3b7130cd143",
+      "apps/web/src/app/projects/task-history.tsx": "d0edfb7c3caf9fc8f9dbb6af55e97fd9330c073eaecd79f4e7942cc5f0a13af8",
+      "apps/web/src/app/projects/task-list.tsx": "cf4089fb369040673b639ba8d87352777b282b0d1c9238f0353fe8aabd0c40fc",
+      "apps/web/src/app/projects/task-move.tsx": "ba8e09c0938dcc2973dbde2cef2a07c09200ec2ce506cc7738774bb1a183a6ea",
+      "apps/web/src/app/projects/task-relations.tsx": "c6327ef1fa629ef9f8a920fa7fce8396028b06f51dbf292b512b0f4d1c8020e6",
+      "apps/web/src/app/projects/task-view-bar.tsx": "871bfcf85eee76b277898dd14826c0676dc43ea0b79b84671271926364bbd23d",
       "apps/web/src/app/workspaces/page.tsx": "5f5c19520524a2ed0eff398e8e8e5bf362c9189232a871d91afc4c9296ed2f82",
       "apps/web/src/app/workspaces/strings.ts": "2967748ed4e9c6ebb16bd1b4e10e0c5219c48502f510edc98ec73d0f6cc16904",
       "apps/web/src/app/workspaces/workspace-admin.tsx": "f57775a05750a8550948e558125902bb0cd0af8e39213405cae5ee71198778ce",
@@ -1034,7 +1034,7 @@
     },
     "lines": {
       "covered": 1177,
-      "total": 3721
+      "total": 3774
     },
     "statements": {
       "covered": 1292,

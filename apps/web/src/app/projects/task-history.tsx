@@ -4,7 +4,11 @@ import type { ActivityChange, TaskActivity } from '@rielia/contracts';
 import { FeedbackPanel } from './feedback';
 import { Badge, useLocale } from './project-ui';
 import { copy, formatDateOnly, priorityName, statusName, typeName } from './strings';
-import { formatTimestamp, provenanceLabel, type ProjectTasksHook } from './task-collaboration-shared';
+import {
+  formatTimestamp,
+  provenanceLabel,
+  type ProjectTasksHook,
+} from './task-collaboration-shared';
 import styles from './projects.module.css';
 
 function changeValue(change: ActivityChange, lang: 'es' | 'en'): string {
@@ -13,28 +17,37 @@ function changeValue(change: ActivityChange, lang: 'es' | 'en'): string {
     if (change.field === 'status') return statusName(raw)[lang];
     if (change.field === 'type') return typeName(raw)[lang];
     if (change.field === 'priority') return priorityName(raw)[lang];
-    if (change.field === 'dueDate') return formatDateOnly(raw, lang) || copy.collaboration.noValue[lang];
+    if (change.field === 'dueDate')
+      return formatDateOnly(raw, lang) || copy.collaboration.noValue[lang];
     return raw;
   };
   return `${value(change.before)} → ${value(change.after)}`;
 }
 
 function activityLine(entry: TaskActivity, lang: 'es' | 'en'): string {
-  const action = copy.collaboration.activityActions[entry.action] ?? { es: entry.action, en: entry.action };
+  const action = copy.collaboration.activityActions[entry.action] ?? {
+    es: entry.action,
+    en: entry.action,
+  };
   const fields = entry.fields
-    .map(field => copy.collaboration.activityFields[field]?.[lang] ?? field)
-    .filter(value => value.length > 0);
-  const changes = entry.changes.map(change => {
+    .map((field) => copy.collaboration.activityFields[field]?.[lang] ?? field)
+    .filter((value) => value.length > 0);
+  const changes = entry.changes.map((change) => {
     const label = copy.collaboration.activityFields[change.field]?.[lang] ?? change.field;
     return `${label}: ${changeValue(change, lang)}`;
   });
-  const details = changes.length > 0
-    ? changes.join(' · ')
-    : entry.action === 'edit-task' || entry.action === 'add-checklist-item' || entry.action === 'edit-checklist-item'
-      || entry.action === 'move-checklist-item' || entry.action === 'remove-checklist-item'
-      || entry.action === 'add-comment' || entry.action === 'edit-comment'
-      ? fields.join(', ')
-      : '';
+  const details =
+    changes.length > 0
+      ? changes.join(' · ')
+      : entry.action === 'edit-task' ||
+          entry.action === 'add-checklist-item' ||
+          entry.action === 'edit-checklist-item' ||
+          entry.action === 'move-checklist-item' ||
+          entry.action === 'remove-checklist-item' ||
+          entry.action === 'add-comment' ||
+          entry.action === 'edit-comment'
+        ? fields.join(', ')
+        : '';
   return details.length > 0 ? `${action[lang]} · ${details}` : action[lang];
 }
 
@@ -47,21 +60,31 @@ export function TaskHistory({ hook }: { hook: ProjectTasksHook }) {
   if (data === null) {
     return (
       <section aria-labelledby="collab-history-heading" className={styles.collabSection}>
-        <h3 className={styles.detailSectionTitle} id="collab-history-heading">{copy.collaboration.history[lang]}</h3>
-        {slot.status === 'error'
-          ? (
-            <FeedbackPanel
-              actions={(
-                <button className={styles.secondary} onClick={() => { void hook.loadCollaborationMore('history'); }} type="button">
-                  {copy.collaboration.sectionRetry[lang]}
-                </button>
-              )}
-              body={copy.collaboration.sectionErrorBody}
-              title={copy.collaboration.sectionErrorTitle}
-              tone="warning"
-            />
-          )
-          : <p className={styles.collabMuted} role="status">{copy.collaboration.sectionLoading[lang]}</p>}
+        <h3 className={styles.detailSectionTitle} id="collab-history-heading">
+          {copy.collaboration.history[lang]}
+        </h3>
+        {slot.status === 'error' ? (
+          <FeedbackPanel
+            actions={
+              <button
+                className={styles.secondary}
+                onClick={() => {
+                  void hook.loadCollaborationMore('history');
+                }}
+                type="button"
+              >
+                {copy.collaboration.sectionRetry[lang]}
+              </button>
+            }
+            body={copy.collaboration.sectionErrorBody}
+            title={copy.collaboration.sectionErrorTitle}
+            tone="warning"
+          />
+        ) : (
+          <p className={styles.collabMuted} role="status">
+            {copy.collaboration.sectionLoading[lang]}
+          </p>
+        )}
       </section>
     );
   }
@@ -69,18 +92,28 @@ export function TaskHistory({ hook }: { hook: ProjectTasksHook }) {
   return (
     <section aria-labelledby="collab-history-heading" className={styles.collabSection}>
       <div className={styles.collabHeader}>
-        <h3 className={styles.detailSectionTitle} id="collab-history-heading">{copy.collaboration.history[lang]}</h3>
-        <span className={styles.collabCount}>{copy.collaboration.historyCount[lang](data.total)}</span>
+        <h3 className={styles.detailSectionTitle} id="collab-history-heading">
+          {copy.collaboration.history[lang]}
+        </h3>
+        <span className={styles.collabCount}>
+          {copy.collaboration.historyCount[lang](data.total)}
+        </span>
       </div>
       <p className={styles.collabHint}>{copy.collaboration.historyHint[lang]}</p>
 
       {slot.status === 'changed' && (
         <FeedbackPanel
-          actions={(
-            <button className={styles.secondary} onClick={() => { void hook.refresh(); }} type="button">
+          actions={
+            <button
+              className={styles.secondary}
+              onClick={() => {
+                void hook.refresh();
+              }}
+              type="button"
+            >
               {copy.collaboration.sectionRefresh[lang]}
             </button>
-          )}
+          }
           body={copy.collaboration.sectionStale}
           title={copy.collaboration.sectionChangedTitle}
           tone="warning"
@@ -88,11 +121,17 @@ export function TaskHistory({ hook }: { hook: ProjectTasksHook }) {
       )}
       {slot.status === 'error' && (
         <FeedbackPanel
-          actions={(
-            <button className={styles.secondary} onClick={() => { void hook.loadCollaborationMore('history'); }} type="button">
+          actions={
+            <button
+              className={styles.secondary}
+              onClick={() => {
+                void hook.loadCollaborationMore('history');
+              }}
+              type="button"
+            >
               {copy.collaboration.sectionRetry[lang]}
             </button>
-          )}
+          }
           body={copy.collaboration.sectionErrorBody}
           title={copy.collaboration.sectionErrorTitle}
           tone="warning"
@@ -108,12 +147,16 @@ export function TaskHistory({ hook }: { hook: ProjectTasksHook }) {
 
       {data.items.length > 0 && (
         <ol className={styles.historyList} aria-label={copy.collaboration.history[lang]}>
-          {data.items.map(entry => (
+          {data.items.map((entry) => (
             <li className={styles.historyItem} key={entry.id}>
               <p className={styles.historyLine}>
                 <span className={styles.historyActor}>{entry.actor.name}</span>
-                {entry.actor.kind === 'agent' && <Badge tone="brand">{copy.task.agentBadge[lang]}</Badge>}
-                {entry.actor.kind === 'system' && <Badge tone="neutral">{copy.task.systemBadge[lang]}</Badge>}
+                {entry.actor.kind === 'agent' && (
+                  <Badge tone="brand">{copy.task.agentBadge[lang]}</Badge>
+                )}
+                {entry.actor.kind === 'system' && (
+                  <Badge tone="neutral">{copy.task.systemBadge[lang]}</Badge>
+                )}
                 <span>{activityLine(entry, lang)}</span>
               </p>
               <p className={styles.historyMeta}>
@@ -130,7 +173,9 @@ export function TaskHistory({ hook }: { hook: ProjectTasksHook }) {
         <button
           className={styles.loadMoreButton}
           disabled={pending}
-          onClick={() => { void hook.loadCollaborationMore('history'); }}
+          onClick={() => {
+            void hook.loadCollaborationMore('history');
+          }}
           type="button"
         >
           {copy.collaboration.loadOlderHistory[lang]}

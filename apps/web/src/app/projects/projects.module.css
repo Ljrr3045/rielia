@@ -32,7 +32,14 @@
   min-height: 100vh;
   background: var(--background);
   color: var(--text-primary);
-  font-family: Inter, "SF Pro Text", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family:
+    Inter,
+    'SF Pro Text',
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
   font-size: 1rem;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -221,7 +228,7 @@
 }
 
 .brandMark::before {
-  content: "";
+  content: '';
   width: 0.95rem;
   height: 0.95rem;
   border: 2px solid currentColor;
@@ -629,7 +636,7 @@
   border-radius: 0.35rem;
   background: var(--pj-surface-2);
   color: var(--text-secondary);
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
   font-size: 0.75rem;
   font-weight: 600;
   white-space: nowrap;
@@ -831,23 +838,23 @@
   background: var(--pj-status-backlog);
 }
 
-.statusValue[data-status="todo"] .statusDot {
+.statusValue[data-status='todo'] .statusDot {
   background: var(--pj-status-todo);
 }
 
-.statusValue[data-status="in_progress"] .statusDot {
+.statusValue[data-status='in_progress'] .statusDot {
   background: var(--pj-status-progress);
 }
 
-.statusValue[data-status="done"] .statusDot {
+.statusValue[data-status='done'] .statusDot {
   background: var(--pj-status-done);
 }
 
-.statusValue[data-status="canceled"] .statusDot {
+.statusValue[data-status='canceled'] .statusDot {
   background: var(--pj-status-canceled);
 }
 
-.statusValue[data-status="blocked"] .statusDot {
+.statusValue[data-status='blocked'] .statusDot {
   background: var(--pj-status-blocked);
 }
 
@@ -887,22 +894,22 @@
   height: 0.75rem;
 }
 
-.priorityValue[data-priority="low"] .priorityBars span:nth-child(-n + 1),
-.priorityValue[data-priority="medium"] .priorityBars span:nth-child(-n + 2),
-.priorityValue[data-priority="high"] .priorityBars span:nth-child(-n + 3),
-.priorityValue[data-priority="urgent"] .priorityBars span:nth-child(-n + 3) {
+.priorityValue[data-priority='low'] .priorityBars span:nth-child(-n + 1),
+.priorityValue[data-priority='medium'] .priorityBars span:nth-child(-n + 2),
+.priorityValue[data-priority='high'] .priorityBars span:nth-child(-n + 3),
+.priorityValue[data-priority='urgent'] .priorityBars span:nth-child(-n + 3) {
   background: var(--pj-priority-low);
 }
 
-.priorityValue[data-priority="medium"] .priorityBars span:nth-child(-n + 2) {
+.priorityValue[data-priority='medium'] .priorityBars span:nth-child(-n + 2) {
   background: var(--pj-priority-medium);
 }
 
-.priorityValue[data-priority="high"] .priorityBars span:nth-child(-n + 3) {
+.priorityValue[data-priority='high'] .priorityBars span:nth-child(-n + 3) {
   background: var(--pj-priority-high);
 }
 
-.priorityValue[data-priority="urgent"] .priorityBars span:nth-child(-n + 3) {
+.priorityValue[data-priority='urgent'] .priorityBars span:nth-child(-n + 3) {
   background: var(--pj-priority-urgent);
 }
 
@@ -1248,8 +1255,8 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   grid-template-areas:
-    "status status"
-    "main main";
+    'status status'
+    'main main';
   gap: 0.35rem 0.75rem;
   padding: 0.7rem 0.8rem;
   border: 1px solid var(--divider);
@@ -1268,7 +1275,7 @@
 @media (min-width: 48rem) {
   .taskRow {
     grid-template-columns: 9rem minmax(0, 1fr) auto;
-    grid-template-areas: "status main aside";
+    grid-template-areas: 'status main aside';
     align-items: center;
     padding: 0.6rem 0.85rem;
   }
@@ -1316,7 +1323,7 @@
 }
 
 .taskKey {
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
   font-size: 0.75rem;
   font-weight: 600;
   color: var(--text-secondary);
@@ -1490,7 +1497,7 @@
 
 .detailHeaderKey {
   color: var(--text-secondary);
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
   font-size: 0.75rem;
   font-weight: 600;
 }
@@ -1574,7 +1581,7 @@
   padding: 0.05rem 0.25rem;
   border-radius: 0.25rem;
   background: var(--pj-surface-2);
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
   font-size: 0.85em;
 }
 
@@ -2946,7 +2953,7 @@
   height: 2px;
   border-radius: 999px;
   background: var(--brand-action);
-  content: "";
+  content: '';
 }
 
 .boardCardTop {

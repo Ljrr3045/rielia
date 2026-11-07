@@ -53,8 +53,8 @@ function TaskRow({
         <TaskMoveControl
           canMove={canMove}
           nextNext={nextNext}
-          onMove={status => onMove(task, status)}
-          onMoveBefore={beforeTaskId => onMoveBefore(task, beforeTaskId)}
+          onMove={(status) => onMove(task, status)}
+          onMoveBefore={(beforeTaskId) => onMoveBefore(task, beforeTaskId)}
           onMoveEnd={() => onMoveEnd(task)}
           pending={movePending}
           previous={previous}
@@ -69,8 +69,15 @@ function TaskRow({
           className={styles.taskTitleButton}
           data-task-open
           href={task.url}
-          onClick={event => {
-            if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+          onClick={(event) => {
+            if (
+              event.metaKey ||
+              event.ctrlKey ||
+              event.shiftKey ||
+              event.altKey ||
+              event.button !== 0
+            )
+              return;
             event.preventDefault();
             onOpen(task.id, event.currentTarget);
           }}
@@ -109,7 +116,7 @@ function TaskRow({
           <button
             className={styles.secondary}
             disabled={pending}
-            onClick={event => onRestore(task, event.currentTarget)}
+            onClick={(event) => onRestore(task, event.currentTarget)}
             type="button"
           >
             <IconRestore size={16} />
@@ -176,7 +183,7 @@ export function TaskList({
           icon={<IconTask size={22} />}
           title={copy.taskView.noResultsTitle}
           body={copy.taskView.noResultsBody}
-          actions={(
+          actions={
             <>
               <button className={styles.secondary} onClick={onClearFilters} type="button">
                 {copy.taskView.clearFilters[lang]}
@@ -187,7 +194,7 @@ export function TaskList({
                 </button>
               )}
             </>
-          )}
+          }
         />
       );
     }
@@ -196,11 +203,13 @@ export function TaskList({
         icon={<IconTask size={22} />}
         title={archivedView ? copy.status.emptyArchivedTasksTitle : copy.status.emptyTasksTitle}
         body={archivedView ? copy.status.emptyArchivedTasksBody : copy.status.emptyTasksBody}
-        actions={!archivedView && canCreate ? (
-          <button className={styles.primary} onClick={onCreate} type="button">
-            {copy.task.captureSubmit[lang]}
-          </button>
-        ) : undefined}
+        actions={
+          !archivedView && canCreate ? (
+            <button className={styles.primary} onClick={onCreate} type="button">
+              {copy.task.captureSubmit[lang]}
+            </button>
+          ) : undefined
+        }
       />
     );
   }
@@ -212,11 +221,14 @@ export function TaskList({
     else groups.push({ status: task.status, items: [task] });
   }
 
-  const summary = total === null
-    ? changed ? copy.taskView.countChanged[lang] : copy.taskView.countPartial[lang]
-    : tasks.length < total
-      ? copy.taskView.showing[lang](tasks.length, total)
-      : copy.taskView.countTotal[lang](total);
+  const summary =
+    total === null
+      ? changed
+        ? copy.taskView.countChanged[lang]
+        : copy.taskView.countPartial[lang]
+      : tasks.length < total
+        ? copy.taskView.showing[lang](tasks.length, total)
+        : copy.taskView.countTotal[lang](total);
 
   return (
     <>
@@ -225,8 +237,12 @@ export function TaskList({
         <span>{summary}</span>
         {partial && total !== null && <span>· {copy.taskView.countPartial[lang]}</span>}
       </div>
-      {groups.map(group => (
-        <section aria-labelledby={`${listLabelId}-${group.status}`} className={styles.taskGroup} key={group.status}>
+      {groups.map((group) => (
+        <section
+          aria-labelledby={`${listLabelId}-${group.status}`}
+          className={styles.taskGroup}
+          key={group.status}
+        >
           <header className={styles.taskGroupHeader}>
             <h3
               className={styles.taskGroupTitle}
@@ -248,7 +264,7 @@ export function TaskList({
           </header>
           <ul aria-label={copy.task.listLabel[lang]} className={styles.taskList}>
             {group.items.map((task, index) => {
-              const previous = index > 0 ? group.items[index - 1] ?? null : null;
+              const previous = index > 0 ? (group.items[index - 1] ?? null) : null;
               const nextNext = group.items[index + 2] ?? null;
               return (
                 <TaskRow
@@ -274,7 +290,12 @@ export function TaskList({
       ))}
       {hasMore && !changed && (
         <div className={styles.formActions}>
-          <button className={styles.secondary} disabled={pending} onClick={onLoadMore} type="button">
+          <button
+            className={styles.secondary}
+            disabled={pending}
+            onClick={onLoadMore}
+            type="button"
+          >
             {copy.common.loadMore[lang]}
           </button>
         </div>

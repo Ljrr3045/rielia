@@ -14,6 +14,9 @@ explicit physical-line baseline migration and current enforced floors.
 The later [web transport W1 adoption](web-transport-formatting.md) records its
 separate reviewed web line migration and unchanged S/F/B gates; historical
 starting values below remain evidence of their original delivery.
+The subsequent [project-surface formatting](project-surface-formatting.md)
+records the separately reviewed 31.18% web physical-line floor, retained zero
+units and exact end-span precision exception; S/F/B gates remain unchanged.
 
 Traceability: P01–P11/P33/P38; US01–US08/US11–US12/US24–US25; T01/T04–T10/T35;
 existing UXR01–04/06 and UX01–03/05–07/09/11. No sprint/product expansion, UI

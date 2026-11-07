@@ -42,12 +42,25 @@ export function FeedbackPanel({
   }, [autoFocus, title]);
 
   return (
-    <div className={cx(styles.feedback, toneClass[tone] ?? '')} role={tone === 'danger' || tone === 'warning' ? 'alert' : 'status'}>
+    <div
+      className={cx(styles.feedback, toneClass[tone] ?? '')}
+      role={tone === 'danger' || tone === 'warning' ? 'alert' : 'status'}
+    >
       <p className={styles.feedbackTitle} ref={titleRef} tabIndex={autoFocus ? -1 : undefined}>
-        {busy ? <Spinner /> : tone === 'success' ? <IconCheck size={18} /> : <IconAlert size={18} />}
+        {busy ? (
+          <Spinner />
+        ) : tone === 'success' ? (
+          <IconCheck size={18} />
+        ) : (
+          <IconAlert size={18} />
+        )}
         <BilingualText value={title} />
       </p>
-      {body !== undefined && <p className={styles.feedbackBody}><BilingualText value={body} /></p>}
+      {body !== undefined && (
+        <p className={styles.feedbackBody}>
+          <BilingualText value={body} />
+        </p>
+      )}
       {target !== undefined && target !== null && <p className={styles.feedbackTarget}>{target}</p>}
       {actions !== undefined && <div className={styles.feedbackActions}>{actions}</div>}
     </div>
@@ -89,11 +102,15 @@ export function ConflictPanel({
         <IconAlert size={18} />
         <BilingualText value={title} />
       </p>
-      <p className={styles.feedbackBody}><BilingualText value={body} /></p>
+      <p className={styles.feedbackBody}>
+        <BilingualText value={body} />
+      </p>
       <div className={styles.conflictGrid}>
         <div className={styles.conflictColumn}>
-          <p className={styles.conflictColumnLabel}><BilingualText value={currentLabel} /></p>
-          {fields.map(field => (
+          <p className={styles.conflictColumnLabel}>
+            <BilingualText value={currentLabel} />
+          </p>
+          {fields.map((field) => (
             <div className={styles.conflictField} key={field.key}>
               <p className={styles.conflictFieldLabel}>{field.label}</p>
               <p className={styles.conflictFieldValue}>{field.current}</p>
@@ -101,12 +118,18 @@ export function ConflictPanel({
           ))}
         </div>
         <div className={styles.conflictColumn}>
-          <p className={styles.conflictColumnLabel}><BilingualText value={draftLabel} /></p>
-          {fields.map(field => (
+          <p className={styles.conflictColumnLabel}>
+            <BilingualText value={draftLabel} />
+          </p>
+          {fields.map((field) => (
             <div className={styles.conflictField} key={field.key}>
               <p className={styles.conflictFieldLabel}>
                 {field.label}
-                {field.changed && <span className={styles.changedMark}><BilingualText value={copy.feedback.conflictChanged} /></span>}
+                {field.changed && (
+                  <span className={styles.changedMark}>
+                    <BilingualText value={copy.feedback.conflictChanged} />
+                  </span>
+                )}
               </p>
               <p className={styles.conflictFieldValue}>{field.draft}</p>
             </div>
@@ -130,12 +153,6 @@ export function DraftContextNotice({
   actions: ReactNode;
 }) {
   return (
-    <FeedbackPanel
-      actions={actions}
-      body={body}
-      target={target}
-      title={title}
-      tone="warning"
-    />
+    <FeedbackPanel actions={actions} body={body} target={target} title={title} tone="warning" />
   );
 }

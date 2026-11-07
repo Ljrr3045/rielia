@@ -1,5 +1,36 @@
 # Delivery progress and decisions
 
+## 2026-11-07 T36 mechanical project-surface formatting — IN PROGRESS
+
+PR #37 is merged at `ec257ea3b2d76be0b73a0d17278be592d3a23e2c`.
+This exact 22-file project surface adds 21 mechanical changes and one unchanged
+adoption, reaching 165/208 adopted and 43 remaining. No behavior/UI, tests,
+extraction, dependencies or pipeline changes are included. The fictional
+prototype and other surfaces remain unchanged.
+
+Fresh A/B/repeat each pass 269 cases with all 101 inputs retained; A's 17 reports
+match accepted PR #37 and B/repeat match exactly. Every full S/F/B unit/hit
+remains; selected 21 project JS inputs stay unexecuted. The coordinator accepted
+only current web lines 1177/3721→1177/3774 and physical floor 31.63→31.18,
+20 fingerprints and ten zero-covered line rows. Seven other baselines and all
+S/F/B gates stay exact; existing saved B/repeat gates pass all four scopes.
+
+The [project formatting guide](project-surface-formatting.md) records 53 extra
+prior-zero physical groups, the exact 106 new unknown END fields/one recovered
+END/zero new START and resulting range-highlighting precision debt. This is no
+semantic coverage gain or general mapping waiver. Paired native/outer guards
+pass. Infrastructure20, immutable handoff/link/whitespace and one actual full
+native `pnpm check` pass (81.99 seconds), including quality24/lint/closure286,
+retained logic/HTTP, typechecks/builds, MCP17 and final smoke. Frozen121/owned25
+bindings and workspace-cache bytes remain exact; legitimate owned task updates
+are preserved. Independent review accepted `7223ce9` without an open finding;
+[Draft PR #38](https://github.com/Ljrr3045/rielia/pull/38) opened at that exact
+source head/base. Live Draft readback shows no native Kilo check/review/comment
+on inspected surfaces, without hidden billing/queue visibility. Final-head
+hosted CI/artifacts and coordinator-controlled Ready/Kilo/merge remain pending. Historical
+entries below retain their original status; T36, remaining formatting/extraction,
+T37 and T11 stay incomplete.
+
 ## 2026-11-07 T36 web transport formatting W1 — IN PROGRESS
 
 PR #36 is merged at `2340ba788be7ab4fe13c62248e3287dd579db94e`.

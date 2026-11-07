@@ -3,7 +3,14 @@
 import { useEffect, useState } from 'react';
 import type { ProjectCommand, Task } from '@rielia/contracts';
 import { FeedbackPanel } from './feedback';
-import { ConfirmBox, IconArrowDown, IconArrowUp, IconClose, IconEdit, useLocale } from './project-ui';
+import {
+  ConfirmBox,
+  IconArrowDown,
+  IconArrowUp,
+  IconClose,
+  IconEdit,
+  useLocale,
+} from './project-ui';
 import { copy } from './strings';
 import type { ProjectTasksHook } from './task-collaboration-shared';
 import styles from './projects.module.css';
@@ -30,11 +37,13 @@ export function TaskChecklist({
   const archived = projectArchived || task.archivedAt !== null;
   const stale = slot.status === 'changed';
   const retrying = hook.collaborationRetryTarget !== null;
-  const collaborationDraft = hook.collaborationDraft?.taskId === task.id ? hook.collaborationDraft : null;
+  const collaborationDraft =
+    hook.collaborationDraft?.taskId === task.id ? hook.collaborationDraft : null;
   const addDraft = collaborationDraft?.type === 'add-checklist-item' ? collaborationDraft : null;
-  const editDraft = collaborationDraft?.type === 'edit-checklist-item' && collaborationDraft.text !== undefined
-    ? collaborationDraft
-    : null;
+  const editDraft =
+    collaborationDraft?.type === 'edit-checklist-item' && collaborationDraft.text !== undefined
+      ? collaborationDraft
+      : null;
   const otherDraft = hook.draftGuard.kind !== 'none' && addDraft === null && editDraft === null;
   const anyChecklistDraft = addDraft !== null || editDraft !== null;
   const disabled = archived || pending || retrying || stale || otherDraft;
@@ -42,16 +51,16 @@ export function TaskChecklist({
   const canCreate = data?.capabilities.canCreate === true && !archived;
   const canEditPage = data?.capabilities.canEdit === true && !archived;
   const itemCount = data?.items.length ?? 0;
-  const completed = data?.items.filter(item => item.completed).length ?? 0;
+  const completed = data?.items.filter((item) => item.completed).length ?? 0;
   const total = data?.total ?? 0;
-  const removeItem = data?.items.find(item => item.id === removeId) ?? null;
+  const removeItem = data?.items.find((item) => item.id === removeId) ?? null;
 
   useEffect(() => {
     setRemoveId(null);
   }, [task.id]);
 
   function stageAdd(text: string) {
-    if (!canCreate || disabled || anyChecklistDraft && addDraft === null) return;
+    if (!canCreate || disabled || (anyChecklistDraft && addDraft === null)) return;
     if (text.trim().length === 0) {
       if (addDraft !== null) onDiscard();
       return;
@@ -68,7 +77,7 @@ export function TaskChecklist({
   }
 
   function stageEdit(itemId: string, text: string) {
-    if (!canEditPage || disabled || anyChecklistDraft && editDraft?.itemId !== itemId) return;
+    if (!canEditPage || disabled || (anyChecklistDraft && editDraft?.itemId !== itemId)) return;
     onStage({
       type: 'edit-checklist-item',
       workspaceId: task.workspaceId,
@@ -133,21 +142,31 @@ export function TaskChecklist({
   if (data === null) {
     return (
       <section aria-labelledby="collab-checklist-heading" className={styles.collabSection}>
-        <h3 className={styles.detailSectionTitle} id="collab-checklist-heading" tabIndex={-1}>{copy.collaboration.checklist[lang]}</h3>
-        {slot.status === 'error'
-          ? (
-            <FeedbackPanel
-              actions={(
-                <button className={styles.secondary} onClick={() => { void hook.loadCollaborationMore('checklist'); }} type="button">
-                  {copy.collaboration.sectionRetry[lang]}
-                </button>
-              )}
-              body={copy.collaboration.sectionErrorBody}
-              title={copy.collaboration.sectionErrorTitle}
-              tone="warning"
-            />
-          )
-          : <p className={styles.collabMuted} role="status">{copy.collaboration.sectionLoading[lang]}</p>}
+        <h3 className={styles.detailSectionTitle} id="collab-checklist-heading" tabIndex={-1}>
+          {copy.collaboration.checklist[lang]}
+        </h3>
+        {slot.status === 'error' ? (
+          <FeedbackPanel
+            actions={
+              <button
+                className={styles.secondary}
+                onClick={() => {
+                  void hook.loadCollaborationMore('checklist');
+                }}
+                type="button"
+              >
+                {copy.collaboration.sectionRetry[lang]}
+              </button>
+            }
+            body={copy.collaboration.sectionErrorBody}
+            title={copy.collaboration.sectionErrorTitle}
+            tone="warning"
+          />
+        ) : (
+          <p className={styles.collabMuted} role="status">
+            {copy.collaboration.sectionLoading[lang]}
+          </p>
+        )}
       </section>
     );
   }
@@ -155,17 +174,29 @@ export function TaskChecklist({
   return (
     <section aria-labelledby="collab-checklist-heading" className={styles.collabSection}>
       <div className={styles.collabHeader}>
-        <h3 className={styles.detailSectionTitle} id="collab-checklist-heading" tabIndex={-1}>{copy.collaboration.checklist[lang]}</h3>
-        {total > 0 && <span className={styles.collabCount}>{copy.collaboration.checklistProgress[lang](completed, total)}</span>}
+        <h3 className={styles.detailSectionTitle} id="collab-checklist-heading" tabIndex={-1}>
+          {copy.collaboration.checklist[lang]}
+        </h3>
+        {total > 0 && (
+          <span className={styles.collabCount}>
+            {copy.collaboration.checklistProgress[lang](completed, total)}
+          </span>
+        )}
       </div>
 
       {slot.status === 'changed' && (
         <FeedbackPanel
-          actions={(
-            <button className={styles.secondary} onClick={() => { void hook.refresh(); }} type="button">
+          actions={
+            <button
+              className={styles.secondary}
+              onClick={() => {
+                void hook.refresh();
+              }}
+              type="button"
+            >
               {copy.collaboration.sectionRefresh[lang]}
             </button>
-          )}
+          }
           body={copy.collaboration.sectionStale}
           title={copy.collaboration.sectionChangedTitle}
           tone="warning"
@@ -173,11 +204,17 @@ export function TaskChecklist({
       )}
       {slot.status === 'error' && (
         <FeedbackPanel
-          actions={(
-            <button className={styles.secondary} onClick={() => { void hook.loadCollaborationMore('checklist'); }} type="button">
+          actions={
+            <button
+              className={styles.secondary}
+              onClick={() => {
+                void hook.loadCollaborationMore('checklist');
+              }}
+              type="button"
+            >
               {copy.collaboration.sectionRetry[lang]}
             </button>
-          )}
+          }
           body={copy.collaboration.sectionErrorBody}
           title={copy.collaboration.sectionErrorTitle}
           tone="warning"
@@ -205,51 +242,68 @@ export function TaskChecklist({
 
       {itemCount > 0 && (
         <ul className={styles.checklistList} aria-label={copy.collaboration.checklist[lang]}>
-          {data.items.map(item => {
+          {data.items.map((item) => {
             const editing = editDraft?.itemId === item.id;
-            const itemDisabled = disabled || anyChecklistDraft && !editing;
+            const itemDisabled = disabled || (anyChecklistDraft && !editing);
             return (
               <li className={styles.checklistItem} key={item.id}>
                 <label className={styles.checkToggle}>
                   <input
                     aria-label={`${copy.collaboration.checklistItemLabel[lang]}: ${item.text}`}
                     checked={item.completed}
-                    disabled={!canEditPage || disabled || anyChecklistDraft || !item.capabilities.canEdit}
-                    onChange={event => toggleItem(item.id, event.currentTarget.checked)}
+                    disabled={
+                      !canEditPage || disabled || anyChecklistDraft || !item.capabilities.canEdit
+                    }
+                    onChange={(event) => toggleItem(item.id, event.currentTarget.checked)}
                     type="checkbox"
                   />
                   <span className={styles.srOnly}>{item.text}</span>
                 </label>
                 <div className={styles.checklistMain}>
-                  {editing
-                    ? (
-                      <form
-                        className={styles.checklistEditForm}
-                        onSubmit={event => {
-                          event.preventDefault();
-                          if ((editDraft?.text ?? '').trim().length > 0) onSubmit();
-                        }}
-                      >
-                        <label className={styles.srOnly} htmlFor={`checklist-edit-${item.id}`}>{copy.collaboration.checklistEdit[lang]}</label>
-                        <input
-                          autoFocus
-                          disabled={disabled}
-                          id={`checklist-edit-${item.id}`}
-                          maxLength={500}
-                          onChange={event => stageEdit(item.id, event.currentTarget.value)}
-                          value={editDraft?.text ?? ''}
-                        />
-                        <div className={styles.collabRowActions}>
-                          <button className={styles.secondary} disabled={pending || (editDraft?.text ?? '').trim().length === 0} type="submit">
-                            {copy.collaboration.checklistSave[lang]}
-                          </button>
-                          <button className={styles.ghostButton} disabled={pending} onClick={() => cancelEdit(item.id)} type="button">
-                            {copy.collaboration.checklistCancel[lang]}
-                          </button>
-                        </div>
-                      </form>
-                    )
-                    : <span className={item.completed ? styles.checklistTextDone : styles.checklistText}>{item.text}</span>}
+                  {editing ? (
+                    <form
+                      className={styles.checklistEditForm}
+                      onSubmit={(event) => {
+                        event.preventDefault();
+                        if ((editDraft?.text ?? '').trim().length > 0) onSubmit();
+                      }}
+                    >
+                      <label className={styles.srOnly} htmlFor={`checklist-edit-${item.id}`}>
+                        {copy.collaboration.checklistEdit[lang]}
+                      </label>
+                      <input
+                        autoFocus
+                        disabled={disabled}
+                        id={`checklist-edit-${item.id}`}
+                        maxLength={500}
+                        onChange={(event) => stageEdit(item.id, event.currentTarget.value)}
+                        value={editDraft?.text ?? ''}
+                      />
+                      <div className={styles.collabRowActions}>
+                        <button
+                          className={styles.secondary}
+                          disabled={pending || (editDraft?.text ?? '').trim().length === 0}
+                          type="submit"
+                        >
+                          {copy.collaboration.checklistSave[lang]}
+                        </button>
+                        <button
+                          className={styles.ghostButton}
+                          disabled={pending}
+                          onClick={() => cancelEdit(item.id)}
+                          type="button"
+                        >
+                          {copy.collaboration.checklistCancel[lang]}
+                        </button>
+                      </div>
+                    </form>
+                  ) : (
+                    <span
+                      className={item.completed ? styles.checklistTextDone : styles.checklistText}
+                    >
+                      {item.text}
+                    </span>
+                  )}
                 </div>
                 {!archived && !editing && (
                   <div className={styles.checklistActions}>
@@ -309,23 +363,31 @@ export function TaskChecklist({
       {canCreate && (
         <form
           className={styles.collabInlineForm}
-          onSubmit={event => {
+          onSubmit={(event) => {
             event.preventDefault();
             if (addDraft !== null && addDraft.text.trim().length > 0) onSubmit();
           }}
         >
-          <label className={styles.srOnly} htmlFor="collab-checklist-add">{copy.collaboration.checklistPlaceholder[lang]}</label>
+          <label className={styles.srOnly} htmlFor="collab-checklist-add">
+            {copy.collaboration.checklistPlaceholder[lang]}
+          </label>
           <input
-            disabled={disabled || anyChecklistDraft && addDraft === null}
+            disabled={disabled || (anyChecklistDraft && addDraft === null)}
             id="collab-checklist-add"
             maxLength={500}
-            onChange={event => stageAdd(event.currentTarget.value)}
+            onChange={(event) => stageAdd(event.currentTarget.value)}
             placeholder={copy.collaboration.checklistPlaceholder[lang]}
             type="text"
             value={addDraft?.text ?? ''}
           />
-          <button className={styles.secondary} disabled={disabled || addDraft === null || addDraft.text.trim().length === 0} type="submit">
-            {pending && addDraft !== null ? copy.collaboration.checklistAdding[lang] : copy.collaboration.checklistAdd[lang]}
+          <button
+            className={styles.secondary}
+            disabled={disabled || addDraft === null || addDraft.text.trim().length === 0}
+            type="submit"
+          >
+            {pending && addDraft !== null
+              ? copy.collaboration.checklistAdding[lang]
+              : copy.collaboration.checklistAdd[lang]}
           </button>
           <p className={styles.collabHint}>{copy.collaboration.checklistHint[lang]}</p>
         </form>
