@@ -6,6 +6,8 @@ This records repository changes. No application version has been released.
 
 ### T36 workspace feature-administration extraction
 
+Delivery: [PR #43](https://github.com/Ljrr3045/rielia/pull/43).
+
 - Separate existing screen actions/display, feedback, workspace entry, invitations,
   members and Agent administration. Preserve controller/key/token authority,
   one locale/hook lifetime, JSX/keys/effects, current version/cache behavior and CSS.

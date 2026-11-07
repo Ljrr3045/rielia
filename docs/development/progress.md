@@ -2,6 +2,8 @@
 
 ## 2026-11-07 T36 workspace feature-administration extraction — IN PROGRESS
 
+Delivery: [PR #43](https://github.com/Ljrr3045/rielia/pull/43).
+
 Merged PR #42 at `3fb40583dc0a212faf7d38e02348565df729bf78` is the actual base.
 The [bounded workspace extraction](workspace-interactions-extraction.md) separates
 screen action/display binding, feedback, entry, invitations, members and Agent
