@@ -1,0 +1,35 @@
+docs/development/progress.md
+  s_cd38fe5b1413ea::t_fe4c990847f706 67-75
+CHANGELOG.md
+  s_cd38fe5b1413ea::t_fe4c990847f706 24-26
+format-adoption.json
+  s_cd38fe5b1413ea::t_d34d394e71a5a1 50
+docs/development/unit-coverage.md
+  s_cd38fe5b1413ea::t_fe4c990847f706 41-48
+scripts/task-events-proxy.integration.test.mjs
+  s_cd38fe5b1413ea::t_84c508527571dc 26-28
+  s_cd38fe5b1413ea::t_ab4cad722fdbd6 7-11,13-24,29-31,36,38-60,62-67,69-70,72-76,79-108
+  s_cd38fe5b1413ea::t_58cfb81ec363e1 12,25,71
+  s_cd38fe5b1413ea::t_6e82bf0bb689e6 32-35,37,68,77-78
+docs/development/formatting-inventory.json
+  s_cd38fe5b1413ea::t_d34d394e71a5a1 264
+scripts/unit/http-deadline-witness.mjs
+  s_cd38fe5b1413ea::t_fe4c990847f706 1-14,19-22,37-47,50-54,58-60
+  s_cd38fe5b1413ea::t_3c102710b862a7 15-18,23-36,48-49,55-57
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "cf1e7b666623ca3dbebee05e33a2877d110d04a9",
+  "prompts": {},
+  "sessions": {
+    "s_cd38fe5b1413ea": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b369-4dc0-7a52-ae15-1cd16031eb12",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
