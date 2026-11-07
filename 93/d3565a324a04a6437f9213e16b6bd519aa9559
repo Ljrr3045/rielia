@@ -1,0 +1,23 @@
+CHANGELOG.md
+  s_8691a07f071c2f::t_6a10999fcc08ca 18-20
+docs/development/progress.md
+  s_8691a07f071c2f::t_6a10999fcc08ca 26-31
+docs/development/web-transport-formatting.md
+  s_8691a07f071c2f::t_6a10999fcc08ca 15-21,140-142
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "93d3565a324a04a6437f9213e16b6bd519aa9559",
+  "prompts": {},
+  "sessions": {
+    "s_8691a07f071c2f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b36a-06f8-7002-9555-020e3c485adb",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
