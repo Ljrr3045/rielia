@@ -1,8 +1,10 @@
 # T36 formatting and commit tooling
 
 This first T36.2/T36.3 slice adds developer enforcement while preserving app
-behavior. T36 remains **IN PROGRESS**: the later unit slice supplies application coverage
-gates; structural extraction and the stable T37 UI contract remain follow-up work.
+behavior. Later units/gates, formatting and scoped backend/frontend extractions
+are delivered. The [stable contract](t36-stable-ui-contract.md) proposes T36.6
+acceptance with explicit debt; this head's CI/native review, merge and coordinator
+decision remain pending before T37.
 The [roadmap](development-quality-roadmap.md) retains T36 → T37 → T11 ordering.
 The later [web transport W1 adoption](web-transport-formatting.md) adds 20
 maintained logic inputs to formatting enforcement, with a separately reviewed
@@ -33,7 +35,7 @@ packages' source-maintenance prepare scripts do not justify enabling builds.
 The scratch tool graph's advisory query found no vulnerabilities; repository
 validation is recorded below. These licenses do not select Rielia's license.
 
-The repository high/critical audit passes with **one existing moderate**:
+At this slice’s audit, the repository high/critical threshold passed with **one moderate**:
 [minimatch globparts amplification](https://github.com/advisories/GHSA-g3hv-75wg-m249),
 version 10.2.6 through the ESLint/typescript-eslint/Next lint development graph.
 Its base/current lock blocks and integrity are identical; no advisory path uses
@@ -94,6 +96,10 @@ executables avoid the path; per-command `PNPM_CONFIG_VERIFY_DEPS_BEFORE_RUN=erro
 fails closed for manual pnpm commands without changing repository/global settings.
 Real hook success/failure, missing/wrong-runtime and safe poison-command controls
 now assert that borrowed dependency metadata stays unchanged.
+
+The [final official metadata recheck and separate CI audit counts](unit-coverage.md#final-t36-advisory-recheck-and-conditions)
+record the later unchanged graph and retained conditions. Historical attribution
+is not a complete mapping of the latest count-only CI output.
 
 ## Staged content and formatting adoption
 

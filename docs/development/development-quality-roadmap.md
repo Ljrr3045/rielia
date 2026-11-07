@@ -16,15 +16,16 @@ T01–T35 acceptance, authorize later capabilities, or reorder the remaining
 dependency graph numerically. Required regression fixes within these tickets
 remain part of their bounded batches.
 
-PR #32 prepared T36's developer guidance, recorded both large tickets and updated
-future worker/landing direction. The first [tooling slice](quality-tooling.md)
-now implements formatting/hooks/prospective commit enforcement with focused
-regressions. The first [unit/coverage delivery](unit-coverage.md) adds isolated
-behavior units and measured separate all-source CI gates; expanded lifecycle
-coverage, extraction and frontend skills remain follow-up work. No screen is
-redesigned or Astro app scaffolded.
-T36 is IN PROGRESS and T37 remains open. Finishing documentation or reducing file sizes
-cannot establish universal completeness, production readiness or UI quality.
+PR #32 prepared guidance. Later [tooling](quality-tooling.md),
+[all-source unit gates](unit-coverage.md), maintained formatting at 242/242,
+[backend owners](project-flow-extraction.md), [project owners](project-interactions-extraction.md)
+and [workspace owners](workspace-interactions-extraction.md) deliver the agreed
+T36.1–T36.5 implementation through merged PR #43. The [stable contract and debt](t36-stable-ui-contract.md)
+now propose T36.6 closure. T36 remains IN PROGRESS pending this batch's current-head
+CI/native review, merge and explicit coordinator acceptance; T37/T11 have not started.
+No screen is redesigned, frontend skill installed or Astro app scaffolded here.
+Prose or smaller files do not establish universal conformity, production readiness
+or full T01–T35 acceptance.
 
 Traceability: architecture §§1.4–1.5, 2–4 and 8.2/8.6; T01/T04–T10/T35; product
 P01–P11/P33/P38, US01–US08/US11–US12/US24–US25; UXR01–UXR04/UXR06 and
@@ -74,12 +75,26 @@ accepts each batch and alone controls review transitions/merge.
 
 | Order | Bounded subdelivery | Acceptance and evidence |
 | --- | --- | --- |
-| T36.1 | Document actual developer architecture, patterns and standards first | Root guidance links concise [web rules](../../apps/web/AGENTS.md) and [API rules](../../apps/api/AGENTS.md). Rules distinguish present structure from target, ownership/dependency direction, DTO/error/state conventions and applicable checks. This PR supplies preparatory documentation only; it does not complete T36 |
+| T36.1 | Document actual developer architecture, patterns and standards first | Root guidance links concise [web rules](../../apps/web/AGENTS.md) and [API rules](../../apps/api/AGENTS.md). Rules distinguish present structure from target, ownership/dependency direction, DTO/error/state conventions and applicable checks. Originally supplied by PR #32; current guidance records delivered boundaries and pending final acceptance |
 | T36.2 | Audit lint/test/build scope and measure frontend/backend unit-coverage baselines | Inventory existing suites, maintained source and unexecuted files, gaps/exclusions and CI. Select compatible runner/coverage providers without assuming a migration; measure separate app baselines and document numerical thresholds/nonregression policy with evidence before enforcement. Reuse ESLint and record exact tool/peer/runtime/license/advisory compatibility |
 | T36.3 | Implement unit/coverage gates alongside compatible formatting and commit/staged enforcement | Establish deterministic frontend/backend unit suites, separate reports and numerical CI gates under the acceptance below. Pin selected test/coverage tools and Prettier/Husky/commitlint/staged tooling. Prove test/threshold failures block CI, publish bounded reports, preserve existing checks, and retain fast staged checks with immutable/generated exclusions. Keep formatting batches separate from structural changes |
 | T36.4 | Extract frontend responsibilities in small behavior-preserving batches | SOL separates navigation/form/command/lifecycle concerns from presentation contracts, and separates cohesive CSS/components where justified. Preserve URLs, focus/draft return, pending/unknown outcomes, exact-key retries, sessions, SSE and authorization projections. Add/update meaningful logic/controller/hook and appropriate component-interaction unit tests; record comparable coverage, affected regression results and remaining debt |
 | T36.5 | Extract backend responsibilities in small behavior-preserving batches | SOL separates validation/DTO mapping, application orchestration, policy and focused persistence boundaries where useful. Add/update domain/use-case unit tests with isolated boundary doubles and comparable coverage. Preserve transactions, locks, tenant filters, version/idempotency/current-authority replay, activity/outbox, SSE commit order and NodeAdapter closure; retain real PostgreSQL/security/race/recovery checks |
 | T36.6 | Consolidate evidence and freeze the UI contract for T37 | Tooling, deterministic unit suites and separate frontend/backend numerical coverage gates are actually enforced locally/in CI; agreed extraction scope is implemented and reviewed. Publish reports, thresholds/exclusions/nonregression evidence, stable UI contracts, surface inventory and remaining owned debt. Coordinator accepts T36 before T37 begins |
+
+### Delivered scope and proposed final closure
+
+| Subdelivery | Current bounded state and evidence |
+| --- | --- |
+| T36.1 | Scoped standards are implemented; this closure updates factual guidance while preserving authority and ongoing rules |
+| T36.2–T36.3 | Pinned behavior-unit providers, all-source/per-file/nonregression gates, bounded artifacts and formatting/commit enforcement are delivered; [unit guide](unit-coverage.md) and [242/242 inventory](formatting-inventory.json) preserve historical baselines/failure proofs |
+| T36.4 | Delivered [PR42 project](project-interactions-extraction.md) and [PR43 workspace](workspace-interactions-extraction.md) owners retain behavior with finite covered/zero/maps and native/CSS evidence; CSS families and unexecuted variants remain owned debt |
+| T36.5 | Delivered [values/policy/DTO](project-values-policy-extraction.md) and [reads/commands](project-flow-extraction.md) preserve facade, transaction and query/lock/await order; other coupling remains explicit |
+| T36.6 | [Stable contract](t36-stable-ui-contract.md), current evidence/advisory conditions and debt ownership are proposed here; final current-head CI/native review, merge and coordinator acceptance remain pending |
+
+T37.1 frontend-local skills/research and Astra presentation require separate scope
+after accepted T36. SOL retains all logic/tests and verified Approve for me rules.
+T11 still follows accepted T37.
 
 ### Architecture and standards to apply
 
@@ -166,8 +181,11 @@ independently verify selected published artifacts during T36.3.
 ### Unit tests, coverage and CI enforcement
 
 The user's explicit follow-up makes **frontend and backend unit tests, separate
-coverage and CI enforcement mandatory T36 work**. This docs PR implements none
-of that infrastructure and measures no current coverage percentage. Reuse useful
+coverage and CI enforcement mandatory T36 work**. The original documentation PR
+implemented no infrastructure; the later [unit/coverage delivery](unit-coverage.md)
+now supplies maintained commands/providers, all-source reports and numerical gates.
+The requirements below continue to govern new behavior and provider migrations.
+Reuse useful
 existing `node:test` suites; select/pin any additional runner, DOM/hook test support
 and coverage provider only after proving compatibility with current Node/pnpm,
 TypeScript/ESM, React/Next and Nest pins. Do not mandate an unsupported runner
@@ -217,8 +235,10 @@ available on failures without turning a failed test/gate green. Prove passing an
 failing test/threshold cases, including maintained unexecuted files and skipped
 local hooks. Preserve existing `validate` checks, integration/runtime/audit stages,
 pins, read-only permissions, protected content and review/security requirements.
-The first tooling slice adds quality-tooling regressions and formatting/commit CI;
-application unit commands, coverage artifacts and numerical gates remain follow-up work.
+The tooling and unit slices now enforce formatting/commit CI, deterministic
+application-unit commands, bounded artifacts and numerical gates. Their delivered
+failure proofs remain evidence; future changes preserve these requirements rather
+than reselecting tools or representing inherited coverage gaps as complete.
 
 ### T36 completion, tests and exclusions
 
@@ -389,5 +409,7 @@ from CONTRIBUTING and retain exact evidence; inspect all changes and update
 [progress](progress.md) and [changelog](../../CHANGELOG.md), and open one Draft PR
 to `dev`. Full remote CI remains obligatory. Only the coordinator transitions Ready,
 requests paid review, accepts the batch and merges; current-head Kilo remains a
-closed merge gate while Draft. T36 tooling delivery is bounded; application unit
-gates/extraction and T37 implementation remain open.
+closed merge gate while Draft. Agreed tooling/units/formatting and scoped
+frontend/backend implementation are delivered; T36.6 consolidation proposes final
+acceptance with owned debt. This head's CI/native review, merge and the recorded
+coordinator decision remain required before T37; T11 follows accepted T37.

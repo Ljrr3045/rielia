@@ -33,14 +33,20 @@ or an Orca installation.
 - The user's 2026-11-05 reprioritization adds exactly two tickets: **T36 engineering
   quality/tooling/structure → T37 UI quality redesign → T11 → remaining work under
   existing dependencies**. [The roadmap](docs/development/development-quality-roadmap.md)
-  defines ordered subdeliveries and evidence. T36 is IN PROGRESS: the first
-  [tooling slice](docs/development/quality-tooling.md) adds scoped formatting,
-  hooks and prospective commit checks. The first [unit/coverage slice](docs/development/unit-coverage.md)
-  adds behavior-focused frontend/backend units, separate all-source reports and
-  measured numerical/nonregression CI gates while retaining real integration/security/runtime
-  checks. Expanded lifecycle coverage, restructuring, frontend skills and redesign
-  remain follow-up implementation; this does not complete T36.
-  Neither ticket is complete. Original
+  defines ordered subdeliveries and evidence. The agreed tooling/formatting,
+  deterministic frontend/backend units, all-source numerical CI gates and bounded
+  frontend/backend extractions are delivered across the T36 PR series through
+  PR #43; see the
+  [unit guide](docs/development/unit-coverage.md),
+  [project owners](docs/development/project-interactions-extraction.md),
+  [workspace owners](docs/development/workspace-interactions-extraction.md) and
+  [backend owners](docs/development/project-flow-extraction.md).
+  The [T36.6 stable contract](docs/development/t36-stable-ui-contract.md) proposes
+  final consolidation with explicit owned debt. T36 remains IN PROGRESS pending
+  this closure batch's current-head CI/native review, merge and coordinator
+  acceptance; the delivery PR records that decision. T37 remains open. Frontend-
+  local skills/redesign belong to T37 after acceptance; T11 follows accepted T37.
+  No universal source conformity or full acceptance is implied. Original
   T01–T35 numbering/acceptance and immutable handoff remain unchanged. Future
   T30–T34 landing work uses the [later Astro/narrative direction](docs/development/landing-direction.md);
   no landing app exists or is scaffolded here.
@@ -90,8 +96,12 @@ or an Orca installation.
   the current Kilo review policy governs all new changes. This supersedes review
   governance only, preserving historical evidence and runtime guidance. Do not
   modify secrets or substitute personal tokens.
-- License selection, final brand and private-project admin visibility remain
-  undecided. Real OAuth/staging and real-project/user acceptance stay OPEN/DEFERRED
+- License selection and final brand remain undecided. Private-project content
+  access follows the [ratified 2026-10-29 policy](docs/development/project-access.md):
+  active human workspace owners/admins have automatic private-content access,
+  with current grant ceilings/current authority and human-web-only privacy/access
+  administration intact. Agents/delegated execution gain no human administration.
+  Real OAuth/staging and real-project/user acceptance stay OPEN/DEFERRED
   until an advanced end-to-end product slice and user scheduling; do not request
   credentials or staging now. These deferred checks do not immediately block
   authorized local implementation; applicable automated unit/integration/security/

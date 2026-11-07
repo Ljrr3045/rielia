@@ -542,7 +542,8 @@
     "docs/development/project-values-policy-extraction.md",
     "docs/development/project-flow-extraction.md",
     "docs/development/project-interactions-extraction.md",
-    "docs/development/workspace-interactions-extraction.md"
+    "docs/development/workspace-interactions-extraction.md",
+    "docs/development/t36-stable-ui-contract.md"
   ],
   "webTransportFormattingAdoption": {
     "owner": "T36.3 web transport/controller/hook mechanical formatting",
@@ -1251,5 +1252,15 @@
     "measurement": "Accepted corrected PR42 A138web/380total; one B retains380 cases and all covered counts; one C145web/387total at68web/124totalinputs. Independent1192oldrawzero retention, explicit1F/2S wrappers, normalized3462retained+183new and raw3761retained+194new;47implicit arms/rawunknown162->163->163/797normalizednulls explicit. Coordinator accepts only exact formatted15fd current-web baseline L1567/3793 S1734/4269 F323/1051 B1588/5192, floors4131/4061/3073/3058; seven other baselines and12other reports exact.",
     "guide": "docs/development/workspace-interactions-extraction.md",
     "validation": "Focused source formatting/lint/types, seven actual-hook cases and one web build pass. All normal-check constituents pass reusing that web build/typecheck; infrastructure20, actual17saved-C comparable/numerical gates and4complete bounded artifacts pass. Six paired browser schedules and4emittedCSSassets/order are exact;24additional responsive observations pass. Final portable-link/whitespace/clean-commit receipts are in external delivery evidence; hosted current-head CI/nativeKilo remain required."
+  },
+  "finalT36ClosureDocumentation": {
+    "owner": "SOL documentation/tooling integration; coordinator final acceptance",
+    "base": "05e9defe645ed9c238f61c5be00ed9c67f50f56d",
+    "scope": "Current guidance, stable source/UI/CSS contract, delivered evidence, explicit debt and advisory conditions; manual Markdown review",
+    "guide": "docs/development/t36-stable-ui-contract.md",
+    "maintainedEligibleUnchanged": 242,
+    "adoptedUnchanged": 242,
+    "applicationProviderBaselineChange": false,
+    "acceptance": "Proposed; current-head CI/native review, merge and coordinator decision required before T37"
   }
 }

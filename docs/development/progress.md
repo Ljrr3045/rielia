@@ -1,8 +1,46 @@
 # Delivery progress and decisions
 
-## 2026-11-07 T36 workspace feature-administration extraction — IN PROGRESS
+## 2026-11-07 T36.6 stable-contract closure — PROPOSED
+
+Delivery and authoritative final decision: [PR #44](https://github.com/Ljrr3045/rielia/pull/44).
+The proposal/pending statements below describe this batch before review. After
+successful current-head gates, the coordinator records the reviewed head, checks,
+merge and explicit T36 acceptance decision in that PR; its final record governs
+closure without rewriting this historical snapshot.
+
+Agreed T36.1–T36.5 implementation is delivered through PR43, merged at
+`05e9defe645ed9c238f61c5be00ed9c67f50f56d`. This docs-only batch updates current
+guidance and proposes the [stable UI contract](t36-stable-ui-contract.md), owners
+and bounded debt. This head's CI/native review, merge and explicit coordinator
+acceptance remain pending. T37/T11 have not started; no app execution, audit,
+metadata sweep, install, provider replay or source/test/baseline change runs here.
+
+Current implementation is 145 web/216 API/7 contracts/19 prototype cases, 387 total
+over 124 inputs (68 web), adoption 242/242 and accepted web `15fd5321…b36fc35` /
+API `6c2e0399…bfca59` baselines. PR43 validate 128522082738/run 42412029803 passed
+at 20:46:14 UTC with full PG/security/runtime/Docker and 17 byte-exact C reports.
+Native 128524600753/App 2193792 completed at 20:52:36 UTC, NoIssuesFound/Merge,
+19 files/zero threads; merge was 20:54:55 UTC. These implementation facts do not
+accept this later docs head; source-map/type-only/zero and CSS/native limits remain.
+
+Official targeted metadata at 18:54:36–18:55:26 UTC found no observed compatible
+parent fix on the unchanged graph. Full CI at 20:46:09/10 separately reports root
+1 moderate/tools 2 moderate, zero high/critical, without advisory IDs/paths.
+The [unit guide](unit-coverage.md#final-t36-advisory-recheck-and-conditions) separates
+these evidence channels and conditions; no complete mapping or audit-clean claim.
+
+The coordinator resolved stale root wording against the user's ratified
+2026-10-29 [private-project policy](project-access.md): active human owner/admin
+private-content access, current grant ceilings/current authority and human-web-
+only administration remain intact. No Agent/delegated expansion or code/policy
+change is introduced; historical proposals are preserved.
+
+## 2026-11-07 T36 workspace feature-administration extraction — DELIVERED BOUNDED BATCH
 
 Delivery: [PR #43](https://github.com/Ljrr3045/rielia/pull/43).
+
+Final delivered merge `05e9defe645ed9c238f61c5be00ed9c67f50f56d`, reviewed head `7404d4175d990223298e0da2a1c1f99ffee6bc7f`;
+387 cases/124 inputs; full current-head CI/native review complete. Earlier pending local notes below remain historical checkpoints.
 
 Merged PR #42 at `3fb40583dc0a212faf7d38e02348565df729bf78` is the actual base.
 The [bounded workspace extraction](workspace-interactions-extraction.md) separates
@@ -33,9 +71,13 @@ Final formatting/link/handoff/whitespace and commit-hook evidence are retained
 in the external delivery report. Current-head hosted CI/Kilo and Draft/Ready/merge
 remain coordinator-owned; real persisted/security/runtime checks remain required.
 
-## 2026-11-07 T36 project interaction/render ownership — IN PROGRESS
+## 2026-11-07 T36 project interaction/render ownership — DELIVERED BOUNDED BATCH
 
 Delivery: [PR #42](https://github.com/Ljrr3045/rielia/pull/42).
+
+Final delivered merge `3fb40583dc0a212faf7d38e02348565df729bf78`, reviewed head `3b3c18cdd5020960b9024883aa6d62fca27de894`;
+corrected C: 138 web / 380 total over 118 inputs. Historical 136 web / 378 total
+counts below are superseded; earlier pending local notes remain historical checkpoints.
 
 Merged PR #41 at `26f6c57d46b280ecb196d0920f73ed2312e88002` is the base.
 The [bounded T36.4 frontend batch](project-interactions-extraction.md) separates
@@ -81,9 +123,12 @@ checks pass, with failed finite-fixture/private-wrapper evidence preserved.
 All four actual corrected-C comparable/numerical gates, bounded artifacts and
 protected-baseline checks pass; no unchanged infrastructure or application replay.
 
-## 2026-11-07 T36 scoped project reads and cohesive commands — IN PROGRESS
+## 2026-11-07 T36 scoped project reads and cohesive commands — DELIVERED BOUNDED BATCH
 
 Delivery: [PR #41](https://github.com/Ljrr3045/rielia/pull/41).
+
+Final delivered merge `26f6c57d46b280ecb196d0920f73ed2312e88002`;
+216 API cases; final current-head CI/native review complete. Earlier pending local notes below remain historical checkpoints.
 
 Merged PR #40 at `3d2354575399dd81d366736ee6630424c750c7e0` is the base.
 The [bounded T36.5 continuation](project-flow-extraction.md) extracts feature-local
@@ -1665,7 +1710,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T33 | Marketing (future) | Metadata, localized SEO, minimal measurement | T31; T32 if capture active | Not started |
 | T34 | Marketing launch gate | Verify/enable public marketing launch | T31, T33; T32 if capture active | Not started |
 | T35 | B1 foundations | Principal model, immutable authorship, autonomous memberships | T04; precedes T05/T06/T12 | T35.0 bounded storage/policy/context implemented; full authorship/domain/export/credential integration incomplete |
-| T36 | Quality prerequisite 1 | Engineering standards, compatible tool enforcement and behavior-preserving frontend/backend structure | Existing bounded foundations/contracts; approved NodeAdapter | IN PROGRESS: scoped guidance/tooling merged; first unit/coverage slice adds measured gates and behavior units pending Draft/current-head acceptance; expanded coverage/structure/skills remain; [ordered acceptance](development-quality-roadmap.md#t36--engineering-quality-tooling-and-structure) |
+| T36 | Quality prerequisite 1 | Engineering standards, compatible tool enforcement and behavior-preserving frontend/backend structure | Existing bounded foundations/contracts; approved NodeAdapter | IN PROGRESS: agreed tooling/units/gates/formatting and scoped extractions delivered through PR43; final T36.6 proposal pending current-head CI/native/merge/coordinator decision; T37 skills deferred; [ordered acceptance](development-quality-roadmap.md#t36--engineering-quality-tooling-and-structure) |
 | T37 | Quality prerequisite 2 | Coherent redesign of existing UI using stable contracts, brand/UX and reviewed frontend-local skills | Coordinator acceptance of T36 | Planned only; Astra research is not redesign delivery; [ordered acceptance](development-quality-roadmap.md#t37--ui-quality-redesign); precedes T11 |
 
 Public release is one launch followed by continuous updates. Internal B1 readiness,

@@ -3,8 +3,10 @@
 This bounded T36.2/T36.3 slice retains `node:test`, adds behavior units and enforces
 separate API, web, shared-contract and fictional-prototype coverage. It builds on
 PR #33 (`465d9e4`), without production source, policy, schema or appearance changes.
-T36 remains **IN PROGRESS**: later lifecycle/recovery coverage, formatting adoption,
-structural extraction and acceptance precede T37, then T11.
+This page preserves the first delivery's evidence. Later lifecycle, formatting
+and scoped structural batches are delivered; [T36.6 consolidation](t36-stable-ui-contract.md)
+is proposed, with this head's CI/native review, merge and coordinator acceptance
+still pending before T37, then T11.
 
 This page records the first delivery and its historical starting floors. The
 [lifecycle follow-up](project-refresh-lifecycle.md) records the later measured
@@ -34,6 +36,15 @@ retains those 148 API cases through a separately reconciled split and adds 68
 focused cases/subtests: 216 API/356 total, 36 API/107 total inputs. Its accepted
 current API floors are L52.44/S52.47/F48.55/B52.52 percent after exact numerical
 acceptance. Other scopes/history and the normal comparator remain unchanged.
+
+Delivered [project interaction owners](project-interactions-extraction.md) end
+at corrected PR42 C: 138 web / 380 total cases over 118 inputs. Delivered
+[workspace owners](workspace-interactions-extraction.md) end at PR43 C: 145 web,
+216 API, 7 contracts and 19 isolated prototype cases, 387 total over 124 maintained
+inputs (68 web). Current web L/S/F/B floors are 4131/4061/3073/3058 basis points;
+API floors are 5244/5247/4855/5252. Prototype counts do not inflate production
+metrics. Exact baseline files and linked covered/zero/null proof govern;
+historical starting values below are not current results.
 
 Traceability: P01–P11/P33/P38; US01–US08/US11–US12/US24–US25; T01/T04–T10/T35;
 existing UXR01–04/06 and UX01–03/05–07/09/11. No sprint/product expansion, UI
@@ -262,6 +273,76 @@ acceptance, rerun both audits, and reproduce comparable counters before updating
 this graph. A changed severity or exposure requires a new coordinator disposition.
 Both root and tools `audit --audit-level=high` remain required in CI.
 
+## Final T36 advisory recheck and conditions
+
+**No material delta found; no published range-compatible fix identified for the
+retained glob/minimatch parent paths. Keep the existing conditional moderate
+debt.** This is targeted metadata research, not a full audit or T36 acceptance.
+
+UTC reads: **2026-11-07 18:54:36–18:55:26**. Fifteen successful official public
+JSON responses retain exact bytes, SHA-256, status, per-request UTC and Date/ETag/
+Last-Modified headers in `metadata-index.json` and `affected-latest-index.json`.
+`comparison.json` binds the prior approximately 05 UTC records; `graph-binding.json`
+confirms the root/tools package manifests and lockfiles are still byte-identical
+to that graph. No resolution, install, override, package/source/config change,
+application run, local audit, GitHub write or new agent occurred.
+
+| Official finding | Current observed status | Delta from 05 UTC |
+| --- | --- | --- |
+| [glob GHSA-3g3m-2fjr-6pw4](https://github.com/advisories/GHSA-3g3m-2fjr-6pw4) | Medium/moderate, CVSSv4 6.3; affected >=9.0.0 through 14.0.1, first patched 14.0.2; unwithdrawn, update 2026-10-30T23:09:15Z | Exact relevant fields unchanged |
+| [minimatch GHSA-g3hv-75wg-m249](https://github.com/advisories/GHSA-g3hv-75wg-m249) | Medium/moderate, CVSSv4 6.9; affected >=7.0.0 below 11.0.1, first patched 11.0.1; unwithdrawn, update 2026-11-04T16:50:04Z | Exact relevant fields unchanged |
+
+The [fixed glob 14.0.2](https://registry.npmjs.org/glob/14.0.2) and
+[fixed minimatch 11.0.1](https://registry.npmjs.org/minimatch/11.0.1) manifests
+remain available with exact prior dependency/engine/peer/type metadata. Pinned
+Node 24.22.1 is not the blocker; the parent dependency ranges exclude the fixes.
+
+| Published parent evidence | Current blocking edge / conclusion |
+| --- | --- |
+| [nyc inventory](https://registry.npmjs.org/nyc), [test-exclude inventory](https://registry.npmjs.org/test-exclude) | Still 18.0.0 and 8.0.0 respectively; nyc 18/test-exclude 8 retain glob ^13.0.6, and test-exclude 8 retains minimatch ^10.2.2. Complete inventories/dist-tags are JSON-exact to prior records; no newly published compatible maintenance release |
+| [ESLint inventory](https://registry.npmjs.org/eslint), [config-array inventory](https://registry.npmjs.org/@eslint%2Fconfig-array) | ESLint latest 10.14.0 still uses minimatch ^10.2.6; latest 0.23.5 config-array uses ^10.2.4. ESLint current latest dependency/engine/peer/type fields equal prior latest, and config-array inventory is exact. The 10/0.23 lines provide no observed fixed-major edge |
+| [typescript-estree latest](https://registry.npmjs.org/@typescript-eslint%2Ftypescript-estree/latest), [typescript-eslint latest](https://registry.npmjs.org/typescript-eslint/latest) | Both still 8.72.1 with exact prior relevant fields; estree still minimatch ^10.2.2. Its full inventory exceeded the 4 MiB budget and was not retained/represented as complete; only these affected bounded latest reads followed. No exhaustive older-branch publication claim is made |
+| [artifact inventory](https://registry.npmjs.org/@actions%2Fartifact), [archiver inventory](https://registry.npmjs.org/archiver), [archiver-utils inventory](https://registry.npmjs.org/archiver-utils), [zip-stream inventory](https://registry.npmjs.org/zip-stream) | All complete inventories/dist-tags remain JSON-exact. SDK 6.3.1 requires archiver ^7.0.1; archiver 7.0.1/zip-stream 6.0.1 use archiver-utils 5.0.2 → glob ^10.0.0. No compatible maintenance fix; zip-stream 7 stays outside the old archiver range |
+| [readdir-glob inventory](https://registry.npmjs.org/readdir-glob) | Exact inventory. Archiver 8 is outside SDK 6's range, remains an ESM major change and still uses readdir-glob 3 → minimatch ^10.2.2. It is not a complete migration proposal |
+
+Inference from the unchanged graph and targeted metadata: the prior conditional
+tooling-exposure disposition remains applicable. Fixed reviewed patterns,
+bounded private source mirror, source-symlink refusal, allowlisted artifact files,
+no tooling in runtime and independent process-group deadlines are retained
+conditions, not evidence that vulnerable packages are patched or universally
+unreachable. Those implementation witnesses were not rerun here. No severity,
+affected-range, withdrawal or observed remediation/exposure change was found for
+the two targeted advisory families. No default-branch/unpublished fix is claimed.
+
+The initial web adapter could not open the official API/registry URLs; direct
+HTTPS public JSON GET supplied the preserved primary evidence instead. One full
+estree response failed the finite 4 MiB budget; the failure and script exit remain
+in the initial index, followed only by its two small affected latest manifests.
+No other request or broad audit was repeated.
+
+Coordinator final acceptance must bind this unchanged graph to root and
+isolated-tools full-audit results produced by required CI for the exact final
+reviewed head. Each new head requires its own results. This research does not
+establish current full-graph totals or absence of other newly disclosed advisories, and does not call either graph audit-clean. Future actual
+compatible candidates still need a separately authorized exact-version/lock,
+engine/peer/lifecycle/runtime and comparable-provider review; no upgrade, forced
+major, override or gate reduction is proposed.
+
+The separately observed required [PR43 CI job](https://github.com/Ljrr3045/rielia/actions/runs/42412029803/job/128522082738)
+ran actual full-graph high-threshold audits on the same graph:
+
+| Graph / command | UTC 2026-11-07 | Result |
+| --- | --- | --- |
+| Root, `pnpm audit --audit-level=high` | 20:46:09 | 1 moderate, 0 high/critical; threshold step passed |
+| Isolated tools, `pnpm --dir scripts/unit/tools audit --audit-level=high` | 20:46:10 | 2 moderate, 0 high/critical; threshold step passed |
+
+The CI log emits counts only, with no advisory IDs, titles or dependency paths.
+Those counts do not establish complete current attribution to the two targeted
+families or exclude other mapped paths. Neither graph is called audit-clean.
+This documentation batch runs no app/audit/install or metadata sweep. Its final
+head still needs actual CI audit results and coordinator disposition before T36
+acceptance; earlier implementation-head results do not replace that gate.
+
 ## CI and remaining acceptance
 
 The existing required `validate` keeps PR/dev/main push events, contents:read,
@@ -293,7 +374,7 @@ audit still passes with only the two documented moderate families. All eight
 baseline manifests explicitly migrate their provider-lock hash with measured
 covered/total values, floors and maintained-source hashes unchanged.
 
-Fresh final count/source digest is
+The first slice’s final count/source digest is
 `400c9a600f09809f39749bf879b4fdad6b13e0e8f686d1ef733f56c7c42c863e`.
 Current-head local/remote checks, actual CI duration and Draft PR evidence are in
 [progress](progress.md). Real-device/assistive-technology/provider/staging/user checks
