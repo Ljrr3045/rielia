@@ -114,3 +114,22 @@ do not replace real PostgreSQL two-tenant/private-project/security, authorship,
 version/idempotency/race/rollback, lock/rank/outbox/SSE/restart and runtime/closure
 checks; remote CI owns those retained checks. No new local Docker, provider/
 staging/user/device result, deployment, merge or completed ticket is claimed.
+
+## PR #41 review assertions
+
+The completed native Kilo round suggested two test-strength improvements. The
+historical-assignee lookup now checks its exact workspace/project/assignee scope;
+the eligible-assignee page checks active membership/principal state/kind and both
+private-project entitlement predicates. Its public item DTO check replaces the
+unconditional-active assertion. Production source, loaded answers and 68-case
+inventory are unchanged. Only that suite fingerprint changes in the current API
+baseline after independent/coordinator acceptance; all numerical/source/provider
+values and seven other baselines stay exact.
+
+The one final ordinary gated `--built` run passes 216 API/356 total cases in
+14.54 seconds against the retained build, followed by infrastructure20 and actual
+artifact validation. Sixteen reports are byte-identical to accepted C; only the
+API manifest's accepted test fingerprint differs. Original A/B/C/raw history and
+failed browser attempts remain untouched. No production build, B comparison or
+finite-control replay is repeated. Root owns Draft publication, both thread
+dispositions and the new current-head hosted CI/native Kilo round.

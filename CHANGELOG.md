@@ -21,6 +21,11 @@ Delivery: [PR #41](https://github.com/Ljrr3045/rielia/pull/41).
   artifacts, handoff and whitespace pass. Current-head hosted CI/Kilo remain
   delivery gates; T36, T37 and T11 stay open.
 
+- Strengthen both Kilo query-scope test suggestions without production changes;
+  accept only the suite fingerprint. Final actual gated 216 API/356 total,
+  infrastructure20 and artifacts pass; 16 reports stay byte-identical to C and
+  numerical gates/maps remain exact. New-head hosted CI/Kilo remain required.
+
 ### T36 first backend values, policy and DTO extraction
 
 Delivery: [PR #40](https://github.com/Ljrr3045/rielia/pull/40).

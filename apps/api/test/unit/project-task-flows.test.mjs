@@ -483,7 +483,20 @@ test(
           ),
         );
         if (mode !== 'eligible')
-          f.script(answer('task.findFirst', mode === 'historical' ? { id: taskId } : null));
+          f.script(
+            answer(
+              'task.findFirst',
+              mode === 'historical' ? { id: taskId } : null,
+              ({ where, select }) => {
+                assert.deepEqual(where, {
+                  workspaceId,
+                  projectId,
+                  assigneePrincipalId: principalId,
+                });
+                assert.deepEqual(select, { id: true });
+              },
+            ),
+          );
         if (mode !== 'unknown') f.script(answer('membership.findMany', [memberRow(principalId)]));
         const result = await f.service.tasks(
           f.context,
@@ -525,7 +538,19 @@ test(
               assert.deepEqual(where.principal.kind, { in: ['human', 'agent'] });
           }),
           answer('membership.findMany', rows, ({ where, take, orderBy }) => {
+            assert.equal(where.workspaceId, workspaceId);
             assert.deepEqual(where.principalId, { gt: 'anchor-flow' });
+            if (operation === 'assignees') {
+              assert.equal(where.state, 'active');
+              assert.deepEqual(where.principal, {
+                state: 'active',
+                kind: { in: ['human', 'agent'] },
+              });
+              assert.deepEqual(where.OR, [
+                { role: { in: ['owner', 'admin'] }, principal: { kind: 'human' } },
+                { projectAccesses: { some: { projectId, state: 'active' } } },
+              ]);
+            } else assert.equal(where.state, undefined);
             assert.equal(take, 101);
             assert.deepEqual(orderBy, { principalId: 'asc' });
           }),
@@ -536,7 +561,13 @@ test(
         assert.equal(result.nextCursor, 'person-99');
         assert.equal(result.total, 122);
         if (operation === 'access') assert.equal(result.projectVersion, 3);
-        else assert.ok(result.items.every((person) => person.active));
+        else
+          assert.deepEqual(result.items[0], {
+            principalId: 'person-0',
+            name: 'Target Human',
+            kind: 'human',
+            active: true,
+          });
         f.done();
       });
   },
