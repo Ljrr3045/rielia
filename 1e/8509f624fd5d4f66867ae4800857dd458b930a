@@ -1,0 +1,41 @@
+docs/development/development-quality-roadmap.md
+  s_b9a431f9c0846a::t_cf1ce8997bd153 19-28,78,85-98,184-188,238-241,412-415
+CONTRIBUTING.md
+  s_b9a431f9c0846a::t_cf1ce8997bd153 35-39,140-154
+docs/development/quality-tooling.md
+  s_b9a431f9c0846a::t_cf1ce8997bd153 4-7,38,100-102
+  s_b9a431f9c0846a::t_0fea3a595262dc 103
+docs/development/t36-stable-ui-contract.md
+  s_b9a431f9c0846a::t_cf1ce8997bd153 1-154
+docs/development/formatting-inventory.json
+  s_b9a431f9c0846a::t_cf1ce8997bd153 545-546,1255-1264
+docs/development/unit-coverage.md
+  s_b9a431f9c0846a::t_9bd70745df1244 285,295-296,302-306
+  s_b9a431f9c0846a::t_cf1ce8997bd153 6-9,40-48,276-284,286-294,297-301,307-345,377
+apps/web/AGENTS.md
+  s_b9a431f9c0846a::t_cf1ce8997bd153 12-18,59-61,70-80
+apps/api/AGENTS.md
+  s_b9a431f9c0846a::t_cf1ce8997bd153 15-20,76-88
+CHANGELOG.md
+  s_b9a431f9c0846a::t_cf1ce8997bd153 7-19
+AGENTS.md
+  s_b9a431f9c0846a::t_cf1ce8997bd153 36-48,98-103
+docs/development/progress.md
+  s_b9a431f9c0846a::t_cf1ce8997bd153 3-32,36-38,68,72-74,119,123-125,1706
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1e8509f624fd5d4f66867ae4800857dd458b930a",
+  "prompts": {},
+  "sessions": {
+    "s_b9a431f9c0846a": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b754-be56-77c0-8664-120d87cf6aa2",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
