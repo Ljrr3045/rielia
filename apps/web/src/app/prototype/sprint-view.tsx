@@ -41,11 +41,14 @@ interface SprintViewProps {
   onCloseSprint: (sprintId: string) => void;
 }
 
-function sprintPoints(state: PrototypeState, sprintId: string): { points: number; unestimated: number } {
-  const scope = state.tasks.filter(task => task.sprintId === sprintId);
+function sprintPoints(
+  state: PrototypeState,
+  sprintId: string,
+): { points: number; unestimated: number } {
+  const scope = state.tasks.filter((task) => task.sprintId === sprintId);
   return {
     points: scope.reduce((total, task) => total + (task.points ?? 0), 0),
-    unestimated: scope.filter(task => task.points === null).length,
+    unestimated: scope.filter((task) => task.points === null).length,
   };
 }
 
@@ -59,26 +62,33 @@ export function SprintView({
   onCloseSprint,
 }: SprintViewProps) {
   const c = copy[lang];
-  const activeSprint = state.sprints.find(sprint => sprint.state === 'active') ?? null;
+  const activeSprint = state.sprints.find((sprint) => sprint.state === 'active') ?? null;
   const pending = state.save.status === 'pending';
   const draftOpen = state.taskDraft !== null || state.sprintDraft !== null;
-  const feedbackContext = state.save.context !== null
-    && (state.save.context.kind === 'sprint'
-      || state.save.context.kind === 'start-sprint'
-      || state.save.context.kind === 'close-sprint')
-    ? state.save.context
-    : null;
-  const retryContext = state.retryContext !== null
-    && (state.retryContext.kind === 'sprint'
-      || state.retryContext.kind === 'start-sprint'
-      || state.retryContext.kind === 'close-sprint')
-    ? state.retryContext
-    : null;
+  const feedbackContext =
+    state.save.context !== null &&
+    (state.save.context.kind === 'sprint' ||
+      state.save.context.kind === 'start-sprint' ||
+      state.save.context.kind === 'close-sprint')
+      ? state.save.context
+      : null;
+  const retryContext =
+    state.retryContext !== null &&
+    (state.retryContext.kind === 'sprint' ||
+      state.retryContext.kind === 'start-sprint' ||
+      state.retryContext.kind === 'close-sprint')
+      ? state.retryContext
+      : null;
 
   if (state.sprints.length === 0) {
     return (
       <EmptyState body={c.noSprintsBody} title={c.noSprintsTitle}>
-        <button className={styles.primaryButton} disabled={draftOpen} onClick={onNewSprint} type="button">
+        <button
+          className={styles.primaryButton}
+          disabled={draftOpen}
+          onClick={onNewSprint}
+          type="button"
+        >
           {c.newSprint}
         </button>
       </EmptyState>
@@ -102,15 +112,16 @@ export function SprintView({
       )}
 
       <div className={styles.sprintList}>
-        {state.sprints.map(sprint => {
+        {state.sprints.map((sprint) => {
           const summary = getSprintSummary(state, sprint.id);
           const points = sprintPoints(state, sprint.id);
-          const scope = state.tasks.filter(task => task.sprintId === sprint.id);
+          const scope = state.tasks.filter((task) => task.sprintId === sprint.id);
           const startBlocked = sprint.state === 'planned' && activeSprint !== null;
           const destination = sprint.closure?.destination ?? null;
-          const targetSprint = destination?.kind === 'sprint'
-            ? state.sprints.find(item => item.id === destination.sprintId) ?? null
-            : null;
+          const targetSprint =
+            destination?.kind === 'sprint'
+              ? (state.sprints.find((item) => item.id === destination.sprintId) ?? null)
+              : null;
 
           return (
             <article className={styles.sprintCard} data-state={sprint.state} key={sprint.id}>
@@ -146,7 +157,9 @@ export function SprintView({
                         type="button"
                       >
                         {pending && state.save.kind === 'start-sprint' ? <Spinner /> : null}
-                        {pending && state.save.kind === 'start-sprint' ? c.startingSprint : c.startSprint}
+                        {pending && state.save.kind === 'start-sprint'
+                          ? c.startingSprint
+                          : c.startSprint}
                       </button>
                     </>
                   )}
@@ -177,26 +190,38 @@ export function SprintView({
                   </h3>
                   <span className={styles.sprintScopeMeta}>
                     {c.taskCount(scope.length)}
-                    {sprint.state !== 'closed' && scope.length > 0 && ` · ${c.pointsTotal(points.points)}`}
-                    {sprint.state !== 'closed' && points.unestimated > 0 && ` · ${c.unestimatedCount(points.unestimated)}`}
+                    {sprint.state !== 'closed' &&
+                      scope.length > 0 &&
+                      ` · ${c.pointsTotal(points.points)}`}
+                    {sprint.state !== 'closed' &&
+                      points.unestimated > 0 &&
+                      ` · ${c.unestimatedCount(points.unestimated)}`}
                   </span>
                 </div>
 
-                {sprint.state === 'closed' && <p className={styles.fieldHint}>{c.retainedTasksHint}</p>}
+                {sprint.state === 'closed' && (
+                  <p className={styles.fieldHint}>{c.retainedTasksHint}</p>
+                )}
 
                 {scope.length > 0 && (
                   <ul
                     aria-label={`${sprint.state === 'closed' ? c.retainedTasksTitle : c.sprintScope}: ${sprint.name}`}
                     className={styles.sprintTaskList}
                   >
-                    {scope.map(task => (
+                    {scope.map((task) => (
                       <li className={styles.sprintTaskRow} key={task.id}>
                         <StatusDot status={task.status} />
                         <span className={styles.taskKey}>{task.key}</span>
-                        <button className={styles.sprintTaskTitle} onClick={() => onOpenTask(task.id)} type="button">
+                        <button
+                          className={styles.sprintTaskTitle}
+                          onClick={() => onOpenTask(task.id)}
+                          type="button"
+                        >
                           {task.title}
                         </button>
-                        <span className={styles.sprintTaskStatus}>{statusLabel(task.status, lang)}</span>
+                        <span className={styles.sprintTaskStatus}>
+                          {statusLabel(task.status, lang)}
+                        </span>
                         {sprint.state !== 'closed' && (
                           <span className={styles.points}>
                             {task.points === null ? c.unestimated : c.pointsTotal(task.points)}
@@ -224,7 +249,8 @@ export function SprintView({
                         <strong>{sprint.closure.canceledTaskIds.length}</strong> {c.canceledTasks}
                       </span>
                       <span>
-                        <strong>{sprint.closure.unfinishedTaskIds.length}</strong> {c.unfinishedTasks}
+                        <strong>{sprint.closure.unfinishedTaskIds.length}</strong>{' '}
+                        {c.unfinishedTasks}
                       </span>
                     </div>
                     <p className={styles.closureDestination}>
@@ -258,7 +284,12 @@ export function SprintView({
       </div>
 
       <div className={styles.sprintFooterAction}>
-        <button className={styles.secondaryButton} disabled={draftOpen} onClick={onNewSprint} type="button">
+        <button
+          className={styles.secondaryButton}
+          disabled={draftOpen}
+          onClick={onNewSprint}
+          type="button"
+        >
           <IconPlus size={16} />
           {c.newSprint}
         </button>
@@ -277,21 +308,24 @@ export function SprintForm({ state, actions, lang }: SprintFormProps) {
   const c = copy[lang];
   const draft = state.sprintDraft;
   const draftSprintId = draft?.sprintId ?? null;
-  const feedbackContext = state.save.context !== null
-    && state.save.context.kind === 'sprint'
-    && state.save.context.sprintId === draftSprintId
-    ? state.save.context
-    : null;
-  const retryContext = state.retryContext !== null
-    && state.retryContext.kind === 'sprint'
-    && state.retryContext.sprintId === draftSprintId
-    ? state.retryContext
-    : null;
+  const feedbackContext =
+    state.save.context !== null &&
+    state.save.context.kind === 'sprint' &&
+    state.save.context.sprintId === draftSprintId
+      ? state.save.context
+      : null;
+  const retryContext =
+    state.retryContext !== null &&
+    state.retryContext.kind === 'sprint' &&
+    state.retryContext.sprintId === draftSprintId
+      ? state.retryContext
+      : null;
   const [confirmDiscard, setConfirmDiscard] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
   const keepEditingRef = useRef<HTMLButtonElement>(null);
   const pending = state.save.status === 'pending';
-  const saveError = state.save.status === 'error' && feedbackContext !== null ? state.save.error : null;
+  const saveError =
+    state.save.status === 'error' && feedbackContext !== null ? state.save.error : null;
 
   useEffect(() => {
     if (confirmDiscard) keepEditingRef.current?.focus();
@@ -307,18 +341,20 @@ export function SprintForm({ state, actions, lang }: SprintFormProps) {
 
   if (draft === undefined || draft === null) return null;
 
-  const existing = state.sprints.some(sprint => sprint.id === draft.sprintId);
+  const existing = state.sprints.some((sprint) => sprint.id === draft.sprintId);
   const candidates = state.tasks
-    .filter(task => task.sprintId === null || task.sprintId === draft.sprintId)
+    .filter((task) => task.sprintId === null || task.sprintId === draft.sprintId)
     .slice()
     .sort((left, right) => left.key.localeCompare(right.key, undefined, { numeric: true }));
   const selected = new Set(draft.taskIds);
   const selectedPoints = candidates
-    .filter(task => selected.has(task.id))
+    .filter((task) => selected.has(task.id))
     .reduce((total, task) => total + (task.points ?? 0), 0);
   const fieldError = (field: string) =>
     saveError !== null && saveError.field === field ? localizeError(saveError, lang) : null;
-  const targetLabel = state.sprints.find(sprint => sprint.id === draft.sprintId)?.name ?? (draft.name.trim() || c.createSprintTitle);
+  const targetLabel =
+    state.sprints.find((sprint) => sprint.id === draft.sprintId)?.name ??
+    (draft.name.trim() || c.createSprintTitle);
   const retryTarget = retryContext === null ? null : targetLabel;
 
   const update = (fields: Partial<SprintFields & { taskIds: readonly string[] }>) => {
@@ -364,7 +400,7 @@ export function SprintForm({ state, actions, lang }: SprintFormProps) {
 
         <form
           className={styles.form}
-          onSubmit={event => {
+          onSubmit={(event) => {
             event.preventDefault();
             if (!pending && !confirmDiscard) void actions.saveSprint();
           }}
@@ -396,11 +432,13 @@ export function SprintForm({ state, actions, lang }: SprintFormProps) {
                     data-autofocus
                     id="prototype-sprint-name"
                     maxLength={100}
-                    onChange={event => update({ name: event.target.value })}
+                    onChange={(event) => update({ name: event.target.value })}
                     placeholder={c.sprintNamePlaceholder}
                     value={draft.name}
                   />
-                  {fieldError('name') !== null && <p className={styles.fieldError}>{fieldError('name')}</p>}
+                  {fieldError('name') !== null && (
+                    <p className={styles.fieldError}>{fieldError('name')}</p>
+                  )}
                 </div>
 
                 <div className={cx(styles.formField, styles.formFieldWide)}>
@@ -412,12 +450,14 @@ export function SprintForm({ state, actions, lang }: SprintFormProps) {
                     className={styles.textArea}
                     id="prototype-sprint-goal"
                     maxLength={500}
-                    onChange={event => update({ goal: event.target.value })}
+                    onChange={(event) => update({ goal: event.target.value })}
                     placeholder={c.sprintGoalPlaceholder}
                     rows={3}
                     value={draft.goal}
                   />
-                  {fieldError('goal') !== null && <p className={styles.fieldError}>{fieldError('goal')}</p>}
+                  {fieldError('goal') !== null && (
+                    <p className={styles.fieldError}>{fieldError('goal')}</p>
+                  )}
                 </div>
 
                 <div className={styles.formField}>
@@ -428,11 +468,13 @@ export function SprintForm({ state, actions, lang }: SprintFormProps) {
                     aria-invalid={fieldError('startsOn') !== null}
                     className={styles.textInput}
                     id="prototype-sprint-start"
-                    onChange={event => update({ startsOn: event.target.value })}
+                    onChange={(event) => update({ startsOn: event.target.value })}
                     type="date"
                     value={draft.startsOn}
                   />
-                  {fieldError('startsOn') !== null && <p className={styles.fieldError}>{fieldError('startsOn')}</p>}
+                  {fieldError('startsOn') !== null && (
+                    <p className={styles.fieldError}>{fieldError('startsOn')}</p>
+                  )}
                 </div>
 
                 <div className={styles.formField}>
@@ -443,15 +485,19 @@ export function SprintForm({ state, actions, lang }: SprintFormProps) {
                     aria-invalid={fieldError('endsOn') !== null}
                     className={styles.textInput}
                     id="prototype-sprint-end"
-                    onChange={event => update({ endsOn: event.target.value })}
+                    onChange={(event) => update({ endsOn: event.target.value })}
                     type="date"
                     value={draft.endsOn}
                   />
                   <p className={styles.fieldHint}>{c.endDateHint}</p>
-                  {fieldError('endsOn') !== null && <p className={styles.fieldError}>{fieldError('endsOn')}</p>}
+                  {fieldError('endsOn') !== null && (
+                    <p className={styles.fieldError}>{fieldError('endsOn')}</p>
+                  )}
                 </div>
 
-                <fieldset className={cx(styles.formField, styles.formFieldWide, styles.scopeFieldset)}>
+                <fieldset
+                  className={cx(styles.formField, styles.formFieldWide, styles.scopeFieldset)}
+                >
                   <legend className={styles.fieldLabel}>{c.scopeLabel}</legend>
                   <p className={styles.fieldHint}>{c.scopeHint}</p>
                   <div className={styles.scopeSummary}>
@@ -460,14 +506,14 @@ export function SprintForm({ state, actions, lang }: SprintFormProps) {
                   </div>
                   <div className={styles.scopeChoices}>
                     {candidates.length === 0 && <p className={styles.fieldHint}>{c.scopeEmpty}</p>}
-                    {candidates.map(task => (
+                    {candidates.map((task) => (
                       <label className={styles.scopeChoice} key={task.id}>
                         <input
                           checked={selected.has(task.id)}
-                          onChange={event => {
+                          onChange={(event) => {
                             const taskIds = event.target.checked
                               ? [...draft.taskIds, task.id]
-                              : draft.taskIds.filter(id => id !== task.id);
+                              : draft.taskIds.filter((id) => id !== task.id);
                             update({ taskIds });
                           }}
                           type="checkbox"
@@ -481,7 +527,9 @@ export function SprintForm({ state, actions, lang }: SprintFormProps) {
                       </label>
                     ))}
                   </div>
-                  {fieldError('taskIds') !== null && <p className={styles.fieldError}>{fieldError('taskIds')}</p>}
+                  {fieldError('taskIds') !== null && (
+                    <p className={styles.fieldError}>{fieldError('taskIds')}</p>
+                  )}
                 </fieldset>
               </div>
             </fieldset>
@@ -493,7 +541,11 @@ export function SprintForm({ state, actions, lang }: SprintFormProps) {
                   <p>{c.discardDraftBody}</p>
                 </div>
                 <div className={styles.confirmActions}>
-                  <button className={styles.secondaryButton} onClick={() => actions.discardSprintDraft()} type="button">
+                  <button
+                    className={styles.secondaryButton}
+                    onClick={() => actions.discardSprintDraft()}
+                    type="button"
+                  >
                     {c.discard}
                   </button>
                   <button
@@ -521,7 +573,11 @@ export function SprintForm({ state, actions, lang }: SprintFormProps) {
             >
               {c.discardSprint}
             </button>
-            <button className={styles.primaryButton} disabled={pending || confirmDiscard} type="submit">
+            <button
+              className={styles.primaryButton}
+              disabled={pending || confirmDiscard}
+              type="submit"
+            >
               {pending ? c.savingSprint : existing ? c.saveSprint : c.createSprint}
             </button>
           </footer>
@@ -539,27 +595,35 @@ interface CloseSprintDialogProps {
   onClose: () => void;
 }
 
-export function CloseSprintDialog({ state, actions, lang, sprintId, onClose }: CloseSprintDialogProps) {
+export function CloseSprintDialog({
+  state,
+  actions,
+  lang,
+  sprintId,
+  onClose,
+}: CloseSprintDialogProps) {
   const c = copy[lang];
-  const sprint = state.sprints.find(item => item.id === sprintId) ?? null;
-  const closeFeedbackContext = state.save.context !== null
-    && state.save.context.kind === 'close-sprint'
-    && state.save.context.sprintId === sprintId
-    ? state.save.context
-    : null;
-  const closeRetryContext = state.retryContext !== null
-    && state.retryContext.kind === 'close-sprint'
-    && state.retryContext.sprintId === sprintId
-    ? state.retryContext
-    : null;
+  const sprint = state.sprints.find((item) => item.id === sprintId) ?? null;
+  const closeFeedbackContext =
+    state.save.context !== null &&
+    state.save.context.kind === 'close-sprint' &&
+    state.save.context.sprintId === sprintId
+      ? state.save.context
+      : null;
+  const closeRetryContext =
+    state.retryContext !== null &&
+    state.retryContext.kind === 'close-sprint' &&
+    state.retryContext.sprintId === sprintId
+      ? state.retryContext
+      : null;
   const capturedDestination = closeRetryContext?.destination ?? null;
-  const initialDestination = capturedDestination?.kind === 'sprint'
-    ? capturedDestination.sprintId
-    : 'backlog';
+  const initialDestination =
+    capturedDestination?.kind === 'sprint' ? capturedDestination.sprintId : 'backlog';
   const [destination, setDestination] = useState<string>(initialDestination);
   const dialogRef = useRef<HTMLDivElement>(null);
   const pending = state.save.status === 'pending';
-  const saveError = state.save.status === 'error' && closeFeedbackContext !== null ? state.save.error : null;
+  const saveError =
+    state.save.status === 'error' && closeFeedbackContext !== null ? state.save.error : null;
   const errorField = saveError?.field ?? null;
 
   const closeIfAllowed = () => {
@@ -571,15 +635,16 @@ export function CloseSprintDialog({ state, actions, lang, sprintId, onClose }: C
 
   const summary = getSprintSummary(state, sprintId);
   const unfinished = summary.unfinishedTaskIds
-    .map(taskId => state.tasks.find(task => task.id === taskId))
+    .map((taskId) => state.tasks.find((task) => task.id === taskId))
     .filter((task): task is DemoTask => task !== undefined);
-  const destinationSprint = state.sprints.find(item => item.id === destination) ?? null;
-  const otherSprints = state.sprints.filter(item => item.id !== sprintId && item.state === 'planned');
+  const destinationSprint = state.sprints.find((item) => item.id === destination) ?? null;
+  const otherSprints = state.sprints.filter(
+    (item) => item.id !== sprintId && item.state === 'planned',
+  );
   const submit = () => {
-    const target: ClosureDestination = destination === 'backlog'
-      ? { kind: 'backlog' }
-      : { kind: 'sprint', sprintId: destination };
-    void actions.closeSprint(sprintId, target).then(saved => {
+    const target: ClosureDestination =
+      destination === 'backlog' ? { kind: 'backlog' } : { kind: 'sprint', sprintId: destination };
+    void actions.closeSprint(sprintId, target).then((saved) => {
       if (saved) onClose();
     });
   };
@@ -598,11 +663,22 @@ export function CloseSprintDialog({ state, actions, lang, sprintId, onClose }: C
         <header className={styles.modalHeader}>
           <div>
             <p className={styles.modalEyebrow}>{sprint.name}</p>
-            <h2 className={styles.modalTitle} data-autofocus id="prototype-close-sprint-heading" tabIndex={-1}>
+            <h2
+              className={styles.modalTitle}
+              data-autofocus
+              id="prototype-close-sprint-heading"
+              tabIndex={-1}
+            >
               {c.closeSprintTitle}
             </h2>
           </div>
-          <button aria-label={c.close} className={styles.iconButton} disabled={pending} onClick={closeIfAllowed} type="button">
+          <button
+            aria-label={c.close}
+            className={styles.iconButton}
+            disabled={pending}
+            onClick={closeIfAllowed}
+            type="button"
+          >
             <IconClose size={20} />
           </button>
         </header>
@@ -614,7 +690,7 @@ export function CloseSprintDialog({ state, actions, lang, sprintId, onClose }: C
               currentTarget={closeFeedbackContext !== null ? sprint.name : null}
               lang={lang}
               onRetry={() => {
-                void actions.retrySave().then(saved => {
+                void actions.retrySave().then((saved) => {
                   if (saved) onClose();
                 });
               }}
@@ -645,12 +721,15 @@ export function CloseSprintDialog({ state, actions, lang, sprintId, onClose }: C
           </section>
 
           {unfinished.length > 0 && (
-            <section aria-labelledby="prototype-close-unfinished" className={styles.closeSummarySection}>
+            <section
+              aria-labelledby="prototype-close-unfinished"
+              className={styles.closeSummarySection}
+            >
               <h3 className={styles.detailSectionTitle} id="prototype-close-unfinished">
                 {c.unfinishedTasks}
               </h3>
               <ul className={styles.unfinishedList}>
-                {unfinished.map(task => (
+                {unfinished.map((task) => (
                   <li key={task.id}>
                     <StatusDot status={task.status} />
                     <span className={styles.taskKey}>{task.key}</span>
@@ -661,7 +740,10 @@ export function CloseSprintDialog({ state, actions, lang, sprintId, onClose }: C
             </section>
           )}
 
-          <fieldset className={styles.destinationFieldset} disabled={pending || closeRetryContext !== null}>
+          <fieldset
+            className={styles.destinationFieldset}
+            disabled={pending || closeRetryContext !== null}
+          >
             <legend className={styles.fieldLabel}>{c.destinationLabel}</legend>
             <label className={styles.destinationChoice}>
               <input
@@ -672,7 +754,7 @@ export function CloseSprintDialog({ state, actions, lang, sprintId, onClose }: C
               />
               {c.destinationBacklog}
             </label>
-            {otherSprints.map(other => (
+            {otherSprints.map((other) => (
               <label className={styles.destinationChoice} key={other.id}>
                 <input
                   checked={destination === other.id}
@@ -689,7 +771,9 @@ export function CloseSprintDialog({ state, actions, lang, sprintId, onClose }: C
               </label>
             ))}
             {otherSprints.length === 0 && <p className={styles.fieldHint}>{c.noOtherSprint}</p>}
-            {closeRetryContext !== null && <p className={styles.fieldHint}>{c.retryFrozenDestination}</p>}
+            {closeRetryContext !== null && (
+              <p className={styles.fieldHint}>{c.retryFrozenDestination}</p>
+            )}
             {errorField === 'destination' && saveError !== null && (
               <p className={styles.fieldError}>{localizeError(saveError, lang)}</p>
             )}
@@ -697,18 +781,30 @@ export function CloseSprintDialog({ state, actions, lang, sprintId, onClose }: C
 
           {destinationSprint !== null && (
             <p className={styles.fieldHint}>
-              {destinationSprint.name} · {c.taskCount(
-                state.tasks.filter(task => task.sprintId === destinationSprint.id).length,
+              {destinationSprint.name}
+              {' · '}
+              {c.taskCount(
+                state.tasks.filter((task) => task.sprintId === destinationSprint.id).length,
               )}
             </p>
           )}
         </div>
 
         <footer className={styles.modalFooter}>
-          <button className={styles.secondaryButton} disabled={pending} onClick={closeIfAllowed} type="button">
+          <button
+            className={styles.secondaryButton}
+            disabled={pending}
+            onClick={closeIfAllowed}
+            type="button"
+          >
             {c.cancel}
           </button>
-          <button className={styles.primaryButton} disabled={pending} onClick={submit} type="button">
+          <button
+            className={styles.primaryButton}
+            disabled={pending}
+            onClick={submit}
+            type="button"
+          >
             {pending ? <Spinner /> : null}
             {pending ? c.closingSprint : c.closeSprintAction}
           </button>

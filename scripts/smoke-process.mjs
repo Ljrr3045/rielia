@@ -10,9 +10,13 @@ export function startProcess(name, args, cwd, env) {
   });
   const entry = { name, child, log: '', stopped: false, error: undefined };
   for (const stream of [child.stdout, child.stderr]) {
-    stream.on('data', (chunk) => { entry.log = (entry.log + chunk.toString()).slice(-16000); });
+    stream.on('data', (chunk) => {
+      entry.log = (entry.log + chunk.toString()).slice(-16000);
+    });
   }
-  child.on('error', (error) => { entry.error = error; });
+  child.on('error', (error) => {
+    entry.error = error;
+  });
   return entry;
 }
 
@@ -30,12 +34,18 @@ function signal(entry, name) {
 export async function stopProcess(entry) {
   if (entry.stopped) return;
   entry.stopped = true;
-  if (typeof entry.child.pid !== 'number'
-    || entry.child.exitCode !== null || entry.child.signalCode !== null) return;
+  if (
+    typeof entry.child.pid !== 'number' ||
+    entry.child.exitCode !== null ||
+    entry.child.signalCode !== null
+  )
+    return;
   const exited = once(entry.child, 'exit');
   signal(entry, 'SIGTERM');
   let timer;
-  const timedOut = new Promise((resolve) => { timer = setTimeout(() => resolve(true), 5000); });
+  const timedOut = new Promise((resolve) => {
+    timer = setTimeout(() => resolve(true), 5000);
+  });
   if (await Promise.race([exited.then(() => false), timedOut])) {
     signal(entry, 'SIGKILL');
     await exited;

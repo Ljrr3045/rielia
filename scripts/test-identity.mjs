@@ -9,7 +9,8 @@ import { setTimeout as delay } from 'node:timers/promises';
 
 const execute = promisify(execFile);
 const root = fileURLToPath(new URL('../', import.meta.url));
-const image = 'postgres:18.6@sha256:edb0c08dc33befd0262ab3b5cf1c4f3f8cfd8b09e88c05b45adee29d6761ddb6';
+const image =
+  'postgres:18.6@sha256:edb0c08dc33befd0262ab3b5cf1c4f3f8cfd8b09e88c05b45adee29d6761ddb6';
 const owner = randomBytes(12).toString('hex');
 const name = `rielia-identity-${owner}`;
 const volume = `${name}-data`;
@@ -23,7 +24,12 @@ process.once('SIGTERM', stop);
 
 async function command(label, executable, args, options = {}) {
   try {
-    return await execute(executable, args, { cwd: root, timeout: 120000, maxBuffer: 4 * 1024 * 1024, ...options });
+    return await execute(executable, args, {
+      cwd: root,
+      timeout: 120000,
+      maxBuffer: 4 * 1024 * 1024,
+      ...options,
+    });
   } catch (error) {
     if (label === 'Identity integration suite') {
       let diagnostics = `${error.stdout ?? ''}\n${error.stderr ?? ''}`;
@@ -41,18 +47,52 @@ try {
   const password = randomBytes(36).toString('hex');
   privateValues.push(password);
   const file = join(directory, 'database.env');
-  await writeFile(file, `POSTGRES_USER=identity\nPOSTGRES_DB=identity_spike\nPOSTGRES_PASSWORD=${password}\n`, { mode: 0o600 });
-  await command('Disposable database volume', 'docker', ['volume', 'create', '--label', `rielia.identity-test=${owner}`, volume], { signal: abort.signal });
-  await command('Disposable database startup', 'docker', ['run', '--detach', '--rm', '--name', name,
-    '--label', `rielia.identity-test=${owner}`, '--publish', '127.0.0.1::5432',
-    '--mount', `type=volume,source=${volume},target=/var/lib/postgresql`, '--env-file', file, image], { signal: abort.signal });
+  await writeFile(
+    file,
+    `POSTGRES_USER=identity\nPOSTGRES_DB=identity_spike\nPOSTGRES_PASSWORD=${password}\n`,
+    { mode: 0o600 },
+  );
+  await command(
+    'Disposable database volume',
+    'docker',
+    ['volume', 'create', '--label', `rielia.identity-test=${owner}`, volume],
+    { signal: abort.signal },
+  );
+  await command(
+    'Disposable database startup',
+    'docker',
+    [
+      'run',
+      '--detach',
+      '--rm',
+      '--name',
+      name,
+      '--label',
+      `rielia.identity-test=${owner}`,
+      '--publish',
+      '127.0.0.1::5432',
+      '--mount',
+      `type=volume,source=${volume},target=/var/lib/postgresql`,
+      '--env-file',
+      file,
+      image,
+    ],
+    { signal: abort.signal },
+  );
   started = true;
   let ready = false;
   for (let attempt = 0; attempt < 60 && !abort.signal.aborted; attempt++) {
     // The image's temporary initialization server accepts Unix sockets before
     // its final TCP server starts. Wait for TCP before running direct PG fixtures.
-    const result = await execute('docker', ['exec', name, 'pg_isready', '-h', '127.0.0.1', '-U', 'identity', '-d', 'identity_spike'], { timeout: 3000 }).catch(() => null);
-    if (result) { ready = true; break; }
+    const result = await execute(
+      'docker',
+      ['exec', name, 'pg_isready', '-h', '127.0.0.1', '-U', 'identity', '-d', 'identity_spike'],
+      { timeout: 3000 },
+    ).catch(() => null);
+    if (result) {
+      ready = true;
+      break;
+    }
     await delay(250, undefined, { signal: abort.signal });
   }
   if (!ready) throw new Error('Disposable PostgreSQL readiness timed out.');
@@ -60,64 +100,157 @@ try {
   const port = /^127\.0\.0\.1:(\d+)\s*$/.exec(stdout)?.[1];
   if (!port) throw new Error('Disposable database did not expose a loopback-only port.');
   const env = {
-    ...process.env, NODE_ENV: 'production', IDENTITY_ENABLED: 'true',
+    ...process.env,
+    NODE_ENV: 'production',
+    IDENTITY_ENABLED: 'true',
     DATABASE_URL: `postgresql://identity:${password}@127.0.0.1:${port}/identity_spike`,
-    BETTER_AUTH_URL: 'https://identity.example.test', BETTER_AUTH_SECRET: randomBytes(48).toString('base64'),
-    GOOGLE_CLIENT_ID: 'simulated-google-client', GOOGLE_CLIENT_SECRET: randomBytes(24).toString('hex'),
-    GITHUB_CLIENT_ID: 'simulated-github-client', GITHUB_CLIENT_SECRET: randomBytes(24).toString('hex'),
-    IDENTITY_TRUSTED_PROXIES: '', IDENTITY_ALLOW_HTTP_LOOPBACK: 'false',
+    BETTER_AUTH_URL: 'https://identity.example.test',
+    BETTER_AUTH_SECRET: randomBytes(48).toString('base64'),
+    GOOGLE_CLIENT_ID: 'simulated-google-client',
+    GOOGLE_CLIENT_SECRET: randomBytes(24).toString('hex'),
+    GITHUB_CLIENT_ID: 'simulated-github-client',
+    GITHUB_CLIENT_SECRET: randomBytes(24).toString('hex'),
+    IDENTITY_TRUSTED_PROXIES: '',
+    IDENTITY_ALLOW_HTTP_LOOPBACK: 'false',
   };
-  privateValues.push(env.DATABASE_URL, env.BETTER_AUTH_SECRET, env.GOOGLE_CLIENT_SECRET, env.GITHUB_CLIENT_SECRET);
-  await command('Legacy identity fixture', process.execPath, ['apps/api/test/prepare-principal-backfill.mjs'], { env, signal: abort.signal });
-  await command('Legacy migration history', 'pnpm', ['--filter', '@rielia/api', 'exec', 'prisma', 'migrate', 'resolve', '--applied', '20261025000000_identity'], { env, signal: abort.signal });
-  await command('Identity migration', 'pnpm', ['--filter', '@rielia/api', 'exec', 'prisma', 'migrate', 'deploy'], { env, signal: abort.signal });
+  privateValues.push(
+    env.DATABASE_URL,
+    env.BETTER_AUTH_SECRET,
+    env.GOOGLE_CLIENT_SECRET,
+    env.GITHUB_CLIENT_SECRET,
+  );
+  await command(
+    'Legacy identity fixture',
+    process.execPath,
+    ['apps/api/test/prepare-principal-backfill.mjs'],
+    { env, signal: abort.signal },
+  );
+  await command(
+    'Legacy migration history',
+    'pnpm',
+    [
+      '--filter',
+      '@rielia/api',
+      'exec',
+      'prisma',
+      'migrate',
+      'resolve',
+      '--applied',
+      '20261025000000_identity',
+    ],
+    { env, signal: abort.signal },
+  );
+  await command(
+    'Identity migration',
+    'pnpm',
+    ['--filter', '@rielia/api', 'exec', 'prisma', 'migrate', 'deploy'],
+    { env, signal: abort.signal },
+  );
   // A second deployment proves the checked-in migration is safely repeatable.
-  await command('Repeated identity migration', 'pnpm', ['--filter', '@rielia/api', 'exec', 'prisma', 'migrate', 'deploy'], { env, signal: abort.signal });
+  await command(
+    'Repeated identity migration',
+    'pnpm',
+    ['--filter', '@rielia/api', 'exec', 'prisma', 'migrate', 'deploy'],
+    { env, signal: abort.signal },
+  );
   console.log('Disposable PostgreSQL 18.6 ready; identity migration applied twice.');
-  const principals = await command('Identity integration suite', process.execPath,
-    ['--test', '--test-reporter=spec', 'apps/api/test/principals.test.mjs'], { env, signal: abort.signal });
+  const principals = await command(
+    'Identity integration suite',
+    process.execPath,
+    ['--test', '--test-reporter=spec', 'apps/api/test/principals.test.mjs'],
+    { env, signal: abort.signal },
+  );
   process.stdout.write(principals.stdout);
-  const workspaces = await command('Identity integration suite', process.execPath,
-    ['--test', '--test-reporter=spec', 'apps/api/test/workspaces.test.mjs'], { env, signal: abort.signal });
+  const workspaces = await command(
+    'Identity integration suite',
+    process.execPath,
+    ['--test', '--test-reporter=spec', 'apps/api/test/workspaces.test.mjs'],
+    { env, signal: abort.signal },
+  );
   process.stdout.write(workspaces.stdout);
-  const domain = await command('Identity integration suite', process.execPath,
-    ['--test', '--test-reporter=spec', 'apps/api/test/project-tasks.test.mjs'], { env, signal: abort.signal });
+  const domain = await command(
+    'Identity integration suite',
+    process.execPath,
+    ['--test', '--test-reporter=spec', 'apps/api/test/project-tasks.test.mjs'],
+    { env, signal: abort.signal },
+  );
   process.stdout.write(domain.stdout);
-  const collaboration = await command('Identity integration suite', process.execPath,
-    ['--test', '--test-reporter=spec', 'apps/api/test/task-collaboration.test.mjs'], { env, signal: abort.signal });
+  const collaboration = await command(
+    'Identity integration suite',
+    process.execPath,
+    ['--test', '--test-reporter=spec', 'apps/api/test/task-collaboration.test.mjs'],
+    { env, signal: abort.signal },
+  );
   process.stdout.write(collaboration.stdout);
-  const discovery = await command('Task discovery integration suite', process.execPath, ['--test', '--test-reporter=spec', 'apps/api/test/task-discovery.test.mjs'], { env, signal: abort.signal });
+  const discovery = await command(
+    'Task discovery integration suite',
+    process.execPath,
+    ['--test', '--test-reporter=spec', 'apps/api/test/task-discovery.test.mjs'],
+    { env, signal: abort.signal },
+  );
   process.stdout.write(discovery.stdout);
   const witness = join(directory, 'domain-persistence.json');
-  await command('Domain persistence snapshot', process.execPath, ['apps/api/test/project-task-persistence.mjs', 'snapshot', witness], { env, signal: abort.signal });
-  await command('Task-owned PostgreSQL restart', 'docker', ['restart', '--time', '10', name], { signal: abort.signal });
+  await command(
+    'Domain persistence snapshot',
+    process.execPath,
+    ['apps/api/test/project-task-persistence.mjs', 'snapshot', witness],
+    { env, signal: abort.signal },
+  );
+  await command('Task-owned PostgreSQL restart', 'docker', ['restart', '--time', '10', name], {
+    signal: abort.signal,
+  });
   let restarted = false;
   for (let attempt = 0; attempt < 60 && !abort.signal.aborted; attempt++) {
-    const result = await execute('docker', ['exec', name, 'pg_isready', '-h', '127.0.0.1', '-U', 'identity', '-d', 'identity_spike'], { timeout: 3000 }).catch(() => null);
-    if (result) { restarted = true; break; }
+    const result = await execute(
+      'docker',
+      ['exec', name, 'pg_isready', '-h', '127.0.0.1', '-U', 'identity', '-d', 'identity_spike'],
+      { timeout: 3000 },
+    ).catch(() => null);
+    if (result) {
+      restarted = true;
+      break;
+    }
     await delay(250, undefined, { signal: abort.signal });
   }
   if (!restarted) throw new Error('Task-owned PostgreSQL restart timed out.');
   // Docker may allocate a new random host port on restart. Rediscover it; the
   // durable witness compares storage, not the incidental loopback mapping.
-  const restartedPortResult = await command('Restarted database port discovery', 'docker', ['port', name, '5432/tcp']);
+  const restartedPortResult = await command('Restarted database port discovery', 'docker', [
+    'port',
+    name,
+    '5432/tcp',
+  ]);
   const restartedPort = /^127\.0\.0\.1:(\d+)\s*$/.exec(restartedPortResult.stdout)?.[1];
   if (!restartedPort) throw new Error('Restarted database port was not loopback-only.');
   env.DATABASE_URL = `postgresql://identity:${password}@127.0.0.1:${restartedPort}/identity_spike`;
   privateValues.push(env.DATABASE_URL);
-  const persistence = await command('Identity integration suite', process.execPath, ['apps/api/test/project-task-persistence.mjs', 'verify', witness], { env, signal: abort.signal });
+  const persistence = await command(
+    'Identity integration suite',
+    process.execPath,
+    ['apps/api/test/project-task-persistence.mjs', 'verify', witness],
+    { env, signal: abort.signal },
+  );
   process.stdout.write(persistence.stdout);
-  const tests = await command('Identity integration suite', process.execPath,
-    ['--test', '--test-reporter=spec', 'apps/api/test/identity.test.mjs'], { env, signal: abort.signal });
+  const tests = await command(
+    'Identity integration suite',
+    process.execPath,
+    ['--test', '--test-reporter=spec', 'apps/api/test/identity.test.mjs'],
+    { env, signal: abort.signal },
+  );
   process.stdout.write(tests.stdout);
   // Successful Node tests must not emit private runtime diagnostics on stderr.
-  if (tests.stderr) console.log('Identity tests emitted diagnostics; inspect privately before delivery.');
+  if (tests.stderr)
+    console.log('Identity tests emitted diagnostics; inspect privately before delivery.');
 } catch (error) {
   console.error(error instanceof Error ? error.message : 'Identity validation failed.');
   process.exitCode = 1;
 } finally {
   try {
-    const owned = await execute('docker', ['inspect', '--format', '{{index .Config.Labels "rielia.identity-test"}}', name], { timeout: 10000 }).catch(() => null);
+    const owned = await execute(
+      'docker',
+      ['inspect', '--format', '{{index .Config.Labels "rielia.identity-test"}}', name],
+      { timeout: 10000 },
+    ).catch(() => null);
     if (started && owned?.stdout.trim() !== owner) {
       console.error('Task-owned database cleanup could not be verified.');
       process.exitCode = 1;
@@ -125,12 +258,28 @@ try {
       await command('Disposable database cleanup', 'docker', ['rm', '--force', name]);
       console.log('Disposable identity database removed.');
     }
-  } catch { console.error('Disposable database cleanup failed; inspect the task-owned identity test container.'); process.exitCode = 1; }
+  } catch {
+    console.error(
+      'Disposable database cleanup failed; inspect the task-owned identity test container.',
+    );
+    process.exitCode = 1;
+  }
   try {
-    const ownedVolume = await execute('docker', ['volume', 'inspect', '--format', '{{index .Labels "rielia.identity-test"}}', volume], { timeout: 10000 }).catch(() => null);
-    if (ownedVolume?.stdout.trim() === owner) await command('Disposable database volume cleanup', 'docker', ['volume', 'rm', volume]);
-    else if (ownedVolume) { console.error('Disposable database volume ownership did not match.'); process.exitCode = 1; }
-  } catch { console.error('Disposable database volume cleanup failed.'); process.exitCode = 1; }
+    const ownedVolume = await execute(
+      'docker',
+      ['volume', 'inspect', '--format', '{{index .Labels "rielia.identity-test"}}', volume],
+      { timeout: 10000 },
+    ).catch(() => null);
+    if (ownedVolume?.stdout.trim() === owner)
+      await command('Disposable database volume cleanup', 'docker', ['volume', 'rm', volume]);
+    else if (ownedVolume) {
+      console.error('Disposable database volume ownership did not match.');
+      process.exitCode = 1;
+    }
+  } catch {
+    console.error('Disposable database volume cleanup failed.');
+    process.exitCode = 1;
+  }
   await rm(directory, { recursive: true, force: true });
   process.removeListener('SIGINT', stop);
   process.removeListener('SIGTERM', stop);

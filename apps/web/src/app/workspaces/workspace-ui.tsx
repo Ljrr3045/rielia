@@ -19,7 +19,9 @@ export function useLocale(): Lang {
 }
 
 export function cx(...values: Array<string | false | null | undefined>): string {
-  return values.filter((value): value is string => typeof value === 'string' && value.length > 0).join(' ');
+  return values
+    .filter((value): value is string => typeof value === 'string' && value.length > 0)
+    .join(' ');
 }
 
 export function BilingualText({ value }: { value: Bilingual }) {
@@ -79,7 +81,9 @@ export function ConfirmBox({
         <BilingualText value={title} />
       </h3>
       {children}
-      <p className={styles.confirmText}><BilingualText value={consequence} /></p>
+      <p className={styles.confirmText}>
+        <BilingualText value={consequence} />
+      </p>
       <div className={styles.formActions}>
         <button
           type="button"

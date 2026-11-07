@@ -32,9 +32,12 @@ function stateTone(state: MemberState): 'neutral' | 'warning' | 'danger' | 'succ
   return 'danger';
 }
 
-function memberName(members: Page<WorkspaceMember> | null, principalId: string | null): string | null {
+function memberName(
+  members: Page<WorkspaceMember> | null,
+  principalId: string | null,
+): string | null {
   if (principalId === null || members === null) return null;
-  return members.items.find(member => member.principalId === principalId)?.name ?? null;
+  return members.items.find((member) => member.principalId === principalId)?.name ?? null;
 }
 
 function BilingualOption({ value }: { value: { es: string; en: string } }) {
@@ -90,10 +93,14 @@ export function CreateWorkspaceForm({
 
   const form = (
     <>
-      <p className={styles.sectionBody}><BilingualText value={copy.workspace.createBody} /></p>
+      <p className={styles.sectionBody}>
+        <BilingualText value={copy.workspace.createBody} />
+      </p>
       <form onSubmit={submit} noValidate>
         <div className={styles.field}>
-          <label htmlFor={inputId}><BilingualText value={copy.workspace.nameLabel} /></label>
+          <label htmlFor={inputId}>
+            <BilingualText value={copy.workspace.nameLabel} />
+          </label>
           <input
             id={inputId}
             name="workspace-name"
@@ -105,9 +112,11 @@ export function CreateWorkspaceForm({
             disabled={disabled}
             aria-invalid={error}
             aria-describedby={cx(hintId, error ? errorId : null)}
-            onChange={event => change(event.currentTarget.value)}
+            onChange={(event) => change(event.currentTarget.value)}
           />
-          <p id={hintId} className={styles.fieldHint}><BilingualText value={copy.workspace.nameHint} /></p>
+          <p id={hintId} className={styles.fieldHint}>
+            <BilingualText value={copy.workspace.nameHint} />
+          </p>
           {error && (
             <p id={errorId} className={styles.fieldError} role="alert">
               <BilingualText value={copy.workspace.nameRequired} />
@@ -126,7 +135,9 @@ export function CreateWorkspaceForm({
   if (empty) {
     return (
       <div className={styles.emptyForm}>
-        <h3 className={styles.subheading}><BilingualText value={copy.workspace.createTitle} /></h3>
+        <h3 className={styles.subheading}>
+          <BilingualText value={copy.workspace.createTitle} />
+        </h3>
         {form}
       </div>
     );
@@ -134,9 +145,13 @@ export function CreateWorkspaceForm({
 
   return (
     <details className={styles.disclosure}>
-      <summary><BilingualText value={copy.workspace.createDisclosure} /></summary>
+      <summary>
+        <BilingualText value={copy.workspace.createDisclosure} />
+      </summary>
       <div className={styles.disclosureBody}>
-        <h2 className={styles.sectionTitle}><BilingualText value={copy.workspace.createTitle} /></h2>
+        <h2 className={styles.sectionTitle}>
+          <BilingualText value={copy.workspace.createTitle} />
+        </h2>
         {form}
       </div>
     </details>
@@ -198,7 +213,9 @@ function InviteForm({
     <form onSubmit={submit}>
       <div className={styles.formGrid}>
         <div className={styles.field}>
-          <label htmlFor={emailId}><BilingualText value={copy.invitations.emailLabel} /></label>
+          <label htmlFor={emailId}>
+            <BilingualText value={copy.invitations.emailLabel} />
+          </label>
           <input
             id={emailId}
             name="invitation-email"
@@ -210,9 +227,11 @@ function InviteForm({
             disabled={disabled}
             aria-invalid={error}
             aria-describedby={cx(hintId, error ? errorId : null)}
-            onChange={event => change({ email: event.currentTarget.value, role })}
+            onChange={(event) => change({ email: event.currentTarget.value, role })}
           />
-          <p id={hintId} className={styles.fieldHint}><BilingualText value={copy.invitations.emailHint} /></p>
+          <p id={hintId} className={styles.fieldHint}>
+            <BilingualText value={copy.invitations.emailHint} />
+          </p>
           {error && (
             <p id={errorId} className={styles.fieldError} role="alert">
               <BilingualText value={copy.invitations.emailRequired} />
@@ -220,19 +239,25 @@ function InviteForm({
           )}
         </div>
         <div className={styles.field}>
-          <label htmlFor={roleId}><BilingualText value={copy.invitations.roleLabel} /></label>
+          <label htmlFor={roleId}>
+            <BilingualText value={copy.invitations.roleLabel} />
+          </label>
           <select
             id={roleId}
             name="invitation-role"
             value={role}
             disabled={disabled}
-            onChange={event => change({ email, role: event.currentTarget.value as LimitedRole })}
+            onChange={(event) => change({ email, role: event.currentTarget.value as LimitedRole })}
           >
-            {limitedRoles.map(value => (
-              <option key={value} value={value}><BilingualOption value={limitedRoleName[value]} /></option>
+            {limitedRoles.map((value) => (
+              <option key={value} value={value}>
+                <BilingualOption value={limitedRoleName[value]} />
+              </option>
             ))}
           </select>
-          <p className={styles.fieldHint}><BilingualText value={roleDescription[role]} /></p>
+          <p className={styles.fieldHint}>
+            <BilingualText value={roleDescription[role]} />
+          </p>
         </div>
       </div>
       <div className={styles.formActions}>
@@ -266,11 +291,20 @@ function InvitationLinkPanel({ link, onDone }: { link: string; onDone: () => voi
   }
 
   return (
-    <section className={cx(styles.banner, styles.bannerBrand)} aria-labelledby="invitation-link-heading">
-      <h2 id="invitation-link-heading" className={styles.bannerTitle}><BilingualText value={copy.invitations.linkTitle} /></h2>
-      <p className={styles.bannerBody}><BilingualText value={copy.invitations.linkBody} /></p>
+    <section
+      className={cx(styles.banner, styles.bannerBrand)}
+      aria-labelledby="invitation-link-heading"
+    >
+      <h2 id="invitation-link-heading" className={styles.bannerTitle}>
+        <BilingualText value={copy.invitations.linkTitle} />
+      </h2>
+      <p className={styles.bannerBody}>
+        <BilingualText value={copy.invitations.linkBody} />
+      </p>
       <div className={styles.field}>
-        <label htmlFor={linkId}><BilingualText value={copy.invitations.linkLabel} /></label>
+        <label htmlFor={linkId}>
+          <BilingualText value={copy.invitations.linkLabel} />
+        </label>
         <input
           ref={inputRef}
           id={linkId}
@@ -278,7 +312,7 @@ function InvitationLinkPanel({ link, onDone }: { link: string; onDone: () => voi
           type="text"
           readOnly
           value={link}
-          onFocus={event => event.currentTarget.select()}
+          onFocus={(event) => event.currentTarget.select()}
         />
       </div>
       <div className={styles.bannerActions}>
@@ -290,14 +324,24 @@ function InvitationLinkPanel({ link, onDone }: { link: string; onDone: () => voi
         </button>
       </div>
       <div role="status" aria-live="polite">
-        {copied === 'copied' && <p className={styles.bannerBody}><BilingualText value={copy.invitations.copied} /></p>}
-        {copied === 'failed' && <p className={styles.fieldError}><BilingualText value={copy.invitations.copyFailed} /></p>}
+        {copied === 'copied' && (
+          <p className={styles.bannerBody}>
+            <BilingualText value={copy.invitations.copied} />
+          </p>
+        )}
+        {copied === 'failed' && (
+          <p className={styles.fieldError}>
+            <BilingualText value={copy.invitations.copyFailed} />
+          </p>
+        )}
       </div>
     </section>
   );
 }
 
-function invitationTone(state: WorkspaceInvitation['state']): 'neutral' | 'warning' | 'danger' | 'success' {
+function invitationTone(
+  state: WorkspaceInvitation['state'],
+): 'neutral' | 'warning' | 'danger' | 'success' {
   if (state === 'pending') return 'warning';
   if (state === 'accepted') return 'success';
   if (state === 'revoked') return 'danger';
@@ -326,7 +370,11 @@ function InvitationRow({
 
   function confirmRevoke() {
     setConfirming(false);
-    onCommand({ type: 'revoke-invitation', workspaceId: invitation.workspaceId, invitationId: invitation.id });
+    onCommand({
+      type: 'revoke-invitation',
+      workspaceId: invitation.workspaceId,
+      invitationId: invitation.id,
+    });
   }
 
   return (
@@ -334,17 +382,27 @@ function InvitationRow({
       <div className={styles.invitationMain}>
         <p className={styles.invitationEmail}>{invitation.recipientEmail}</p>
         <div className={styles.badgeRow}>
-          <Badge tone="neutral"><BilingualText value={limitedRoleName[invitation.role]} /></Badge>
-          <Badge tone={invitationTone(invitation.state)}><BilingualText value={invitationStateName[invitation.state]} /></Badge>
+          <Badge tone="neutral">
+            <BilingualText value={limitedRoleName[invitation.role]} />
+          </Badge>
+          <Badge tone={invitationTone(invitation.state)}>
+            <BilingualText value={invitationStateName[invitation.state]} />
+          </Badge>
         </div>
         <dl className={styles.metaGrid}>
           <div>
-            <dt><BilingualText value={copy.invitations.issuer} /></dt>
+            <dt>
+              <BilingualText value={copy.invitations.issuer} />
+            </dt>
             <dd className={styles.longValue}>{issuer ?? invitation.issuerPrincipalId}</dd>
           </div>
           <div>
-            <dt><BilingualText value={copy.invitations.expires} /></dt>
-            <dd><time dateTime={invitation.expiresAt}>{formatDate(invitation.expiresAt)}</time></dd>
+            <dt>
+              <BilingualText value={copy.invitations.expires} />
+            </dt>
+            <dd>
+              <time dateTime={invitation.expiresAt}>{formatDate(invitation.expiresAt)}</time>
+            </dd>
           </div>
         </dl>
       </div>
@@ -373,7 +431,9 @@ function InvitationRow({
         >
           <dl className={styles.metaGrid}>
             <div>
-              <dt><BilingualText value={copy.common.email} /></dt>
+              <dt>
+                <BilingualText value={copy.common.email} />
+              </dt>
               <dd className={styles.longValue}>{invitation.recipientEmail}</dd>
             </div>
           </dl>
@@ -414,15 +474,31 @@ export function InvitationsSection({
     <section className={styles.section} aria-labelledby="invitations-heading">
       <div className={styles.sectionHeader}>
         <div>
-          <h2 id="invitations-heading" className={styles.sectionTitle}><BilingualText value={copy.invitations.title} /></h2>
-          <p className={styles.sectionBody}><BilingualText value={copy.invitations.body} /></p>
-          <p className={styles.sectionHint}><BilingualText value={countText(invitations.total, copy.invitations.countOne, copy.invitations.countMany)} /></p>
+          <h2 id="invitations-heading" className={styles.sectionTitle}>
+            <BilingualText value={copy.invitations.title} />
+          </h2>
+          <p className={styles.sectionBody}>
+            <BilingualText value={copy.invitations.body} />
+          </p>
+          <p className={styles.sectionHint}>
+            <BilingualText
+              value={countText(
+                invitations.total,
+                copy.invitations.countOne,
+                copy.invitations.countMany,
+              )}
+            />
+          </p>
         </div>
       </div>
 
       <div className={styles.card}>
-        <p className={styles.noEmailNote}><BilingualText value={copy.invitations.noEmailNote} /></p>
-        <p className={styles.fieldHint}><BilingualText value={copy.invitations.pendingNote} /></p>
+        <p className={styles.noEmailNote}>
+          <BilingualText value={copy.invitations.noEmailNote} />
+        </p>
+        <p className={styles.fieldHint}>
+          <BilingualText value={copy.invitations.pendingNote} />
+        </p>
         <InviteForm
           workspaceId={workspaceId}
           disabled={disabled}
@@ -433,10 +509,12 @@ export function InvitationsSection({
       </div>
 
       {invitations.items.length === 0 ? (
-        <p className={styles.emptyNote}><BilingualText value={copy.invitations.empty} /></p>
+        <p className={styles.emptyNote}>
+          <BilingualText value={copy.invitations.empty} />
+        </p>
       ) : (
         <ul className={styles.list}>
-          {invitations.items.map(invitation => (
+          {invitations.items.map((invitation) => (
             <InvitationRow
               key={`${invitation.id}:${invitation.state}`}
               invitation={invitation}
@@ -448,17 +526,22 @@ export function InvitationsSection({
         </ul>
       )}
       {invitations.nextCursor !== null && (
-        <button type="button" className={styles.secondary} disabled={busy || loadingMore} onClick={onLoadMore}>
-          <BilingualText value={loadingMore ? copy.common.loadingMore : copy.invitations.loadMore} />
+        <button
+          type="button"
+          className={styles.secondary}
+          disabled={busy || loadingMore}
+          onClick={onLoadMore}
+        >
+          <BilingualText
+            value={loadingMore ? copy.common.loadingMore : copy.invitations.loadMore}
+          />
         </button>
       )}
     </section>
   );
 }
 
-type MemberAction =
-  | { kind: 'role'; role: LimitedRole }
-  | { kind: 'state'; state: MemberState };
+type MemberAction = { kind: 'role'; role: LimitedRole } | { kind: 'state'; state: MemberState };
 
 function HumanMemberCard({
   member,
@@ -485,7 +568,12 @@ function HumanMemberCard({
   const principalInactive = member.principalState !== 'active';
 
   useEffect(() => {
-    if (draft?.type === 'update-member' && draft.workspaceId === workspaceId && draft.principalId === member.principalId && draft.role !== undefined) {
+    if (
+      draft?.type === 'update-member' &&
+      draft.workspaceId === workspaceId &&
+      draft.principalId === member.principalId &&
+      draft.role !== undefined
+    ) {
       setNextRole(draft.role);
     } else if (draft === null) {
       setNextRole(baseRole);
@@ -494,7 +582,13 @@ function HumanMemberCard({
 
   function changeRole(role: LimitedRole) {
     setNextRole(role);
-    onStage({ type: 'update-member', workspaceId, principalId: member.principalId, version: member.version, role });
+    onStage({
+      type: 'update-member',
+      workspaceId,
+      principalId: member.principalId,
+      version: member.version,
+      role,
+    });
   }
 
   function review(next: MemberAction, opener: HTMLButtonElement) {
@@ -533,82 +627,115 @@ function HumanMemberCard({
     onCommand(command);
   }
 
-  const actionTitle = action === null
-    ? null
-    : action.kind === 'role'
-      ? copy.members.confirmRoleTitle
-      : action.state === 'suspended'
-        ? copy.members.confirmSuspendTitle
-        : action.state === 'revoked'
-          ? copy.members.confirmRemoveTitle
-          : copy.members.confirmRestoreTitle;
+  const actionTitle =
+    action === null
+      ? null
+      : action.kind === 'role'
+        ? copy.members.confirmRoleTitle
+        : action.state === 'suspended'
+          ? copy.members.confirmSuspendTitle
+          : action.state === 'revoked'
+            ? copy.members.confirmRemoveTitle
+            : copy.members.confirmRestoreTitle;
 
-  const actionConsequence = action === null
-    ? null
-    : action.kind === 'role'
-      ? copy.members.roleConsequence
-      : action.state === 'suspended'
-        ? copy.members.suspendConsequence
-        : action.state === 'revoked'
-          ? copy.members.removeConsequence
-          : copy.members.restoreConsequence;
+  const actionConsequence =
+    action === null
+      ? null
+      : action.kind === 'role'
+        ? copy.members.roleConsequence
+        : action.state === 'suspended'
+          ? copy.members.suspendConsequence
+          : action.state === 'revoked'
+            ? copy.members.removeConsequence
+            : copy.members.restoreConsequence;
 
-  const controlsAvailable = canAdminister && !disabled && !principalInactive && member.state !== 'revoked' && member.role !== 'owner';
+  const controlsAvailable =
+    canAdminister &&
+    !disabled &&
+    !principalInactive &&
+    member.state !== 'revoked' &&
+    member.role !== 'owner';
 
   return (
     <li className={styles.memberCard}>
       <div className={styles.memberHeader}>
         <h3 className={styles.memberName}>{member.name}</h3>
         <div className={styles.badgeRow}>
-          <Badge tone="neutral"><BilingualText value={kindName.human} /></Badge>
-          <Badge tone={member.role === 'owner' ? 'brand' : 'neutral'}><BilingualText value={roleName[member.role]} /></Badge>
-          <Badge tone={stateTone(member.state)}><BilingualText value={stateName[member.state]} /></Badge>
+          <Badge tone="neutral">
+            <BilingualText value={kindName.human} />
+          </Badge>
+          <Badge tone={member.role === 'owner' ? 'brand' : 'neutral'}>
+            <BilingualText value={roleName[member.role]} />
+          </Badge>
+          <Badge tone={stateTone(member.state)}>
+            <BilingualText value={stateName[member.state]} />
+          </Badge>
           {member.principalState !== member.state && (
             <Badge tone={stateTone(member.principalState)}>
-              <BilingualText value={copy.members.principalState} />: <BilingualText value={stateName[member.principalState]} />
+              <BilingualText value={copy.members.principalState} />
+              {': '}
+              <BilingualText value={stateName[member.principalState]} />
             </Badge>
           )}
         </div>
       </div>
       {member.role === 'owner' && (
-        <p className={styles.ownerNote}><BilingualText value={copy.members.ownerProtected} /></p>
+        <p className={styles.ownerNote}>
+          <BilingualText value={copy.members.ownerProtected} />
+        </p>
       )}
       {member.role !== 'owner' && principalInactive && (
-        <p className={styles.ownerNote}><BilingualText value={copy.members.principalInactive} /></p>
+        <p className={styles.ownerNote}>
+          <BilingualText value={copy.members.principalInactive} />
+        </p>
       )}
       {member.role !== 'owner' && member.state === 'revoked' && (
-        <p className={styles.ownerNote}><BilingualText value={copy.members.revokedNote} /></p>
+        <p className={styles.ownerNote}>
+          <BilingualText value={copy.members.revokedNote} />
+        </p>
       )}
       {member.role !== 'owner' && member.state === 'suspended' && !principalInactive && (
-        <p className={styles.ownerNote}><BilingualText value={copy.members.suspendedNote} /></p>
+        <p className={styles.ownerNote}>
+          <BilingualText value={copy.members.suspendedNote} />
+        </p>
       )}
 
       {controlsAvailable && (
         <details className={styles.details}>
-          <summary><BilingualText value={copy.members.manage} /></summary>
+          <summary>
+            <BilingualText value={copy.members.manage} />
+          </summary>
           <div className={styles.detailsBody}>
             {member.state === 'active' && (
               <>
                 <div className={styles.field}>
-                  <label htmlFor={roleId}><BilingualText value={copy.members.roleLabel} /></label>
+                  <label htmlFor={roleId}>
+                    <BilingualText value={copy.members.roleLabel} />
+                  </label>
                   <select
                     id={roleId}
                     value={nextRole}
                     disabled={disabled || action !== null}
-                    onChange={event => changeRole(event.currentTarget.value as LimitedRole)}
+                    onChange={(event) => changeRole(event.currentTarget.value as LimitedRole)}
                   >
-                    {limitedRoles.map(value => (
-                      <option key={value} value={value}><BilingualOption value={limitedRoleName[value]} /></option>
+                    {limitedRoles.map((value) => (
+                      <option key={value} value={value}>
+                        <BilingualOption value={limitedRoleName[value]} />
+                      </option>
                     ))}
                   </select>
-                  <p className={styles.fieldHint}><BilingualText value={roleDescription[nextRole]} /></p>
+                  <p className={styles.fieldHint}>
+                    <BilingualText value={roleDescription[nextRole]} />
+                  </p>
                 </div>
                 <div className={styles.formActions}>
                   <button
                     type="button"
                     className={styles.secondary}
                     disabled={disabled || action !== null || nextRole === member.role}
-                    onClick={event => review({ kind: 'role', role: nextRole }, event.currentTarget)}
+                    onClick={(event) =>
+                      review({ kind: 'role', role: nextRole }, event.currentTarget)
+                    }
                   >
                     <BilingualText value={copy.members.changeRole} />
                   </button>
@@ -616,7 +743,9 @@ function HumanMemberCard({
                     type="button"
                     className={styles.secondary}
                     disabled={disabled || action !== null}
-                    onClick={event => review({ kind: 'state', state: 'suspended' }, event.currentTarget)}
+                    onClick={(event) =>
+                      review({ kind: 'state', state: 'suspended' }, event.currentTarget)
+                    }
                   >
                     <BilingualText value={copy.members.suspend} />
                   </button>
@@ -624,7 +753,9 @@ function HumanMemberCard({
                     type="button"
                     className={styles.dangerButton}
                     disabled={disabled || action !== null}
-                    onClick={event => review({ kind: 'state', state: 'revoked' }, event.currentTarget)}
+                    onClick={(event) =>
+                      review({ kind: 'state', state: 'revoked' }, event.currentTarget)
+                    }
                   >
                     <BilingualText value={copy.members.remove} />
                   </button>
@@ -637,7 +768,9 @@ function HumanMemberCard({
                   type="button"
                   className={styles.secondary}
                   disabled={disabled || action !== null}
-                  onClick={event => review({ kind: 'state', state: 'active' }, event.currentTarget)}
+                  onClick={(event) =>
+                    review({ kind: 'state', state: 'active' }, event.currentTarget)
+                  }
                 >
                   <BilingualText value={copy.members.restore} />
                 </button>
@@ -645,7 +778,9 @@ function HumanMemberCard({
                   type="button"
                   className={styles.dangerButton}
                   disabled={disabled || action !== null}
-                  onClick={event => review({ kind: 'state', state: 'revoked' }, event.currentTarget)}
+                  onClick={(event) =>
+                    review({ kind: 'state', state: 'revoked' }, event.currentTarget)
+                  }
                 >
                   <BilingualText value={copy.members.remove} />
                 </button>
@@ -655,11 +790,13 @@ function HumanMemberCard({
               <ConfirmBox
                 title={actionTitle}
                 consequence={actionConsequence}
-                confirmLabel={action.kind === 'role'
-                  ? copy.common.confirm
-                  : action.state === 'revoked'
-                    ? copy.members.remove
-                    : copy.common.confirm}
+                confirmLabel={
+                  action.kind === 'role'
+                    ? copy.common.confirm
+                    : action.state === 'revoked'
+                      ? copy.members.remove
+                      : copy.common.confirm
+                }
                 danger={action.kind === 'state' && action.state !== 'active'}
                 disabled={disabled}
                 onConfirm={confirmAction}
@@ -667,16 +804,34 @@ function HumanMemberCard({
               >
                 <dl className={styles.metaGrid}>
                   <div>
-                    <dt><BilingualText value={copy.common.name} /></dt>
+                    <dt>
+                      <BilingualText value={copy.common.name} />
+                    </dt>
                     <dd className={styles.longValue}>{member.name}</dd>
                   </div>
                   <div>
-                    <dt><BilingualText value={copy.common.current} /></dt>
-                    <dd><BilingualText value={action.kind === 'role' ? roleName[member.role] : stateName[member.state]} /></dd>
+                    <dt>
+                      <BilingualText value={copy.common.current} />
+                    </dt>
+                    <dd>
+                      <BilingualText
+                        value={
+                          action.kind === 'role' ? roleName[member.role] : stateName[member.state]
+                        }
+                      />
+                    </dd>
                   </div>
                   <div>
-                    <dt><BilingualText value={copy.common.newValue} /></dt>
-                    <dd><BilingualText value={action.kind === 'role' ? roleName[action.role] : stateName[action.state]} /></dd>
+                    <dt>
+                      <BilingualText value={copy.common.newValue} />
+                    </dt>
+                    <dd>
+                      <BilingualText
+                        value={
+                          action.kind === 'role' ? roleName[action.role] : stateName[action.state]
+                        }
+                      />
+                    </dd>
                   </div>
                 </dl>
               </ConfirmBox>
@@ -703,12 +858,20 @@ function AgentMemberRow({
       <div className={styles.memberHeader}>
         <h3 className={styles.memberName}>{member.name}</h3>
         <div className={styles.badgeRow}>
-          <Badge tone="brand"><BilingualText value={kindName.agent} /></Badge>
-          <Badge tone="neutral"><BilingualText value={roleName[member.role]} /></Badge>
-          <Badge tone={stateTone(member.principalState)}><BilingualText value={stateName[member.principalState]} /></Badge>
+          <Badge tone="brand">
+            <BilingualText value={kindName.agent} />
+          </Badge>
+          <Badge tone="neutral">
+            <BilingualText value={roleName[member.role]} />
+          </Badge>
+          <Badge tone={stateTone(member.principalState)}>
+            <BilingualText value={stateName[member.principalState]} />
+          </Badge>
           {member.state !== member.principalState && (
             <Badge tone={stateTone(member.state)}>
-              <BilingualText value={copy.members.membership} />: <BilingualText value={stateName[member.state]} />
+              <BilingualText value={copy.members.membership} />
+              {': '}
+              <BilingualText value={stateName[member.state]} />
             </Badge>
           )}
         </div>
@@ -716,14 +879,24 @@ function AgentMemberRow({
       <p className={styles.memberMeta}>
         <BilingualText value={copy.members.custodian} />
         {': '}
-        <span className={styles.longValue}>{custodian ?? member.custodianPrincipalId ?? <BilingualText value={copy.members.custodianUnavailable} />}</span>
+        <span className={styles.longValue}>
+          {custodian ?? member.custodianPrincipalId ?? (
+            <BilingualText value={copy.members.custodianUnavailable} />
+          )}
+        </span>
       </p>
       {member.principalState !== 'active' && (
         <p className={styles.ownerNote}>
-          <BilingualText value={copy.members.principalState} />: <BilingualText value={stateName[member.principalState]} />
+          <BilingualText value={copy.members.principalState} />
+          {': '}
+          <BilingualText value={stateName[member.principalState]} />
         </p>
       )}
-      {canAdminister && <a className={styles.inlineLink} href="#agents"><BilingualText value={copy.members.manageInAgents} /></a>}
+      {canAdminister && (
+        <a className={styles.inlineLink} href="#agents">
+          <BilingualText value={copy.members.manageInAgents} />
+        </a>
+      )}
     </li>
   );
 }
@@ -755,38 +928,55 @@ export function MembersSection({
     <section className={styles.section} aria-labelledby="members-heading">
       <div className={styles.sectionHeader}>
         <div>
-          <h2 id="members-heading" className={styles.sectionTitle}><BilingualText value={copy.members.title} /></h2>
-          <p className={styles.sectionBody}><BilingualText value={copy.members.body} /></p>
-          <p className={styles.sectionHint}><BilingualText value={countText(members.total, copy.members.countOne, copy.members.countMany)} /></p>
+          <h2 id="members-heading" className={styles.sectionTitle}>
+            <BilingualText value={copy.members.title} />
+          </h2>
+          <p className={styles.sectionBody}>
+            <BilingualText value={copy.members.body} />
+          </p>
+          <p className={styles.sectionHint}>
+            <BilingualText
+              value={countText(members.total, copy.members.countOne, copy.members.countMany)}
+            />
+          </p>
         </div>
       </div>
       {members.items.length === 0 ? (
-        <p className={styles.emptyNote}><BilingualText value={copy.members.empty} /></p>
+        <p className={styles.emptyNote}>
+          <BilingualText value={copy.members.empty} />
+        </p>
       ) : (
         <ul className={styles.memberGrid}>
-          {members.items.map(member => member.kind === 'human' ? (
-            <HumanMemberCard
-              key={`${member.principalId}:${member.version}:${member.state}:${member.role}`}
-              member={member}
-              workspaceId={workspaceId}
-              canAdminister={canAdminister}
-              disabled={disabled}
-              draft={draft}
-              onStage={onStage}
-              onCommand={onCommand}
-            />
-          ) : (
-            <AgentMemberRow
-              key={member.principalId}
-              member={member}
-              members={members}
-              canAdminister={canAdminister}
-            />
-          ))}
+          {members.items.map((member) =>
+            member.kind === 'human' ? (
+              <HumanMemberCard
+                key={`${member.principalId}:${member.version}:${member.state}:${member.role}`}
+                member={member}
+                workspaceId={workspaceId}
+                canAdminister={canAdminister}
+                disabled={disabled}
+                draft={draft}
+                onStage={onStage}
+                onCommand={onCommand}
+              />
+            ) : (
+              <AgentMemberRow
+                key={member.principalId}
+                member={member}
+                members={members}
+                canAdminister={canAdminister}
+              />
+            ),
+          )}
         </ul>
       )}
       {members.nextCursor !== null && (
-        <button type="button" className={styles.secondary} disabled={busy || loadingMore} onClick={onLoadMore}>
+        <button
+          type="button"
+          className={styles.secondary}
+          disabled={busy || loadingMore}
+          onClick={onLoadMore}
+        >
           <BilingualText value={loadingMore ? copy.common.loadingMore : copy.members.loadMore} />
         </button>
       )}
@@ -795,8 +985,7 @@ export function MembersSection({
 }
 
 type AgentAction =
-  | { kind: 'state'; state: MemberState }
-  | { kind: 'custodian'; custodianPrincipalId: string };
+  { kind: 'state'; state: MemberState } | { kind: 'custodian'; custodianPrincipalId: string };
 
 function AgentRegistrationForm({
   workspaceId,
@@ -870,15 +1059,23 @@ function AgentRegistrationForm({
 
   return (
     <div className={styles.card}>
-      <h3 className={styles.subheading}><BilingualText value={copy.agents.registerTitle} /></h3>
-      <p className={styles.sectionBody}><BilingualText value={copy.agents.registerBody} /></p>
+      <h3 className={styles.subheading}>
+        <BilingualText value={copy.agents.registerTitle} />
+      </h3>
+      <p className={styles.sectionBody}>
+        <BilingualText value={copy.agents.registerBody} />
+      </p>
       {custodians.length === 0 ? (
-        <p className={styles.ownerNote}><BilingualText value={copy.agents.noCustodians} /></p>
+        <p className={styles.ownerNote}>
+          <BilingualText value={copy.agents.noCustodians} />
+        </p>
       ) : (
         <form onSubmit={submit} noValidate>
           <div className={styles.formGrid}>
             <div className={styles.field}>
-              <label htmlFor={nameId}><BilingualText value={copy.agents.nameLabel} /></label>
+              <label htmlFor={nameId}>
+                <BilingualText value={copy.agents.nameLabel} />
+              </label>
               <input
                 id={nameId}
                 type="text"
@@ -889,43 +1086,69 @@ function AgentRegistrationForm({
                 disabled={disabled}
                 aria-invalid={error}
                 aria-describedby={cx(hintId, error ? errorId : null)}
-                onChange={event => change({ name: event.currentTarget.value, role, custodian })}
+                onChange={(event) => change({ name: event.currentTarget.value, role, custodian })}
               />
-              <p id={hintId} className={styles.fieldHint}><BilingualText value={copy.agents.nameHint} /></p>
+              <p id={hintId} className={styles.fieldHint}>
+                <BilingualText value={copy.agents.nameHint} />
+              </p>
               {error && (
                 <p id={errorId} className={styles.fieldError} role="alert">
-                  <BilingualText value={name.trim() ? copy.agents.custodianRequired : copy.agents.nameRequired} />
+                  <BilingualText
+                    value={name.trim() ? copy.agents.custodianRequired : copy.agents.nameRequired}
+                  />
                 </p>
               )}
             </div>
             <div className={styles.field}>
-              <label htmlFor={roleId}><BilingualText value={copy.agents.roleLabel} /></label>
+              <label htmlFor={roleId}>
+                <BilingualText value={copy.agents.roleLabel} />
+              </label>
               <select
                 id={roleId}
                 value={role}
                 disabled={disabled}
-                onChange={event => change({ name, role: event.currentTarget.value as 'member' | 'viewer', custodian })}
+                onChange={(event) =>
+                  change({
+                    name,
+                    role: event.currentTarget.value as 'member' | 'viewer',
+                    custodian,
+                  })
+                }
               >
-                <option value="member"><BilingualOption value={agentRoleName.member} /></option>
-                <option value="viewer"><BilingualOption value={agentRoleName.viewer} /></option>
+                <option value="member">
+                  <BilingualOption value={agentRoleName.member} />
+                </option>
+                <option value="viewer">
+                  <BilingualOption value={agentRoleName.viewer} />
+                </option>
               </select>
-              <p className={styles.fieldHint}><BilingualText value={copy.agents.roleHint} /></p>
+              <p className={styles.fieldHint}>
+                <BilingualText value={copy.agents.roleHint} />
+              </p>
             </div>
             <div className={styles.field}>
-              <label htmlFor={custodianId}><BilingualText value={copy.agents.custodianLabel} /></label>
+              <label htmlFor={custodianId}>
+                <BilingualText value={copy.agents.custodianLabel} />
+              </label>
               <select
                 id={custodianId}
                 value={custodian}
                 disabled={disabled}
                 required
-                onChange={event => change({ name, role, custodian: event.currentTarget.value })}
+                onChange={(event) => change({ name, role, custodian: event.currentTarget.value })}
               >
-                <option value=""><BilingualOption value={copy.agents.custodianPlaceholder} /></option>
-                {custodians.map(member => (
-                  <option key={member.principalId} value={member.principalId}>{member.name}</option>
+                <option value="">
+                  <BilingualOption value={copy.agents.custodianPlaceholder} />
+                </option>
+                {custodians.map((member) => (
+                  <option key={member.principalId} value={member.principalId}>
+                    {member.name}
+                  </option>
                 ))}
               </select>
-              <p className={styles.fieldHint}><BilingualText value={copy.agents.custodianHint} /></p>
+              <p className={styles.fieldHint}>
+                <BilingualText value={copy.agents.custodianHint} />
+              </p>
             </div>
           </div>
           <div className={styles.formActions}>
@@ -968,10 +1191,17 @@ function AgentCard({
   const retired = member.principalState === 'revoked';
   const membershipActive = member.state === 'active';
   const controlsAvailable = canAdminister && !disabled && membershipActive && !retired;
-  const otherCustodians = custodians.filter(memberOption => memberOption.principalId !== member.custodianPrincipalId);
+  const otherCustodians = custodians.filter(
+    (memberOption) => memberOption.principalId !== member.custodianPrincipalId,
+  );
 
   useEffect(() => {
-    if (draft?.type === 'manage-agent' && draft.workspaceId === workspaceId && draft.principalId === member.principalId && draft.custodianPrincipalId !== undefined) {
+    if (
+      draft?.type === 'manage-agent' &&
+      draft.workspaceId === workspaceId &&
+      draft.principalId === member.principalId &&
+      draft.custodianPrincipalId !== undefined
+    ) {
       setNextCustodian(draft.custodianPrincipalId);
     } else if (draft === null) {
       setNextCustodian('');
@@ -980,7 +1210,13 @@ function AgentCard({
 
   function changeCustodian(custodianPrincipalId: string) {
     setNextCustodian(custodianPrincipalId);
-    onStage({ type: 'manage-agent', workspaceId, principalId: member.principalId, version: member.version, custodianPrincipalId });
+    onStage({
+      type: 'manage-agent',
+      workspaceId,
+      principalId: member.principalId,
+      version: member.version,
+      custodianPrincipalId,
+    });
   }
 
   function review(next: AgentAction, opener: HTMLButtonElement) {
@@ -995,7 +1231,13 @@ function AgentCard({
 
   function commandFor(next: AgentAction): WorkspaceCommand {
     if (next.kind === 'state') {
-      return { type: 'manage-agent', workspaceId, principalId: member.principalId, version: member.version, state: next.state };
+      return {
+        type: 'manage-agent',
+        workspaceId,
+        principalId: member.principalId,
+        version: member.version,
+        state: next.state,
+      };
     }
     return {
       type: 'manage-agent',
@@ -1014,37 +1256,47 @@ function AgentCard({
     onCommand(command);
   }
 
-  const title = action === null
-    ? null
-    : action.kind === 'state'
-      ? action.state === 'suspended'
-        ? copy.agents.confirmSuspendTitle
-        : action.state === 'revoked'
-          ? copy.agents.confirmRetireTitle
-          : copy.agents.confirmRestoreTitle
-      : copy.agents.confirmCustodianTitle;
+  const title =
+    action === null
+      ? null
+      : action.kind === 'state'
+        ? action.state === 'suspended'
+          ? copy.agents.confirmSuspendTitle
+          : action.state === 'revoked'
+            ? copy.agents.confirmRetireTitle
+            : copy.agents.confirmRestoreTitle
+        : copy.agents.confirmCustodianTitle;
 
-  const consequence = action === null
-    ? null
-    : action.kind === 'state'
-      ? action.state === 'suspended'
-        ? copy.agents.suspendConsequence
-        : action.state === 'revoked'
-          ? copy.agents.retireConsequence
-          : copy.agents.restoreConsequence
-      : copy.agents.custodianConsequence;
+  const consequence =
+    action === null
+      ? null
+      : action.kind === 'state'
+        ? action.state === 'suspended'
+          ? copy.agents.suspendConsequence
+          : action.state === 'revoked'
+            ? copy.agents.retireConsequence
+            : copy.agents.restoreConsequence
+        : copy.agents.custodianConsequence;
 
   return (
     <li className={styles.memberCard}>
       <div className={styles.memberHeader}>
         <h3 className={styles.memberName}>{member.name}</h3>
         <div className={styles.badgeRow}>
-          <Badge tone="brand"><BilingualText value={kindName.agent} /></Badge>
-          <Badge tone="neutral"><BilingualText value={roleName[member.role]} /></Badge>
-          <Badge tone={stateTone(member.principalState)}><BilingualText value={stateName[member.principalState]} /></Badge>
+          <Badge tone="brand">
+            <BilingualText value={kindName.agent} />
+          </Badge>
+          <Badge tone="neutral">
+            <BilingualText value={roleName[member.role]} />
+          </Badge>
+          <Badge tone={stateTone(member.principalState)}>
+            <BilingualText value={stateName[member.principalState]} />
+          </Badge>
           {member.state !== member.principalState && (
             <Badge tone={stateTone(member.state)}>
-              <BilingualText value={copy.members.membership} />: <BilingualText value={stateName[member.state]} />
+              <BilingualText value={copy.members.membership} />
+              {': '}
+              <BilingualText value={stateName[member.state]} />
             </Badge>
           )}
         </div>
@@ -1052,12 +1304,22 @@ function AgentCard({
       <p className={styles.memberMeta}>
         <BilingualText value={copy.agents.currentCustodian} />
         {': '}
-        <span className={styles.longValue}>{custodian ?? member.custodianPrincipalId ?? <BilingualText value={copy.members.custodianUnavailable} />}</span>
+        <span className={styles.longValue}>
+          {custodian ?? member.custodianPrincipalId ?? (
+            <BilingualText value={copy.members.custodianUnavailable} />
+          )}
+        </span>
       </p>
 
-      {retired && <p className={styles.ownerNote}><BilingualText value={copy.agents.revokedNote} /></p>}
+      {retired && (
+        <p className={styles.ownerNote}>
+          <BilingualText value={copy.agents.revokedNote} />
+        </p>
+      )}
       {!retired && !membershipActive && (
-        <p className={styles.ownerNote}><BilingualText value={copy.agents.membershipNotActive} /></p>
+        <p className={styles.ownerNote}>
+          <BilingualText value={copy.agents.membershipNotActive} />
+        </p>
       )}
 
       {controlsAvailable && (
@@ -1068,7 +1330,9 @@ function AgentCard({
                 type="button"
                 className={styles.secondary}
                 disabled={disabled || action !== null}
-                onClick={event => review({ kind: 'state', state: 'suspended' }, event.currentTarget)}
+                onClick={(event) =>
+                  review({ kind: 'state', state: 'suspended' }, event.currentTarget)
+                }
               >
                 <BilingualText value={copy.agents.suspend} />
               </button>
@@ -1078,7 +1342,7 @@ function AgentCard({
                 type="button"
                 className={styles.secondary}
                 disabled={disabled || action !== null}
-                onClick={event => review({ kind: 'state', state: 'active' }, event.currentTarget)}
+                onClick={(event) => review({ kind: 'state', state: 'active' }, event.currentTarget)}
               >
                 <BilingualText value={copy.agents.restore} />
               </button>
@@ -1087,7 +1351,7 @@ function AgentCard({
               type="button"
               className={styles.dangerButton}
               disabled={disabled || action !== null}
-              onClick={event => review({ kind: 'state', state: 'revoked' }, event.currentTarget)}
+              onClick={(event) => review({ kind: 'state', state: 'revoked' }, event.currentTarget)}
             >
               <BilingualText value={copy.agents.retire} />
             </button>
@@ -1095,36 +1359,53 @@ function AgentCard({
 
           {otherCustodians.length > 0 ? (
             <div className={styles.field}>
-              <label htmlFor={custodianId}><BilingualText value={copy.agents.newCustodian} /></label>
+              <label htmlFor={custodianId}>
+                <BilingualText value={copy.agents.newCustodian} />
+              </label>
               <select
                 id={custodianId}
                 value={nextCustodian}
                 disabled={disabled || action !== null}
-                onChange={event => changeCustodian(event.currentTarget.value)}
+                onChange={(event) => changeCustodian(event.currentTarget.value)}
               >
-                <option value=""><BilingualOption value={copy.agents.changeCustodian} /></option>
-                {otherCustodians.map(memberOption => (
-                  <option key={memberOption.principalId} value={memberOption.principalId}>{memberOption.name}</option>
+                <option value="">
+                  <BilingualOption value={copy.agents.changeCustodian} />
+                </option>
+                {otherCustodians.map((memberOption) => (
+                  <option key={memberOption.principalId} value={memberOption.principalId}>
+                    {memberOption.name}
+                  </option>
                 ))}
               </select>
               <button
                 type="button"
                 className={styles.secondary}
                 disabled={disabled || action !== null || nextCustodian === ''}
-                onClick={event => review({ kind: 'custodian', custodianPrincipalId: nextCustodian }, event.currentTarget)}
+                onClick={(event) =>
+                  review(
+                    { kind: 'custodian', custodianPrincipalId: nextCustodian },
+                    event.currentTarget,
+                  )
+                }
               >
                 <BilingualText value={copy.common.reviewChange} />
               </button>
             </div>
           ) : (
-            <p className={styles.fieldHint}><BilingualText value={copy.agents.noOtherCustodian} /></p>
+            <p className={styles.fieldHint}>
+              <BilingualText value={copy.agents.noOtherCustodian} />
+            </p>
           )}
 
           {action !== null && title !== null && consequence !== null && (
             <ConfirmBox
               title={title}
               consequence={consequence}
-              confirmLabel={action.kind === 'state' && action.state === 'revoked' ? copy.agents.retire : copy.common.confirm}
+              confirmLabel={
+                action.kind === 'state' && action.state === 'revoked'
+                  ? copy.agents.retire
+                  : copy.common.confirm
+              }
               danger={action.kind === 'state' && action.state !== 'active'}
               disabled={disabled}
               onConfirm={confirmAction}
@@ -1132,19 +1413,28 @@ function AgentCard({
             >
               <dl className={styles.metaGrid}>
                 <div>
-                  <dt><BilingualText value={copy.common.name} /></dt>
+                  <dt>
+                    <BilingualText value={copy.common.name} />
+                  </dt>
                   <dd className={styles.longValue}>{member.name}</dd>
                 </div>
                 {action.kind === 'state' ? (
                   <div>
-                    <dt><BilingualText value={copy.common.newValue} /></dt>
-                    <dd><BilingualText value={stateName[action.state]} /></dd>
+                    <dt>
+                      <BilingualText value={copy.common.newValue} />
+                    </dt>
+                    <dd>
+                      <BilingualText value={stateName[action.state]} />
+                    </dd>
                   </div>
                 ) : (
                   <div>
-                    <dt><BilingualText value={copy.agents.newCustodian} /></dt>
+                    <dt>
+                      <BilingualText value={copy.agents.newCustodian} />
+                    </dt>
                     <dd className={styles.longValue}>
-                      {memberName(members, action.custodianPrincipalId) ?? action.custodianPrincipalId}
+                      {memberName(members, action.custodianPrincipalId) ??
+                        action.custodianPrincipalId}
                     </dd>
                   </div>
                 )}
@@ -1183,15 +1473,23 @@ export function AgentsSection({
   onLoadMore: () => void;
 }) {
   if (!canAdminister) return null;
-  const agents = members.items.filter(member => member.kind === 'agent');
+  const agents = members.items.filter((member) => member.kind === 'agent');
 
   return (
     <section className={styles.section} aria-labelledby="agents-heading">
       <div className={styles.sectionHeader}>
         <div>
-          <h2 id="agents-heading" className={styles.sectionTitle}><BilingualText value={copy.agents.title} /></h2>
-          <p className={styles.sectionBody}><BilingualText value={copy.agents.body} /></p>
-          <p className={styles.sectionHint}><BilingualText value={countText(agents.length, copy.agents.countOne, copy.agents.countMany)} /></p>
+          <h2 id="agents-heading" className={styles.sectionTitle}>
+            <BilingualText value={copy.agents.title} />
+          </h2>
+          <p className={styles.sectionBody}>
+            <BilingualText value={copy.agents.body} />
+          </p>
+          <p className={styles.sectionHint}>
+            <BilingualText
+              value={countText(agents.length, copy.agents.countOne, copy.agents.countMany)}
+            />
+          </p>
         </div>
       </div>
 
@@ -1205,13 +1503,17 @@ export function AgentsSection({
       />
 
       {members.nextCursor !== null && (
-        <p className={styles.fieldHint}><BilingualText value={copy.agents.moreMembers} /></p>
+        <p className={styles.fieldHint}>
+          <BilingualText value={copy.agents.moreMembers} />
+        </p>
       )}
       {agents.length === 0 ? (
-        <p className={styles.emptyNote}><BilingualText value={copy.agents.empty} /></p>
+        <p className={styles.emptyNote}>
+          <BilingualText value={copy.agents.empty} />
+        </p>
       ) : (
         <ul className={styles.memberGrid}>
-          {agents.map(member => (
+          {agents.map((member) => (
             <AgentCard
               key={`${member.principalId}:${member.version}:${member.state}:${member.principalState}`}
               member={member}
@@ -1228,7 +1530,12 @@ export function AgentsSection({
         </ul>
       )}
       {members.nextCursor !== null && (
-        <button type="button" className={styles.secondary} disabled={busy || loadingMore} onClick={onLoadMore}>
+        <button
+          type="button"
+          className={styles.secondary}
+          disabled={busy || loadingMore}
+          onClick={onLoadMore}
+        >
           <BilingualText value={loadingMore ? copy.common.loadingMore : copy.agents.loadMore} />
         </button>
       )}

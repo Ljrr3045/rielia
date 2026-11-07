@@ -1,13 +1,11 @@
 'use client';
 
-import type { TaskFilters, TaskPrototypeActions, PrototypeState } from '../../lib/task-prototype/types';
-import {
-  copy,
-  priorityLabel,
-  sprintStateLabel,
-  statusLabel,
-  type Lang,
-} from './strings';
+import type {
+  TaskFilters,
+  TaskPrototypeActions,
+  PrototypeState,
+} from '../../lib/task-prototype/types';
+import { copy, priorityLabel, sprintStateLabel, statusLabel, type Lang } from './strings';
 import { cx, IconClose, IconSearch } from './ui';
 import styles from './prototype.module.css';
 
@@ -33,7 +31,7 @@ export function Filters({ state, actions, lang, open }: FiltersProps) {
   const c = copy[lang];
   const count = activeFilterCount(state.filters);
   const sprintLabel = (sprintId: string) => {
-    const sprint = state.sprints.find(item => item.id === sprintId);
+    const sprint = state.sprints.find((item) => item.id === sprintId);
     if (sprint === undefined) return sprintId;
     return `${sprint.name} · ${sprintStateLabel(sprint.state, lang)}`;
   };
@@ -54,7 +52,7 @@ export function Filters({ state, actions, lang, open }: FiltersProps) {
             autoComplete="off"
             className={styles.textInput}
             id="prototype-filter-search"
-            onChange={event => actions.setFilters({ search: event.target.value })}
+            onChange={(event) => actions.setFilters({ search: event.target.value })}
             placeholder={c.searchPlaceholder}
             type="text"
             value={state.filters.search}
@@ -76,11 +74,13 @@ export function Filters({ state, actions, lang, open }: FiltersProps) {
         <span className={styles.fieldLabel}>{c.status}</span>
         <select
           className={styles.select}
-          onChange={event => actions.setFilters({ status: event.target.value as TaskFilters['status'] })}
+          onChange={(event) =>
+            actions.setFilters({ status: event.target.value as TaskFilters['status'] })
+          }
           value={state.filters.status}
         >
           <option value="all">{c.all}</option>
-          {state.statuses.map(status => (
+          {state.statuses.map((status) => (
             <option key={status.id} value={status.id}>
               {statusLabel(status.id, lang)}
             </option>
@@ -92,7 +92,9 @@ export function Filters({ state, actions, lang, open }: FiltersProps) {
         <span className={styles.fieldLabel}>{c.priority}</span>
         <select
           className={styles.select}
-          onChange={event => actions.setFilters({ priority: event.target.value as TaskFilters['priority'] })}
+          onChange={(event) =>
+            actions.setFilters({ priority: event.target.value as TaskFilters['priority'] })
+          }
           value={state.filters.priority}
         >
           <option value="all">{c.all}</option>
@@ -107,12 +109,12 @@ export function Filters({ state, actions, lang, open }: FiltersProps) {
         <span className={styles.fieldLabel}>{c.assignee}</span>
         <select
           className={styles.select}
-          onChange={event => actions.setFilters({ assigneeId: event.target.value })}
+          onChange={(event) => actions.setFilters({ assigneeId: event.target.value })}
           value={state.filters.assigneeId}
         >
           <option value="all">{c.all}</option>
           <option value="unassigned">{c.unassigned}</option>
-          {state.principals.map(principal => (
+          {state.principals.map((principal) => (
             <option key={principal.id} value={principal.id}>
               {principal.name}
               {principal.kind === 'agent' ? ` · ${c.agent}` : ''}
@@ -125,11 +127,11 @@ export function Filters({ state, actions, lang, open }: FiltersProps) {
         <span className={styles.fieldLabel}>{c.label}</span>
         <select
           className={styles.select}
-          onChange={event => actions.setFilters({ labelId: event.target.value })}
+          onChange={(event) => actions.setFilters({ labelId: event.target.value })}
           value={state.filters.labelId}
         >
           <option value="all">{c.all}</option>
-          {state.labels.map(label => (
+          {state.labels.map((label) => (
             <option key={label.id} value={label.id}>
               {label.name}
             </option>
@@ -141,12 +143,12 @@ export function Filters({ state, actions, lang, open }: FiltersProps) {
         <span className={styles.fieldLabel}>{c.sprint}</span>
         <select
           className={styles.select}
-          onChange={event => actions.setFilters({ sprintId: event.target.value })}
+          onChange={(event) => actions.setFilters({ sprintId: event.target.value })}
           value={state.filters.sprintId}
         >
           <option value="all">{c.all}</option>
           <option value="backlog">{c.noSprint}</option>
-          {state.sprints.map(sprint => (
+          {state.sprints.map((sprint) => (
             <option key={sprint.id} value={sprint.id}>
               {sprintLabel(sprint.id)}
             </option>
@@ -155,7 +157,11 @@ export function Filters({ state, actions, lang, open }: FiltersProps) {
       </label>
 
       {count > 0 && (
-        <button className={styles.clearFilters} onClick={() => actions.clearFilters()} type="button">
+        <button
+          className={styles.clearFilters}
+          onClick={() => actions.clearFilters()}
+          type="button"
+        >
           {c.clearFilters}
           <span className={styles.filterCount}>{count}</span>
         </button>

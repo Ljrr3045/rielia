@@ -1,7 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import type { DemoTask, PrototypeState, TaskPrototypeActions, TaskStatus } from '../../lib/task-prototype/types';
+import type {
+  DemoTask,
+  PrototypeState,
+  TaskPrototypeActions,
+  TaskStatus,
+} from '../../lib/task-prototype/types';
 import { copy, formatDate, statusLabel, type Lang } from './strings';
 import {
   AssigneeTag,
@@ -44,9 +49,9 @@ function BoardCard({
   onDragEnd: () => void;
 }) {
   const c = copy[lang];
-  const assignee = state.principals.find(principal => principal.id === task.assigneeId) ?? null;
+  const assignee = state.principals.find((principal) => principal.id === task.assigneeId) ?? null;
   const labels = task.labelIds
-    .map(labelId => state.labels.find(label => label.id === labelId))
+    .map((labelId) => state.labels.find((label) => label.id === labelId))
     .filter((label): label is { id: string; name: string } => label !== undefined);
   const pending = state.save.status === 'pending';
 
@@ -55,7 +60,7 @@ function BoardCard({
       className={cx(styles.boardCard, dragging && styles.boardCardDragging)}
       draggable={!pending}
       onDragEnd={onDragEnd}
-      onDragStart={event => {
+      onDragStart={(event) => {
         event.dataTransfer.effectAllowed = 'move';
         event.dataTransfer.setData('text/plain', task.id);
         onDragStart(task.id);
@@ -72,7 +77,7 @@ function BoardCard({
       </h3>
       {labels.length > 0 && (
         <div className={styles.cardLabels}>
-          {labels.map(label => (
+          {labels.map((label) => (
             <LabelChip key={label.id} name={label.name} />
           ))}
         </div>
@@ -117,7 +122,12 @@ export function BoardView({ state, actions, lang, onOpen, onNew }: BoardViewProp
   if (state.tasks.length === 0) {
     return (
       <EmptyState body={c.emptyProjectBody} title={c.emptyProjectTitle}>
-        <button className={styles.primaryButton} disabled={addDisabled} onClick={() => actions.beginCreateTask('backlog')} type="button">
+        <button
+          className={styles.primaryButton}
+          disabled={addDisabled}
+          onClick={() => actions.beginCreateTask('backlog')}
+          type="button"
+        >
           {c.createFirstTask}
         </button>
       </EmptyState>
@@ -127,10 +137,19 @@ export function BoardView({ state, actions, lang, onOpen, onNew }: BoardViewProp
   if (state.visibleTasks.length === 0) {
     return (
       <EmptyState body={c.noResultsBody} title={c.noResultsTitle}>
-        <button className={styles.secondaryButton} onClick={() => actions.clearFilters()} type="button">
+        <button
+          className={styles.secondaryButton}
+          onClick={() => actions.clearFilters()}
+          type="button"
+        >
           {c.clearFilters}
         </button>
-        <button className={styles.primaryButton} disabled={addDisabled} onClick={() => actions.beginCreateTask('backlog')} type="button">
+        <button
+          className={styles.primaryButton}
+          disabled={addDisabled}
+          onClick={() => actions.beginCreateTask('backlog')}
+          type="button"
+        >
           {c.newTask}
         </button>
       </EmptyState>
@@ -140,7 +159,7 @@ export function BoardView({ state, actions, lang, onOpen, onNew }: BoardViewProp
   return (
     <div className={styles.boardFrame}>
       <div aria-label={c.boardColumn} className={styles.columnPicker} role="group">
-        {state.columns.map(column => (
+        {state.columns.map((column) => (
           <button
             aria-pressed={column.status === activeColumn}
             className={styles.columnPickerButton}
@@ -156,7 +175,7 @@ export function BoardView({ state, actions, lang, onOpen, onNew }: BoardViewProp
       </div>
 
       <div className={styles.board}>
-        {state.columns.map(column => {
+        {state.columns.map((column) => {
           const statusName = statusLabel(column.status, lang);
           return (
             <section
@@ -167,20 +186,24 @@ export function BoardView({ state, actions, lang, onOpen, onNew }: BoardViewProp
                 dragOver === column.status && styles.columnDragOver,
               )}
               key={column.status}
-              onDragLeave={() => setDragOver(current => (current === column.status ? null : current))}
-              onDragOver={event => {
+              onDragLeave={() =>
+                setDragOver((current) => (current === column.status ? null : current))
+              }
+              onDragOver={(event) => {
                 if (pending || draggingId === null) return;
                 event.preventDefault();
                 event.dataTransfer.dropEffect = 'move';
                 setDragOver(column.status);
               }}
-              onDrop={event => {
+              onDrop={(event) => {
                 event.preventDefault();
                 const taskId = event.dataTransfer.getData('text/plain') || draggingId;
                 setDraggingId(null);
                 setDragOver(null);
-                const task = taskId === null ? undefined : state.tasks.find(item => item.id === taskId);
-                if (task !== undefined && task.status !== column.status) void actions.moveTask(task.id, column.status);
+                const task =
+                  taskId === null ? undefined : state.tasks.find((item) => item.id === taskId);
+                if (task !== undefined && task.status !== column.status)
+                  void actions.moveTask(task.id, column.status);
               }}
             >
               <header className={styles.columnHeader}>
@@ -201,7 +224,7 @@ export function BoardView({ state, actions, lang, onOpen, onNew }: BoardViewProp
               </header>
 
               <div className={styles.columnCards}>
-                {column.tasks.map(task => (
+                {column.tasks.map((task) => (
                   <BoardCard
                     actions={actions}
                     dragging={draggingId === task.id}

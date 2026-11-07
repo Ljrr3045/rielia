@@ -1,7 +1,12 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import type { DemoTask, PrototypeState, TaskPrototypeActions, TaskStatus } from '../../lib/task-prototype/types';
+import type {
+  DemoTask,
+  PrototypeState,
+  TaskPrototypeActions,
+  TaskStatus,
+} from '../../lib/task-prototype/types';
 import { copy, formatDate, sprintStateLabel, type Lang } from './strings';
 import {
   AgentBadge,
@@ -30,7 +35,9 @@ interface TaskDetailProps {
 function provenanceText(task: DemoTask, lang: Lang): string {
   const c = copy[lang];
   if (task.provenance.mode === 'delegated') {
-    return lang === 'es' ? `Mediante ${task.provenance.clientName}` : `Through ${task.provenance.clientName}`;
+    return lang === 'es'
+      ? `Mediante ${task.provenance.clientName}`
+      : `Through ${task.provenance.clientName}`;
   }
   if (task.provenance.mode === 'autonomous') {
     return `${c.autonomousAgent} · ${task.provenance.clientName}`;
@@ -64,16 +71,32 @@ export function TaskDetail({ state, actions, lang, trapFocus, onClose, onEdit }:
           tabIndex={-1}
         >
           <header className={styles.detailHeader}>
-            <button aria-label={c.closeDetail} className={styles.backButton} onClick={onClose} type="button">
+            <button
+              aria-label={c.closeDetail}
+              className={styles.backButton}
+              onClick={onClose}
+              type="button"
+            >
               <IconArrowLeft size={18} />
               <span>{c.back}</span>
             </button>
-            <button aria-label={c.closeDetail} className={styles.iconButton} onClick={onClose} type="button">
+            <button
+              aria-label={c.closeDetail}
+              className={styles.iconButton}
+              onClick={onClose}
+              type="button"
+            >
               <IconClose size={18} />
             </button>
           </header>
           <div className={styles.detailBody}>
-            <h2 className={styles.detailTitle} data-autofocus id="prototype-detail-heading" ref={headingRef} tabIndex={-1}>
+            <h2
+              className={styles.detailTitle}
+              data-autofocus
+              id="prototype-detail-heading"
+              ref={headingRef}
+              tabIndex={-1}
+            >
               {c.missingTaskTitle}
             </h2>
             <p className={styles.detailDescription}>{c.missingTaskBody}</p>
@@ -83,23 +106,26 @@ export function TaskDetail({ state, actions, lang, trapFocus, onClose, onEdit }:
     );
   }
 
-  const assignee = state.principals.find(principal => principal.id === task.assigneeId) ?? null;
-  const creator = state.principals.find(principal => principal.id === task.createdByPrincipalId) ?? null;
-  const sprint = state.sprints.find(item => item.id === task.sprintId) ?? null;
+  const assignee = state.principals.find((principal) => principal.id === task.assigneeId) ?? null;
+  const creator =
+    state.principals.find((principal) => principal.id === task.createdByPrincipalId) ?? null;
+  const sprint = state.sprints.find((item) => item.id === task.sprintId) ?? null;
   const labels = task.labelIds
-    .map(labelId => state.labels.find(label => label.id === labelId))
+    .map((labelId) => state.labels.find((label) => label.id === labelId))
     .filter((label): label is { id: string; name: string } => label !== undefined);
   const pending = state.save.status === 'pending';
-  const feedbackContext = state.save.context !== null
-    && (state.save.context.kind === 'task' || state.save.context.kind === 'status')
-    && state.save.context.taskId === task.id
-    ? state.save.context
-    : null;
-  const retryContext = state.retryContext !== null
-    && (state.retryContext.kind === 'task' || state.retryContext.kind === 'status')
-    && state.retryContext.taskId === task.id
-    ? state.retryContext
-    : null;
+  const feedbackContext =
+    state.save.context !== null &&
+    (state.save.context.kind === 'task' || state.save.context.kind === 'status') &&
+    state.save.context.taskId === task.id
+      ? state.save.context
+      : null;
+  const retryContext =
+    state.retryContext !== null &&
+    (state.retryContext.kind === 'task' || state.retryContext.kind === 'status') &&
+    state.retryContext.taskId === task.id
+      ? state.retryContext
+      : null;
 
   return (
     <div className={styles.detailLayer}>
@@ -113,15 +139,30 @@ export function TaskDetail({ state, actions, lang, trapFocus, onClose, onEdit }:
         tabIndex={-1}
       >
         <header className={styles.detailHeader}>
-          <button aria-label={c.closeDetail} className={styles.backButton} onClick={onClose} type="button">
+          <button
+            aria-label={c.closeDetail}
+            className={styles.backButton}
+            onClick={onClose}
+            type="button"
+          >
             <IconArrowLeft size={18} />
             <span className={styles.detailBackLabel}>{c.back}</span>
           </button>
           <span className={styles.detailHeaderKey}>{task.key}</span>
-          <button className={styles.secondaryButton} disabled={pending} onClick={() => onEdit(task.id)} type="button">
+          <button
+            className={styles.secondaryButton}
+            disabled={pending}
+            onClick={() => onEdit(task.id)}
+            type="button"
+          >
             {c.edit}
           </button>
-          <button aria-label={c.closeDetail} className={styles.iconButton} onClick={onClose} type="button">
+          <button
+            aria-label={c.closeDetail}
+            className={styles.iconButton}
+            onClick={onClose}
+            type="button"
+          >
             <IconClose size={18} />
           </button>
         </header>
@@ -144,12 +185,20 @@ export function TaskDetail({ state, actions, lang, trapFocus, onClose, onEdit }:
           </div>
 
           <div className={styles.detailTitleRow}>
-            <h2 className={styles.detailTitle} data-autofocus id="prototype-detail-heading" ref={headingRef} tabIndex={-1}>
+            <h2
+              className={styles.detailTitle}
+              data-autofocus
+              id="prototype-detail-heading"
+              ref={headingRef}
+              tabIndex={-1}
+            >
               {task.title}
             </h2>
           </div>
 
-          <p className={styles.detailDescription}>{task.description.length > 0 ? task.description : c.noDescription}</p>
+          <p className={styles.detailDescription}>
+            {task.description.length > 0 ? task.description : c.noDescription}
+          </p>
 
           {task.assigneeId === null && <p className={styles.detailNotice}>{c.unassignedHint}</p>}
 
@@ -188,7 +237,9 @@ export function TaskDetail({ state, actions, lang, trapFocus, onClose, onEdit }:
               <div className={styles.propertyRow}>
                 <dt>{c.labels}</dt>
                 <dd className={styles.propertyLabels}>
-                  {labels.length > 0 ? labels.map(label => <LabelChip key={label.id} name={label.name} />) : c.noLabels}
+                  {labels.length > 0
+                    ? labels.map((label) => <LabelChip key={label.id} name={label.name} />)
+                    : c.noLabels}
                 </dd>
               </div>
               <div className={styles.propertyRow}>
@@ -201,7 +252,11 @@ export function TaskDetail({ state, actions, lang, trapFocus, onClose, onEdit }:
               <div className={styles.propertyRow}>
                 <dt>{c.points}</dt>
                 <dd>
-                  {task.points === null ? c.unestimated : <span className={styles.points}>{c.pointsTotal(task.points)}</span>}
+                  {task.points === null ? (
+                    c.unestimated
+                  ) : (
+                    <span className={styles.points}>{c.pointsTotal(task.points)}</span>
+                  )}
                 </dd>
               </div>
               <div className={styles.propertyRow}>

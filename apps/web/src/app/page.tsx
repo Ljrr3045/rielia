@@ -22,40 +22,123 @@ export default async function Home() {
   const apiAvailable = await checkApi();
   return (
     <>
-      <a className="skip-link" href="#main">Ir al contenido / Skip to content</a>
+      <a className="skip-link" href="#main">
+        Ir al contenido / Skip to content
+      </a>
       <main id="main" tabIndex={-1}>
         <header>
           <p className="eyebrow">Rielia · B0</p>
-          <h1>Desarrollo <span lang="en">/ Development</span></h1>
+          <h1>
+            Desarrollo <span lang="en">/ Development</span>
+          </h1>
         </header>
         <section aria-labelledby="es-heading" lang="es">
           <h2 id="es-heading">Una base técnica para empezar</h2>
-          <p>Esta página verifica el arranque de la web y la conexión con la API. Todavía no es una aplicación completa de gestión de trabajo.</p>
-          <p>Hay una prueba de acceso experimental y opcional. También hay una interfaz de espacios, miembros e invitaciones con datos reales de la API, una interfaz de proyectos y tareas del espacio actual, y un prototipo visual de tareas y sprints con datos ficticios. No hay un producto completo ni MCP. El nombre y la identidad visual siguen siendo propuestas.</p>
-          <p><Link href="/workspaces">Espacios / <span lang="en">Workspaces</span></Link></p>
-          <p><Link href="/projects?taskScope=mine">Mis tareas / <span lang="en">My tasks</span></Link></p>
-          <p><Link href="/identity">Prueba de identidad / <span lang="en">Identity spike</span></Link></p>
-          <p><Link href="/prototype">Prototipo de tareas / <span lang="en">Task prototype</span></Link></p>
+          <p>
+            Esta página verifica el arranque de la web y la conexión con la API. Todavía no es una
+            aplicación completa de gestión de trabajo.
+          </p>
+          <p>
+            Hay una prueba de acceso experimental y opcional. También hay una interfaz de espacios,
+            miembros e invitaciones con datos reales de la API, una interfaz de proyectos y tareas
+            del espacio actual, y un prototipo visual de tareas y sprints con datos ficticios. No
+            hay un producto completo ni MCP. El nombre y la identidad visual siguen siendo
+            propuestas.
+          </p>
+          <p>
+            <Link href="/workspaces">
+              Espacios / <span lang="en">Workspaces</span>
+            </Link>
+          </p>
+          <p>
+            <Link href="/projects?taskScope=mine">
+              Mis tareas / <span lang="en">My tasks</span>
+            </Link>
+          </p>
+          <p>
+            <Link href="/identity">
+              Prueba de identidad / <span lang="en">Identity spike</span>
+            </Link>
+          </p>
+          <p>
+            <Link href="/prototype">
+              Prototipo de tareas / <span lang="en">Task prototype</span>
+            </Link>
+          </p>
         </section>
         <section aria-labelledby="en-heading" lang="en">
           <h2 id="en-heading">A technical starting point</h2>
-          <p>This page checks web startup and the API connection. It is not yet a complete work-management application.</p>
-          <p>An optional, experimental sign-in check is available. A workspace, member and invitation interface uses real API data, a projects and tasks interface covers the current workspace, and a visual task and sprint prototype uses fictional data. There is no complete product or MCP. The name and visual identity remain proposals.</p>
-          <p><Link href="/workspaces">Espacios / <span lang="en">Workspaces</span></Link></p>
-          <p><Link href="/projects?taskScope=mine">Mis tareas / <span lang="en">My tasks</span></Link></p>
-          <p><Link href="/identity">Prueba de identidad / <span lang="en">Identity spike</span></Link></p>
-          <p><Link href="/prototype">Prototipo de tareas / <span lang="en">Task prototype</span></Link></p>
+          <p>
+            This page checks web startup and the API connection. It is not yet a complete
+            work-management application.
+          </p>
+          <p>
+            An optional, experimental sign-in check is available. A workspace, member and invitation
+            interface uses real API data, a projects and tasks interface covers the current
+            workspace, and a visual task and sprint prototype uses fictional data. There is no
+            complete product or MCP. The name and visual identity remain proposals.
+          </p>
+          <p>
+            <Link href="/workspaces">
+              Espacios / <span lang="en">Workspaces</span>
+            </Link>
+          </p>
+          <p>
+            <Link href="/projects?taskScope=mine">
+              Mis tareas / <span lang="en">My tasks</span>
+            </Link>
+          </p>
+          <p>
+            <Link href="/identity">
+              Prueba de identidad / <span lang="en">Identity spike</span>
+            </Link>
+          </p>
+          <p>
+            <Link href="/prototype">
+              Prototipo de tareas / <span lang="en">Task prototype</span>
+            </Link>
+          </p>
         </section>
         <section className="status" aria-labelledby="status-heading">
-          <h2 id="status-heading">Estado / <span lang="en">Status</span></h2>
+          <h2 id="status-heading">
+            Estado / <span lang="en">Status</span>
+          </h2>
           <dl>
-            <div><dt>Web</dt><dd>En ejecución / <span lang="en">Running</span></dd></div>
-            <div><dt>API</dt><dd data-api-status={apiAvailable ? 'available' : 'unavailable'}>{apiAvailable ? <>Disponible / <span lang="en">Available</span></> : <>No disponible / <span lang="en">Unavailable</span></>}</dd></div>
+            <div>
+              <dt>Web</dt>
+              <dd>
+                En ejecución / <span lang="en">Running</span>
+              </dd>
+            </div>
+            <div>
+              <dt>API</dt>
+              <dd data-api-status={apiAvailable ? 'available' : 'unavailable'}>
+                {apiAvailable ? (
+                  <>
+                    Disponible / <span lang="en">Available</span>
+                  </>
+                ) : (
+                  <>
+                    No disponible / <span lang="en">Unavailable</span>
+                  </>
+                )}
+              </dd>
+            </div>
           </dl>
-          <p>Solo se verifica que el proceso responde. <span lang="en">This checks process liveness only.</span></p>
-          {!apiAvailable && <p>Inicia la API y vuelve a comprobar. <span lang="en">Start the API and check again.</span></p>}
+          <p>
+            {'Solo se verifica que el proceso responde. '}
+            <span lang="en">This checks process liveness only.</span>
+          </p>
+          {!apiAvailable && (
+            <p>
+              {'Inicia la API y vuelve a comprobar. '}
+              <span lang="en">Start the API and check again.</span>
+            </p>
+          )}
           <form action="/" method="get">
-            <button className="refresh" type="submit">Comprobar de nuevo / <span lang="en">Check again</span></button>
+            <button className="refresh" type="submit">
+              Comprobar de nuevo / <span lang="en">Check again</span>
+            </button>
           </form>
         </section>
       </main>

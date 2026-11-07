@@ -1,8 +1,8 @@
 # T36 formatting and commit tooling
 
 This first T36.2/T36.3 slice adds developer enforcement while preserving app
-behavior. T36 remains **IN PROGRESS**: application unit infrastructure, separate
-coverage gates, extraction and the stable T37 UI baseline remain follow-up work.
+behavior. T36 remains **IN PROGRESS**: the later unit slice supplies application coverage
+gates; structural extraction and the stable T37 UI contract remain follow-up work.
 The [roadmap](development-quality-roadmap.md) retains T36 → T37 → T11 ordering.
 The later [web transport W1 adoption](web-transport-formatting.md) adds 20
 maintained logic inputs to formatting enforcement, with a separately reviewed
@@ -10,6 +10,10 @@ physical-line coverage migration and no behavior or UI changes.
 The later [project-surface adoption](project-surface-formatting.md) adds 22
 existing files, taking permanent adoption to 165/208 with 43 inputs remaining;
 it preserves behavior and separates physical mapping from test coverage.
+The subsequent [formatting completion](formatting-completion.md) adopts the final
+43 inputs (38 changes/five unchanged), reaching 208/208 eligible maintained inputs.
+It separately accepts four current manifest/line migrations and exact end-span debt;
+legacy Markdown/manual formats and all structural extraction remain open.
 
 ## Tools and installation
 

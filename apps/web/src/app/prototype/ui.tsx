@@ -2,7 +2,12 @@
 
 import { useCallback, useEffect, useRef, useSyncExternalStore } from 'react';
 import type { ReactNode, RefObject } from 'react';
-import type { DemoPrincipal, PrototypeState, TaskPriority, TaskStatus } from '../../lib/task-prototype/types';
+import type {
+  DemoPrincipal,
+  PrototypeState,
+  TaskPriority,
+  TaskStatus,
+} from '../../lib/task-prototype/types';
 import {
   copy,
   localizeError,
@@ -15,7 +20,9 @@ import {
 import styles from './prototype.module.css';
 
 export function cx(...values: Array<string | false | null | undefined>): string {
-  return values.filter((value): value is string => typeof value === 'string' && value.length > 0).join(' ');
+  return values
+    .filter((value): value is string => typeof value === 'string' && value.length > 0)
+    .join(' ');
 }
 
 const NARROW_QUERY = '(max-width: 1199px)';
@@ -60,7 +67,11 @@ export function useBodyScrollLock(active: boolean) {
   }, [active]);
 }
 
-export function useFocusTrap<T extends HTMLElement>(ref: RefObject<T | null>, active: boolean, onEscape?: () => void) {
+export function useFocusTrap<T extends HTMLElement>(
+  ref: RefObject<T | null>,
+  active: boolean,
+  onEscape?: () => void,
+) {
   const escapeRef = useRef(onEscape);
   escapeRef.current = onEscape;
 
@@ -86,7 +97,7 @@ export function useFocusTrap<T extends HTMLElement>(ref: RefObject<T | null>, ac
         node!.querySelectorAll<HTMLElement>(
           'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), summary, [tabindex]:not([tabindex="-1"])',
         ),
-      ).filter(element => element.offsetParent !== null || element === document.activeElement);
+      ).filter((element) => element.offsetParent !== null || element === document.activeElement);
       if (focusable.length === 0) {
         event.preventDefault();
         node!.focus();
@@ -96,7 +107,12 @@ export function useFocusTrap<T extends HTMLElement>(ref: RefObject<T | null>, ac
       const last = focusable[focusable.length - 1]!;
       const current = document.activeElement;
       if (event.shiftKey) {
-        if (current === first || current === autofocus || current === node || !node!.contains(current)) {
+        if (
+          current === first ||
+          current === autofocus ||
+          current === node ||
+          !node!.contains(current)
+        ) {
           event.preventDefault();
           last.focus();
         }
@@ -115,7 +131,15 @@ export function useFocusTrap<T extends HTMLElement>(ref: RefObject<T | null>, ac
   }, [active, ref]);
 }
 
-function IconBase({ children, size = 20, className }: { children: ReactNode; size?: number; className?: string }) {
+function IconBase({
+  children,
+  size = 20,
+  className,
+}: {
+  children: ReactNode;
+  size?: number;
+  className?: string;
+}) {
   return (
     <svg
       aria-hidden="true"
@@ -275,7 +299,9 @@ export function IconInbox({ size = 32 }: { size?: number }) {
 }
 
 export function Spinner({ size = 16 }: { size?: number }) {
-  return <span aria-hidden="true" className={styles.spinner} style={{ width: size, height: size }} />;
+  return (
+    <span aria-hidden="true" className={styles.spinner} style={{ width: size, height: size }} />
+  );
 }
 
 export function StatusDot({ status }: { status: TaskStatus }) {
@@ -291,7 +317,14 @@ interface StatusSelectProps {
   onChange: (status: TaskStatus) => void;
 }
 
-export function StatusSelect({ status, statuses, lang, label, disabled, onChange }: StatusSelectProps) {
+export function StatusSelect({
+  status,
+  statuses,
+  lang,
+  label,
+  disabled,
+  onChange,
+}: StatusSelectProps) {
   return (
     <span className={styles.statusSelectWrap} data-status={status}>
       <StatusDot status={status} />
@@ -299,10 +332,10 @@ export function StatusSelect({ status, statuses, lang, label, disabled, onChange
         aria-label={label}
         className={styles.statusSelect}
         disabled={disabled}
-        onChange={event => onChange(event.target.value as TaskStatus)}
+        onChange={(event) => onChange(event.target.value as TaskStatus)}
         value={status}
       >
-        {statuses.map(item => (
+        {statuses.map((item) => (
           <option key={item.id} value={item.id}>
             {statusLabel(item.id, lang)}
           </option>
@@ -346,7 +379,7 @@ export function Avatar({ name, kind }: { name: string; kind: 'human' | 'agent' }
     .trim()
     .split(/\s+/)
     .slice(0, 2)
-    .map(part => part.charAt(0).toUpperCase())
+    .map((part) => part.charAt(0).toUpperCase())
     .join('');
   return (
     <span aria-hidden="true" className={styles.avatar} data-kind={kind}>
@@ -364,7 +397,15 @@ export function LabelChip({ name }: { name: string }) {
   );
 }
 
-export function EmptyState({ title, body, children }: { title: string; body: string; children?: ReactNode }) {
+export function EmptyState({
+  title,
+  body,
+  children,
+}: {
+  title: string;
+  body: string;
+  children?: ReactNode;
+}) {
   return (
     <div className={styles.emptyState}>
       <span aria-hidden="true" className={styles.emptyIcon}>
@@ -387,9 +428,18 @@ interface SaveFeedbackProps {
   onRetry: () => void;
 }
 
-export function SaveFeedback({ save, lang, canRetry, currentTarget, retryTarget, showError, onRetry }: SaveFeedbackProps) {
+export function SaveFeedback({
+  save,
+  lang,
+  canRetry,
+  currentTarget,
+  retryTarget,
+  showError,
+  onRetry,
+}: SaveFeedbackProps) {
   const c = copy[lang];
-  const current = save !== null && save.status !== 'idle' && (save.status !== 'error' || showError) ? save : null;
+  const current =
+    save !== null && save.status !== 'idle' && (save.status !== 'error' || showError) ? save : null;
   if (current === null && !canRetry) return null;
 
   const retryButton = canRetry ? (
@@ -418,7 +468,9 @@ export function SaveFeedback({ save, lang, canRetry, currentTarget, retryTarget,
         <Spinner />
         <span>
           {savePendingLabel(current.kind ?? 'task', lang)}
-          {currentTarget !== null && <span className={styles.feedbackTarget}> · {currentTarget}</span>}
+          {currentTarget !== null && (
+            <span className={styles.feedbackTarget}> · {currentTarget}</span>
+          )}
         </span>
       </div>
     );
@@ -430,7 +482,9 @@ export function SaveFeedback({ save, lang, canRetry, currentTarget, retryTarget,
         <IconCheck size={16} />
         <span>
           {saveSavedLabel(current.kind ?? 'task', lang)}
-          {currentTarget !== null && <span className={styles.feedbackTarget}> · {currentTarget}</span>}
+          {currentTarget !== null && (
+            <span className={styles.feedbackTarget}> · {currentTarget}</span>
+          )}
         </span>
       </div>
     );
@@ -444,7 +498,9 @@ export function SaveFeedback({ save, lang, canRetry, currentTarget, retryTarget,
       <span className={styles.feedbackBody}>
         <strong>
           {c.saveError}
-          {currentTarget !== null && <span className={styles.feedbackTarget}> · {currentTarget}</span>}
+          {currentTarget !== null && (
+            <span className={styles.feedbackTarget}> · {currentTarget}</span>
+          )}
         </strong>
         <span>{localizeError(problem, lang)}</span>
       </span>

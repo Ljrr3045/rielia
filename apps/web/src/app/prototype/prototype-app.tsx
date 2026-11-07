@@ -1,7 +1,12 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { PrototypeScenario, PrototypeView, SaveContext, TaskStatus } from '../../lib/task-prototype/types';
+import type {
+  PrototypeScenario,
+  PrototypeView,
+  SaveContext,
+  TaskStatus,
+} from '../../lib/task-prototype/types';
 import { useTaskPrototype } from '../../lib/task-prototype/use-task-prototype';
 import { BoardView } from './board-view';
 import { Filters, activeFilterCount } from './filters';
@@ -28,12 +33,13 @@ import {
 } from './ui';
 import styles from './prototype.module.css';
 
-const NAV_ITEMS: readonly { id: PrototypeView; icon: 'my-tasks' | 'list' | 'board' | 'sprints' }[] = [
-  { id: 'my-tasks', icon: 'my-tasks' },
-  { id: 'list', icon: 'list' },
-  { id: 'board', icon: 'board' },
-  { id: 'sprints', icon: 'sprints' },
-];
+const NAV_ITEMS: readonly { id: PrototypeView; icon: 'my-tasks' | 'list' | 'board' | 'sprints' }[] =
+  [
+    { id: 'my-tasks', icon: 'my-tasks' },
+    { id: 'list', icon: 'list' },
+    { id: 'board', icon: 'board' },
+    { id: 'sprints', icon: 'sprints' },
+  ];
 
 function NavIcon({ kind }: { kind: 'my-tasks' | 'list' | 'board' | 'sprints' }) {
   if (kind === 'my-tasks') return <IconMyTasks size={18} />;
@@ -73,18 +79,28 @@ export function PrototypeApp() {
   const pending = state.save.status === 'pending';
   const filtersActive = activeFilterCount(state.filters);
   const selectedDetailTaskId = detailOpen ? state.selectedTaskId : null;
-  const isDetailTaskContext = (context: SaveContext | null) => context !== null
-    && (context.kind === 'task' || context.kind === 'status')
-    && selectedDetailTaskId !== null
-    && context.taskId === selectedDetailTaskId;
-  const isSprintLocalContext = (context: SaveContext | null) => context !== null
-    && state.view === 'sprints'
-    && (context.kind === 'sprint' || context.kind === 'start-sprint' || context.kind === 'close-sprint');
-  const currentHandledLocally = isDetailTaskContext(state.save.context) || isSprintLocalContext(state.save.context);
-  const retryHandledLocally = isDetailTaskContext(state.retryContext) || isSprintLocalContext(state.retryContext);
+  const isDetailTaskContext = (context: SaveContext | null) =>
+    context !== null &&
+    (context.kind === 'task' || context.kind === 'status') &&
+    selectedDetailTaskId !== null &&
+    context.taskId === selectedDetailTaskId;
+  const isSprintLocalContext = (context: SaveContext | null) =>
+    context !== null &&
+    state.view === 'sprints' &&
+    (context.kind === 'sprint' ||
+      context.kind === 'start-sprint' ||
+      context.kind === 'close-sprint');
+  const currentHandledLocally =
+    isDetailTaskContext(state.save.context) || isSprintLocalContext(state.save.context);
+  const retryHandledLocally =
+    isDetailTaskContext(state.retryContext) || isSprintLocalContext(state.retryContext);
   const backgroundInert = (sidebarDrawer && sidebarOpen) || (isNarrow && detailOpen && !modalOpen);
-  const globalSave = !modalOpen && !backgroundInert && state.save.status !== 'idle' && !currentHandledLocally ? state.save : null;
-  const globalCanRetry = !modalOpen && !backgroundInert && state.retryContext !== null && !retryHandledLocally;
+  const globalSave =
+    !modalOpen && !backgroundInert && state.save.status !== 'idle' && !currentHandledLocally
+      ? state.save
+      : null;
+  const globalCanRetry =
+    !modalOpen && !backgroundInert && state.retryContext !== null && !retryHandledLocally;
   const showGlobalFeedback = globalSave !== null || globalCanRetry;
 
   const closeSidebar = useCallback(() => setSidebarOpen(false), []);
@@ -100,37 +116,43 @@ export function PrototypeApp() {
   }, [actions]);
 
   const openTask = (taskId: string) => {
-    returnFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    returnFocusRef.current =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
     actions.selectTask(taskId);
     setSidebarOpen(false);
   };
 
   const openNewTask = (status: TaskStatus = 'backlog') => {
     if (state.taskDraft !== null || state.sprintDraft !== null || pending) return;
-    draftOpenerRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    draftOpenerRef.current =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
     actions.beginCreateTask(status);
   };
 
   const openEditTask = (taskId: string) => {
     if (state.taskDraft !== null || state.sprintDraft !== null || pending) return;
-    draftOpenerRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    draftOpenerRef.current =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
     actions.beginEditTask(taskId);
   };
 
   const openNewSprint = () => {
     if (state.taskDraft !== null || state.sprintDraft !== null || pending) return;
-    sprintOpenerRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    sprintOpenerRef.current =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
     actions.beginCreateSprint();
   };
 
   const openEditSprint = (sprintId: string) => {
     if (state.taskDraft !== null || state.sprintDraft !== null || pending) return;
-    sprintOpenerRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    sprintOpenerRef.current =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
     actions.beginEditSprint(sprintId);
   };
 
   const openCloseSprint = (sprintId: string) => {
-    closeOpenerRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    closeOpenerRef.current =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
     setCloseSprintId(sprintId);
   };
 
@@ -217,7 +239,10 @@ export function PrototypeApp() {
         {c.skipLink}
       </a>
 
-      <div className={styles.demoBar} inert={modalOpen || (isNarrow && detailOpen) || (sidebarDrawer && sidebarOpen)}>
+      <div
+        className={styles.demoBar}
+        inert={modalOpen || (isNarrow && detailOpen) || (sidebarDrawer && sidebarOpen)}
+      >
         <span className={styles.demoBadge}>{c.prototypeLabel}</span>
         <span className={styles.demoText}>{c.fictionalData}</span>
         <span className={styles.demoText}>{c.memoryOnly}</span>
@@ -239,10 +264,18 @@ export function PrototypeApp() {
           <div className={styles.demoMenu}>
             {pendingReset === null ? (
               <div className={styles.demoResetChoices}>
-                <button className={styles.demoAction} onClick={() => setPendingReset('seeded')} type="button">
+                <button
+                  className={styles.demoAction}
+                  onClick={() => setPendingReset('seeded')}
+                  type="button"
+                >
                   {c.resetSeeded}
                 </button>
-                <button className={styles.demoAction} onClick={() => setPendingReset('empty')} type="button">
+                <button
+                  className={styles.demoAction}
+                  onClick={() => setPendingReset('empty')}
+                  type="button"
+                >
                   {c.resetEmpty}
                 </button>
               </div>
@@ -256,7 +289,11 @@ export function PrototypeApp() {
                   <button className={styles.demoConfirm} onClick={resetDemo} type="button">
                     {c.resetConfirm}
                   </button>
-                  <button className={styles.demoAction} onClick={() => setPendingReset(null)} type="button">
+                  <button
+                    className={styles.demoAction}
+                    onClick={() => setPendingReset(null)}
+                    type="button"
+                  >
                     {c.resetCancel}
                   </button>
                 </div>
@@ -306,7 +343,10 @@ export function PrototypeApp() {
               <p className={styles.navLabel}>{c.myWork}</p>
               <button
                 aria-current={state.view === 'my-tasks' ? 'page' : undefined}
-                className={cx(styles.navButton, state.view === 'my-tasks' && styles.navButtonActive)}
+                className={cx(
+                  styles.navButton,
+                  state.view === 'my-tasks' && styles.navButtonActive,
+                )}
                 onClick={() => changeView('my-tasks')}
                 type="button"
               >
@@ -321,7 +361,7 @@ export function PrototypeApp() {
                 <span className={styles.projectName}>{state.project.name}</span>
                 <span className={styles.projectKey}>{state.project.key}</span>
               </div>
-              {NAV_ITEMS.filter(item => item.id !== 'my-tasks').map(item => (
+              {NAV_ITEMS.filter((item) => item.id !== 'my-tasks').map((item) => (
                 <button
                   aria-current={state.view === item.id ? 'page' : undefined}
                   className={cx(styles.navButton, state.view === item.id && styles.navButtonActive)}
@@ -356,15 +396,21 @@ export function PrototypeApp() {
               </span>
               <span>{state.project.name}</span>
             </div>
-            <div
-              aria-label={c.language}
-              className={styles.langToggle}
-              role="group"
-            >
-              <button aria-label="Español" aria-pressed={lang === 'es'} onClick={() => setLang('es')} type="button">
+            <div aria-label={c.language} className={styles.langToggle} role="group">
+              <button
+                aria-label="Español"
+                aria-pressed={lang === 'es'}
+                onClick={() => setLang('es')}
+                type="button"
+              >
                 ES
               </button>
-              <button aria-label="English" aria-pressed={lang === 'en'} onClick={() => setLang('en')} type="button">
+              <button
+                aria-label="English"
+                aria-pressed={lang === 'en'}
+                onClick={() => setLang('en')}
+                type="button"
+              >
                 EN
               </button>
             </div>
@@ -399,21 +445,33 @@ export function PrototypeApp() {
                     aria-controls="prototype-filters"
                     aria-expanded={filtersOpen}
                     className={cx(styles.secondaryButton, styles.filterToggle)}
-                    onClick={() => setFiltersOpen(open => !open)}
+                    onClick={() => setFiltersOpen((open) => !open)}
                     type="button"
                   >
                     <IconFilter size={16} />
                     {c.filters}
-                    {filtersActive > 0 && <span className={styles.filterCount}>{filtersActive}</span>}
+                    {filtersActive > 0 && (
+                      <span className={styles.filterCount}>{filtersActive}</span>
+                    )}
                   </button>
                 )}
                 {state.view === 'sprints' ? (
-                  <button className={styles.primaryButton} disabled={draftOpen || pending} onClick={openNewSprint} type="button">
+                  <button
+                    className={styles.primaryButton}
+                    disabled={draftOpen || pending}
+                    onClick={openNewSprint}
+                    type="button"
+                  >
                     <IconPlus size={16} />
                     {c.newSprint}
                   </button>
                 ) : (
-                  <button className={styles.primaryButton} disabled={draftOpen || pending} onClick={() => openNewTask('backlog')} type="button">
+                  <button
+                    className={styles.primaryButton}
+                    disabled={draftOpen || pending}
+                    onClick={() => openNewTask('backlog')}
+                    type="button"
+                  >
                     <IconPlus size={16} />
                     {c.newTask}
                   </button>
@@ -425,29 +483,57 @@ export function PrototypeApp() {
               {showGlobalFeedback && (
                 <SaveFeedback
                   canRetry={globalCanRetry}
-                  currentTarget={contextTargetLabel(globalSave?.context ?? null, state.tasks, state.sprints)}
+                  currentTarget={contextTargetLabel(
+                    globalSave?.context ?? null,
+                    state.tasks,
+                    state.sprints,
+                  )}
                   lang={lang}
                   onRetry={() => {
                     void actions.retrySave();
                   }}
-                  retryTarget={globalCanRetry ? contextTargetLabel(state.retryContext, state.tasks, state.sprints) : null}
+                  retryTarget={
+                    globalCanRetry
+                      ? contextTargetLabel(state.retryContext, state.tasks, state.sprints)
+                      : null
+                  }
                   save={globalSave}
                   showError
                 />
               )}
             </div>
 
-            {state.view !== 'sprints' && <Filters actions={actions} lang={lang} open={filtersOpen} state={state} />}
+            {state.view !== 'sprints' && (
+              <Filters actions={actions} lang={lang} open={filtersOpen} state={state} />
+            )}
 
             <section className={styles.viewBody} aria-label={viewTitle}>
               {state.view === 'my-tasks' && (
-                <TaskListView actions={actions} lang={lang} mode="my-tasks" onOpen={openTask} state={state} />
+                <TaskListView
+                  actions={actions}
+                  lang={lang}
+                  mode="my-tasks"
+                  onOpen={openTask}
+                  state={state}
+                />
               )}
               {state.view === 'list' && (
-                <TaskListView actions={actions} lang={lang} mode="list" onOpen={openTask} state={state} />
+                <TaskListView
+                  actions={actions}
+                  lang={lang}
+                  mode="list"
+                  onOpen={openTask}
+                  state={state}
+                />
               )}
               {state.view === 'board' && (
-                <BoardView actions={actions} lang={lang} onNew={status => openNewTask(status)} onOpen={openTask} state={state} />
+                <BoardView
+                  actions={actions}
+                  lang={lang}
+                  onNew={(status) => openNewTask(status)}
+                  onOpen={openTask}
+                  state={state}
+                />
               )}
               {state.view === 'sprints' && (
                 <SprintView
@@ -464,10 +550,13 @@ export function PrototypeApp() {
           </main>
 
           <nav aria-label={c.viewNavigation} className={styles.bottomNav}>
-            {NAV_ITEMS.map(item => (
+            {NAV_ITEMS.map((item) => (
               <button
                 aria-current={state.view === item.id ? 'page' : undefined}
-                className={cx(styles.bottomNavButton, state.view === item.id && styles.bottomNavButtonActive)}
+                className={cx(
+                  styles.bottomNavButton,
+                  state.view === item.id && styles.bottomNavButtonActive,
+                )}
                 key={item.id}
                 onClick={() => changeView(item.id)}
                 type="button"
@@ -491,9 +580,21 @@ export function PrototypeApp() {
         )}
       </div>
 
-      {taskFormOpen && <TaskForm actions={actions} key={state.taskDraft?.taskId ?? 'task-form'} lang={lang} state={state} />}
+      {taskFormOpen && (
+        <TaskForm
+          actions={actions}
+          key={state.taskDraft?.taskId ?? 'task-form'}
+          lang={lang}
+          state={state}
+        />
+      )}
       {sprintFormOpen && (
-        <SprintForm actions={actions} key={state.sprintDraft?.sprintId ?? 'sprint-form'} lang={lang} state={state} />
+        <SprintForm
+          actions={actions}
+          key={state.sprintDraft?.sprintId ?? 'sprint-form'}
+          lang={lang}
+          state={state}
+        />
       )}
       {closeSprintId !== null && (
         <CloseSprintDialog

@@ -39,8 +39,7 @@ export interface TaskDraft extends TaskFields {
   readonly expectedVersion: number | null;
 }
 export type ClosureDestination =
-  | { readonly kind: 'backlog' }
-  | { readonly kind: 'sprint'; readonly sprintId: string };
+  { readonly kind: 'backlog' } | { readonly kind: 'sprint'; readonly sprintId: string };
 export interface SprintSummary {
   readonly doneTaskIds: readonly string[];
   readonly canceledTaskIds: readonly string[];
@@ -82,11 +81,21 @@ export type SaveContext =
   | { readonly kind: 'sprint'; readonly sprintId: string }
   | { readonly kind: 'start-sprint'; readonly sprintId: string }
   /** Null destination represents a rejected close without a destination; never a captured retry. */
-  | { readonly kind: 'close-sprint'; readonly sprintId: string; readonly destination: ClosureDestination | null };
+  | {
+      readonly kind: 'close-sprint';
+      readonly sprintId: string;
+      readonly destination: ClosureDestination | null;
+    };
 export type SaveKind = SaveContext['kind'];
 export interface PrototypeState {
   readonly workspace: { readonly id: string; readonly name: string };
-  readonly project: { readonly id: string; readonly key: string; readonly name: string; readonly description: string; readonly timeZone: string };
+  readonly project: {
+    readonly id: string;
+    readonly key: string;
+    readonly name: string;
+    readonly description: string;
+    readonly timeZone: string;
+  };
   readonly currentPrincipalId: string;
   readonly principals: readonly DemoPrincipal[];
   readonly statuses: readonly { readonly id: TaskStatus; readonly name: string }[];
@@ -102,7 +111,12 @@ export interface PrototypeState {
   readonly taskDraft: TaskDraft | null;
   readonly sprintDraft: SprintDraft | null;
   /** Latest feedback only. Unbound action errors have null context, never the selected record. */
-  readonly save: { readonly status: 'idle' | 'pending' | 'saved' | 'error'; readonly kind: SaveKind | null; readonly context: SaveContext | null; readonly error: PrototypeError | null };
+  readonly save: {
+    readonly status: 'idle' | 'pending' | 'saved' | 'error';
+    readonly kind: SaveKind | null;
+    readonly context: SaveContext | null;
+    readonly error: PrototypeError | null;
+  };
   /** Captured previous failed save remains retryable even when a rejected patch shows a field error. */
   readonly canRetry: boolean;
   /** Captured operation iff canRetry; independent of the latest save feedback. */

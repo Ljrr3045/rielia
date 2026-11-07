@@ -6,7 +6,8 @@ export interface Bilingual {
 }
 
 export type CommandType = WorkspaceCommand['type'];
-export type OutcomeKind = 'success' | 'invalid' | 'forbidden' | 'conflict' | 'error' | 'invitation-link-unavailable';
+export type OutcomeKind =
+  'success' | 'invalid' | 'forbidden' | 'conflict' | 'error' | 'invitation-link-unavailable';
 
 export const copy = {
   common: {
@@ -90,7 +91,10 @@ export const copy = {
     selectorLabel: { es: 'Espacio de trabajo', en: 'Workspace' },
     roleLabel: { es: 'Tu rol', en: 'Your role' },
     ownerLabel: { es: 'Propietario', en: 'Owner' },
-    ownerUnavailable: { es: 'No visible en la lista cargada', en: 'Not visible in the loaded list' },
+    ownerUnavailable: {
+      es: 'No visible en la lista cargada',
+      en: 'Not visible in the loaded list',
+    },
     createTitle: { es: 'Crear un espacio', en: 'Create a workspace' },
     createBody: {
       es: 'El espacio nuevo te añade como propietario. Podrás invitar a otras personas y registrar agentes después.',
@@ -118,7 +122,10 @@ export const copy = {
       es: 'Personas y agentes con una membresía en este espacio. El propietario siempre es humano y está protegido.',
       en: 'People and agents with a membership in this workspace. The owner is always human and protected.',
     },
-    empty: { es: 'Este espacio no tiene miembros visibles.', en: 'This workspace has no visible members.' },
+    empty: {
+      es: 'Este espacio no tiene miembros visibles.',
+      en: 'This workspace has no visible members.',
+    },
     human: { es: 'Humano', en: 'Human' },
     agent: { es: 'Agente', en: 'Agent' },
     ownerProtected: {
@@ -129,10 +136,16 @@ export const copy = {
     membership: { es: 'Membresía', en: 'Membership' },
     principalState: { es: 'Estado de la identidad', en: 'Identity state' },
     custodian: { es: 'Custodio', en: 'Custodian' },
-    custodianUnavailable: { es: 'No visible en la lista cargada', en: 'Not visible in the loaded list' },
+    custodianUnavailable: {
+      es: 'No visible en la lista cargada',
+      en: 'Not visible in the loaded list',
+    },
     manageInAgents: { es: 'Gestionar en Agentes', en: 'Manage in Agents' },
     roleLabel: { es: 'Rol del miembro', en: 'Member role' },
-    roleHint: { es: 'Se aplica en el servidor al confirmar.', en: 'Applied by the server when confirmed.' },
+    roleHint: {
+      es: 'Se aplica en el servidor al confirmar.',
+      en: 'Applied by the server when confirmed.',
+    },
     changeRole: { es: 'Revisar rol', en: 'Review role' },
     suspend: { es: 'Suspender acceso', en: 'Suspend access' },
     restore: { es: 'Restaurar acceso', en: 'Restore access' },
@@ -152,7 +165,10 @@ export const copy = {
     confirmRoleTitle: { es: 'Cambiar el rol del miembro', en: 'Change member role' },
     confirmSuspendTitle: { es: 'Suspender el acceso del miembro', en: 'Suspend member access' },
     confirmRestoreTitle: { es: 'Restaurar el acceso del miembro', en: 'Restore member access' },
-    confirmRemoveTitle: { es: 'Retirar al miembro del espacio', en: 'Remove member from workspace' },
+    confirmRemoveTitle: {
+      es: 'Retirar al miembro del espacio',
+      en: 'Remove member from workspace',
+    },
     roleConsequence: {
       es: 'El nuevo rol se aplica en el servidor y cambia lo que esta persona puede hacer. El historial de autoría no cambia.',
       en: 'The new role is applied by the server and changes what this person can do. Authorship history does not change.',
@@ -179,7 +195,10 @@ export const copy = {
       es: 'Identidades no humanas con una membresía limitada. No pueden ser propietarias ni administrar personas, y su custodio es una persona administradora activa.',
       en: 'Nonhuman identities with limited membership. They cannot be owners or administer people, and their custodian is an active human administrator.',
     },
-    empty: { es: 'Este espacio no tiene agentes visibles.', en: 'This workspace has no visible agents.' },
+    empty: {
+      es: 'Este espacio no tiene agentes visibles.',
+      en: 'This workspace has no visible agents.',
+    },
     registerTitle: { es: 'Registrar un agente', en: 'Register an agent' },
     registerBody: {
       es: 'El registro crea solo la identidad del agente y su membresía limitada. Las credenciales de conexión no forman parte de esta versión.',
@@ -257,7 +276,10 @@ export const copy = {
       es: 'Invita a personas con un rol limitado. La invitación es de un solo uso, caduca en 7 días y requiere una cuenta con el correo invitado.',
       en: 'Invite people with a limited role. The invitation is single-use, expires in 7 days and requires an account with the invited email.',
     },
-    empty: { es: 'No hay invitaciones en este espacio.', en: 'There are no invitations in this workspace.' },
+    empty: {
+      es: 'No hay invitaciones en este espacio.',
+      en: 'There are no invitations in this workspace.',
+    },
     emailLabel: { es: 'Correo de la persona invitada', en: 'Invitee email address' },
     emailHint: {
       es: 'La cuenta debe usar exactamente este correo al aceptar.',
@@ -265,7 +287,10 @@ export const copy = {
     },
     emailRequired: { es: 'Escribe un correo válido.', en: 'Enter a valid email address.' },
     roleLabel: { es: 'Rol de la invitación', en: 'Invitation role' },
-    roleHint: { es: 'Se aplica al aceptar y el servidor vuelve a comprobarlo.', en: 'Applied on acceptance; the server rechecks it.' },
+    roleHint: {
+      es: 'Se aplica al aceptar y el servidor vuelve a comprobarlo.',
+      en: 'Applied on acceptance; the server rechecks it.',
+    },
     create: { es: 'Crear invitación', en: 'Create invitation' },
     noEmailNote: {
       es: 'Esta versión no envía correo. El enlace se muestra una sola vez después de crear la invitación; cópialo y compártelo por un canal de confianza.',
@@ -338,7 +363,10 @@ export const copy = {
       en: 'The server is processing the request. You can cancel waiting; retrying later does not duplicate a change that was already applied.',
     },
     successTitle: { es: 'Cambio guardado', en: 'Change saved' },
-    successGeneric: { es: 'El servidor confirmó el cambio.', en: 'The server confirmed the change.' },
+    successGeneric: {
+      es: 'El servidor confirmó el cambio.',
+      en: 'The server confirmed the change.',
+    },
     successRefreshFailed: {
       es: 'El cambio se guardó, pero la lista no se pudo actualizar. No lo envíes de nuevo; actualiza cuando vuelva la conexión.',
       en: 'The change was saved, but the list could not refresh. Do not submit it again; refresh when the connection returns.',
@@ -357,7 +385,10 @@ export const copy = {
       es: 'El servidor denegó esta acción para la sesión o el rol actual. No se aplicó ningún cambio.',
       en: 'The server denied this action for the current session or role. No change was applied.',
     },
-    conflictTitle: { es: 'El registro cambió mientras tanto', en: 'The record changed in the meantime' },
+    conflictTitle: {
+      es: 'El registro cambió mientras tanto',
+      en: 'The record changed in the meantime',
+    },
     conflictBody: {
       es: 'Otra persona o agente guardó una versión más reciente. Actualiza, revisa la versión actual y vuelve a enviar; el borrador se conserva.',
       en: 'Another person or agent saved a newer version. Refresh, review the current version and submit again; the draft is kept.',
@@ -385,7 +416,10 @@ export const copy = {
       en: 'A draft in this tab belongs to another workspace. Switch to that workspace or discard it before starting another change.',
     },
     draftScopeTitle: { es: 'Borrador de otro espacio', en: 'Draft from another workspace' },
-    inviteRecoveryTitle: { es: 'No se pudo confirmar el enlace de invitación', en: 'The invitation link could not be confirmed' },
+    inviteRecoveryTitle: {
+      es: 'No se pudo confirmar el enlace de invitación',
+      en: 'The invitation link could not be confirmed',
+    },
     inviteRecoveryBody: {
       es: 'El servidor pudo haber creado la invitación, pero no devolvió su enlace. No la envíes de nuevo sin comprobarlo. Actualiza la lista, localiza la invitación pendiente y revócala explícitamente; después crea una nueva.',
       en: 'The server may have created the invitation but did not return its link. Do not submit it again without checking. Refresh the list, find the pending invitation and revoke it explicitly; then create a new one.',
@@ -500,8 +534,14 @@ export const commandName: Record<CommandType, Bilingual> = {
 export const retryText: Record<CommandType, Bilingual> = {
   'create-workspace': { es: 'Reintentar crear el espacio', en: 'Retry creating the workspace' },
   invite: { es: 'Reintentar crear la invitación', en: 'Retry creating the invitation' },
-  'revoke-invitation': { es: 'Reintentar revocar la invitación', en: 'Retry revoking the invitation' },
-  'accept-invitation': { es: 'Reintentar aceptar la invitación', en: 'Retry accepting the invitation' },
+  'revoke-invitation': {
+    es: 'Reintentar revocar la invitación',
+    en: 'Retry revoking the invitation',
+  },
+  'accept-invitation': {
+    es: 'Reintentar aceptar la invitación',
+    en: 'Retry accepting the invitation',
+  },
   'update-member': { es: 'Reintentar actualizar al miembro', en: 'Retry updating the member' },
   'register-agent': { es: 'Reintentar registrar al agente', en: 'Retry registering the agent' },
   'manage-agent': { es: 'Reintentar actualizar al agente', en: 'Retry updating the agent' },

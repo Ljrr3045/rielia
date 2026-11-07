@@ -1,6 +1,62 @@
 # Delivery progress and decisions
 
-## 2026-11-07 T36 mechanical project-surface formatting — IN PROGRESS
+## 2026-11-07 T36 maintained-source formatting completion — IN PROGRESS
+
+Merged PR #38 at `fbc9fad8bb431d6dcadcaddcb137f33bebceee78` is the actual base.
+This final 43-path batch applies 38 approved changes and five unchanged adoptions,
+reaching 208/208 eligible maintained inputs, zero remaining. Nine explicitly
+reviewed JSX text representations and three exact finite CSS pairs preserve
+runtime/source/literal/comment identity; no test behavior, policy, dependency,
+provider, pipeline, extraction or redesign changes. Legacy Markdown/manual formats
+and T36.4/T36.5/T36.6 extraction/acceptance remain owned and open before T37→T11.
+
+Fresh native A/B/repeat each pass 269 cases/all 101 inputs; A's 17 reports equal
+accepted PR #38 hosted files and all 17 B/repeat files match. All S/F/B IDs/topology/
+full hits and 79 unchanged full maps stay exact. The coordinator accepts exactly
+44 baseline scalar changes: shared webtsconfig fingerprint in all four current
+scopes, 22 source/four test fingerprints and 14 physical line/floor values.
+Web 1177/3774→1177/3779/floor 31.18→31.14; prototype 199/805→238/853/floor 24.72→27.90.
+Controller 184/188→223/231/uncovered 4→8 separately exposes three existing zero-hit
+returns from covered dense groups. Four historical baselines and every S/F/B/API/
+contracts gate/count stay exact; all eight saved comparable/nonregression pairs
+pass without another app measurement.
+
+The [completion guide](formatting-completion.md) and inventory enumerate 88 new
+unknown END fields across 11 files, including 14 hit-bearing fields, zero new
+START/recovered and valid 44,596 endpoint bounds. Exact range-highlighting loss
+remains tooling/integration debt; nulls are retained and no future waiver or
+behavioral coverage gain is claimed. Finite 37 negative/four positive and raw 16
+controls pass. Native 15-call/group/own 25/frozen 121 guards pass; the preserved
+pre-native activation status failure received a finite exact-link correction.
+No install/cache repair or host execution-state copy occurred.
+
+Independent source/numerical/docs review is complete. Actual final native
+`pnpm check` passes in 82.420066 seconds (formatting, quality 24, lint/closure 286,
+logic/real HTTP, typechecks/builds, MCP 17 and ES/EN smoke); infrastructure 20
+passes in 5.479414 seconds. Handoff 47/assets 30/613 links in 69 documents and
+working whitespace pass. Both actual groups and preservation guards pass with
+cache bytes exact and legitimate own task changes retained. The private wrapper
+subsequently rejects Node's spec-summary prefix because it expected TAP; original
+failure is preserved. Independent saved-log reconciliation confirms 20 passes,
+zero fail/cancel/skip/todo and unchanged source; no app/native rerun is used.
+The exact temporary owned tools link is removed after identity verification,
+without changing the frozen host tree. A local commit uses the tracked hooks;
+Draft publication/current-head hosted CI/Kilo remain coordinator-owned gates.
+The worker performs no GitHub write or Ready/merge transition. No fresh local
+PG/Docker/browser/provider/device/accessibility result or complete T36 is claimed.
+
+[Draft PR #39](https://github.com/Ljrr3045/rielia/pull/39) targets `dev` and
+opened at exact source head `f6f8758745d916f33006f421cb9b6d5f9536644d` after root
+verified the remote base/no existing branch PR, pushed and immediately created
+Draft. November 7, 11:31 UTC readback confirms OPEN/Draft at that head, validate
+128391243315 in progress and no native Kilo check/comment on inspected surfaces;
+reviews, inline comments and threads are empty, with hidden queues/billing
+unavailable. This bounded PR URL/status-only batch is prepared before the next
+coordinator Draft push. Final-head hosted CI/artifacts and Ready/Kilo/merge remain
+coordinator gates; initial-head evidence does not accept the later documentation
+head. No app or infrastructure command is rerun for this metadata update.
+
+## 2026-11-07 T36 mechanical project-surface formatting — MERGED
 
 PR #37 is merged at `ec257ea3b2d76be0b73a0d17278be592d3a23e2c`.
 This exact 22-file project surface adds 21 mechanical changes and one unchanged
@@ -25,11 +81,16 @@ retained logic/HTTP, typechecks/builds, MCP17 and final smoke. Frozen121/owned25
 bindings and workspace-cache bytes remain exact; legitimate owned task updates
 are preserved. Independent review accepted `7223ce9` without an open finding;
 [Draft PR #38](https://github.com/Ljrr3045/rielia/pull/38) opened at that exact
-source head/base. Live Draft readback shows no native Kilo check/review/comment
-on inspected surfaces, without hidden billing/queue visibility. Final-head
-hosted CI/artifacts and coordinator-controlled Ready/Kilo/merge remain pending. Historical
-entries below retain their original status; T36, remaining formatting/extraction,
-T37 and T11 stay incomplete.
+source head/base. Initial Draft observations are historical. Final head
+`f16dfac` has successful validate 128372042941 and Kilo 128375942393/App 2193792;
+[its summary](https://github.com/Ljrr3045/rielia/pull/38#issuecomment-6705555677)
+reports No Issues Found for 29 files with empty final feedback surfaces. The
+coordinator merged PR #38 at `fbc9fad` on November 7, 10:26:37 UTC; postmerge
+validate 128378024516 also succeeds. All 17 final hosted artifact reports equal
+accepted local B; real hosted PG/security/runtime/audits passed. The final
+[guide](project-surface-formatting.md) records the artifact identity and limits.
+T36/extraction, T37 and T11 stay open; remaining formatting is prepared separately
+in the entry above.
 
 ## 2026-11-07 T36 web transport formatting W1 — IN PROGRESS
 
