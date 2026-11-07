@@ -1,5 +1,37 @@
 # Delivery progress and decisions
 
+## 2026-11-07 T36 first backend values/policy/DTO extraction — IN PROGRESS
+
+Merged PR #39 at `c9a742618a7b1d7734daf1d98c31f33245304120` is the base.
+The bounded T36.5 [delivery guide](project-values-policy-extraction.md) records
+three cohesive helpers for existing input/canonical values, pure human-management
+booleans and loaded project/task/access DTOs. The facade retains reads/hydration,
+SQL/locks, mutation/receipt kernel, command callbacks, exceptions and DI/public
+signatures. Collaboration/Discovery use the input owner and retain their existing
+composition APIs. No UI/schema/pin/provider/pipeline or product behavior change;
+later backend/frontend restructuring and T36.6/T37/T11 remain open.
+
+A passes 129 API / 269 total cases and reconciles all 17 accepted hosted reports.
+B/repeat retain those suites with 33 API / 104 total inputs and 17 identical
+reports. Independent review accepts 996 raw facade units, including 530 zeros,
+56 measured physical-line groups and exact mapping/END dispositions. C adds 19
+focused cases and passes 148 API / 288 total cases, measuring L638/1477 S698/1617
+F156/396 B523/1228. The other scopes retain all 12 report bytes. All six source
+files already match pinned formatting; four new adoptions reach 212/212.
+The coordinator accepts only the current API baseline, with L/S/F/B floors
+43.19/43.16/39.39/42.58 percent; seven other baselines remain unchanged.
+
+Fresh builds and focused cases pass. Final `pnpm check` passes in 76.47 seconds;
+one final-source gated coverage regeneration passes all 288 cases in 14.46 seconds
+with the accepted final fingerprint and unchanged C counts. Infrastructure passes
+20 cases; artifacts, handoff (47 files/30 assets/616 links in 70 documents),
+whitespace, cleanup and owned/frozen dependency guards pass. Original C and the
+resolved lint/stale-report failures remain private evidence; legitimate native
+task transitions are retained. The local commit uses tracked quality hooks.
+Draft publication/current-head hosted CI/Kilo and coordinator delivery acceptance
+remain pending. No new local PG/Docker/browser/provider/staging result or completed
+T36 is claimed.
+
 ## 2026-11-07 T36 maintained-source formatting completion — IN PROGRESS
 
 Merged PR #38 at `fbc9fad8bb431d6dcadcaddcb137f33bebceee78` is the actual base.

@@ -13,7 +13,8 @@ import {
 } from '@rielia/contracts';
 import type { Prisma } from '../generated/prisma/client.js';
 import type { VerifiedExecution } from '../principals/principal.service.js';
-import { object, ProjectTaskService } from './project-task.service.js';
+import { ProjectTaskService } from './project-task.service.js';
+import { object } from './project-task-input.js';
 
 export function normalizedDiscovery(query: TaskDiscoveryQuery): TaskDiscoveryQuery {
   return {

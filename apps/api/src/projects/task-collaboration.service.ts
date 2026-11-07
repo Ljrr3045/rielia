@@ -21,7 +21,8 @@ import {
 } from '@rielia/contracts';
 import type { Task as TaskRow, TaskComment as CommentRow } from '../generated/prisma/client.js';
 import type { Transaction, VerifiedExecution } from '../principals/principal.service.js';
-import { ProjectTaskService, object, expected, text } from './project-task.service.js';
+import { ProjectTaskService } from './project-task.service.js';
+import { object, expected, text } from './project-task-input.js';
 
 const identifier = (v: unknown): v is string =>
   typeof v === 'string' && /^[A-Za-z0-9_-]{1,128}$/.test(v);
