@@ -131,6 +131,23 @@ export function projectBrowser(t, search = '?workspace=a&project=p') {
     rows: 114,
     streams: [],
     mutate: () => Response.json(task(115), { status: 201 }),
+    taskPage(w = 'a', cursor = false) {
+      const offset = cursor ? 100 : 0;
+      const items = Array.from({ length: server.rows }, (_, i) => ({
+        ...task(i + 1, w),
+        title: `${server.title} ${i + 1}`,
+        version: server.version,
+      }));
+      return {
+        items: items.slice(offset, offset + 100),
+        total: items.length,
+        nextCursor: offset + 100 < items.length ? 'tail' : null,
+        capabilities: { canCreate: true },
+        orderVersion: 1,
+        columnCounts: { backlog: items.length, todo: 0, in_progress: 0, done: 0, canceled: 0 },
+        selectedAssignee: null,
+      };
+    },
     holdNext(match) {
       const hold = { ...deferred(), match, request: null };
       holds.push(hold);
@@ -205,22 +222,42 @@ export function projectBrowser(t, search = '?workspace=a&project=p') {
     if (tail === '/projects/p') return Response.json(project('p', w, server.version));
     if (tail === '/projects/p/assignees')
       return Response.json({ ...page([]), workspaceId: w, projectId: 'p' });
-    if (tail === '/projects/p/tasks') {
-      const offset = url.searchParams.has('cursor') ? 100 : 0;
-      const items = Array.from({ length: server.rows }, (_, i) => ({
-        ...task(i + 1, w),
-        title: `${server.title} ${i + 1}`,
-        version: server.version,
-      }));
-      return Response.json({
-        items: items.slice(offset, offset + 100),
-        total: items.length,
-        nextCursor: offset + 100 < items.length ? 'tail' : null,
-        capabilities: { canCreate: true },
-        orderVersion: 1,
-        columnCounts: { backlog: items.length, todo: 0, in_progress: 0, done: 0, canceled: 0 },
-        selectedAssignee: null,
-      });
+    if (tail === '/projects/p/tasks')
+      return Response.json(server.taskPage(w, url.searchParams.has('cursor')));
+    const detail =
+      /^\/projects\/p\/tasks\/t(\d+)(?:\/(relations|parent-candidates|checklist|comments|history))?$/.exec(
+        tail,
+      );
+    if (detail) {
+      const [, index, collection] = detail;
+      if (!collection)
+        return Response.json({
+          ...task(Number(index), w, 'p', server.version),
+          title: `${server.title} ${index}`,
+        });
+      const common = {
+        ...page([]),
+        workspaceId: w,
+        projectId: 'p',
+        taskId: `t${index}`,
+        revision:
+          collection === 'relations' || collection === 'parent-candidates' ? 1 : server.version,
+      };
+      if (collection === 'relations')
+        return Response.json({
+          ...common,
+          parent: null,
+          open: 0,
+          archivedOpen: 0,
+          capabilities: { canCreate: true, canLink: true, canUnlink: false },
+        });
+      if (collection === 'parent-candidates')
+        return Response.json({ ...common, capabilities: { canSelect: true } });
+      if (collection === 'checklist')
+        return Response.json({ ...common, capabilities: { canCreate: true, canEdit: true } });
+      if (collection === 'comments')
+        return Response.json({ ...common, capabilities: { canCreate: true } });
+      return Response.json(common);
     }
     throw new Error(`Unexpected HTTP path ${path}`);
   });
