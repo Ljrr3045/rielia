@@ -1,0 +1,23 @@
+CHANGELOG.md
+  s_8691a07f071c2f::t_2701e9445acbc3 15,18
+docs/development/progress.md
+  s_8691a07f071c2f::t_0ca26fe5e04835 6,9,20,28,33-36,38
+docs/development/project-refresh-lifecycle.md
+  s_8691a07f071c2f::t_f015ad6d4a2172 85,128-130
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "61d04b00231ee3b77939d5dd100e202aa543cd03",
+  "prompts": {},
+  "sessions": {
+    "s_8691a07f071c2f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1b36a-06f8-7002-9555-020e3c485adb",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
