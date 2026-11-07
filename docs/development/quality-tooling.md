@@ -4,6 +4,9 @@ This first T36.2/T36.3 slice adds developer enforcement while preserving app
 behavior. T36 remains **IN PROGRESS**: application unit infrastructure, separate
 coverage gates, extraction and the stable T37 UI baseline remain follow-up work.
 The [roadmap](development-quality-roadmap.md) retains T36 → T37 → T11 ordering.
+The later [web transport W1 adoption](web-transport-formatting.md) adds 20
+maintained logic inputs to formatting enforcement, with a separately reviewed
+physical-line coverage migration and no behavior or UI changes.
 
 ## Tools and installation
 
