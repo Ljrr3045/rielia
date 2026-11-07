@@ -320,10 +320,10 @@ estree response failed the finite 4 MiB budget; the failure and script exit rema
 in the initial index, followed only by its two small affected latest manifests.
 No other request or broad audit was repeated.
 
-Coordinator final acceptance must bind this unchanged graph to actual final-head
-root and isolated-tools full-audit logs already produced by required CI. This
-research does not establish current full-graph totals or absence of other newly
-disclosed advisories, and does not call either graph audit-clean. Future actual
+Coordinator final acceptance must bind this unchanged graph to root and
+isolated-tools full-audit results produced by required CI for the exact final
+reviewed head. Each new head requires its own results. This research does not
+establish current full-graph totals or absence of other newly disclosed advisories, and does not call either graph audit-clean. Future actual
 compatible candidates still need a separately authorized exact-version/lock,
 engine/peer/lifecycle/runtime and comparable-provider review; no upgrade, forced
 major, override or gate reduction is proposed.

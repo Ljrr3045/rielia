@@ -76,7 +76,8 @@ remain coordinator-owned; real persisted/security/runtime checks remain required
 Delivery: [PR #42](https://github.com/Ljrr3045/rielia/pull/42).
 
 Final delivered merge `3fb40583dc0a212faf7d38e02348565df729bf78`, reviewed head `3b3c18cdd5020960b9024883aa6d62fca27de894`;
-corrected C: 138 web / 380 total over 118 inputs; historical 136/378/049 notes below are not current. Earlier pending local notes below remain historical checkpoints.
+corrected C: 138 web / 380 total over 118 inputs. Historical 136 web / 378 total
+counts below are superseded; earlier pending local notes remain historical checkpoints.
 
 Merged PR #41 at `26f6c57d46b280ecb196d0920f73ed2312e88002` is the base.
 The [bounded T36.4 frontend batch](project-interactions-extraction.md) separates

@@ -35,7 +35,8 @@ or an Orca installation.
   existing dependencies**. [The roadmap](docs/development/development-quality-roadmap.md)
   defines ordered subdeliveries and evidence. The agreed tooling/formatting,
   deterministic frontend/backend units, all-source numerical CI gates and bounded
-  frontend/backend extractions are delivered through PRs #41–#43; see the
+  frontend/backend extractions are delivered across the T36 PR series through
+  PR #43; see the
   [unit guide](docs/development/unit-coverage.md),
   [project owners](docs/development/project-interactions-extraction.md),
   [workspace owners](docs/development/workspace-interactions-extraction.md) and
