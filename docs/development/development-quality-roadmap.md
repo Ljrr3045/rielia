@@ -40,10 +40,12 @@ accepted in merged [PR #46](https://github.com/Ljrr3045/rielia/pull/46) at
 passed. [T37.3 shell/entry work](t37-shell-entry.md) is accepted in merged
 [PR #47](https://github.com/Ljrr3045/rielia/pull/47#issuecomment-6814793798) at
 `55f0f8d85521998d3d7ed883f387bd3c6cb664f8`. [T37.4 project/task work](t37-project-task-ui.md)
-has 177 passing frontend cases, 26 bounded native journeys and a 14-image Astra
-review subset from one source-bound build, published in
-[Draft PR #48](https://github.com/Ljrr3045/rielia/pull/48); current-head review and
-coordinator acceptance remain. F1 navigation fill is T37.5-owned; no T37.5
+is published in [Draft PR #48](https://github.com/Ljrr3045/rielia/pull/48).
+Round1 recovery corrections retain all 177 cases and add eight: 185 pass an exact
+reviewed gate. A new source-bound build passes ten focused native journeys and
+nine coordinator-inspected images without a new visual blocker; the initial
+26 journeys/14-image Astra subset remain historical for unchanged surfaces.
+Current-head review and coordinator acceptance remain. F1 navigation fill is T37.5-owned; no T37.5
 source is included in this batch.
 T11 has not started; no Astro app is scaffolded.
 Prose or smaller files do not establish universal conformity, production readiness
