@@ -380,3 +380,59 @@ Current-head local/remote checks, actual CI duration and Draft PR evidence are i
 [progress](progress.md). Real-device/assistive-technology/provider/staging/user checks
 remain deferred; DOM evidence does not replace them. Further project-task hook/SSE
 recovery units and responsibility extraction remain later bounded deliveries.
+
+
+## T37.3 reviewed current-web baseline migration
+
+The coordinator explicitly reviewed and approved this current-web-only migration
+through a blocking candidate decision after the bounded invitation-feedback fix
+at `9f9f07f`. Earlier T37.3 statements that coverage reconciliation remained blocked
+are superseded by this decision and the passing normal gate; their original run
+failure is preserved as historical evidence. This accepts a reviewed baseline
+migration, not T37.3 UI/publication or broader T37 acceptance.
+
+| Metric | Accepted covered/total | Reviewed covered/total | Floor before → after (basis points) |
+| --- | --- | --- | --- |
+| Lines | 1567/3793 | 1649/3793 | 4131 → 4347 |
+| Statements | 1734/4269 | 1818/4269 | 4061 → 4258 |
+| Functions | 323/1051 | 335/1051 | 3073 → 3187 |
+| Branches | 1588/5192 | 1665/5196 | 3058 → 3204 |
+
+Only `scripts/unit/baselines/web.json` changes from SHA-256
+`15fd5321b42a3bcbc221aa72ceaba8355d7ea33f485794ef92a0a2e23b36fc35` to
+`9e85d482a01099d38b2101cdcef6d83b57ba21722562239bf9c61c67f6f50f16`.
+The exact 68 maintained inputs remain; 64 file counters match and four improve:
+workspace strings, feedback, invitations and UI. Every L/S/F denominator is
+unchanged. Only workspace-feedback B131→135 adds outcomes: the new conditional
+has mapped hits [9,24], and its short-circuit operand counters [33,32]. No unhit
+outcome or source was omitted, no count/floor regressed and no exclusion/ignore,
+provider, compiler/runtime/tool lock, shared config or gate code changed.
+
+Seven expected maintained-source fingerprint deltas cover identity view/page,
+project shell, and workspace strings/entry/feedback/view. Existing test/helper
+fingerprints are byte-identical; the only added input is
+`apps/web/test/unit/workspace-feedback.test.mjs`, containing ten real rendered
+component/hook/controller regressions. All historical pre-unit manifests and
+other-scope current manifests remain byte-identical. The 92-source compiled UI
+binding from `9f9f07f` is unchanged by this baseline/docs-only descendant.
+
+The candidate is generated with existing `baselineFor` and manifest semantics
+from the already retained complete 155-pass instrumented report. Source-map
+`sourcesContent` matches all 68 current inputs; selected tests/helpers match the
+retained execution mirror. No fresh measure or maintenance-mode run is needed.
+After the exact candidate decision, one normal `pnpm unit:web` passes all 155 cases,
+exact manifests, aggregate/floor/per-file/nonregression and mapping-bound checks;
+its full normalized maps and hit vectors match the retained report exactly.
+
+Current source mapping still contains 797 null-column points of 28348 mapped
+points; these remain provider precision limits, not precise recovered endpoints.
+The type-only `task-collaboration-view.ts` stays in the denominator as an explicit
+zero-unit N/A input, without a 100% fiction. Existing unexecuted-source, implicit
+branch, null/zero-unit and lifecycle debt is not closed. No unavailable historical
+endpoint comparison or universal coverage conformity is claimed.
+
+No app/test source, install, production build, browser or native-matrix rerun is
+part of this migration. Existing 19 native checks/23 captures retain their exact
+build/source provenance. Current-head CI/native review, T37.3 publication and
+coordinator acceptance, plus later real persisted/security/device/AT/provider/
+staging/actual-browser-zoom QA remain separate requirements.

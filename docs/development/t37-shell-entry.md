@@ -172,14 +172,14 @@ Ten new real-hook/component DOM regressions cover read403/503 in both languages,
 visible-link/manual-copy/Done, read recovery and dismiss without another POST,
 inbound separation, refresh/selection/account replacement/expiry clearing, and
 unrelated success versus uncertain recovery. Only CSS and HTTP/browser boundaries
-are controlled. All 155 frontend unit cases pass. **The unchanged coverage gate
-fails** its exact source/test manifest comparison: six incoming T37.3 source
+are controlled. All 155 frontend unit cases pass. **The initial unchanged coverage gate
+failed** its exact source/test manifest comparison: six incoming T37.3 source
 fingerprints already differed from accepted T36, and this correction adds the
 feedback change and regression file. Read-only normalization of that same run
 measures L1649/3793, S1818/4269, F335/1051, B1665/5196; its numerical comparator
-also rejects the changed branch denominator (5196 versus 5192). No baseline,
-threshold, source selection, exclusion or policy was changed. Comparable source/
-test reconciliation remains an explicit coordinator-owned acceptance blocker.
+also rejects the changed branch denominator (5196 versus 5192). At that checkpoint no baseline,
+threshold, source selection, exclusion or policy was changed. The reviewed
+reconciliation below supersedes that checkpoint blocker.
 
 One production build, `exXrwr4o43S12E7dSkmxO`, passes alongside affected type/lint
 checks. Nineteen targeted installed-Brave cases pass, with 23 captures bound to
@@ -206,6 +206,46 @@ The earlier `fbc0829` / `B4VarUs7QHLK6SVdmvGsG` baseline evidence is unchanged.
 Astra must inspect corrected images. The inherited 1280 breadcrumb overlap stays
 Astra-owned T37.4; all three project/collaboration recovery debts remain open.
 Actual browser-chrome 200% zoom, physical device/AT/provider/staging and real
-PostgreSQL/Nest/Next persisted/security QA are unperformed. Coverage reconciliation,
+PostgreSQL/Nest/Next persisted/security QA are unperformed. The later reviewed migration below resolves the local coverage blocker;
 current-head CI/native review, consolidated Draft publication and coordinator
-acceptance remain required; this correction does not accept T37.3 or T37.
+acceptance remain required. This correction does not accept T37.3 or T37.
+
+
+## Reviewed current-web coverage reconciliation (2026-11-11)
+
+The coordinator approved the exact current-web candidate after reviewing retained
+source/test fingerprints, per-file counters, provider/config equality and mapped
+branch outcomes through a blocking decision. This explicit authorization and the
+following passing normal gate supersede the earlier coverage-blocker statements;
+those failures remain historical evidence, not a current unresolved local gate.
+
+Only `scripts/unit/baselines/web.json` migrates. Accepted SHA-256
+`15fd5321b42a3bcbc221aa72ceaba8355d7ea33f485794ef92a0a2e23b36fc35` becomes
+`9e85d482a01099d38b2101cdcef6d83b57ba21722562239bf9c61c67f6f50f16`.
+All seven other current/historical baselines, provider/compiler/runtime/tool-lock,
+shared config, source selection, exclusions and gate implementations remain exact.
+The [unit-guide addendum](unit-coverage.md#t373-reviewed-current-web-baseline-migration)
+records all before/after counts, raised floors and retained mapping/zero-unit debt.
+
+The candidate reuses the complete retained 155-pass report and the existing
+`baselineFor`/manifest semantics; no measurement rerun was needed. All 68 original
+source contents were verified against the retained instrumented source maps,
+and every selected test/helper against the retained mirror. The 68-input inventory
+is unchanged, 64 file counters are exact and four files improve. Seven expected
+source fingerprints change; the sole added test fingerprint is the ten-regression
+workspace-feedback suite, with every prior test/helper byte-identical.
+
+One normal `pnpm unit:web` now passes all **155 cases**, exact manifests, all-source
+L/S/F/B floors, per-file/nonregression gates and source-bound mapping checks. Its
+counts, maps and hit vectors reproduce the retained run exactly:
+L1649/3793, S1818/4269, F335/1051, B1665/5196. L/S/F/B floors rise to
+4347/4258/3187/3204 basis points. No counter nondeterminism or regression was found.
+
+No app/test source, build, browser or runtime changes occur in this migration.
+The 92 compiled-source hashes from `9f9f07f` still match; existing build
+`exXrwr4o43S12E7dSkmxO`, 19 native checks and 23 captures retain their original
+provenance. No duplicate install/build/native matrix ran. Mapping precision debt
+(797 current null-column points) and the type-only zero-unit collaboration-view
+input remain explicit. Corrected-image/publication integration, current-head
+CI/native review and coordinator T37.3 acceptance remain separate gates;
+real persisted/security/device/AT/provider/staging/actual-zoom limits still apply.

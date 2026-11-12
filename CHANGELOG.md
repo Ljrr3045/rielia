@@ -6,14 +6,20 @@ This records repository changes. No application version has been released.
 
 ### T37.3 shell and entry-flow presentation checkpoint
 
+- Reconcile the coordinator-reviewed current web baseline after exact retained-run
+  comparison: preserve all 68 inputs and prior tests, retain every other baseline,
+  and raise all four floors. One normal frontend gate passes 155 cases with exact
+  maps/counters; no app/test/provider/config change or repeated UI build/browser run.
+
 - Correct confirmed invitation feedback when the temporary link has been cleared:
   keep the success, explain that Refresh cannot restore the link, and require
   current permission plus deliberate list review/revocation before replacement.
   Preserve token clearing, visible-link copy and uncertain-outcome recovery.
 - Add ten frontend regressions; 155 cases and 19 targeted native checks pass on
-  the corrected layout/feedback build. Coverage manifest/denominator reconciliation
-  remains blocked and is recorded explicitly; no baseline/threshold change,
-  publication or T37 acceptance.
+  the corrected layout/feedback build. The initial manifest/denominator rejection
+  is preserved as historical evidence;
+  the later reviewed current-web migration resolves the local blocker without
+  lowering a gate. No publication or T37 acceptance.
 
 - Follow twelve native baseline captures with CSS corrections for repeated
   secondary mobile context, workspace header wrapping and role/owner alignment;

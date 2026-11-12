@@ -1,6 +1,23 @@
 # Delivery progress and decisions
 
 
+## 2026-11-11 T37.3 reviewed web coverage reconciliation — NORMAL LOCAL GATE PASSED
+
+A new explicit coordinator-reviewed migration supersedes the earlier local
+coverage-blocker statements. Only the current web baseline changes: 68 inputs
+remain, 64 files are counter-exact, four improve, all prior tests/helpers and
+provider/config hashes are preserved, and the expected four branch outcomes are
+reviewed. L/S/F/B floors rise from 4131/4061/3073/3058 to 4347/4258/3187/3204.
+One normal frontend run passes all 155 cases and numerical/per-file/nonregression
+and exact-manifest gates, reproducing the retained counts/maps/hits exactly.
+See the [reconciliation](t37-shell-entry.md#reviewed-current-web-coverage-reconciliation-2026-11-11)
+and [unit evidence](unit-coverage.md#t373-reviewed-current-web-baseline-migration).
+All other/historical baselines and gate policy are unchanged. Application code,
+tests and the 92-source UI build binding remain unchanged. No install, production
+build, app service or browser run is added; 19 native cases and 23 captures remain. T37.3 integration/publication/current-head
+CI/native review and coordinator acceptance remain open; no T37/T11 closure.
+
+
 ## 2026-11-11 T37.3 truthful invitation feedback — LOCAL CORRECTION
 
 SOL's `fix/t37-invitation-feedback` starts from corrected Astra `5af198a`.
@@ -8,10 +25,10 @@ Confirmed invitation success now distinguishes a present generated link from a
 cleared temporary result, without changing token clearing or adding retry/state.
 The [guide](t37-shell-entry.md#truthful-invitation-feedback-and-targeted-revalidation-2026-11-11)
 records ten new regressions, 155 passing frontend cases, one successful production
-build and 19 passing targeted native cases/23 captures. Coverage acceptance remains
-blocked: unchanged manifest and branch-denominator comparators reject the changed
-source/test inputs; no baseline or threshold is modified. Corrected-image review,
-comparable coverage reconciliation, later persisted QA, publication/current-head
+build and 19 passing targeted native cases/23 captures. The initial coverage run was
+blocked by unchanged manifest and branch-denominator comparators; this historical
+checkpoint changed no baseline or threshold. The later reviewed migration above
+resolves that local blocker. Later persisted QA, publication/current-head
 CI/native review and coordinator acceptance remain open. Runtime is stopped;
 no push/PR/Ready/merge/deploy or T37/T11 acceptance claim.
 
