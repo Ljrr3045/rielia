@@ -1,0 +1,23 @@
+docs/development/progress.md
+  s_4270ef6aad1034::t_05019b82257b50 18-20
+docs/development/t37-shell-entry.md
+  s_4270ef6aad1034::t_05019b82257b50 7-9
+CHANGELOG.md
+  s_4270ef6aad1034::t_05019b82257b50 9-10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "67f5ecbfc9e65eb1ee98f25c14a76a4acebc5660",
+  "prompts": {},
+  "sessions": {
+    "s_4270ef6aad1034": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1cd8b-46df-7340-97a6-67b2478a8359",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
