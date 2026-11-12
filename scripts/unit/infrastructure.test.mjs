@@ -73,11 +73,31 @@ test(
       'apps/web/src/app/projects/projects-view.tsx',
       'apps/web/src/app/projects/task-detail.tsx',
     ]) {
-      assert.equal(web.files[file].functions.covered, 0);
       assert.ok(
-        web.files[file].functions.total > 1,
-        'Unimported functions must have actual AST counters',
+        web.files[file].functions.covered > 0,
+        `${file} must execute in the real screen units`,
       );
+      assert.ok(
+        web.files[file].branches.covered > 0,
+        `${file} screen decisions must retain coverage`,
+      );
+    }
+    // Coverage can expand without freezing a particular screen as unimported.
+    // Keep the actual-report denominator witness and verify its real AST counts.
+    const unexecuted = Object.entries(web.files).filter(([, units]) =>
+      metrics.every((metric) => units[metric].covered === 0 && units[metric].total > 0),
+    );
+    assert.ok(unexecuted.length > 0, 'Actual web reports must retain unexecuted runtime inputs');
+    const counters = read('coverage/unit/web/coverage-final.json');
+    for (const [file, units] of unexecuted) {
+      const actual = coverage.createFileCoverage(counters[file]).toSummary();
+      for (const metric of metrics) {
+        assert.deepEqual(
+          units[metric],
+          { covered: 0, total: actual[metric].total },
+          `${file} unexecuted ${metric} must retain actual AST counters`,
+        );
+      }
     }
     const hook = web.files['apps/web/src/lib/use-project-tasks.ts'];
     assert.ok(hook.functions.covered > 0, 'The actual project hook must execute in React units');

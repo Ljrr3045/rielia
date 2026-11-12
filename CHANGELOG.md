@@ -6,6 +6,11 @@ This records repository changes. No application version has been released.
 
 ### T37.4 project/task presentation and recovery — [Draft PR #48](https://github.com/Ljrr3045/rielia/pull/48)
 
+- Correct an obsolete CI infrastructure witness now that project/detail screens
+  execute in real units; retain actual unexecuted AST denominators and all gate
+  rejection witnesses. One targeted 20-case run passes using exact-head CI reports,
+  with unchanged application source/tests and all eight baselines.
+
 - Wrap full breadcrumb context within its work column; prioritize task titles in
   contiguous rows, retain native Move/reorder and expose permitted mobile Restore.
   Improve project/access forms and readable detail/collaboration structure.

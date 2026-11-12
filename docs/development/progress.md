@@ -1,5 +1,18 @@
 # Delivery progress and decisions
 
+## 2026-11-12 PR48 infrastructure witness correction
+
+The initial [PR48 CI run](https://github.com/Ljrr3045/rielia/actions/runs/43159616732)
+failed an obsolete zero-execution assertion after T37.4 added real screen units;
+its four-scope coverage gates passed and 19 other infrastructure cases passed.
+The [bounded correction](unit-coverage.md#t374-infrastructure-witness-correction)
+requires execution of the newly tested screens and retains actual-report
+unexecuted AST denominators plus the separate never-imported negative witness.
+One targeted infrastructure run passes 20/20 using exact-head, fingerprint-verified
+CI reports. No application source/tests/baseline or provider/config changes and
+no repeated application suites/build/native work. PR48 remains Draft; current-head
+CI/native review and coordinator acceptance remain, without T37.4/T37 closure.
+
 ## 2026-11-12 T37.4 published as Draft PR48
 
 Accepted foundations are PRs #45/#46/#47; accepted `dev` is `55f0f8d`. Publication

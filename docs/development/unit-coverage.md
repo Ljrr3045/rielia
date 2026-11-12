@@ -556,3 +556,34 @@ local integration authorization itself did not accept PR47. The coordinator
 subsequently [accepted/merged PR47](https://github.com/Ljrr3045/rielia/pull/47#issuecomment-6814793798) at `55f0f8d`; T37.4 acceptance
 remains separate. The separately authorized T37.4 production/native
 group follows this integration; HTTP fixtures cannot establish persisted security.
+
+
+## T37.4 infrastructure witness correction
+
+The initial [PR48 CI run](https://github.com/Ljrr3045/rielia/actions/runs/43159616732)
+passed the four-scope coverage pipeline but failed one of 20 infrastructure cases:
+its historical unexecuted-screen assertion expected zero covered functions in
+`projects-view.tsx`, now 11 after meaningful T37.4 screen units. `task-detail.tsx`
+also executes (7 covered functions). This was an obsolete witness, not a coverage
+floor failure; the failed log and exact-head safe artifact remain preserved.
+
+The corrected actual-report assertions require both screens to execute functions
+and branches. Unexecuted executable inputs are selected from the actual web report
+rather than freezing a screen as permanently unimported. Their four positive
+L/S/F/B denominators are checked against actual Istanbul AST counters, with zero
+covered units retained. Ten such inputs are present in the failed run's report.
+The separate real never-imported two-branch fixture, all-scope raised-floor
+rejection, per-file regression, malformed-input and selected-test protections
+remain unchanged.
+
+One targeted `pnpm test:unit-infrastructure` passes all 20 cases on Node 24.22.1,
+using the already-produced safe artifact from exact unchanged source head
+`df4876d8`. All four manifest cores, source/test fingerprints, provider/config and
+tool-lock identities match the accepted baselines and current inputs; the API's
+runner-generated compiler witness is checked against its unchanged runner string.
+No application suites, measurement, install, build, browser or Docker rerun occurs.
+All 92 compiled-source hashes, 24 frontend test/helper fingerprints and eight
+baselines remain exact, including current web `7e44c96c` and its higher floors.
+The prior 177-case/native evidence therefore retains its source binding, without
+claiming a new application run. Current-head CI and coordinator review/acceptance
+remain required; this fix does not accept T37.4 or T37.
