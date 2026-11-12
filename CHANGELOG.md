@@ -4,52 +4,24 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
-- Validate exact integrated T37.4 source with one production build, 26 bounded
-  native journeys and 20 selected images; retain all 177 frontend cases and higher
-  coverage floors. Record recovery, keyboard/touch, breadcrumb paint, long metadata,
-  role/form/detail/shared-row evidence and exact owned-resource cleanup.
-- Record coordinator acceptance/merge of T37.3 PR47 at `55f0f8d`; its dependency
-  is resolved. The My tasks primary-fill presentation follow-up remains T37.5-owned;
-  T37.4 acceptance/publication and final persisted/device/AT/zoom/provider QA remain.
+### T37.4 project/task presentation and recovery
 
-
-- Integrate exact PR47 corrective source into T37.4 recovery, retain all 177 cases
-  and corrected invitation assertions, and reconcile only two current-web
-  fingerprints after measured review. One normal gate reproduces every counter,
-  map and hit without changing higher floors or seven other baselines. Native
-  validation follows separately; no PR47 acceptance or publication is implied.
-
-
-### T37.4 bounded project/task recovery
-
-- Keep confirmed project writes visible after failed reads, using generic feedback
-  while current data/access are unavailable; read recovery never repeats a write.
-- Restore denied memory-local drafts only with current target/capability, captured
-  versions and deliberate Return; retain safe Discard/focus and prevent stale
-  dialog remount after permission loss, including an empty workspace.
-- Separate pending checklist saving from genuinely unknown exact-key recovery.
-- Add 22 meaningful frontend regressions; all 177 cases pass one normal gate after
-  exact coordinator-reviewed current-web migration. Preserve provider/config,
-  prior cases and seven other baselines while raising every aggregate floor.
-  The [guide](docs/development/t37-project-task-ui.md#bounded-sol-recovery-implementation--2026-11-12)
-  retains the failed loader attempt, unapproved 171-case checkpoint, reproduced
-  capability edge case, source boundaries and deferred native/persisted QA.
-- Preserve exact Astra presentation and T37.3 invitation/token behavior. No new
-  frontend production build, browser/runtime, publication or T37 acceptance claim.
-
-
-### T37.4 project and task presentation checkpoint
-
-- Wrap long breadcrumb context within its work column; retain complete text and
-  existing detail thresholds, pending native paint-bound verification.
-- Make task titles lead contiguous project rows, align wide metadata and expose
-  existing capability-gated Restore on narrow rows; retain native status/Move.
-- Quiet project administration, show the capture label, and improve board,
-  project/access form and detail/collaboration reading structure with existing tokens.
-- Record [source boundaries, baseline provenance and pending checks](docs/development/t37-project-task-ui.md).
-  No logic/recovery/test/dependency change or new rendering claim; independent SOL
-  validation, three owned recovery fixes, T37.3 acceptance/base sync and publication
-  remain pending. T37.4 and T37 are not closed.
+- Wrap full breadcrumb context within its work column; prioritize task titles in
+  contiguous rows, retain native Move/reorder and expose permitted mobile Restore.
+  Improve project/access forms and readable detail/collaboration structure.
+- Keep confirmed writes visible through failed reads without private labels or
+  automatic mutation retry. Gate denied-draft Return on current target/capability,
+  preserve captured versions/exact unknown keys, and provide Discard/focus recovery.
+- Separate pending checklist Saving from unknown Retry/Discard, and prevent stale
+  create-form remount after capability restoration in an empty workspace.
+- Retain all 177 frontend cases, reviewed floors 5994/5781/4739/5362, 26 unique native
+  journeys and one build with 20 source-bound images. Astra reviewed 14 selected
+  states, with no new blocking T37.4 visual issue in that bounded subset.
+- Preserve accepted PRs #45/#46/#47, exact source/test/baseline proof and failed
+  diagnostics. Record F1 navigation fill ambiguity as T37.5-owned; no T37.5 source
+  is included. The [guide](docs/development/t37-project-task-ui.md) separates
+  current-head CI/native/coordinator acceptance and final real persisted/device/
+  AT/zoom/provider/staging QA. No T11, landing, new policy or full-T37 acceptance.
 
 ### T37.3 shell, identity and workspace entry
 

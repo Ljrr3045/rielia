@@ -1,5 +1,27 @@
 # Delivery progress and decisions
 
+## 2026-11-12 T37.4 consolidated Draft preparation
+
+Accepted foundations are PRs #45/#46/#47; accepted `dev` is `55f0f8d`. Publication
+branch `feat/t37-project-task-work` preserves recovery checkpoint `8d7b937` and
+merges accepted-dev ancestry without changing its tree. 92 source/24 test-helper
+hashes and reviewed current baseline `7e44c96c` remain exact. No units, build,
+browser or Docker repeats are warranted for this ancestry/documentation update.
+
+The [consolidated guide](t37-project-task-ui.md) records project/task presentation,
+four bounded recovery corrections, 177 frontend cases, 26 unique native journeys,
+one build `6QKhwGDQLKveEfZvAYWsS` from `ce60740f` and 20 selected source-bound images.
+Astra reviewed 14 distinct selected states, including resolved pending feedback;
+no new blocking T37.4 visual defect was found in that subset. F1 navigation fill
+ambiguity stays T37.5 presentation-owned; its source is excluded from this batch.
+
+One English Draft PR to `dev` is authorized, not final acceptance. Current-head
+CI/native review and coordinator acceptance remain. Final PG/Nest/Next persisted/
+security QA stays in T37.5/6; fixture evidence is not persistence/security proof.
+Actual browser zoom, physical devices/manual AT, users/providers/staging remain
+deferred. No T11/landing/new policy or whole-T37 closure is implied.
+
+
 ## 2026-11-12 T37.4 integrated native validation — LOCAL EVIDENCE COMPLETE
 
 The coordinator [accepted T37.3/PR47](https://github.com/Ljrr3045/rielia/pull/47#issuecomment-6814793798) and merged
