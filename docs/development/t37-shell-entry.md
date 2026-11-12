@@ -17,8 +17,13 @@ source `9f9f07f7ae66917377b6bd5dfbe1f1f356eb51a2`; the production build originat
 from working-tree snapshot `b93210f9f512ee6958941d199a18556f749a21b123fcfb1cb23932b7ffb27fa1`
 and is **`exXrwr4o43S12E7dSkmxO`**. Commit equivalence was checked afterward;
 the build is not relabelled as having run from a later commit. Publication changes
-after integration are documentation only and preserve these bytes and the reviewed
-web baseline `9e85d482a01099d38b2101cdcef6d83b57ba21722562239bf9c61c67f6f50f16`.
+through `67f5ecbfc9e65eb1ee98f25c14a76a4acebc5660` were documentation only and
+preserved those bytes and baseline
+`9e85d482a01099d38b2101cdcef6d83b57ba21722562239bf9c61c67f6f50f16`.
+The native round1 correction below changes two dead style hooks and one existing
+test; that earlier build/capture binding is historical, not byte-identical to
+the corrected source. Its approved current baseline is
+`2553f6c1aff88cc0e9d3f2372058fa8f041da505c576207768927b1302ebe70f`.
 
 The delivered batch combines Astra shell/identity/workspace presentation, SOL's
 minimal existing-prop invitation success discriminator and ES/EN wording, ten
@@ -321,3 +326,48 @@ T37.3 does not accept these debts or close T37/T11. Actual browser-chrome 200%
 zoom, physical devices/virtual keyboard, manual AT, real-user/provider/staging and
 real persisted/security QA remain unperformed here. Current-head hosted CI/native
 review and coordinator acceptance remain required; publication stays Draft.
+
+
+## Native round1 corrective batch (2026-11-12)
+
+The [completed native round1 check](https://github.com/Ljrr3045/rielia/runs/130956869143)
+at `67f5ecb` succeeded with four suggestions, all triaged valid by the coordinator.
+PR #47 returned to Draft after completion. SOL has explicit mixed-file ownership
+of only the two behavior-preserving presentation cleanups below; no aesthetic,
+policy/authentication, route, controller or transport redesign is included.
+Traceability and exclusions remain the T37.3 scope above, particularly UX05/07/09.
+
+| Finding | Bounded disposition and evidence |
+| --- | --- |
+| [Unused identity class](https://github.com/Ljrr3045/rielia/pull/47#discussion_r4546139092) | Remove only `className="identity-bilingual"`. Repository search found no selector or other consumer. Preserve the same inline span, ES/EN children, language span and DOM structure; no appearance or accessibility semantics change |
+| [Overridden notice color](https://github.com/Ljrr3045/rielia/pull/47#discussion_r4546139099) | Remove only `color: var(--danger-ink)` from `.identity-panel .notice`. Its ancestor is the same `section.status.identity-panel`; the later `.status .notice` has equal specificity `(0,2,0)` and already wins with `var(--danger-text)`. Border/background/spacing and the winning color are untouched in both themes |
+| [Vacuous clearing assertions](https://github.com/Ljrr3045/rielia/pull/47#discussion_r4546139106) | Each journey first proves real success and its actual generated token. Refresh then proves a real success panel, unavailable-link/Refresh copy and no textbox. Selection/account replacement prove ready state, actual outcome reset and absent panels; they also verify the new workspace/account. Expiry proves signed-out and absent panels. All four verify cleared secret and exactly one POST, using the original real hooks/controller/HTTP boundary without artificial rendering |
+| [Stale current floors](https://github.com/Ljrr3045/rielia/pull/47#discussion_r4546139109) | Label 4131/4061/3073/3058 explicitly historical and state measured current 4347/4258/3187/3204. Preserve the original before/after migration evidence |
+
+One fresh web measurement and, after exact candidate approval, one normal gate
+pass **155/155**. All 68 file counters, aggregate counts, floors, normalized maps
+and hit vectors match the previous accepted report; only identity-view and the
+existing feedback-test fingerprints change. Seven other baselines and provider/
+config/tool locks/selection/exclusions remain exact. The
+[coverage addendum](unit-coverage.md#t373-native-round1-manifest-correction-2026-11-12)
+records the exact accepted/candidate hashes, counts and retained mapping debt.
+Affected ESLint, web typecheck, adopted formatting, immutable handoff/local links,
+whitespace and required commit hooks pass. Preflight direct TSX runs failed loader
+configuration/IPC setup before any behavior result; diagnostics remain external,
+and the unchanged instrumented runner passes all actual cases. No source workaround
+or test removal was used to make those preflights pass.
+
+Cached frozen offline preparations reuse 541 root and 406 isolated-tool packages,
+zero downloads, with locks unchanged. Only required contracts compilation and unit
+instrumentation ran; no Next/API application production build, browser, Docker or
+app service. The sole heavy lease was released immediately after unit/lint/type
+checks. No owned runtime remains; foreign services/caches were not changed.
+
+The historical build `exXrwr4o43S12E7dSkmxO` and its 19 native checks/23 captures
+retain the original snapshot/source binding above. Of those 92 source hashes,
+only `globals.css` and `identity-view.tsx` now differ; source/cascade proof establishes
+the dead-hook cleanup without a new visual render. Do not relabel the old build
+as compiled from this correction or claim new native/persistence/security evidence.
+T37.4/T37.5, real zoom/device/AT/provider/staging and persisted-flow debt remain
+outside this batch. Current-head CI/native round2, thread resolution, Ready/merge
+and T37.3 acceptance stay coordinator-owned and outstanding; PR #47 stays Draft.

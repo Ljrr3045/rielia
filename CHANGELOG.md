@@ -22,8 +22,15 @@ Published in [Draft PR #47](https://github.com/Ljrr3045/rielia/pull/47) targetin
   exact prior tests/provider/config and seven protected baselines unchanged,
   raised floors and one passing normal gate.
 - Bind eleven Astra-reviewed corrected images and all 92 compiled sources to the
-  tested build; publication edits remain docs only. Record [evidence and limits](docs/development/t37-shell-entry.md).
-  Current-head CI/native review, T37.3 acceptance, T37.4 breadcrumb/recovery work
+  original tested build; publication through `67f5ecb` changed documentation only.
+- Address all four valid native round1 findings: remove two dead identity style
+  hooks without changing the winning CSS/DOM, make the four secret-clearing tests
+  transition-specific, and distinguish historical/current coverage floors.
+  Review exactly two current-web fingerprint changes; 155 cases, all counters/
+  floors/maps/hits and seven other baselines remain exact, and one normal gate
+  passes. Earlier build/captures keep historical provenance because source bytes
+  now differ. Record [dispositions, source proof and limits](docs/development/t37-shell-entry.md#native-round1-corrective-batch-2026-11-12).
+  Current-head CI/native round2, T37.3 acceptance, T37.4 breadcrumb/recovery work
   and real persisted/device/AT/zoom/provider/staging evidence remain outstanding.
 
 ### T37.2 CSS foundations checkpoint

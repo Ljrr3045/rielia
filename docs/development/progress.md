@@ -1,5 +1,31 @@
 # Delivery progress and decisions
 
+## 2026-11-12 T37.3 PR47 native round1 — CORRECTIVE DRAFT BATCH
+
+The completed [native check](https://github.com/Ljrr3045/rielia/runs/130956869143)
+at `67f5ecb` produced four valid suggestions. SOL removes only the unused identity
+class and overridden notice color, strengthens the existing refresh/selection/
+replacement/expiry assertions, and corrects current coverage-floor wording while
+retaining the historical values. See [all four dispositions and cascade proof](t37-shell-entry.md#native-round1-corrective-batch-2026-11-12).
+No policy/authentication/controller/transport or visual redesign is included.
+
+One full web measurement passes 155/155. Coordinator-approved candidate
+`2553f6c1aff88cc0e9d3f2372058fa8f041da505c576207768927b1302ebe70f`
+updates exactly two current-web manifest fingerprints; all 68 file counters,
+totals/floors/maps/hits remain exact, seven other baselines unchanged.
+One normal web gate then passes 155/155; affected lint/typecheck and applicable
+format/handoff/diff/hooks pass. Failed direct TSX preflights remain diagnostics,
+not passing behavior evidence. Cached frozen installs download nothing; only the
+contracts prerequisite/unit instrumentation run. Heavy lease is released and no
+owned app/browser runtime remains. No application build/browser/Docker rerun.
+
+The earlier 92-source build binding is historical: identity-view/globals.css bytes
+change, with unchanged appearance established by source/cascade proof. The 19
+native checks/23 captures keep their original provenance. Same [PR #47](https://github.com/Ljrr3045/rielia/pull/47)
+stays Draft; current-head CI/native round2, thread resolution and coordinator
+acceptance/merge remain required. No T37.4/T37.5 integration, T37/T11 closure or
+new persisted/security/device/AT/real-zoom/provider/staging evidence is claimed.
+
 ## 2026-11-11 T37.3 corrected-source review and consolidated Draft preparation
 
 T37.1 and T37.2 are accepted in merged PRs #45/#46; T37.2 merge is
