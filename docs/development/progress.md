@@ -1,8 +1,8 @@
 # Delivery progress and decisions
 
-## 2026-11-12 T37.5/6 final delivery — DRAFT PREPARATION
+## 2026-11-12 T37.5/6 final delivery — DRAFT PR49
 
-Final delivery: prepared for Draft publication. T37.1–4 are accepted, including
+Final delivery: [Draft PR49](https://github.com/Ljrr3045/rielia/pull/49) targets `dev`. T37.1–4 are accepted, including
 [PR48](https://github.com/Ljrr3045/rielia/pull/48#issuecomment-6818479075) at reviewed `9e9c68bf`, merge `f628fd3`.
 Validate passes in 7m42s; native round3 passes in 2m46s, No Issues Found / Merge,
 with all four findings resolved. Exact accepted ancestry is integrated without

@@ -3,7 +3,7 @@
 Status: **T37 IN PROGRESS; T37.5 implementation/bounded QA and T37.6 consolidation
 complete, final acceptance pending**. The coordinator's current-head delivery-PR
 acceptance comment governs after CI, completed native Kilo feedback, ownership and
-merge gates. Publication: the final Draft PR URL will be recorded after creation.
+merge gates. Final delivery: [Draft PR49](https://github.com/Ljrr3045/rielia/pull/49) targets `dev`; current-head delivery gates remain pending.
 
 T37.1–4 are accepted. [PR48 acceptance](https://github.com/Ljrr3045/rielia/pull/48#issuecomment-6818479075) covers the bounded T37.4
 batch at `9e9c68bf1564f4a00862363637ff97e00313e66c`, merged into `dev` at
