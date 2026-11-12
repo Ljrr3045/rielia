@@ -1,0 +1,28 @@
+CHANGELOG.md
+  s_56f9656cb2b0b9::t_9e803194c417da 48-50
+docs/development/development-quality-roadmap.md
+  s_56f9656cb2b0b9::t_9e803194c417da 43-48
+docs/development/unit-coverage.md
+  s_56f9656cb2b0b9::t_9e803194c417da 147-149
+docs/development/progress.md
+  s_56f9656cb2b0b9::t_9e803194c417da 39,48-53
+  s_56f9656cb2b0b9::t_265928e23f3aaf 38
+docs/development/t37-project-task-ui.md
+  s_56f9656cb2b0b9::t_9e803194c417da 45-82
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "888f0b8e81f3dcde77cbf4dcc934d0053e3b0853",
+  "prompts": {},
+  "sessions": {
+    "s_56f9656cb2b0b9": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1ce20-f7eb-7503-839d-9f1b8ffda007",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
