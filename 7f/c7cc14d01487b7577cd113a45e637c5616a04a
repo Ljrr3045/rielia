@@ -1,0 +1,37 @@
+AGENTS.md
+  s_01b68cbb526cdf::t_0f8edc06e062e9 49-50
+docs/development/frontend-skills.md
+  s_01b68cbb526cdf::t_0f8edc06e062e9 8-10,128-151
+CHANGELOG.md
+  s_01b68cbb526cdf::t_0f8edc06e062e9 9-10,19-23
+docs/development/development-quality-roadmap.md
+  s_01b68cbb526cdf::t_0f8edc06e062e9 29-31,423
+docs/development/t37-design-direction.md
+  s_01b68cbb526cdf::t_dd3e2a7ff02d76 1-142
+docs/development/frontend-agent.md
+  s_01b68cbb526cdf::t_0f8edc06e062e9 56-58
+docs/development/progress.md
+  s_01b68cbb526cdf::t_0f8edc06e062e9 5-7,46-52,1769-1770
+docs/development/t37-ui-inventory.md
+  s_01b68cbb526cdf::t_dd3e2a7ff02d76 1-113
+CONTRIBUTING.md
+  s_01b68cbb526cdf::t_0f8edc06e062e9 139-142
+docs/development/formatting-inventory.json
+  s_01b68cbb526cdf::t_8c9fecee3d9fbc 1277-1279,1283-1284
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "7fc7cc14d01487b7577cd113a45e637c5616a04a",
+  "prompts": {},
+  "sessions": {
+    "s_01b68cbb526cdf": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1cd17-1e3d-7401-9364-abbd8f7c3f62",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
