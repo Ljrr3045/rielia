@@ -242,7 +242,7 @@ export function TaskDiscoveryBar({
         </div>
 
         <form className={styles.discoverySearch} onSubmit={submitSearch} role="search">
-          <label className={styles.srOnly} htmlFor={searchId}>
+          <label className={styles.discoverySearchLabel} htmlFor={searchId}>
             {copy.discovery.searchLabel[lang]}
           </label>
           <input
@@ -258,7 +258,7 @@ export function TaskDiscoveryBar({
             type="search"
             value={queryDraft}
           />
-          <button className={styles.secondary} disabled={disabled} type="submit">
+          <button className={styles.primary} disabled={disabled} type="submit">
             {copy.discovery.searchSubmit[lang]}
           </button>
         </form>
@@ -586,7 +586,7 @@ export function TaskDiscoveryList({
       : copy.discovery.count[lang](page.total);
 
   return (
-    <div aria-busy={loadingMore}>
+    <div aria-busy={loadingMore} className={styles.discoveryResults}>
       {failed && (
         <FeedbackPanel
           actions={
@@ -621,7 +621,7 @@ export function TaskDiscoveryList({
           tone="warning"
         />
       )}
-      <div aria-live="polite" className={styles.listSummary}>
+      <div aria-live="polite" className={cx(styles.listSummary, styles.discoverySummary)}>
         {scope === 'mine' ? <IconTask size={14} /> : <IconSearch size={14} />}
         <span>{summary}</span>
         {filtered && (
@@ -652,9 +652,6 @@ export function TaskDiscoveryList({
                     data-discovery-task-id={item.id}
                     key={item.id}
                   >
-                    <div className={styles.taskStatusCell}>
-                      <StatusMark name={statusName(item.status)} status={item.status} />
-                    </div>
                     <div className={styles.taskMain}>
                       <a
                         className={cx(styles.taskTitleButton, styles.discoveryTitleLink)}
@@ -713,6 +710,9 @@ export function TaskDiscoveryList({
                         )}
                       </div>
                     </div>
+                    <div className={styles.taskStatusCell}>
+                      <StatusMark name={statusName(item.status)} status={item.status} />
+                    </div>
                     <div className={styles.taskAside}>
                       <PriorityMark name={priorityName(item.priority)} priority={item.priority} />
                     </div>
@@ -729,9 +729,11 @@ export function TaskDiscoveryList({
           {copy.discovery.updating[lang]}
         </p>
       )}
-      {contextLimit && <p className={styles.discoveryHint}>{copy.discovery.contextLimit[lang]}</p>}
+      {contextLimit && (
+        <p className={styles.discoveryContextLimit}>{copy.discovery.contextLimit[lang]}</p>
+      )}
       {page.nextCursor !== null && !changed && !contextLimit && (
-        <div className={styles.formActions}>
+        <div className={cx(styles.formActions, styles.discoveryPagination)}>
           <button
             className={styles.secondary}
             disabled={disabled || loadingMore}
