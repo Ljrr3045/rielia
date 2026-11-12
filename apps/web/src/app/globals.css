@@ -1,36 +1,99 @@
+/* T37 foundations. Palette remains a brand proposal pending rendered-state QA. */
 :root {
   color-scheme: light dark;
+  font-family: var(--font-ui);
   --background: #f8fafc;
   --surface: #ffffff;
+  --surface-muted: #f1f5f9;
+  --surface-hover: #e2e8f0;
+  --surface-inset: #f8fafc;
   --text-primary: #0f172a;
   --text-secondary: #475569;
   --brand-action: #0f766e;
+  --brand-hover: #115e59;
   --on-brand-action: #ffffff;
+  --brand-soft: #ccfbf1;
+  --brand-ink: #115e59;
   --divider: #e2e8f0;
-  --focus: #1d4ed8;
   --control-border: #64748b;
+  --focus: #1d4ed8;
   --danger-text: #b91c1c;
-  font-family:
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    sans-serif;
+  --danger-action: #b91c1c;
+  --danger-hover: #991b1b;
+  --on-danger-action: #ffffff;
+  --danger-soft: #fee2e2;
+  --danger-ink: #991b1b;
+  --warning-soft: #fef3c7;
+  --warning-ink: #92400e;
+  --success-soft: #d1fae5;
+  --success-ink: #065f46;
+  --info-soft: #e0f2fe;
+  --info-ink: #075985;
+  --disabled-surface: #f1f5f9;
+  --disabled-text: #475569;
+  --disabled-border: #64748b;
+  --font-ui: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: 0.9375rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-title: clamp(1.5rem, 5vw, 2rem);
+  --leading-body: 1.5;
+  --leading-control: 1.25;
+  --weight-control: 600;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --radius-control: 0.5rem;
+  --radius-panel: 0.75rem;
+  --control-height: 2.75rem;
+  --control-padding: var(--space-2) var(--space-3);
+  --focus-width: 3px;
+  --focus-offset: 2px;
 }
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0f172a;
     --surface: #1e293b;
+    --surface-muted: #172033;
+    --surface-hover: #273449;
+    --surface-inset: #131d2e;
     --text-primary: #f8fafc;
     --text-secondary: #cbd5e1;
     --brand-action: #5eead4;
+    --brand-hover: #2dd4bf;
     --on-brand-action: #0f172a;
+    --brand-soft: #134e4a;
+    --brand-ink: #99f6e4;
     --divider: #334155;
-    --focus: #93c5fd;
     --control-border: #94a3b8;
+    --focus: #93c5fd;
     --danger-text: #fca5a5;
+    --danger-action: #fca5a5;
+    --danger-hover: #fecaca;
+    --on-danger-action: #0f172a;
+    --danger-soft: #450a0a;
+    --danger-ink: #fecaca;
+    --warning-soft: #451a03;
+    --warning-ink: #fde68a;
+    --success-soft: #064e3b;
+    --success-ink: #a7f3d0;
+    --info-soft: #082f49;
+    --info-ink: #bae6fd;
+    --disabled-surface: #172033;
+    --disabled-text: #cbd5e1;
+    --disabled-border: #94a3b8;
   }
 }
+
 * {
   box-sizing: border-box;
 }
@@ -38,7 +101,7 @@ body {
   margin: 0;
   background: var(--background);
   color: var(--text-primary);
-  font-size: 1rem;
+  font-size: var(--text-base);
   line-height: 1.65;
 }
 main {
@@ -46,15 +109,15 @@ main {
   margin: 3rem auto;
 }
 header {
-  margin-bottom: 2rem;
+  margin-bottom: var(--space-8);
 }
 h1 {
-  font-size: clamp(1.5rem, 5vw, 2rem);
+  font-size: var(--text-title);
   line-height: 1.3;
   margin: 0.5rem 0;
 }
 h2 {
-  font-size: 1.125rem;
+  font-size: var(--text-lg);
   line-height: 1.5;
   margin: 0 0 0.75rem;
 }
@@ -62,17 +125,17 @@ p {
   margin: 0 0 1rem;
 }
 section {
-  margin-top: 2rem;
+  margin-top: var(--space-8);
 }
 .eyebrow {
   color: var(--text-secondary);
   margin: 0;
 }
 .status {
-  padding: 1.5rem;
+  padding: var(--space-6);
   background: var(--surface);
   border: 1px solid var(--divider);
-  border-radius: 0.75rem;
+  border-radius: var(--radius-panel);
 }
 .status p {
   color: var(--text-secondary);
@@ -98,34 +161,54 @@ a {
   text-underline-offset: 0.2em;
 }
 .refresh {
-  display: inline-block;
-  padding: 0.75rem 1rem;
-  border: 0;
-  border-radius: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  min-width: var(--control-height);
+  padding: var(--control-padding);
+  border: 1px solid var(--brand-action);
+  border-radius: var(--radius-control);
   background: var(--brand-action);
   color: var(--on-brand-action);
-  min-height: 2.75rem;
+  min-height: var(--control-height);
   font: inherit;
+  font-weight: var(--weight-control);
+  line-height: var(--leading-control);
+  text-align: center;
+  overflow-wrap: anywhere;
   cursor: pointer;
 }
-.refresh:hover {
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
+.refresh:not([aria-disabled='true']):not(:disabled):hover {
+  border-color: var(--brand-hover);
+  background: var(--brand-hover);
 }
-.refresh[aria-disabled='true'] {
-  opacity: 0.65;
+.refresh[aria-disabled='true'],
+.refresh:disabled {
+  border-color: var(--disabled-border);
+  background: var(--disabled-surface);
+  color: var(--disabled-text);
+  opacity: 1;
   cursor: wait;
 }
 .button-secondary {
-  background: transparent;
+  background: var(--surface);
   color: var(--text-primary);
   border: 1px solid var(--control-border);
+}
+.button-secondary:not([aria-disabled='true']):not(:disabled):hover {
+  border-color: var(--control-border);
+  background: var(--surface-muted);
+}
+.identity-panel[aria-busy='true'] {
+  border-color: var(--control-border);
+  border-style: dashed;
 }
 .identity-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-block: 1rem 0;
+  gap: var(--space-3);
+  margin-block: var(--space-4) 0;
 }
 .identity-actions .refresh {
   flex: 1 1 15rem;
@@ -143,14 +226,14 @@ a:hover {
 a:focus-visible,
 button:focus-visible,
 h2[tabindex='-1']:focus-visible {
-  outline: 3px solid var(--focus);
+  outline: var(--focus-width) solid var(--focus);
   outline-offset: 4px;
 }
 .skip-link {
   position: absolute;
   left: 1rem;
   top: -10rem;
-  padding: 0.75rem;
+  padding: var(--space-3);
   background: var(--surface);
 }
 .skip-link:focus {

@@ -1,5 +1,32 @@
 # Delivery progress and decisions
 
+## 2026-11-11 T37.2 CSS foundations — IMPLEMENTATION CHECKPOINT
+
+The coordinator authorized isolated presentation work from preparation
+`ea7916b156bdf1afe9f3758e303b564f59fca618` on `feat/t37-ui-foundations` while
+[PR #45](https://github.com/Ljrr3045/rielia/pull/45) completes its separate review
+and packaging corrections. No publication or T37.1/T37.2 acceptance is implied.
+See [foundation scope, tokens and evidence](t37-ui-foundations.md).
+
+Existing global CSS now owns shared light/dark surface, semantic feedback,
+typography, spacing and native-control tokens. Workspace/project styles consume
+these tokens while preserving their root/panel/menu ancestry and breakpoints.
+System fonts, explicit readable disabled states, styling for existing invalid fields,
+neutral busy read panels and scoped mobile/coarse-pointer input sizing support
+the existing controls. No TSX, logic, tests, dependency/lock, coverage or prototype
+source changes; no new capability, route, preference, T11 or landing work.
+
+One controlled frozen install reused 541 packages with zero downloads and
+preserved shared Git config. Focused CSS format checks and solid-pair contrast
+calculations pass; the latter are not browser measurements. Full formatting over 243 adopted inputs, offline handoff verification (47 imported
+files, 30 assets, 795 local links in 78 documents) and whitespace checks pass;
+mandatory-hook evidence accompanies the checkpoint.
+All native visual/responsive/focus/zoom/AT and persisted-flow checks remain pending;
+no app server/build/unit/Docker run occurs in this task. SOL owns functional and
+fixture support on the same source, followed by Astra's actual visual inspection.
+Coordinator base sync, publication, current-head CI/Kilo and bounded acceptance
+remain required; T37 stays IN PROGRESS and T11 follows accepted T37.
+
 ## 2026-11-11 T37.1 discovery correction — FRESH CHECK VERIFIED
 
 Draft delivery remains [PR #45](https://github.com/Ljrr3045/rielia/pull/45).

@@ -4,6 +4,20 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+### T37.2 CSS foundations checkpoint
+
+- Establish one shared light/dark token source in existing global CSS for
+  surfaces, feedback, system typography, spacing, focus and native controls;
+  reuse it in workspace/project appearance while retaining selector ancestry.
+- Align button/link variants, visible invalid fields, readable disabled controls
+  and neutral busy read panels; retain existing operation feedback and semantics.
+  Keep narrow/coarse-pointer form text at least 16px and standard control height
+  at 44px with the default root font, pending native measurements.
+- Record [source contrast calculations and pending evidence](docs/development/t37-ui-foundations.md).
+  CSS-only checkpoint: no TSX/logic/test/dependency/coverage/prototype changes;
+  runtime, native visual, persisted-flow, CI/Kilo and T37.2 acceptance remain open.
+  Publication follows coordinator sequencing after PR #45; T11/landing excluded.
+
 ### T37.1 frontend-local skill preparation
 
 Delivery: Draft [PR #45](https://github.com/Ljrr3045/rielia/pull/45).

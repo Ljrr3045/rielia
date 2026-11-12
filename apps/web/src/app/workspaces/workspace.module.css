@@ -1,33 +1,12 @@
 /* Scoped T05 workspace presentation. Reuses the shared Rielia semantic tokens. */
 
 .shell {
-  --w-surface-2: #f1f5f9;
-  --w-surface-3: #e2e8f0;
-  --w-brand-soft: #ccfbf1;
-  --w-brand-ink: #115e59;
-  --w-success-soft: #d1fae5;
-  --w-success-ink: #065f46;
-  --w-warning-soft: #fef3c7;
-  --w-warning-ink: #92400e;
-  --w-danger-soft: #fee2e2;
-  --w-danger-ink: #991b1b;
-  --w-info-soft: #e0f2fe;
-  --w-info-ink: #075985;
-  --w-danger-button-bg: #b91c1c;
-  --w-on-danger: #ffffff;
   width: min(100% - 1.5rem, 76rem);
   margin: 0.75rem auto 4rem;
   color: var(--text-primary);
-  font-family:
-    Inter,
-    'SF Pro Text',
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    sans-serif;
-  font-size: 1rem;
-  line-height: 1.55;
+  font-family: var(--font-ui);
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -50,7 +29,7 @@
 }
 
 .shell :where(button, input, select, textarea, summary) {
-  min-height: 2.75rem;
+  min-height: var(--control-height);
 }
 
 .shell ul {
@@ -68,22 +47,40 @@
 }
 
 .shell :where(button, a, input, select, textarea, summary, [tabindex]):focus-visible {
-  outline: 3px solid var(--focus);
-  outline-offset: 2px;
+  outline: var(--focus-width) solid var(--focus);
+  outline-offset: var(--focus-offset);
 }
 
 .shell :where(input, select, textarea) {
   width: 100%;
   min-width: 0;
-  padding: 0.55rem 0.7rem;
+  padding: var(--control-padding);
   border: 1px solid var(--control-border);
-  border-radius: 0.5rem;
+  border-radius: var(--radius-control);
   background: var(--surface);
   color: var(--text-primary);
 }
 
-.shell :where(input, select, textarea):disabled {
-  opacity: 0.62;
+.shell :where(input, textarea)::placeholder {
+  color: var(--text-secondary);
+  opacity: 1;
+}
+
+.shell :where(input, select, textarea)[aria-invalid='true'] {
+  border-color: var(--danger-text);
+  border-width: 2px;
+}
+
+.shell :where(input, select, textarea) {
+  accent-color: var(--brand-action);
+  caret-color: var(--text-primary);
+}
+
+.shell :where(button, input, select, textarea):disabled {
+  border-color: var(--disabled-border);
+  background: var(--disabled-surface);
+  color: var(--disabled-text);
+  opacity: 1;
   cursor: not-allowed;
 }
 
@@ -110,9 +107,9 @@
   z-index: 100;
   display: inline-flex;
   align-items: center;
-  min-height: 2.75rem;
-  padding: 0.55rem 0.9rem;
-  border-radius: 0.5rem;
+  min-height: var(--control-height);
+  padding: var(--control-padding);
+  border-radius: var(--radius-control);
   border: 1px solid var(--control-border);
   background: var(--surface);
   color: var(--text-primary);
@@ -137,7 +134,7 @@
 .backLink {
   display: inline-flex;
   align-items: center;
-  min-height: 2.75rem;
+  min-height: var(--control-height);
   font-weight: 600;
 }
 
@@ -163,14 +160,14 @@
 
 .accountEmail {
   color: var(--text-secondary);
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   overflow-wrap: anywhere;
 }
 
 .accountLink {
   display: inline-flex;
   align-items: center;
-  min-height: 2.75rem;
+  min-height: var(--control-height);
   font-weight: 600;
   white-space: normal;
 }
@@ -186,7 +183,7 @@
 }
 
 .headingBlock {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-6);
 }
 
 .eyebrow {
@@ -198,15 +195,15 @@
 }
 
 .title {
-  margin-top: 0.25rem;
-  font-size: clamp(1.75rem, 5vw, 2.25rem);
+  margin-top: var(--space-1);
+  font-size: var(--text-title);
   line-height: 1.2;
   overflow-wrap: anywhere;
 }
 
 .lede {
   max-width: 68ch;
-  margin-top: 0.5rem;
+  margin-top: var(--space-2);
   color: var(--text-secondary);
   font-size: 1.0625rem;
 }
@@ -220,18 +217,18 @@
   flex-wrap: wrap;
   align-items: start;
   justify-content: space-between;
-  gap: 0.75rem;
+  gap: var(--space-3);
   margin-bottom: 0.9rem;
 }
 
 .sectionTitle {
-  font-size: 1.25rem;
+  font-size: var(--text-xl);
   line-height: 1.3;
   overflow-wrap: anywhere;
 }
 
 .subheading {
-  font-size: 1.125rem;
+  font-size: var(--text-lg);
   line-height: 1.35;
   margin-bottom: 0.35rem;
 }
@@ -240,13 +237,13 @@
   max-width: 72ch;
   margin-top: 0.35rem;
   color: var(--text-secondary);
-  font-size: 0.9375rem;
+  font-size: var(--text-md);
 }
 
 .sectionHint {
   margin-top: 0.35rem;
   color: var(--text-secondary);
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
 }
 
 .card,
@@ -254,55 +251,55 @@
 .emptyState {
   padding: clamp(0.9rem, 2vw, 1.25rem);
   border: 1px solid var(--divider);
-  border-radius: 0.75rem;
+  border-radius: var(--radius-panel);
   background: var(--surface);
 }
 
 .emptyState {
-  margin-top: 2rem;
+  margin-top: var(--space-8);
 }
 
 .emptyForm {
-  margin-top: 1rem;
+  margin-top: var(--space-4);
 }
 
 .statusTitle {
-  font-size: 1.25rem;
+  font-size: var(--text-xl);
   line-height: 1.3;
 }
 
 .statusBody {
   max-width: 70ch;
-  margin-top: 0.5rem;
+  margin-top: var(--space-2);
   color: var(--text-secondary);
 }
 
 .statusActions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 1rem;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
 }
 
 .field {
   display: grid;
   gap: 0.35rem;
   min-width: 0;
-  margin-top: 0.75rem;
+  margin-top: var(--space-3);
 }
 
 .field label {
-  font-size: 0.9375rem;
+  font-size: var(--text-md);
 }
 
 .fieldHint {
   color: var(--text-secondary);
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
 }
 
 .fieldError {
   color: var(--danger-text);
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   font-weight: 600;
 }
 
@@ -315,23 +312,25 @@
 .formActions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 1rem;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
 }
 
 .primary,
 .secondary,
-.dangerButton {
+.dangerButton,
+.shell a.dangerButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   max-width: 100%;
-  min-height: 2.75rem;
-  padding: 0.55rem 0.9rem;
-  border: 1px solid transparent;
-  border-radius: 0.5rem;
+  min-width: var(--control-height);
+  min-height: var(--control-height);
+  padding: var(--control-padding);
+  border: 1px solid var(--control-border);
+  border-radius: var(--radius-control);
   font-weight: 600;
-  line-height: 1.25;
+  line-height: var(--leading-control);
   text-align: center;
   text-decoration: none;
   white-space: normal;
@@ -339,30 +338,44 @@
   cursor: pointer;
 }
 
-.primary {
+.primary,
+.shell a.primary {
+  border-color: var(--brand-action);
   background: var(--brand-action);
   color: var(--on-brand-action);
 }
 
-.secondary {
+.secondary,
+.shell a.secondary {
   border-color: var(--control-border);
-  background: transparent;
+  background: var(--surface);
   color: var(--text-primary);
 }
 
-.dangerButton {
-  background: var(--w-danger-button-bg);
-  color: var(--w-on-danger);
+.dangerButton,
+.shell a.dangerButton {
+  border-color: var(--danger-action);
+  background: var(--danger-action);
+  color: var(--on-danger-action);
 }
 
-.shell :where(.primary, .secondary, .dangerButton):not(:disabled):hover {
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
+.primary:not(:disabled):hover {
+  border-color: var(--brand-hover);
+  background: var(--brand-hover);
 }
 
-.shell :where(.primary, .secondary, .dangerButton):disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.secondary:not(:disabled):hover {
+  background: var(--surface-muted);
+}
+
+.dangerButton:not(:disabled):hover {
+  border-color: var(--danger-hover);
+  background: var(--danger-hover);
+}
+
+.statusCard[aria-busy='true'] {
+  border-color: var(--control-border);
+  border-style: dashed;
 }
 
 .badgeRow {
@@ -379,7 +392,7 @@
   padding: 0.15rem 0.5rem;
   border: 1px solid transparent;
   border-radius: 999px;
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   font-weight: 600;
   line-height: 1.4;
   overflow-wrap: anywhere;
@@ -387,28 +400,28 @@
 
 .badgeNeutral {
   border-color: var(--divider);
-  background: var(--w-surface-2);
+  background: var(--surface-muted);
   color: var(--text-secondary);
 }
 
 .badgeBrand {
-  background: var(--w-brand-soft);
-  color: var(--w-brand-ink);
+  background: var(--brand-soft);
+  color: var(--brand-ink);
 }
 
 .badgeSuccess {
-  background: var(--w-success-soft);
-  color: var(--w-success-ink);
+  background: var(--success-soft);
+  color: var(--success-ink);
 }
 
 .badgeWarning {
-  background: var(--w-warning-soft);
-  color: var(--w-warning-ink);
+  background: var(--warning-soft);
+  color: var(--warning-ink);
 }
 
 .badgeDanger {
-  background: var(--w-danger-soft);
-  color: var(--w-danger-ink);
+  background: var(--danger-soft);
+  color: var(--danger-ink);
 }
 
 .banner {
@@ -416,42 +429,42 @@
   padding: clamp(0.85rem, 2vw, 1.1rem);
   border: 1px solid var(--divider);
   border-left-width: 4px;
-  border-radius: 0.75rem;
+  border-radius: var(--radius-panel);
   background: var(--surface);
 }
 
 .bannerBrand {
   border-left-color: var(--brand-action);
-  background: var(--w-brand-soft);
-  color: var(--w-brand-ink);
+  background: var(--brand-soft);
+  color: var(--brand-ink);
 }
 
 .bannerInfo {
   border-left-color: var(--focus);
-  background: var(--w-info-soft);
-  color: var(--w-info-ink);
+  background: var(--info-soft);
+  color: var(--info-ink);
 }
 
 .bannerSuccess {
-  border-left-color: var(--w-success-ink);
-  background: var(--w-success-soft);
-  color: var(--w-success-ink);
+  border-left-color: var(--success-ink);
+  background: var(--success-soft);
+  color: var(--success-ink);
 }
 
 .bannerWarning {
-  border-left-color: var(--w-warning-ink);
-  background: var(--w-warning-soft);
-  color: var(--w-warning-ink);
+  border-left-color: var(--warning-ink);
+  background: var(--warning-soft);
+  color: var(--warning-ink);
 }
 
 .bannerDanger {
-  border-left-color: var(--w-danger-ink);
-  background: var(--w-danger-soft);
-  color: var(--w-danger-ink);
+  border-left-color: var(--danger-ink);
+  background: var(--danger-soft);
+  color: var(--danger-ink);
 }
 
 .bannerTitle {
-  font-size: 1.125rem;
+  font-size: var(--text-lg);
   line-height: 1.35;
   overflow-wrap: anywhere;
 }
@@ -459,35 +472,34 @@
 .bannerBody {
   max-width: 76ch;
   margin-top: 0.4rem;
-  font-size: 0.9375rem;
+  font-size: var(--text-md);
 }
 
 .bannerHint {
   max-width: 76ch;
   margin-top: 0.4rem;
-  font-size: 0.875rem;
-  opacity: 0.92;
+  font-size: var(--text-sm);
 }
 
 .bannerActions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: var(--space-2);
   margin-top: 0.9rem;
 }
 
 .focusPanel:focus {
-  outline: 3px solid var(--focus);
-  outline-offset: 2px;
+  outline: var(--focus-width) solid var(--focus);
+  outline-offset: var(--focus-offset);
 }
 
 .scopeBlock {
-  margin-top: 0.5rem;
+  margin-top: var(--space-2);
 }
 
 .workspaceChooser {
   display: grid;
-  gap: 0.5rem;
+  gap: var(--space-2);
   max-width: 34rem;
 }
 
@@ -502,7 +514,7 @@
   margin-top: 1.25rem;
   padding: clamp(0.9rem, 2vw, 1.25rem);
   border: 1px solid var(--divider);
-  border-radius: 0.75rem;
+  border-radius: var(--radius-panel);
   background: var(--surface);
 }
 
@@ -540,7 +552,7 @@
 
 .memberGrid {
   display: grid;
-  gap: 0.5rem;
+  gap: var(--space-2);
   grid-template-columns: minmax(0, 1fr);
 }
 
@@ -551,7 +563,7 @@
   min-width: 0;
   padding: 0.7rem 0.85rem;
   border: 1px solid var(--divider);
-  border-radius: 0.6rem;
+  border-radius: var(--radius-panel);
   background: var(--surface);
 }
 
@@ -566,14 +578,14 @@
 
 .memberName {
   min-width: 0;
-  font-size: 1rem;
+  font-size: var(--text-base);
   line-height: 1.35;
   overflow-wrap: anywhere;
 }
 
 .memberMeta {
   color: var(--text-secondary);
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   overflow-wrap: anywhere;
 }
 
@@ -586,13 +598,13 @@
 .metaGrid div {
   display: grid;
   grid-template-columns: minmax(5.25rem, 30%) minmax(0, 1fr);
-  gap: 0.5rem;
+  gap: var(--space-2);
   align-items: start;
 }
 
 .metaGrid dt {
   color: var(--text-secondary);
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   font-weight: 600;
 }
 
@@ -611,15 +623,15 @@
   padding: 0.6rem 0.75rem;
   border-left: 3px solid var(--control-border);
   border-radius: 0.35rem;
-  background: var(--w-surface-2);
+  background: var(--surface-muted);
   color: var(--text-secondary);
-  font-size: 0.9375rem;
+  font-size: var(--text-md);
 }
 
 .details,
 .disclosure {
   border: 1px solid var(--divider);
-  border-radius: 0.6rem;
+  border-radius: var(--radius-panel);
   background: var(--surface);
 }
 
@@ -635,7 +647,7 @@
 .disclosure summary {
   display: flex;
   align-items: center;
-  min-height: 2.75rem;
+  min-height: var(--control-height);
   padding: 0.35rem 0.15rem;
   font-weight: 600;
   cursor: pointer;
@@ -651,28 +663,28 @@
 
 .detailsBody {
   display: grid;
-  gap: 0.75rem;
+  gap: var(--space-3);
   padding-top: 0.35rem;
 }
 
 .controlGroup {
   display: grid;
-  gap: 0.75rem;
-  padding-top: 0.75rem;
+  gap: var(--space-3);
+  padding-top: var(--space-3);
   border-top: 1px solid var(--divider);
 }
 
 .confirm {
-  margin-top: 0.75rem;
+  margin-top: var(--space-3);
   padding: 0.85rem;
-  border: 1px solid var(--w-warning-ink);
-  border-radius: 0.6rem;
-  background: var(--w-warning-soft);
-  color: var(--w-warning-ink);
+  border: 1px solid var(--warning-ink);
+  border-radius: var(--radius-panel);
+  background: var(--warning-soft);
+  color: var(--warning-ink);
 }
 
 .confirmTitle {
-  font-size: 1rem;
+  font-size: var(--text-base);
   line-height: 1.35;
 }
 
@@ -681,41 +693,41 @@
 }
 
 .confirmText {
-  margin-top: 0.5rem;
-  font-size: 0.9375rem;
+  margin-top: var(--space-2);
+  font-size: var(--text-md);
 }
 
 .inlineLink {
   display: inline-flex;
   align-items: center;
-  min-height: 2.75rem;
+  min-height: var(--control-height);
   font-weight: 600;
 }
 
 .emptyNote {
-  margin-top: 1rem;
+  margin-top: var(--space-4);
   padding: 0.9rem;
   border: 1px dashed var(--control-border);
-  border-radius: 0.6rem;
+  border-radius: var(--radius-panel);
   color: var(--text-secondary);
 }
 
 .noEmailNote {
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--space-3);
   padding: 0.7rem 0.8rem;
   border-left: 3px solid var(--brand-action);
   border-radius: 0.35rem;
-  background: var(--w-surface-2);
-  font-size: 0.9375rem;
+  background: var(--surface-muted);
+  font-size: var(--text-md);
 }
 
 .list {
-  margin-top: 0.75rem;
+  margin-top: var(--space-3);
 }
 
 .invitationRow {
   display: grid;
-  gap: 0.75rem;
+  gap: var(--space-3);
   min-width: 0;
   padding-block: 1rem;
   border-top: 1px solid var(--divider);
@@ -733,16 +745,16 @@
 .invitationActions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: var(--space-2);
 }
 
 .draftNotice {
-  margin-top: 1rem;
-  padding: 0.75rem;
-  border-radius: 0.5rem;
-  background: var(--w-surface-2);
+  margin-top: var(--space-4);
+  padding: var(--space-3);
+  border-radius: var(--radius-control);
+  background: var(--surface-muted);
   color: var(--text-secondary);
-  font-size: 0.9375rem;
+  font-size: var(--text-md);
 }
 
 .draftNotice p + p {
@@ -750,14 +762,14 @@
 }
 
 .linkInput {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 0.875rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
 }
 
 @media (min-width: 48rem) {
   .shell {
     width: min(100% - 2rem, 76rem);
-    margin-top: 1.5rem;
+    margin-top: var(--space-6);
   }
 
   .invitationRow {
@@ -772,21 +784,8 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  .shell {
-    --w-surface-2: #172033;
-    --w-surface-3: #263247;
-    --w-brand-soft: #134e4a;
-    --w-brand-ink: #99f6e4;
-    --w-success-soft: #064e3b;
-    --w-success-ink: #a7f3d0;
-    --w-warning-soft: #78350f;
-    --w-warning-ink: #fde68a;
-    --w-danger-soft: #450a0a;
-    --w-danger-ink: #fecaca;
-    --w-info-soft: #0c4a6e;
-    --w-info-ink: #bae6fd;
-    --w-danger-button-bg: #fca5a5;
-    --w-on-danger: #0f172a;
+@media (max-width: 47.9375rem), (pointer: coarse) {
+  .shell :is(input, select, textarea) {
+    font-size: max(var(--text-base), 16px);
   }
 }
