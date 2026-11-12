@@ -4,6 +4,12 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Prepare final T37.5 discovery/navigation and T37.6 consolidation delivery from
+  [accepted PR48](https://github.com/Ljrr3045/rielia/pull/48#issuecomment-6818479075) ancestry (`f628fd3`), preserving exact tested
+  source, all195 cases and eight baselines. Record the current one-build/four-native/
+  five-image proof and qualified historical persisted evidence without reruns.
+  Final T37 acceptance remains pending delivery CI/native/coordinator gates.
+
 - Integrate exact modal-focus correction while preserving discovery/CSS; 195
   frontend cases pass one approved composed measure/gate with higher floors and
   explicit guard/mapping debt. One new build passes three detail/edit overlap

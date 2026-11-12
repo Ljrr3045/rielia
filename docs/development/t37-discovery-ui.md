@@ -1,5 +1,16 @@
 # T37.5 My tasks and Search presentation checkpoint
 
+## Accepted base and final delivery — 2026-11-12
+
+T37.5 implementation/bounded QA and T37.6 consolidation are complete for the
+final Draft delivery. [PR48 is accepted](https://github.com/Ljrr3045/rielia/pull/48#issuecomment-6818479075) at reviewed `9e9c68bf`,
+merge `f628fd3`; that exact ancestry is integrated. Final T37 acceptance remains
+pending the delivery PR's current-head CI/native/ownership and coordinator decision.
+The following evidence keeps its original source/build identities; publication
+changes documentation only and verifies all source/tests/eight baselines exact.
+No new unit, build, browser or database run; T11 remains unstarted and user-scheduled.
+Older checkpoint statements about PR48 gates describe their historical execution.
+
 ## Composed modal-focus integration — 2026-11-12
 
 Exact focus source `57020a0` is merged at `92ffcb1`, preserving `e67f332`

@@ -1,11 +1,14 @@
 # T37.4 project/task presentation and recovery
 
-**2026-11-12 — implementation and bounded local validation complete; published in
-[Draft PR #48](https://github.com/Ljrr3045/rielia/pull/48), T37.4 acceptance pending.** T37.1/2/3 are accepted in
+**2026-11-12 — bounded T37.4 ACCEPTED in
+[PR48](https://github.com/Ljrr3045/rielia/pull/48#issuecomment-6818479075)**, reviewed `9e9c68bf`, merged `f628fd3`.
+Validate `131053543922` passes in 7m42s; native round3 `131057532217` passes in
+2m46s, No Issues Found / Merge, with all four findings resolved. Older checkpoint
+sections preserve their then-current status and source limits. T37.1/2/3 are accepted in
 merged [PR45](https://github.com/Ljrr3045/rielia/pull/45),
 [PR46](https://github.com/Ljrr3045/rielia/pull/46) and
 [PR47](https://github.com/Ljrr3045/rielia/pull/47#issuecomment-6814793798).
-Accepted `dev` is `55f0f8d85521998d3d7ed883f387bd3c6cb664f8`. This batch includes
+Accepted T37.3 base was `55f0f8d`; accepted T37.4 merge is `f628fd3`. This batch includes
 project/task presentation, four bounded recovery corrections and their evidence.
 No T37.5 source, T11, landing, new domain/policy or whole-product acceptance.
 

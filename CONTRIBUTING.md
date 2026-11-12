@@ -39,9 +39,12 @@ T36.1–T36.6 were accepted for the bounded scope in
 [PR #44](https://github.com/Ljrr3045/rielia/pull/44); owned coverage/coupling/CSS
 debt remains explicit. T37 started with the user's 2026-11-11 authorization;
 no universal architecture migration or completed redesign is claimed.
-The [bounded T37 acceptance proposal](docs/development/t37-ui-acceptance.md)
-consolidates final local native/persisted evidence and remaining gates; its text
-does not itself accept T37 or authorize T11.
+The [bounded T37 evidence consolidation](docs/development/t37-ui-acceptance.md)
+records accepted T37.1–4, including [PR48](https://github.com/Ljrr3045/rielia/pull/48#issuecomment-6818479075), and completed T37.5/6
+implementation/bounded QA. Overall T37 acceptance still requires final delivery
+current-head CI/native/ownership and coordinator decision. Historical evidence
+retains its source, fixture/persistence and provenance limits. T11 is unstarted
+and awaits explicit acceptance plus user scheduling.
 Preparing these contribution documents does not
 complete T16 or its real-project validation.
 

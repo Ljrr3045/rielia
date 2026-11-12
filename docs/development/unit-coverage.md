@@ -728,3 +728,16 @@ Changed-source semantic identities remain unmanufactured. Provider/config/tools,
 68/24 selection, type-only zero-unit N/A and seven other baselines stay exact.
 No lowered floor/exclusion or backend build. The [focused composed proof](t37-discovery-ui.md#composed-modal-focus-integration--2026-11-12)
 does not relabel historical database receipts as execution on this source.
+
+
+## Final T37.5/6 publication binding
+
+Accepted PR48 merge `f628fd3` is integrated with source/tests/all eight baselines
+byte-exact to the tested composed checkpoint. Current web candidate remains
+`c7e1a52842c14c772260c9598f89a3b129489cb497dd95154166452a74f06ceb`:195 cases,
+68 inputs/24 helper-test entries, floors6182/5960/4962/5601, nullable812/29010,
+accepted defensive-guard debt and type-only zero-unit N/A. Changed-source unit
+identity limits and all seven other baselines remain. Publication changes docs
+only; no measure/gate/build/browser/backend/PG repeat or baseline/config/provider/
+dependency migration. Final hosted CI checks the actual delivery head; historical
+local reports retain their original source/build identities and qualified limits.

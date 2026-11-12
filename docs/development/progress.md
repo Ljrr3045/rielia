@@ -1,5 +1,29 @@
 # Delivery progress and decisions
 
+## 2026-11-12 T37.5/6 final delivery — DRAFT PREPARATION
+
+Final delivery: prepared for Draft publication. T37.1–4 are accepted, including
+[PR48](https://github.com/Ljrr3045/rielia/pull/48#issuecomment-6818479075) at reviewed `9e9c68bf`, merge `f628fd3`.
+Validate passes in 7m42s; native round3 passes in 2m46s, No Issues Found / Merge,
+with all four findings resolved. Exact accepted ancestry is integrated without
+changing the tested application, tests, eight baselines, config or dependencies.
+
+T37.5 discovery/navigation implementation and bounded QA plus T37.6 consolidation
+are complete. The [current evidence](t37-discovery-ui.md#composed-modal-focus-integration--2026-11-12)
+binds source `fe0bdc9`, one successful build `FS64cq9CNxiMpNAUJK4si`, 195 cases,
+four focused native cases and five SOL-opened PNGs. Coordinator verifies five
+hashes, opens two changed images and reuses three byte-identical prior opens.
+Baseline `c7e1a528`, floors6182/5960/4962/5601, nullable812/29010 and accepted
+guard debt remain exact. No new unit/build/browser/database run in publication.
+
+Historical `2edecbe` 185/11-fixture-native/3-persisted and original `81b`
+177/16-native/12-persisted/Astra18 proof retain their source/provenance/crop limits;
+durable checklist exact-key proof belongs specifically to81b. The
+[acceptance matrix](t37-ui-acceptance.md) preserves all limits and remaining gates.
+T37 stays IN PROGRESS pending final current-head CI/native/ownership/coordinator
+acceptance; T11 remains unstarted and awaits user scheduling. Older dated entries
+below retain their then-current status. No original-ticket acceptance or deployment.
+
 ## 2026-11-12 T37.5 composed modal focus — LOCAL PROOF COMPLETE
 
 Exact source `57020a0` and final PR48 docs `9e9c68bf` are really merged while

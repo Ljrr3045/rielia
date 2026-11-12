@@ -1,10 +1,18 @@
 # Bounded T37 acceptance proposal and T11 handoff
 
-Status: **T37 IN PROGRESS; T37.6 consolidation prepared, acceptance pending the
-final delivery PR**. This document consolidates evidence; it is not an acceptance
-decision. The coordinator's current-head delivery-PR acceptance comment is
-authoritative after CI, completed native Kilo feedback, ownership and merge gates.
-PR48 still awaits its final review/acceptance; no final delivery PR URL exists yet.
+Status: **T37 IN PROGRESS; T37.5 implementation/bounded QA and T37.6 consolidation
+complete, final acceptance pending**. The coordinator's current-head delivery-PR
+acceptance comment governs after CI, completed native Kilo feedback, ownership and
+merge gates. Publication: the final Draft PR URL will be recorded after creation.
+
+T37.1–4 are accepted. [PR48 acceptance](https://github.com/Ljrr3045/rielia/pull/48#issuecomment-6818479075) covers the bounded T37.4
+batch at `9e9c68bf1564f4a00862363637ff97e00313e66c`, merged into `dev` at
+`f628fd3f77bdf3468cf4cd9003ca4ca1091ffea1`; that exact ancestry is integrated here.
+Validate check `131053543922` passes in 7m42s; native round3 check `131057532217`
+passes in 2m46s with No Issues Found / Merge, and all four finding threads resolved.
+The native reviewer could not recompute hashes in its sandbox; independently
+verified local fingerprints and CI provide integrity evidence with that limitation.
+This accepts neither T37.5/6 nor full T37 or any original T01–T35 ticket.
 
 The user sequence remains T36 → T37 → T11 → other work under existing dependencies.
 T36.1–T36.6 were accepted for the bounded scope in [PR44](https://github.com/Ljrr3045/rielia/pull/44);
@@ -21,9 +29,9 @@ T01–T35, future capability, universal source conformity or public launch is im
 | T37.1 skills/inventory | Accepted [PR45](https://github.com/Ljrr3045/rielia/pull/45); pinned frontend-local packages, corrected fresh discovery and explicit local paths in [frontend skills](frontend-skills.md) and [inventory](t37-ui-inventory.md) | No global/backend skill changes or automatic duplicate-name override |
 | T37.2 foundations | Accepted [PR46](https://github.com/Ljrr3045/rielia/pull/46); [tokens/base controls and bounded native evidence](t37-ui-foundations.md) | Proposed brand/name/logo and unperformed device/AT/zoom evidence stay explicit |
 | T37.3 shell/identity/workspaces | Accepted [PR47](https://github.com/Ljrr3045/rielia/pull/47), reviewed corrective `b1f3ddec`, merged `55f0f8d`; [shell guide](t37-shell-entry.md) | Real provider/staging/users remain deferred; actual invitation feedback is also exercised in final persisted QA |
-| T37.4 projects/tasks/recovery | [PR48](https://github.com/Ljrr3045/rielia/pull/48) pending final acceptance; focus source `57020a0`, final docs `9e9c68bf`; 195 cases, three focused overlap cases and four coordinator-opened corrected4 images; [project/task guide](t37-project-task-ui.md) | Earlier 185-case/10-native and 177-case/26-native/Astra subsets retain their historical sources; final accepted dev ancestry/current-head gates remain |
+| T37.4 projects/tasks/recovery | [Accepted PR48](https://github.com/Ljrr3045/rielia/pull/48#issuecomment-6818479075), reviewed `9e9c68bf`, merge `f628fd3`; focus source `57020a0`, 195 cases, three focused overlap cases and four coordinator-opened corrected4 images; [project/task guide](t37-project-task-ui.md) | Earlier 185-case/10-native and 177-case/26-native/Astra subsets retain their historical sources; this acceptance is bounded to T37.4 |
 | T37.5 discovery/cross-surface | [Composed focus QA](t37-discovery-ui.md#composed-modal-focus-integration--2026-11-12): source `fe0bdc9`, build `FS64cq9CNxiMpNAUJK4si`, 195 cases, three overlap viewport cases and one discovery smoke; five SOL-opened PNGs | Coordinator verifies five hashes, opens two changed desktop/discovery PNGs and reuses three identical corrected4 images. Historical `2edecbe` 185/11/3 and `81b` durable-checklist proof keep source/provenance/crop limits; no new DB run |
-| T37.6 consolidation | This evidence matrix, preserved contracts, remaining gaps and T11 handoff are prepared for the same final delivery PR | Proposal only; coordinator acceptance/current-head CI/native feedback/ownership/merge remain required |
+| T37.6 consolidation | Evidence matrix, preserved contracts, source-qualified limits and T11 handoff are complete for the same final delivery PR | Final T37 acceptance remains pending coordinator decision/current-head CI/native feedback/ownership/merge; T11 remains unstarted and user-scheduled |
 
 Current composed supplement: exact focus source `57020a0` plus final PR48 docs
 `9e9c68bf` are locally merged. Source `fe0bdc9`/build `FS64cq9CNxiMpNAUJK4si`
@@ -33,7 +41,7 @@ focus ownership changes. Previous 185-case/11-native/3-persisted results remain 
 no new DB run is claimed. Current candidate `c7e1a528`, floors6182/5960/4962/5601
 and nullable debt812/29010 preserve the accepted guard debt and all seven other
 baselines. Lower form actions/second result remain below crop. Cleanup verifies
-six owned PIDs/one port absent; T37/final acceptance and accepted ancestry remain open.
+six owned PIDs/one port absent. Accepted PR48 ancestry is integrated; final T37 acceptance remains open.
 
 ## Preserved contracts and measured limits
 
@@ -80,9 +88,9 @@ are absent, four ports and 17 recorded PIDs are closed; heavy lease released.
 
 | Gap or limit | Owner and next action |
 | --- | --- |
-| Final source/base ancestry and hosted review | Exact corrective source and final PR48 docs are locally merged; coordinator supplies accepted dev ancestry, preserves tested bytes, freezes final delivery and verifies current-head CI/Kilo/ownership before acceptance |
+| Final source/base ancestry and hosted review | Accepted PR48 merge `f628fd3` is integrated with all tested source/tests/eight baselines exact; coordinator freezes final delivery and verifies current-head CI/Kilo/ownership before acceptance |
 | Crop-limited empty states/mobile controls | Historical three 320 message panels/mobile literal row and 390×844 denial/revocation lower actions/conflict lower form remain below crop; current focused forms and second discovery row also have lower cropped content. DOM/API results are separate; no full visual coverage claim or extra runtime solely for crops |
-| Historical persisted runner provenance | Earlier runner-SHA-null records remain explicit; current helper/both runner hashes are captured. No retroactive exact-script claim |
+| Historical persisted runner provenance | Earlier runner-SHA-null records remain explicit. Historical `2edecbe` helper and both pre-execution runner hashes are captured; the first runner source was revised in place, with its hash/receipts retained and no original source copy. No retroactive exact-script claim |
 | Actual browser-chrome 200% zoom, physical devices/OS virtual keyboard, manual AT | SOL/Astra record unperformed checks; later validation uses actual supported controls/devices/AT. Root-font enlargement and synthesized touch remain separately labelled |
 | Real users, providers/HTTPS/staging and scale/performance | User scheduling and applicable later work; no credentials requested now. No usability/performance/WCAG certification is inferred |
 | Existing structural/coverage/CSS debt | Existing owners and [stable contract](t36-stable-ui-contract.md); no arbitrary universal migration or coverage waiver |
@@ -91,7 +99,7 @@ are absent, four ports and 17 recorded PIDs are closed; heavy lease released.
 
 The existing workspace/project/list/board/detail/discovery shell and stable
 presentation → hook/controller → transport/public-contract boundaries form the
-bounded foundation. T11 retains its original sprint, UTC/DST, history, permission
+bounded foundation. T11 is unstarted and retains its original sprint, UTC/DST, history, permission
 and dependency requirements in the immutable architecture/product handoff; no
 sprint placeholder is delivered here. The user chooses when to start T11.
 
