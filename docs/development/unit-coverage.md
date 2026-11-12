@@ -633,7 +633,7 @@ was approved before writing. L/S/F/B move from 2336/3847, 2542/4339, 511/1059,
 2910/5333 to **2387/3861, 2595/4354, 526/1060, 2996/5349**; floors rise from
 6072/5858/4825/5456 to **6182/5960/4962/5601**. No per-file covered count/ratio or
 stable-map covered unit regresses. New defensive disconnected/CSS-hidden checks
-retain one uncovered line/two statements/one branch in the effect, with improved
+add a net one uncovered line/two statements/one branch in the effect, with improved
 ratios; this debt is explicit, not ignored or padded to 100%.
 
 Three source fingerprints and one existing test fingerprint change; 68 inputs,

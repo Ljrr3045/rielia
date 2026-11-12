@@ -45,7 +45,11 @@ Round1 recovery corrections retain all 177 cases and add eight: 185 pass an exac
 reviewed gate. A new source-bound build passes ten focused native journeys and
 nine coordinator-inspected images without a new visual blocker; the initial
 26 journeys/14-image Astra subset remain historical for unchanged surfaces.
-Current-head review and coordinator acceptance remain. F1 navigation fill is T37.5-owned; no T37.5
+A later pure DOM focus correction addresses the missed selected-task/modal overlap:
+195 cases pass the reviewed higher gate; one new build passes three focused browser
+schedules at 390/768/1280 with four inspected current images. No persisted/backend
+rerun is needed for this targeting-only diff; current-head review and coordinator
+acceptance remain. F1 navigation fill is T37.5-owned; no T37.5
 source is included in this batch.
 T11 has not started; no Astro app is scaffolded.
 Prose or smaller files do not establish universal conformity, production readiness

@@ -10,7 +10,9 @@ This records repository changes. No application version has been released.
   explicitly target the reachable form modal, preserve deliberate current focus
   and prefer an enabled autofocus child. New selected-task/priority-guard cases
   retain 185 prior tests; 195 pass the exact reviewed gate with higher floors.
-  New-source build and bounded native proof remain pending before the Draft push.
+  One new build passes exactly three overlapping-detail/form browser schedules
+  at 390/768/1280; four current images are inspected and exact resources stopped.
+  Old overlap-omitting matrices remain historical; current-head review stays open.
 
 - Correct round1 recovery findings: keep read-loading/error dialogs reachable with
   private fields hidden; restore generic cross-target denied-draft Return and
