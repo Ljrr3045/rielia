@@ -60,7 +60,7 @@ export function ProjectForm({
   }
 
   return (
-    <form className={styles.form} noValidate onSubmit={submit}>
+    <form className={styles.form + ' ' + styles.projectForm} noValidate onSubmit={submit}>
       <div className={styles.formGrid}>
         <div className={styles.field}>
           <label className={styles.fieldLabel} htmlFor={nameId}>

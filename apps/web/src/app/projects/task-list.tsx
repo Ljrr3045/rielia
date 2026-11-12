@@ -48,22 +48,10 @@ function TaskRow({
   const lang = useLocale();
   const archived = task.archivedAt !== null;
   return (
-    <li className={cx(styles.taskRow, archived && styles.taskRowArchived)} data-task-id={task.id}>
-      <div className={styles.taskStatusCell}>
-        <TaskMoveControl
-          canMove={canMove}
-          nextNext={nextNext}
-          onMove={(status) => onMove(task, status)}
-          onMoveBefore={(beforeTaskId) => onMoveBefore(task, beforeTaskId)}
-          onMoveEnd={() => onMoveEnd(task)}
-          pending={movePending}
-          previous={previous}
-          readOnly={readOnly}
-          task={task}
-          variant="row"
-        />
-      </div>
-
+    <li
+      className={cx(styles.taskRow, styles.projectTaskRow, archived && styles.taskRowArchived)}
+      data-task-id={task.id}
+    >
       <div className={styles.taskMain}>
         <a
           className={styles.taskTitleButton}
@@ -88,11 +76,11 @@ function TaskRow({
           <span className={styles.taskKey}>{task.key}</span>
           <span className={styles.taskMetaItem}>{typeName(task.type)[lang]}</span>
           {task.dueDate !== null && (
-            <span className={styles.taskMetaItem}>
+            <span className={cx(styles.taskMetaItem, styles.taskMetaDue)}>
               <DueDate value={task.dueDate} />
             </span>
           )}
-          <span className={styles.taskMetaItem}>
+          <span className={cx(styles.taskMetaItem, styles.taskMetaAssignee)}>
             <AssigneeTag
               inactive={task.assignee !== null && !task.assignee.active}
               kind={task.assignee?.kind ?? null}
@@ -108,6 +96,21 @@ function TaskRow({
             </span>
           )}
         </div>
+      </div>
+
+      <div className={styles.taskStatusCell}>
+        <TaskMoveControl
+          canMove={canMove}
+          nextNext={nextNext}
+          onMove={(status) => onMove(task, status)}
+          onMoveBefore={(beforeTaskId) => onMoveBefore(task, beforeTaskId)}
+          onMoveEnd={() => onMoveEnd(task)}
+          pending={movePending}
+          previous={previous}
+          readOnly={readOnly}
+          task={task}
+          variant="row"
+        />
       </div>
 
       <div className={styles.taskAside}>
