@@ -1,7 +1,7 @@
 # T37.4 project/task presentation and recovery
 
-**2026-11-12 — implementation and bounded local validation complete; Draft
-publication authorized, T37.4 acceptance pending.** T37.1/2/3 are accepted in
+**2026-11-12 — implementation and bounded local validation complete; published in
+[Draft PR #48](https://github.com/Ljrr3045/rielia/pull/48), T37.4 acceptance pending.** T37.1/2/3 are accepted in
 merged [PR45](https://github.com/Ljrr3045/rielia/pull/45),
 [PR46](https://github.com/Ljrr3045/rielia/pull/46) and
 [PR47](https://github.com/Ljrr3045/rielia/pull/47#issuecomment-6814793798).
@@ -155,7 +155,8 @@ correctly separate; this is not a routing or authorization finding. The coordina
 assigns a minimal Astra presentation correction to T37.5. Its separate source
 must not enter this PR; F1 is not a T37.4 blocker.
 
-Draft publication is not final T37.4 acceptance. Current-head CI/native Kilo,
+[Draft PR #48](https://github.com/Ljrr3045/rielia/pull/48) targets `dev` from
+`feat/t37-project-task-work`. Publication is not final T37.4 acceptance. Current-head CI/native Kilo,
 coordinator review/acceptance and later publication decisions remain required.
 Final real PostgreSQL/Nest/Next cross-surface persisted/security QA remains
 scheduled in T37.5/6, using the existing QA machinery. Finite HTTP fixtures never

@@ -41,8 +41,9 @@ passed. [T37.3 shell/entry work](t37-shell-entry.md) is accepted in merged
 [PR #47](https://github.com/Ljrr3045/rielia/pull/47#issuecomment-6814793798) at
 `55f0f8d85521998d3d7ed883f387bd3c6cb664f8`. [T37.4 project/task work](t37-project-task-ui.md)
 has 177 passing frontend cases, 26 bounded native journeys and a 14-image Astra
-review subset from one source-bound build; Draft publication/current-head review
-and coordinator acceptance remain. F1 navigation fill is T37.5-owned; no T37.5
+review subset from one source-bound build, published in
+[Draft PR #48](https://github.com/Ljrr3045/rielia/pull/48); current-head review and
+coordinator acceptance remain. F1 navigation fill is T37.5-owned; no T37.5
 source is included in this batch.
 T11 has not started; no Astro app is scaffolded.
 Prose or smaller files do not establish universal conformity, production readiness
@@ -448,7 +449,7 @@ closed merge gate while Draft. Agreed tooling/units/formatting, scoped
 frontend/backend implementation and bounded T36.6 consolidation are accepted in
 PR #44 with owned debt. T37.1 preparation is accepted in merged PR #45 as linked
 above; T37.2 foundations and T37.3 shell/entry are accepted in merged PRs #46/#47.
-T37.4's consolidated project/task evidence is prepared for one Draft PR. Its
+T37.4's consolidated project/task evidence is published in Draft PR #48. Its
 current-head CI/native review and coordinator acceptance remain; final persisted
 QA and owned T37.5 follow-ups do not disappear by implication. No full T37
 acceptance is claimed, and T11 follows accepted T37.

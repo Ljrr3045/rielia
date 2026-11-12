@@ -1,6 +1,6 @@
 # Delivery progress and decisions
 
-## 2026-11-12 T37.4 consolidated Draft preparation
+## 2026-11-12 T37.4 published as Draft PR48
 
 Accepted foundations are PRs #45/#46/#47; accepted `dev` is `55f0f8d`. Publication
 branch `feat/t37-project-task-work` preserves recovery checkpoint `8d7b937` and
@@ -15,8 +15,11 @@ Astra reviewed 14 distinct selected states, including resolved pending feedback;
 no new blocking T37.4 visual defect was found in that subset. F1 navigation fill
 ambiguity stays T37.5 presentation-owned; its source is excluded from this batch.
 
-One English Draft PR to `dev` is authorized, not final acceptance. Current-head
-CI/native review and coordinator acceptance remain. Final PG/Nest/Next persisted/
+English [Draft PR #48](https://github.com/Ljrr3045/rielia/pull/48) targets `dev`.
+The initial push was immediately followed by Draft creation; actual Draft status
+was verified before the URL follow-up push. No Ready transition or paid Kilo
+trigger is authorized. Current-head CI/native review and coordinator acceptance
+remain; publication is not final acceptance. Final PG/Nest/Next persisted/
 security QA stays in T37.5/6; fixture evidence is not persistence/security proof.
 Actual browser zoom, physical devices/manual AT, users/providers/staging remain
 deferred. No T11/landing/new policy or whole-T37 closure is implied.

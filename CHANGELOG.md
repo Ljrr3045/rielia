@@ -4,7 +4,7 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
-### T37.4 project/task presentation and recovery
+### T37.4 project/task presentation and recovery — [Draft PR #48](https://github.com/Ljrr3045/rielia/pull/48)
 
 - Wrap full breadcrumb context within its work column; prioritize task titles in
   contiguous rows, retain native Move/reorder and expose permitted mobile Restore.
