@@ -1,12 +1,13 @@
 # T37.2 CSS foundations checkpoint
 
-Status: **CSS correction checkpoint; corrected-head validation and T37.2 acceptance pending**.
+Status: **Corrected-source native evidence reviewed; CI/native review and T37.2 acceptance pending**.
 The initial implementation was committed as `d533cc03b364fa31035a1a8398c3ebdaba71b3a1`
 on `feat/t37-ui-foundations`. [T37.1 acceptance](https://github.com/Ljrr3045/rielia/pull/45#issuecomment-6811811563) now governs the preparation:
 PR #45 merged as `8065c07895640da228accbd50295d79517d2afa1` from reviewed
 `57ee1641aa453b6f08d81d29f0b5f294afece35c`. That accepted base is merged with
 ancestry retained; the original dated preparation and research proposals remain
-historical. This implementation is not published and does not accept T37.
+historical. [PR45 postmerge CI](https://github.com/Ljrr3045/rielia/actions/runs/43135834271)
+completed successfully on that exact merge SHA. This implementation does not accept T37.
 
 ## Scope and ownership
 
@@ -212,3 +213,36 @@ viewport resizing or CSS/page scale is not substituted. Width samples include
 emulation for theme/reduced motion. Physical devices, virtual keyboard, manual
 AT, real-user/provider/staging evidence and DB/security proof remain deferred.
 SOL's route/HTTP fixtures are distinct from real persisted-flow evidence.
+
+
+## Corrected-source revalidation and publication preparation (2026-11-11)
+
+Independent SOL revalidation uses `999aba720cc9485f5e1ac1a3c817c3a260a802c8`,
+build `WI1g2MAenwElnKRcG-YBH`; baseline results above remain bound to `d533cc0`.
+Eight targeted list/board cases pass across 320/390/768/1440, both themes and
+ES/EN, plus a shared discovery-link sample. Mobile/coarse Move selects measure
+16px; view segments measure 44px high and title links at least 44×44px. Long
+text wraps without sampled page overflow or painted overlap. Native href/URL,
+Enter/click activation, detail return/focus and Move behavior pass the targeted
+fixture assertions. List return may focus the equivalent remounted link;
+board refresh instead returns focus to the project-heading fallback. Same-node
+identity is not claimed. Fine-pointer desktop Move text remains 12.8px.
+
+Astra viewed nine actual corrected PNGs: four list, four board and one discovery.
+Short-title focus boundaries remain visible; long titles wrap, metadata stays
+separate and native field text is readable. No new CSS defect was demonstrated.
+All three final CSS files match SOL's tested hashes; subsequent publication
+commits contain documentation only and do not change those bytes:
+
+| CSS file | SHA-256 at tested source and publication |
+| --- | --- |
+| `globals.css` | `2c4ae524473124db78bf72e2fca26330455e9083367126321d469b63262cdd12` |
+| `workspace.module.css` | `90011906e28006293a1b5a0e4cfead32a15dac48b28749ae8bc8151d377f5a70` |
+| `projects.module.css` | `25165e70e289dee9fb3800eb672e86da8da1dd45c2f66767397e1493161ff6b4` |
+
+SOL's report/index and Astra's `publication-inspected.json` retain source/build
+and image hashes. Runtime cleanup is confirmed. No duplicate runtime, broad
+suite or installation ran in Astra's publication task. The inherited T37.4
+recovery findings and real zoom/device/AT/persisted-flow limits above remain;
+corrected selector evidence does not establish full T37 acceptance. Current-head
+CI/native Kilo and coordinator review remain required before acceptance.

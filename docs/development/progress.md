@@ -1,10 +1,24 @@
 # Delivery progress and decisions
 
+## 2026-11-11 T37.2 corrected-source evidence and Draft preparation
+
+SOL's eight targeted native cases and shared discovery sample pass on `999aba7`,
+build `WI1g2MAenwElnKRcG-YBH`; Astra inspected nine actual corrected PNGs.
+Mobile/coarse Move fields measure 16px, segments 44px and task-title targets
+at least 44×44px, with wrapping/focus/activation and source hashes recorded in the
+[foundation guide](t37-ui-foundations.md#corrected-source-revalidation-and-publication-preparation-2026-11-11).
+Baseline evidence stays bound to `d533cc0`; publication documentation preserves
+all tested CSS bytes. Current-head CI/native Kilo and coordinator acceptance
+remain pending. Inherited checklist feedback and earlier project recovery debts
+remain SOL-owned T37.4 work; real zoom/device/AT and persisted-flow limits remain.
+
 ## 2026-11-11 T37.1 acceptance and T37.2 visual correction checkpoint
 
 [T37.1 acceptance](https://github.com/Ljrr3045/rielia/pull/45#issuecomment-6811811563) is recorded in merged PR #45 at
 `8065c07895640da228accbd50295d79517d2afa1`, from reviewed
-`57ee1641aa453b6f08d81d29f0b5f294afece35c`. The dated preparation/review entries
+`57ee1641aa453b6f08d81d29f0b5f294afece35c`, with successful
+[postmerge CI](https://github.com/Ljrr3045/rielia/actions/runs/43135834271) on that
+exact merge SHA. The dated preparation/review entries
 below are historical; their pending claims do not override this decision.
 The foundations branch merges that accepted base with ancestry retained and both
 dated progress entries preserved. No skill resource, dependency or discovery

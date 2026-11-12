@@ -10,7 +10,8 @@ This records repository changes. No application version has been released.
   segments and task-title links, plus 16px Move selects on narrow/coarse-pointer
   layouts. Merge the
   accepted T37.1 base with both dated progress entries preserved; corrected-head
-  SOL validation, Draft publication and current-head CI/Kilo remain required.
+  SOL validation is recorded on `999aba7`, with nine corrected PNGs reviewed;
+  current-head CI/Kilo and coordinator acceptance remain required.
 - Establish one shared light/dark token source in existing global CSS for
   surfaces, feedback, system typography, spacing, focus and native controls;
   reuse it in workspace/project appearance while retaining selector ancestry.
@@ -21,7 +22,7 @@ This records repository changes. No application version has been released.
 - Record [source contrast calculations and pending evidence](docs/development/t37-ui-foundations.md).
   CSS-only checkpoint: no TSX/logic/test/dependency/coverage/prototype changes;
   initial runtime/visual gaps are followed up in the guide, with exact source
-  binding. Corrected-head validation, persisted-flow limits, CI/Kilo and T37.2
+  binding. Persisted-flow limits, CI/Kilo and T37.2
   acceptance remain open; T11/landing excluded.
 
 ### T37.1 frontend-local skill preparation

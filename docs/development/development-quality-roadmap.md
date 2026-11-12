@@ -35,8 +35,8 @@ top-level paths. [T37.1 acceptance](https://github.com/Ljrr3045/rielia/pull/45#i
 is recorded at merge `8065c07895640da228accbd50295d79517d2afa1` from reviewed
 `57ee1641aa453b6f08d81d29f0b5f294afece35c`. The separate
 [T37.2 foundations checkpoint](t37-ui-foundations.md) and visual corrections
-remain in progress, requiring corrected-head SOL evidence and later CI/native
-review/coordinator acceptance. T11 has not started; no Astro app is scaffolded.
+remain in progress, with corrected-head SOL evidence recorded on `999aba7`
+and later CI/native review/coordinator acceptance required. T11 has not started; no Astro app is scaffolded.
 Prose or smaller files do not establish universal conformity, production readiness
 or full T01–T35 acceptance.
 
