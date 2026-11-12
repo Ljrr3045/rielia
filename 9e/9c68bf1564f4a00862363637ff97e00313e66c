@@ -1,0 +1,29 @@
+docs/development/unit-coverage.md
+  s_436a98e4642f61::t_faf316594aecc7 636
+docs/development/development-quality-roadmap.md
+  s_436a98e4642f61::t_faf316594aecc7 48-52
+docs/development/t37-project-task-ui.md
+  s_436a98e4642f61::t_faf316594aecc7 43,46-55,59-67
+  s_436a98e4642f61::t_b0d4988ea9733f 56-58
+CHANGELOG.md
+  s_436a98e4642f61::t_faf316594aecc7 13-15
+docs/development/progress.md
+  s_436a98e4642f61::t_b0d4988ea9733f 11-14
+  s_436a98e4642f61::t_faf316594aecc7 3,15-18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9e9c68bf1564f4a00862363637ff97e00313e66c",
+  "prompts": {},
+  "sessions": {
+    "s_436a98e4642f61": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1cd96-e5fb-78c1-ad15-35bdfb4f2e74",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
