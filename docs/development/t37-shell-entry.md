@@ -4,9 +4,9 @@
 
 T37.1 is accepted in merged [PR #45](https://github.com/Ljrr3045/rielia/pull/45);
 T37.2 is accepted in merged [PR #46](https://github.com/Ljrr3045/rielia/pull/46) at
-`8647f19fc3e359716d64eb649ff0ef79775cdf13`. **T37.3 remains IN PROGRESS**, prepared
-for consolidated Draft publication to `dev`; current-head CI/native review and
-coordinator acceptance remain required. Earlier dated pending/blocker statements
+`8647f19fc3e359716d64eb649ff0ef79775cdf13`. **T37.3 remains IN PROGRESS**, published in
+[Draft PR #47](https://github.com/Ljrr3045/rielia/pull/47) targeting `dev`;
+current-head CI/native review and coordinator acceptance remain required. Earlier dated pending/blocker statements
 below retain their historical source and are superseded by the later evidence.
 
 Integrated source/test/coverage head is

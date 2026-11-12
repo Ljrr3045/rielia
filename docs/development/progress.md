@@ -15,8 +15,9 @@ compact secondary context/full primary titles, grouped header actions, top-align
 role/owner values and truthful confirmed-invite/unavailable-link feedback. No new
 source correction. See the [consolidated evidence and limits](t37-shell-entry.md#corrected-source-visual-review-and-publication-evidence-2026-11-11).
 SOL's 19 native cases/23 captures use HTTP/clipboard fixtures, not persistence or
-security proof. Publication is prepared as Draft; current-head CI/native review
-and coordinator acceptance remain outstanding. T37.4 breadcrumb/three recovery
+security proof. Published in [Draft PR #47](https://github.com/Ljrr3045/rielia/pull/47)
+targeting `dev`; current-head CI/native review and coordinator acceptance remain
+outstanding. The documentation-only publication update preserves tested source. T37.4 breadcrumb/three recovery
 debts, device/AT/real-zoom/provider/staging/persisted-flow limits remain explicit.
 
 

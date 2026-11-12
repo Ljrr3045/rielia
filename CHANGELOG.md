@@ -6,7 +6,8 @@ This records repository changes. No application version has been released.
 
 ### T37.3 shell, identity and workspace entry
 
-Prepared for consolidated Draft publication to `dev`; T37.3 remains in progress.
+Published in [Draft PR #47](https://github.com/Ljrr3045/rielia/pull/47) targeting
+`dev`; T37.3 remains in progress.
 
 - Compose compact bilingual session guidance, a 14rem desktop work rail and
   compact secondary mobile context while keeping full primary titles and current
