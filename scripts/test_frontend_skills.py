@@ -113,6 +113,36 @@ class FrontendSkillsIntegrity(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Unexpected command-path adaptation"):
             VERIFIER.verify(self.root)
 
+    def test_stripped_transformation_and_adjusted_source_hash_are_rejected(self):
+        def change(manifest):
+            entry = next(e for s in manifest["skills"] for e in s["files"]
+                         if e["path"] == VERIFIER.ADAPTED_SKILL)
+            del entry["transformation"]
+            entry["sourceSha256"] = entry["sha256"]
+        self.edit_manifest(change)
+        with self.assertRaisesRegex(ValueError, "Expected exactly one codex-search-path-v1"):
+            VERIFIER.verify(self.root)
+
+    def test_duplicate_transformation_is_rejected(self):
+        def change(manifest):
+            entry = next(e for s in manifest["skills"] for e in s["files"]
+                         if e["path"].endswith("/upstream/SKILL.md.txt"))
+            entry["transformation"] = VERIFIER.TRANSFORMATION
+        self.edit_manifest(change)
+        with self.assertRaisesRegex(ValueError, "Expected exactly one codex-search-path-v1"):
+            VERIFIER.verify(self.root)
+
+    def test_transformation_at_wrong_target_is_rejected(self):
+        def change(manifest):
+            entries = [e for s in manifest["skills"] for e in s["files"]]
+            adapted = next(e for e in entries if e["path"] == VERIFIER.ADAPTED_SKILL)
+            original = next(e for e in entries if e["path"].endswith("/upstream/SKILL.md.txt"))
+            original["transformation"] = adapted.pop("transformation")
+            adapted["sourceSha256"] = adapted["sha256"]
+        self.edit_manifest(change)
+        with self.assertRaisesRegex(ValueError, "Expected exactly one codex-search-path-v1"):
+            VERIFIER.verify(self.root)
+
 
 if __name__ == "__main__":
     unittest.main()

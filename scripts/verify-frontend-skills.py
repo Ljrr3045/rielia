@@ -13,6 +13,8 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = "apps/web/.agents/skill-installation.json"
 SKILLS = "apps/web/.agents/skills"
+ADAPTED_SKILL = SKILLS + "/ui-ux-pro-max/SKILL.md"
+TRANSFORMATION = "codex-search-path-v1"
 PINS = {
     "frontend-design": "ca45fc496a3436251f191354091d557da31c15b5",
     "impeccable": "c3bb418ee38ee49a6b999b7752c1368f3123a2bd",
@@ -70,6 +72,13 @@ def verify(root):
     skills = manifest["skills"]
     if len(skills) != 3 or {s["name"]: s["revision"] for s in skills} != PINS:
         raise ValueError("Expected exactly the three reviewed skill revisions")
+    transformations = [
+        (entry.get("path"), entry["transformation"])
+        for skill in skills for entry in skill["files"] if "transformation" in entry
+    ]
+    if transformations != [(ADAPTED_SKILL, TRANSFORMATION)]:
+        raise ValueError("Expected exactly one " + TRANSFORMATION + " transformation at "
+                         + ADAPTED_SKILL)
     expected = set()
     total_bytes = 0
     for skill in skills:
@@ -91,7 +100,7 @@ def verify(root):
                 raise ValueError("Hash/size mismatch: " + relative)
             if bool(path.stat().st_mode & 0o111) != entry["executable"]:
                 raise ValueError("Executable mode mismatch: " + relative)
-            if entry.get("transformation") == "codex-search-path-v1":
+            if relative == ADAPTED_SKILL:
                 original = regular(root, prefix + "upstream/SKILL.md.txt").read_bytes()
                 if hashlib.sha256(original).hexdigest() != entry["sourceSha256"]:
                     raise ValueError("Original source mismatch: " + relative)

@@ -1,5 +1,39 @@
 # Delivery progress and decisions
 
+## 2026-11-11 T37.1 first native review — CORRECTION BATCH
+
+Draft [PR #45](https://github.com/Ljrr3045/rielia/pull/45) addresses all three valid
+findings from completed native check 130892886669 on reviewed
+`ea7916b156bdf1afe9f3758e303b564f59fca618` ([summary](https://github.com/Ljrr3045/rielia/pull/45#issuecomment-6811434465)).
+The check concluded success with one warning and two suggestions, not a clean
+review. The coordinator returned the same PR to Draft before corrections.
+
+- [Roadmap status](https://github.com/Ljrr3045/rielia/pull/45#discussion_r4545050376):
+  the current requested-skills sentence now states verified initial/corrected
+  discovery; dated November 5/6 research snapshots remain unchanged.
+- [Sole transformation](https://github.com/Ljrr3045/rielia/pull/45#discussion_r4545050405):
+  preflight requires exactly one `codex-search-path-v1` entry at
+  `apps/web/.agents/skills/ui-ux-pro-max/SKILL.md`; adaptation checks use that
+  fixed path rather than an entry's opt-in. Three regressions reject a removed
+  marker with adjusted source hash, duplicate markers and a marker moved to the
+  wrong target. All 16 integrity cases and the exact-resource verifier pass.
+- [Evidence reference](https://github.com/Ljrr3045/rielia/pull/45#discussion_r4545050410):
+  a stable link to the integrity section replaces the inaccurate direction/count.
+  Current suite accounting is 16; earlier 13-case checkpoints remain historical.
+
+All 147 resource bytes/modes, source/provenance hashes, pins and installation
+manifest remain unchanged from the reviewed head. Existing fresh catalog evidence
+at `325d732` remains bound to that unchanged skill payload; no discovery session,
+install, vendor code or app/build/PG/Docker suite is repeated. The reviewed manifest
+remains the trust input, not proof of upstream authenticity. The archived source
+digest is distinct from the whole installation manifest digest.
+
+Affected format/docs/whitespace and mandatory hooks apply to this bounded batch.
+Earlier validate 130890009675/run 43129519740 success and completed native
+130892886669 are historical head evidence; this correction needs its own full CI
+and completed native review after coordinator Ready. Thread resolution, Ready,
+review request, acceptance and merge remain coordinator-owned and pending.
+
 ## 2026-11-11 T37.1 discovery correction — FRESH CHECK VERIFIED
 
 Draft delivery remains [PR #45](https://github.com/Ljrr3045/rielia/pull/45).

@@ -301,8 +301,8 @@ coordination against contracts. Native Kilo remains the selected external review
 
 ### Requested frontend skills and authority
 
-Current T37.1 technical installation, immutable pins, safety boundaries and pending
-fresh-worker discovery are recorded in [frontend skills](frontend-skills.md).
+Current T37.1 technical installation, immutable pins, safety boundaries and verified
+initial/corrected fresh-worker discovery are recorded in [frontend skills](frontend-skills.md).
 The table below preserves the November 5/6 **research snapshot**: its "Not installed"
 status applied to that documentation PR, before the separate T37.1 installation.
 

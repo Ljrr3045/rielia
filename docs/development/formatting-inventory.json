@@ -1282,6 +1282,6 @@
     "applicationProviderBaselineChange": false,
     "freshFrontendDiscovery": "PASS at 325d732 in fresh Astra high session 01a1cd31-7804-7bf3-b496-f9e2282d9352 from apps/web: three intended local entries, no nested/archive candidate; explicit local paths required, no automatic global override",
     "researchIntegration": "Coordinator-authorized byte-exact Astra prepared docs from docs/t37-ui-research at 92d480d; source hashes recorded in frontend-skills.md; no source research repeated",
-    "archiveCatalogCorrection": "Original upstream SKILL.md preserved byte-exact as SKILL.md.txt; manifest retains upstream sourcePath/hash; integrity enforces three top-level catalog entries with13 focused witnesses"
+    "archiveCatalogCorrection": "Original upstream SKILL.md preserved byte-exact as SKILL.md.txt; manifest retains upstream sourcePath/hash; integrity enforces three top-level catalog entries and exactly one pinned-path transformation with 16 focused cases"
   }
 }

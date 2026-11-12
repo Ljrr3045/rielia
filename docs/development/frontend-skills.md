@@ -151,8 +151,9 @@ auto_review/on-request/workspace-write, with network access false. Its actual
 injected catalog contained all three intended local top-level entries and the
 global duplicate, with no nested upstream or archival-text entry. The worker
 explicitly selected and fully read the three local files. It observed the archive
-and metadata without rerunning integrity or resource sampling; the 13 integrity
-witnesses above are SOL evidence. No vendor code or app checks ran in that session.
+and metadata without rerunning integrity or resource sampling; the
+[focused integrity checks](#integrity-formatting-and-validation) are SOL evidence.
+No vendor code or app checks ran in that session.
 
 The [local usage entry](../../apps/web/.agents/README.md) gives the exact read-only
 search command from `apps/web`. No Impeccable binary probe is needed for discovery.
@@ -203,6 +204,11 @@ pins, exact file set, each path component/type, SHA-256, byte length, executable
 mode, exactly three top-level catalog entries, required entry/license/notice and
 exact adaptation. Missing/extra/tampered
 resources, path traversal, symlink files/directories/manifest and mode drift fail.
+The focused Python suite now has 16 cases, including stripped transformation
+metadata with an adjusted source hash, duplicate transformations and a transformation
+at the wrong target. The verifier requires exactly one `codex-search-path-v1`
+entry at `apps/web/.agents/skills/ui-ux-pro-max/SKILL.md` before reading resources;
+that path's adaptation check cannot be disabled by removing its marker.
 Focused Python failure witnesses and the verifier also run in CI. The reviewed
 manifest is the trust input: changing both a file and its reviewed manifest is a
 source change requiring review, not cryptographic proof of upstream authenticity.
