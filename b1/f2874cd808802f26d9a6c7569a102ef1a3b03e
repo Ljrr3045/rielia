@@ -1,0 +1,27 @@
+docs/development/t37-discovery-ui.md
+  s_56f9656cb2b0b9::t_545d5df18888bf 1-144
+apps/web/src/app/projects/projects.module.css
+  s_56f9656cb2b0b9::t_545d5df18888bf 3732,3737-3740,3744-3748,3751-3754,3763-3765,3788-3789,3793-3800,3807-3808,3810-3876,3929,3933,3940-3941,3946,3959-3960,3965,3967-3968,3970-4004,4009,4013-4016,4018,4022,4025-4026,4035,4042-4044,4048,4050,4087-4099
+CHANGELOG.md
+  s_56f9656cb2b0b9::t_545d5df18888bf 15-26,52-62
+apps/web/src/app/projects/task-discovery.tsx
+  s_56f9656cb2b0b9::t_545d5df18888bf 245,261,589,624,713-715,732-734,736
+docs/development/progress.md
+  s_56f9656cb2b0b9::t_545d5df18888bf 22-42,162-179
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b1f2874cd808802f26d9a6c7569a102ef1a3b03e",
+  "prompts": {},
+  "sessions": {
+    "s_56f9656cb2b0b9": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1ce20-f7eb-7503-839d-9f1b8ffda007",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
