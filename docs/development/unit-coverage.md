@@ -43,8 +43,8 @@ at corrected PR42 C: 138 web / 380 total cases over 118 inputs. Delivered
 216 API, 7 contracts and 19 isolated prototype cases, 387 total over 124 maintained
 inputs (68 web). Historical PR43 web L/S/F/B floors were 4131/4061/3073/3058
 basis points. The T37.3 migrations raised web floors to 4347/4258/3187/3204. Current
-T37.4/T37.5 web floors are **6072/5858/4825/5456** after reviewed round1 recovery
-and integrated discovery migrations below; 5994/5781/4739/5362 are historical.
+T37.4/T37.5 web floors are **6182/5960/4962/5601** after reviewed modal-focus
+and composed discovery migrations below; earlier floor sets remain historical.
 API floors are 5244/5247/4855/5252. Prototype counts do not inflate production
 metrics. Exact baseline files and linked covered/zero/null proof govern;
 historical starting values below are not current results.
@@ -704,3 +704,27 @@ exact. 54 file summaries/65 maps/35 hit vectors are unchanged. Null-column point
 remain 811 with 29,010 total points; implicit arms, changed-location identity limits
 and the same type-only zero-unit N/A remain. No lowered floor/exclusion, historical
 baseline rewrite, backend/policy or persistence/security claim.
+
+
+## T37.5 composed modal-focus baseline
+
+Real merge `92ffcb1` retains exact focus source `57020a0`, historical `e67f332` and
+Astra discovery/CSS. One measure and one normal `--built` gate pass **195**, with
+68 inputs/24 helper-test entries and byte-exact measured summary/manifest/maps/
+hits/LCOV. Coordinator ASK approves exact composed candidate
+`c7e1a52842c14c772260c9598f89a3b129489cb497dd95154166452a74f06ceb` before write.
+All counters/hits/totals/floors equal corrected4 `263d596f`; only discovery source
+fingerprint/physical map positions differ, with identical IDs/shapes/types.
+L/S/F/B are 2387/3861, 2595/4354, 526/1060, 2996/5349; floors
+**6182/5960/4962/5601**. Nullable debt is **812/29010**, versus corrected4
+811/29010 and historical integrated5 812/28926.
+
+Against historical `be0f904d`, three DOM-source/one existing test fingerprints
+change; 54 summaries/65 maps/35 hit vectors are exact. Per-file covered counts/
+ratios do not regress and no stable-map covered unit is lost. New guard debt of
+one uncovered line/two statements/one branch is explicitly accepted, with higher
+effect-owner ratios; it is not asserted that all uncovered counts decrease.
+Changed-source semantic identities remain unmanufactured. Provider/config/tools,
+68/24 selection, type-only zero-unit N/A and seven other baselines stay exact.
+No lowered floor/exclusion or backend build. The [focused composed proof](t37-discovery-ui.md#composed-modal-focus-integration--2026-11-12)
+does not relabel historical database receipts as execution on this source.

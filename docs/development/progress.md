@@ -1,5 +1,20 @@
 # Delivery progress and decisions
 
+## 2026-11-12 T37.5 composed modal focus — LOCAL PROOF COMPLETE
+
+Exact source `57020a0` and final PR48 docs `9e9c68bf` are really merged while
+preserving Astra discovery/CSS and historical `e67f332`. The
+[focused guide](t37-discovery-ui.md#composed-modal-focus-integration--2026-11-12)
+records source `fe0bdc9`, build `FS64cq9CNxiMpNAUJK4si`, 195-case measure/normal
+gate, approved `c7e1a528`, floors6182/5960/4962/5601 and explicit812/29010 mapping
+debt plus accepted defensive-guard uncovered debt. Affected checks/hooks pass.
+Three detail/edit overlap viewports and one discovery smoke pass; SOL opens five
+current focused PNGs, retaining below-crop action/row limits. Exact owned server/
+five browser PIDs and port are closed; heavy lease released. No backend/Docker/PG
+or unchanged matrices repeated. Earlier185/11/3 and81b checklist durable-retry
+proof retain source/provenance limits. T37 IN PROGRESS; PR48/final acceptance,
+accepted dev ancestry and later publication/current-head gates remain pending.
+
 ## 2026-11-12 PR48 round2 selected-task modal focus — LOCAL PROOF COMPLETE
 
 The [bounded correction](t37-project-task-ui.md#pr48-round2-form-modal-focus-correction)

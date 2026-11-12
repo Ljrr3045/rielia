@@ -1,6 +1,51 @@
 # T37.5 My tasks and Search presentation checkpoint
 
+## Composed modal-focus integration — 2026-11-12
+
+Exact focus source `57020a0` is merged at `92ffcb1`, preserving `e67f332`
+and Astra `ad61925` discovery/CSS bytes. Final PR48 docs `9e9c68bf` are integrated
+without source changes. Tested source `fe0bdc99aa26fede69396826e22afb08b3c266b6`
+produces the one completed new build **`FS64cq9CNxiMpNAUJK4si`**. The 92-source
+snapshot is `ed39a5e7bb7526850c444fc1772b7febfbdf7a3f8a6afae67a8a582a365eeef4`;
+compiled JS/CSS, source/tests and the exact approved baseline remain unchanged
+through docs commits. No policy, controller command, API, CSS or dependency changes.
+
+One composed measure and one normal gate pass **195** cases, retaining 185,
+68 inputs and 24 helper/test entries. Coordinator approval precedes adoption of
+`c7e1a52842c14c772260c9598f89a3b129489cb497dd95154166452a74f06ceb`.
+Totals are L2387/3861, S2595/4354, F526/1060, B2996/5349; floors rise to
+**6182/5960/4962/5601**. Counters/hits/floors equal corrected4 `263d596f`; only
+discovery fingerprint/physical locations differ. Nullable columns are actually
+**812/29010**, versus corrected4 811/29010 and historical integrated5 812/28926.
+Accepted new defensive-guard debt is one line/two statements/one branch, with
+improved per-file ratios and no stable-map covered-unit loss. Seven other
+baselines, provider/config/tools and type-only zero-unit N/A remain exact.
+
+Four narrow native cases pass on installed Brave/Playwright: selected-task detail
+plus task edit at **390/768/1280**, and one labelled literal discovery/selected
+navigation/detail-Back smoke. Held read success/503 keeps focus in the connected
+current non-inert form modal; real Tab/Shift+Tab, Escape/Cancel/Close and late-read
+handoff return focus to underlying detail. A finite save retains original fields
+and captured version1. SOL opens all five current PNGs; no new visual blocker in
+this focused EN/light subset. Lower form actions and the second discovery row
+are below crop; DOM assertions are separate. These finite DTOs prove no SQL effect.
+
+Affected type/lint/format/handoff/diff/hooks pass. Owned ignored dev cache is
+already absent before the build, so no cleanup/retry is needed. Exact server plus
+five browser PIDs are absent and loopback port43886 is closed; heavy lease released.
+No backend compile, Docker/PG run or unchanged native/persisted matrix is repeated.
+The prior **2edecbe/6xxx 185/11/3** evidence below remains historical with its source
+limit; its actual current-authority/version/DB receipts are retained because this
+new diff changes only DOM focus targeting. Durable checklist exact-key proof belongs
+to the earlier **81b** persisted run, not the three focused cases or this new head.
+Historical failures, runner-SHA-null, crop/device/AT/actual browser-zoom/provider/
+user/staging limits remain. T37 IN PROGRESS; accepted PR48 ancestry, publication
+and final current-head CI/native/ownership/coordinator acceptance remain pending.
+
 ## Corrective integration QA — 2026-11-12
+
+Historical checkpoint: this section describes source `2edecbe`/build `6xxx` before the
+DOM-focus correction above; its 185/11/3 receipts are not current-head execution.
 
 Status: **local corrective integration evidence complete; T37 IN PROGRESS**.
 Real merge `01ebdee` preserves checkpoint `def5d5a` and exact corrective PR48

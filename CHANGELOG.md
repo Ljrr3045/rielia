@@ -4,6 +4,13 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Integrate exact modal-focus correction while preserving discovery/CSS; 195
+  frontend cases pass one approved composed measure/gate with higher floors and
+  explicit guard/mapping debt. One new build passes three detail/edit overlap
+  viewport cases plus discovery smoke, with five inspected focused images and
+  exact owned cleanup. Historical persisted receipts keep their source limits;
+  T37 and PR48/final publication/acceptance remain open.
+
 - Integrate exact PR48 corrective source/final docs while preserving discovery
   presentation and both histories. Validate 185 frontend cases with one reviewed
   measure/gate, floors 6072/5858/4825/5456 and explicit 812/28926 mapping debt.
