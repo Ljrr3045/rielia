@@ -4,6 +4,11 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Integrate T37.4 native and T37.5 presentation histories for independent discovery
+  validation; explicitly review the current-web manifest migration and retain all
+  177 cases, strengthened floors and seven unrelated baselines. Native/persisted
+  evidence and coordinator acceptance remain separate gates.
+
 - Validate exact integrated T37.4 source with one production build, 26 bounded
   native journeys and 20 selected images; retain all 177 frontend cases and higher
   coverage floors. Record recovery, keyboard/touch, breadcrumb paint, long metadata,

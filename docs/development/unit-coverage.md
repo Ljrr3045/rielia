@@ -556,3 +556,26 @@ local integration authorization itself did not accept PR47. The coordinator
 subsequently [accepted/merged PR47](https://github.com/Ljrr3045/rielia/pull/47#issuecomment-6814793798) at `55f0f8d`; T37.4 acceptance
 remains separate. The separately authorized T37.4 production/native
 group follows this integration; HTTP fixtures cannot establish persisted security.
+
+
+## T37.5 reviewed discovery manifest reconciliation
+
+The independent SOL validator integrates exact T37.4 checkpoint `8d7b937` and
+Astra discovery finish `ad61925`, preserving both histories and accepted dev
+ancestry at integration head `b1f2874`. One measured web run passes all 177 cases
+over the same 68 maintained inputs. All per-file counters, hit vectors, totals
+and L/S/F/B floors **5994/5781/4739/5362** equal accepted T37.4. Provider, runtime,
+configuration, inventory and all 24 test fingerprints remain exact. Only the
+`task-discovery.tsx` fingerprint changes; its physical mapping locations move with
+the reviewed title-first markup and class formatting, while map shapes, unit IDs,
+branch types and hit vectors remain unchanged. All other normalized maps match.
+
+A blocking coordinator review approves exact current-web candidate
+`cb65f8fdf2b9badef8350d4b5e4b68f75ebfdfa560cb9f093f95bc221fe914c6` before replacing
+accepted baseline `7e44c96c37036bff1e8aa65a01c1020b664a74ba411d238bcd3c82a2f63ff865`.
+One normal `pnpm unit:web -- --built` gate then passes 177/177 and reproduces the
+measured summary, manifest, full maps and hit vectors byte-for-byte. Seven other
+baselines remain byte-identical; no floor, exclusion, provider or gate changes.
+Source typecheck, affected lint, adopted formatting, handoff/links and whitespace
+checks pass. Native discovery and real persisted cross-surface QA remain separate
+steps; this reconciliation does not establish T37.5 acceptance.

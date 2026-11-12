@@ -1,5 +1,18 @@
 # Delivery progress and decisions
 
+## 2026-11-12 T37.5 integrated functional preparation — NORMAL GATE PASSED
+
+Independent SOL integration preserves exact T37.4 `8d7b937`, Astra finish `ad61925`
+and accepted dev ancestry. Only additive changelog/progress conflicts required
+resolution. The coordinator approves the exact current-web fingerprint migration;
+one measured and one normal gated run pass all 177 cases with unchanged higher
+floors, all 68 per-file counters and hit vectors. The
+[coverage addendum](unit-coverage.md#t375-reviewed-discovery-manifest-reconciliation)
+records the physical-map-only discovery differences and seven unchanged baselines.
+Affected type/lint/format/handoff/whitespace checks pass with mandatory hooks.
+Native discovery and actual PostgreSQL/Nest/Next daily-work validation follow under
+the sole runtime lease. No application fix, publication or T37.5 acceptance occurs.
+
 ## 2026-11-12 T37.4 integrated native validation — LOCAL EVIDENCE COMPLETE
 
 The coordinator [accepted T37.3/PR47](https://github.com/Ljrr3045/rielia/pull/47#issuecomment-6814793798) and merged
