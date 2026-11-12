@@ -5,7 +5,9 @@ technical installation/integrity/documentation batch. Astra high owns independen
 surface/state inventory, reference research and visual decisions in a separate
 checkout. This package changes no application behavior, dependencies, permissions,
 unit/coverage baseline or handoff bytes; T11, landing and new product surfaces are
-excluded. Full T37.1 integration and fresh frontend-worker discovery remain pending.
+excluded. Delivery: Draft [PR #45](https://github.com/Ljrr3045/rielia/pull/45).
+The coordinator also authorized integrating Astra's prepared research documents
+below. Fresh frontend-worker discovery and full T37.1 acceptance remain pending.
 
 T36.1–T36.6 were accepted in [PR #44](https://github.com/Ljrr3045/rielia/pull/44),
 merged as `92d480dcc3c35f2bc340b99ff2dd084097c7457c` from reviewed head
@@ -123,8 +125,30 @@ Do not change global skill/config settings to hide the result.
 
 The [local usage entry](../../apps/web/.agents/README.md) gives the exact read-only
 search command from `apps/web`. No Impeccable binary probe is needed for discovery.
-Fresh Astra discovery, independent inventory/reference research and their
-integration are pending; this technical batch does not close full T37.1 or T37.
+Fresh Astra discovery remains pending; this preparation batch does not close
+full T37.1 or T37.
+
+## Independent Astra research integration
+
+The coordinator reviewed and authorized byte-exact integration of the prepared
+[current-source inventory](t37-ui-inventory.md) and
+[design direction](t37-design-direction.md) from `docs/t37-ui-research`, task
+`task_8846f535f733`, based on `92d480dcc3c35f2bc340b99ff2dd084097c7457c`.
+The source worker used verified GPT-6-Astra high and Approve for me. It produced
+staged documents without a source commit because its local hooks runtime was
+absent; SOL integrates them here with required hooks and without modifying the
+source checkout. Source file SHA-256 values are:
+
+- Inventory: `f1d0cbdedcaf43a5d4428f67b57768a231f2d08b7001f5524fc0cccc21172fcb`.
+- Direction: `c636e6aedab7d3189e9401ebd7268be96f67646ee4444c52ae4b8a5d4384f764`.
+
+Their source/base labels are preserved, including the then-absent local skills;
+the installed package state is recorded separately above. Astra reports actual
+Mobbin image inspection and mismatched results with explicit limits; SOL did not
+repeat that research or claim its images as technical-worker observations.
+The inventory, proposed composition, two project-recovery proposals, mixed-file
+ownership and future evidence matrix guide later explicitly scoped work. They
+are not visual implementation, final design acceptance or fresh local discovery.
 
 ## Integrity, formatting and validation
 

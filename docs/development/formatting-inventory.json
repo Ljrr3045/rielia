@@ -1274,10 +1274,13 @@
       "apps/web/.agents/README.md",
       "docs/development/frontend-skills.md",
       "scripts/verify-frontend-skills.py",
-      "scripts/test_frontend_skills.py"
+      "scripts/test_frontend_skills.py",
+      "docs/development/t37-ui-inventory.md",
+      "docs/development/t37-design-direction.md"
     ],
     "vendorPolicy": "Preserve exact upstream resource bytes in only three named directories; verifier enforces hashes/paths/modes and sole documented adaptation; first-party metadata and app gates remain enforced",
     "applicationProviderBaselineChange": false,
-    "freshFrontendDiscovery": "Pending independent fresh Astra session from apps/web"
+    "freshFrontendDiscovery": "Pending independent fresh Astra session from apps/web",
+    "researchIntegration": "Coordinator-authorized byte-exact Astra prepared docs from docs/t37-ui-research at 92d480d; source hashes recorded in frontend-skills.md; no source research repeated"
   }
 }

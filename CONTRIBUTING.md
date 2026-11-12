@@ -136,7 +136,10 @@ Preserve immutable/generated exclusions and avoid broad formatting churn.
 T37.1 prepares the three requested [frontend-local skills](docs/development/frontend-skills.md),
 with pinned complete resources/notices and offline integrity checks. Start fresh
 frontend sessions from `apps/web` and observe local/global duplicate-name
-resolution before claiming discovery; independent Astra research remains pending.
+resolution before claiming discovery. The separate
+[Astra inventory](docs/development/t37-ui-inventory.md) and
+[direction proposal](docs/development/t37-design-direction.md) are integrated
+research, not redesign implementation or acceptance.
 Product/UX/brand authority governs their suggestions. Later T30–T34 uses the
 [Astro landing/narrative decision](docs/development/landing-direction.md), not a
 new priority ticket or permission to scaffold/publish now.

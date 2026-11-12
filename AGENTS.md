@@ -46,8 +46,8 @@ or an Orca installation.
   `37f2a8c`; the [stable contract](docs/development/t36-stable-ui-contract.md)
   retains explicit owned debt. The user authorized T37 on 2026-11-11
   America/Caracas. T37 is IN PROGRESS; [frontend-local skill preparation](docs/development/frontend-skills.md)
-  is T37.1 technical work, with fresh discovery and independent Astra research
-  pending. T11 follows accepted T37.
+  and [Astra's inventory](docs/development/t37-ui-inventory.md) are T37.1
+  preparation, with fresh frontend discovery pending. T11 follows accepted T37.
   No universal source conformity or full acceptance is implied. Original
   T01–T35 numbering/acceptance and immutable handoff remain unchanged. Future
   T30–T34 landing work uses the [later Astro/narrative direction](docs/development/landing-direction.md);

@@ -2,6 +2,9 @@
 
 ## 2026-11-11 T37.1 frontend-local skills — TECHNICAL PREPARATION
 
+Delivery: Draft [PR #45](https://github.com/Ljrr3045/rielia/pull/45).
+Committed package checkpoint: `bc2fb2eaaf0d4d430720b72f8d2e9ea7a004f6f1`.
+
 The user authorized starting T37 on November 11 America/Caracas (November 12 UTC
 for this delivery). T36.1–T36.6 are ACCEPTED for the bounded scope in
 [PR #44](https://github.com/Ljrr3045/rielia/pull/44), merged at
@@ -40,8 +43,13 @@ behavior acceptance is inferred. Exact check commands are in the delivery report
 
 Frontend workers must start a **fresh session with cwd `apps/web`** after the
 preparation commit is present, observe all three local SKILL.md paths and resolve
-the duplicate global/local `ui-ux-pro-max` name. Fresh Astra discovery, separate
-surface/state inventory/reference research and integration remain PENDING. This
+the duplicate global/local `ui-ux-pro-max` name. Fresh Astra discovery remains
+PENDING. The coordinator authorized byte-exact integration of the separately
+prepared [Astra inventory](t37-ui-inventory.md) and
+[direction proposal](t37-design-direction.md), from task `task_8846f535f733` on
+`docs/t37-ui-research` at the same accepted base; no source commit existed because
+its hooks runtime was absent. [Source hash/provenance](frontend-skills.md#independent-astra-research-integration)
+is preserved and SOL did not repeat or reattribute the source/Mobbin research. This
 batch completes only technical preparation, not full T37.1 or T37 acceptance.
 T36's historical 387 cases/124 inputs/242 adoption remain reused evidence; no
 new app units/build/PG/Docker/audit/device/AT/provider/staging checks are claimed.
@@ -1758,8 +1766,8 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T33 | Marketing (future) | Metadata, localized SEO, minimal measurement | T31; T32 if capture active | Not started |
 | T34 | Marketing launch gate | Verify/enable public marketing launch | T31, T33; T32 if capture active | Not started |
 | T35 | B1 foundations | Principal model, immutable authorship, autonomous memberships | T04; precedes T05/T06/T12 | T35.0 bounded storage/policy/context implemented; full authorship/domain/export/credential integration incomplete |
-| T36 | Quality prerequisite 1 | Engineering standards, compatible tool enforcement and behavior-preserving frontend/backend structure | Existing bounded foundations/contracts; approved NodeAdapter | IN PROGRESS: agreed tooling/units/gates/formatting and scoped extractions delivered through PR43; final T36.6 proposal pending current-head CI/native/merge/coordinator decision; T37 skills deferred; [ordered acceptance](development-quality-roadmap.md#t36--engineering-quality-tooling-and-structure) |
-| T37 | Quality prerequisite 2 | Coherent redesign of existing UI using stable contracts, brand/UX and reviewed frontend-local skills | Coordinator acceptance of T36 | Planned only; Astra research is not redesign delivery; [ordered acceptance](development-quality-roadmap.md#t37--ui-quality-redesign); precedes T11 |
+| T36 | Quality prerequisite 1 | Engineering standards, compatible tool enforcement and behavior-preserving frontend/backend structure | Existing bounded foundations/contracts; approved NodeAdapter | ACCEPTED bounded T36.1–T36.6 in [PR #44](https://github.com/Ljrr3045/rielia/pull/44), merged `92d480d` from reviewed `37f2a8c`; retained owned debt and [stable contract](t36-stable-ui-contract.md) remain binding |
+| T37 | Quality prerequisite 2 | Coherent redesign of existing UI using stable contracts, brand/UX and reviewed frontend-local skills | Coordinator acceptance of T36 | IN PROGRESS under 2026-11-11 authorization: [PR #45](https://github.com/Ljrr3045/rielia/pull/45) prepares pinned frontend-local skills and integrates Astra research; fresh discovery and later visual/functional acceptance pending; precedes T11 |
 
 Public release is one launch followed by continuous updates. Internal B1 readiness,
 private T15 deployment, and marketing T34 do not substitute for T24. B3 follows

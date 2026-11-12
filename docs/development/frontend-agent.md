@@ -53,7 +53,9 @@ under `apps/web/.agents/skills`. Start a fresh frontend session with cwd `apps/w
 and record its actual local paths and duplicate-name resolution; this technical
 worker does not prove fresh Astra discovery. Brand/UX/product/architecture
 instructions govern skill suggestions. Do not overwrite a global customization
-or treat it as proof of local setup. Independent Astra research remains pending.
+or treat it as proof of local setup. Independent
+[Astra research](t37-ui-inventory.md) is integrated as prepared-source evidence;
+[design direction](t37-design-direction.md) remains a proposal. Discovery is pending.
 
 ## Historical decision and verification — 2026-10-25
 
