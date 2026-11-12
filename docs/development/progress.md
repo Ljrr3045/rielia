@@ -1,5 +1,121 @@
 # Delivery progress and decisions
 
+## 2026-11-12 T37.3 PR47 native round1 — CORRECTIVE DRAFT BATCH
+
+The completed [native check](https://github.com/Ljrr3045/rielia/runs/130956869143)
+at `67f5ecb` produced four valid suggestions. SOL removes only the unused identity
+class and overridden notice color, strengthens the existing refresh/selection/
+replacement/expiry assertions, and corrects current coverage-floor wording while
+retaining the historical values. See [all four dispositions and cascade proof](t37-shell-entry.md#native-round1-corrective-batch-2026-11-12).
+No policy/authentication/controller/transport or visual redesign is included.
+
+One full web measurement passes 155/155. Coordinator-approved candidate
+`2553f6c1aff88cc0e9d3f2372058fa8f041da505c576207768927b1302ebe70f`
+updates exactly two current-web manifest fingerprints; all 68 file counters,
+totals/floors/maps/hits remain exact, seven other baselines unchanged.
+One normal web gate then passes 155/155; affected lint/typecheck and applicable
+format/handoff/diff/hooks pass. Failed direct TSX preflights remain diagnostics,
+not passing behavior evidence. Cached frozen installs download nothing; only the
+contracts prerequisite/unit instrumentation run. Heavy lease is released and no
+owned app/browser runtime remains. No application build/browser/Docker rerun.
+
+The earlier 92-source build binding is historical: identity-view/globals.css bytes
+change, with unchanged appearance established by source/cascade proof. The 19
+native checks/23 captures keep their original provenance. Same [PR #47](https://github.com/Ljrr3045/rielia/pull/47)
+stays Draft; current-head CI/native round2, thread resolution and coordinator
+acceptance/merge remain required. No T37.4/T37.5 integration, T37/T11 closure or
+new persisted/security/device/AT/real-zoom/provider/staging evidence is claimed.
+
+## 2026-11-11 T37.3 corrected-source review and consolidated Draft preparation
+
+T37.1 and T37.2 are accepted in merged PRs #45/#46; T37.2 merge is
+`8647f19fc3e359716d64eb649ff0ef79775cdf13`. T37.3 remains IN PROGRESS.
+Coordinator-approved SOL descendant `d3cc5362aa0a0c4439b2d4b91c1c02d1b9b9fbc9`
+is fast-forwarded into `feat/t37-shell-entry`, preserving accepted-base ancestry.
+The normal frontend gate passes 155 cases with exact manifests/counters and raised
+floors; the earlier blocked report remains historical. All 92 compiled-source and
+23 test/helper hashes match tested `9f9f07f`; later publication edits are docs only.
+
+Astra viewed eleven actual corrected captures from build `exXrwr4o43S12E7dSkmxO`:
+compact secondary context/full primary titles, grouped header actions, top-aligned
+role/owner values and truthful confirmed-invite/unavailable-link feedback. No new
+source correction. See the [consolidated evidence and limits](t37-shell-entry.md#corrected-source-visual-review-and-publication-evidence-2026-11-11).
+SOL's 19 native cases/23 captures use HTTP/clipboard fixtures, not persistence or
+security proof. Published in [Draft PR #47](https://github.com/Ljrr3045/rielia/pull/47)
+targeting `dev`; current-head CI/native review and coordinator acceptance remain
+outstanding. The documentation-only publication update preserves tested source. T37.4 breadcrumb/three recovery
+debts, device/AT/real-zoom/provider/staging/persisted-flow limits remain explicit.
+
+
+## 2026-11-11 T37.3 reviewed web coverage reconciliation — NORMAL LOCAL GATE PASSED
+
+A new explicit coordinator-reviewed migration supersedes the earlier local
+coverage-blocker statements. Only the current web baseline changes: 68 inputs
+remain, 64 files are counter-exact, four improve, all prior tests/helpers and
+provider/config hashes are preserved, and the expected four branch outcomes are
+reviewed. L/S/F/B floors rise from 4131/4061/3073/3058 to 4347/4258/3187/3204.
+One normal frontend run passes all 155 cases and numerical/per-file/nonregression
+and exact-manifest gates, reproducing the retained counts/maps/hits exactly.
+See the [reconciliation](t37-shell-entry.md#reviewed-current-web-coverage-reconciliation-2026-11-11)
+and [unit evidence](unit-coverage.md#t373-reviewed-current-web-baseline-migration).
+All other/historical baselines and gate policy are unchanged. Application code,
+tests and the 92-source UI build binding remain unchanged. No install, production
+build, app service or browser run is added; 19 native cases and 23 captures remain. T37.3 integration/publication/current-head
+CI/native review and coordinator acceptance remain open; no T37/T11 closure.
+
+
+## 2026-11-11 T37.3 truthful invitation feedback — LOCAL CORRECTION
+
+SOL's `fix/t37-invitation-feedback` starts from corrected Astra `5af198a`.
+Confirmed invitation success now distinguishes a present generated link from a
+cleared temporary result, without changing token clearing or adding retry/state.
+The [guide](t37-shell-entry.md#truthful-invitation-feedback-and-targeted-revalidation-2026-11-11)
+records ten new regressions, 155 passing frontend cases, one successful production
+build and 19 passing targeted native cases/23 captures. The initial coverage run was
+blocked by unchanged manifest and branch-denominator comparators; this historical
+checkpoint changed no baseline or threshold. The later reviewed migration above
+resolves that local blocker. Later persisted QA, publication/current-head
+CI/native review and coordinator acceptance remain open. Runtime is stopped;
+no push/PR/Ready/merge/deploy or T37/T11 acceptance claim.
+
+## 2026-11-11 T37.3 native visual review — CORRECTION CHECKPOINT
+
+Astra inspected twelve actual `fbc0829` captures from compiled build
+`B4VarUs7QHLK6SVdmvGsG`; [observations and exact scope](t37-shell-entry.md#native-visual-review-and-bounded-correction-2026-11-11)
+bind them to that source, not the correction. CSS now ellipsizes only duplicated
+secondary mobile context, allocates available workspace header width to account
+actions, and top-aligns role/owner summary tracks. Full primary titles, accessible
+DOM context, 44px menu/add controls and all JS/state semantics stay unchanged.
+
+Corrected documentation: external InvitationLinkPanel placement does not retain
+the generated token. Existing readFailure clears invitationLink after follow-up
+403/503, and refresh/selection/session recovery clear it too; confirmed success
+survives but link/copy fallback does not. SOL owns truthful conditional messaging;
+token clearing/security is unchanged. Long breadcrumb crossing at 1280 is explicit
+Astra T37.4 interior debt. Accepted PR #46 base `8647f19` is locally merged with
+ancestry retained. No publication or T37.3 acceptance; targeted SOL revalidation
+and Astra corrected-image inspection remain required, without duplicate runtime.
+
+## 2026-11-11 T37.3 shell and entry-flow presentation — IMPLEMENTATION CHECKPOINT
+
+Isolated `feat/t37-shell-entry` starts at frozen PR #46 head `1e2ed071` while
+its native review completes; no T37.2/T37.3 acceptance or publication is implied.
+The [checkpoint guide](t37-shell-entry.md) records compact bilingual identity,
+14rem work rail, wrapping shell context, aligned workspace/member/Agent rows
+and invitation/recovery presentation, reusing T37.2 tokens and existing states.
+
+Source had no workspace Projects entry. The coordinator authorized a localized
+plain `/projects` global link, without contextual selection, draft-navigation
+logic or new routing. Generated-link/operation feedback retains its component placement
+(the controller still clears links during failed reads/recovery); contextual navigation and result relocation remain SOL-owned follow-ups.
+No hooks/handlers/conditions/contracts/tests/dependencies/coverage changes.
+One offline frozen install reused 541 packages with zero downloads for mandatory
+tooling; formatting/handoff/diff/hooks evidence accompanies the committed checkpoint.
+No runtime/build/browser/Docker/full suites or new rendered-result claim.
+SOL independently validates exact source and captures, followed by Astra review,
+base sync and consolidated Draft publication. T37 remains IN PROGRESS; T11 follows
+accepted T37 and inherited T37.4 recovery debts remain open.
+
 ## 2026-11-11 T37.2 corrected-source evidence and Draft publication
 
 Delivery: [Draft PR #46](https://github.com/Ljrr3045/rielia/pull/46), targeting `dev`. All batch changes remain Draft;

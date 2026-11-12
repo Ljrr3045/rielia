@@ -4,16 +4,47 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+### T37.3 shell, identity and workspace entry
+
+Published in [Draft PR #47](https://github.com/Ljrr3045/rielia/pull/47) targeting
+`dev`; T37.3 remains in progress.
+
+- Compose compact bilingual session guidance, a 14rem desktop work rail and
+  compact secondary mobile context while keeping full primary titles and current
+  drawer/detail mechanics. Align workspace role/owner, member/Agent rows and
+  invitation controls, and add the plain global Projects entry.
+- Show truthful confirmed-invitation success when the one-time link was cleared:
+  explain that Refresh cannot recover it and make review/revocation/replacement
+  deliberate and subject to current permission. Preserve token clearing,
+  visible-link copy/manual fallback and uncertain-outcome recovery.
+- Add ten regressions; 155 frontend cases and 19 targeted native cases pass.
+  Reconcile only the reviewed current-web baseline with all 68 inputs retained,
+  exact prior tests/provider/config and seven protected baselines unchanged,
+  raised floors and one passing normal gate.
+- Bind eleven Astra-reviewed corrected images and all 92 compiled sources to the
+  original tested build; publication through `67f5ecb` changed documentation only.
+- Address all four valid native round1 findings: remove two dead identity style
+  hooks without changing the winning CSS/DOM, make the four secret-clearing tests
+  transition-specific, and distinguish historical/current coverage floors.
+  Review exactly two current-web fingerprint changes; 155 cases, all counters/
+  floors/maps/hits and seven other baselines remain exact, and one normal gate
+  passes. Earlier build/captures keep historical provenance because source bytes
+  now differ. Record [dispositions, source proof and limits](docs/development/t37-shell-entry.md#native-round1-corrective-batch-2026-11-12).
+  Current-head CI/native round2, T37.3 acceptance, T37.4 breadcrumb/recovery work
+  and real persisted/device/AT/zoom/provider/staging evidence remain outstanding.
+
 ### T37.2 CSS foundations checkpoint
 
-Delivery: [Draft PR #46](https://github.com/Ljrr3045/rielia/pull/46), targeting `dev`; current-head CI/native review and acceptance remain pending.
+Delivery: accepted merged [PR #46](https://github.com/Ljrr3045/rielia/pull/46) at
+`8647f19fc3e359716d64eb649ff0ef79775cdf13`, with head/postmerge CI and native review passed.
+The following describes its bounded implementation and retained evidence limits.
 
 - Follow native visual evidence with bounded corrections: 44px List/Board
   segments and task-title links, plus 16px Move selects on narrow/coarse-pointer
   layouts. Merge the
   accepted T37.1 base with both dated progress entries preserved; corrected-head
   SOL validation is recorded on `999aba7`, with nine corrected PNGs reviewed;
-  current-head CI/Kilo and coordinator acceptance remain required.
+  final head/postmerge CI and native review passed before bounded acceptance.
 - Establish one shared light/dark token source in existing global CSS for
   surfaces, feedback, system typography, spacing, focus and native controls;
   reuse it in workspace/project appearance while retaining selector ancestry.
@@ -24,8 +55,8 @@ Delivery: [Draft PR #46](https://github.com/Ljrr3045/rielia/pull/46), targeting 
 - Record [source contrast calculations and pending evidence](docs/development/t37-ui-foundations.md).
   CSS-only checkpoint: no TSX/logic/test/dependency/coverage/prototype changes;
   initial runtime/visual gaps are followed up in the guide, with exact source
-  binding. Persisted-flow limits, CI/Kilo and T37.2
-  acceptance remain open; T11/landing excluded.
+  binding. Persisted-flow/device/AT/zoom limits remain explicit after bounded
+  T37.2 acceptance; T11/landing excluded.
 
 ### T37.1 frontend-local skill preparation
 

@@ -33,6 +33,7 @@ export const copy = {
     language: { es: 'Idioma', en: 'Language' },
   },
   header: {
+    projects: { es: 'Proyectos', en: 'Projects' },
     eyebrow: { es: 'Rielia', en: 'Rielia' },
     title: { es: 'Espacios de trabajo', en: 'Workspaces' },
     lede: {
@@ -366,6 +367,10 @@ export const copy = {
     successGeneric: {
       es: 'El servidor confirmó el cambio.',
       en: 'The server confirmed the change.',
+    },
+    inviteLinkUnavailable: {
+      es: 'Invitación creada. Su enlace temporal no está disponible en esta pestaña. Cuando puedas leer el espacio, revisa la lista de invitaciones. Si no copiaste el enlace y aún tienes permiso para administrar invitaciones, revoca esa invitación antes de crear una de reemplazo. Actualizar no recupera el enlace.',
+      en: 'Invitation created. Its temporary link is not available in this tab. Once you can read the workspace, review the invitation list. If you did not copy the link and still have permission to manage invitations, revoke that invitation before choosing to create a replacement. Refresh does not restore the link.',
     },
     successRefreshFailed: {
       es: 'El cambio se guardó, pero la lista no se pudo actualizar. No lo envíes de nuevo; actualiza cuando vuelva la conexión.',

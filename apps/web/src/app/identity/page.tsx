@@ -11,16 +11,16 @@ export default function IdentityPage() {
       <a className="skip-link" href="#main">
         Ir al contenido / Skip to content
       </a>
-      <main id="main" tabIndex={-1}>
-        <Link href="/">
+      <main id="main" tabIndex={-1} className="identity-page">
+        <Link href="/" className="identity-back">
           Volver / <span lang="en">Back</span>
         </Link>
-        <header>
+        <header className="identity-header">
           <h1>
             Prueba de identidad / <span lang="en">Identity spike</span>
           </h1>
         </header>
-        <p>
+        <p className="identity-intro">
           {
             'Acceso experimental con Google o GitHub. No crea espacios de trabajo, tareas ni acceso MCP. / '
           }
@@ -39,7 +39,7 @@ export default function IdentityPage() {
           onSignIn={(provider) => void identity.signIn(provider)}
           onSignOut={() => void identity.signOut()}
         />
-        <p>
+        <p className="identity-return">
           {
             'Si abriste esta página desde Espacios, vuelve a esa pestaña y pulsa Actualizar para conservar su invitación o borrador. / '
           }
@@ -48,8 +48,8 @@ export default function IdentityPage() {
             its invitation or draft.
           </span>
         </p>
-        <p>
-          <Link href="/workspaces">
+        <p className="identity-next">
+          <Link href="/workspaces" className="identity-workspaces">
             Ir a espacios / <span lang="en">Go to workspaces</span>
           </Link>
         </p>

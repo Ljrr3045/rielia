@@ -226,7 +226,12 @@ export function OperationPanel({
   } else if (outcome === 'success') {
     tone = 'success';
     title = copy.operation.successTitle;
-    body = lastAction === null ? copy.operation.successGeneric : successText[lastAction.type];
+    body =
+      lastAction === null
+        ? copy.operation.successGeneric
+        : lastAction.type === 'invite' && !invitationLinkVisible
+          ? copy.operation.inviteLinkUnavailable
+          : successText[lastAction.type];
     const refreshFailed = status === 'error' || status === 'forbidden';
     if (refreshFailed) {
       extra =

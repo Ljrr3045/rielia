@@ -1,8 +1,8 @@
 /* Scoped T05 workspace presentation. Reuses the shared Rielia semantic tokens. */
 
 .shell {
-  width: min(100% - 1.5rem, 76rem);
-  margin: 0.75rem auto 4rem;
+  width: min(100% - 2rem, 68rem);
+  margin: var(--space-4) auto 4rem;
   color: var(--text-primary);
   font-family: var(--font-ui);
   font-size: var(--text-base);
@@ -125,10 +125,10 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 0.5rem 1rem;
-  padding-block: 0.25rem 0.75rem;
+  gap: var(--space-3) var(--space-6);
+  padding-block: 0 var(--space-4);
   border-bottom: 1px solid var(--divider);
-  margin-bottom: 1.25rem;
+  margin-bottom: var(--space-8);
 }
 
 .backLink {
@@ -138,17 +138,26 @@
   font-weight: 600;
 }
 
-.topbarActions {
+.topbarNavigation {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  gap: var(--space-4);
+}
+
+.topbarActions {
+  display: flex;
+  flex: 1 1 36rem;
+  flex-wrap: wrap;
+  align-items: center;
   justify-content: flex-end;
-  gap: 0.4rem 0.75rem;
+  gap: var(--space-2) var(--space-4);
   min-width: 0;
 }
 
 .account {
   display: grid;
+  flex: 1 1 12rem;
   min-width: 0;
   text-align: right;
 }
@@ -186,16 +195,7 @@
   margin-bottom: var(--space-6);
 }
 
-.eyebrow {
-  color: var(--text-secondary);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
 .title {
-  margin-top: var(--space-1);
   font-size: var(--text-title);
   line-height: 1.2;
   overflow-wrap: anywhere;
@@ -205,11 +205,13 @@
   max-width: 68ch;
   margin-top: var(--space-2);
   color: var(--text-secondary);
-  font-size: 1.0625rem;
+  font-size: var(--text-base);
 }
 
 .section {
-  margin-top: 2.25rem;
+  margin-top: var(--space-8);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--divider);
 }
 
 .sectionHeader {
@@ -218,7 +220,7 @@
   align-items: start;
   justify-content: space-between;
   gap: var(--space-3);
-  margin-bottom: 0.9rem;
+  margin-bottom: var(--space-4);
 }
 
 .sectionTitle {
@@ -249,7 +251,7 @@
 .card,
 .statusCard,
 .emptyState {
-  padding: clamp(0.9rem, 2vw, 1.25rem);
+  padding: var(--space-4);
   border: 1px solid var(--divider);
   border-radius: var(--radius-panel);
   background: var(--surface);
@@ -279,6 +281,15 @@
   flex-wrap: wrap;
   gap: var(--space-2);
   margin-top: var(--space-4);
+}
+
+.statusCard {
+  margin-top: var(--space-4);
+}
+
+.section > .card {
+  margin-bottom: var(--space-4);
+  background: var(--surface-inset);
 }
 
 .field {
@@ -509,10 +520,10 @@
 
 .workspaceBar {
   display: grid;
-  gap: 0.75rem 1.25rem;
+  gap: var(--space-4) var(--space-6);
   align-items: end;
-  margin-top: 1.25rem;
-  padding: clamp(0.9rem, 2vw, 1.25rem);
+  margin-top: var(--space-6);
+  padding: var(--space-4);
   border: 1px solid var(--divider);
   border-radius: var(--radius-panel);
   background: var(--surface);
@@ -522,26 +533,35 @@
   margin-top: 0;
 }
 
+.workspaceTitle {
+  grid-column: 1 / -1;
+  font-size: var(--text-xl);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
 .workspaceBar select {
   max-width: 34rem;
 }
 
 .workspaceSummary {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 1.5rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: var(--space-3) var(--space-6);
   margin: 0;
 }
 
 .workspaceSummary div {
   display: grid;
+  align-content: start;
   gap: 0.05rem;
   min-width: 0;
+  padding: 0;
 }
 
 .workspaceSummary dt {
   color: var(--text-secondary);
-  font-size: 0.8125rem;
+  font-size: var(--text-sm);
   font-weight: 600;
 }
 
@@ -552,19 +572,23 @@
 
 .memberGrid {
   display: grid;
-  gap: var(--space-2);
+  gap: 0;
   grid-template-columns: minmax(0, 1fr);
+  border: 1px solid var(--divider);
+  border-radius: var(--radius-panel);
+  background: var(--surface);
 }
 
 .memberCard {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: var(--space-2);
   min-width: 0;
-  padding: 0.7rem 0.85rem;
-  border: 1px solid var(--divider);
-  border-radius: var(--radius-panel);
-  background: var(--surface);
+  padding: var(--space-4);
+}
+
+.memberCard + .memberCard {
+  border-top: 1px solid var(--divider);
 }
 
 .memberHeader {
@@ -572,7 +596,7 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 0.35rem 0.75rem;
+  gap: var(--space-2) var(--space-4);
   min-width: 0;
 }
 
@@ -600,6 +624,7 @@
   grid-template-columns: minmax(5.25rem, 30%) minmax(0, 1fr);
   gap: var(--space-2);
   align-items: start;
+  padding: 0;
 }
 
 .metaGrid dt {
@@ -620,12 +645,9 @@
 }
 
 .ownerNote {
-  padding: 0.6rem 0.75rem;
-  border-left: 3px solid var(--control-border);
-  border-radius: 0.35rem;
-  background: var(--surface-muted);
+  max-width: 72ch;
   color: var(--text-secondary);
-  font-size: var(--text-md);
+  font-size: var(--text-sm);
 }
 
 .details,
@@ -637,34 +659,50 @@
 
 .details {
   border: 0;
-  border-top: 1px solid var(--divider);
   border-radius: 0;
-  margin-top: 0.1rem;
-  padding-top: 0.35rem;
+  background: transparent;
+  margin-top: 0;
 }
 
 .details summary,
 .disclosure summary {
-  display: flex;
-  align-items: center;
+  display: list-item;
   min-height: var(--control-height);
-  padding: 0.35rem 0.15rem;
+  padding: var(--space-3) var(--space-2);
   font-weight: 600;
   cursor: pointer;
 }
 
 .disclosure summary {
-  padding-inline: 0.85rem;
+  padding-inline: var(--space-4);
+  list-style-position: inside;
+}
+
+.details summary {
+  margin-inline-start: var(--space-4);
+  width: fit-content;
+  max-width: calc(100% - var(--space-4));
+  font-size: var(--text-sm);
+}
+
+.details summary:hover,
+.disclosure summary:hover {
+  background: var(--surface-muted);
+}
+
+.shell > .disclosure {
+  margin-top: var(--space-8);
 }
 
 .disclosureBody {
-  padding: 0 0.85rem 0.85rem;
+  padding: 0 var(--space-4) var(--space-4);
 }
 
 .detailsBody {
   display: grid;
   gap: var(--space-3);
-  padding-top: 0.35rem;
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--divider);
 }
 
 .controlGroup {
@@ -672,6 +710,14 @@
   gap: var(--space-3);
   padding-top: var(--space-3);
   border-top: 1px solid var(--divider);
+}
+
+.controlGroup > .formActions {
+  margin-top: 0;
+}
+
+.controlGroup > .field {
+  max-width: 34rem;
 }
 
 .confirm {
@@ -735,6 +781,8 @@
 
 .invitationMain {
   min-width: 0;
+  display: grid;
+  gap: var(--space-2);
 }
 
 .invitationEmail {
@@ -766,9 +814,13 @@
   font-size: var(--text-sm);
 }
 
+.invitationRow > .confirm {
+  grid-column: 1 / -1;
+}
+
 @media (min-width: 48rem) {
   .shell {
-    width: min(100% - 2rem, 76rem);
+    width: min(100% - 3rem, 68rem);
     margin-top: var(--space-6);
   }
 
@@ -776,11 +828,52 @@
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: start;
   }
+
+  .memberHeader {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .memberHeader .badgeRow {
+    justify-content: flex-end;
+  }
+
+  .card,
+  .statusCard,
+  .emptyState,
+  .workspaceBar {
+    padding: var(--space-6);
+  }
 }
 
 @media (min-width: 64rem) {
   .workspaceBar {
-    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .workspaceBar > button {
+    justify-self: start;
+  }
+}
+
+@media (max-width: 47.9375rem) {
+  .topbarActions {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .account {
+    text-align: left;
+  }
+
+  .memberHeader {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .metaGrid div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-1);
   }
 }
 

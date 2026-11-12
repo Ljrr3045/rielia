@@ -67,9 +67,14 @@ function WorkspaceScreen({
       </a>
       <main id="main" tabIndex={-1} className={styles.shell} lang={lang}>
         <header className={styles.topbar}>
-          <Link href="/" className={styles.backLink}>
-            <BilingualText value={copy.common.backHome} />
-          </Link>
+          <nav className={styles.topbarNavigation}>
+            <Link href="/" className={styles.backLink}>
+              <BilingualText value={copy.common.backHome} />
+            </Link>
+            <Link href="/projects" className={styles.primary}>
+              <BilingualText value={copy.header.projects} />
+            </Link>
+          </nav>
           <div className={styles.topbarActions}>
             <div className={styles.localeField}>
               <label className={styles.srOnly} htmlFor={localeId}>
@@ -112,9 +117,6 @@ function WorkspaceScreen({
         </header>
 
         <div className={styles.headingBlock}>
-          <p className={styles.eyebrow}>
-            <BilingualText value={copy.header.eyebrow} />
-          </p>
           <h1 className={styles.title}>
             <BilingualText value={copy.header.title} />
           </h1>

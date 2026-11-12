@@ -41,8 +41,9 @@ Delivered [project interaction owners](project-interactions-extraction.md) end
 at corrected PR42 C: 138 web / 380 total cases over 118 inputs. Delivered
 [workspace owners](workspace-interactions-extraction.md) end at PR43 C: 145 web,
 216 API, 7 contracts and 19 isolated prototype cases, 387 total over 124 maintained
-inputs (68 web). Current web L/S/F/B floors are 4131/4061/3073/3058 basis points;
-API floors are 5244/5247/4855/5252. Prototype counts do not inflate production
+inputs (68 web). Historical PR43 web L/S/F/B floors were 4131/4061/3073/3058
+basis points. Current web floors are **4347/4258/3187/3204** after the reviewed
+T37.3 migrations below; API floors are 5244/5247/4855/5252. Prototype counts do not inflate production
 metrics. Exact baseline files and linked covered/zero/null proof govern;
 historical starting values below are not current results.
 
@@ -380,3 +381,89 @@ Current-head local/remote checks, actual CI duration and Draft PR evidence are i
 [progress](progress.md). Real-device/assistive-technology/provider/staging/user checks
 remain deferred; DOM evidence does not replace them. Further project-task hook/SSE
 recovery units and responsibility extraction remain later bounded deliveries.
+
+
+## T37.3 reviewed current-web baseline migration
+
+The coordinator explicitly reviewed and approved this current-web-only migration
+through a blocking candidate decision after the bounded invitation-feedback fix
+at `9f9f07f`. Earlier T37.3 statements that coverage reconciliation remained blocked
+are superseded by this decision and the passing normal gate; their original run
+failure is preserved as historical evidence. This accepts a reviewed baseline
+migration, not T37.3 UI/publication or broader T37 acceptance.
+
+| Metric | Accepted covered/total | Reviewed covered/total | Floor before → after (basis points) |
+| --- | --- | --- | --- |
+| Lines | 1567/3793 | 1649/3793 | 4131 → 4347 |
+| Statements | 1734/4269 | 1818/4269 | 4061 → 4258 |
+| Functions | 323/1051 | 335/1051 | 3073 → 3187 |
+| Branches | 1588/5192 | 1665/5196 | 3058 → 3204 |
+
+Only `scripts/unit/baselines/web.json` changes from SHA-256
+`15fd5321b42a3bcbc221aa72ceaba8355d7ea33f485794ef92a0a2e23b36fc35` to
+`9e85d482a01099d38b2101cdcef6d83b57ba21722562239bf9c61c67f6f50f16`.
+The exact 68 maintained inputs remain; 64 file counters match and four improve:
+workspace strings, feedback, invitations and UI. Every L/S/F denominator is
+unchanged. Only workspace-feedback B131→135 adds outcomes: the new conditional
+has mapped hits [9,24], and its short-circuit operand counters [33,32]. No unhit
+outcome or source was omitted, no count/floor regressed and no exclusion/ignore,
+provider, compiler/runtime/tool lock, shared config or gate code changed.
+
+Seven expected maintained-source fingerprint deltas cover identity view/page,
+project shell, and workspace strings/entry/feedback/view. Existing test/helper
+fingerprints are byte-identical; the only added input is
+`apps/web/test/unit/workspace-feedback.test.mjs`, containing ten real rendered
+component/hook/controller regressions. All historical pre-unit manifests and
+other-scope current manifests remain byte-identical. The 92-source compiled UI
+binding from `9f9f07f` is unchanged by this baseline/docs-only descendant.
+
+The candidate is generated with existing `baselineFor` and manifest semantics
+from the already retained complete 155-pass instrumented report. Source-map
+`sourcesContent` matches all 68 current inputs; selected tests/helpers match the
+retained execution mirror. No fresh measure or maintenance-mode run is needed.
+After the exact candidate decision, one normal `pnpm unit:web` passes all 155 cases,
+exact manifests, aggregate/floor/per-file/nonregression and mapping-bound checks;
+its full normalized maps and hit vectors match the retained report exactly.
+
+Current source mapping still contains 797 null-column points of 28348 mapped
+points; these remain provider precision limits, not precise recovered endpoints.
+The type-only `task-collaboration-view.ts` stays in the denominator as an explicit
+zero-unit N/A input, without a 100% fiction. Existing unexecuted-source, implicit
+branch, null/zero-unit and lifecycle debt is not closed. No unavailable historical
+endpoint comparison or universal coverage conformity is claimed.
+
+No app/test source, install, production build, browser or native-matrix rerun is
+part of this migration. Existing 19 native checks/23 captures retain their exact
+build/source provenance. Current-head CI/native review, T37.3 publication and
+coordinator acceptance, plus later real persisted/security/device/AT/provider/
+staging/actual-browser-zoom QA remain separate requirements.
+
+
+## T37.3 native round1 manifest correction (2026-11-12)
+
+The four valid [PR #47 native findings](t37-shell-entry.md#native-round1-corrective-batch-2026-11-12)
+include transition-specific invitation assertions and the stale current-floors
+sentence above. All ten invitation-feedback cases and all prior cases remain.
+One necessary fresh web measurement passes **155/155** with the same toolchain,
+provider, config, source/test selection and 68 maintained inputs. All 68 per-file
+counters, totals, floors, normalized maps and hit vectors are exactly equal to
+the accepted T37.3 report: L1649/3793, S1818/4269, F335/1051, B1665/5196;
+floors remain **4347/4258/3187/3204** basis points. No added coverage is claimed.
+
+After a blocking exact-candidate approval, only current `web.json` migrates from
+`9e85d482a01099d38b2101cdcef6d83b57ba21722562239bf9c61c67f6f50f16` to
+`2553f6c1aff88cc0e9d3f2372058fa8f041da505c576207768927b1302ebe70f`.
+Its only changes are the identity-view source fingerprint (unused class removed)
+and the existing workspace-feedback test fingerprint (stronger assertions).
+All seven other baselines are byte-identical; no floor, ignore, exclusion,
+inventory, provider/config/tool lock or gate changes. One normal `pnpm unit:web -- --built`
+then passes 155/155 and exactly reproduces measured manifests, counters/maps/hits.
+The normal gate reuses the required contracts-only compilation, not an app build.
+
+Raw provider diagnostics and measured/normal reports are preserved in the
+external corrective report. Null-column points remain 797/28348; the explicit
+zero-unit type-only input and unexecuted-source/lifecycle debt remain. Earlier
+build/source equivalence applies to its dated checkpoint: the two dead style
+hooks change source bytes, so no old build is represented as this new source.
+No new Next/API build, browser/device/AT/persistence/security/provider/staging
+validation ran; current-head CI/native review and coordinator acceptance remain.
