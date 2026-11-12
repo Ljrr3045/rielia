@@ -6,13 +6,20 @@ This records repository changes. No application version has been released.
 
 ### T37.3 shell and entry-flow presentation checkpoint
 
+- Follow twelve native baseline captures with CSS corrections for repeated
+  secondary mobile context, workspace header wrapping and role/owner alignment;
+  retain full primary titles and existing interactions. Correct the invitation
+  link-survival explanation: only confirmed success survives follow-up read
+  403/503, while the existing controller clears the link. Targeted corrected-source
+  validation and T37.4 breadcrumb correction remain open.
 - Compose compact identity/session guidance, a 14rem desktop work rail and
   wrapping mobile context; retain existing route, drawer and detail mechanics.
 - Align workspace identity/role/owner and member/Agent rows, preserve protected
   and recovery states, and improve invitation metadata/confirmation spacing.
 - Add the coordinator-authorized plain Projects global link; contextual workspace
   transfer and draft-safe departure remain SOL-owned. Preserve generated-link
-  feedback lifetime instead of remounting it beneath ready-only administration.
+  panel placement instead of remounting it beneath ready-only administration;
+  the existing controller still clears the link on failed reads/recovery.
 - Record [scope and pending independent validation](docs/development/t37-shell-entry.md).
   Presentation checkpoint only: no publication, runtime/visual acceptance or
   T37.3 completion claim; no logic/test/dependency/coverage changes.

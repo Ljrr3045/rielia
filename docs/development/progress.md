@@ -1,5 +1,23 @@
 # Delivery progress and decisions
 
+## 2026-11-11 T37.3 native visual review — CORRECTION CHECKPOINT
+
+Astra inspected twelve actual `fbc0829` captures from compiled build
+`B4VarUs7QHLK6SVdmvGsG`; [observations and exact scope](t37-shell-entry.md#native-visual-review-and-bounded-correction-2026-11-11)
+bind them to that source, not the correction. CSS now ellipsizes only duplicated
+secondary mobile context, allocates available workspace header width to account
+actions, and top-aligns role/owner summary tracks. Full primary titles, accessible
+DOM context, 44px menu/add controls and all JS/state semantics stay unchanged.
+
+Corrected documentation: external InvitationLinkPanel placement does not retain
+the generated token. Existing readFailure clears invitationLink after follow-up
+403/503, and refresh/selection/session recovery clear it too; confirmed success
+survives but link/copy fallback does not. SOL owns truthful conditional messaging;
+token clearing/security is unchanged. Long breadcrumb crossing at 1280 is explicit
+Astra T37.4 interior debt. Accepted PR #46 base `8647f19` is locally merged with
+ancestry retained. No publication or T37.3 acceptance; targeted SOL revalidation
+and Astra corrected-image inspection remain required, without duplicate runtime.
+
 ## 2026-11-11 T37.3 shell and entry-flow presentation — IMPLEMENTATION CHECKPOINT
 
 Isolated `feat/t37-shell-entry` starts at frozen PR #46 head `1e2ed071` while
@@ -10,8 +28,8 @@ and invitation/recovery presentation, reusing T37.2 tokens and existing states.
 
 Source had no workspace Projects entry. The coordinator authorized a localized
 plain `/projects` global link, without contextual selection, draft-navigation
-logic or new routing. Generated-link/operation feedback retains its recovery-safe
-lifetime; contextual navigation and result relocation remain SOL-owned follow-ups.
+logic or new routing. Generated-link/operation feedback retains its component placement
+(the controller still clears links during failed reads/recovery); contextual navigation and result relocation remain SOL-owned follow-ups.
 No hooks/handlers/conditions/contracts/tests/dependencies/coverage changes.
 One offline frozen install reused 541 packages with zero downloads for mandatory
 tooling; formatting/handoff/diff/hooks evidence accompanies the committed checkpoint.

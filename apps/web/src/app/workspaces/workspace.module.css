@@ -147,6 +147,7 @@
 
 .topbarActions {
   display: flex;
+  flex: 1 1 36rem;
   flex-wrap: wrap;
   align-items: center;
   justify-content: flex-end;
@@ -552,6 +553,7 @@
 
 .workspaceSummary div {
   display: grid;
+  align-content: start;
   gap: 0.05rem;
   min-width: 0;
   padding: 0;

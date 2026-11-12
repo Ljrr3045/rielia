@@ -547,7 +547,9 @@
   min-width: 0;
   font-size: var(--text-md);
   font-weight: 700;
-  overflow-wrap: anywhere;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   line-height: 1.4;
 }
 

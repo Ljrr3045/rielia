@@ -21,7 +21,7 @@ landing, new routes/capabilities and final branding remain excluded.
 | Surface | Presentation intent |
 | --- | --- |
 | Identity | A 36rem maximum reading column with a compact session panel, vertically grouped configured-provider actions and separated return guidance. A plain text wrapper keeps bilingual button copy in one text flow. All original ES/EN words, English spans, states and action nodes remain |
-| Project shell | A 14rem desktop rail at the existing 1024 CSS px threshold; sentence-case group labels, wrapping project names and separate secondary workspace administration. Work area gutters are 16px narrow/24px desktop at the default root. The mobile title wraps beside the existing menu/create controls, and the existing drawer receives safe-area padding |
+| Project shell | A 14rem desktop rail at the existing 1024 CSS px threshold; sentence-case group labels, wrapping project names and separate secondary workspace administration. Work area gutters are 16px narrow/24px desktop at the default root. The secondary mobile context uses visual ellipsis beside the existing menu/create controls after the native correction below; complete DOM text and the full primary title remain. The existing drawer receives safe-area padding |
 | Workspace entry | A 68rem content measure, visible wrapping current-workspace heading, selector and aligned role/owner summary. Projects is a global entry beside Back home; account, locale and Refresh remain in the existing header |
 | Members and Agents | One contiguous list surface with row dividers, name/status alignment on wide screens and stacked narrow rows. Existing type/state badges, owner protection, inactive/revoked explanations, custodians and target-specific controls remain visible. Native disclosure markers return through list-item styling; no new disclosure state |
 | Invitations and recovery | Form/list spacing and aligned recipient metadata; revoke confirmation spans its whole row. Inbound Accept/Dismiss, generated-link Copy/Done/manual-copy fallback and operation feedback retain their actual parents, conditions and lifetime. Read loading remains distinct from mutation feedback |
@@ -52,12 +52,17 @@ Contextual workspace-to-project transfer and draft-safe route departure remain
 SOL-owned; this new link has ordinary route-navigation semantics and does not
 add draft retention. Existing memory/return disclosures are retained.
 
-Generated invitation feedback currently lives outside ready-state administration
-so it can survive failed reads and session recovery. Moving it under InviteForm
-would alter component lifetime. The coordinator confirmed preserving that
-lifetime for this checkpoint. Copy/Done and copy-failure text stay together;
-bringing the generated result closer to its originating invitation form remains
-an explicit SOL composition/lifecycle follow-up, not a completed acceptance claim.
+Generated invitation feedback keeps its existing placement outside ready-state
+administration; moving it under InviteForm would change component lifetime.
+This does **not** preserve the link across recovery: SOL verified that unchanged
+`workspace-controller` readFailure clears `invitationLink` after both follow-up
+403 and 503; refresh, selection and session recovery also clear it. Confirmed
+write success survives, but the generated link and copy fallback do not.
+The initial checkpoint's link-survival explanation was incorrect and is
+superseded by this correction. Copy/Done and copy-failure text stay together only
+while a link is present. Keep token clearing/security unchanged; truthful
+conditional recovery messaging and any result relocation remain SOL-owned
+follow-ups before acceptance as needed.
 Workspace confirmed-write/read403/read503 success and scoped-row clearing retain
 their source behavior. The three inherited project/collaboration recovery debts
 remain SOL T37.4 work and are not concealed by CSS.
@@ -102,3 +107,49 @@ Screenshots do not prove persistence. Coordinator base sync after PR #46,
 independent SOL validation, later consolidated Draft publication, current-head
 CI/native review and bounded acceptance remain required. No push, PR creation,
 Ready/review/merge/deploy or worktree deletion is authorized in this checkpoint.
+
+
+## Native visual review and bounded correction (2026-11-11)
+
+This review inspected twelve actual images from immutable `fbc082975d2387748000d6fd303de18760247d56`,
+compiled build `B4VarUs7QHLK6SVdmvGsG`, supplied by SOL. Exact filenames and
+SHA-256 values are retained in the external visual-review manifest. Images
+show viewport crops, not proof of below-fold states, focus behavior or persistence.
+
+| Viewed capture(s) | Observation and disposition |
+| --- | --- |
+| `shell-390x844-light-en`, `shell-320x720-light-es` | Full long secondary mobile context repeats the primary title and consumes much of the first viewport. Correct only `.mobileTitle` to a single line with ellipsis; preserve complete DOM text, primary title, menu/add controls and callbacks |
+| `shell-844x390-dark-en` | The same repeated context consumes several lines in short landscape. Apply the same secondary-only correction; full heading/breadcrumb interiors remain unchanged |
+| `shell-1024x768-dark-en` | Rail, My tasks/Search/project entries and full long heading remain readable. The long rail item occupies substantial height but remains uncut; no further change in this batch |
+| `shell-1280x900-dark-en-detail`, `shell-1440x960-light-en-detail` | Work and contextual detail remain distinct. At 1280, long unbroken breadcrumb text visibly continues beneath the detail edge; SOL reports text-right 923.56 versus panel-left 824. Protected interior source is unchanged: explicit Astra-owned T37.4 correction, not fixed here |
+| `workspace-populated-light-1440` | Contiguous member rows, badges, protected-owner note and native disclosure markers are visible. Refresh unnecessarily wraps below the account controls. Give `.topbarActions` `flex: 1 1 36rem` so it uses remaining header width, while retaining wrapping |
+| `workspace-long-dark-390` | Long workspace/owner text wraps; the short role value drifts vertically beside the tall owner value. Give each `.workspaceSummary div` `align-content: start` so label/value tracks stay together |
+| `workspace-member-states-dark-320-en` | Long title, selector and unavailable-owner text remain readable; the crop ends at the member section introduction, so member-state rows are not visually established by this image. Summary alignment correction applies |
+| `workspace-admin-states-dark-768-es` | Refresh also wraps at this width; the header allocation correction applies. First member row and disclosure remain readable; the crop does not establish all seven rows or Agent administration |
+| `identity-signed-out-light-320` | Bilingual provider labels read as one wrapping text flow. Return guidance extends below the crop; no complete-flow claim |
+| `identity-signed-in-dark-375` | Session identity, sign-out, return guidance and Workspaces entry are readable in the viewport. No identity CSS correction is justified by these selected images |
+
+All listed filenames end in `.png`. No extra diagnostic images were inspected.
+The three CSS corrections add no JS, condition, truncation logic, tooltip,
+handler, ref, route, state or control-size change. Ellipsis is an explicit
+exception for duplicated secondary navigation context only. No primary title,
+task row or desktop project link is clipped by this correction.
+
+PR #46 foundations are now coordinator-accepted and merged at
+`8647f19fc3e359716d64eb649ff0ef79775cdf13`, with head/postmerge CI and native checks
+reported passed. Local merge `ba4d59811cffdeb6ba514fa524a20b89158d4c7f` preserves
+that ancestry without content conflicts; the initial review-pending statements
+above describe the earlier checkpoint. T37.3 remains unaccepted and unpublished.
+
+SOL's baseline validation results remain bound to `fbc0829`; they do not validate
+this CSS correction. Targeted revalidation must cover 320/390 mobile and 844×390
+landscape context, 44px menu/add controls, full DOM/accessible context and primary
+title, plus workspace header grouping at 1440/768/390/320 with long account and
+owner names, both locales/themes and existing focus/disabled states. Check no
+new page overflow and top-aligned role/owner values, then retain corrected images
+for Astra inspection. The 1024 rail/1280 detail semantics are unchanged.
+
+Only low-cost format/handoff/diff and mandatory hooks run in this review task;
+no install, build, runtime, browser, service or full test suite. Physical devices,
+AT, actual browser-chrome zoom, provider/staging and persistence evidence remain
+outside this visual review. No after-correction render or acceptance is claimed.
