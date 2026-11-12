@@ -1,0 +1,27 @@
+docs/development/progress.md
+  s_f45d3e64497389::t_219526e72ce243 3-14
+  s_f45d3e64497389::t_3424a47df74590 19-21
+docs/development/t37-ui-foundations.md
+  s_f45d3e64497389::t_3424a47df74590 9-10
+  s_f45d3e64497389::t_219526e72ce243 3,216-248
+CHANGELOG.md
+  s_f45d3e64497389::t_219526e72ce243 13-14,25
+docs/development/development-quality-roadmap.md
+  s_f45d3e64497389::t_219526e72ce243 38-39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "6fcf62741143680b93b036c1e6e8d0cb2a437e8e",
+  "prompts": {},
+  "sessions": {
+    "s_f45d3e64497389": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1cd4f-7c27-7923-9d7b-df7a240f0fd9",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
