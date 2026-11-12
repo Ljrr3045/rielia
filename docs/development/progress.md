@@ -1,5 +1,25 @@
 # Delivery progress and decisions
 
+## 2026-11-12 T37.4 integrated native validation — LOCAL EVIDENCE COMPLETE
+
+The coordinator [accepted T37.3/PR47](https://github.com/Ljrr3045/rielia/pull/47#issuecomment-6814793798) and merged
+`55f0f8d85521998d3d7ed883f387bd3c6cb664f8`; it is no longer a pending foundation.
+Exact integrated source `ce60740f` retains all 177 passing cases and the approved
+manifest-only migration, then one production build `6QKhwGDQLKveEfZvAYWsS`
+passes 26 bounded native journeys with 20 selected source-bound images. The
+[validation guide](t37-project-task-ui.md#integrated-native-validation--2026-11-12)
+records actual coverage, private fixture corrections, visible pending-feedback
+capture, computed bounds/contrast/focus and exact cleanup. No production edit,
+second build, dependency download, Docker or persisted-security proof is added.
+
+My tasks' unconditional primary fill is assigned by the coordinator to T37.5
+presentation, not routing or a T37.4 blocker. Owned resources are stopped and the
+heavy lease released. Final Astra/coordinator T37.4 review/acceptance, later
+publication/base-ancestry sync and real PG/Nest/Next QA in T37.5/6 remain; physical
+users/devices/AT/provider/staging and browser-chrome zoom remain unperformed.
+No T37/T11 closure, push/PR/Ready/merge-to-dev/deploy occurs in this native task.
+
+
 ## 2026-11-12 T37.4 exact corrective-head integration — LOCAL CHECKPOINT
 
 Recovery `39c72ebb` integrates exact coordinator-supplied PR47 correction

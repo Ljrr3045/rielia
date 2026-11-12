@@ -1,5 +1,11 @@
 # T37.4 project and task presentation checkpoint
 
+**Current update — 2026-11-12:** the coordinator [accepted PR47](https://github.com/Ljrr3045/rielia/pull/47#issuecomment-6814793798)
+and merged T37.3 at `55f0f8d85521998d3d7ed883f387bd3c6cb664f8`. It is no longer
+an unaccepted dependency. T37.4's local integrated native checkpoint below passes
+26 bounded journeys; final Astra/coordinator T37.4 acceptance remains separate.
+The dated original sections retain their historical scope and pending states.
+
 **2026-11-11, America/Caracas — implementation checkpoint, not acceptance.**
 This bounded advance uses `feat/t37-project-task-ui`, created from accepted
 `origin/dev` at `8647f19fc3e359716d64eb649ff0ef79775cdf13`, then fast-forwarded to the
@@ -212,3 +218,67 @@ replace current-head CI/native review. The next bounded native group uses one
 production build of this exact integrated source; results must be recorded with
 actual build, source/fixture hashes, browser version and cleanup. No new native
 or persisted proof is claimed by this integration entry.
+
+
+## Integrated native validation — 2026-11-12
+
+Exact source `ce60740f1a58942add205679b348cf5e78bfe785` integrates corrective
+`b1f3ddec` without T37.5 source. One Next 16.4.3 production build passes as
+`6QKhwGDQLKveEfZvAYWsS`, bound to 92 source hashes with snapshot SHA-256
+`ca6bfc2c75ff969680c1ead0c21a5fb2981e9274d1e4716f8cdaf2460ad16e92`.
+Node 24.22.1/pnpm 12.15.0 build and unit tooling remain pinned; the private native
+runner uses existing Node 26.12.1, Playwright 1.57.0 and installed Brave
+157.0.8103.39 with ephemeral headless profiles. No package/browser download occurs.
+No production fix or visual restyle is made during validation.
+
+Twenty-six unique representative journeys pass, with 20 selected images:
+
+- Title-first row Tab order, native status Move, explicit reorder alternative,
+  five populated board columns, mobile Restore and long task/assignee/due metadata.
+  The board image shows the current visible portion of a locally scrolling board;
+  all five columns are in the real DOM, not all in one viewport image.
+- Private project creation and archive/restore, settings, owner/human/Agent access
+  disclosures, reader capabilities, real labels and invalid/disabled controls.
+  Detail includes distinct creator/assignee, hierarchy, checklist, Markdown comment
+  and history; nested picker, workspace guard, URL and native keyboard/trap/return
+  and body-lock schedules retain one detail/controller lifetime.
+- Confirmed write/read503 shows generic success without private labels or duplicate
+  mutation. Read recovery and target clearing work. Mutation403 hides private
+  fields, focuses generic denial and supports current allowed Return versus revoked
+  no-form/Discard, preserving version1 after fresh version2. Held checklist saving
+  has no unknown Retry/Discard; lost response exposes exact-key retry, while
+  success/403/409 remain distinct. Workspace/invitation invariants retain the
+  corrected current-source unit evidence; no secret-retention change.
+- Unchanged My tasks/Search interiors render shared row styles, with literal query
+  and current-assignee request semantics preserved. Their broader variants/paging
+  retain source/unit evidence rather than a duplicated native matrix.
+
+Samples cover 320/375/390/768/1024/1279/1280/1281/1440 and 844×390, ES/EN,
+both themes, keyboard and synthesized touch. At 1280 the complete unbroken
+breadcrumb paints to 803.14px within an 804px container, without clipping or
+hiding text. At1279 detail is an overlay with one dialog/body lock; at 1280/1281
+it is contextual. Selected states have no viewport overflow; mobile Restore and
+long title targets are at least 44px, mobile text inputs 16px. Sampled enabled text
+contrast is at least 5.23:1; focused Save rings contrast 6.70 light/8.11 dark against
+actual adjacent screenshot pixels. Raw outline-to-button-fill ratios are not
+outside-ring conformance measurements. Reduced motion and 200% enlarged root text
+reflow pass; enlarged text is explicitly not desktop browser-chrome zoom.
+
+Private fixture failures remain separate: initial selectors/route/schema/context
+assumptions are corrected with target-only reruns, preserving passing cases on
+unchanged source. A checkbox-only pending capture is replaced by the visibly
+correct `checklist-pending-visible-dark-390.png`; its actual Saving status is at
+x16/y389.34,358×65.73 within 390×844, with no unknown controls. The earlier image
+is diagnostic evidence only. Per-attempt fixture hashes, final case receipts,
+computed measurements, selected-image index and cleanup are retained externally.
+This is finite controlled HTTP/browser state evidence, not persistence/security.
+
+The coordinator assigns the unconditional My tasks primary fill, which can look
+active beside the selected project, to a minimal T37.5 presentation follow-up.
+It is not a routing finding or T37.4 blocker; no source change is made here.
+Owned Next/browser resources are stopped and exact PIDs/port cleanup verified;
+foreign services remain untouched. The heavy lease is released. Final real
+PostgreSQL/Nest/Next cross-surface persisted/security QA stays scheduled in
+T37.5/6. Physical devices, AT, users, provider/staging and actual browser-chrome
+200% zoom remain unperformed. Current T37.4 review/acceptance and later publication/
+base-ancestry synchronization remain coordinator-owned; no push or deployment.

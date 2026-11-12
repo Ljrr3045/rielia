@@ -551,7 +551,8 @@ A blocking coordinator review approved exact candidate
 `7e44c96c37036bff1e8aa65a01c1020b664a74ba411d238bcd3c82a2f63ff865`
 before writing current web baseline. One normal gate then passes 177/177 with
 exact measured summary/manifest/maps/hits equality. No gate waiver, coverage gain,
-excluded source, reduced floor or historical baseline change is claimed. This is
-local source integration, not PR47 acceptance; current-head CI/native review and
-coordinator decision remain. The separately authorized T37.4 production/native
+excluded source, reduced floor or historical baseline change is claimed. That
+local integration authorization itself did not accept PR47. The coordinator
+subsequently [accepted/merged PR47](https://github.com/Ljrr3045/rielia/pull/47#issuecomment-6814793798) at `55f0f8d`; T37.4 acceptance
+remains separate. The separately authorized T37.4 production/native
 group follows this integration; HTTP fixtures cannot establish persisted security.

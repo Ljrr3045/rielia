@@ -4,6 +4,15 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Validate exact integrated T37.4 source with one production build, 26 bounded
+  native journeys and 20 selected images; retain all 177 frontend cases and higher
+  coverage floors. Record recovery, keyboard/touch, breadcrumb paint, long metadata,
+  role/form/detail/shared-row evidence and exact owned-resource cleanup.
+- Record coordinator acceptance/merge of T37.3 PR47 at `55f0f8d`; its dependency
+  is resolved. The My tasks primary-fill presentation follow-up remains T37.5-owned;
+  T37.4 acceptance/publication and final persisted/device/AT/zoom/provider QA remain.
+
+
 - Integrate exact PR47 corrective source into T37.4 recovery, retain all 177 cases
   and corrected invitation assertions, and reconcile only two current-web
   fingerprints after measured review. One normal gate reproduces every counter,
@@ -44,8 +53,9 @@ This records repository changes. No application version has been released.
 
 ### T37.3 shell, identity and workspace entry
 
-Published in [Draft PR #47](https://github.com/Ljrr3045/rielia/pull/47) targeting
-`dev`; T37.3 remains in progress.
+Accepted in [PR #47](https://github.com/Ljrr3045/rielia/pull/47#issuecomment-6814793798), merged into `dev` at
+`55f0f8d85521998d3d7ed883f387bd3c6cb664f8`. The dated corrective evidence below
+retains its historical review state.
 
 - Compose compact bilingual session guidance, a 14rem desktop work rail and
   compact secondary mobile context while keeping full primary titles and current
@@ -68,8 +78,8 @@ Published in [Draft PR #47](https://github.com/Ljrr3045/rielia/pull/47) targetin
   floors/maps/hits and seven other baselines remain exact, and one normal gate
   passes. Earlier build/captures keep historical provenance because source bytes
   now differ. Record [dispositions, source proof and limits](docs/development/t37-shell-entry.md#native-round1-corrective-batch-2026-11-12).
-  Current-head CI/native round2, T37.3 acceptance, T37.4 breadcrumb/recovery work
-  and real persisted/device/AT/zoom/provider/staging evidence remain outstanding.
+  The coordinator subsequently accepted T37.3 as linked above. T37.4 acceptance
+  and real persisted/device/AT/zoom/provider/staging evidence remain separate.
 
 ### T37.2 CSS foundations checkpoint
 
