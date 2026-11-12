@@ -1,5 +1,13 @@
 # T36 stable UI contract — closure proposal
 
+Current status: T36.1–T36.6 are ACCEPTED for the bounded scope in
+[PR #44](https://github.com/Ljrr3045/rielia/pull/44), merged at `92d480d` from
+reviewed `37f2a8c` with successful CI/native review. The proposed/pending statements
+below preserve the pre-review snapshot; PR #44's final decision governs acceptance.
+T37 started on 2026-11-11 with [technical skill preparation](frontend-skills.md)
+and separate Astra research. The contracts and owned debt below remain applicable;
+T11 follows accepted T37.
+
 Status: **proposed T36.6 closure**, not acceptance or a fresh app/audit run.
 Agreed implementation is delivered through [PR41](https://github.com/Ljrr3045/rielia/pull/41),
 [corrected PR42](https://github.com/Ljrr3045/rielia/pull/42) and

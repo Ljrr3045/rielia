@@ -1,5 +1,12 @@
 # T36 formatting and commit tooling
 
+Current status: bounded T36.1–T36.6 acceptance is recorded in
+[PR #44](https://github.com/Ljrr3045/rielia/pull/44). The historical slice/pending
+statements below describe their original delivery checkpoints. T37.1 adds
+[frontend skill integrity](frontend-skills.md): exact vendor-byte exceptions for
+only three directories and one adopted first-party manifest (243 total versus
+T36's historical 242). Existing app formatting/lint/unit gates remain intact.
+
 This first T36.2/T36.3 slice adds developer enforcement while preserving app
 behavior. Later units/gates, formatting and scoped backend/frontend extractions
 are delivered. The [stable contract](t36-stable-ui-contract.md) proposes T36.6

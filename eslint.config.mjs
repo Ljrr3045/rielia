@@ -12,6 +12,10 @@ export default [
       '**/next-env.d.ts',
       'apps/api/src/generated/**',
       'docs/handoff/**',
+      // Preserve reviewed vendor bytes; first-party .agents metadata stays checked.
+      'apps/web/.agents/skills/frontend-design/**',
+      'apps/web/.agents/skills/impeccable/**',
+      'apps/web/.agents/skills/ui-ux-pro-max/**',
     ],
   },
   js.configs.recommended,

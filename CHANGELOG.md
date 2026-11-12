@@ -4,6 +4,21 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+### T37.1 frontend-local skill preparation
+
+- Record bounded T36 acceptance in merged PR #44 and the user's 2026-11-11
+  authorization to start T37; preserve historical pre-review proposal notes.
+- Pin and install Frontend Design, Impeccable and UI UX Pro Max under
+  `apps/web/.agents/skills`, with complete resources/notices and per-file provenance.
+  Preserve original UI UX Pro Max instructions beside the documented Codex path adaptation.
+- Add offline integrity checks/failure witnesses to CI; preserve vendor bytes
+  with exact scoped exceptions and keep first-party gates enforced (243 adopted
+  inputs, including the manifest, versus T36's historical 242).
+- Document fresh `apps/web` discovery and duplicate-name verification as pending,
+  alongside separate Astra inventory/research. Exclude optional engines/hooks/live
+  Apply, global changes, backend skills, app redesign, T11, landing and deployment.
+  See [installation, evidence and limits](docs/development/frontend-skills.md).
+
 ### T36.6 stable contract and current guidance — proposed closure
 
 Delivery and authoritative final acceptance record: [PR #44](https://github.com/Ljrr3045/rielia/pull/44).

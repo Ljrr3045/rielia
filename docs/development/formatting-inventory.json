@@ -1,6 +1,6 @@
 {
   "baseline": "1c33560f2fca954cbac6d35a87881a41dd72b017",
-  "policy": "All 242 currently eligible maintained source/config/tooling inputs are adopted; changed/new supported inputs remain prospectively enforced. Legacy Markdown adoption and unsupported formats retain explicit owners and checks.",
+  "policy": "All 243 currently eligible maintained source/config/tooling inputs are adopted, including the T37.1 frontend-skill manifest; changed/new supported inputs remain prospectively enforced. T36 acceptance retains its historical 242/242 count. Legacy Markdown and unsupported formats retain explicit owners and checks.",
   "adopted": [
     ".github/actions/unit-artifacts/action.yml",
     ".github/actions/unit-artifacts/index.mjs",
@@ -65,6 +65,7 @@
     "apps/api/test/unit/workspace-invitation.test.mjs",
     "apps/api/test/workspaces.test.mjs",
     "apps/api/tsconfig.json",
+    "apps/web/.agents/skill-installation.json",
     "apps/web/next.config.ts",
     "apps/web/package.json",
     "apps/web/src/app/api/auth/[...path]/route.ts",
@@ -384,11 +385,11 @@
   "manualFormats": {
     "sql": "9 maintained migrations: integration/review; no formatter plugin selected",
     "prisma": "1 maintained schema: Prisma tooling/review",
-    "python": "scripts/verify-handoff.py: Python/review",
+    "python": "scripts/verify-handoff.py plus scripts/verify-frontend-skills.py and scripts/test_frontend_skills.py: direct offline checks/failure witnesses and review",
     "shellAndDocker": "Executable hooks, Dockerfile and ignore files: direct regressions/runtime/review",
     "toml": "Prisma migration lock metadata: preserve generator format"
   },
-  "excluded": "Immutable handoff/hash inventory; generated Prisma/Next/build/coverage; dependencies; lockfile; patches; source notices and supplied assets",
+  "excluded": "Immutable handoff/hash inventory; generated Prisma/Next/build/coverage; dependencies; lockfile; patches; source notices and supplied assets; exact reviewed frontend vendor trees under apps/web/.agents/skills/{frontend-design,impeccable,ui-ux-pro-max}, verified by pinned manifest without first-party waivers",
   "newFormattedDocuments": [
     "docs/development/quality-tooling.md",
     "docs/development/unit-coverage.md"
@@ -514,9 +515,9 @@
     "measurementSourceHead": "3b9507f5f8c2a046351885f7cccae527f5a5c154"
   },
   "currentSourceAccounting": {
-    "owner": "T36 mechanical formatting integration; all current maintained inputs adopted, future inputs prospective; coordinator owns remaining structural acceptance",
-    "eligibleCount": 242,
-    "adoptedCount": 242,
+    "owner": "SOL maintained tooling; coordinator acceptance; T36 historical 242/242 preserved",
+    "eligibleCount": 243,
+    "adoptedCount": 243,
     "remainingCount": 0,
     "remaining": []
   },
@@ -1262,5 +1263,21 @@
     "adoptedUnchanged": 242,
     "applicationProviderBaselineChange": false,
     "acceptance": "Proposed; current-head CI/native review, merge and coordinator decision required before T37"
+  },
+  "frontendSkillPreparation": {
+    "ticket": "T37.1",
+    "guide": "docs/development/frontend-skills.md",
+    "adopted": ["apps/web/.agents/skill-installation.json"],
+    "eligibleCountAfter": 243,
+    "historicalT36Adoption": 242,
+    "manualReviewed": [
+      "apps/web/.agents/README.md",
+      "docs/development/frontend-skills.md",
+      "scripts/verify-frontend-skills.py",
+      "scripts/test_frontend_skills.py"
+    ],
+    "vendorPolicy": "Preserve exact upstream resource bytes in only three named directories; verifier enforces hashes/paths/modes and sole documented adaptation; first-party metadata and app gates remain enforced",
+    "applicationProviderBaselineChange": false,
+    "freshFrontendDiscovery": "Pending independent fresh Astra session from apps/web"
   }
 }

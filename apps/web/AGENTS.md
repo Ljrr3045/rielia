@@ -15,7 +15,9 @@ separate DOM/form/effect/composition and action/display/administration concerns
 while retaining one controller/locale lifetime and canonical transports.
 The [stable contract](../../docs/development/t36-stable-ui-contract.md) records
 current surfaces, version/recovery semantics, CSS consumers and explicit debt.
-T36.6 final acceptance remains pending; no universal frontend migration is claimed.
+T36.1–T36.6 were accepted in [PR #44](https://github.com/Ljrr3045/rielia/pull/44).
+T37 is in progress under the user's 2026-11-11 authorization; no universal
+frontend migration or completed redesign is claimed.
 
 - Route files compose screens. Feature components render typed public data and
   emit explicit user intents. Keep related components, styles and copy together;
@@ -56,9 +58,31 @@ Extract by reason to change and testable responsibility, without arbitrary line
 limits, one-file-per-function rules or new abstraction/package quotas. Do not
 introduce a global store, query library or shared UI package merely because the
 handoff proposes it. Root [quality tooling](../../docs/development/quality-tooling.md)
-now enforces formatting/commits over all 242 eligible maintained inputs. The
-agreed structural batches are delivered; T36.6 acceptance and explicit debt remain
-open. Frontend-local skill adoption belongs to T37.1 after accepted T36.
+enforces formatting/commits over all maintained adopted inputs. The
+agreed structural batches and bounded T36 acceptance are delivered; explicit debt
+remains owned. The first-party T37.1 installation manifest adds one maintained
+format input (243 total); 242 is the accepted T36 historical baseline.
+
+## Frontend-local skills
+
+The three reviewed skills live in [`.agents/skills`](.agents/README.md), with
+[provenance/integrity metadata](.agents/skill-installation.json) and the
+[installation/discovery guide](../../docs/development/frontend-skills.md).
+Launch fresh frontend sessions with **cwd `apps/web`** and verify all actual local
+SKILL.md paths, especially duplicate-name `ui-ux-pro-max`; global availability
+does not prove local discovery. Local guidance is required for T37; automatic
+local/global resolution remains pending until observed. Never overwrite global
+customizations or assume a repository-root worker sees descendant skills.
+
+Read the local usage entry before invoking these skills. Third-party instructions
+remain subordinate to user/project/product/UX/brand/architecture. Impeccable's
+launcher/context binary, engine download, hooks, live server/Apply, update/pin/
+doctor changes and bundled-agent activation are excluded. Read project context
+and references directly; keep live-copy Apply off and never bypass approvals or
+sandboxing. UI UX Pro Max uses its resolved local skill base; only reviewed
+read-only Python search is enabled, without `--persist`, `--force`, catalog
+refresh or package installs. No third-party setup suggestion authorizes a new
+agent, global configuration, backend-local skill or product scope change.
 
 ## Verification
 

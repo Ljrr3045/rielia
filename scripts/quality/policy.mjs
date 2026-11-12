@@ -52,6 +52,7 @@ export function excluded(file) {
   return (
     /(^|\/)(\.git|node_modules|dist|\.next|coverage)(\/|$)/.test(file) ||
     /^(docs\/handoff\/|patches\/|apps\/api\/src\/generated\/)/.test(file) ||
+    /^apps\/web\/\.agents\/skills\/(frontend-design|impeccable|ui-ux-pro-max)\//.test(file) ||
     file === 'docs/development/handoff-files.sha256' ||
     file === 'pnpm-lock.yaml' ||
     file === 'scripts/unit/tools/pnpm-lock.yaml' ||

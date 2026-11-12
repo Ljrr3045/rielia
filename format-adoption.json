@@ -63,6 +63,7 @@
     "apps/api/test/unit/workspace-invitation.test.mjs",
     "apps/api/test/workspaces.test.mjs",
     "apps/api/tsconfig.json",
+    "apps/web/.agents/skill-installation.json",
     "apps/web/next.config.ts",
     "apps/web/package.json",
     "apps/web/src/app/api/auth/[...path]/route.ts",

@@ -2,3 +2,13 @@
 docs/handoff/** -text
 # Original Markdown uses two trailing spaces for hard line breaks. Keep them.
 docs/handoff/*.md whitespace=-blank-at-eol
+# Preserve reviewed third-party snapshot hashes on every checkout.
+apps/web/.agents/skills/frontend-design/** -text
+apps/web/.agents/skills/impeccable/** -text
+apps/web/.agents/skills/ui-ux-pro-max/** -text
+# These upstream files contain trailing spaces; integrity replaces normalization.
+apps/web/.agents/skills/impeccable/reference/harden.md whitespace=-blank-at-eol
+apps/web/.agents/skills/impeccable/reference/optimize.md whitespace=-blank-at-eol
+apps/web/.agents/skills/ui-ux-pro-max/scripts/design_system.py whitespace=-blank-at-eol
+apps/web/.agents/skills/impeccable/reference/extract.md whitespace=-blank-at-eof
+apps/web/.agents/skills/impeccable/scripts/impeccable.cmd whitespace=cr-at-eol

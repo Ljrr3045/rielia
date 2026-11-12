@@ -1,5 +1,53 @@
 # Delivery progress and decisions
 
+## 2026-11-11 T37.1 frontend-local skills — TECHNICAL PREPARATION
+
+The user authorized starting T37 on November 11 America/Caracas (November 12 UTC
+for this delivery). T36.1–T36.6 are ACCEPTED for the bounded scope in
+[PR #44](https://github.com/Ljrr3045/rielia/pull/44), merged at
+`92d480dcc3c35f2bc340b99ff2dd084097c7457c` from final reviewed
+`37f2a8ccfcb021dab859432c48b1fc4107e33f15`. Validate 128542524120 /
+[run 42418787393](https://github.com/Ljrr3045/rielia/actions/runs/42418787393),
+native 128544891139 and coordinator-supplied postmerge
+[run 42419900016](https://github.com/Ljrr3045/rielia/actions/runs/42419900016)
+succeeded. Earlier PROPOSED/pending sections below remain historical snapshots.
+T37 is IN PROGRESS; T11 and landing remain excluded.
+
+SOL installs the three roadmap research pins under `apps/web/.agents/skills`:
+Frontend Design `ca45fc4`, Impeccable v4.8.0 `c3bb418`, UI UX Pro Max `b7d5353`.
+The [manifest](../../apps/web/.agents/skill-installation.json) binds all 147 files /
+5,930,871 bytes to original source paths/hashes, installed bytes/modes, archive
+digests and observed newer heads without upgrading. Complete resources/notices
+are retained. Only 11 UI UX Pro Max command paths and a modification notice are
+adapted; original instructions and the Codex layout remain alongside them.
+See [review, installation and safe-use evidence](frontend-skills.md).
+
+The isolated session's effective turn context confirms SOL xhigh, auto_review,
+workspace-write and on-request. One explicit pnpm12.15.0 frozen install reused
+541 packages with zero downloads, installed the exact Node24.22.1 toolchain and
+left dependency/runtime locks unchanged; prepare kept shared Git config intact.
+No optional skill engine/hook/live server/Apply or bundled agent was run/enabled,
+and no global or backend-local skill was changed.
+
+Local checks: offline exact-file integrity passes; 12 Python failure witnesses
+pass; all 24 quality regressions pass, including narrowly scoped vendor selection
+with first-party metadata/app paths still enforced. Installed pinned formatting
+over 243 adopted inputs and focused ESLint pass. Handoff/link validation confirms
+47 immutable files, 30 asset hashes and local targets; whitespace checks pass.
+The read-only Python Next.js smoke returned zero matches for `keyboard focus`
+and three packaged results for `server components`; no recommendation or app
+behavior acceptance is inferred. Exact check commands are in the delivery report.
+
+Frontend workers must start a **fresh session with cwd `apps/web`** after the
+preparation commit is present, observe all three local SKILL.md paths and resolve
+the duplicate global/local `ui-ux-pro-max` name. Fresh Astra discovery, separate
+surface/state inventory/reference research and integration remain PENDING. This
+batch completes only technical preparation, not full T37.1 or T37 acceptance.
+T36's historical 387 cases/124 inputs/242 adoption remain reused evidence; no
+new app units/build/PG/Docker/audit/device/AT/provider/staging checks are claimed.
+Current-head full hosted CI/native review and coordinator acceptance remain required;
+the preparation PR stays Draft until coordinator action.
+
 ## 2026-11-07 T36.6 stable-contract closure — PROPOSED
 
 Delivery and authoritative final decision: [PR #44](https://github.com/Ljrr3045/rielia/pull/44).
