@@ -1,0 +1,43 @@
+docs/development/t37-ui-inventory.md
+  s_01b68cbb526cdf::t_881fadfd33461c 3-11
+docs/development/progress.md
+  s_01b68cbb526cdf::t_881fadfd33461c 3-26
+docs/development/frontend-skills.md
+  s_01b68cbb526cdf::t_881fadfd33461c 10-11,51,119-145,149-152,168-171,192-193
+CHANGELOG.md
+  s_01b68cbb526cdf::t_881fadfd33461c 11-17
+docs/development/t37-design-direction.md
+  s_01b68cbb526cdf::t_881fadfd33461c 3-11
+apps/web/.agents/README.md
+  s_01b68cbb526cdf::t_881fadfd33461c 16-22
+apps/web/AGENTS.md
+  s_01b68cbb526cdf::t_881fadfd33461c 72-79
+apps/web/.agents/skills/ui-ux-pro-max/SKILL.md
+  s_01b68cbb526cdf::t_4d29115e1e608b 6
+AGENTS.md
+  s_01b68cbb526cdf::t_881fadfd33461c 50-52
+apps/web/.agents/skill-installation.json
+  s_01b68cbb526cdf::t_4d29115e1e608b 20-27,654-655,1246,1262
+docs/development/frontend-agent.md
+  s_01b68cbb526cdf::t_881fadfd33461c 58-62
+scripts/test_frontend_skills.py
+  s_01b68cbb526cdf::t_8d5bb76fdbbe8c 50-61
+scripts/verify-frontend-skills.py
+  s_01b68cbb526cdf::t_8d5bb76fdbbe8c 25,95,115-119,135
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "325d73211b859debecb4e780ee7fefc0433a8172",
+  "prompts": {},
+  "sessions": {
+    "s_01b68cbb526cdf": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1cd17-1e3d-7401-9364-abbd8f7c3f62",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
