@@ -1,0 +1,48 @@
+scripts/verify-frontend-skills.py
+  s_f45d3e64497389::t_94bb0e22b68972 16-17,75-81,103
+docs/development/t37-ui-foundations.md
+  s_f45d3e64497389::t_170b5fd3d5cb0e 127-131,133-134,142-150,152-161,165-167,169-178,184-185,192-214
+  s_f45d3e64497389::t_9d087b48220c01 132,135-141,151,162-164,168,179-183,186-191
+  s_f45d3e64497389::t_52bcbd0abe341a 3-9,100
+docs/development/progress.md
+  s_f45d3e64497389::t_94bb0e22b68972 60-92
+  s_f45d3e64497389::t_52bcbd0abe341a 3-13,17,22-26,1897
+  s_f45d3e64497389::t_9d087b48220c01 14-16,18-21
+  s_f45d3e64497389::t_170b5fd3d5cb0e 27-32
+  s_f45d3e64497389::t_9a7e8efcf00a7c 93
+docs/development/frontend-skills.md
+  s_f45d3e64497389::t_94bb0e22b68972 155-157,208-212
+  s_f45d3e64497389::t_52bcbd0abe341a 8-9,12-14
+apps/web/src/app/projects/projects.module.css
+  s_f45d3e64497389::t_1864e9a67c28f5 1277-1281,1292,2964-2967
+  s_f45d3e64497389::t_13ba3d3bb95f16 2491,3868-3869
+scripts/test_frontend_skills.py
+  s_f45d3e64497389::t_94bb0e22b68972 116-145
+CHANGELOG.md
+  s_f45d3e64497389::t_52bcbd0abe341a 12-13,23-25,29-30,36
+  s_f45d3e64497389::t_94bb0e22b68972 32-35,41
+  s_f45d3e64497389::t_9d087b48220c01 9-11
+  s_f45d3e64497389::t_274408a89fdbb5 31
+docs/development/formatting-inventory.json
+  s_f45d3e64497389::t_94bb0e22b68972 1285
+docs/development/development-quality-roadmap.md
+  s_f45d3e64497389::t_94bb0e22b68972 315-316
+  s_f45d3e64497389::t_170b5fd3d5cb0e 305-312
+  s_f45d3e64497389::t_52bcbd0abe341a 34-39,437-440
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "999aba720cc9485f5e1ac1a3c817c3a260a802c8",
+  "prompts": {},
+  "sessions": {
+    "s_f45d3e64497389": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1cd4f-7c27-7923-9d7b-df7a240f0fd9",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
