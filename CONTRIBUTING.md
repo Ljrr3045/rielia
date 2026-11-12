@@ -35,8 +35,10 @@ rules before changing those apps. These rules describe incremental migration
 targets. Delivered [tooling](docs/development/quality-tooling.md),
 [unit gates](docs/development/unit-coverage.md) and scoped frontend/backend owners
 are consolidated in the [stable contract](docs/development/t36-stable-ui-contract.md).
-T36.6 acceptance and owned coverage/coupling/CSS debt remain open; no universal
-architecture migration or T37 implementation is claimed.
+T36.1–T36.6 were accepted for the bounded scope in
+[PR #44](https://github.com/Ljrr3045/rielia/pull/44); owned coverage/coupling/CSS
+debt remains explicit. T37 started with the user's 2026-11-11 authorization;
+no universal architecture migration or completed redesign is claimed.
 Preparing these contribution documents does not
 complete T16 or its real-project validation.
 
@@ -131,9 +133,16 @@ CI formatting/prospective commit enforcement. In linked worktrees use
 `git -c core.hooksPath=.husky commit`; prepare does not change shared Git config.
 See the [commands, adoption inventory, policy and limitations](docs/development/quality-tooling.md).
 Preserve immutable/generated exclusions and avoid broad formatting churn.
-T37 plans the three requested frontend-local skills, with
-provenance/discovery verification and product/UX/brand authority; see the
-[roadmap](docs/development/development-quality-roadmap.md). Later T30–T34 uses the
+T37.1 prepares the three requested [frontend-local skills](docs/development/frontend-skills.md),
+with pinned complete resources/notices and offline integrity checks. Start fresh
+frontend sessions from `apps/web` and explicitly select local top-level
+`.agents/skills/<name>/SKILL.md` paths. Fresh catalog discovery and explicit
+loading are verified at `325d732`; global/local copies coexist without a proven
+automatic bare-name winner. The separate
+[Astra inventory](docs/development/t37-ui-inventory.md) and
+[direction proposal](docs/development/t37-design-direction.md) are integrated
+research, not redesign implementation or acceptance.
+Product/UX/brand authority governs their suggestions. Later T30–T34 uses the
 [Astro landing/narrative decision](docs/development/landing-direction.md), not a
 new priority ticket or permission to scaffold/publish now.
 
@@ -196,6 +205,11 @@ is separately owned; no full T05/T07/T35 acceptance is implied.
 Documentation-only changes run the handoff/link verifier and unstaged/staged
 whitespace checks below, inspect the diff, and retain CI and the applicable
 branch review gates.
+
+Changes to the frontend skill snapshots/manifest also run
+`python3 -B scripts/verify-frontend-skills.py` and
+`python3 -B scripts/test_frontend_skills.py`. Preserve upstream bytes and exact
+three-package vendor exceptions; first-party metadata/tooling stays checked.
 Unrelated local application suites need not be rerun for prose-only edits.
 
 Use Python 3.9+, Node 24.22.1, and pnpm 12.15.0. From the repository root:

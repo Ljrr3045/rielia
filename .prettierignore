@@ -10,3 +10,7 @@ docs/development/handoff-files.sha256
 apps/api/src/generated/**
 pnpm-lock.yaml
 patches/**
+# Reviewed third-party snapshots; exact integrity is checked separately.
+apps/web/.agents/skills/frontend-design/**
+apps/web/.agents/skills/impeccable/**
+apps/web/.agents/skills/ui-ux-pro-max/**

@@ -21,9 +21,19 @@ PR #32 prepared guidance. Later [tooling](quality-tooling.md),
 [backend owners](project-flow-extraction.md), [project owners](project-interactions-extraction.md)
 and [workspace owners](workspace-interactions-extraction.md) deliver the agreed
 T36.1–T36.5 implementation through merged PR #43. The [stable contract and debt](t36-stable-ui-contract.md)
-now propose T36.6 closure. T36 remains IN PROGRESS pending this batch's current-head
-CI/native review, merge and explicit coordinator acceptance; T37/T11 have not started.
-No screen is redesigned, frontend skill installed or Astro app scaffolded here.
+records the bounded T36.6 closure accepted in
+[PR #44](https://github.com/Ljrr3045/rielia/pull/44), merged at `92d480d` from
+reviewed `37f2a8c` with successful current-head CI/native review. T36.1–T36.6 are
+ACCEPTED; explicit debt remains owned. The user authorized starting T37 on
+2026-11-11 America/Caracas. T37 is IN PROGRESS through
+[T37.1 technical skill preparation](frontend-skills.md) and integrated
+[Astra inventory](t37-ui-inventory.md)/[direction proposal](t37-design-direction.md).
+Fresh frontend catalog discovery and explicit local loading are verified at
+`325d732`, including removal of an unintended archived-source candidate. Bare-name
+local/global precedence is not established; dispatches select explicit local
+top-level paths. Current-head CI/native review and coordinator acceptance remain
+required. T11 has not started.
+No screen is redesigned or Astro app scaffolded by this preparation.
 Prose or smaller files do not establish universal conformity, production readiness
 or full T01–T35 acceptance.
 
@@ -90,10 +100,10 @@ accepts each batch and alone controls review transitions/merge.
 | T36.2–T36.3 | Pinned behavior-unit providers, all-source/per-file/nonregression gates, bounded artifacts and formatting/commit enforcement are delivered; [unit guide](unit-coverage.md) and [242/242 inventory](formatting-inventory.json) preserve historical baselines/failure proofs |
 | T36.4 | Delivered [PR42 project](project-interactions-extraction.md) and [PR43 workspace](workspace-interactions-extraction.md) owners retain behavior with finite covered/zero/maps and native/CSS evidence; CSS families and unexecuted variants remain owned debt |
 | T36.5 | Delivered [values/policy/DTO](project-values-policy-extraction.md) and [reads/commands](project-flow-extraction.md) preserve facade, transaction and query/lock/await order; other coupling remains explicit |
-| T36.6 | [Stable contract](t36-stable-ui-contract.md), current evidence/advisory conditions and debt ownership are proposed here; final current-head CI/native review, merge and coordinator acceptance remain pending |
+| T36.6 | [Stable contract](t36-stable-ui-contract.md), evidence/advisory conditions and debt ownership accepted in merged [PR #44](https://github.com/Ljrr3045/rielia/pull/44); historical proposal snapshots are preserved |
 
-T37.1 frontend-local skills/research and Astra presentation require separate scope
-after accepted T36. SOL retains all logic/tests and verified Approve for me rules.
+T37.1 frontend-local skills/research started under separate scope after accepted
+T36. SOL retains all logic/tests and verified Approve for me rules.
 T11 still follows accepted T37.
 
 ### Architecture and standards to apply
@@ -291,8 +301,10 @@ coordination against contracts. Native Kilo remains the selected external review
 
 ### Requested frontend skills and authority
 
-Plan installation and use of all three requested sources; no installation occurs
-in this documentation PR:
+Current T37.1 technical installation, immutable pins, safety boundaries and verified
+initial/corrected fresh-worker discovery are recorded in [frontend skills](frontend-skills.md).
+The table below preserves the November 5/6 **research snapshot**: its "Not installed"
+status applied to that documentation PR, before the separate T37.1 installation.
 
 | Requested source | Intended use | Status |
 | --- | --- | --- |
@@ -409,7 +421,8 @@ from CONTRIBUTING and retain exact evidence; inspect all changes and update
 [progress](progress.md) and [changelog](../../CHANGELOG.md), and open one Draft PR
 to `dev`. Full remote CI remains obligatory. Only the coordinator transitions Ready,
 requests paid review, accepts the batch and merges; current-head Kilo remains a
-closed merge gate while Draft. Agreed tooling/units/formatting and scoped
-frontend/backend implementation are delivered; T36.6 consolidation proposes final
-acceptance with owned debt. This head's CI/native review, merge and the recorded
-coordinator decision remain required before T37; T11 follows accepted T37.
+closed merge gate while Draft. Agreed tooling/units/formatting, scoped
+frontend/backend implementation and bounded T36.6 consolidation are accepted in
+PR #44 with owned debt. T37.1 technical preparation is in progress; its current-head
+CI/native review and coordinator decision remain
+required. T11 follows accepted T37.

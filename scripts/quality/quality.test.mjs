@@ -366,6 +366,13 @@ test('protected/generated files are skipped and staged symlinks are rejected', a
   const root = fixture(t);
   assert.equal(excluded('docs/handoff/source.ts'), true);
   assert.equal(excluded('apps/api/src/generated/client.ts'), true);
+  for (const name of ['frontend-design', 'impeccable', 'ui-ux-pro-max']) {
+    assert.equal(excluded(`apps/web/.agents/skills/${name}/scripts/vendor.js`), true);
+    assert.equal(excluded(`apps/web/.agents/skills/${name}-first-party/check.mjs`), false);
+  }
+  assert.equal(excluded('apps/web/.agents/skill-installation.json'), false);
+  assert.equal(excluded('apps/web/src/app/page.tsx'), false);
+  assert.equal(excluded('scripts/verify-frontend-skills.py'), false);
   await checkFiles(root, ['docs/handoff/missing.ts', 'apps/api/src/generated/missing.ts'], {
     staged: true,
   });

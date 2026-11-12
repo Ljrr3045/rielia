@@ -1,5 +1,131 @@
 # Delivery progress and decisions
 
+## 2026-11-11 T37.1 first native review — CORRECTION BATCH
+
+Draft [PR #45](https://github.com/Ljrr3045/rielia/pull/45) addresses all three valid
+findings from completed native check 130892886669 on reviewed
+`ea7916b156bdf1afe9f3758e303b564f59fca618` ([summary](https://github.com/Ljrr3045/rielia/pull/45#issuecomment-6811434465)).
+The check concluded success with one warning and two suggestions, not a clean
+review. The coordinator returned the same PR to Draft before corrections.
+
+- [Roadmap status](https://github.com/Ljrr3045/rielia/pull/45#discussion_r4545050376):
+  the current requested-skills sentence now states verified initial/corrected
+  discovery; dated November 5/6 research snapshots remain unchanged.
+- [Sole transformation](https://github.com/Ljrr3045/rielia/pull/45#discussion_r4545050405):
+  preflight requires exactly one `codex-search-path-v1` entry at
+  `apps/web/.agents/skills/ui-ux-pro-max/SKILL.md`; adaptation checks use that
+  fixed path rather than an entry's opt-in. Three regressions reject a removed
+  marker with adjusted source hash, duplicate markers and a marker moved to the
+  wrong target. All 16 integrity cases and the exact-resource verifier pass.
+- [Evidence reference](https://github.com/Ljrr3045/rielia/pull/45#discussion_r4545050410):
+  a stable link to the integrity section replaces the inaccurate direction/count.
+  Current suite accounting is 16; earlier 13-case checkpoints remain historical.
+
+All 147 resource bytes/modes, source/provenance hashes, pins and installation
+manifest remain unchanged from the reviewed head. Existing fresh catalog evidence
+at `325d732` remains bound to that unchanged skill payload; no discovery session,
+install, vendor code or app/build/PG/Docker suite is repeated. The reviewed manifest
+remains the trust input, not proof of upstream authenticity. The archived source
+digest is distinct from the whole installation manifest digest.
+
+Affected format/docs/whitespace and mandatory hooks apply to this bounded batch.
+Earlier validate 130890009675/run 43129519740 success and completed native
+130892886669 are historical head evidence; this correction needs its own full CI
+and completed native review after coordinator Ready. Thread resolution, Ready,
+review request, acceptance and merge remain coordinator-owned and pending.
+
+## 2026-11-11 T37.1 discovery correction — FRESH CHECK VERIFIED
+
+Draft delivery remains [PR #45](https://github.com/Ljrr3045/rielia/pull/45).
+Fresh Astra high session `01a1cd29-5fae-72b3-97a7-834947304c3d`, task
+`task_ba6ec966ff00`, used cwd `apps/web` at `bc2fb2e` with verified
+auto_review/on-request/workspace-write. Its actual injected catalog exposed all
+three intended local entries; explicit full reads and sampled local references,
+license and Next.js/React rows succeeded without vendor code execution.
+
+That catalog also included the preserved `ui-ux-pro-max/upstream/SKILL.md`, whose
+relative resources did not resolve, and the global customized copy. No unique
+bare-name winner was observable. T37 dispatches must explicitly select local
+top-level skill paths; global skills remain unchanged and no override is claimed.
+
+The source is renamed to `upstream/SKILL.md.txt` without changing its original
+SHA-256 `9aa50bd44076db28624ea976056d915905ab9357748f90263a004fa0ef087147`.
+Manifest installed paths change while upstream provenance paths/hashes remain
+intact. The adapted notice adds four bytes; 147 files now total 5,930,875 bytes.
+Offline integrity enforces exactly three top-level SKILL.md entries; 13 focused
+failure witnesses pass, including a nested entry listed in a changed manifest.
+Post-fix task `task_016c2e3ce98c`, fresh Astra high session
+`01a1cd31-7804-7bf3-b496-f9e2282d9352`, verified the actual injected catalog at
+`325d73211b859debecb4e780ee7fefc0433a8172` from cwd `apps/web`, with confirmed
+auto_review/on-request/workspace-write and network access false. The three intended
+local entries remained; no nested upstream/archive candidate appeared. All three
+were explicitly selected and fully read. The global duplicate still coexisted;
+automatic bare-name precedence remains unverified. This read-only session did not
+repeat integrity, resource sampling, vendor execution or app checks. The coordinator
+accepted its bounded evidence for integration.
+
+The final metadata batch retains the verified resource/catalog payload. Applicable
+format/docs/whitespace/hooks checks apply; no unchanged integrity/app suite is
+rerun for prose. Current-head full CI/native review and coordinator acceptance
+remain required. Prior preparation/discovery notes below are historical checkpoint
+status; full T37 acceptance and app/visual implementation remain open.
+
+## 2026-11-11 T37.1 frontend-local skills — INITIAL PREPARATION CHECKPOINT
+
+Delivery: Draft [PR #45](https://github.com/Ljrr3045/rielia/pull/45).
+Committed package checkpoint: `bc2fb2eaaf0d4d430720b72f8d2e9ea7a004f6f1`.
+
+The user authorized starting T37 on November 11 America/Caracas (November 12 UTC
+for this delivery). T36.1–T36.6 are ACCEPTED for the bounded scope in
+[PR #44](https://github.com/Ljrr3045/rielia/pull/44), merged at
+`92d480dcc3c35f2bc340b99ff2dd084097c7457c` from final reviewed
+`37f2a8ccfcb021dab859432c48b1fc4107e33f15`. Validate 128542524120 /
+[run 42418787393](https://github.com/Ljrr3045/rielia/actions/runs/42418787393),
+native 128544891139 and coordinator-supplied postmerge
+[run 42419900016](https://github.com/Ljrr3045/rielia/actions/runs/42419900016)
+succeeded. Earlier PROPOSED/pending sections below remain historical snapshots.
+T37 is IN PROGRESS; T11 and landing remain excluded.
+
+SOL installs the three roadmap research pins under `apps/web/.agents/skills`:
+Frontend Design `ca45fc4`, Impeccable v4.8.0 `c3bb418`, UI UX Pro Max `b7d5353`.
+The [manifest](../../apps/web/.agents/skill-installation.json) binds all 147 files /
+5,930,871 bytes to original source paths/hashes, installed bytes/modes, archive
+digests and observed newer heads without upgrading. Complete resources/notices
+are retained. Only 11 UI UX Pro Max command paths and a modification notice are
+adapted; original instructions and the Codex layout remain alongside them.
+See [review, installation and safe-use evidence](frontend-skills.md).
+
+The isolated session's effective turn context confirms SOL xhigh, auto_review,
+workspace-write and on-request. One explicit pnpm12.15.0 frozen install reused
+541 packages with zero downloads, installed the exact Node24.22.1 toolchain and
+left dependency/runtime locks unchanged; prepare kept shared Git config intact.
+No optional skill engine/hook/live server/Apply or bundled agent was run/enabled,
+and no global or backend-local skill was changed.
+
+Local checks: offline exact-file integrity passes; 12 Python failure witnesses
+pass; all 24 quality regressions pass, including narrowly scoped vendor selection
+with first-party metadata/app paths still enforced. Installed pinned formatting
+over 243 adopted inputs and focused ESLint pass. Handoff/link validation confirms
+47 immutable files, 30 asset hashes and local targets; whitespace checks pass.
+The read-only Python Next.js smoke returned zero matches for `keyboard focus`
+and three packaged results for `server components`; no recommendation or app
+behavior acceptance is inferred. Exact check commands are in the delivery report.
+
+Frontend workers must start a **fresh session with cwd `apps/web`** after the
+preparation commit is present, observe all three local SKILL.md paths and resolve
+the duplicate global/local `ui-ux-pro-max` name. Fresh Astra discovery remains
+PENDING. The coordinator authorized byte-exact integration of the separately
+prepared [Astra inventory](t37-ui-inventory.md) and
+[direction proposal](t37-design-direction.md), from task `task_8846f535f733` on
+`docs/t37-ui-research` at the same accepted base; no source commit existed because
+its hooks runtime was absent. [Source hash/provenance](frontend-skills.md#independent-astra-research-integration)
+is preserved and SOL did not repeat or reattribute the source/Mobbin research. This
+batch completes only technical preparation, not full T37.1 or T37 acceptance.
+T36's historical 387 cases/124 inputs/242 adoption remain reused evidence; no
+new app units/build/PG/Docker/audit/device/AT/provider/staging checks are claimed.
+Current-head full hosted CI/native review and coordinator acceptance remain required;
+the preparation PR stays Draft until coordinator action.
+
 ## 2026-11-07 T36.6 stable-contract closure — PROPOSED
 
 Delivery and authoritative final decision: [PR #44](https://github.com/Ljrr3045/rielia/pull/44).
@@ -1710,8 +1836,8 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T33 | Marketing (future) | Metadata, localized SEO, minimal measurement | T31; T32 if capture active | Not started |
 | T34 | Marketing launch gate | Verify/enable public marketing launch | T31, T33; T32 if capture active | Not started |
 | T35 | B1 foundations | Principal model, immutable authorship, autonomous memberships | T04; precedes T05/T06/T12 | T35.0 bounded storage/policy/context implemented; full authorship/domain/export/credential integration incomplete |
-| T36 | Quality prerequisite 1 | Engineering standards, compatible tool enforcement and behavior-preserving frontend/backend structure | Existing bounded foundations/contracts; approved NodeAdapter | IN PROGRESS: agreed tooling/units/gates/formatting and scoped extractions delivered through PR43; final T36.6 proposal pending current-head CI/native/merge/coordinator decision; T37 skills deferred; [ordered acceptance](development-quality-roadmap.md#t36--engineering-quality-tooling-and-structure) |
-| T37 | Quality prerequisite 2 | Coherent redesign of existing UI using stable contracts, brand/UX and reviewed frontend-local skills | Coordinator acceptance of T36 | Planned only; Astra research is not redesign delivery; [ordered acceptance](development-quality-roadmap.md#t37--ui-quality-redesign); precedes T11 |
+| T36 | Quality prerequisite 1 | Engineering standards, compatible tool enforcement and behavior-preserving frontend/backend structure | Existing bounded foundations/contracts; approved NodeAdapter | ACCEPTED bounded T36.1–T36.6 in [PR #44](https://github.com/Ljrr3045/rielia/pull/44), merged `92d480d` from reviewed `37f2a8c`; retained owned debt and [stable contract](t36-stable-ui-contract.md) remain binding |
+| T37 | Quality prerequisite 2 | Coherent redesign of existing UI using stable contracts, brand/UX and reviewed frontend-local skills | Coordinator acceptance of T36 | IN PROGRESS under 2026-11-11 authorization: [PR #45](https://github.com/Ljrr3045/rielia/pull/45) prepares pinned skills, Astra research and verified fresh catalog/explicit local loading at `325d732`; current-head CI/native/coordinator acceptance and later visual/functional implementation remain pending; precedes T11 |
 
 Public release is one launch followed by continuous updates. Internal B1 readiness,
 private T15 deployment, and marketing T34 do not substitute for T24. B3 follows

@@ -1,6 +1,6 @@
 {
   "baseline": "1c33560f2fca954cbac6d35a87881a41dd72b017",
-  "policy": "All 242 currently eligible maintained source/config/tooling inputs are adopted; changed/new supported inputs remain prospectively enforced. Legacy Markdown adoption and unsupported formats retain explicit owners and checks.",
+  "policy": "All 243 currently eligible maintained source/config/tooling inputs are adopted, including the T37.1 frontend-skill manifest; changed/new supported inputs remain prospectively enforced. T36 acceptance retains its historical 242/242 count. Legacy Markdown and unsupported formats retain explicit owners and checks.",
   "adopted": [
     ".github/actions/unit-artifacts/action.yml",
     ".github/actions/unit-artifacts/index.mjs",
@@ -65,6 +65,7 @@
     "apps/api/test/unit/workspace-invitation.test.mjs",
     "apps/api/test/workspaces.test.mjs",
     "apps/api/tsconfig.json",
+    "apps/web/.agents/skill-installation.json",
     "apps/web/next.config.ts",
     "apps/web/package.json",
     "apps/web/src/app/api/auth/[...path]/route.ts",
@@ -384,11 +385,11 @@
   "manualFormats": {
     "sql": "9 maintained migrations: integration/review; no formatter plugin selected",
     "prisma": "1 maintained schema: Prisma tooling/review",
-    "python": "scripts/verify-handoff.py: Python/review",
+    "python": "scripts/verify-handoff.py plus scripts/verify-frontend-skills.py and scripts/test_frontend_skills.py: direct offline checks/failure witnesses and review",
     "shellAndDocker": "Executable hooks, Dockerfile and ignore files: direct regressions/runtime/review",
     "toml": "Prisma migration lock metadata: preserve generator format"
   },
-  "excluded": "Immutable handoff/hash inventory; generated Prisma/Next/build/coverage; dependencies; lockfile; patches; source notices and supplied assets",
+  "excluded": "Immutable handoff/hash inventory; generated Prisma/Next/build/coverage; dependencies; lockfile; patches; source notices and supplied assets; exact reviewed frontend vendor trees under apps/web/.agents/skills/{frontend-design,impeccable,ui-ux-pro-max}, verified by pinned manifest without first-party waivers",
   "newFormattedDocuments": [
     "docs/development/quality-tooling.md",
     "docs/development/unit-coverage.md"
@@ -514,9 +515,9 @@
     "measurementSourceHead": "3b9507f5f8c2a046351885f7cccae527f5a5c154"
   },
   "currentSourceAccounting": {
-    "owner": "T36 mechanical formatting integration; all current maintained inputs adopted, future inputs prospective; coordinator owns remaining structural acceptance",
-    "eligibleCount": 242,
-    "adoptedCount": 242,
+    "owner": "SOL maintained tooling; coordinator acceptance; T36 historical 242/242 preserved",
+    "eligibleCount": 243,
+    "adoptedCount": 243,
     "remainingCount": 0,
     "remaining": []
   },
@@ -1262,5 +1263,25 @@
     "adoptedUnchanged": 242,
     "applicationProviderBaselineChange": false,
     "acceptance": "Proposed; current-head CI/native review, merge and coordinator decision required before T37"
+  },
+  "frontendSkillPreparation": {
+    "ticket": "T37.1",
+    "guide": "docs/development/frontend-skills.md",
+    "adopted": ["apps/web/.agents/skill-installation.json"],
+    "eligibleCountAfter": 243,
+    "historicalT36Adoption": 242,
+    "manualReviewed": [
+      "apps/web/.agents/README.md",
+      "docs/development/frontend-skills.md",
+      "scripts/verify-frontend-skills.py",
+      "scripts/test_frontend_skills.py",
+      "docs/development/t37-ui-inventory.md",
+      "docs/development/t37-design-direction.md"
+    ],
+    "vendorPolicy": "Preserve exact upstream resource bytes in only three named directories; verifier enforces hashes/paths/modes and sole documented adaptation; first-party metadata and app gates remain enforced",
+    "applicationProviderBaselineChange": false,
+    "freshFrontendDiscovery": "PASS at 325d732 in fresh Astra high session 01a1cd31-7804-7bf3-b496-f9e2282d9352 from apps/web: three intended local entries, no nested/archive candidate; explicit local paths required, no automatic global override",
+    "researchIntegration": "Coordinator-authorized byte-exact Astra prepared docs from docs/t37-ui-research at 92d480d; source hashes recorded in frontend-skills.md; no source research repeated",
+    "archiveCatalogCorrection": "Original upstream SKILL.md preserved byte-exact as SKILL.md.txt; manifest retains upstream sourcePath/hash; integrity enforces three top-level catalog entries and exactly one pinned-path transformation with 16 focused cases"
   }
 }

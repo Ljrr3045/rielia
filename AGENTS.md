@@ -41,11 +41,17 @@ or an Orca installation.
   [project owners](docs/development/project-interactions-extraction.md),
   [workspace owners](docs/development/workspace-interactions-extraction.md) and
   [backend owners](docs/development/project-flow-extraction.md).
-  The [T36.6 stable contract](docs/development/t36-stable-ui-contract.md) proposes
-  final consolidation with explicit owned debt. T36 remains IN PROGRESS pending
-  this closure batch's current-head CI/native review, merge and coordinator
-  acceptance; the delivery PR records that decision. T37 remains open. Frontend-
-  local skills/redesign belong to T37 after acceptance; T11 follows accepted T37.
+  T36.1–T36.6 are ACCEPTED for the bounded scope in merged
+  [PR #44](https://github.com/Ljrr3045/rielia/pull/44), at `92d480d` from reviewed
+  `37f2a8c`; the [stable contract](docs/development/t36-stable-ui-contract.md)
+  retains explicit owned debt. The user authorized T37 on 2026-11-11
+  America/Caracas. T37 is IN PROGRESS; [frontend-local skill preparation](docs/development/frontend-skills.md)
+  and [Astra's inventory](docs/development/t37-ui-inventory.md) are T37.1
+  preparation. Initial frontend discovery succeeded with a nested archive catalog
+  finding; fresh verification at `325d732` confirms the packaging fix removes
+  that extra entry. Current-head CI/native review and coordinator acceptance
+  remain required. Dispatches explicitly
+  select local top-level skill paths. T11 follows accepted T37.
   No universal source conformity or full acceptance is implied. Original
   T01–T35 numbering/acceptance and immutable handoff remain unchanged. Future
   T30–T34 landing work uses the [later Astro/narrative direction](docs/development/landing-direction.md);

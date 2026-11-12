@@ -45,10 +45,22 @@ For this planning run the coordinator verified `launch.effective` as Codex
 November 5 America/Caracas). This establishes the research dispatch configuration,
 not completed redesign, model quality or later workers' configuration.
 
-The [quality roadmap](development-quality-roadmap.md) defines T36 → T37 → T11 and
-the requested frontend-local skill installation/verification, which remains future
-work. Brand/UX/product/architecture instructions govern skill suggestions. Do not
-overwrite an existing global customization or treat it as proof of local setup.
+The [quality roadmap](development-quality-roadmap.md) defines T36 → T37 → T11.
+T36 is accepted in [PR #44](https://github.com/Ljrr3045/rielia/pull/44); T37 started
+under the user's 2026-11-11 authorization. The
+[T37.1 skill preparation](frontend-skills.md) installs pinned complete packages
+under `apps/web/.agents/skills`. Start a fresh frontend session with cwd `apps/web`
+and record its actual local paths and duplicate-name resolution; this technical
+worker does not prove fresh Astra discovery. Brand/UX/product/architecture
+instructions govern skill suggestions. Do not overwrite a global customization
+or treat it as proof of local setup. Independent
+[Astra research](t37-ui-inventory.md) is integrated as prepared-source evidence;
+[design direction](t37-design-direction.md) remains a proposal. Initial fresh
+frontend discovery loaded all three local entries, but also catalogued an archival
+SKILL.md; a second fresh session at `325d732` confirmed its renamed-source fix,
+with three intended local entries and no nested/archive candidate. Dispatches must explicitly
+select local top-level paths because the catalog exposed both local and global
+`ui-ux-pro-max` without an observable unique bare-name winner.
 
 ## Historical decision and verification — 2026-10-25
 
