@@ -1,0 +1,35 @@
+docs/development/t37-project-task-ui.md
+  s_0ec400d6ec8385::t_b71624dd549647 1-113
+apps/web/src/app/projects/task-forms.tsx
+  s_0ec400d6ec8385::t_c2c6c49a762f97 312
+apps/web/src/app/projects/task-list.tsx
+  s_0ec400d6ec8385::t_6c92ba6fc48c2f 51-54
+  s_0ec400d6ec8385::t_c2c6c49a762f97 79,83,101-113
+  s_0ec400d6ec8385::t_49d7ef50174546 114-115
+docs/development/progress.md
+  s_0ec400d6ec8385::t_b71624dd549647 3-22
+apps/web/src/app/projects/project-forms.tsx
+  s_0ec400d6ec8385::t_c2c6c49a762f97 63
+CHANGELOG.md
+  s_0ec400d6ec8385::t_b71624dd549647 7-19
+apps/web/src/app/projects/project-work-area.tsx
+  s_0ec400d6ec8385::t_c2c6c49a762f97 241
+apps/web/src/app/projects/projects.module.css
+  s_0ec400d6ec8385::t_7d953302d381d3 567-569,584-588,1210-1211,1217-1224,1227,1257-1260,1270-1271,1275-1288,1304-1326,1387-1418,1519,1598,1605-1606,1686,1692-1696,1706,1709,1733-1735,2001-2012,2027,2039,2093,2379-2380,2384-2386,2388-2397,2434,2441-2446,2577-2579,2714,2726,2913,2917,2920,3034,3036,3063,3072-3073,3103,3110,3312,3322-3327,3345,3352,3556,3561-3567,3627,3652
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0721c721db32ed9b1c4dfdaa930af7b71eb48f23",
+  "prompts": {},
+  "sessions": {
+    "s_0ec400d6ec8385": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1cdb2-857c-7941-9e12-11b7e525c6fc",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
