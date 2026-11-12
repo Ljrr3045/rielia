@@ -1,0 +1,19 @@
+scripts/unit/baselines/web.json
+  s_ca155d954aa2b0::t_f88ebb7b322c0a 221,225,229,233,239,247,251,293,297,301,305,311,329-330,347,365,369,373,377,387,391,395,473,527,531,535,539,563,567,571,575,653,689-690,693-694,697-698,701-702,1013,1229-1232,1265,1271,1291,1342,1361-1362,1365-1366,1369-1370,1373-1374
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "fe0bdc99aa26fede69396826e22afb08b3c266b6",
+  "prompts": {},
+  "sessions": {
+    "s_ca155d954aa2b0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1ce9c-b762-7780-a63f-881142107e54",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
