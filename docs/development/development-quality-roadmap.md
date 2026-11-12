@@ -34,9 +34,13 @@ local/global precedence is not established; dispatches select explicit local
 top-level paths. [T37.1 acceptance](https://github.com/Ljrr3045/rielia/pull/45#issuecomment-6811811563)
 is recorded at merge `8065c07895640da228accbd50295d79517d2afa1` from reviewed
 `57ee1641aa453b6f08d81d29f0b5f294afece35c`. The separate
-[T37.2 foundations checkpoint](t37-ui-foundations.md) and visual corrections
-remain in progress, with corrected-head SOL evidence recorded on `999aba7`
-and later CI/native review/coordinator acceptance required. T11 has not started; no Astro app is scaffolded.
+[T37.2 foundations](t37-ui-foundations.md) and bounded visual corrections are
+accepted in merged [PR #46](https://github.com/Ljrr3045/rielia/pull/46) at
+`8647f19fc3e359716d64eb649ff0ef79775cdf13`, with head/postmerge CI and native review
+passed. [T37.3 shell/entry work](t37-shell-entry.md) is IN PROGRESS: corrected-source
+native/visual evidence and the reviewed passing web gate are integrated for Draft
+publication; current-head CI/native review and coordinator acceptance remain.
+T11 has not started; no Astro app is scaffolded.
 Prose or smaller files do not establish universal conformity, production readiness
 or full T01–T35 acceptance.
 
@@ -308,7 +312,11 @@ and Saving change at the same time. SOL owns the discriminator, exact-key retry
 and disabled-action regressions; Astra owns subsequent feedback review. See the
 [bound observation](t37-ui-foundations.md#inherited-collaboration-recovery-follow-up).
 This is separate from CSS fixes and the two earlier project recovery debts;
-final T37 acceptance must revisit it.
+final T37 acceptance must revisit it. T37.3 native review also records long unbroken
+project breadcrumb text crossing beneath contextual detail at 1280; this protected
+interior remains an explicit Astra-owned T37.4 correction. The confirmed workspace
+invitation success message now truthfully handles a cleared link, with SOL tests;
+it changes neither token clearing nor any of these project recovery debts.
 
 ### Requested frontend skills and authority
 
@@ -435,6 +443,8 @@ requests paid review, accepts the batch and merges; current-head Kilo remains a
 closed merge gate while Draft. Agreed tooling/units/formatting, scoped
 frontend/backend implementation and bounded T36.6 consolidation are accepted in
 PR #44 with owned debt. T37.1 preparation is accepted in merged PR #45 as linked
-above; T37.2 foundations and visual correction/revalidation are in progress.
+above; T37.2 foundations are accepted in merged PR #46. T37.3 shell/entry and
+truthful invitation feedback remain in progress under the linked evidence; no
+full T37 acceptance is implied.
 Later current-head CI/native review and coordinator acceptance remain required
 for that implementation. T11 follows accepted T37.

@@ -1,5 +1,34 @@
 # T37.3 shell and entry-flow presentation checkpoint
 
+## Current delivery status
+
+T37.1 is accepted in merged [PR #45](https://github.com/Ljrr3045/rielia/pull/45);
+T37.2 is accepted in merged [PR #46](https://github.com/Ljrr3045/rielia/pull/46) at
+`8647f19fc3e359716d64eb649ff0ef79775cdf13`. **T37.3 remains IN PROGRESS**, prepared
+for consolidated Draft publication to `dev`; current-head CI/native review and
+coordinator acceptance remain required. Earlier dated pending/blocker statements
+below retain their historical source and are superseded by the later evidence.
+
+Integrated source/test/coverage head is
+`d3cc5362aa0a0c4439b2d4b91c1c02d1b9b9fbc9`, fast-forwarded after the coordinator
+accepted its exact baseline migration and one normal passing `pnpm unit:web` gate.
+All 92 compiled-source and 23 test/helper hashes match the independently tested
+source `9f9f07f7ae66917377b6bd5dfbe1f1f356eb51a2`; the production build originated
+from working-tree snapshot `b93210f9f512ee6958941d199a18556f749a21b123fcfb1cb23932b7ffb27fa1`
+and is **`exXrwr4o43S12E7dSkmxO`**. Commit equivalence was checked afterward;
+the build is not relabelled as having run from a later commit. Publication changes
+after integration are documentation only and preserve these bytes and the reviewed
+web baseline `9e85d482a01099d38b2101cdcef6d83b57ba21722562239bf9c61c67f6f50f16`.
+
+The delivered batch combines Astra shell/identity/workspace presentation, SOL's
+minimal existing-prop invitation success discriminator and ES/EN wording, ten
+real-hook/component regressions, and the explicitly reviewed current-web coverage
+reconciliation. No controller/token policy, transport/backend, dependency/lock,
+new route/capability, skill resource or immutable handoff changes. The initial
+presentation-only statements below describe that earlier ownership checkpoint.
+
+## Original implementation checkpoint
+
 **2026-11-11, America/Caracas — implementation checkpoint, not acceptance.**
 Prepared in `feat/t37-shell-entry` from frozen T37.2 PR #46 head
 `1e2ed071283ad5da4d52f6658a75d2f87db62aee`, on the accepted T37.1 ancestry.
@@ -249,3 +278,46 @@ provenance. No duplicate install/build/native matrix ran. Mapping precision debt
 input remain explicit. Corrected-image/publication integration, current-head
 CI/native review and coordinator T37.3 acceptance remain separate gates;
 real persisted/security/device/AT/provider/staging/actual-zoom limits still apply.
+
+
+## Corrected-source visual review and publication evidence (2026-11-11)
+
+Astra independently viewed eleven corrected compiled-route PNGs and their
+measurements from the build above. The external `final-visual-manifest.json`
+retains exact PNG/metadata hashes; the source binding is independently rechecked
+in the publication checkout. No further aesthetic/source correction was justified.
+
+| Actual corrected images | Observed result |
+| --- | --- |
+| `mobile-title-320-light-es.png`, `mobile-title-390-dark-en.png`, `mobile-title-844-dark-en.png` | Secondary context is one line with visual ellipsis; full primary heading remains untruncated, with a visible focused menu boundary. SOL metadata/interaction assertions separately establish complete DOM/accessibility text, 44×44px menu/add targets and keyboard focus return; images alone do not prove these behaviors |
+| `workspace-header-1440-light-en-short.png`, `workspace-header-768-dark-es-short.png` | Refresh remains in the account-action row; navigation/locale/account grouping is readable without the earlier isolated Refresh row |
+| `workspace-summary-390-dark-es-long.png`, `workspace-summary-320-light-en-long.png` | Role and owner values start together; long account/email/owner text wraps. Some content continues below the crop, so this view does not prove below-fold reachability |
+| `invitation-confirmed-read403-dark-320-es.png`, `invitation-confirmed-read503-light-390-en.png` | Saved creation is distinct from unavailable secret and follow-up read failure. Copy says Refresh cannot restore the link and makes review/revocation/replacement deliberate and permission-dependent |
+| `invitation-after-read-recovery-503-light-390-en.png` | Unavailable-link confirmation remains truthful after successful read recovery, while the transient read-failure explanation is gone |
+| `invitation-link-copied-light-390.png` | Visible one-time link, Copy/Done and copied feedback remain grouped; available-below success text is truthful while that link is present |
+
+All selected metadata names the same build/snapshot and reports no whole-page
+overflow. Actual visible product-language subtrees are described above; some
+metadata still records the unchanged Spanish document-root language. Native
+evidence uses installed Brave with controlled public HTTP DTO/clipboard fixtures;
+it is separate from real PostgreSQL/Nest/Next persistence/security proof.
+
+The normal frontend gate passes **155 cases**, including ten new regressions;
+exact source/test manifests, all-source/per-file/nonregression checks and raised
+floors pass. Nineteen targeted native cases and 23 retained captures cover the
+corrected source. The 68-source inventory, seven protected baseline files,
+provider/config/tool lock, prior tests and mapping-debt ownership remain intact;
+see the [reviewed unit migration](unit-coverage.md#t373-reviewed-current-web-baseline-migration).
+Affected lint/typecheck/build evidence belongs to SOL; this publication task runs
+only documentation/format/handoff/diff checks and mandatory hooks, with no repeated
+runtime/build/browser/install/Docker/full suite.
+
+Remaining T37.4 work: Astra's long breadcrumb crossing beneath contextual detail
+at 1280, plus SOL's project mutation403 recovery, confirmed project-write/read503
+hidden success, and checklist pending-versus-unknown discriminator. The plain
+Projects global link does not carry current-workspace selection or add draft-safe
+departure; any contextual integration/result relocation remains separately scoped.
+T37.3 does not accept these debts or close T37/T11. Actual browser-chrome 200%
+zoom, physical devices/virtual keyboard, manual AT, real-user/provider/staging and
+real persisted/security QA remain unperformed here. Current-head hosted CI/native
+review and coordinator acceptance remain required; publication stays Draft.

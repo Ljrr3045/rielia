@@ -1,5 +1,24 @@
 # Delivery progress and decisions
 
+## 2026-11-11 T37.3 corrected-source review and consolidated Draft preparation
+
+T37.1 and T37.2 are accepted in merged PRs #45/#46; T37.2 merge is
+`8647f19fc3e359716d64eb649ff0ef79775cdf13`. T37.3 remains IN PROGRESS.
+Coordinator-approved SOL descendant `d3cc5362aa0a0c4439b2d4b91c1c02d1b9b9fbc9`
+is fast-forwarded into `feat/t37-shell-entry`, preserving accepted-base ancestry.
+The normal frontend gate passes 155 cases with exact manifests/counters and raised
+floors; the earlier blocked report remains historical. All 92 compiled-source and
+23 test/helper hashes match tested `9f9f07f`; later publication edits are docs only.
+
+Astra viewed eleven actual corrected captures from build `exXrwr4o43S12E7dSkmxO`:
+compact secondary context/full primary titles, grouped header actions, top-aligned
+role/owner values and truthful confirmed-invite/unavailable-link feedback. No new
+source correction. See the [consolidated evidence and limits](t37-shell-entry.md#corrected-source-visual-review-and-publication-evidence-2026-11-11).
+SOL's 19 native cases/23 captures use HTTP/clipboard fixtures, not persistence or
+security proof. Publication is prepared as Draft; current-head CI/native review
+and coordinator acceptance remain outstanding. T37.4 breadcrumb/three recovery
+debts, device/AT/real-zoom/provider/staging/persisted-flow limits remain explicit.
+
 
 ## 2026-11-11 T37.3 reviewed web coverage reconciliation — NORMAL LOCAL GATE PASSED
 
