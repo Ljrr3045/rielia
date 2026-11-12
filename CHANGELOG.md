@@ -37,12 +37,20 @@ This records repository changes. No application version has been released.
   ancestry integration remain pending. Earlier checkpoint statements below retain
   their historical status. Prior native images are before-change references;
   source checks/hooks are not rendered, persisted or complete T37.5 acceptance.
+### T37.4 project/task presentation and recovery — [Draft PR #48](https://github.com/Ljrr3045/rielia/pull/48)
 
-- Integrate exact PR47 corrective source into T37.4 recovery, retain all 177 cases
-  and corrected invitation assertions, and reconcile only two current-web
-  fingerprints after measured review. One normal gate reproduces every counter,
-  map and hit without changing higher floors or seven other baselines. Native
-  validation follows separately; no PR47 acceptance or publication is implied.
+- Correct round1 recovery findings: keep read-loading/error dialogs reachable with
+  private fields hidden; restore generic cross-target denied-draft Return and
+  require deliberate reauthorization after a failed attempt; restore valid focus
+  after form revocation. Preserve captured versions, local intent and once-only writes.
+- Retain all 177 cases and add eight meaningful schedules; 185 pass one measure
+  and one normal gate after exact reviewed migration, raising L/S/F/B floors to
+  6072/5858/4825/5456. New-source native evidence is pending; old captures remain historical.
+
+- Correct an obsolete CI infrastructure witness now that project/detail screens
+  execute in real units; retain actual unexecuted AST denominators and all gate
+  rejection witnesses. One targeted 20-case run passes using exact-head CI reports,
+  with unchanged application source/tests and all eight baselines.
 
 
 ### T37.4 bounded project/task recovery
@@ -86,6 +94,22 @@ This records repository changes. No application version has been released.
   No logic/recovery/test/dependency change or new rendering claim; independent SOL
   validation, three owned recovery fixes, T37.3 acceptance/base sync and publication
   remain pending. T37.4 and T37 are not closed.
+- Wrap full breadcrumb context within its work column; prioritize task titles in
+  contiguous rows, retain native Move/reorder and expose permitted mobile Restore.
+  Improve project/access forms and readable detail/collaboration structure.
+- Keep confirmed writes visible through failed reads without private labels or
+  automatic mutation retry. Gate denied-draft Return on current target/capability,
+  preserve captured versions/exact unknown keys, and provide Discard/focus recovery.
+- Separate pending checklist Saving from unknown Retry/Discard, and prevent stale
+  create-form remount after capability restoration in an empty workspace.
+- Retain all 177 frontend cases, reviewed floors 5994/5781/4739/5362, 26 unique native
+  journeys and one build with 20 source-bound images. Astra reviewed 14 selected
+  states, with no new blocking T37.4 visual issue in that bounded subset.
+- Preserve accepted PRs #45/#46/#47, exact source/test/baseline proof and failed
+  diagnostics. Record F1 navigation fill ambiguity as T37.5-owned; no T37.5 source
+  is included. The [guide](docs/development/t37-project-task-ui.md) separates
+  current-head CI/native/coordinator acceptance and final real persisted/device/
+  AT/zoom/provider/staging QA. No T11, landing, new policy or full-T37 acceptance.
 
 ### T37.3 shell, identity and workspace entry
 

@@ -35,6 +35,56 @@ records the physical-map-only discovery differences and seven unchanged baseline
 Affected type/lint/format/handoff/whitespace checks pass with mandatory hooks.
 Native discovery and actual PostgreSQL/Nest/Next daily-work validation follow under
 the sole runtime lease. No application fix, publication or T37.5 acceptance occurs.
+## 2026-11-12 PR48 round1 recovery corrections — IMPLEMENTED, NATIVE PENDING
+
+Completed native review found three credible recovery gaps; real regressions
+reproduce dialog loss during reads, unavailable cross-target denied-draft Return
+and missing focus after revocation. The [corrections](t37-project-task-ui.md#pr48-round1-recovery-corrections--implementation-checkpoint)
+retain the existing modal/feedback/controller owners, hide unverified private
+fields, preserve versioned memory-only intent and require fresh authority.
+One measure and one normal web gate pass 185 cases, retaining 177; exact reviewed
+baseline `560abd96` raises all four floors, with unchanged provider/config/inventory
+and seven other baselines. New-source production/native proof is pending before
+Draft publication; old build/26-native/14-Astra evidence remains historical.
+No T37.4 acceptance, T37.5 source, Ready/review trigger or whole-T37 closure.
+
+## 2026-11-12 PR48 infrastructure witness correction
+
+The initial [PR48 CI run](https://github.com/Ljrr3045/rielia/actions/runs/43159616732)
+failed an obsolete zero-execution assertion after T37.4 added real screen units;
+its four-scope coverage gates passed and 19 other infrastructure cases passed.
+The [bounded correction](unit-coverage.md#t374-infrastructure-witness-correction)
+requires execution of the newly tested screens and retains actual-report
+unexecuted AST denominators plus the separate never-imported negative witness.
+One targeted infrastructure run passes 20/20 using exact-head, fingerprint-verified
+CI reports. No application source/tests/baseline or provider/config changes and
+no repeated application suites/build/native work. PR48 remains Draft; current-head
+CI/native review and coordinator acceptance remain, without T37.4/T37 closure.
+
+## 2026-11-12 T37.4 published as Draft PR48
+
+Accepted foundations are PRs #45/#46/#47; accepted `dev` is `55f0f8d`. Publication
+branch `feat/t37-project-task-work` preserves recovery checkpoint `8d7b937` and
+merges accepted-dev ancestry without changing its tree. 92 source/24 test-helper
+hashes and reviewed current baseline `7e44c96c` remain exact. No units, build,
+browser or Docker repeats are warranted for this ancestry/documentation update.
+
+The [consolidated guide](t37-project-task-ui.md) records project/task presentation,
+four bounded recovery corrections, 177 frontend cases, 26 unique native journeys,
+one build `6QKhwGDQLKveEfZvAYWsS` from `ce60740f` and 20 selected source-bound images.
+Astra reviewed 14 distinct selected states, including resolved pending feedback;
+no new blocking T37.4 visual defect was found in that subset. F1 navigation fill
+ambiguity stays T37.5 presentation-owned; its source is excluded from this batch.
+
+English [Draft PR #48](https://github.com/Ljrr3045/rielia/pull/48) targets `dev`.
+The initial push was immediately followed by Draft creation; actual Draft status
+was verified before the URL follow-up push. No Ready transition or paid Kilo
+trigger is authorized. Current-head CI/native review and coordinator acceptance
+remain; publication is not final acceptance. Final PG/Nest/Next persisted/
+security QA stays in T37.5/6; fixture evidence is not persistence/security proof.
+Actual browser zoom, physical devices/manual AT, users/providers/staging remain
+deferred. No T11/landing/new policy or whole-T37 closure is implied.
+
 
 ## 2026-11-12 T37.4 integrated native validation — LOCAL EVIDENCE COMPLETE
 

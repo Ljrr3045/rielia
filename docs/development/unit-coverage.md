@@ -586,3 +586,59 @@ line 732/column 98 to line 733/null after the reviewed markup formatting; no uni
 hit vector, denominator, provider or gate changes. This is explicit mapping
 precision loss. The [final native/persisted evidence](t37-discovery-ui.md#independent-final-source-qa--2026-11-12)
 and [T37.6 proposal](t37-ui-acceptance.md) retain bounded acceptance status.
+## T37.4 infrastructure witness correction
+
+The initial [PR48 CI run](https://github.com/Ljrr3045/rielia/actions/runs/43159616732)
+passed the four-scope coverage pipeline but failed one of 20 infrastructure cases:
+its historical unexecuted-screen assertion expected zero covered functions in
+`projects-view.tsx`, now 11 after meaningful T37.4 screen units. `task-detail.tsx`
+also executes (7 covered functions). This was an obsolete witness, not a coverage
+floor failure; the failed log and exact-head safe artifact remain preserved.
+
+The corrected actual-report assertions require both screens to execute functions
+and branches. Unexecuted executable inputs are selected from the actual web report
+rather than freezing a screen as permanently unimported. Their four positive
+L/S/F/B denominators are checked against actual Istanbul AST counters, with zero
+covered units retained. Ten such inputs are present in the failed run's report.
+The separate real never-imported two-branch fixture, all-scope raised-floor
+rejection, per-file regression, malformed-input and selected-test protections
+remain unchanged.
+
+One targeted `pnpm test:unit-infrastructure` passes all 20 cases on Node 24.22.1,
+using the already-produced safe artifact from exact unchanged source head
+`df4876d8`. All four manifest cores, source/test fingerprints, provider/config and
+tool-lock identities match the accepted baselines and current inputs; the API's
+runner-generated compiler witness is checked against its unchanged runner string.
+No application suites, measurement, install, build, browser or Docker rerun occurs.
+All 92 compiled-source hashes, 24 frontend test/helper fingerprints and eight
+baselines remain exact, including current web `7e44c96c` and its higher floors.
+The prior 177-case/native evidence therefore retains its source binding, without
+claiming a new application run. Current-head CI and coordinator review/acceptance
+remain required; this fix does not accept T37.4 or T37.
+
+
+## T37.4 reviewed round1 recovery migration
+
+Completed native review exposed missing read-modal, cross-target denied-draft and
+revocation-focus schedules. Eight new real screen/controller cases retain 177
+prior cases; one measure and one normal `pnpm unit:web` pass **185**. Four owned
+source fingerprints and the existing recovery-test fingerprint change; all 68
+inputs and 24 selected test/helper entries remain. Runtime/compiler/provider/config/
+tool identities and the seven other baselines are byte-identical.
+
+The coordinator approved exact current-web candidate
+`560abd962881e8e3d93666919c8e190125f8a8e467a65af60bcf7078f88d41df`
+before writing it. L/S/F/B move from 2299/3835, 2500/4324, 500/1055, 2845/5305 to
+2336/3847, 2542/4339, 511/1059, 2910/5333; all floors rise from
+5994/5781/4739/5362 to **6072/5858/4825/5456**. All per-file covered counts/ratios are
+retained or improved and no uncovered count increases. Fifty-eight file summaries,
+64 map sets and 39 hit vectors remain exact. Stable-map owners lose no previously
+covered unit; shifted locations in the four changed owners are not asserted to be
+one-to-one semantic identities. Both raw counter/map reports are preserved.
+
+The normal gate reproduces the measured candidate, full manifests, normalized
+maps/hits and LCOV exactly. No lowered threshold, omitted test/source, ignore,
+provider change or historical baseline edit. Null-column debt changes from
+803/28,798 to **811/28,926** with the new mapped code; implicit arms, unexecuted
+owners and the unchanged type-only zero-unit N/A remain explicit. Controlled HTTP
+units do not establish SQL persistence/security or native focus behavior.

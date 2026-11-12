@@ -37,9 +37,14 @@ is recorded at merge `8065c07895640da228accbd50295d79517d2afa1` from reviewed
 [T37.2 foundations](t37-ui-foundations.md) and bounded visual corrections are
 accepted in merged [PR #46](https://github.com/Ljrr3045/rielia/pull/46) at
 `8647f19fc3e359716d64eb649ff0ef79775cdf13`, with head/postmerge CI and native review
-passed. [T37.3 shell/entry work](t37-shell-entry.md) is IN PROGRESS: corrected-source
-native/visual evidence and the reviewed passing web gate are integrated for Draft
-publication; current-head CI/native review and coordinator acceptance remain.
+passed. [T37.3 shell/entry work](t37-shell-entry.md) is accepted in merged
+[PR #47](https://github.com/Ljrr3045/rielia/pull/47#issuecomment-6814793798) at
+`55f0f8d85521998d3d7ed883f387bd3c6cb664f8`. [T37.4 project/task work](t37-project-task-ui.md)
+has 177 passing frontend cases, 26 bounded native journeys and a 14-image Astra
+review subset from one source-bound build, published in
+[Draft PR #48](https://github.com/Ljrr3045/rielia/pull/48); current-head review and
+coordinator acceptance remain. F1 navigation fill is T37.5-owned; no T37.5
+source is included in this batch.
 T11 has not started; no Astro app is scaffolded.
 Prose or smaller files do not establish universal conformity, production readiness
 or full T01–T35 acceptance.
@@ -313,17 +318,17 @@ coordination against contracts. Native Kilo remains the selected external review
 | T37.5 | Redesign My tasks/search and complete cross-surface QA | Current-assignee My tasks, project-grouped authorized search, paging/counts and live/reconnecting/offline states use the same records/contracts. Verify complete daily-work journeys and consistency across shell, workspace, project and task surfaces; record remaining gaps |
 | T37.6 | Accept the bounded redesign and hand T11 a coherent foundation | Coordinator reviews actual desktop/mobile behavior, visual/state consistency, a11y and persisted/recovery parity with SOL functional evidence and current-head CI/Kilo. Record any deferred real-device/AT/user evidence explicitly; T37 does not certify the entire future product |
 
-T37.2 native review also identifies an inherited T37.4 collaboration recovery
-follow-up: a pending checklist POST can show unknown-outcome Retry save/Discard
-and Saving change at the same time. SOL owns the discriminator, exact-key retry
-and disabled-action regressions; Astra owns subsequent feedback review. See the
-[bound observation](t37-ui-foundations.md#inherited-collaboration-recovery-follow-up).
-This is separate from CSS fixes and the two earlier project recovery debts;
-final T37 acceptance must revisit it. T37.3 native review also records long unbroken
-project breadcrumb text crossing beneath contextual detail at 1280; this protected
-interior remains an explicit Astra-owned T37.4 correction. The confirmed workspace
-invitation success message now truthfully handles a cleared link, with SOL tests;
-it changes neither token clearing nor any of these project recovery debts.
+Inherited T37.2/3 recovery and breadcrumb observations are retained in their
+historical evidence. T37.4 now supplies actual regressions/native fixtures for
+confirmed-write/read failure, denied-draft recovery, mutually exclusive checklist
+pending/unknown feedback and empty-create capability remount. Long breadcrumb
+paint is bounded at 1280. The [consolidated guide](t37-project-task-ui.md) records
+177 cases, 26 unique native journeys, 20 source-bound images, the actual 14-state
+Astra review subset, reviewed higher floors and remaining map/type-only debt.
+F1 unconditional My tasks primary fill is a minimal T37.5 presentation follow-up,
+not a routing finding or T37.4 blocker. Final real PostgreSQL/Nest/Next cross-surface
+QA remains in T37.5/6; fixtures never establish persistence/security. Physical
+users/devices/manual AT, real browser zoom and provider/staging remain deferred.
 
 ### Requested frontend skills and authority
 
@@ -450,8 +455,8 @@ requests paid review, accepts the batch and merges; current-head Kilo remains a
 closed merge gate while Draft. Agreed tooling/units/formatting, scoped
 frontend/backend implementation and bounded T36.6 consolidation are accepted in
 PR #44 with owned debt. T37.1 preparation is accepted in merged PR #45 as linked
-above; T37.2 foundations are accepted in merged PR #46. T37.3 shell/entry and
-truthful invitation feedback remain in progress under the linked evidence; no
-full T37 acceptance is implied.
-Later current-head CI/native review and coordinator acceptance remain required
-for that implementation. T11 follows accepted T37.
+above; T37.2 foundations and T37.3 shell/entry are accepted in merged PRs #46/#47.
+T37.4's consolidated project/task evidence is published in Draft PR #48. Its
+current-head CI/native review and coordinator acceptance remain; final persisted
+QA and owned T37.5 follow-ups do not disappear by implication. No full T37
+acceptance is claimed, and T11 follows accepted T37.
