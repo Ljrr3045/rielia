@@ -6,6 +6,8 @@ This records repository changes. No application version has been released.
 
 ### T37.2 CSS foundations checkpoint
 
+Delivery: [Draft PR #46](https://github.com/Ljrr3045/rielia/pull/46), targeting `dev`; current-head CI/native review and acceptance remain pending.
+
 - Follow native visual evidence with bounded corrections: 44px List/Board
   segments and task-title links, plus 16px Move selects on narrow/coarse-pointer
   layouts. Merge the

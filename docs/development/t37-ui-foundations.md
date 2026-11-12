@@ -1,6 +1,8 @@
 # T37.2 CSS foundations checkpoint
 
 Status: **Corrected-source native evidence reviewed; CI/native review and T37.2 acceptance pending**.
+Delivery: [Draft PR #46](https://github.com/Ljrr3045/rielia/pull/46), targeting `dev`; publication documentation
+preserves the tested CSS hashes below.
 The initial implementation was committed as `d533cc03b364fa31035a1a8398c3ebdaba71b3a1`
 on `feat/t37-ui-foundations`. [T37.1 acceptance](https://github.com/Ljrr3045/rielia/pull/45#issuecomment-6811811563) now governs the preparation:
 PR #45 merged as `8065c07895640da228accbd50295d79517d2afa1` from reviewed

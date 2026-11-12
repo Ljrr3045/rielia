@@ -1,6 +1,9 @@
 # Delivery progress and decisions
 
-## 2026-11-11 T37.2 corrected-source evidence and Draft preparation
+## 2026-11-11 T37.2 corrected-source evidence and Draft publication
+
+Delivery: [Draft PR #46](https://github.com/Ljrr3045/rielia/pull/46), targeting `dev`. All batch changes remain Draft;
+only the coordinator controls freeze, Ready, review and acceptance.
 
 SOL's eight targeted native cases and shared discovery sample pass on `999aba7`,
 build `WI1g2MAenwElnKRcG-YBH`; Astra inspected nine actual corrected PNGs.
