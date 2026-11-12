@@ -33,6 +33,7 @@ export const copy = {
     language: { es: 'Idioma', en: 'Language' },
   },
   header: {
+    projects: { es: 'Proyectos', en: 'Projects' },
     eyebrow: { es: 'Rielia', en: 'Rielia' },
     title: { es: 'Espacios de trabajo', en: 'Workspaces' },
     lede: {

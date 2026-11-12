@@ -4,6 +4,19 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+### T37.3 shell and entry-flow presentation checkpoint
+
+- Compose compact identity/session guidance, a 14rem desktop work rail and
+  wrapping mobile context; retain existing route, drawer and detail mechanics.
+- Align workspace identity/role/owner and member/Agent rows, preserve protected
+  and recovery states, and improve invitation metadata/confirmation spacing.
+- Add the coordinator-authorized plain Projects global link; contextual workspace
+  transfer and draft-safe departure remain SOL-owned. Preserve generated-link
+  feedback lifetime instead of remounting it beneath ready-only administration.
+- Record [scope and pending independent validation](docs/development/t37-shell-entry.md).
+  Presentation checkpoint only: no publication, runtime/visual acceptance or
+  T37.3 completion claim; no logic/test/dependency/coverage changes.
+
 ### T37.2 CSS foundations checkpoint
 
 Delivery: [Draft PR #46](https://github.com/Ljrr3045/rielia/pull/46), targeting `dev`; current-head CI/native review and acceptance remain pending.

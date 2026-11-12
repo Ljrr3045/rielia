@@ -394,7 +394,7 @@ export function renderProjectShell({
             )}
           </div>
 
-          <div className={styles.navGroup}>
+          <div className={styles.sidebarAdministration}>
             <Link className={styles.navWorkspacesLink} href="/workspaces">
               {copy.common.workspaces[lang]}
             </Link>

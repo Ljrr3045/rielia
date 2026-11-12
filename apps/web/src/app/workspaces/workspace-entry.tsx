@@ -202,8 +202,8 @@ export function WorkspaceBar({
 
   return (
     <section className={styles.workspaceBar} aria-labelledby="workspace-bar-heading">
-      <h2 id="workspace-bar-heading" className={styles.srOnly}>
-        <BilingualText value={copy.workspace.selectorLabel} />
+      <h2 id="workspace-bar-heading" className={styles.workspaceTitle}>
+        {workspace.name}
       </h2>
       <div className={styles.field}>
         <label htmlFor={selectorId}>

@@ -1,5 +1,25 @@
 # Delivery progress and decisions
 
+## 2026-11-11 T37.3 shell and entry-flow presentation — IMPLEMENTATION CHECKPOINT
+
+Isolated `feat/t37-shell-entry` starts at frozen PR #46 head `1e2ed071` while
+its native review completes; no T37.2/T37.3 acceptance or publication is implied.
+The [checkpoint guide](t37-shell-entry.md) records compact bilingual identity,
+14rem work rail, wrapping shell context, aligned workspace/member/Agent rows
+and invitation/recovery presentation, reusing T37.2 tokens and existing states.
+
+Source had no workspace Projects entry. The coordinator authorized a localized
+plain `/projects` global link, without contextual selection, draft-navigation
+logic or new routing. Generated-link/operation feedback retains its recovery-safe
+lifetime; contextual navigation and result relocation remain SOL-owned follow-ups.
+No hooks/handlers/conditions/contracts/tests/dependencies/coverage changes.
+One offline frozen install reused 541 packages with zero downloads for mandatory
+tooling; formatting/handoff/diff/hooks evidence accompanies the committed checkpoint.
+No runtime/build/browser/Docker/full suites or new rendered-result claim.
+SOL independently validates exact source and captures, followed by Astra review,
+base sync and consolidated Draft publication. T37 remains IN PROGRESS; T11 follows
+accepted T37 and inherited T37.4 recovery debts remain open.
+
 ## 2026-11-11 T37.2 corrected-source evidence and Draft publication
 
 Delivery: [Draft PR #46](https://github.com/Ljrr3045/rielia/pull/46), targeting `dev`. All batch changes remain Draft;
