@@ -69,10 +69,14 @@ The three reviewed skills live in [`.agents/skills`](.agents/README.md), with
 [provenance/integrity metadata](.agents/skill-installation.json) and the
 [installation/discovery guide](../../docs/development/frontend-skills.md).
 Launch fresh frontend sessions with **cwd `apps/web`** and verify all actual local
-SKILL.md paths, especially duplicate-name `ui-ux-pro-max`; global availability
-does not prove local discovery. Local guidance is required for T37; automatic
-local/global resolution remains pending until observed. Never overwrite global
-customizations or assume a repository-root worker sees descendant skills.
+SKILL.md paths, especially duplicate-name `ui-ux-pro-max`. Initial fresh-session
+discovery and explicit loading succeeded for all three intended local entries;
+the catalog exposed local/global copies without a unique bare-name winner.
+Every T37 dispatch must explicitly select `.agents/skills/<name>/SKILL.md` from
+`apps/web`. A nested archived source was also catalogued and is now renamed
+`SKILL.md.txt`; post-fix fresh verification remains pending. Never claim an
+automatic override, overwrite global customizations or assume a repository-root
+worker sees descendant skills.
 
 Read the local usage entry before invoking these skills. Third-party instructions
 remain subordinate to user/project/product/UX/brand/architecture. Impeccable's

@@ -47,6 +47,18 @@ class FrontendSkillsIntegrity(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Resource set mismatch"):
             VERIFIER.verify(self.root)
 
+    def test_nested_skill_catalog_is_rejected_even_when_listed_in_manifest(self):
+        target = self.skill / "archive/SKILL.md"
+        target.parent.mkdir()
+        shutil.copyfile(self.skill / "SKILL.md", target)
+        def change(manifest):
+            skill = next(s for s in manifest["skills"] if s["name"] == "frontend-design")
+            entry = next(e for e in skill["files"] if e["path"].endswith("/SKILL.md"))
+            skill["files"].append(dict(entry, path=target.relative_to(self.root).as_posix()))
+        self.edit_manifest(change)
+        with self.assertRaisesRegex(ValueError, "only three top-level SKILL.md"):
+            VERIFIER.verify(self.root)
+
     def test_resource_symlink_even_to_same_bytes(self):
         source = self.skill / "SKILL.md"
         outside = self.root / "external.md"

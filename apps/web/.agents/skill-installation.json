@@ -17,8 +17,14 @@
   },
   "discovery": {
     "requiredWorkingDirectory": "apps/web",
-    "freshFrontendSession": "PENDING",
-    "duplicateNameResolution": "PENDING; require local ui-ux-pro-max path, do not overwrite global customization"
+    "initialFreshFrontendSession": {
+      "session": "01a1cd29-5fae-72b3-97a7-834947304c3d",
+      "task": "task_ba6ec966ff00",
+      "head": "bc2fb2eaaf0d4d430720b72f8d2e9ea7a004f6f1",
+      "result": "Three intended local entries catalogued and explicitly loaded with readable resources; nested archival SKILL.md also catalogued with unresolved relative resources"
+    },
+    "duplicateNameResolution": "Catalog exposed local and global entries without a unique bare-name winner; future dispatches must explicitly select local top-level SKILL.md paths; global customization unchanged",
+    "postFixFreshFrontendSession": "PENDING"
   },
   "skills": [
     {
@@ -645,8 +651,8 @@
         },
         {
           "path": "apps/web/.agents/skills/ui-ux-pro-max/SKILL.md",
-          "sha256": "3456b1a68b83ed26feb459ebf738df995ec578ea951aa1869005224d39e001af",
-          "bytes": 16429,
+          "sha256": "59879c1cad95bd68a7ee4a140e03da2bebeedfc6e5318209d416ff17d1330925",
+          "bytes": 16433,
           "executable": false,
           "sourcePath": ".claude/skills/ui-ux-pro-max/SKILL.md",
           "sourceSha256": "9aa50bd44076db28624ea976056d915905ab9357748f90263a004fa0ef087147",
@@ -1237,7 +1243,7 @@
           "sourceSha256": "a599aa256049cf30954d1f164721b99e453eb7e4cb8241bcab2d5573e6cf58b8"
         },
         {
-          "path": "apps/web/.agents/skills/ui-ux-pro-max/upstream/SKILL.md",
+          "path": "apps/web/.agents/skills/ui-ux-pro-max/upstream/SKILL.md.txt",
           "sha256": "9aa50bd44076db28624ea976056d915905ab9357748f90263a004fa0ef087147",
           "bytes": 16646,
           "executable": false,
@@ -1253,7 +1259,7 @@
           "sourceSha256": "3fb533fb2025172bbaa82f5743e6d1484c64685b776381045106b44f828dfdf1"
         }
       ],
-      "adaptation": "Only SKILL.md command paths and an attribution comment change; original retained at upstream/SKILL.md, upstream Codex layout at upstream/codex.json. Scripts/data/references unchanged."
+      "adaptation": "Only SKILL.md command paths and an attribution comment change; original retained at upstream/SKILL.md.txt (non-discoverable archival filename), upstream Codex layout at upstream/codex.json. Scripts/data/references unchanged."
     }
   ]
 }

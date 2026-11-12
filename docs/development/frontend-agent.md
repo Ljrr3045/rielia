@@ -55,7 +55,11 @@ worker does not prove fresh Astra discovery. Brand/UX/product/architecture
 instructions govern skill suggestions. Do not overwrite a global customization
 or treat it as proof of local setup. Independent
 [Astra research](t37-ui-inventory.md) is integrated as prepared-source evidence;
-[design direction](t37-design-direction.md) remains a proposal. Discovery is pending.
+[design direction](t37-design-direction.md) remains a proposal. Initial fresh
+frontend discovery loaded all three local entries, but also catalogued an archival
+SKILL.md; its renamed-source fix awaits a fresh check. Dispatches must explicitly
+select local top-level paths because the catalog exposed both local and global
+`ui-ux-pro-max` without an observable unique bare-name winner.
 
 ## Historical decision and verification — 2026-10-25
 

@@ -1,5 +1,14 @@
 # T37 design direction and implementation handoff
 
+**Discovery addendum — 2026-11-11 America/Caracas:** subsequent fresh-session
+discovery at `bc2fb2e` loaded the three intended local entries, while also exposing
+a preserved-source SKILL.md with broken relative resources. Its non-discoverable
+`SKILL.md.txt` replacement preserves source bytes; post-fix fresh verification is
+pending. Future dispatches explicitly select local top-level paths and do not
+claim an automatic override of global skills. See
+[discovery evidence](frontend-skills.md#safe-discovery-and-precedence).
+The original research proposal and source/base status below remain unchanged.
+
 **Proposal dated 2026-11-11, America/Caracas.** This translates the authorized
 T37 scope into bounded presentation decisions; it is not a final mockup, brand
 ratification or measured usability result. Read the [current-source inventory](t37-ui-inventory.md)

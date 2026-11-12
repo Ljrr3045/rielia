@@ -47,7 +47,9 @@ or an Orca installation.
   retains explicit owned debt. The user authorized T37 on 2026-11-11
   America/Caracas. T37 is IN PROGRESS; [frontend-local skill preparation](docs/development/frontend-skills.md)
   and [Astra's inventory](docs/development/t37-ui-inventory.md) are T37.1
-  preparation, with fresh frontend discovery pending. T11 follows accepted T37.
+  preparation. Initial frontend discovery succeeded with a nested archive catalog
+  finding; its packaging fix awaits fresh verification. Dispatches explicitly
+  select local top-level skill paths. T11 follows accepted T37.
   No universal source conformity or full acceptance is implied. Original
   T01–T35 numbering/acceptance and immutable handoff remain unchanged. Future
   T30–T34 landing work uses the [later Astro/narrative direction](docs/development/landing-direction.md);

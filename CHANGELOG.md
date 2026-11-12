@@ -8,6 +8,13 @@ This records repository changes. No application version has been released.
 
 Delivery: Draft [PR #45](https://github.com/Ljrr3045/rielia/pull/45).
 
+- Follow-up discovery found all three intended local entries usable, plus an
+  unintended catalog entry from the preserved upstream SKILL.md. Archive it as
+  `SKILL.md.txt` with identical source bytes, update provenance/adaptation, and
+  enforce exactly three top-level entries with 13 focused integrity witnesses.
+  Require explicit local paths rather than claim automatic global precedence;
+  post-fix fresh-session verification remains pending.
+
 - Record bounded T36 acceptance in merged PR #44 and the user's 2026-11-11
   authorization to start T37; preserve historical pre-review proposal notes.
 - Pin and install Frontend Design, Impeccable and UI UX Pro Max under

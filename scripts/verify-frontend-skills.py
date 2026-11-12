@@ -22,7 +22,7 @@ OLD_SEARCH = '${CLAUDE_PLUGIN_ROOT}/.claude/skills/ui-ux-pro-max/scripts/search.
 NEW_SEARCH = '<skill-base-dir>/scripts/search.py'
 ADAPTATION = (
     "<!-- Rielia T37.1 adaptation: replace Claude plugin command paths with the "
-    "resolved local skill base. Original: upstream/SKILL.md; see ../../README.md. -->\n"
+    "resolved local skill base. Original: upstream/SKILL.md.txt; see ../../README.md. -->\n"
 )
 
 
@@ -92,7 +92,7 @@ def verify(root):
             if bool(path.stat().st_mode & 0o111) != entry["executable"]:
                 raise ValueError("Executable mode mismatch: " + relative)
             if entry.get("transformation") == "codex-search-path-v1":
-                original = regular(root, prefix + "upstream/SKILL.md").read_bytes()
+                original = regular(root, prefix + "upstream/SKILL.md.txt").read_bytes()
                 if hashlib.sha256(original).hexdigest() != entry["sourceSha256"]:
                     raise ValueError("Original source mismatch: " + relative)
                 adapted = original.decode("utf-8").replace("\n---\n", "\n---\n\n" + ADAPTATION, 1)
@@ -112,6 +112,11 @@ def verify(root):
     # Checking a regular sentinel first validates every ancestor of the vendor root.
     regular(root, SKILLS + "/frontend-design/SKILL.md")
     actual = {p.relative_to(root).as_posix() for p in tree_files(root / SKILLS)}
+    catalog = {p for p in actual if PurePosixPath(p).name.casefold() == "skill.md"}
+    intended_catalog = {SKILLS + "/" + name + "/SKILL.md" for name in PINS}
+    if catalog != intended_catalog:
+        raise ValueError("Expected only three top-level SKILL.md catalog entries; got "
+                         + str(sorted(catalog)))
     if actual != expected:
         raise ValueError("Resource set mismatch; missing=" + str(sorted(expected - actual))
                          + "; unexpected=" + str(sorted(actual - expected)))
@@ -127,7 +132,7 @@ def main():
     except (OSError, ValueError, KeyError, TypeError) as error:
         print("FAIL: " + str(error), file=sys.stderr)
         return 1
-    print(f"PASS: {skills} pinned frontend skills; {files} exact files; {size} bytes; no symlinks/extra resources")
+    print(f"PASS: {skills} pinned frontend skills; {files} exact files; {size} bytes; exactly three top-level SKILL.md entries; no symlinks/extra resources")
     print("Scope: reviewed local manifest integrity, not upstream authenticity or fresh-session discovery.")
     return 0
 

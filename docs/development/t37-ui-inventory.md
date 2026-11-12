@@ -1,5 +1,14 @@
 # T37.1 current UI inventory
 
+**Discovery addendum — 2026-11-11 America/Caracas:** the subsequent fresh session
+at preparation checkpoint `bc2fb2e` catalogued and explicitly loaded all three
+intended frontend-local skills with readable resources. It also catalogued the
+preserved upstream SKILL.md with unresolved relative resources; that archive is
+now `SKILL.md.txt`, with post-fix fresh verification pending. Dispatches explicitly
+select local top-level paths because local/global bare-name precedence was not
+established. See [discovery evidence](frontend-skills.md#safe-discovery-and-precedence).
+The source/base snapshot below remains unchanged.
+
 Research snapshot: **2026-11-11, America/Caracas**, branch `docs/t37-ui-research`,
 source/base `92d480dcc3c35f2bc340b99ff2dd084097c7457c`. This is a source inventory
 and evidence index, not a new browser audit. The dispatch records T36 accepted in

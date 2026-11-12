@@ -7,7 +7,8 @@ checkout. This package changes no application behavior, dependencies, permission
 unit/coverage baseline or handoff bytes; T11, landing and new product surfaces are
 excluded. Delivery: Draft [PR #45](https://github.com/Ljrr3045/rielia/pull/45).
 The coordinator also authorized integrating Astra's prepared research documents
-below. Fresh frontend-worker discovery and full T37.1 acceptance remain pending.
+below. Initial fresh discovery succeeded with a nested archive catalog finding;
+post-fix fresh verification and full T37.1 acceptance remain pending.
 
 T36.1–T36.6 were accepted in [PR #44](https://github.com/Ljrr3045/rielia/pull/44),
 merged as `92d480dcc3c35f2bc340b99ff2dd084097c7457c` from reviewed head
@@ -47,7 +48,7 @@ not replaced by a global copy or an incomplete SKILL-only installation.
 
 The sole local instruction adaptation replaces 11 Claude-plugin search paths in
 UI UX Pro Max with `<skill-base-dir>/scripts/search.py` and adds a modification
-notice after its frontmatter. Original bytes remain at `upstream/SKILL.md` and the
+notice after its frontmatter. Original bytes remain at `upstream/SKILL.md.txt` and the
 pinned Codex platform layout at `upstream/codex.json`. The scripts, data and
 references are unchanged. The verifier reconstructs the adaptation exactly.
 
@@ -115,18 +116,40 @@ assumed to discover descendant skills. Installed files become candidates on the
 next turn/fresh session; this existing technical session's catalog is not proof.
 
 Record the actual catalog/loaded `SKILL.md` paths for all three names, the checkout
-head and cwd, and the local `ui-ux-pro-max` Next/React guidance/resources. Rielia's
-required precedence is the local copy for T37. Actual harness duplicate-name
-resolution is **unverified until observed**; the preexisting global customization
-must remain untouched. If the harness selects the global copy or omits a package,
-explicitly load the local file, report automatic discovery as failed/unverified
-and send the discrepancy to the coordinator; do not claim transparent override.
-Do not change global skill/config settings to hide the result.
+head and cwd, and the local `ui-ux-pro-max` Next/React guidance/resources. Every
+T37 dispatch must explicitly select the local top-level
+`apps/web/.agents/skills/<name>/SKILL.md` paths (relative to repository root),
+or `.agents/skills/<name>/SKILL.md` from `apps/web`. Do not claim an automatic
+local/global override or change global skill/config settings.
+
+Initial discovery task `task_ba6ec966ff00`, fresh Astra high session
+`01a1cd29-5fae-72b3-97a7-834947304c3d`, ran with cwd `apps/web` at checkpoint
+`bc2fb2eaaf0d4d430720b72f8d2e9ea7a004f6f1`. Verified permissions were
+auto_review/on-request/workspace-write. Its actual injected catalog contained
+all three intended local top-level entries; the worker fully read them and
+sampled their local references/license/Next.js/React data successfully, without
+running vendor code. The catalog also exposed the global customized
+`ui-ux-pro-max` and a fourth local entry at `ui-ux-pro-max/upstream/SKILL.md`.
+No unique bare-name winner was observable; the local top-level entry was selected
+explicitly. The archival entry's relative reference/script paths did not resolve.
+
+The follow-up renames only that original source to non-discoverable
+`upstream/SKILL.md.txt`, preserving its exact SHA-256
+`9aa50bd44076db28624ea976056d915905ab9357748f90263a004fa0ef087147`.
+Installed and upstream source paths remain distinct in the manifest: the upstream
+source is still `.claude/skills/ui-ux-pro-max/SKILL.md` at the original pin.
+The adapted entry's notice points to the archival filename. Integrity now enforces
+exactly the three intended top-level catalog filenames and rejects nested entries
+even if a changed manifest lists them. The package still has 147 files, now
+5,930,875 bytes (four extra bytes in that notice); no original source bytes change.
+**Post-fix fresh-session catalog verification remains pending.**
 
 The [local usage entry](../../apps/web/.agents/README.md) gives the exact read-only
 search command from `apps/web`. No Impeccable binary probe is needed for discovery.
-Fresh Astra discovery remains pending; this preparation batch does not close
-full T37.1 or T37.
+Post-fix fresh Astra verification remains pending; this preparation batch does
+not close full T37.1 or T37. The initial terminal footer's two unexplained warnings
+are not attributed to skill loading. No backend-session isolation, UI quality,
+accessibility or persistence conclusion follows from discovery.
 
 ## Independent Astra research integration
 
@@ -141,6 +164,10 @@ source checkout. Source file SHA-256 values are:
 
 - Inventory: `f1d0cbdedcaf43a5d4428f67b57768a231f2d08b7001f5524fc0cccc21172fcb`.
 - Direction: `c636e6aedab7d3189e9401ebd7268be96f67646ee4444c52ae4b8a5d4384f764`.
+
+These hashes bind the original byte-exact research integration. Later dated
+discovery addenda update only current discovery status; they are distinct from
+the preserved research snapshot and naturally change the whole document hashes.
 
 Their source/base labels are preserved, including the then-absent local skills;
 the installed package state is recorded separately above. Astra reports actual
@@ -162,7 +189,8 @@ python3 scripts/verify-handoff.py
 
 The verifier reads no network and executes no vendor code. It validates the three
 pins, exact file set, each path component/type, SHA-256, byte length, executable
-mode, required entry/license/notice and exact adaptation. Missing/extra/tampered
+mode, exactly three top-level catalog entries, required entry/license/notice and
+exact adaptation. Missing/extra/tampered
 resources, path traversal, symlink files/directories/manifest and mode drift fail.
 Focused Python failure witnesses and the verifier also run in CI. The reviewed
 manifest is the trust input: changing both a file and its reviewed manifest is a

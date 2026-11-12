@@ -1,5 +1,29 @@
 # Delivery progress and decisions
 
+## 2026-11-11 T37.1 discovery correction — CHECKPOINT
+
+Draft delivery remains [PR #45](https://github.com/Ljrr3045/rielia/pull/45).
+Fresh Astra high session `01a1cd29-5fae-72b3-97a7-834947304c3d`, task
+`task_ba6ec966ff00`, used cwd `apps/web` at `bc2fb2e` with verified
+auto_review/on-request/workspace-write. Its actual injected catalog exposed all
+three intended local entries; explicit full reads and sampled local references,
+license and Next.js/React rows succeeded without vendor code execution.
+
+That catalog also included the preserved `ui-ux-pro-max/upstream/SKILL.md`, whose
+relative resources did not resolve, and the global customized copy. No unique
+bare-name winner was observable. T37 dispatches must explicitly select local
+top-level skill paths; global skills remain unchanged and no override is claimed.
+
+The source is renamed to `upstream/SKILL.md.txt` without changing its original
+SHA-256 `9aa50bd44076db28624ea976056d915905ab9357748f90263a004fa0ef087147`.
+Manifest installed paths change while upstream provenance paths/hashes remain
+intact. The adapted notice adds four bytes; 147 files now total 5,930,875 bytes.
+Offline integrity enforces exactly three top-level SKILL.md entries; 13 focused
+failure witnesses pass, including a nested entry listed in a changed manifest.
+Post-fix fresh-session verification is PENDING; later evidence will be integrated
+in this Draft batch. Prior preparation/discovery notes below retain their original
+checkpoint status; full T37 acceptance and app/visual implementation remain open.
+
 ## 2026-11-11 T37.1 frontend-local skills — TECHNICAL PREPARATION
 
 Delivery: Draft [PR #45](https://github.com/Ljrr3045/rielia/pull/45).
