@@ -218,25 +218,25 @@
     },
     "apps/web/src/app/projects/project-content-dialog.tsx": {
       "branches": {
-        "covered": 79,
+        "covered": 90,
         "total": 97
       },
       "functions": {
-        "covered": 4,
+        "covered": 6,
         "total": 12
       },
       "lines": {
-        "covered": 5,
+        "covered": 7,
         "total": 15
       },
       "statements": {
-        "covered": 5,
+        "covered": 7,
         "total": 15
       }
     },
     "apps/web/src/app/projects/project-content-model.ts": {
       "branches": {
-        "covered": 23,
+        "covered": 26,
         "total": 32
       },
       "functions": {
@@ -244,11 +244,11 @@
         "total": 8
       },
       "lines": {
-        "covered": 33,
+        "covered": 36,
         "total": 42
       },
       "statements": {
-        "covered": 37,
+        "covered": 40,
         "total": 46
       }
     },
@@ -290,25 +290,25 @@
     },
     "apps/web/src/app/projects/project-recovery.tsx": {
       "branches": {
-        "covered": 144,
+        "covered": 155,
         "total": 399
       },
       "functions": {
-        "covered": 8,
+        "covered": 10,
         "total": 41
       },
       "lines": {
-        "covered": 73,
+        "covered": 76,
         "total": 184
       },
       "statements": {
-        "covered": 76,
+        "covered": 80,
         "total": 198
       }
     },
     "apps/web/src/app/projects/project-shell.tsx": {
       "branches": {
-        "covered": 77,
+        "covered": 80,
         "total": 124
       },
       "functions": {
@@ -326,8 +326,8 @@
     },
     "apps/web/src/app/projects/project-ui.tsx": {
       "branches": {
-        "covered": 34,
-        "total": 66
+        "covered": 38,
+        "total": 69
       },
       "functions": {
         "covered": 32,
@@ -344,7 +344,7 @@
     },
     "apps/web/src/app/projects/project-work-area.tsx": {
       "branches": {
-        "covered": 99,
+        "covered": 103,
         "total": 179
       },
       "functions": {
@@ -362,19 +362,19 @@
     },
     "apps/web/src/app/projects/projects-view.tsx": {
       "branches": {
-        "covered": 107,
+        "covered": 111,
         "total": 211
       },
       "functions": {
-        "covered": 11,
+        "covered": 13,
         "total": 41
       },
       "lines": {
-        "covered": 78,
+        "covered": 82,
         "total": 178
       },
       "statements": {
-        "covered": 79,
+        "covered": 84,
         "total": 196
       }
     },
@@ -384,15 +384,15 @@
         "total": 83
       },
       "functions": {
-        "covered": 25,
+        "covered": 26,
         "total": 73
       },
       "lines": {
-        "covered": 26,
+        "covered": 27,
         "total": 79
       },
       "statements": {
-        "covered": 26,
+        "covered": 27,
         "total": 82
       }
     },
@@ -470,7 +470,7 @@
     },
     "apps/web/src/app/projects/task-collaboration.tsx": {
       "branches": {
-        "covered": 62,
+        "covered": 63,
         "total": 148
       },
       "functions": {
@@ -524,19 +524,19 @@
     },
     "apps/web/src/app/projects/task-detail.tsx": {
       "branches": {
-        "covered": 38,
+        "covered": 42,
         "total": 56
       },
       "functions": {
-        "covered": 7,
+        "covered": 8,
         "total": 8
       },
       "lines": {
-        "covered": 20,
+        "covered": 21,
         "total": 23
       },
       "statements": {
-        "covered": 20,
+        "covered": 21,
         "total": 23
       }
     },
@@ -560,19 +560,19 @@
     },
     "apps/web/src/app/projects/task-forms.tsx": {
       "branches": {
-        "covered": 8,
+        "covered": 32,
         "total": 60
       },
       "functions": {
-        "covered": 1,
+        "covered": 7,
         "total": 16
       },
       "lines": {
-        "covered": 8,
+        "covered": 32,
         "total": 49
       },
       "statements": {
-        "covered": 8,
+        "covered": 32,
         "total": 51
       }
     },
@@ -650,7 +650,7 @@
     },
     "apps/web/src/app/projects/task-view-bar.tsx": {
       "branches": {
-        "covered": 33,
+        "covered": 37,
         "total": 73
       },
       "functions": {
@@ -686,20 +686,20 @@
     },
     "apps/web/src/app/projects/use-project-interaction-effects.ts": {
       "branches": {
-        "covered": 111,
-        "total": 155
+        "covered": 123,
+        "total": 168
       },
       "functions": {
-        "covered": 31,
-        "total": 39
+        "covered": 32,
+        "total": 40
       },
       "lines": {
-        "covered": 130,
-        "total": 169
+        "covered": 143,
+        "total": 183
       },
       "statements": {
-        "covered": 154,
-        "total": 204
+        "covered": 167,
+        "total": 219
       }
     },
     "apps/web/src/app/projects/use-project-navigation-focus.ts": {
@@ -1010,7 +1010,7 @@
     },
     "apps/web/src/lib/project-task-controller.ts": {
       "branches": {
-        "covered": 748,
+        "covered": 749,
         "total": 853
       },
       "functions": {
@@ -1226,10 +1226,10 @@
     }
   },
   "floors": {
-    "branches": 5456,
-    "functions": 4825,
-    "lines": 6072,
-    "statements": 5858
+    "branches": 5601,
+    "functions": 4962,
+    "lines": 6182,
+    "statements": 5960
   },
   "manifest": {
     "compiler": {
@@ -1262,13 +1262,13 @@
       "apps/web/src/app/projects/feedback.tsx": "6b7d62e9dfbe1aa1431e6f08d5f6e273a3e0f791c05746b18ff222609d72332a",
       "apps/web/src/app/projects/page.tsx": "91a38ea3d2bda72bbdfdd0fd4dc2965764b854eb7d08c985dbf938472ae8bcea",
       "apps/web/src/app/projects/project-access.tsx": "19615611600e046d98b47588fbbbc221be78fa792642764513727c1a87d3ed26",
-      "apps/web/src/app/projects/project-content-dialog.tsx": "c6a34080bbd7fed25db642142b146da90e999031a9c5f29ca7fa90ffdadf7d8c",
+      "apps/web/src/app/projects/project-content-dialog.tsx": "f2d3e6477f9d1e0fc61ae2ed17902826e666ca4f631a27a52d88021025a1f4d5",
       "apps/web/src/app/projects/project-content-model.ts": "379eda84be7ed778646e6ef0480cc3a2627e72e1ffe1c9979b876e52662fa1e2",
       "apps/web/src/app/projects/project-dom-hooks.ts": "3361f2beeddf059a1136501ccf2339587890a86833b9400ee6d8c074386c74eb",
       "apps/web/src/app/projects/project-forms.tsx": "e867646dbe574980eeebed7cb1e3722b47666590e29df7e674616c5236533389",
       "apps/web/src/app/projects/project-recovery.tsx": "c09fa42e1b45215deefbc36d103129fe4dcf6443799b7d340a7ce0d5e5ecb240",
       "apps/web/src/app/projects/project-shell.tsx": "f430091089574c53acbf3b8a63de709d2a1f8af484b315a151ca9d4c1fb37287",
-      "apps/web/src/app/projects/project-ui.tsx": "c162f41b627871d219086269a76d174a8927d57c49356f355c37d890dbb81818",
+      "apps/web/src/app/projects/project-ui.tsx": "86e79a16fd17d6491c41cfda2fef20d2d52d7685acf7af96c40a724adf86e3dd",
       "apps/web/src/app/projects/project-work-area.tsx": "792b8155e2fa42e008d87a766dcb9ffefa73e95953b33964e003a8eabaf50ba9",
       "apps/web/src/app/projects/projects-view.tsx": "367df5e7406cb8a123bdcb2dd56862f07ba4ca37acd29255a6be6a7e7425ff9d",
       "apps/web/src/app/projects/strings.ts": "13a65633bada725ac918affcfd2836e9681315ca46a49aee0dcf1e61e2654d79",
@@ -1288,7 +1288,7 @@
       "apps/web/src/app/projects/task-relations.tsx": "d5d530ecc87d3683495cde1d8a865efa248eb1d402248a9f4088c140e6341214",
       "apps/web/src/app/projects/task-view-bar.tsx": "7ba364c06c39ce46808f11352458924af998c38753461290c6d2d97ec7d03048",
       "apps/web/src/app/projects/use-project-content-forms.ts": "23d8cbb8374134f15a6925ffcb0c7324a611baec3b5a852dd24359cbeddd0fe0",
-      "apps/web/src/app/projects/use-project-interaction-effects.ts": "165d3ffebf63019813505ab4a09fba7153ba9c3d6f9e6db63ae0131d4c99d0ed",
+      "apps/web/src/app/projects/use-project-interaction-effects.ts": "b87e6422ee2d345fa6bced2c7c4f2ce1e42c7c862888ed51f0ff79774854dccf",
       "apps/web/src/app/projects/use-project-navigation-focus.ts": "c64adc2b9649feb07408d343f38bdedbe109970498107d3952701e382b762fa2",
       "apps/web/src/app/projects/use-task-result-focus.ts": "69e9b94356674fba3f6e0ca19e4d5829730dc8a37e78ca24340dc956e60014e7",
       "apps/web/src/app/workspaces/page.tsx": "b17f0cef9233707a457278663b06e9fc94b54f048826cc3471da2c50812dd9b7",
@@ -1339,7 +1339,7 @@
       "apps/web/test/unit/project-hook.test.mjs": "aa1d96fdcba93651eeb0366e1af347746981488e337ea1694e35a38ad168493e",
       "apps/web/test/unit/project-interaction-harness.mjs": "0592454f57ab40250c04bfded397620fc2856f21b11822b597281605001c1b61",
       "apps/web/test/unit/project-navigation-focus.test.mjs": "735d3a714873f43c3df6f3515a42c7bd9f4580c193842da078cac2b96ce4192f",
-      "apps/web/test/unit/project-recovery.test.mjs": "58a2138d843606392eb44fd717668b53ac53ec242426e89278cd9168dbc48c3a",
+      "apps/web/test/unit/project-recovery.test.mjs": "d51464135d5abb1d162568ea24b266b7ac699de36b0236fe0143d432989eaf66",
       "apps/web/test/unit/task-result-focus.test.mjs": "28c4019099eb4d5bea66b3fd430a87b027d31154a34c8af8383f9cf0766018e8",
       "apps/web/test/unit/workspace-feedback.test.mjs": "6338d7ffd30291fef3082e994311898aff3a6fc5068da1259b883b0986ac7239",
       "apps/web/test/unit/workspace-hook.test.mjs": "d77c03576e8e3340d40a1a30f79b82cc77b1533cc751be0f9646dc7c9ca5da0b",
@@ -1358,20 +1358,20 @@
   "scope": "web",
   "total": {
     "branches": {
-      "covered": 2910,
-      "total": 5333
+      "covered": 2996,
+      "total": 5349
     },
     "functions": {
-      "covered": 511,
-      "total": 1059
+      "covered": 526,
+      "total": 1060
     },
     "lines": {
-      "covered": 2336,
-      "total": 3847
+      "covered": 2387,
+      "total": 3861
     },
     "statements": {
-      "covered": 2542,
-      "total": 4339
+      "covered": 2595,
+      "total": 4354
     }
   }
 }

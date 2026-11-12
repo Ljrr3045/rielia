@@ -241,8 +241,41 @@ export function useProjectInteractionEffects({
   useEffect(() => {
     if (form === null) return;
     const frame = requestAnimationFrame(() => {
-      const dialog = document.querySelector<HTMLElement>('[role="dialog"]');
-      if (dialog !== null && !dialog.contains(document.activeElement)) dialog.focus();
+      const dialog = document.querySelector<HTMLElement>('[data-project-form-modal="true"]');
+      function reachable(element: HTMLElement): boolean {
+        if (!element.isConnected) return false;
+        for (
+          let current: HTMLElement | null = element;
+          current !== null;
+          current = current.parentElement
+        ) {
+          if (
+            current.matches(
+              '[inert], [hidden], [aria-hidden="true"], [disabled], [aria-disabled="true"], :disabled',
+            )
+          )
+            return false;
+          const style = window.getComputedStyle(current);
+          if (
+            style.display === 'none' ||
+            style.visibility === 'hidden' ||
+            style.visibility === 'collapse'
+          )
+            return false;
+        }
+        return true;
+      }
+      if (dialog === null || !reachable(dialog)) return;
+      const active = document.activeElement;
+      if (
+        active instanceof HTMLElement &&
+        active !== document.body &&
+        active !== document.documentElement &&
+        reachable(active)
+      )
+        return;
+      const target = [...dialog.querySelectorAll<HTMLElement>('[data-autofocus]')].find(reachable);
+      (target ?? dialog).focus();
     });
     return () => cancelAnimationFrame(frame);
   }, [form, status]);

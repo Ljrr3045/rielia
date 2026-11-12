@@ -6,6 +6,12 @@ This records repository changes. No application version has been released.
 
 ### T37.4 project/task presentation and recovery — [Draft PR #48](https://github.com/Ljrr3045/rielia/pull/48)
 
+- Correct round2 focus ownership when task detail and form both have dialog roles:
+  explicitly target the reachable form modal, preserve deliberate current focus
+  and prefer an enabled autofocus child. New selected-task/priority-guard cases
+  retain 185 prior tests; 195 pass the exact reviewed gate with higher floors.
+  New-source build and bounded native proof remain pending before the Draft push.
+
 - Correct round1 recovery findings: keep read-loading/error dialogs reachable with
   private fields hidden; restore generic cross-target denied-draft Return and
   require deliberate reauthorization after a failed attempt; restore valid focus
