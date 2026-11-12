@@ -3729,21 +3729,29 @@
 /* T10 workspace discovery: My tasks, search, live status and workspace guard. */
 
 .discoveryBar {
-  margin: 0.35rem 0 0.7rem;
+  margin-block: var(--space-4) var(--space-6);
   min-width: 0;
 }
 
 .discoveryTop {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.45rem 0.7rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: var(--space-4) var(--space-3);
   min-width: 0;
+}
+
+.discoveryTop > .secondary {
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 .discoveryScope {
   display: inline-flex;
-  flex: 0 0 auto;
+  flex-wrap: wrap;
+  grid-column: 1 / -1;
+  justify-self: start;
+  max-width: 100%;
   gap: 0.15rem;
   padding: 0.15rem;
   border: 1px solid var(--divider);
@@ -3752,6 +3760,9 @@
 }
 
 .discoveryScopeTab {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
   min-height: var(--control-height);
   padding: 0 0.8rem;
   border: 0;
@@ -3773,11 +3784,18 @@
 
 .discoverySearch {
   display: grid;
-  flex: 1 1 20rem;
   grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 0.4rem;
+  align-items: end;
+  gap: var(--space-2);
   min-width: 0;
+}
+
+.discoverySearchLabel {
+  grid-column: 1 / -1;
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+  font-weight: 650;
+  overflow-wrap: anywhere;
 }
 
 .discoverySearchInput {
@@ -3786,9 +3804,76 @@
 }
 
 .discoveryHint {
-  margin-top: 0.35rem;
+  max-width: 75ch;
+  margin-top: var(--space-2);
   color: var(--text-secondary);
-  font-size: 0.78rem;
+  font-size: 0.8125rem;
+  overflow-wrap: anywhere;
+}
+
+.discoveryBar > .filterRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  padding-block: var(--space-4);
+  border-block: 1px solid var(--divider);
+}
+
+.discoveryBar .filterField {
+  align-self: start;
+  gap: var(--space-2);
+  font-size: 0.8125rem;
+}
+
+.discoveryBar > .secondary {
+  margin-top: var(--space-4);
+}
+
+.discoveryBar > .filterPanel {
+  margin-top: var(--space-3);
+  background: var(--surface-inset);
+}
+
+.discoveryBar .filterPanelGrid {
+  gap: var(--space-4);
+}
+
+.discoveryResults {
+  min-width: 0;
+}
+
+.discoverySummary {
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  min-height: var(--control-height);
+  padding-block: var(--space-2);
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.discoveryPagination {
+  margin-top: var(--space-6);
+  padding-block: var(--space-4);
+  border-top: 1px solid var(--divider);
+}
+
+.discoveryPagination > .secondary {
+  min-width: min(100%, 12rem);
+}
+
+.discoveryContextLimit {
+  margin-top: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--divider);
+  border-radius: var(--radius-control);
+  background: var(--surface-inset);
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  overflow-wrap: anywhere;
 }
 
 .liveNotice {
@@ -3841,24 +3926,24 @@
 
 .discoveryGroup {
   min-width: 0;
-  margin-top: 0.85rem;
+  margin-top: var(--space-6);
 }
 
 .discoveryGroup:first-of-type {
-  margin-top: 0.35rem;
+  margin-top: var(--space-3);
 }
 
 .discoveryGroupHeader {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 0.25rem 0.55rem;
-  margin-bottom: 0.3rem;
+  gap: var(--space-2) var(--space-3);
+  margin-bottom: var(--space-3);
 }
 
 .discoveryGroupTitle {
   min-width: 0;
-  font-size: 0.95rem;
+  font-size: var(--text-lg);
   line-height: 1.3;
   overflow-wrap: anywhere;
 }
@@ -3871,34 +3956,74 @@
 
 .discoverySkeleton {
   display: grid;
-  gap: 0.4rem;
-  margin-top: var(--space-3);
+  gap: var(--space-2);
+  margin-top: var(--space-4);
 }
 
 .discoveryLoading {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0.4rem;
-  margin-top: 0.55rem;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
   color: var(--text-secondary);
-  font-size: 0.8125rem;
+  font-size: var(--text-sm);
+}
+
+.taskRow.discoveryRow {
+  grid-template-areas:
+    'main main'
+    'status status';
+}
+
+.discoveryRow .taskMeta {
+  gap: var(--space-1) var(--space-3);
+}
+
+@media (min-width: 48rem) {
+  .taskRow.discoveryRow {
+    grid-template-columns: minmax(0, 1fr) minmax(6rem, 9rem) minmax(6rem, auto);
+    grid-template-areas: 'main status aside';
+    align-items: start;
+  }
+
+  .discoveryRow .taskStatusCell,
+  .discoveryRow .taskAside {
+    display: flex;
+    align-items: center;
+    min-height: var(--control-height);
+  }
+}
+
+@media (min-width: 80rem) {
+  .workLayoutOpen .discoveryRow {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'main main'
+      'status aside';
+  }
 }
 
 @media (max-width: 47.9375rem) {
   .discoveryTop {
+    grid-template-columns: minmax(0, 1fr);
     align-items: stretch;
   }
 
+  .discoveryTop > .secondary {
+    justify-self: start;
+  }
+
   .discoveryScope {
-    flex: 1 1 100%;
+    justify-self: stretch;
   }
 
   .discoveryScopeTab {
-    flex: 1 1 50%;
+    flex: 1 1 0;
   }
 
-  .discoverySearch {
-    flex-basis: 100%;
+  .discoveryPagination > .secondary {
+    width: 100%;
   }
 }
 
@@ -3907,7 +4032,7 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .discoverySearch > .secondary {
+  .discoverySearch > .primary {
     width: 100%;
   }
 }
@@ -3926,9 +4051,9 @@
 }
 
 .discoveryCreate {
-  margin: 0.25rem 0 0.65rem;
+  margin-block: var(--space-3) var(--space-4);
   border: 1px solid var(--divider);
-  border-radius: 0.65rem;
+  border-radius: var(--radius-control);
   background: var(--surface);
 }
 
@@ -3965,8 +4090,19 @@
 
 .discoveryCreateBody {
   display: grid;
-  gap: 0.55rem;
-  padding: 0.7rem;
+  gap: var(--space-4);
+  padding: var(--space-4);
+}
+
+@media (min-width: 48rem) {
+  .discoveryCreateBody {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+  }
+
+  .discoveryCreateBody > .discoveryHint {
+    grid-column: 1 / -1;
+  }
 }
 
 .discoveryCreateBody .filterField {

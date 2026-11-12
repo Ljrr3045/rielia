@@ -1,5 +1,23 @@
 # Delivery progress and decisions
 
+## 2026-11-11 T37.5 discovery presentation — SOURCE CHECKPOINT
+
+Isolated `feat/t37-discovery-ui` starts at T37.4 presentation `0721c721` with
+coordinator authorization while SOL owns recovery work separately. T37.3 PR #47
+remains Draft/CI, and T37.4 logic/QA/acceptance remain open. The
+[discovery guide](t37-discovery-ui.md) records visible query labeling, separated
+secondary filters, project grouping, title-first result rows, canonical summary
+emphasis and deliberate continuation/context-limit presentation.
+
+Only discovery JSX/classes and discovery-scoped CSS change; shared T37.4 source,
+all logic/conditions and existing localized meanings remain. Existing dependencies
+support targeted formatting, handoff/diff and mandatory hooks; no install, build,
+browser, test, coverage or new image inspection occurs. SOL must explicitly migrate
+current-web source fingerprints and run the normal scoped gate on the integrated
+source, then functional/native/persisted cross-surface QA; Astra actual-image review,
+CI/native Kilo and coordinator acceptance follow. No publication or T37.5 completion
+claim; T37 remains IN PROGRESS.
+
 ## 2026-11-11 T37.4 project/task presentation — IMPLEMENTATION CHECKPOINT
 
 The coordinator authorized isolated `feat/t37-project-task-ui` from accepted
