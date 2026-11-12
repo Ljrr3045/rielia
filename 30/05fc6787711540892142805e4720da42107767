@@ -1,0 +1,25 @@
+CHANGELOG.md
+  s_4270ef6aad1034::t_8c252e7e6c361e 7-26,30-32,39,50-51
+docs/development/progress.md
+  s_4270ef6aad1034::t_8c252e7e6c361e 3-21
+docs/development/t37-shell-entry.md
+  s_4270ef6aad1034::t_8c252e7e6c361e 3-31,281-323
+docs/development/development-quality-roadmap.md
+  s_4270ef6aad1034::t_8c252e7e6c361e 37-43,315-319,446-448
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3005fc6787711540892142805e4720da42107767",
+  "prompts": {},
+  "sessions": {
+    "s_4270ef6aad1034": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1cd8b-46df-7340-97a6-67b2478a8359",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
