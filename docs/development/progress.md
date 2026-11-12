@@ -1,5 +1,25 @@
 # Delivery progress and decisions
 
+## 2026-11-11 T37.4 project/task presentation — IMPLEMENTATION CHECKPOINT
+
+The coordinator authorized isolated `feat/t37-project-task-ui` from accepted
+`8647f19`, fast-forwarded to corrected T37.3 checkpoint `5af198a`. T37.3 remains
+in progress; publication waits for acceptance/base sync. The
+[project/task checkpoint](t37-project-task-ui.md) records wrapping breadcrumb
+children, quieter project administration, title-first contiguous task rows,
+readable board/cards, native form/access sections and detail/collaboration rhythm.
+The existing capability-gated Restore control is visible in narrow project rows.
+All commands, conditions, handlers, lifetimes and recovery semantics remain.
+
+Five actual historical PNGs were inspected with original source/build/hash
+provenance; none is an after-change render. One authorized offline frozen install
+reused 541 packages, zero downloads, for format/handoff/diff and mandatory hooks.
+No build/browser/server/Docker/full suite or new functional test ran here.
+Independent SOL functional/coverage/native/persisted evidence and Astra actual-image
+review remain required, including shared discovery styles and breadcrumb paint
+bounds at 1280. Three inherited recovery defects remain SOL-owned and unchanged.
+No push/PR/Ready/merge/deploy, T37.4 completion or overall T37 acceptance is claimed.
+
 ## 2026-11-11 T37.3 native visual review — CORRECTION CHECKPOINT
 
 Astra inspected twelve actual `fbc0829` captures from compiled build

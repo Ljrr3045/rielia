@@ -238,7 +238,7 @@ export function renderProjectWorkArea({
   workspace,
 }: ProjectWorkAreaPorts) {
   function renderProjectActions(compact: boolean) {
-    const base = compact ? styles.projectMenuItem : styles.secondary;
+    const base = compact ? styles.projectMenuItem : styles.ghostButton;
     return (
       <>
         {canManageAccess && (

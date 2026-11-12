@@ -309,7 +309,7 @@ export function TaskCaptureForm({
     <div className={styles.capturePanel}>
       <form className={styles.captureForm} noValidate onSubmit={submit}>
         <div className={styles.captureInputWrap}>
-          <label className={styles.srOnly} htmlFor={inputId}>
+          <label className={styles.captureLabel} htmlFor={inputId}>
             {copy.task.captureLabel[lang]}
           </label>
           <input

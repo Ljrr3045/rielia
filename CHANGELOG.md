@@ -4,6 +4,19 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+### T37.4 project and task presentation checkpoint
+
+- Wrap long breadcrumb context within its work column; retain complete text and
+  existing detail thresholds, pending native paint-bound verification.
+- Make task titles lead contiguous project rows, align wide metadata and expose
+  existing capability-gated Restore on narrow rows; retain native status/Move.
+- Quiet project administration, show the capture label, and improve board,
+  project/access form and detail/collaboration reading structure with existing tokens.
+- Record [source boundaries, baseline provenance and pending checks](docs/development/t37-project-task-ui.md).
+  No logic/recovery/test/dependency change or new rendering claim; independent SOL
+  validation, three owned recovery fixes, T37.3 acceptance/base sync and publication
+  remain pending. T37.4 and T37 are not closed.
+
 ### T37.3 shell and entry-flow presentation checkpoint
 
 - Follow twelve native baseline captures with CSS corrections for repeated
