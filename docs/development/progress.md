@@ -1,5 +1,34 @@
 # Delivery progress and decisions
 
+## 2026-11-12 T37.4 bounded recovery — NORMAL LOCAL GATE PASSED
+
+SOL integrated exact Astra `0721c721` by merge `0b874e3`, retaining the T37.3
+reconciliation and presentation histories. Confirmed project writes now remain
+visible after read failure without private target labels or repeated mutation.
+Denied content intent has current-capability/target guarded Return, explicit
+Discard and focus recovery; permission loss cannot remount stale forms. Pending
+checklist feedback excludes genuinely unknown recovery until the response is lost.
+Twenty-two meaningful real screen/hook regressions extend all 155 retained cases.
+
+The first incomplete measurement exposed a test-local real Next ESM import seam;
+its diagnostic remains. A reviewed 171-case checkpoint prompted six additional
+capability journeys, which found and corrected empty-state create-form remount.
+The final measurement and one normal frontend gate both pass 177 cases, with
+exact normalized maps/hits/manifests. The coordinator approved only the current
+web baseline, raising all four floors; other seven baselines/provider/config/tests
+remain preserved. Typecheck, affected lint and required documentation/hooks checks
+are recorded in the [recovery guide](t37-project-task-ui.md#bounded-sol-recovery-implementation--2026-11-12)
+and [coverage addendum](unit-coverage.md#t374-reviewed-recovery-baseline-migration).
+
+No install, frontend production build, browser/app runtime, Docker or persisted
+journey ran in this task. The unit lease is released. Native current-source QA,
+Astra actual-image review, real PostgreSQL/Nest/Next persistence/security,
+current-head CI/native review and coordinator acceptance/publication remain open.
+T37.3 local source/coverage checkpoints are not final merged acceptance. Later
+accepted PR47 corrections require their own integration/manifest reconciliation;
+T37.5 source remains separate. No push/PR/Ready/merge/deploy/T37 or T11 closure.
+
+
 
 ## 2026-11-11 T37.3 reviewed web coverage reconciliation — NORMAL LOCAL GATE PASSED
 

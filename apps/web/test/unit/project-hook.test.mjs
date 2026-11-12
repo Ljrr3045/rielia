@@ -527,3 +527,47 @@ test(
     assert.equal(hook.state.tasks, null);
   },
 );
+
+for (const navigation of ['task', 'project', 'workspace'])
+  test(`confirmed result clears on ${navigation} navigation and survives same-target read recovery`, async (t) => {
+    const { browser, hook } = await mounted(t);
+    browser.server.mutate = () => Response.json(task(115), { status: 201 });
+    await act(async () => {
+      hook.state.stage(createDraft());
+      await hook.state.submit();
+    });
+    assert.equal(hook.state.outcome, 'success');
+    await act(async () => hook.state.refresh());
+    assert.equal(hook.state.outcome, 'success');
+    assert.equal(hook.state.result.id, 't115');
+    await act(async () =>
+      navigation === 'task'
+        ? hook.state.selectTask('t2')
+        : navigation === 'project'
+          ? hook.state.selectProject(null)
+          : hook.state.selectWorkspace('b'),
+    );
+    assert.equal(hook.state.outcome, null);
+    assert.equal(hook.state.result, null);
+    assert.equal(browser.posts().length, 1);
+  });
+
+test('confirmed result clears at expiry and cannot return after same-session reauthentication', async (t) => {
+  const { browser, hook } = await mounted(t);
+  await act(async () => {
+    hook.state.stage(createDraft());
+    await hook.state.submit();
+  });
+  assert.equal(hook.state.outcome, 'success');
+  const [expiry] = browser.timers.keys();
+  browser.setNow(Date.parse(browser.server.session.session.expiresAt));
+  await browser.fireTimer(expiry);
+  assert.equal(hook.state.status, 'signed-out');
+  assert.equal(hook.state.result, null);
+  assert.equal(hook.state.outcome, null);
+  browser.server.session.session.expiresAt = new Date(Date.now() + 60_000).toISOString();
+  await act(async () => hook.state.refresh());
+  assert.equal(hook.state.outcome, null);
+  assert.equal(hook.state.result, null);
+  assert.equal(browser.posts().length, 1);
+});

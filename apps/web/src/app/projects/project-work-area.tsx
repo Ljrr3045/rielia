@@ -101,6 +101,7 @@ export interface ProjectWorkAreaPorts {
 
   readOnlyTasks: boolean;
   recoveryBlock: ReactNode;
+  statusRecoveryBlock: ReactNode;
   refresh: () => Promise<void>;
   refreshDeferred: ProjectTaskState['refreshDeferred'];
   refreshRequired: ProjectTaskState['refreshRequired'];
@@ -201,6 +202,7 @@ export function renderProjectWorkArea({
   projectList,
   readOnlyTasks,
   recoveryBlock,
+  statusRecoveryBlock,
   refresh,
   refreshDeferred,
   refreshRequired,
@@ -361,6 +363,8 @@ export function renderProjectWorkArea({
           )}
         </StateCard>
       )}
+
+      {(status === 'forbidden' || status === 'error') && statusRecoveryBlock}
 
       {status === 'forbidden' && (
         <StateCard

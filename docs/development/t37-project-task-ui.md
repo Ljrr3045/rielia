@@ -111,3 +111,86 @@ Actual browser-chrome zoom, physical devices/virtual keyboard, manual AT, real
 users and provider/staging evidence remain unperformed here. Current-head CI,
 native Kilo, coordinator acceptance and eventual publication remain gates.
 No push/PR/Ready/merge/deploy/worktree deletion occurs; T37 remains IN PROGRESS.
+
+
+## Bounded SOL recovery implementation — 2026-11-12
+
+The coordinator assigned three inherited recovery defects to SOL xhigh, starting
+from T37.3 local checkpoint `d3cc536`. Exact Astra presentation `0721c721` is
+integrated by merge `0b874e3`; the progress-only conflict retains both actual
+histories. This section supersedes the three unchanged-debt statements above for
+the new logic checkpoint, without rewriting Astra's original evidence.
+
+- Confirmed writes retain their result through same-target read recovery. A
+  separate error/forbidden outlet shows generic confirmation and explains the
+  failed read, with read recovery and dismissal. It contains no private target
+  labels while authorization/data are unavailable and never repeats the mutation.
+  Genuine target/workspace navigation, session replacement and expiry fence old
+  results; existing successful create/move focus and page-revision barriers remain.
+- A denied content operation retains only memory-local intent. Scoped rows clear,
+  dialogs cannot render without current authorized DTOs/capabilities, and denial
+  feedback stays outside the removed form. Refresh checks access. Return requires
+  the same current target and allowed capability, preserves the captured version,
+  and explicitly restores the draft; Discard removes the intent and focuses the
+  current surface. A fresh read revoking edit permission closes an existing form;
+  restored permission cannot automatically remount stale fields. Backend policy
+  and exact-key unknown retry remain canonical.
+- Pending checklist feedback and unknown-outcome recovery are mutually exclusive.
+  The original retry record remains internal during the write, without Retry or
+  Discard actions. A genuinely lost response exposes the original-key retry;
+  confirmed success, denial and conflict retain their existing distinct outcomes.
+
+SOL owns conditional JSX, the existing controller/forms/lifecycle owners and
+localized recovery copy. Astra's CSS, form classes and title/status sibling order
+remain intact. No transport, auth policy, public contract, backend, dependency,
+provider, shared unit configuration or historical baseline changes are included.
+T37.3 invitation feedback/token clearing and workspace retained confirmation are
+preserved.
+
+Twenty-two added real component/hook regressions cover the bounded outcomes;
+all prior tests remain selected. The first focused 46-case schedule and the
+subsequent 29-case affected schedule pass, as do frontend strict typecheck and
+affected lint. A first instrumented attempt hit a file-local Node ESM import
+resolution failure before the new rendered file could execute; 160 other cases
+passed. The coordinator authorized mapping `next/link` to the real installed
+`next/link.js` in this test only. No component or shared loader was replaced.
+The corrected 171-pass checkpoint is preserved, but its candidate was not
+approved: source review required actual create/restore/access capability journeys.
+Six added screen journeys reproduce an empty-workspace create-form remount bug,
+then prove the corrected ready-or-empty close condition, current permission,
+deliberate restoration and captured lifecycle versions. Retained target/session
+replacement and positive create/move focus tests remain selected.
+
+The complete final measured run passes **177 cases over the same 68 inputs**:
+L2299/3835, S2500/4324, F500/1055, B2845/5305. The approved current-web baseline
+`c69839c025e8cab983ef0c9366d92e75139989dc61c1fd86b446d119cf1b26e4`
+raises L/S/F/B floors to 5994/5781/4739/5362 basis points from
+4347/4258/3187/3204. No file loses covered counts or increases uncovered counts.
+Provider/config/tool identities, every prior selected case and all other baselines
+are retained. Fifty-six unchanged source files preserve exact maps and previously
+covered endpoints. Mapping precision remains explicit: 803 null-column points
+of 28,798; the type-only collaboration port remains zero-unit N/A. This is not
+universal coverage or closure of unexecuted paths. The coordinator approved that
+exact current-web candidate before writing it.
+One normal `pnpm unit:web` gate passes all 177 cases, reproducing the measured
+summary, manifest, normalized maps and hit vectors exactly. Thirty-nine file
+counter sets remain exact and 29 improve; all seven other baseline files stay
+byte-identical. See the [coverage addendum](unit-coverage.md#t374-reviewed-recovery-baseline-migration).
+
+The screen test executes the actual screen, Next Link, forms, locale, focus hooks,
+controller and transports. Its only seams are stylesheet loading, finite public
+HTTP responses and controlled browser/media/clock/RAF/idle scheduling. These JSDOM
+observations do not establish native focus/geometry, SQL isolation, durable writes
+or security. No install, production frontend build, browser, Docker or persisted
+journey runs here. Later SOL native/persisted QA, Astra actual-image review,
+current-head CI/native review, publication and coordinator acceptance remain open.
+The original T37.3 source/build/capture artifacts remain immutable and do not prove
+this new source. Actual chrome zoom/device/AT/provider/staging remain unperformed.
+
+
+Final local scope remains an implementation checkpoint. Native paint/reflow,
+keyboard/focus, title-first tab order, mobile Restore, shared discovery rows and
+real persisted/security journeys still need independent current-source QA and
+Astra image review. No new source-build/native binding is claimed. Later accepted
+PR47 corrections must be integrated through a fresh explicit manifest comparison;
+this checkpoint cannot overwrite their corrected source/tests.

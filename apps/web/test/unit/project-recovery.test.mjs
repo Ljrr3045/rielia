@@ -1,0 +1,489 @@
+import assert from 'node:assert/strict';
+import { registerHooks } from 'node:module';
+import { test } from 'node:test';
+import {
+  act,
+  createElement,
+  getByRole,
+  queryByRole,
+  deferred,
+  identitySession,
+} from './dom-harness.mjs';
+import { projectBrowser, project, task } from './project-hook-harness.mjs';
+
+// Only stylesheet loading and finite browser/HTTP boundaries are replaced.
+// The actual screen, forms, focus hooks, controller and transports execute.
+const css = registerHooks({
+  resolve(specifier, context, next) {
+    // Node ESM requires the extension; execute the real installed Next Link.
+    if (specifier === 'next/link') return next('next/link.js', context);
+    if (specifier === './projects.module.css')
+      return { url: new URL(specifier, context.parentURL).href, shortCircuit: true };
+    return next(specifier, context);
+  },
+  load(url, context, next) {
+    if (url.endsWith('/projects.module.css'))
+      return { format: 'module', source: 'export default {};', shortCircuit: true };
+    return next(url, context);
+  },
+});
+const { ProjectsView } = await import('../../src/app/projects/projects-view.tsx');
+css.deregister();
+
+async function mount(t, search = '?workspace=a&project=p', lang = 'en', configure = () => {}) {
+  const b = projectBrowser(t, search);
+  b.server.rows = 2;
+  b.replace(b.window, 'matchMedia', (media) => ({
+    media,
+    matches: false,
+    addEventListener() {},
+    removeEventListener() {},
+  }));
+  const frames = new Map();
+  let frame = 0;
+  const restores = [
+    b.replace(globalThis, 'self', b.window),
+    // Next idle scheduling uses self.setTimeout and global clearTimeout.
+    b.replace(b.window, 'setTimeout', globalThis.setTimeout),
+    b.replace(b.window, 'clearTimeout', globalThis.clearTimeout),
+    b.replace(globalThis, 'requestAnimationFrame', (callback) => {
+      frames.set(++frame, callback);
+      return frame;
+    }),
+    b.replace(globalThis, 'cancelAnimationFrame', (id) => frames.delete(id)),
+    // React DOM was imported before JSDOM; its legacy input focus seam is inert.
+    b.replace(b.window.HTMLElement.prototype, 'attachEvent', function () {
+      this.detachEvent = () => {};
+    }),
+    b.replace(b.window.HTMLElement.prototype, 'detachEvent', () => {}),
+  ];
+  t.after(async () => {
+    try {
+      await b.unmount();
+    } finally {
+      restores.reverse().forEach((restore) => restore());
+    }
+  });
+  async function flush() {
+    for (let count = 0; frames.size; count++) {
+      assert.ok(count < 20, 'focus frames converge');
+      const callbacks = [...frames.values()];
+      frames.clear();
+      await act(async () => callbacks.forEach((callback) => callback(0)));
+    }
+  }
+  async function click(name, root = b.container) {
+    await act(async () => getByRole(root, 'button', { name, exact: true }).click());
+    await flush();
+  }
+  async function input(element, value) {
+    await act(async () => {
+      element.focus();
+      Object.getOwnPropertyDescriptor(b.window.HTMLInputElement.prototype, 'value').set.call(
+        element,
+        value,
+      );
+      element.dispatchEvent(new b.window.KeyboardEvent('keyup', { key: 'a', bubbles: true }));
+    });
+  }
+  configure(b);
+  await b.render(createElement(ProjectsView));
+  if (lang === 'en') {
+    const language = getByRole(b.container, 'combobox', { name: 'Idioma' });
+    await act(async () => {
+      language.value = 'en';
+      language.dispatchEvent(new b.window.Event('change', { bubbles: true }));
+    });
+  }
+  await flush();
+  return { ...b, flush, click, input };
+}
+
+for (const lang of ['en', 'es'])
+  test(`confirmed project write survives failed read and read-only reload, ${lang}`, async (t) => {
+    const b = await mount(t, undefined, lang);
+    await b.click(lang === 'en' ? 'Project settings' : 'Ajustes del proyecto');
+    const dialog = getByRole(b.container, 'dialog');
+    await b.input(
+      getByRole(dialog, 'textbox', { name: /Project name|Nombre del proyecto/ }),
+      'Private saved title',
+    );
+    b.server.mutate = () => Response.json({ ...project('p', 'a', 2), name: 'Private saved title' });
+    const followup = b.server.holdNext(
+      (request) =>
+        request.options.method !== 'POST' && request.url === '/api/v1/workspaces/a/projects/p',
+    );
+    await b.click(lang === 'en' ? 'Save changes' : 'Guardar cambios', dialog);
+    await act(async () =>
+      followup.resolve(Response.json({ code: 'unavailable' }, { status: 503 })),
+    );
+    await b.flush();
+    assert.equal(b.posts().length, 1);
+    assert.equal(queryByRole(b.container, 'dialog') === null, true);
+    assert.match(b.container.textContent, lang === 'en' ? /Changes saved/ : /Cambios guardados/);
+    assert.match(
+      b.container.textContent,
+      lang === 'en' ? /could not refresh the view/ : /No pudimos actualizar la vista/,
+    );
+    assert.doesNotMatch(b.container.textContent, /Private saved title/);
+    assert.equal(
+      queryByRole(b.container, 'button', { name: /Retry save|Reintentar guardado/ }),
+      null,
+    );
+    const failedAgain = b.server.holdNext(
+      (request) =>
+        request.options.method !== 'POST' && request.url === '/api/v1/workspaces/a/projects/p',
+    );
+    await b.click(lang === 'en' ? 'Load again' : 'Volver a cargar');
+    await act(async () =>
+      failedAgain.resolve(Response.json({ code: 'unavailable' }, { status: 503 })),
+    );
+    await b.flush();
+    assert.match(b.container.textContent, lang === 'en' ? /Changes saved/ : /Cambios guardados/);
+    await b.click(lang === 'en' ? 'Load again' : 'Volver a cargar');
+    assert.match(
+      b.container.textContent,
+      lang === 'en' ? /Project updated/ : /Proyecto actualizado/,
+    );
+    assert.equal(b.posts().length, 1, 'read recovery never resubmits');
+  });
+
+for (const allowed of [false, true])
+  test(`project denial hides private intent; fresh capability allows Return=${allowed}`, async (t) => {
+    const b = await mount(t);
+    await b.click('Project settings');
+    await b.input(
+      getByRole(b.container, 'textbox', { name: /Project name/ }),
+      'Secret denied intent',
+    );
+    b.server.mutate = () => Response.json({ code: 'FORBIDDEN' }, { status: 403 });
+    await b.click('Save changes', getByRole(b.container, 'dialog'));
+    assert.equal(queryByRole(b.container, 'dialog') === null, true);
+    assert.match(b.container.textContent, /The action is not allowed/);
+    assert.doesNotMatch(b.container.textContent, /Secret denied intent/);
+    assert.equal(queryByRole(b.container, 'button', { name: 'Return to draft' }) === null, true);
+    assert.match(b.document.activeElement.textContent, /The action is not allowed/);
+    const read = b.server.holdNext(
+      (request) =>
+        request.options.method !== 'POST' && request.url === '/api/v1/workspaces/a/projects/p',
+    );
+    await b.click('Refresh');
+    const current = project('p', 'a', 2);
+    current.capabilities.canEdit = allowed;
+    await act(async () => read.resolve(Response.json(current)));
+    await b.flush();
+    assert.doesNotMatch(b.container.textContent, /Secret denied intent/);
+    assert.equal(queryByRole(b.container, 'button', { name: 'Return to draft' }) !== null, allowed);
+    assert.equal(b.posts().length, 1);
+    if (allowed) {
+      await b.click('Return to draft');
+      assert.equal(
+        getByRole(b.container, 'textbox', { name: /Project name/ }).value,
+        'Secret denied intent',
+      );
+      b.server.mutate = () => Response.json(project('p', 'a', 3));
+      await b.click('Save changes', getByRole(b.container, 'dialog'));
+      assert.equal(b.posts().length, 2);
+      assert.equal(
+        JSON.parse(b.posts()[1].options.body).expectedVersion,
+        1,
+        'captured version is not silently rebased',
+      );
+      assert.notEqual(
+        b.posts()[1].options.headers['Idempotency-Key'],
+        b.posts()[0].options.headers['Idempotency-Key'],
+        'a definite denied operation is deliberately resubmitted, not an unknown retry',
+      );
+    } else {
+      await b.click('Discard draft');
+      assert.equal(queryByRole(b.container, 'button', { name: 'Discard draft' }) === null, true);
+      assert.equal(b.document.activeElement.isConnected, true);
+      assert.equal(b.document.activeElement.matches('#projects-main, h1[tabindex="-1"]'), true);
+    }
+  });
+
+test('denied draft is cleared on replacement session and never remounts private fields', async (t) => {
+  const b = await mount(t);
+  await b.click('Project settings');
+  await b.input(getByRole(b.container, 'textbox', { name: /Project name/ }), 'Old private draft');
+  b.server.mutate = () => Response.json({ code: 'FORBIDDEN' }, { status: 403 });
+  await b.click('Save changes', getByRole(b.container, 'dialog'));
+  b.server.session = identitySession();
+  b.server.session.session.id = 'replacement';
+  await b.click('Refresh');
+  assert.doesNotMatch(b.container.textContent, /Old private draft|The action is not allowed/);
+  assert.equal(queryByRole(b.container, 'dialog') === null, true);
+  assert.equal(queryByRole(b.container, 'button', { name: 'Return to draft' }) === null, true);
+  assert.equal(b.posts().length, 1);
+});
+
+const checklist = () => ({
+  workspaceId: 'a',
+  projectId: 'p',
+  taskId: 't1',
+  revision: 1,
+  items: [
+    {
+      id: 'item',
+      text: 'Canonical step',
+      completed: false,
+      position: 1,
+      version: 1,
+      moveUpBeforeItemId: null,
+      moveDownBeforeItemId: null,
+      capabilities: { canEdit: true, canRemove: true, canMoveUp: false, canMoveDown: false },
+    },
+  ],
+  total: 1,
+  nextCursor: null,
+  capabilities: { canCreate: true, canEdit: true },
+});
+
+for (const response of ['success', 'lost', 'forbidden', 'conflict'])
+  test(`checklist held pending is distinct from ${response} response`, async (t) => {
+    const b = await mount(t, '?workspace=a&project=p&task=t1', 'en', (browser) => {
+      browser.server.checklist = checklist();
+    });
+    await b.flush();
+    const write = deferred();
+    b.server.mutate = () => write.promise;
+    const toggle = getByRole(b.container, 'checkbox', { name: 'Checklist item: Canonical step' });
+    await act(async () => toggle.click());
+    await b.flush();
+    assert.equal(b.posts().length, 1);
+    assert.match(b.container.textContent, /Saving change…/);
+    assert.doesNotMatch(b.container.textContent, /The outcome could not be confirmed/);
+    assert.equal(queryByRole(b.container, 'button', { name: 'Retry save' }) === null, true);
+    assert.equal(queryByRole(b.container, 'button', { name: 'Discard' }) === null, true);
+    assert.equal(toggle.disabled, true);
+    await act(async () => toggle.click());
+    assert.equal(b.posts().length, 1);
+    const first = b.posts()[0];
+    assert.deepEqual(JSON.parse(first.options.body), { expectedVersion: 1, completed: true });
+    if (response === 'lost') await act(async () => write.reject(new Error('Lost HTTP response')));
+    else
+      await act(async () =>
+        write.resolve(
+          response === 'success'
+            ? Response.json(task(1, 'a', 'p', 2))
+            : Response.json({ code: response }, { status: response === 'forbidden' ? 403 : 409 }),
+        ),
+      );
+    await b.flush();
+    assert.doesNotMatch(b.container.textContent, /Saving change…/);
+    if (response === 'lost') {
+      assert.match(b.container.textContent, /The outcome could not be confirmed/);
+      assert.equal(getByRole(b.container, 'button', { name: 'Retry save' }).disabled, false);
+      b.server.mutate = () => Response.json(task(1, 'a', 'p', 2));
+      await b.click('Retry save');
+      assert.equal(b.posts().length, 2);
+      assert.equal(b.posts()[1].options.body, first.options.body);
+      assert.equal(
+        b.posts()[1].options.headers['Idempotency-Key'],
+        first.options.headers['Idempotency-Key'],
+      );
+      assert.match(b.container.textContent, /Change saved/);
+    } else if (response === 'success') {
+      assert.match(b.container.textContent, /Change saved/);
+      assert.equal(b.posts().length, 1);
+    } else {
+      assert.equal(queryByRole(b.container, 'button', { name: 'Retry save' }) === null, true);
+      assert.match(
+        b.container.textContent,
+        response === 'forbidden' ? /The action is not allowed/ : /A newer version exists/,
+      );
+      assert.equal(b.posts().length, 1);
+    }
+  });
+
+test('a fresh read revoking edit permission closes the form; restored permission needs deliberate Return', async (t) => {
+  const b = await mount(t);
+  await b.click('Project settings');
+  await b.input(
+    getByRole(b.container, 'textbox', { name: /Project name/ }),
+    'Unsent private intent',
+  );
+  const read = b.server.holdNext(
+    (request) =>
+      request.options.method !== 'POST' && request.url === '/api/v1/workspaces/a/projects/p',
+  );
+  await b.event('popstate');
+  const current = project('p', 'a', 2);
+  current.capabilities.canEdit = false;
+  await act(async () => read.resolve(Response.json(current)));
+  await b.flush();
+  assert.equal(queryByRole(b.container, 'dialog') === null, true);
+  assert.doesNotMatch(b.container.textContent, /Unsent private intent/);
+  assert.equal(getByRole(b.container, 'button', { name: 'Return to draft' }).disabled, true);
+  await b.event('popstate');
+  await b.flush();
+  assert.equal(
+    queryByRole(b.container, 'dialog') === null,
+    true,
+    'grant restoration cannot automatically remount the old form',
+  );
+  await b.click('Return to draft');
+  assert.equal(
+    getByRole(b.container, 'textbox', { name: /Project name/ }).value,
+    'Unsent private intent',
+  );
+  assert.equal(b.posts().length, 0);
+});
+
+test('confirmed read403 has only generic confirmation; dismissal focuses main and later reads cannot resurrect it', async (t) => {
+  const b = await mount(t);
+  await b.click('Project settings');
+  b.server.mutate = () =>
+    Response.json({ ...project('p', 'a', 2), name: 'Revoked private result' });
+  const read = b.server.holdNext(
+    (request) =>
+      request.options.method !== 'POST' && request.url === '/api/v1/workspaces/a/projects/p',
+  );
+  await b.click('Save changes', getByRole(b.container, 'dialog'));
+  await act(async () => read.resolve(Response.json({ code: 'FORBIDDEN' }, { status: 403 })));
+  await b.flush();
+  assert.match(b.container.textContent, /Changes saved/);
+  assert.doesNotMatch(b.container.textContent, /Revoked private result/);
+  await b.click('Dismiss notice');
+  assert.equal(b.document.activeElement.id, 'projects-main');
+  await b.click('Refresh');
+  assert.doesNotMatch(b.container.textContent, /Changes saved|Project updated/);
+  assert.equal(b.posts().length, 1);
+});
+
+const projectPath = '/api/v1/workspaces/a/projects/p';
+const projectsPath = '/api/v1/workspaces/a/projects';
+const taskPath = `${projectPath}/tasks/t1`;
+const emptyProjects = (allowed) => ({
+  items: [],
+  total: 0,
+  nextCursor: null,
+  capabilities: { canCreate: allowed },
+});
+
+for (const empty of [false, true])
+  test(`authorized project creation resumes in ${empty ? 'empty' : 'ready'} workspace without losing entered fields`, async (t) => {
+    const b = await mount(t, empty ? '?workspace=a' : undefined, 'en', (browser) => {
+      if (empty) browser.server.responses.set(projectsPath, emptyProjects(true));
+    });
+    await b.click(empty ? 'Create the first project' : 'Create project');
+    await b.input(getByRole(b.container, 'textbox', { name: /Project name/ }), 'New local project');
+    await b.input(getByRole(b.container, 'textbox', { name: /Key/ }), 'NEW');
+    if (empty) {
+      b.server.responses.set(projectsPath, emptyProjects(false));
+      await b.event('popstate');
+      await b.flush();
+      assert.equal(queryByRole(b.container, 'dialog') === null, true);
+      b.server.responses.set(projectsPath, emptyProjects(true));
+      await b.event('popstate');
+      await b.flush();
+      assert.equal(
+        queryByRole(b.container, 'dialog') === null,
+        true,
+        'restored create permission must not remount stale fields automatically',
+      );
+    } else await b.click('Cancel', getByRole(b.container, 'dialog'));
+    await b.click('Return to draft');
+    assert.equal(
+      getByRole(b.container, 'textbox', { name: /Project name/ }).value,
+      'New local project',
+    );
+    assert.equal(getByRole(b.container, 'textbox', { name: /Key/ }).value, 'NEW');
+    b.server.mutate = () => {
+      b.server.responses.delete(projectsPath);
+      return Response.json(
+        { ...project(), key: 'NEW', name: 'New local project' },
+        { status: 201 },
+      );
+    };
+    await b.click('Create project', getByRole(b.container, 'dialog'));
+    assert.equal(b.posts().length, 1);
+    assert.equal(JSON.parse(b.posts()[0].options.body).name, 'New local project');
+    assert.match(b.container.textContent, /Project created/);
+  });
+
+for (const operation of ['project-restore', 'task-archive', 'task-restore'])
+  test(`${operation} denial resumes only with current capability and original captured version`, async (t) => {
+    const projectOperation = operation === 'project-restore';
+    const restore = operation !== 'task-archive';
+    const record = projectOperation ? project() : task();
+    if (restore) record.archivedAt = '2026-01-01T00:00:00.000Z';
+    record.capabilities.canRestore = restore;
+    record.capabilities.canArchive = !restore;
+    record.capabilities.canEdit = !restore;
+    const path = projectOperation ? projectPath : taskPath;
+    const label = projectOperation ? 'Restore project' : restore ? 'Restore task' : 'Archive task';
+    const b = await mount(
+      t,
+      projectOperation ? undefined : '?workspace=a&project=p&task=t1',
+      'en',
+      (browser) => browser.server.responses.set(path, record),
+    );
+    if (projectOperation) {
+      const restoreButton = [...b.container.querySelectorAll('button')].find(
+        (button) => button.textContent === label,
+      );
+      assert.ok(restoreButton);
+      await act(async () => restoreButton.click());
+      await b.flush();
+    } else await b.click(label);
+    b.server.mutate = () => Response.json({ code: 'FORBIDDEN' }, { status: 403 });
+    await b.click(label, getByRole(b.container, 'dialog'));
+    assert.equal(queryByRole(b.container, 'dialog') === null, true);
+    assert.match(b.container.textContent, /The action is not allowed/);
+    record.version = 2;
+    const capability = restore ? 'canRestore' : 'canArchive';
+    record.capabilities[capability] = false;
+    await b.click('Refresh');
+    assert.equal(queryByRole(b.container, 'button', { name: 'Return to draft' }) === null, true);
+    assert.equal(b.posts().length, 1);
+    record.capabilities[capability] = true;
+    await b.click('Refresh');
+    assert.equal(queryByRole(b.container, 'dialog') === null, true);
+    await b.click('Return to draft');
+    assert.equal(queryByRole(b.container, 'dialog') !== null, true);
+    b.server.mutate = () => {
+      record.version = 3;
+      record.archivedAt = restore ? null : '2026-11-06T12:00:00.000Z';
+      return Response.json(record);
+    };
+    await b.click(label, getByRole(b.container, 'dialog'));
+    assert.equal(b.posts().length, 2);
+    assert.equal(
+      JSON.parse(b.posts()[1].options.body).expectedVersion,
+      1,
+      'fresh read never silently rebases the captured version',
+    );
+  });
+
+test('current project access capability mounts real administration; revoked and restored capability cannot remount it automatically', async (t) => {
+  const record = project();
+  record.capabilities.canManageAccess = true;
+  const b = await mount(t, undefined, 'en', (browser) => {
+    browser.server.responses.set(projectPath, record);
+    browser.server.responses.set(`${projectPath}/access`, {
+      workspaceId: 'a',
+      projectId: 'p',
+      projectVersion: 1,
+      items: [],
+      total: 0,
+      nextCursor: null,
+    });
+  });
+  await b.click('Access');
+  assert.match(getByRole(b.container, 'dialog').textContent, /Project access/);
+  assert.equal(b.reads(`${projectPath}/access`).length > 0, true);
+  assert.equal(b.posts().length, 0);
+  record.capabilities.canManageAccess = false;
+  await b.event('popstate');
+  await b.flush();
+  assert.equal(queryByRole(b.container, 'dialog') === null, true);
+  record.capabilities.canManageAccess = true;
+  await b.event('popstate');
+  await b.flush();
+  assert.equal(queryByRole(b.container, 'dialog') === null, true);
+  await b.click('Access');
+  assert.equal(queryByRole(b.container, 'dialog') !== null, true);
+  await b.click('Close', getByRole(b.container, 'dialog'));
+  assert.equal(b.posts().length, 0);
+});

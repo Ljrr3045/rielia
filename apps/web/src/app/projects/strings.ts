@@ -1298,6 +1298,14 @@ export const copy = {
       es: 'Algunos valores no son válidos. Corrige los campos indicados; el borrador se conserva.',
       en: 'Some values are not valid. Correct the indicated fields; the draft is preserved.',
     },
+    savedReadUnavailable: {
+      es: 'El cambio se guardó. No pudimos actualizar la vista. Vuelve a cargar para comprobar el acceso y los datos actuales; no se repetirá el cambio.',
+      en: 'The change was saved. We could not refresh the view. Load again to check current access and data; this will not repeat the change.',
+    },
+    deniedDraftBody: {
+      es: 'La sesión actual no puede hacer este cambio. El borrador permanece solo en la memoria de esta pestaña y sus campos están ocultos. Actualiza para comprobar el acceso; solo podrás volver al borrador con permiso actual sobre el mismo destino. También puedes descartarlo.',
+      en: 'The current session cannot make this change. The draft remains only in this tab’s memory and its fields are hidden. Refresh to check access; you can return to the draft only with current permission for the same target. You can also discard it.',
+    },
     forbiddenTitle: { es: 'La acción no está permitida', en: 'The action is not allowed' },
     forbiddenBody: {
       es: 'La sesión actual no puede realizar este cambio. Comprueba tu rol o pide acceso a un administrador del espacio.',

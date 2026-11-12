@@ -4,6 +4,24 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+### T37.4 bounded project/task recovery
+
+- Keep confirmed project writes visible after failed reads, using generic feedback
+  while current data/access are unavailable; read recovery never repeats a write.
+- Restore denied memory-local drafts only with current target/capability, captured
+  versions and deliberate Return; retain safe Discard/focus and prevent stale
+  dialog remount after permission loss, including an empty workspace.
+- Separate pending checklist saving from genuinely unknown exact-key recovery.
+- Add 22 meaningful frontend regressions; all 177 cases pass one normal gate after
+  exact coordinator-reviewed current-web migration. Preserve provider/config,
+  prior cases and seven other baselines while raising every aggregate floor.
+  The [guide](docs/development/t37-project-task-ui.md#bounded-sol-recovery-implementation--2026-11-12)
+  retains the failed loader attempt, unapproved 171-case checkpoint, reproduced
+  capability edge case, source boundaries and deferred native/persisted QA.
+- Preserve exact Astra presentation and T37.3 invitation/token behavior. No new
+  frontend production build, browser/runtime, publication or T37 acceptance claim.
+
+
 ### T37.4 project and task presentation checkpoint
 
 - Wrap long breadcrumb context within its work column; retain complete text and

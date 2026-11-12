@@ -25,6 +25,7 @@ export interface ProjectInteractionEffectsPorts {
   focusTask: (taskId: string) => boolean;
   focusViewBar: () => void;
   form: FormState | null;
+  formAuthorized: boolean;
   hadDetailRef: RefObject<boolean>;
   lastCommandRef: RefObject<ProjectTaskCommand | null>;
   modalOpenerRef: RefObject<HTMLElement | null>;
@@ -92,6 +93,7 @@ export function useProjectInteractionEffects({
   focusTask,
   focusViewBar,
   form,
+  formAuthorized,
   hadDetailRef,
   lastCommandRef,
   modalOpenerRef,
@@ -224,10 +226,12 @@ export function useProjectInteractionEffects({
   }, [outcome, form]);
 
   useEffect(() => {
+    if ((status === 'ready' || status === 'empty') && form !== null && !formAuthorized)
+      setForm(null);
     if (status !== 'signed-out' && status !== 'forbidden') return;
     if (form !== null) setForm(null);
     if (workspaceNavigation !== null) void resolveWorkspaceNavigation('stay');
-  }, [status, form, workspaceNavigation, resolveWorkspaceNavigation]);
+  }, [status, form, formAuthorized, workspaceNavigation, resolveWorkspaceNavigation]);
 
   useEffect(() => {
     if (form !== null) return;

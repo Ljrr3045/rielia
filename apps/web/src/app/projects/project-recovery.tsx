@@ -43,6 +43,9 @@ export interface ProjectRecoveryPorts {
   assigneeOptions: readonly DomainPerson[];
   blocked: boolean;
   canCapture: boolean;
+  canResumeDraft: boolean;
+  focusDismissedSurface: (hadForm: boolean) => void;
+  status: ProjectTaskState['status'];
   captureStatus: TaskStatus;
   closeCurrentTaskForMove: () => void;
   closeForm: () => void;
@@ -136,6 +139,9 @@ export function createProjectRecoveryView({
   assigneeOptions,
   blocked,
   canCapture,
+  canResumeDraft,
+  focusDismissedSurface,
+  status,
   captureStatus,
   closeCurrentTaskForMove,
   closeForm,
@@ -376,7 +382,11 @@ export function createProjectRecoveryView({
         (taskView.filters.status === undefined || taskView.filters.status === captureStatus)));
 
   const showDraftBanner =
-    draft !== null && form === null && retryTarget === null && !draftVisibleInCapture;
+    draft !== null &&
+    form === null &&
+    retryTarget === null &&
+    !draftVisibleInCapture &&
+    outcome !== 'forbidden';
 
   const taskFeedbackId =
     outcome === 'success' && result !== null && isTaskResult(result)
@@ -505,15 +515,19 @@ export function createProjectRecoveryView({
         <FeedbackPanel
           actions={
             <>
+              {canResumeDraft && (
+                <button className={styles.secondary} onClick={resumeCurrentDraft} type="button">
+                  {copy.feedback.draftReturn[lang]}
+                </button>
+              )}
               <button
                 className={styles.secondary}
                 onClick={() => {
-                  dismissOutcome();
-                  closeForm();
+                  void refresh();
                 }}
                 type="button"
               >
-                {copy.common.close[lang]}
+                {copy.common.refresh[lang]}
               </button>
               {draft !== null && (
                 <button className={styles.ghostButton} onClick={discardCurrentDraft} type="button">
@@ -523,8 +537,7 @@ export function createProjectRecoveryView({
             </>
           }
           autoFocus
-          body={copy.feedback.forbiddenBody}
-          target={draft === null ? null : commandLabel(draft)}
+          body={copy.feedback.deniedDraftBody}
           title={copy.feedback.forbiddenTitle}
           tone="danger"
         />
@@ -1228,7 +1241,12 @@ export function createProjectRecoveryView({
       <FeedbackPanel
         actions={
           <>
-            <button className={styles.secondary} onClick={resumeCurrentDraft} type="button">
+            <button
+              className={styles.secondary}
+              disabled={draftMatches && !canResumeDraft}
+              onClick={resumeCurrentDraft}
+              type="button"
+            >
               {draftMatches
                 ? copy.feedback.draftReturn[lang]
                 : copy.feedback.draftContextReturn[lang]}
@@ -1238,8 +1256,14 @@ export function createProjectRecoveryView({
             </button>
           </>
         }
-        body={draftMatches ? copy.feedback.draftBody : copy.feedback.draftContextBody}
-        target={commandLabel(draft)}
+        body={
+          draftMatches && !canResumeDraft
+            ? copy.feedback.deniedDraftBody
+            : draftMatches
+              ? copy.feedback.draftBody
+              : copy.feedback.draftContextBody
+        }
+        target={draftMatches && !canResumeDraft ? null : commandLabel(draft)}
         title={draftMatches ? copy.feedback.draftTitle : copy.feedback.draftContextTitle}
         tone={draftMatches ? 'info' : 'warning'}
       />
@@ -1308,6 +1332,37 @@ export function createProjectRecoveryView({
     </>
   );
 
+  const statusRecoveryBlock: ReactNode =
+    (status === 'error' || status === 'forbidden') &&
+    (outcome === 'success' || outcome === 'forbidden') ? (
+      <FeedbackPanel
+        actions={
+          outcome === 'success' ? (
+            <button
+              className={styles.secondary}
+              onClick={() => {
+                dismissOutcome();
+                focusDismissedSurface(false);
+              }}
+              type="button"
+            >
+              {copy.common.dismiss[lang]}
+            </button>
+          ) : (
+            <button className={styles.ghostButton} onClick={discardCurrentDraft} type="button">
+              {copy.common.discardDraft[lang]}
+            </button>
+          )
+        }
+        autoFocus
+        body={
+          outcome === 'success' ? copy.feedback.savedReadUnavailable : copy.feedback.deniedDraftBody
+        }
+        title={outcome === 'success' ? copy.feedback.saved : copy.feedback.forbiddenTitle}
+        tone={outcome === 'success' ? 'success' : 'danger'}
+      />
+    ) : null;
+
   const pageErrorBlock: ReactNode =
     pageError === null ? null : (
       <FeedbackPanel
@@ -1347,6 +1402,7 @@ export function createProjectRecoveryView({
     draftBanner,
     draftInDetail,
     recoveryBlock,
+    statusRecoveryBlock,
     pageErrorBlock,
   };
 }
