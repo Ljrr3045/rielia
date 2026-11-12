@@ -1,0 +1,38 @@
+docs/development/unit-coverage.md
+  s_56f9656cb2b0b9::t_50477c5fd9b497 583-585
+  s_56f9656cb2b0b9::t_379fbf1913e4a0 582,586-588
+CONTRIBUTING.md
+  s_56f9656cb2b0b9::t_379fbf1913e4a0 42-44
+CHANGELOG.md
+  s_56f9656cb2b0b9::t_379fbf1913e4a0 7,9-14
+  s_56f9656cb2b0b9::t_50477c5fd9b497 8
+docs/development/development-quality-roadmap.md
+  s_56f9656cb2b0b9::t_379fbf1913e4a0 61-64
+  s_56f9656cb2b0b9::t_50477c5fd9b497 58-60
+docs/development/t37-discovery-ui.md
+  s_56f9656cb2b0b9::t_379fbf1913e4a0 3-33,35-52,54,56,59-64,66-68,71,74-81,83-93,101,103-104,106-110,112-115,119-123,125-130
+  s_56f9656cb2b0b9::t_50477c5fd9b497 34,53,55,57-58,65,69-70,72-73,82,94-95,97-99,102,105,116-118,124
+  s_56f9656cb2b0b9::t_b88bb3d0c0d033 96,100,111
+docs/development/t37-ui-acceptance.md
+  s_56f9656cb2b0b9::t_50477c5fd9b497 24-25,46-47,50,60
+  s_56f9656cb2b0b9::t_379fbf1913e4a0 1-23,26-45,48-49,51-59,61-85
+docs/development/progress.md
+  s_56f9656cb2b0b9::t_379fbf1913e4a0 3-5,10-13,17-25
+  s_56f9656cb2b0b9::t_50477c5fd9b497 6-9,14-16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "def5d5add9da019734c12ec45745a42e0bcf5114",
+  "prompts": {},
+  "sessions": {
+    "s_56f9656cb2b0b9": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1ce20-f7eb-7503-839d-9f1b8ffda007",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
