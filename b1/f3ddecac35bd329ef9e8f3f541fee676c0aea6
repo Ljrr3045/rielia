@@ -1,0 +1,32 @@
+CHANGELOG.md
+  s_d687ed7c4899c1::t_c12975da83bd62 25-33
+scripts/unit/baselines/web.json
+  s_d687ed7c4899c1::t_b61571eb87eb7a 1258,1343
+docs/development/t37-shell-entry.md
+  s_d687ed7c4899c1::t_c12975da83bd62 20-26,329-373
+docs/development/unit-coverage.md
+  s_d687ed7c4899c1::t_c12975da83bd62 44-46,440-469
+docs/development/progress.md
+  s_d687ed7c4899c1::t_c12975da83bd62 3-28
+apps/web/src/app/identity/identity-view.tsx
+  s_d687ed7c4899c1::t_3f83176688f741 41
+apps/web/test/unit/workspace-feedback.test.mjs
+  s_d687ed7c4899c1::t_fe17169ec9e063 230-233
+  s_d687ed7c4899c1::t_3f83176688f741 228-229,248-266
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b1f3ddecac35bd329ef9e8f3f541fee676c0aea6",
+  "prompts": {},
+  "sessions": {
+    "s_d687ed7c4899c1": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1cdf3-aa8e-75d1-ab31-d31aeee7e10e",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
