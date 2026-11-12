@@ -4,6 +4,10 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Correct PR49 round1 documentation finding: label the `2edecbe` coverage checkpoint
+  historical and distinguish its pending PR48 status from accepted PR48/current
+  final-T37 gates. Preserve all counts, tested artifacts and current 195-case proof.
+
 - Publish [Draft PR49](https://github.com/Ljrr3045/rielia/pull/49) for final T37.5
   discovery/navigation and T37.6 consolidation delivery from
   [accepted PR48](https://github.com/Ljrr3045/rielia/pull/48#issuecomment-6818479075) ancestry (`f628fd3`), preserving exact tested

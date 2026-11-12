@@ -648,6 +648,9 @@ units do not establish SQL persistence/security or native focus behavior.
 
 ## T37.5 corrective integration baseline
 
+**Historical checkpoint at `2edecbe`.** Counts and pending status in this section
+describe that source; see the [current publication binding](#final-t3756-publication-binding).
+
 Real merge `01ebdee` preserves historical discovery `def5d5a` and exact corrected
 PR48 source `0c95bfd4`, including the infrastructure-test correction. One actual
 web measure passes **185/185**, retaining 68 maintained inputs and 24 helper/test
@@ -677,7 +680,10 @@ type/lint/format/handoff/diff and mandatory commit hooks pass; documentation-onl
 PR48 sync does not change source/test/baseline bytes. The
 [integrated native/persisted guide](t37-discovery-ui.md#corrective-integration-qa--2026-11-12)
 keeps real database effects distinct from finite fixture results and retains
-historical failures/provenance gaps. PR48/final T37 acceptance remains pending.
+historical failures/provenance gaps. At `2edecbe`, PR48 and final T37 acceptance
+were pending. [PR48 was subsequently accepted](https://github.com/Ljrr3045/rielia/pull/48#issuecomment-6818479075);
+the [current publication binding](#final-t3756-publication-binding) retains final
+T37 acceptance as pending.
 
 ## T37.4 reviewed round2 modal-focus migration
 

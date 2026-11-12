@@ -1,5 +1,14 @@
 # Delivery progress and decisions
 
+## 2026-11-12 PR49 round1 documentation correction — DRAFT
+
+Native check `131068806214` completed SUCCESS in 16m41s with one valid
+[status-label finding](https://github.com/Ljrr3045/rielia/pull/49#discussion_r4548279493)
+and Address before merge. The unit guide now labels the `2edecbe` baseline historical
+and qualifies its then-pending PR48 status, linking accepted PR48/current binding.
+The 195-case/`c7e1a528` proof is unchanged; only doc checks/hooks run. Final T37
+acceptance remains pending, and T11 remains unstarted. Coordinator owns resolution/review.
+
 ## 2026-11-12 T37.5/6 final delivery — DRAFT PR49
 
 Final delivery: [Draft PR49](https://github.com/Ljrr3045/rielia/pull/49) targets `dev`. T37.1–4 are accepted, including
