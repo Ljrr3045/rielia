@@ -267,7 +267,12 @@ export function useProjectContentForms({
       requestAnimationFrame(() => {
         if (hadForm) {
           const opener = modalOpenerRef.current;
-          if (opener !== null && opener.isConnected && !opener.matches('[disabled]')) {
+          if (
+            opener !== null &&
+            opener.isConnected &&
+            !opener.matches('[disabled]') &&
+            opener.closest('[inert], [hidden], [aria-hidden="true"]') === null
+          ) {
             opener.focus();
             if (document.activeElement === opener) return;
           }

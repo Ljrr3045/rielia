@@ -1,5 +1,18 @@
 # Delivery progress and decisions
 
+## 2026-11-12 PR48 round1 recovery corrections — IMPLEMENTED, NATIVE PENDING
+
+Completed native review found three credible recovery gaps; real regressions
+reproduce dialog loss during reads, unavailable cross-target denied-draft Return
+and missing focus after revocation. The [corrections](t37-project-task-ui.md#pr48-round1-recovery-corrections--implementation-checkpoint)
+retain the existing modal/feedback/controller owners, hide unverified private
+fields, preserve versioned memory-only intent and require fresh authority.
+One measure and one normal web gate pass 185 cases, retaining 177; exact reviewed
+baseline `560abd96` raises all four floors, with unchanged provider/config/inventory
+and seven other baselines. New-source production/native proof is pending before
+Draft publication; old build/26-native/14-Astra evidence remains historical.
+No T37.4 acceptance, T37.5 source, Ready/review trigger or whole-T37 closure.
+
 ## 2026-11-12 PR48 infrastructure witness correction
 
 The initial [PR48 CI run](https://github.com/Ljrr3045/rielia/actions/runs/43159616732)

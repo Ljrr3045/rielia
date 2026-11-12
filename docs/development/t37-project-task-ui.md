@@ -15,6 +15,39 @@ Follow the [direction](t37-design-direction.md), [inventory](t37-ui-inventory.md
 [T36 contract](t36-stable-ui-contract.md) and [project owner map](project-interactions-extraction.md).
 The imported handoff and existing server authorization remain authoritative.
 
+## PR48 round1 recovery corrections — implementation checkpoint
+
+The completed first native review reported three credible findings
+([summary](https://github.com/Ljrr3045/rielia/pull/48#issuecomment-6816185604)):
+read loading/error removed the only modal while its shell stayed inert; a denied
+draft lost its cross-target Return; permission revocation closed a form without
+restoring focus. All three are reproduced through the real screen/controller
+before source correction. Earlier passing matrices did not cover these schedules.
+
+The existing ModalFrame now remains mounted during loading/error with generic
+FeedbackPanel recovery, reachable Cancel/Escape and read-only retry. Private fields
+are absent until fresh same-target DTO/capability is available. Focus stays inside
+the reachable modal across child replacement; closing it clears inert/body lock
+without losing memory-local intent. The denial panel provides generic cross-target
+Return without private labels. Failed or revoked return attempts cannot reopen
+fields after a later read without a new deliberate Return; captured versions and
+unknown keys retain their existing semantics. Revocation uses the established
+focus-restoration path and rejects hidden/inert openers.
+
+Eight meaningful schedules retain all 177 prior cases: **185 pass** one measure
+and one normal web gate. Exact coordinator-approved current baseline
+`560abd962881e8e3d93666919c8e190125f8a8e467a65af60bcf7078f88d41df`
+raises L/S/F/B floors to **6072/5858/4825/5456**. Provider/config, 68 inputs, all prior
+tests and seven other baselines remain exact; no per-file coverage regression or
+increase in uncovered units. Mapping debt is now 811 null columns of 28,926, with
+shifted-source mapping limits and the same type-only N/A owner retained.
+
+A new production build and focused native correction schedules remain required
+before the corrective Draft push. The ce607 build, 26 journeys/20 images and
+14-state Astra subset below are **historical evidence for unchanged surfaces**;
+they are not exact-new-source proof or acceptance of these review corrections.
+No T37.5 source or whole-T37 acceptance is included.
+
 ## Result and ownership
 
 | Surface | Result |

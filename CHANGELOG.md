@@ -6,6 +6,14 @@ This records repository changes. No application version has been released.
 
 ### T37.4 project/task presentation and recovery — [Draft PR #48](https://github.com/Ljrr3045/rielia/pull/48)
 
+- Correct round1 recovery findings: keep read-loading/error dialogs reachable with
+  private fields hidden; restore generic cross-target denied-draft Return and
+  require deliberate reauthorization after a failed attempt; restore valid focus
+  after form revocation. Preserve captured versions, local intent and once-only writes.
+- Retain all 177 cases and add eight meaningful schedules; 185 pass one measure
+  and one normal gate after exact reviewed migration, raising L/S/F/B floors to
+  6072/5858/4825/5456. New-source native evidence is pending; old captures remain historical.
+
 - Correct an obsolete CI infrastructure witness now that project/detail screens
   execute in real units; retain actual unexecuted AST denominators and all gate
   rejection witnesses. One targeted 20-case run passes using exact-head CI reports,

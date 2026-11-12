@@ -226,12 +226,26 @@ export function useProjectInteractionEffects({
   }, [outcome, form]);
 
   useEffect(() => {
-    if ((status === 'ready' || status === 'empty') && form !== null && !formAuthorized)
+    if (
+      form !== null &&
+      (((status === 'ready' || status === 'empty') && !formAuthorized) || status === 'disabled')
+    ) {
+      dismissFocusPendingRef.current = true;
       setForm(null);
+    }
     if (status !== 'signed-out' && status !== 'forbidden') return;
     if (form !== null) setForm(null);
     if (workspaceNavigation !== null) void resolveWorkspaceNavigation('stay');
   }, [status, form, formAuthorized, workspaceNavigation, resolveWorkspaceNavigation]);
+
+  useEffect(() => {
+    if (form === null) return;
+    const frame = requestAnimationFrame(() => {
+      const dialog = document.querySelector<HTMLElement>('[role="dialog"]');
+      if (dialog !== null && !dialog.contains(document.activeElement)) dialog.focus();
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [form, status]);
 
   useEffect(() => {
     if (form !== null) return;
@@ -356,6 +370,15 @@ export function useProjectInteractionEffects({
 
   useEffect(() => {
     if (!resumeDraftOnReady || !draft) return;
+    if (
+      status === 'forbidden' ||
+      status === 'error' ||
+      status === 'signed-out' ||
+      status === 'disabled'
+    ) {
+      setResumeDraftOnReady(false);
+      return;
+    }
     if (
       draft.type === 'create-project'
         ? status !== 'ready' && status !== 'empty'

@@ -515,10 +515,16 @@ export function createProjectRecoveryView({
         <FeedbackPanel
           actions={
             <>
-              {canResumeDraft && (
-                <button className={styles.secondary} onClick={resumeCurrentDraft} type="button">
-                  {copy.feedback.draftReturn[lang]}
+              {draft !== null && !draftMatches ? (
+                <button className={styles.secondary} onClick={handleReturnToDraft} type="button">
+                  {copy.feedback.draftContextReturn[lang]}
                 </button>
+              ) : (
+                canResumeDraft && (
+                  <button className={styles.secondary} onClick={resumeCurrentDraft} type="button">
+                    {copy.feedback.draftReturn[lang]}
+                  </button>
+                )
               )}
               <button
                 className={styles.secondary}

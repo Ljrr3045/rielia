@@ -315,6 +315,12 @@ test('a fresh read revoking edit permission closes the form; restored permission
   assert.equal(queryByRole(b.container, 'dialog') === null, true);
   assert.doesNotMatch(b.container.textContent, /Unsent private intent/);
   assert.equal(getByRole(b.container, 'button', { name: 'Return to draft' }).disabled, true);
+  assert.equal(
+    b.document.activeElement.matches('#projects-main, h1[tabindex="-1"]'),
+    true,
+    'revocation restores focus to a reachable current surface',
+  );
+  assert.equal(b.document.activeElement.closest('[inert]'), null);
   await b.event('popstate');
   await b.flush();
   assert.equal(
@@ -487,3 +493,178 @@ test('current project access capability mounts real administration; revoked and 
   await b.click('Close', getByRole(b.container, 'dialog'));
   assert.equal(b.posts().length, 0);
 });
+
+const accessPage = (version = 1) => ({
+  workspaceId: 'a',
+  projectId: 'p',
+  projectVersion: version,
+  items: [
+    {
+      principalId: 'person',
+      name: 'Private access member',
+      kind: 'human',
+      active: true,
+      role: 'member',
+      explicitAccess: 'active',
+      implicitAccess: false,
+      effectiveAccess: true,
+      capabilities: { canGrant: false, canRevoke: false },
+    },
+  ],
+  total: 2,
+  nextCursor: 'tail',
+});
+
+for (const result of ['success', '503', 'cancel'])
+  test(`access Refresh retains one reachable dialog through held read and ${result}`, async (t) => {
+    const record = project();
+    record.capabilities.canManageAccess = true;
+    const b = await mount(t, undefined, 'en', (browser) => {
+      browser.server.responses.set(projectPath, record);
+      browser.server.responses.set(`${projectPath}/access`, accessPage());
+    });
+    await b.click('Access');
+    const dialog = getByRole(b.container, 'dialog');
+    b.server.responses.set(`${projectPath}/access`, accessPage(2));
+    await b.click('Load more people', dialog);
+    assert.match(dialog.textContent, /The access list changed/);
+    const read = b.server.holdNext(projectPath);
+    await b.click('Refresh list', dialog);
+    assert.equal(queryByRole(b.container, 'dialog'), dialog, 'modal and trap remain mounted');
+    assert.match(dialog.textContent, /Checking the session/);
+    assert.equal(
+      dialog.contains(b.document.activeElement),
+      true,
+      'held refresh keeps focus in the reachable dialog',
+    );
+    assert.doesNotMatch(dialog.textContent, /Private access member/);
+    assert.equal(queryByRole(dialog, 'radio'), null, 'unverified policy fields are absent');
+    assert.equal(getByRole(dialog, 'button', { name: 'Cancel', exact: true }).disabled, false);
+    if (result === 'cancel') {
+      await act(async () =>
+        b.document.dispatchEvent(
+          new b.window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }),
+        ),
+      );
+      await b.flush();
+      assert.equal(queryByRole(b.container, 'dialog') === null, true);
+      assert.equal(b.document.body.style.overflow, '');
+      assert.equal(b.container.querySelector('main').hasAttribute('inert'), false);
+    }
+    await act(async () =>
+      read.resolve(
+        result === '503'
+          ? Response.json({ code: 'unavailable' }, { status: 503 })
+          : Response.json({ ...record, version: 2 }),
+      ),
+    );
+    await b.flush();
+    if (result === '503') {
+      assert.equal(queryByRole(b.container, 'dialog'), dialog);
+      assert.match(dialog.textContent, /Projects could not be loaded/);
+      assert.doesNotMatch(dialog.textContent, /Private access member/);
+      await b.click('Load again', dialog);
+      assert.equal(queryByRole(b.container, 'dialog'), dialog);
+      assert.match(dialog.textContent, /Private access member/);
+      assert.equal(dialog.contains(b.document.activeElement), true);
+      await b.click('Close', dialog);
+    } else if (result === 'success') {
+      assert.equal(queryByRole(b.container, 'dialog'), dialog);
+      assert.match(dialog.textContent, /Private access member/);
+      assert.equal(dialog.contains(b.document.activeElement), true);
+      await b.click('Close', dialog);
+    } else
+      assert.equal(
+        queryByRole(b.container, 'dialog') === null,
+        true,
+        'late read cannot remount a cancelled dialog',
+      );
+    assert.equal(b.container.querySelector('main').hasAttribute('inert'), false);
+    assert.equal(b.document.body.style.overflow, '');
+    assert.equal(b.posts().length, 0);
+  });
+
+test('an open versioned draft survives read503 in a reachable modal without stale fields or duplicate save', async (t) => {
+  const b = await mount(t);
+  await b.click('Project settings');
+  const dialog = getByRole(b.container, 'dialog');
+  await b.input(getByRole(dialog, 'textbox', { name: /Project name/ }), 'Memory only edit');
+  const read = b.server.holdNext(projectPath);
+  await b.event('popstate');
+  await act(async () => read.resolve(Response.json({ code: 'unavailable' }, { status: 503 })));
+  await b.flush();
+  assert.equal(queryByRole(b.container, 'dialog'), dialog);
+  assert.equal(queryByRole(dialog, 'textbox'), null);
+  assert.doesNotMatch(b.container.textContent, /Memory only edit/);
+  assert.equal(b.posts().length, 0);
+  b.server.responses.set(projectPath, project('p', 'a', 2));
+  await b.click('Load again', dialog);
+  assert.equal(getByRole(dialog, 'textbox', { name: /Project name/ }).value, 'Memory only edit');
+  b.server.mutate = () => Response.json(project('p', 'a', 3));
+  await b.click('Save changes', dialog);
+  assert.equal(b.posts().length, 1);
+  assert.equal(JSON.parse(b.posts()[0].options.body).expectedVersion, 1);
+});
+
+for (const access of ['authorized', 'forbidden', 'revoked', 'gone'])
+  test(`denied draft returns across same-workspace targets with fresh ${access} target authority`, async (t) => {
+    const b = await mount(t);
+    await b.click('Project settings');
+    await b.input(
+      getByRole(b.container, 'textbox', { name: /Project name/ }),
+      'Secret original intent',
+    );
+    b.server.mutate = () => Response.json({ code: 'FORBIDDEN' }, { status: 403 });
+    await b.click('Save changes', getByRole(b.container, 'dialog'));
+    const first = b.posts()[0];
+    b.server.responses.set('/api/v1/workspaces/a/projects/q', project('q'));
+    const page = b.server.taskPage();
+    b.server.responses.set('/api/v1/workspaces/a/projects/q/tasks', {
+      ...page,
+      items: page.items.map((row) => ({ ...row, projectId: 'q' })),
+    });
+    b.window.history.pushState({}, '', '/projects?workspace=a&project=q');
+    await b.event('popstate');
+    await b.flush();
+    assert.match(b.window.location.search, /project=q/);
+    assert.doesNotMatch(b.container.textContent, /Secret original intent/);
+    const target = b.server.holdNext(projectPath);
+    await b.click('Return to draft');
+    assert.equal(queryByRole(b.container, 'dialog') === null, true);
+    assert.doesNotMatch(b.container.textContent, /Secret original intent/);
+    const current = project('p', 'a', 2);
+    current.capabilities.canEdit = access !== 'revoked';
+    await act(async () =>
+      target.resolve(
+        access === 'forbidden' || access === 'gone'
+          ? Response.json({ code: access }, { status: access === 'gone' ? 404 : 403 })
+          : Response.json(current),
+      ),
+    );
+    await b.flush();
+    assert.equal(b.posts().length, 1, 'context return never submits');
+    if (access !== 'authorized') {
+      assert.equal(queryByRole(b.container, 'dialog') === null, true);
+      assert.doesNotMatch(b.container.textContent, /Secret original intent/);
+      b.server.responses.set(projectPath, project('p', 'a', 3));
+      await b.click(access === 'gone' ? 'Load again' : 'Refresh');
+      assert.equal(
+        queryByRole(b.container, 'dialog') === null,
+        true,
+        'a failed/revoked return cannot remount later without a new explicit Return',
+      );
+      await b.click('Return to draft');
+    }
+    assert.equal(
+      getByRole(b.container, 'textbox', { name: /Project name/ }).value,
+      'Secret original intent',
+    );
+    b.server.mutate = () => Response.json(project('p', 'a', 4));
+    await b.click('Save changes', getByRole(b.container, 'dialog'));
+    assert.equal(b.posts().length, 2);
+    assert.equal(JSON.parse(b.posts()[1].options.body).expectedVersion, 1);
+    assert.notEqual(
+      b.posts()[1].options.headers['Idempotency-Key'],
+      first.options.headers['Idempotency-Key'],
+    );
+  });
