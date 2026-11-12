@@ -1,0 +1,25 @@
+scripts/unit/baselines/web.json
+  s_56f9656cb2b0b9::t_72fee35103cf64 1283
+CHANGELOG.md
+  s_56f9656cb2b0b9::t_a517722ddaff3e 7-11
+docs/development/unit-coverage.md
+  s_56f9656cb2b0b9::t_a517722ddaff3e 559-581
+docs/development/progress.md
+  s_56f9656cb2b0b9::t_a517722ddaff3e 3-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "81b5180af65247ae154906cabf34a1cfcf05f6df",
+  "prompts": {},
+  "sessions": {
+    "s_56f9656cb2b0b9": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1ce20-f7eb-7503-839d-9f1b8ffda007",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
