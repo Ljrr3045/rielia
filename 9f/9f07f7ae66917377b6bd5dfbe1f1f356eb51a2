@@ -1,0 +1,33 @@
+docs/development/progress.md
+  s_436a98e4642f61::t_8309ceaf621c92 3-17
+apps/web/src/app/workspaces/strings.ts
+  s_436a98e4642f61::t_9371795a5b9191 371-374
+apps/web/test/unit/workspace-feedback.test.mjs
+  s_436a98e4642f61::t_8295db9ac4a187 148,214
+  s_436a98e4642f61::t_b3eef1c8c8033e 1-52,54,56-59,64-95,103-115,120-121,127-130,137,149-150,161,168-169,180,186-193,197-199,204,211-213,218-251,259,267,272-274,281-285
+  s_436a98e4642f61::t_8271b17987ae20 205-206
+  s_436a98e4642f61::t_745dae8b131a9e 53,55,60-63,96-102,116-119,122-126,131-136,138-147,151-160,162-167,170-179,181-185,194-196,200-203,207-210,215-217,252-258,260-266,268-271,275-280
+CHANGELOG.md
+  s_436a98e4642f61::t_8309ceaf621c92 9-17
+  s_436a98e4642f61::t_0e8a21fe6c0cb3 23
+apps/web/src/app/workspaces/workspace-feedback.tsx
+  s_436a98e4642f61::t_9371795a5b9191 229-234
+docs/development/t37-shell-entry.md
+  s_436a98e4642f61::t_8309ceaf621c92 156-211
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9f9f07f7ae66917377b6bd5dfbe1f1f356eb51a2",
+  "prompts": {},
+  "sessions": {
+    "s_436a98e4642f61": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1cd96-e5fb-78c1-ad15-35bdfb4f2e74",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
