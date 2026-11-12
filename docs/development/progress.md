@@ -1,5 +1,20 @@
 # Delivery progress and decisions
 
+
+## 2026-11-11 T37.3 truthful invitation feedback — LOCAL CORRECTION
+
+SOL's `fix/t37-invitation-feedback` starts from corrected Astra `5af198a`.
+Confirmed invitation success now distinguishes a present generated link from a
+cleared temporary result, without changing token clearing or adding retry/state.
+The [guide](t37-shell-entry.md#truthful-invitation-feedback-and-targeted-revalidation-2026-11-11)
+records ten new regressions, 155 passing frontend cases, one successful production
+build and 19 passing targeted native cases/23 captures. Coverage acceptance remains
+blocked: unchanged manifest and branch-denominator comparators reject the changed
+source/test inputs; no baseline or threshold is modified. Corrected-image review,
+comparable coverage reconciliation, later persisted QA, publication/current-head
+CI/native review and coordinator acceptance remain open. Runtime is stopped;
+no push/PR/Ready/merge/deploy or T37/T11 acceptance claim.
+
 ## 2026-11-11 T37.3 native visual review — CORRECTION CHECKPOINT
 
 Astra inspected twelve actual `fbc0829` captures from compiled build

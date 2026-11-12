@@ -153,3 +153,59 @@ Only low-cost format/handoff/diff and mandatory hooks run in this review task;
 no install, build, runtime, browser, service or full test suite. Physical devices,
 AT, actual browser-chrome zoom, provider/staging and persistence evidence remain
 outside this visual review. No after-correction render or acceptance is claimed.
+
+
+## Truthful invitation feedback and targeted revalidation (2026-11-11)
+
+SOL's bounded correction starts from Astra `5af198a009a7a9fbda19a9f0148eb68c89aaebb3`.
+`OperationPanel` uses its existing confirmed outcome, last-action type and
+`invitationLinkVisible` to distinguish an available generated link from a cleared
+temporary result. ES/EN copy confirms creation without promising a missing link,
+explains that Refresh cannot restore it, and directs the user to review the list
+once readable. Only if the link was not copied and current permission permits it
+should the user explicitly revoke that invitation before choosing a replacement.
+No automatic invite retry/action, token retention, state/effect/controller,
+transport, policy, CSS or dependency change is introduced. Uncertain
+`invitation-link-unavailable` recovery remains separate from confirmed success.
+
+Ten new real-hook/component DOM regressions cover read403/503 in both languages,
+visible-link/manual-copy/Done, read recovery and dismiss without another POST,
+inbound separation, refresh/selection/account replacement/expiry clearing, and
+unrelated success versus uncertain recovery. Only CSS and HTTP/browser boundaries
+are controlled. All 155 frontend unit cases pass. **The unchanged coverage gate
+fails** its exact source/test manifest comparison: six incoming T37.3 source
+fingerprints already differed from accepted T36, and this correction adds the
+feedback change and regression file. Read-only normalization of that same run
+measures L1649/3793, S1818/4269, F335/1051, B1665/5196; its numerical comparator
+also rejects the changed branch denominator (5196 versus 5192). No baseline,
+threshold, source selection, exclusion or policy was changed. Comparable source/
+test reconciliation remains an explicit coordinator-owned acceptance blocker.
+
+One production build, `exXrwr4o43S12E7dSkmxO`, passes alongside affected type/lint
+checks. Nineteen targeted installed-Brave cases pass, with 23 captures bound to
+exact source hashes; the build originates from the tested working-tree snapshot
+and final commit equivalence is verified separately. These samples confirm:
+
+- Secondary mobile context at 320/390 and 844×390 uses visual ellipsis while the
+  complete DOM/accessibility text and primary h1 remain; menu/add are 44×44px,
+  and keyboard menu return remains functional.
+- Workspace header allocation at 1440/768/390/320 supports short/long account and
+  owner names, ES/EN and light/dark; short-account controls share a row at 1440/768.
+  Role/owner label/value tracks align at the top with long values.
+- Failed follow-up 403/503 retains confirmed invitation success with truthful
+  unavailable-link feedback, read recovery/dismiss and no mutation retry; successful
+  reads do not restore the token. Original visible-link copy/manual fallback,
+  Done and clearing remain. The pending header retains disabled Refresh.
+- No sampled whole-page overflow/unresolved CSS variable; changed-surface control
+  minimum is 44px and narrow fields are 16px. Sampled enabled-control text contrast
+  is at least 5.231:1; this is computed evidence, not WCAG certification.
+
+One cached offline isolated-unit-tool preparation reuses 406 packages with zero
+downloads. Runtime/browser resources are stopped; foreign listeners remain.
+The earlier `fbc0829` / `B4VarUs7QHLK6SVdmvGsG` baseline evidence is unchanged.
+Astra must inspect corrected images. The inherited 1280 breadcrumb overlap stays
+Astra-owned T37.4; all three project/collaboration recovery debts remain open.
+Actual browser-chrome 200% zoom, physical device/AT/provider/staging and real
+PostgreSQL/Nest/Next persisted/security QA are unperformed. Coverage reconciliation,
+current-head CI/native review, consolidated Draft publication and coordinator
+acceptance remain required; this correction does not accept T37.3 or T37.

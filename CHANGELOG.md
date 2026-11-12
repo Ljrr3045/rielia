@@ -6,12 +6,21 @@ This records repository changes. No application version has been released.
 
 ### T37.3 shell and entry-flow presentation checkpoint
 
+- Correct confirmed invitation feedback when the temporary link has been cleared:
+  keep the success, explain that Refresh cannot restore the link, and require
+  current permission plus deliberate list review/revocation before replacement.
+  Preserve token clearing, visible-link copy and uncertain-outcome recovery.
+- Add ten frontend regressions; 155 cases and 19 targeted native checks pass on
+  the corrected layout/feedback build. Coverage manifest/denominator reconciliation
+  remains blocked and is recorded explicitly; no baseline/threshold change,
+  publication or T37 acceptance.
+
 - Follow twelve native baseline captures with CSS corrections for repeated
   secondary mobile context, workspace header wrapping and role/owner alignment;
   retain full primary titles and existing interactions. Correct the invitation
   link-survival explanation: only confirmed success survives follow-up read
   403/503, while the existing controller clears the link. Targeted corrected-source
-  validation and T37.4 breadcrumb correction remain open.
+  validation is recorded in the guide; T37.4 breadcrumb correction remains open.
 - Compose compact identity/session guidance, a 14rem desktop work rail and
   wrapping mobile context; retain existing route, drawer and detail mechanics.
 - Align workspace identity/role/owner and member/Agent rows, preserve protected
