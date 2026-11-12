@@ -1,0 +1,45 @@
+apps/web/src/app/identity/page.tsx
+  s_4270ef6aad1034::t_fd7e007f5e7517 14-15,18,23,42,51-52
+docs/development/t37-shell-entry.md
+  s_4270ef6aad1034::t_560e4007113e9e 1-104
+apps/web/src/app/projects/projects.module.css
+  s_4270ef6aad1034::t_cb08448e195125 177,179,225-226,228,235-236,249-252,261,283,305,315,332-333,353-354,360,364,371,383,386-387,392,399-400,439-440,486-487,497-502,509,514,521-524,546,550-551
+apps/web/src/app/workspaces/strings.ts
+  s_4270ef6aad1034::t_b6d13f432db6ea 36
+docs/development/progress.md
+  s_4270ef6aad1034::t_560e4007113e9e 3-22
+apps/web/src/app/globals.css
+  s_4270ef6aad1034::t_52456f4ba062a8 214,217-218
+  s_4270ef6aad1034::t_fd7e007f5e7517 207-213,215-216,219-260,262-263,268-269,301-302
+  s_4270ef6aad1034::t_56bd72bd53463e 303
+apps/web/src/app/projects/project-shell.tsx
+  s_4270ef6aad1034::t_cb08448e195125 397
+apps/web/src/app/workspaces/workspace.module.css
+  s_4270ef6aad1034::t_5a1ab186c807d7 4-5,128-129,131,153,159,207,211-213,222,253,285-293,522,524-525,547-549,562,573,575-577,583,585-589,597,646,648,661-662,667,669,675-692,696,702-703,713-720,782-783,815-818,821,829-844,849-874
+  s_4270ef6aad1034::t_b6d13f432db6ea 141-147
+  s_4270ef6aad1034::t_36af5366d65a92 535-541,557,625
+apps/web/src/app/identity/identity-view.tsx
+  s_4270ef6aad1034::t_fd7e007f5e7517 41,43
+apps/web/src/app/workspaces/workspace-entry.tsx
+  s_4270ef6aad1034::t_36af5366d65a92 205-206
+apps/web/src/app/workspaces/workspace-view.tsx
+  s_4270ef6aad1034::t_b6d13f432db6ea 70-77
+CHANGELOG.md
+  s_4270ef6aad1034::t_560e4007113e9e 7-19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "fbc082975d2387748000d6fd303de18760247d56",
+  "prompts": {},
+  "sessions": {
+    "s_4270ef6aad1034": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1cd8b-46df-7340-97a6-67b2478a8359",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
