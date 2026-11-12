@@ -564,7 +564,9 @@
 .breadcrumb {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: baseline;
+  min-width: 0;
+  overflow-wrap: anywhere;
   gap: 0.35rem;
   margin-bottom: var(--space-2);
   color: var(--text-secondary);
@@ -577,6 +579,11 @@
   min-height: var(--control-height);
   color: var(--text-secondary);
   font-weight: 600;
+}
+
+.breadcrumb > * {
+  min-width: 0;
+  max-width: 100%;
 }
 
 .breadcrumbSeparator {
@@ -1200,16 +1207,24 @@
 }
 
 .capturePanel {
-  margin-bottom: var(--space-4);
-  padding: 0.7rem;
+  margin-block: var(--space-4) var(--space-6);
+  padding: var(--space-4);
   border: 1px solid var(--divider);
   border-radius: var(--radius-panel);
   background: var(--surface);
 }
 
+.captureLabel {
+  display: block;
+  margin-bottom: var(--space-2);
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+  font-weight: 650;
+}
+
 .captureForm {
   display: flex;
-  align-items: center;
+  align-items: end;
   gap: var(--space-2);
 }
 
@@ -1239,7 +1254,10 @@
 
 .taskList {
   display: grid;
-  gap: 0.4rem;
+  gap: 0;
+  border: 1px solid var(--divider);
+  border-radius: var(--radius-panel);
+  background: var(--surface);
 }
 
 .taskRow {
@@ -1249,14 +1267,25 @@
     'status status'
     'main main';
   gap: 0.35rem 0.75rem;
-  padding: 0.7rem 0.8rem;
-  border: 1px solid var(--divider);
-  border-radius: 0.65rem;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--divider);
   background: var(--surface);
 }
 
-.taskRow:hover {
-  border-color: var(--control-border);
+.taskRow:first-child {
+  border-start-start-radius: var(--radius-panel);
+  border-start-end-radius: var(--radius-panel);
+}
+
+.taskRow:last-child {
+  border-bottom: 0;
+  border-end-start-radius: var(--radius-panel);
+  border-end-end-radius: var(--radius-panel);
+}
+
+.taskRow:hover,
+.taskRow:focus-within {
+  background: var(--surface-inset);
 }
 
 .taskRowArchived {
@@ -1269,6 +1298,29 @@
     grid-template-areas: 'status main aside';
     align-items: center;
     padding: 0.6rem 0.85rem;
+  }
+}
+
+.projectTaskRow {
+  grid-template-areas:
+    'main main'
+    'status status'
+    'aside aside';
+}
+
+.projectTaskRow .taskAside {
+  display: flex;
+  justify-content: space-between;
+}
+
+.projectTaskRow .mobilePriority {
+  display: none;
+}
+
+@media (min-width: 48rem) {
+  .taskRow.projectTaskRow {
+    grid-template-columns: minmax(0, 1fr) 11rem minmax(6rem, auto);
+    grid-template-areas: 'main status aside';
   }
 }
 
@@ -1330,6 +1382,38 @@
   align-items: center;
   gap: var(--space-1);
   min-width: 0;
+}
+
+@media (min-width: 64rem) {
+  .workLayout:not(.workLayoutOpen) .projectTaskRow .taskMeta {
+    display: grid;
+    grid-template-columns: auto auto minmax(8rem, 1fr) minmax(6rem, auto);
+    align-items: start;
+    gap: var(--space-2) var(--space-3);
+  }
+
+  .workLayout:not(.workLayoutOpen) .taskMetaAssignee {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .workLayout:not(.workLayoutOpen) .taskMetaDue {
+    grid-column: 4;
+    grid-row: 1;
+  }
+}
+
+@media (min-width: 80rem) {
+  .workLayoutOpen .projectTaskRow {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'main main'
+      'status aside';
+  }
+
+  .workLayoutOpen .projectTaskRow .taskStatusCell {
+    max-width: 15rem;
+  }
 }
 
 .taskAside {
@@ -1432,9 +1516,8 @@
 .detailPanel {
   min-width: 0;
   border: 1px solid var(--divider);
-  border-radius: 0.8rem;
+  border-radius: var(--radius-panel);
   background: var(--surface);
-  box-shadow: 0 1px 2px rgb(15 23 42 / 5%);
 }
 
 @media (min-width: 80rem) {
@@ -1512,14 +1595,15 @@
 }
 
 .detailTitle {
-  font-size: 1.35rem;
+  font-size: 1.5rem;
   line-height: 1.25;
   letter-spacing: -0.01em;
   overflow-wrap: anywhere;
 }
 
 .detailDescription {
-  margin-top: 0.6rem;
+  max-width: 65ch;
+  margin-top: var(--space-4);
   color: var(--text-primary);
   font-size: var(--text-md);
   overflow-wrap: anywhere;
@@ -1599,18 +1683,17 @@
 }
 
 .detailSection {
-  margin-top: 1.35rem;
+  margin-top: var(--space-6);
   padding-top: var(--space-4);
   border-top: 1px solid var(--divider);
 }
 
 .detailSectionTitle {
-  margin-bottom: 0.55rem;
-  color: var(--text-secondary);
-  font-size: var(--text-xs);
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
+  margin-bottom: var(--space-3);
+  color: var(--text-primary);
+  font-size: 1.125rem;
+  font-weight: 650;
+  line-height: 1.35;
 }
 
 .propertyList {
@@ -1620,10 +1703,10 @@
 
 .propertyRow {
   display: grid;
-  grid-template-columns: minmax(7rem, 9rem) minmax(0, 1fr);
+  grid-template-columns: minmax(5rem, 7rem) minmax(0, 1fr);
   align-items: start;
   gap: 0.5rem 0.75rem;
-  padding-block: 0.35rem;
+  padding-block: var(--space-2);
 }
 
 @media (max-width: 30rem) {
@@ -1647,11 +1730,9 @@
 
 .provenanceCard {
   display: grid;
-  gap: 0.35rem;
-  padding: 0.65rem 0.75rem;
-  border: 1px solid var(--divider);
-  border-radius: var(--radius-panel);
-  background: var(--surface-inset);
+  gap: var(--space-2);
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .provenanceLine {
@@ -1917,7 +1998,18 @@
 .formGrid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 0.85rem;
+  align-items: start;
+  gap: var(--space-4);
+}
+
+.projectForm .formGrid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.fieldWide {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
 }
 
 @media (min-width: 36rem) {
@@ -1932,7 +2024,7 @@
 
 .field {
   display: grid;
-  gap: 0.3rem;
+  gap: var(--space-2);
   min-width: 0;
 }
 
@@ -1944,7 +2036,7 @@
 
 .fieldHint {
   color: var(--text-secondary);
-  font-size: 0.78rem;
+  font-size: 0.8125rem;
   overflow-wrap: anywhere;
 }
 
@@ -1998,9 +2090,7 @@
 }
 
 .formSummary {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
+  display: list-item;
   min-height: var(--control-height);
   color: var(--text-primary);
   font-weight: 650;
@@ -2286,16 +2376,25 @@
 .accessIntro,
 .accessSection {
   display: grid;
-  gap: 0.55rem;
-  padding: 0.85rem;
-  border: 1px solid var(--divider);
-  border-radius: 0.7rem;
-  background: var(--surface-inset);
+  gap: var(--space-3);
+  min-width: 0;
 }
 
 .accessIntro {
-  border-color: var(--info-ink);
+  padding: var(--space-4);
+  border: 1px solid var(--info-ink);
+  border-radius: var(--radius-control);
   background: var(--info-soft);
+  color: var(--info-ink);
+}
+
+.accessIntro .accessBody {
+  color: inherit;
+}
+
+.accessSection {
+  padding-block: var(--space-4);
+  border-top: 1px solid var(--divider);
 }
 
 .accessSectionHeader {
@@ -2332,17 +2431,19 @@
 
 .accessList {
   display: grid;
-  gap: 0.55rem;
+  gap: 0;
 }
 
 .accessRow {
   display: grid;
   gap: 0.55rem;
   min-width: 0;
-  padding: 0.65rem;
-  border: 1px solid var(--divider);
-  border-radius: var(--radius-panel);
-  background: var(--surface);
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--divider);
+}
+
+.accessRow:last-child {
+  border-bottom: 0;
 }
 
 .accessRowMain {
@@ -2473,7 +2574,9 @@
 }
 
 .taskViewBar {
-  margin: 0.35rem 0 0.7rem;
+  margin-block: var(--space-4);
+  padding-block: var(--space-3);
+  border-block: 1px solid var(--divider);
   min-width: 0;
 }
 
@@ -2608,7 +2711,7 @@
 
 .taskGroup {
   min-width: 0;
-  margin-top: 0.7rem;
+  margin-top: var(--space-4);
 }
 
 .taskGroup:first-of-type {
@@ -2620,7 +2723,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 0.35rem 0.6rem;
-  margin-bottom: 0.3rem;
+  margin-bottom: var(--space-2);
 }
 
 .taskGroupTitle {
@@ -2807,14 +2910,14 @@
 
 .boardColumn {
   display: flex;
-  flex: 0 0 17rem;
+  flex: 0 0 18rem;
   flex-direction: column;
   gap: var(--space-2);
   min-width: 0;
-  padding: 0.6rem;
+  padding: var(--space-3);
   border: 1px solid var(--divider);
   border-radius: var(--radius-panel);
-  background: var(--surface);
+  background: var(--surface-inset);
 }
 
 .boardColumnNarrow {
@@ -2928,9 +3031,9 @@
 .boardCard {
   position: relative;
   display: grid;
-  gap: 0.35rem;
+  gap: var(--space-2);
   min-width: 0;
-  padding: 0.55rem 0.6rem;
+  padding: var(--space-3);
   border: 1px solid var(--divider);
   border-radius: var(--radius-panel);
   background: var(--surface);
@@ -2957,6 +3060,7 @@
 
 .boardCardTop {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 0.35rem;
@@ -2965,8 +3069,8 @@
 
 .boardCardTitle {
   min-width: 0;
-  font-size: 0.92rem;
-  line-height: 1.35;
+  font-size: var(--text-base);
+  line-height: 1.4;
 }
 
 .app .cardTitleButton {
@@ -2996,14 +3100,14 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.2rem 0.55rem;
+  gap: var(--space-2);
   color: var(--text-secondary);
   font-size: var(--text-xs);
   min-width: 0;
 }
 
 .boardCardFooter {
-  padding-top: 0.3rem;
+  padding-top: var(--space-2);
   border-top: 1px solid var(--divider);
 }
 
@@ -3205,7 +3309,7 @@
 /* T09 collaboration */
 
 .collabSection {
-  margin-top: 1.35rem;
+  margin-top: var(--space-6);
   padding-top: var(--space-4);
   border-top: 1px solid var(--divider);
 }
@@ -3215,8 +3319,12 @@
   flex-wrap: wrap;
   align-items: baseline;
   justify-content: space-between;
-  gap: 0.3rem 0.75rem;
-  margin-bottom: 0.45rem;
+  gap: var(--space-2) var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.collabHeader .detailSectionTitle {
+  margin-bottom: 0;
 }
 
 .collabCount,
@@ -3234,17 +3342,14 @@
 .collabHint {
   margin: 0.2rem 0 0;
   color: var(--text-secondary);
-  font-size: var(--text-xs);
+  font-size: 0.8125rem;
   line-height: var(--leading-body);
   overflow-wrap: anywhere;
 }
 
 .collabEmpty {
   margin-top: var(--space-2);
-  padding: 0.65rem 0.75rem;
-  border: 1px dashed var(--divider);
-  border-radius: 0.55rem;
-  background: var(--surface-inset);
+  padding-block: var(--space-2) var(--space-3);
 }
 
 .collabEmptyTitle {
@@ -3448,15 +3553,18 @@
 
 .commentList {
   display: grid;
-  gap: var(--space-3);
+  gap: 0;
   margin-top: 0.6rem;
 }
 
 .commentItem {
-  padding: 0.65rem 0.7rem;
-  border: 1px solid var(--divider);
-  border-radius: 0.55rem;
-  background: var(--surface);
+  min-width: 0;
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--divider);
+}
+
+.commentItem:last-child {
+  border-bottom: 0;
 }
 
 .commentHeader {
@@ -3516,7 +3624,7 @@
   gap: 0.55rem;
   margin-top: 0.55rem;
   padding-left: 0.7rem;
-  border-left: 2px solid var(--divider);
+  border-left: 1px solid var(--divider);
 }
 
 .historyItem {
@@ -3541,6 +3649,7 @@
 .historyMeta {
   display: flex;
   flex-wrap: wrap;
+  overflow-wrap: anywhere;
   gap: 0.3rem;
   margin-top: 0.2rem;
   color: var(--text-secondary);

@@ -23,6 +23,7 @@ import {
 } from './project-content-model';
 export interface ProjectContentFormsPorts {
   blocked: boolean;
+  mutationPending: ProjectCommand['type'] | null;
   canArchiveProject: boolean;
   canCapture: boolean;
   canCreateProject: boolean;
@@ -68,6 +69,7 @@ export interface ProjectContentFormsPorts {
 
 export function useProjectContentForms({
   blocked,
+  mutationPending,
   canArchiveProject,
   canCapture,
   canCreateProject,
@@ -125,7 +127,58 @@ export function useProjectContentForms({
 
   const dismissFocusPendingRef = useRef(false);
 
+  function canResume(command: ProjectTaskCommand): boolean {
+    if (!commandMatches(command, selection) || mutationPending !== null) return false;
+    if (command.type === 'create-project')
+      return (status === 'ready' || status === 'empty') && workspace !== null && canCreateProject;
+    if (status !== 'ready' || project === null || project.id !== selection.projectId) return false;
+    if (command.type === 'edit-project') return canEditProject;
+    if (command.type === 'archive-project') return canArchiveProject;
+    if (command.type === 'restore-project') return canRestoreProject;
+    if (command.type === 'create-task') return canCapture;
+    if ('taskId' in command) {
+      const target =
+        task?.id === command.taskId
+          ? task
+          : tasks?.items.find((item) => item.id === command.taskId);
+      if (!target) return false;
+      if (command.type === 'archive-task') return target.capabilities.canArchive;
+      if (command.type === 'restore-task') return target.capabilities.canRestore;
+      return !projectArchived && target.capabilities.canEdit && target.archivedAt === null;
+    }
+    return false;
+  }
+
+  const formAuthorized = (() => {
+    if (form === null || form.workspaceId !== selection.workspaceId) return false;
+    if (form.kind === 'project-create') return canCreateProject;
+    if (project === null || project.id !== form.projectId || project.id !== selection.projectId)
+      return false;
+    switch (form.kind) {
+      case 'project-edit':
+        return canEditProject;
+      case 'project-access':
+        return canManageAccess;
+      case 'project-archive':
+        return canArchiveProject;
+      case 'project-restore':
+        return canRestoreProject;
+      default:
+        if (task === null || task.id !== form.taskId || task.id !== selection.taskId) return false;
+        return form.kind === 'task-edit'
+          ? task.capabilities.canEdit && task.archivedAt === null && !projectArchived
+          : form.kind === 'task-restore'
+            ? task.capabilities.canRestore
+            : task.capabilities.canArchive;
+    }
+  })();
+
+  const canResumeDraft = draft !== null && canResume(draft);
+
   function resumeDraft(command: ProjectTaskCommand) {
+    // Only current authorized DTOs may rehydrate a memory-local draft.
+    if (!canResume(command)) return;
+    dismissOutcome();
     // Resumed forms must not reuse a previous modal opener. Never restore
     // focus to a control left behind by a previously closed modal.
     modalOpenerRef.current = null;
@@ -174,6 +227,25 @@ export function useProjectContentForms({
       });
       return;
     }
+    if (command.type === 'archive-project' || command.type === 'restore-project') {
+      setForm({
+        kind: command.type === 'archive-project' ? 'project-archive' : 'project-restore',
+        workspaceId: command.workspaceId,
+        projectId: command.projectId,
+        version: command.expectedVersion,
+      });
+      return;
+    }
+    if (command.type === 'archive-task' || command.type === 'restore-task') {
+      setForm({
+        kind: command.type === 'archive-task' ? 'task-archive' : 'task-restore',
+        workspaceId: command.workspaceId,
+        projectId: command.projectId,
+        taskId: command.taskId,
+        version: command.expectedVersion,
+      });
+      return;
+    }
     if (command.type === 'create-task') {
       setCaptureTitle(command.fields.title ?? '');
       requestAnimationFrame(() => captureRef.current?.focus());
@@ -195,7 +267,12 @@ export function useProjectContentForms({
       requestAnimationFrame(() => {
         if (hadForm) {
           const opener = modalOpenerRef.current;
-          if (opener !== null && opener.isConnected && !opener.matches('[disabled]')) {
+          if (
+            opener !== null &&
+            opener.isConnected &&
+            !opener.matches('[disabled]') &&
+            opener.closest('[inert], [hidden], [aria-hidden="true"]') === null
+          ) {
             opener.focus();
             if (document.activeElement === opener) return;
           }
@@ -554,6 +631,7 @@ export function useProjectContentForms({
   function discardCurrentDraft() {
     const hadForm = form !== null;
     if (hadForm) dismissFocusPendingRef.current = true;
+    else focusDismissedSurface(false);
     discardDraft();
     setForm(null);
     setCaptureTitle('');
@@ -618,6 +696,8 @@ export function useProjectContentForms({
     else handleReturnToDraft();
   }
   return {
+    canResumeDraft,
+    formAuthorized,
     form,
     setForm,
     projectValue,

@@ -386,6 +386,7 @@ export function createProjectTaskController(options: {
     publish({
       ...state,
       selection: { ...selection },
+      ...(!sameScope && state.outcome === 'success' ? { outcome: null, result: null } : {}),
       url,
       parentCandidatesWanted: sameScope && state.parentCandidatesWanted,
     });
@@ -403,6 +404,7 @@ export function createProjectTaskController(options: {
       refreshDeferred: false,
       streamStatus: 'signed-out',
       status: 'signed-out',
+      outcome: state.outcome === 'success' ? null : state.outcome,
       session: null,
       workspaces: null,
       pending: null,
@@ -824,6 +826,7 @@ export function createProjectTaskController(options: {
           ...state,
           parentCandidatesWanted: false,
           status: config.enabled ? 'signed-out' : 'disabled',
+          outcome: state.outcome === 'success' ? null : state.outcome,
           session: null,
           result: null,
           conflict: null,

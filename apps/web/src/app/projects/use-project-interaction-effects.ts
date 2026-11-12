@@ -25,6 +25,7 @@ export interface ProjectInteractionEffectsPorts {
   focusTask: (taskId: string) => boolean;
   focusViewBar: () => void;
   form: FormState | null;
+  formAuthorized: boolean;
   hadDetailRef: RefObject<boolean>;
   lastCommandRef: RefObject<ProjectTaskCommand | null>;
   modalOpenerRef: RefObject<HTMLElement | null>;
@@ -92,6 +93,7 @@ export function useProjectInteractionEffects({
   focusTask,
   focusViewBar,
   form,
+  formAuthorized,
   hadDetailRef,
   lastCommandRef,
   modalOpenerRef,
@@ -224,10 +226,59 @@ export function useProjectInteractionEffects({
   }, [outcome, form]);
 
   useEffect(() => {
+    if (
+      form !== null &&
+      (((status === 'ready' || status === 'empty') && !formAuthorized) || status === 'disabled')
+    ) {
+      dismissFocusPendingRef.current = true;
+      setForm(null);
+    }
     if (status !== 'signed-out' && status !== 'forbidden') return;
     if (form !== null) setForm(null);
     if (workspaceNavigation !== null) void resolveWorkspaceNavigation('stay');
-  }, [status, form, workspaceNavigation, resolveWorkspaceNavigation]);
+  }, [status, form, formAuthorized, workspaceNavigation, resolveWorkspaceNavigation]);
+
+  useEffect(() => {
+    if (form === null) return;
+    const frame = requestAnimationFrame(() => {
+      const dialog = document.querySelector<HTMLElement>('[data-project-form-modal="true"]');
+      function reachable(element: HTMLElement): boolean {
+        if (!element.isConnected) return false;
+        for (
+          let current: HTMLElement | null = element;
+          current !== null;
+          current = current.parentElement
+        ) {
+          if (
+            current.matches(
+              '[inert], [hidden], [aria-hidden="true"], [disabled], [aria-disabled="true"], :disabled',
+            )
+          )
+            return false;
+          const style = window.getComputedStyle(current);
+          if (
+            style.display === 'none' ||
+            style.visibility === 'hidden' ||
+            style.visibility === 'collapse'
+          )
+            return false;
+        }
+        return true;
+      }
+      if (dialog === null || !reachable(dialog)) return;
+      const active = document.activeElement;
+      if (
+        active instanceof HTMLElement &&
+        active !== document.body &&
+        active !== document.documentElement &&
+        reachable(active)
+      )
+        return;
+      const target = [...dialog.querySelectorAll<HTMLElement>('[data-autofocus]')].find(reachable);
+      (target ?? dialog).focus();
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [form, status]);
 
   useEffect(() => {
     if (form !== null) return;
@@ -352,6 +403,15 @@ export function useProjectInteractionEffects({
 
   useEffect(() => {
     if (!resumeDraftOnReady || !draft) return;
+    if (
+      status === 'forbidden' ||
+      status === 'error' ||
+      status === 'signed-out' ||
+      status === 'disabled'
+    ) {
+      setResumeDraftOnReady(false);
+      return;
+    }
     if (
       draft.type === 'create-project'
         ? status !== 'ready' && status !== 'empty'

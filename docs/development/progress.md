@@ -1,5 +1,141 @@
 # Delivery progress and decisions
 
+## 2026-11-12 PR48 round2 selected-task modal focus — LOCAL PROOF COMPLETE
+
+The [bounded correction](t37-project-task-ui.md#pr48-round2-form-modal-focus-correction)
+reproduces body/behind-modal focus after selected-task read recovery; the prior
+matrices omitted this overlap. Explicit form-modal ownership and reachable target
+selection preserve current focus, drafts/keys and existing controller semantics.
+The revised measure and one normal gate pass 195 cases, retaining 185; exact
+baseline `263d596f` is coordinator-approved, with higher floors and explicit new
+defensive guard debt. New-source 390/768/1280 native proof is complete: build `mAp3WdSelNjHy1r1sa55S` from `57020a0` passes exactly three
+actual-browser overlap schedules and four inspected EN/light captures. The
+coordinator opened all four hash-verified images without a blocker and accepted
+the stable source for downstream integration; T37.4 acceptance remains separate. The old
+build separately reproduces actual body focus before the fix; earlier matrices
+remain historical for this path. Owned before/after browser/server PIDs are gone,
+port 43886 clear and the heavy lease released; final corrective push stays Draft
+with current-head CI/review and coordinator acceptance pending.
+The initial 194-case candidate is retained as unapproved evidence after its
+per-file marker-default issue; the coordinator authorized the bounded guard test
+and revised measurement. No Ready/review trigger or T37.4/T37 acceptance.
+
+## 2026-11-12 PR48 round1 recovery corrections — LOCAL PROOF COMPLETE
+
+Completed native review found three credible recovery gaps; real regressions
+reproduce dialog loss during reads, unavailable cross-target denied-draft Return
+and missing focus after revocation. The [corrections](t37-project-task-ui.md#pr48-round1-recovery-corrections--implementation-checkpoint)
+retain the existing modal/feedback/controller owners, hide unverified private
+fields, preserve versioned memory-only intent and require fresh authority.
+One measure and one normal web gate pass 185 cases, retaining 177; exact reviewed
+baseline `560abd96` raises all four floors, with unchanged provider/config/inventory
+and seven other baselines. New build `rnOoBwmdKkBln0mAz1EYY` from `0c95bfd4`
+passes ten focused native journeys; nine source-bound images were directly reviewed
+by the coordinator without a new visual blocker. Old build/26-native/14-Astra
+evidence remains historical for unchanged surfaces. Owned browser/runtime resources
+are stopped and the heavy lease released; the corrective push remains Draft with
+current-head CI/native review and coordinator acceptance still required.
+No T37.4 acceptance, T37.5 source, Ready/review trigger or whole-T37 closure.
+
+## 2026-11-12 PR48 infrastructure witness correction
+
+The initial [PR48 CI run](https://github.com/Ljrr3045/rielia/actions/runs/43159616732)
+failed an obsolete zero-execution assertion after T37.4 added real screen units;
+its four-scope coverage gates passed and 19 other infrastructure cases passed.
+The [bounded correction](unit-coverage.md#t374-infrastructure-witness-correction)
+requires execution of the newly tested screens and retains actual-report
+unexecuted AST denominators plus the separate never-imported negative witness.
+One targeted infrastructure run passes 20/20 using exact-head, fingerprint-verified
+CI reports. No application source/tests/baseline or provider/config changes and
+no repeated application suites/build/native work. PR48 remains Draft; current-head
+CI/native review and coordinator acceptance remain, without T37.4/T37 closure.
+
+## 2026-11-12 T37.4 published as Draft PR48
+
+Accepted foundations are PRs #45/#46/#47; accepted `dev` is `55f0f8d`. Publication
+branch `feat/t37-project-task-work` preserves recovery checkpoint `8d7b937` and
+merges accepted-dev ancestry without changing its tree. 92 source/24 test-helper
+hashes and reviewed current baseline `7e44c96c` remain exact. No units, build,
+browser or Docker repeats are warranted for this ancestry/documentation update.
+
+The [consolidated guide](t37-project-task-ui.md) records project/task presentation,
+four bounded recovery corrections, 177 frontend cases, 26 unique native journeys,
+one build `6QKhwGDQLKveEfZvAYWsS` from `ce60740f` and 20 selected source-bound images.
+Astra reviewed 14 distinct selected states, including resolved pending feedback;
+no new blocking T37.4 visual defect was found in that subset. F1 navigation fill
+ambiguity stays T37.5 presentation-owned; its source is excluded from this batch.
+
+English [Draft PR #48](https://github.com/Ljrr3045/rielia/pull/48) targets `dev`.
+The initial push was immediately followed by Draft creation; actual Draft status
+was verified before the URL follow-up push. No Ready transition or paid Kilo
+trigger is authorized. Current-head CI/native review and coordinator acceptance
+remain; publication is not final acceptance. Final PG/Nest/Next persisted/
+security QA stays in T37.5/6; fixture evidence is not persistence/security proof.
+Actual browser zoom, physical devices/manual AT, users/providers/staging remain
+deferred. No T11/landing/new policy or whole-T37 closure is implied.
+
+
+## 2026-11-12 T37.4 integrated native validation — LOCAL EVIDENCE COMPLETE
+
+The coordinator [accepted T37.3/PR47](https://github.com/Ljrr3045/rielia/pull/47#issuecomment-6814793798) and merged
+`55f0f8d85521998d3d7ed883f387bd3c6cb664f8`; it is no longer a pending foundation.
+Exact integrated source `ce60740f` retains all 177 passing cases and the approved
+manifest-only migration, then one production build `6QKhwGDQLKveEfZvAYWsS`
+passes 26 bounded native journeys with 20 selected source-bound images. The
+[validation guide](t37-project-task-ui.md#integrated-native-validation--2026-11-12)
+records actual coverage, private fixture corrections, visible pending-feedback
+capture, computed bounds/contrast/focus and exact cleanup. No production edit,
+second build, dependency download, Docker or persisted-security proof is added.
+
+My tasks' unconditional primary fill is assigned by the coordinator to T37.5
+presentation, not routing or a T37.4 blocker. Owned resources are stopped and the
+heavy lease released. Final Astra/coordinator T37.4 review/acceptance, later
+publication/base-ancestry sync and real PG/Nest/Next QA in T37.5/6 remain; physical
+users/devices/AT/provider/staging and browser-chrome zoom remain unperformed.
+No T37/T11 closure, push/PR/Ready/merge-to-dev/deploy occurs in this native task.
+
+
+## 2026-11-12 T37.4 exact corrective-head integration — LOCAL CHECKPOINT
+
+Recovery `39c72ebb` integrates exact coordinator-supplied PR47 correction
+`b1f3ddec`, preserving both histories, corrected invitation assertions and all
+177 cases. Only additive documentation conflicts required resolution. One measured
+and one normal frontend run pass with exact prior counters/maps/hits and unchanged
+5994/5781/4739/5362 floors, after exact candidate review before current-baseline
+write; seven other baselines remain byte-identical. See the
+[integration evidence](t37-project-task-ui.md#exact-pr47-corrective-head-integration--2026-11-12).
+No PR47/T37 acceptance or T37.5 integration is implied. The authorized one-build
+native group and real persisted QA remain separate from this unit checkpoint.
+
+
+## 2026-11-12 T37.4 bounded recovery — NORMAL LOCAL GATE PASSED
+
+SOL integrated exact Astra `0721c721` by merge `0b874e3`, retaining the T37.3
+reconciliation and presentation histories. Confirmed project writes now remain
+visible after read failure without private target labels or repeated mutation.
+Denied content intent has current-capability/target guarded Return, explicit
+Discard and focus recovery; permission loss cannot remount stale forms. Pending
+checklist feedback excludes genuinely unknown recovery until the response is lost.
+Twenty-two meaningful real screen/hook regressions extend all 155 retained cases.
+
+The first incomplete measurement exposed a test-local real Next ESM import seam;
+its diagnostic remains. A reviewed 171-case checkpoint prompted six additional
+capability journeys, which found and corrected empty-state create-form remount.
+The final measurement and one normal frontend gate both pass 177 cases, with
+exact normalized maps/hits/manifests. The coordinator approved only the current
+web baseline, raising all four floors; other seven baselines/provider/config/tests
+remain preserved. Typecheck, affected lint and required documentation/hooks checks
+are recorded in the [recovery guide](t37-project-task-ui.md#bounded-sol-recovery-implementation--2026-11-12)
+and [coverage addendum](unit-coverage.md#t374-reviewed-recovery-baseline-migration).
+
+No install, frontend production build, browser/app runtime, Docker or persisted
+journey ran in this task. The unit lease is released. Native current-source QA,
+Astra actual-image review, real PostgreSQL/Nest/Next persistence/security,
+current-head CI/native review and coordinator acceptance/publication remain open.
+T37.3 local source/coverage checkpoints are not final merged acceptance. Later
+accepted PR47 corrections require their own integration/manifest reconciliation;
+T37.5 source remains separate. No push/PR/Ready/merge/deploy/T37 or T11 closure.
+
 ## 2026-11-12 T37.3 PR47 native round1 — CORRECTIVE DRAFT BATCH
 
 The completed [native check](https://github.com/Ljrr3045/rielia/runs/130956869143)
@@ -77,6 +213,25 @@ checkpoint changed no baseline or threshold. The later reviewed migration above
 resolves that local blocker. Later persisted QA, publication/current-head
 CI/native review and coordinator acceptance remain open. Runtime is stopped;
 no push/PR/Ready/merge/deploy or T37/T11 acceptance claim.
+## 2026-11-11 T37.4 project/task presentation — IMPLEMENTATION CHECKPOINT
+
+The coordinator authorized isolated `feat/t37-project-task-ui` from accepted
+`8647f19`, fast-forwarded to corrected T37.3 checkpoint `5af198a`. T37.3 remains
+in progress; publication waits for acceptance/base sync. The
+[project/task checkpoint](t37-project-task-ui.md) records wrapping breadcrumb
+children, quieter project administration, title-first contiguous task rows,
+readable board/cards, native form/access sections and detail/collaboration rhythm.
+The existing capability-gated Restore control is visible in narrow project rows.
+All commands, conditions, handlers, lifetimes and recovery semantics remain.
+
+Five actual historical PNGs were inspected with original source/build/hash
+provenance; none is an after-change render. One authorized offline frozen install
+reused 541 packages, zero downloads, for format/handoff/diff and mandatory hooks.
+No build/browser/server/Docker/full suite or new functional test ran here.
+Independent SOL functional/coverage/native/persisted evidence and Astra actual-image
+review remain required, including shared discovery styles and breadcrumb paint
+bounds at 1280. Three inherited recovery defects remain SOL-owned and unchanged.
+No push/PR/Ready/merge/deploy, T37.4 completion or overall T37 acceptance is claimed.
 
 ## 2026-11-11 T37.3 native visual review — CORRECTION CHECKPOINT
 

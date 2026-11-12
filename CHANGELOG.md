@@ -4,10 +4,53 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+### T37.4 project/task presentation and recovery — [Draft PR #48](https://github.com/Ljrr3045/rielia/pull/48)
+
+- Correct round2 focus ownership when task detail and form both have dialog roles:
+  explicitly target the reachable form modal, preserve deliberate current focus
+  and prefer an enabled autofocus child. New selected-task/priority-guard cases
+  retain 185 prior tests; 195 pass the exact reviewed gate with higher floors.
+  One new build passes exactly three overlapping-detail/form browser schedules
+  at 390/768/1280; four current images are inspected and exact resources stopped.
+  Old overlap-omitting matrices remain historical; current-head review stays open.
+
+- Correct round1 recovery findings: keep read-loading/error dialogs reachable with
+  private fields hidden; restore generic cross-target denied-draft Return and
+  require deliberate reauthorization after a failed attempt; restore valid focus
+  after form revocation. Preserve captured versions, local intent and once-only writes.
+- Retain all 177 cases and add eight meaningful schedules; 185 pass one measure
+  and one normal gate after exact reviewed migration, raising L/S/F/B floors to
+  6072/5858/4825/5456. One new production build passes ten focused native journeys;
+  the coordinator inspected nine current images without a new visual blocker.
+  Owned resources are stopped; old matrices remain historical for unchanged surfaces.
+
+- Correct an obsolete CI infrastructure witness now that project/detail screens
+  execute in real units; retain actual unexecuted AST denominators and all gate
+  rejection witnesses. One targeted 20-case run passes using exact-head CI reports,
+  with unchanged application source/tests and all eight baselines.
+
+- Wrap full breadcrumb context within its work column; prioritize task titles in
+  contiguous rows, retain native Move/reorder and expose permitted mobile Restore.
+  Improve project/access forms and readable detail/collaboration structure.
+- Keep confirmed writes visible through failed reads without private labels or
+  automatic mutation retry. Gate denied-draft Return on current target/capability,
+  preserve captured versions/exact unknown keys, and provide Discard/focus recovery.
+- Separate pending checklist Saving from unknown Retry/Discard, and prevent stale
+  create-form remount after capability restoration in an empty workspace.
+- Retain all 177 frontend cases, reviewed floors 5994/5781/4739/5362, 26 unique native
+  journeys and one build with 20 source-bound images. Astra reviewed 14 selected
+  states, with no new blocking T37.4 visual issue in that bounded subset.
+- Preserve accepted PRs #45/#46/#47, exact source/test/baseline proof and failed
+  diagnostics. Record F1 navigation fill ambiguity as T37.5-owned; no T37.5 source
+  is included. The [guide](docs/development/t37-project-task-ui.md) separates
+  current-head CI/native/coordinator acceptance and final real persisted/device/
+  AT/zoom/provider/staging QA. No T11, landing, new policy or full-T37 acceptance.
+
 ### T37.3 shell, identity and workspace entry
 
-Published in [Draft PR #47](https://github.com/Ljrr3045/rielia/pull/47) targeting
-`dev`; T37.3 remains in progress.
+Accepted in [PR #47](https://github.com/Ljrr3045/rielia/pull/47#issuecomment-6814793798), merged into `dev` at
+`55f0f8d85521998d3d7ed883f387bd3c6cb664f8`. The dated corrective evidence below
+retains its historical review state.
 
 - Compose compact bilingual session guidance, a 14rem desktop work rail and
   compact secondary mobile context while keeping full primary titles and current
@@ -30,8 +73,8 @@ Published in [Draft PR #47](https://github.com/Ljrr3045/rielia/pull/47) targetin
   floors/maps/hits and seven other baselines remain exact, and one normal gate
   passes. Earlier build/captures keep historical provenance because source bytes
   now differ. Record [dispositions, source proof and limits](docs/development/t37-shell-entry.md#native-round1-corrective-batch-2026-11-12).
-  Current-head CI/native round2, T37.3 acceptance, T37.4 breadcrumb/recovery work
-  and real persisted/device/AT/zoom/provider/staging evidence remain outstanding.
+  The coordinator subsequently accepted T37.3 as linked above. T37.4 acceptance
+  and real persisted/device/AT/zoom/provider/staging evidence remain separate.
 
 ### T37.2 CSS foundations checkpoint
 

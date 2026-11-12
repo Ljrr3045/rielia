@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { act, deferred } from './dom-harness.mjs';
-import { task } from './project-hook-harness.mjs';
+import { task, project } from './project-hook-harness.mjs';
 import { mountProjectInteractions } from './project-interaction-harness.mjs';
 
 for (const strict of [false, true]) {
@@ -144,3 +144,25 @@ test(
     assert.equal(b.state.canonical.selection.taskId, null);
   },
 );
+
+test('denied lifecycle intent resumes only after a fresh target read and keeps the captured version', async (t) => {
+  const b = await mountProjectInteractions(t);
+  b.server.mutate = () => Response.json({ code: 'FORBIDDEN' }, { status: 403 });
+  await act(async () => b.state.content.requestProjectArchive(false));
+  await act(async () => b.state.content.confirmLifecycle());
+  assert.equal(b.state.canonical.status, 'forbidden');
+  assert.equal(b.state.content.form, null);
+  await act(async () => b.state.content.resumeCurrentDraft());
+  assert.equal(b.state.content.form, null);
+  b.server.version = 2;
+  await act(async () => b.state.canonical.refresh());
+  await act(async () => b.state.content.resumeCurrentDraft());
+  assert.equal(b.state.content.form.kind, 'project-archive');
+  assert.equal(b.state.content.form.version, 1);
+  b.server.mutate = () =>
+    Response.json({ ...project('p', 'a', 3), archivedAt: '2026-11-06T12:00:00.000Z' });
+  await act(async () => b.state.content.confirmLifecycle());
+  assert.equal(JSON.parse(b.posts()[1].options.body).expectedVersion, 1);
+  assert.equal(b.posts().length, 2);
+  await b.framesUntilIdle();
+});
