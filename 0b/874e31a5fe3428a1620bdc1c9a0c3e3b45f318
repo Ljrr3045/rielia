@@ -1,0 +1,34 @@
+docs/development/t37-project-task-ui.md
+  s_436a98e4642f61::t_abd9811804348b 1-113
+apps/web/src/app/projects/project-forms.tsx
+  s_436a98e4642f61::t_abd9811804348b 63
+apps/web/src/app/projects/task-list.tsx
+  s_436a98e4642f61::t_abd9811804348b 51-54,79,83,101-113
+  s_436a98e4642f61::t_d7d7ad6927ee39 114-115
+docs/development/progress.md
+  s_436a98e4642f61::t_abd9811804348b 34-52
+apps/web/src/app/projects/project-work-area.tsx
+  s_436a98e4642f61::t_abd9811804348b 241
+apps/web/src/app/projects/task-forms.tsx
+  s_436a98e4642f61::t_abd9811804348b 312
+CHANGELOG.md
+  s_436a98e4642f61::t_abd9811804348b 7-19
+apps/web/src/app/projects/projects.module.css
+  s_436a98e4642f61::t_abd9811804348b 567-569,584-588,1210-1211,1217-1224,1227,1257-1260,1270-1271,1275-1288,1304-1326,1387-1418,1519,1598,1605-1606,1686,1692-1696,1706,1709,1733-1735,2001-2012,2027,2039,2093,2379-2380,2384-2386,2388-2397,2434,2441-2446,2577-2579,2714,2726,2913,2917,2920,3034,3036,3063,3072-3073,3103,3110,3312,3322-3327,3345,3352,3556,3561-3567,3627,3652
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0b874e31a5fe3428a1620bdc1c9a0c3e3b45f318",
+  "prompts": {},
+  "sessions": {
+    "s_436a98e4642f61": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1cd96-e5fb-78c1-ad15-35bdfb4f2e74",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
