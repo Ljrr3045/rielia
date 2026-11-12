@@ -1,0 +1,45 @@
+apps/web/src/app/projects/use-project-interaction-effects.ts
+  s_436a98e4642f61::t_b6a82b740dd1c3 233,235,241-248,379-381
+  s_436a98e4642f61::t_bd8fa3832f01dd 229-232,373-378
+  s_436a98e4642f61::t_c712b74f7c8587 249
+apps/web/src/app/projects/use-project-content-forms.ts
+  s_436a98e4642f61::t_bd8fa3832f01dd 270-275
+docs/development/unit-coverage.md
+  s_436a98e4642f61::t_d8907a7e909c9f 590-616
+scripts/unit/baselines/web.json
+  s_436a98e4642f61::t_207c22440e413e 203,207,211,215,221-222,225-226,229-230,233-234,293-294,311,383,387,391,395,653,671-672,675,679,683,689-690,693-694,697-698,701-702,1013,1021,1025,1121,1229-1232,1265,1269,1290-1291,1342,1361-1362,1365-1366,1369-1370,1373-1374
+docs/development/t37-project-task-ui.md
+  s_436a98e4642f61::t_d8907a7e909c9f 18-50
+apps/web/src/app/projects/project-content-dialog.tsx
+  s_436a98e4642f61::t_bd8fa3832f01dd 166-172,186-247,249-252,255-257,259-315
+  s_436a98e4642f61::t_b6a82b740dd1c3 22,124,128-130,155-165,173-185,316
+CHANGELOG.md
+  s_436a98e4642f61::t_d8907a7e909c9f 9-16
+apps/web/src/app/projects/project-recovery.tsx
+  s_436a98e4642f61::t_bd8fa3832f01dd 522-527
+  s_436a98e4642f61::t_b6a82b740dd1c3 518-520
+docs/development/progress.md
+  s_436a98e4642f61::t_d8907a7e909c9f 3-15
+apps/web/test/unit/project-recovery.test.mjs
+  s_436a98e4642f61::t_c995b55042e169 570,632
+  s_436a98e4642f61::t_bd8fa3832f01dd 318-322,498-515,535-539,544-548,554-560,576-581,591,594,600,602-603,613-618,622-626,633,635,637-643,647,649,651-655,658-663,666-669
+  s_436a98e4642f61::t_3017254a7dfcfb 550
+  s_436a98e4642f61::t_e73f2cc2b5e5e2 323,496-497,516-534,540-543,549,551-553,561-568,571-573,575,582-590,592-593,595-599,601,604-612,619-621,627-631,634,636,644-646,648,650,656-657,664-665,670
+  s_436a98e4642f61::t_b6a82b740dd1c3 569,574
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0c95bfd4d855055ed9793f938b4129b113243a19",
+  "prompts": {},
+  "sessions": {
+    "s_436a98e4642f61": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1cd96-e5fb-78c1-ad15-35bdfb4f2e74",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
