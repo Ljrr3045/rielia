@@ -1,0 +1,31 @@
+apps/web/src/app/projects/task-discovery.tsx
+  s_0ec400d6ec8385::t_7ce0b5d4c8b38e 245,261,589,624,713-715,732-734,736
+apps/web/src/app/projects/projects.module.css
+  s_0ec400d6ec8385::t_7ce0b5d4c8b38e 3732,3737-3740,3744-3748,3751-3754,3763-3765,3788-3789,3793-3800,3807-3808,3810-3876,3929,3933,3940-3941,3946,3959-3960,3965,3967-3968,3970-4004,4009,4013-4016,4018,4022,4025-4026,4035,4048,4050,4087-4099
+  s_0ec400d6ec8385::t_fd362f4f8a457f 4042-4044
+CHANGELOG.md
+  s_0ec400d6ec8385::t_7ce0b5d4c8b38e 44-54
+  s_0ec400d6ec8385::t_fd362f4f8a457f 7-19
+docs/development/progress.md
+  s_0ec400d6ec8385::t_fd362f4f8a457f 3-24,143
+  s_0ec400d6ec8385::t_7ce0b5d4c8b38e 144-160
+docs/development/t37-discovery-ui.md
+  s_0ec400d6ec8385::t_fd362f4f8a457f 3-54
+  s_0ec400d6ec8385::t_7ce0b5d4c8b38e 1-2,55-144
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ad61925d370260cb9d830585ed27f7d10fea3c86",
+  "prompts": {},
+  "sessions": {
+    "s_0ec400d6ec8385": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1cdb2-857c-7941-9e12-11b7e525c6fc",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
