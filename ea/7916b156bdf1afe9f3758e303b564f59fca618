@@ -1,0 +1,43 @@
+apps/web/.agents/README.md
+  s_01b68cbb526cdf::t_7a4694f5fb0c2d 19-21
+CONTRIBUTING.md
+  s_01b68cbb526cdf::t_7a4694f5fb0c2d 138-141
+docs/development/frontend-skills.md
+  s_01b68cbb526cdf::t_7a4694f5fb0c2d 11-13,147-155,159-161
+CHANGELOG.md
+  s_01b68cbb526cdf::t_7a4694f5fb0c2d 16-17,30-31
+docs/development/development-quality-roadmap.md
+  s_01b68cbb526cdf::t_7a4694f5fb0c2d 31-35,427
+docs/development/t37-design-direction.md
+  s_01b68cbb526cdf::t_7a4694f5fb0c2d 6-8
+docs/development/frontend-agent.md
+  s_01b68cbb526cdf::t_7a4694f5fb0c2d 60-61
+docs/development/progress.md
+  s_01b68cbb526cdf::t_7a4694f5fb0c2d 3,23-39,1806
+apps/web/.agents/skill-installation.json
+  s_01b68cbb526cdf::t_5dd881807af9ac 27-39
+apps/web/AGENTS.md
+  s_01b68cbb526cdf::t_7a4694f5fb0c2d 77-78
+docs/development/t37-ui-inventory.md
+  s_01b68cbb526cdf::t_7a4694f5fb0c2d 7-9
+AGENTS.md
+  s_01b68cbb526cdf::t_7a4694f5fb0c2d 51-53
+docs/development/formatting-inventory.json
+  s_01b68cbb526cdf::t_e5780084637bdd 1283-1285
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ea7916b156bdf1afe9f3758e303b564f59fca618",
+  "prompts": {},
+  "sessions": {
+    "s_01b68cbb526cdf": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1cd17-1e3d-7401-9364-abbd8f7c3f62",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
