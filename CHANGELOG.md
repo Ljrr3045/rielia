@@ -4,6 +4,14 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Complete bounded T37.5 local discovery/native and real persisted cross-surface
+  QA:177 frontend cases, 16 unique native journeys, 18 Astra-inspected captures and
+  12 real PostgreSQL/Nest/Next journeys, with actual one-effect retry, conflict,
+  revocation/session and invitation-feedback evidence. Preserve crop/device/AT/
+  browser zoom/provider limits and verified owned cleanup.
+- Prepare the [T37.6 evidence consolidation and T11 handoff](docs/development/t37-ui-acceptance.md)
+  for the final delivery PR; T37 and PR48 acceptance/current-head gates remain open.
+
 - Integrate T37.4 native and T37.5 presentation histories for independent discovery
   validation; explicitly review the current-web manifest migration and retain all
   177 cases, strengthened floors and seven unrelated baselines. Native/persisted

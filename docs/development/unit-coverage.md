@@ -579,3 +579,10 @@ baselines remain byte-identical; no floor, exclusion, provider or gate changes.
 Source typecheck, affected lint, adopted formatting, handoff/links and whitespace
 checks pass. Native discovery and real persisted cross-surface QA remain separate
 steps; this reconciliation does not establish T37.5 acceptance.
+
+Final T37.5 map accounting retains 28,798 mapped points with 804 null columns,
+versus 803 accepted T37.4. Only discovery branch 79's outer end changes from
+line 732/column 98 to line 733/null after the reviewed markup formatting; no unit,
+hit vector, denominator, provider or gate changes. This is explicit mapping
+precision loss. The [final native/persisted evidence](t37-discovery-ui.md#independent-final-source-qa--2026-11-12)
+and [T37.6 proposal](t37-ui-acceptance.md) retain bounded acceptance status.

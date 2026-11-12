@@ -1,5 +1,28 @@
 # Delivery progress and decisions
 
+## 2026-11-12 T37.5 final local QA and T37.6 proposal — EVIDENCE COMPLETE
+
+The [independent final-source QA](t37-discovery-ui.md#independent-final-source-qa--2026-11-12)
+retains all 177 frontend cases and higher floors, passes 16 unique native discovery/
+navigation cases on one production build, and completes 12 real PostgreSQL/Nest/
+Next dev daily-work/recovery journeys. Astra actually inspects all 18 native PNGs
+and reports F1 resolved with no blocking visual finding in that subset. Three 320
+message panels remain below crop; device/AT/browser zoom/provider/user evidence
+is explicitly unperformed. No production fix is made during QA.
+
+Actual commit/lost-response/exact-key retry has one SQL checklist/activity/outbox
+effect; real 409, deferred SSE refresh, private 403 hidden draft, confirmed save/
+read 503, current-assignee search/paging, membership/session/account/logout and
+invitation Done/Refresh lifetimes pass. All four listeners, 62 owned PIDs and the
+owned database container/volume/private state are removed; heavy lease released.
+Private signed state/cookies/helper logs are excluded from the safe evidence index.
+
+The [bounded T37.6 acceptance proposal](t37-ui-acceptance.md) consolidates T37.1–6
+in this final delivery batch. T37 remains IN PROGRESS: PR48 native/coordinator
+acceptance, accepted ancestry/test-infrastructure/docs sync, final delivery
+CI/Kilo/ownership and explicit coordinator acceptance remain gates. No final PR URL,
+push/Ready/Kilo/dev merge/deployment or T11 implementation is claimed here.
+
 ## 2026-11-12 T37.5 integrated functional preparation — NORMAL GATE PASSED
 
 Independent SOL integration preserves exact T37.4 `8d7b937`, Astra finish `ad61925`

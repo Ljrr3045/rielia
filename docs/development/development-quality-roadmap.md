@@ -55,6 +55,13 @@ owns composition/interaction, architecture owns contracts and permissions, and
 Record contradictions for coordinator decisions. Reference products and skills
 cannot expand these authorities.
 
+The 2026-11-12 [final local QA](t37-discovery-ui.md#independent-final-source-qa--2026-11-12)
+adds 16 native and 12 real persisted cross-surface journeys to retained 177 web
+cases, with Astra's 18-image review and explicit crop/device/AT/zoom limits.
+[PR47](https://github.com/Ljrr3045/rielia/pull/47) is accepted; PR48 remains pending
+final native/coordinator acceptance. The [T37.6 consolidation](t37-ui-acceptance.md)
+is a proposal for the same final delivery PR, not T37 acceptance or T11 authority.
+
 ## Observed baseline for the new work
 
 Read-only audit at `origin/dev` **`63bf4c6eb0c20fd493a08442fbd337fa4a5f4187`**
