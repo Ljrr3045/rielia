@@ -1,0 +1,25 @@
+scripts/unit/infrastructure.test.mjs
+  s_436a98e4642f61::t_d17ecab60f31a5 77-78,80-100
+docs/development/progress.md
+  s_436a98e4642f61::t_9bd09d02b87e52 3-15
+CHANGELOG.md
+  s_436a98e4642f61::t_9bd09d02b87e52 9-13
+docs/development/unit-coverage.md
+  s_436a98e4642f61::t_9bd09d02b87e52 559-589
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1f101d2e0eb05fa3091caea97547a95219333e9b",
+  "prompts": {},
+  "sessions": {
+    "s_436a98e4642f61": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1cd96-e5fb-78c1-ad15-35bdfb4f2e74",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
