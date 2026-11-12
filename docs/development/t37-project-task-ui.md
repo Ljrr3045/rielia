@@ -40,10 +40,31 @@ Stay focus and returns the original form/draft without a write. Exact revised
 baseline `263d596f595c8cc89b7fecacde9ec7e0ad9d3be03483c8145a5c309f9e872a75`
 was approved before writing. L/S/F/B floors rise to 6182/5960/4962/5601; no file
 covered-count/ratio or stable-map covered path regresses. New defensive debt is
-one uncovered line/two statements/one branch, with improved effect ratios.
+a net one uncovered line/two statements/one branch, with improved effect ratios.
 68 inputs/24 test-helper entries/provider/config and seven other baselines remain
 exact; 811/29,010 null-column points and type-only N/A remain explicit. A new
-production build and bounded native correction checks still gate publication.
+production build now passes: `mAp3WdSelNjHy1r1sa55S` from clean source
+`57020a07359d0bbaa07a706a73fde3a8cb168580`, 92-source snapshot
+`ce2b398f3567172c89fd047cf0d0fefd0ae009410b842c975361ec81c01e77c2`.
+Three actual-browser schedules at 390/768/1280 pass opening, held/success and 503
+recovery, real Tab/Escape/Cancel/Close, cancellation/late-read detail handoff,
+private-field hiding and original captured intent/version with no automatic write.
+390/768 have two dialog-role nodes; 1280 retains complementary detail as a control.
+Focus belongs to the connected non-inert marked form and its enabled title field,
+then to live detail after cancellation; only the detail lock remains until close.
+
+Four current EN/light viewport PNGs were directly inspected by worker and
+coordinator, with no new blocker; the concise index records source/build/runner/
+fixture/image hashes and actual focus ownership.
+390 crops omit lower fields/actions; dynamic assertions separately establish
+keyboard reach and lifetimes. Both browser phases and exact owned server/PIDs
+are stopped, port 43886 absent and the heavy lease released. Ten served assets
+match compiled files. Node 24.22.1/pnpm 12.15.0, installed Brave 157.0.8103.39 and
+Playwright 1.57.0 are reused without downloads. No source fix/rebuild during native
+QA; the one before case reuses the prior exact build and only one new build runs.
+No new PG/backend/container run is needed for this pure DOM targeting diff;
+downstream composed-build integration remains separate. Older matrices are
+historical for this changed overlap path, not proof it was previously covered.
 
 Kilo's sandbox could not hash source; this is a reviewer limitation, not a source
 defect or substitute for independently verified local/CI fingerprint integrity.

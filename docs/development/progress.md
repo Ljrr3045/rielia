@@ -1,6 +1,6 @@
 # Delivery progress and decisions
 
-## 2026-11-12 PR48 round2 selected-task modal focus — IN PROGRESS
+## 2026-11-12 PR48 round2 selected-task modal focus — LOCAL PROOF COMPLETE
 
 The [bounded correction](t37-project-task-ui.md#pr48-round2-form-modal-focus-correction)
 reproduces body/behind-modal focus after selected-task read recovery; the prior
@@ -8,8 +8,14 @@ matrices omitted this overlap. Explicit form-modal ownership and reachable targe
 selection preserve current focus, drafts/keys and existing controller semantics.
 The revised measure and one normal gate pass 195 cases, retaining 185; exact
 baseline `263d596f` is coordinator-approved, with higher floors and explicit new
-defensive guard debt. One new-source build with 390/768/1280 native proof remains
-pending before Draft publication.
+defensive guard debt. New-source 390/768/1280 native proof is complete: build `mAp3WdSelNjHy1r1sa55S` from `57020a0` passes exactly three
+actual-browser overlap schedules and four inspected EN/light captures. The
+coordinator opened all four hash-verified images without a blocker and accepted
+the stable source for downstream integration; T37.4 acceptance remains separate. The old
+build separately reproduces actual body focus before the fix; earlier matrices
+remain historical for this path. Owned before/after browser/server PIDs are gone,
+port 43886 clear and the heavy lease released; final corrective push stays Draft
+with current-head CI/review and coordinator acceptance pending.
 The initial 194-case candidate is retained as unapproved evidence after its
 per-file marker-default issue; the coordinator authorized the bounded guard test
 and revised measurement. No Ready/review trigger or T37.4/T37 acceptance.
