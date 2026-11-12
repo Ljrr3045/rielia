@@ -164,19 +164,19 @@
     },
     "apps/web/src/app/projects/feedback.tsx": {
       "branches": {
-        "covered": 0,
+        "covered": 22,
         "total": 24
       },
       "functions": {
-        "covered": 0,
+        "covered": 4,
         "total": 9
       },
       "lines": {
-        "covered": 0,
+        "covered": 7,
         "total": 14
       },
       "statements": {
-        "covered": 0,
+        "covered": 10,
         "total": 17
       }
     },
@@ -200,55 +200,55 @@
     },
     "apps/web/src/app/projects/project-access.tsx": {
       "branches": {
-        "covered": 0,
+        "covered": 33,
         "total": 159
       },
       "functions": {
-        "covered": 0,
+        "covered": 6,
         "total": 29
       },
       "lines": {
-        "covered": 0,
+        "covered": 29,
         "total": 98
       },
       "statements": {
-        "covered": 0,
+        "covered": 34,
         "total": 127
       }
     },
     "apps/web/src/app/projects/project-content-dialog.tsx": {
       "branches": {
-        "covered": 0,
-        "total": 80
+        "covered": 66,
+        "total": 84
       },
       "functions": {
-        "covered": 0,
+        "covered": 1,
         "total": 11
       },
       "lines": {
-        "covered": 0,
+        "covered": 1,
         "total": 13
       },
       "statements": {
-        "covered": 0,
+        "covered": 1,
         "total": 13
       }
     },
     "apps/web/src/app/projects/project-content-model.ts": {
       "branches": {
-        "covered": 4,
+        "covered": 23,
         "total": 32
       },
       "functions": {
-        "covered": 3,
+        "covered": 8,
         "total": 8
       },
       "lines": {
-        "covered": 9,
+        "covered": 33,
         "total": 42
       },
       "statements": {
-        "covered": 13,
+        "covered": 37,
         "total": 46
       }
     },
@@ -258,141 +258,141 @@
         "total": 27
       },
       "functions": {
-        "covered": 13,
+        "covered": 16,
         "total": 17
       },
       "lines": {
-        "covered": 55,
+        "covered": 58,
         "total": 58
       },
       "statements": {
-        "covered": 63,
+        "covered": 66,
         "total": 69
       }
     },
     "apps/web/src/app/projects/project-forms.tsx": {
       "branches": {
-        "covered": 0,
+        "covered": 34,
         "total": 50
       },
       "functions": {
-        "covered": 0,
+        "covered": 4,
         "total": 7
       },
       "lines": {
-        "covered": 0,
+        "covered": 22,
         "total": 29
       },
       "statements": {
-        "covered": 0,
+        "covered": 22,
         "total": 31
       }
     },
     "apps/web/src/app/projects/project-recovery.tsx": {
       "branches": {
-        "covered": 0,
-        "total": 370
+        "covered": 140,
+        "total": 395
       },
       "functions": {
-        "covered": 0,
-        "total": 40
+        "covered": 8,
+        "total": 41
       },
       "lines": {
-        "covered": 0,
-        "total": 182
+        "covered": 73,
+        "total": 184
       },
       "statements": {
-        "covered": 0,
-        "total": 196
+        "covered": 76,
+        "total": 198
       }
     },
     "apps/web/src/app/projects/project-shell.tsx": {
       "branches": {
-        "covered": 0,
+        "covered": 76,
         "total": 124
       },
       "functions": {
-        "covered": 0,
+        "covered": 7,
         "total": 13
       },
       "lines": {
-        "covered": 0,
+        "covered": 9,
         "total": 24
       },
       "statements": {
-        "covered": 0,
+        "covered": 10,
         "total": 25
       }
     },
     "apps/web/src/app/projects/project-ui.tsx": {
       "branches": {
-        "covered": 0,
+        "covered": 34,
         "total": 66
       },
       "functions": {
-        "covered": 0,
+        "covered": 32,
         "total": 37
       },
       "lines": {
-        "covered": 0,
+        "covered": 47,
         "total": 54
       },
       "statements": {
-        "covered": 0,
+        "covered": 47,
         "total": 54
       }
     },
     "apps/web/src/app/projects/project-work-area.tsx": {
       "branches": {
-        "covered": 0,
-        "total": 176
+        "covered": 99,
+        "total": 179
       },
       "functions": {
-        "covered": 0,
+        "covered": 8,
         "total": 38
       },
       "lines": {
-        "covered": 0,
+        "covered": 12,
         "total": 48
       },
       "statements": {
-        "covered": 0,
+        "covered": 12,
         "total": 59
       }
     },
     "apps/web/src/app/projects/projects-view.tsx": {
       "branches": {
-        "covered": 0,
+        "covered": 107,
         "total": 211
       },
       "functions": {
-        "covered": 0,
+        "covered": 11,
         "total": 41
       },
       "lines": {
-        "covered": 0,
+        "covered": 78,
         "total": 178
       },
       "statements": {
-        "covered": 0,
+        "covered": 79,
         "total": 196
       }
     },
     "apps/web/src/app/projects/strings.ts": {
       "branches": {
-        "covered": 0,
+        "covered": 16,
         "total": 83
       },
       "functions": {
-        "covered": 0,
+        "covered": 24,
         "total": 73
       },
       "lines": {
-        "covered": 1,
+        "covered": 25,
         "total": 79
       },
       "statements": {
-        "covered": 1,
+        "covered": 25,
         "total": 82
       }
     },
@@ -416,19 +416,19 @@
     },
     "apps/web/src/app/projects/task-checklist.tsx": {
       "branches": {
-        "covered": 0,
+        "covered": 82,
         "total": 136
       },
       "functions": {
-        "covered": 0,
+        "covered": 7,
         "total": 27
       },
       "lines": {
-        "covered": 0,
+        "covered": 32,
         "total": 66
       },
       "statements": {
-        "covered": 0,
+        "covered": 34,
         "total": 76
       }
     },
@@ -470,37 +470,37 @@
     },
     "apps/web/src/app/projects/task-collaboration.tsx": {
       "branches": {
-        "covered": 0,
-        "total": 147
+        "covered": 62,
+        "total": 148
       },
       "functions": {
-        "covered": 0,
+        "covered": 9,
         "total": 20
       },
       "lines": {
-        "covered": 0,
+        "covered": 40,
         "total": 85
       },
       "statements": {
-        "covered": 0,
+        "covered": 42,
         "total": 97
       }
     },
     "apps/web/src/app/projects/task-comments.tsx": {
       "branches": {
-        "covered": 0,
+        "covered": 36,
         "total": 94
       },
       "functions": {
-        "covered": 0,
+        "covered": 1,
         "total": 18
       },
       "lines": {
-        "covered": 0,
+        "covered": 17,
         "total": 47
       },
       "statements": {
-        "covered": 0,
+        "covered": 17,
         "total": 53
       }
     },
@@ -524,199 +524,199 @@
     },
     "apps/web/src/app/projects/task-detail.tsx": {
       "branches": {
-        "covered": 0,
+        "covered": 38,
         "total": 56
       },
       "functions": {
-        "covered": 0,
+        "covered": 7,
         "total": 8
       },
       "lines": {
-        "covered": 0,
+        "covered": 20,
         "total": 23
       },
       "statements": {
-        "covered": 0,
+        "covered": 20,
         "total": 23
       }
     },
     "apps/web/src/app/projects/task-discovery.tsx": {
       "branches": {
-        "covered": 0,
+        "covered": 23,
         "total": 200
       },
       "functions": {
-        "covered": 0,
+        "covered": 3,
         "total": 36
       },
       "lines": {
-        "covered": 0,
+        "covered": 16,
         "total": 112
       },
       "statements": {
-        "covered": 0,
+        "covered": 17,
         "total": 125
       }
     },
     "apps/web/src/app/projects/task-forms.tsx": {
       "branches": {
-        "covered": 0,
+        "covered": 8,
         "total": 60
       },
       "functions": {
-        "covered": 0,
+        "covered": 1,
         "total": 16
       },
       "lines": {
-        "covered": 0,
+        "covered": 8,
         "total": 49
       },
       "statements": {
-        "covered": 0,
+        "covered": 8,
         "total": 51
       }
     },
     "apps/web/src/app/projects/task-history.tsx": {
       "branches": {
-        "covered": 0,
+        "covered": 10,
         "total": 47
       },
       "functions": {
-        "covered": 0,
+        "covered": 1,
         "total": 12
       },
       "lines": {
-        "covered": 0,
+        "covered": 7,
         "total": 30
       },
       "statements": {
-        "covered": 0,
+        "covered": 7,
         "total": 34
       }
     },
     "apps/web/src/app/projects/task-list.tsx": {
       "branches": {
-        "covered": 0,
+        "covered": 23,
         "total": 57
       },
       "functions": {
-        "covered": 0,
+        "covered": 4,
         "total": 9
       },
       "lines": {
-        "covered": 0,
+        "covered": 17,
         "total": 28
       },
       "statements": {
-        "covered": 0,
+        "covered": 18,
         "total": 29
       }
     },
     "apps/web/src/app/projects/task-move.tsx": {
       "branches": {
-        "covered": 0,
+        "covered": 10,
         "total": 23
       },
       "functions": {
-        "covered": 0,
+        "covered": 2,
         "total": 9
       },
       "lines": {
-        "covered": 0,
+        "covered": 7,
         "total": 28
       },
       "statements": {
-        "covered": 0,
+        "covered": 7,
         "total": 32
       }
     },
     "apps/web/src/app/projects/task-relations.tsx": {
       "branches": {
-        "covered": 0,
+        "covered": 62,
         "total": 151
       },
       "functions": {
-        "covered": 0,
+        "covered": 3,
         "total": 34
       },
       "lines": {
-        "covered": 0,
+        "covered": 31,
         "total": 88
       },
       "statements": {
-        "covered": 0,
+        "covered": 31,
         "total": 99
       }
     },
     "apps/web/src/app/projects/task-view-bar.tsx": {
       "branches": {
-        "covered": 0,
+        "covered": 32,
         "total": 73
       },
       "functions": {
-        "covered": 0,
+        "covered": 4,
         "total": 15
       },
       "lines": {
-        "covered": 0,
+        "covered": 21,
         "total": 42
       },
       "statements": {
-        "covered": 0,
+        "covered": 21,
         "total": 45
       }
     },
     "apps/web/src/app/projects/use-project-content-forms.ts": {
       "branches": {
-        "covered": 68,
-        "total": 196
+        "covered": 185,
+        "total": 259
       },
       "functions": {
-        "covered": 18,
-        "total": 41
+        "covered": 26,
+        "total": 44
       },
       "lines": {
-        "covered": 99,
-        "total": 205
+        "covered": 186,
+        "total": 243
       },
       "statements": {
-        "covered": 104,
-        "total": 230
+        "covered": 202,
+        "total": 281
       }
     },
     "apps/web/src/app/projects/use-project-interaction-effects.ts": {
       "branches": {
-        "covered": 92,
-        "total": 140
+        "covered": 98,
+        "total": 145
       },
       "functions": {
         "covered": 28,
         "total": 36
       },
       "lines": {
-        "covered": 111,
-        "total": 157
+        "covered": 115,
+        "total": 159
       },
       "statements": {
-        "covered": 131,
-        "total": 189
+        "covered": 136,
+        "total": 191
       }
     },
     "apps/web/src/app/projects/use-project-navigation-focus.ts": {
       "branches": {
-        "covered": 0,
+        "covered": 1,
         "total": 17
       },
       "functions": {
-        "covered": 3,
+        "covered": 4,
         "total": 13
       },
       "lines": {
-        "covered": 14,
+        "covered": 18,
         "total": 42
       },
       "statements": {
-        "covered": 14,
+        "covered": 19,
         "total": 53
       }
     },
@@ -992,7 +992,7 @@
     },
     "apps/web/src/lib/project-task-client.ts": {
       "branches": {
-        "covered": 151,
+        "covered": 162,
         "total": 198
       },
       "functions": {
@@ -1000,18 +1000,18 @@
         "total": 22
       },
       "lines": {
-        "covered": 100,
+        "covered": 109,
         "total": 130
       },
       "statements": {
-        "covered": 108,
+        "covered": 117,
         "total": 141
       }
     },
     "apps/web/src/lib/project-task-controller.ts": {
       "branches": {
-        "covered": 735,
-        "total": 845
+        "covered": 745,
+        "total": 853
       },
       "functions": {
         "covered": 88,
@@ -1118,19 +1118,19 @@
     },
     "apps/web/src/lib/use-project-tasks.ts": {
       "branches": {
-        "covered": 58,
+        "covered": 61,
         "total": 70
       },
       "functions": {
-        "covered": 16,
+        "covered": 17,
         "total": 18
       },
       "lines": {
-        "covered": 54,
+        "covered": 55,
         "total": 56
       },
       "statements": {
-        "covered": 59,
+        "covered": 60,
         "total": 63
       }
     },
@@ -1226,10 +1226,10 @@
     }
   },
   "floors": {
-    "branches": 3204,
-    "functions": 3187,
-    "lines": 4347,
-    "statements": 4258
+    "branches": 5362,
+    "functions": 4739,
+    "lines": 5994,
+    "statements": 5781
   },
   "manifest": {
     "compiler": {
@@ -1262,33 +1262,33 @@
       "apps/web/src/app/projects/feedback.tsx": "6b7d62e9dfbe1aa1431e6f08d5f6e273a3e0f791c05746b18ff222609d72332a",
       "apps/web/src/app/projects/page.tsx": "91a38ea3d2bda72bbdfdd0fd4dc2965764b854eb7d08c985dbf938472ae8bcea",
       "apps/web/src/app/projects/project-access.tsx": "19615611600e046d98b47588fbbbc221be78fa792642764513727c1a87d3ed26",
-      "apps/web/src/app/projects/project-content-dialog.tsx": "a6a3a5caa336b13198631456944634ab1934f62c7004d36d385d5842eca7e88b",
+      "apps/web/src/app/projects/project-content-dialog.tsx": "2b4215d093b6dc4375bd0fead63f49497c435ac5dfc11cb586b3e5674dbfe9af",
       "apps/web/src/app/projects/project-content-model.ts": "379eda84be7ed778646e6ef0480cc3a2627e72e1ffe1c9979b876e52662fa1e2",
       "apps/web/src/app/projects/project-dom-hooks.ts": "3361f2beeddf059a1136501ccf2339587890a86833b9400ee6d8c074386c74eb",
-      "apps/web/src/app/projects/project-forms.tsx": "7d2afa47d83f2b38969e26e0edfd6573065417db8b385004163a379dc63e99c2",
-      "apps/web/src/app/projects/project-recovery.tsx": "7f5f55aa35eb847ba25fe01eb9b3216b140413c6dc075a8f4658499bf40a3f6d",
+      "apps/web/src/app/projects/project-forms.tsx": "e867646dbe574980eeebed7cb1e3722b47666590e29df7e674616c5236533389",
+      "apps/web/src/app/projects/project-recovery.tsx": "52930eaede83ef7b0d875226b641f029a2460728064c0acf90de32cd7a461746",
       "apps/web/src/app/projects/project-shell.tsx": "f430091089574c53acbf3b8a63de709d2a1f8af484b315a151ca9d4c1fb37287",
       "apps/web/src/app/projects/project-ui.tsx": "c162f41b627871d219086269a76d174a8927d57c49356f355c37d890dbb81818",
-      "apps/web/src/app/projects/project-work-area.tsx": "90fcb9a936da1e53a2b4f984272d08c05a12a786c0c90daf526cd8b08f415050",
-      "apps/web/src/app/projects/projects-view.tsx": "ba3e62e9f3db4566b4fda69a437b24528e269c8dcb2ae91337a9b2375d1f93cc",
-      "apps/web/src/app/projects/strings.ts": "529560ffa3baf12590e9510c7ccf9fcf76e086dfee503eb45d9ba46327df44b4",
+      "apps/web/src/app/projects/project-work-area.tsx": "792b8155e2fa42e008d87a766dcb9ffefa73e95953b33964e003a8eabaf50ba9",
+      "apps/web/src/app/projects/projects-view.tsx": "367df5e7406cb8a123bdcb2dd56862f07ba4ca37acd29255a6be6a7e7425ff9d",
+      "apps/web/src/app/projects/strings.ts": "13a65633bada725ac918affcfd2836e9681315ca46a49aee0dcf1e61e2654d79",
       "apps/web/src/app/projects/task-board.tsx": "318a9b956f56a4486da0bfdb543a3615f0045fff17461d879e637bbf4ecb34e8",
       "apps/web/src/app/projects/task-checklist.tsx": "8993b7dab92034b352d35b7086d69d6a9586b35bbf7429dcaf408158db6c0d7c",
       "apps/web/src/app/projects/task-collaboration-shared.tsx": "f6eb7666295d08752387f982215c9b1b8faa5506f48fb17012ba37f12522d268",
       "apps/web/src/app/projects/task-collaboration-view.ts": "be0cee703e6b2f3bc965a48f6e2aeb41a5b7f7e21b8405ed5c41e7ed6ddbe85f",
-      "apps/web/src/app/projects/task-collaboration.tsx": "923299aaae9f8563d192d03a4b5c0b8d6c86e3385585dfb13919f6ad67312e71",
+      "apps/web/src/app/projects/task-collaboration.tsx": "7ef1d9b43ff676dfdb62317dd1b895082a1c6e7537d12fc35ffe1f810563c79d",
       "apps/web/src/app/projects/task-comments.tsx": "c00472b14d594c7cfe231be993141557e9e04492b63750d4d4b342966068fda8",
       "apps/web/src/app/projects/task-description.tsx": "108eddc51e6e177a736cae622e4b94e83f426d621d5fd124d65c4a456331a8fb",
       "apps/web/src/app/projects/task-detail.tsx": "365906e594c590e4d828570be6ec7d894d100299b441da9295ae7096a706fae7",
       "apps/web/src/app/projects/task-discovery.tsx": "a98aa32c235cf4fe4aeb8b5873d16bb17788c0bce505812d498815c651865d4a",
-      "apps/web/src/app/projects/task-forms.tsx": "1c920bec7a8fd5480252fe67ea0ce9ebb84ce84df9d4c4927094e3b7130cd143",
+      "apps/web/src/app/projects/task-forms.tsx": "037f7e1046501c4888b28e8fca6fb623f1ab7ae7be68d81633ba493a8369c01b",
       "apps/web/src/app/projects/task-history.tsx": "511c9980d40c6d120d50dc9017b1a7c5ab89be695b3892b26078f5bd0490cfd4",
-      "apps/web/src/app/projects/task-list.tsx": "cf4089fb369040673b639ba8d87352777b282b0d1c9238f0353fe8aabd0c40fc",
+      "apps/web/src/app/projects/task-list.tsx": "dc9fa1250a7ae4b0e4d5f209d4b8aa69d37dab6d659891aa043b56d0b1c20073",
       "apps/web/src/app/projects/task-move.tsx": "ba8e09c0938dcc2973dbde2cef2a07c09200ec2ce506cc7738774bb1a183a6ea",
       "apps/web/src/app/projects/task-relations.tsx": "d5d530ecc87d3683495cde1d8a865efa248eb1d402248a9f4088c140e6341214",
       "apps/web/src/app/projects/task-view-bar.tsx": "7ba364c06c39ce46808f11352458924af998c38753461290c6d2d97ec7d03048",
-      "apps/web/src/app/projects/use-project-content-forms.ts": "c90685c7650030462e0aa3ee99207f388169b660ec968abacefbd88d51d03105",
-      "apps/web/src/app/projects/use-project-interaction-effects.ts": "d3ee09c468ee3710efacf4135d863d4afa12b6a826f089f467f176ebe6794b2f",
+      "apps/web/src/app/projects/use-project-content-forms.ts": "989943aeb6fff59548629a1416f68e4a08d502d4eb438b67b3077389c1ddfc07",
+      "apps/web/src/app/projects/use-project-interaction-effects.ts": "ba6236777df4d7444c123d0e1306bba8222cc9e4a9f8fc6e49556111f36d9177",
       "apps/web/src/app/projects/use-project-navigation-focus.ts": "c64adc2b9649feb07408d343f38bdedbe109970498107d3952701e382b762fa2",
       "apps/web/src/app/projects/use-task-result-focus.ts": "69e9b94356674fba3f6e0ca19e4d5829730dc8a37e78ca24340dc956e60014e7",
       "apps/web/src/app/workspaces/page.tsx": "b17f0cef9233707a457278663b06e9fc94b54f048826cc3471da2c50812dd9b7",
@@ -1306,7 +1306,7 @@
       "apps/web/src/lib/identity-controller.ts": "75bdfeca7ec1ad50a38c4a560c9e249719aa1a726cfb2a90895984170f480ef7",
       "apps/web/src/lib/identity-proxy.ts": "d3bfab1aea9ab2ba4e9803b58d343361f325e519bbfb9e92ad01b0933cae997c",
       "apps/web/src/lib/project-task-client.ts": "b6fa3d76ed6912c785197c5ec63eaae9a86d7ab17a190c344c2bb4e9e88eeb61",
-      "apps/web/src/lib/project-task-controller.ts": "af196b0b75f08b2fe7b1e5bae03dfe92dfb35f40610b211cefcbcf32f064dac3",
+      "apps/web/src/lib/project-task-controller.ts": "ba6ab573fcf216f85ba75b5d45053ba161fa32b6485173800e47e18ed27e7a79",
       "apps/web/src/lib/project-task-proxy.ts": "faeada1455c85f11c2410929abff7ac3421a3ee7c84376531a57403ec9819a8a",
       "apps/web/src/lib/safe-markdown.ts": "ec1344cc57dade02d9e351aa78b7f8d85bd4fd2addd0540a552d407196dec244",
       "apps/web/src/lib/task-collaboration-state.ts": "e9d4b011349e9f35fb0ae64fcafb1c7c8a1ed1cb94cdbf1373b4f6da21177723",
@@ -1332,13 +1332,14 @@
       "apps/web/test/unit/identity-hook.test.mjs": "c9b0ae7bd603ab0e6cb375bb65106ff466bbfa46ebafa3803fdec0db6266ff2a",
       "apps/web/test/unit/identity-view.test.mjs": "5906ae34ba9b93abc070879303bebc326bc51853c6fb31366d4a03d8417d620a",
       "apps/web/test/unit/mutation-witness.mjs": "ad5ea2e60af38550c56dab4bd4cdcf33d4a8cd74319c02a311aacaa9501fc268",
-      "apps/web/test/unit/project-content-forms.test.mjs": "30f550bf29f31aa82147ef53e57f2173d4381dee63dfe881429649921f2b2d81",
+      "apps/web/test/unit/project-content-forms.test.mjs": "cd8e2baee25561aa185ebe1a325671e3195570b0a7bae121ac6b9fb930dee57e",
       "apps/web/test/unit/project-content-model.test.mjs": "ded751e8601f571d4536bdbeeb017752d5175e1723fbf7ee5bc7547423c2bd01",
       "apps/web/test/unit/project-dom-hooks.test.mjs": "fed7602ba90530cc2463794b6cf1beabfbada2704224cb30230f508faf756ed0",
-      "apps/web/test/unit/project-hook-harness.mjs": "38a71f869ecd8f77c18d682db3d544a3b4cbf1036a12093bee67d419fe2933a5",
-      "apps/web/test/unit/project-hook.test.mjs": "cff85875be43335646360b36bdb5b2b9a03c0075ccf77bf72a75459302026cfc",
+      "apps/web/test/unit/project-hook-harness.mjs": "35a109eeb7959de6bd15b1d9fa7bf009851ecf3bf231aa44ac5ad23ae27638af",
+      "apps/web/test/unit/project-hook.test.mjs": "aa1d96fdcba93651eeb0366e1af347746981488e337ea1694e35a38ad168493e",
       "apps/web/test/unit/project-interaction-harness.mjs": "0592454f57ab40250c04bfded397620fc2856f21b11822b597281605001c1b61",
       "apps/web/test/unit/project-navigation-focus.test.mjs": "735d3a714873f43c3df6f3515a42c7bd9f4580c193842da078cac2b96ce4192f",
+      "apps/web/test/unit/project-recovery.test.mjs": "6cae6a202dee36a3544da00d0a0fde3716023164344b22def7dd367e1810db32",
       "apps/web/test/unit/task-result-focus.test.mjs": "28c4019099eb4d5bea66b3fd430a87b027d31154a34c8af8383f9cf0766018e8",
       "apps/web/test/unit/workspace-feedback.test.mjs": "6338d7ffd30291fef3082e994311898aff3a6fc5068da1259b883b0986ac7239",
       "apps/web/test/unit/workspace-hook.test.mjs": "d77c03576e8e3340d40a1a30f79b82cc77b1533cc751be0f9646dc7c9ca5da0b",
@@ -1357,20 +1358,20 @@
   "scope": "web",
   "total": {
     "branches": {
-      "covered": 1665,
-      "total": 5196
+      "covered": 2845,
+      "total": 5305
     },
     "functions": {
-      "covered": 335,
-      "total": 1051
+      "covered": 500,
+      "total": 1055
     },
     "lines": {
-      "covered": 1649,
-      "total": 3793
+      "covered": 2299,
+      "total": 3835
     },
     "statements": {
-      "covered": 1818,
-      "total": 4269
+      "covered": 2500,
+      "total": 4324
     }
   }
 }

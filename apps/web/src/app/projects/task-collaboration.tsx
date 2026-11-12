@@ -297,7 +297,7 @@ export function TaskCollaboration({
 
   return (
     <>
-      {retry !== null && (
+      {retry !== null && hook.mutationPending === null && (
         <FeedbackPanel
           actions={
             <>

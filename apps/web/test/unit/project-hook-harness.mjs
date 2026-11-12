@@ -129,6 +129,8 @@ export function projectBrowser(t, search = '?workspace=a&project=p') {
     title: 'Task',
     version: 1,
     rows: 114,
+    checklist: null,
+    responses: new Map(),
     streams: [],
     mutate: () => Response.json(task(115), { status: 201 }),
     taskPage(w = 'a', cursor = false) {
@@ -208,6 +210,7 @@ export function projectBrowser(t, search = '?workspace=a&project=p') {
       return held.promise;
     }
     if (request.options.method === 'POST') return server.mutate(request);
+    if (server.responses.has(path)) return Response.json(server.responses.get(path));
     if (path === '/api/v1/identity/config') return Response.json({ enabled: true, providers: [] });
     if (path === '/api/v1/identity/session') return Response.json(server.session);
     if (path === '/api/v1/workspaces') return Response.json(page(server.workspaces));
@@ -254,7 +257,9 @@ export function projectBrowser(t, search = '?workspace=a&project=p') {
       if (collection === 'parent-candidates')
         return Response.json({ ...common, capabilities: { canSelect: true } });
       if (collection === 'checklist')
-        return Response.json({ ...common, capabilities: { canCreate: true, canEdit: true } });
+        return Response.json(
+          server.checklist ?? { ...common, capabilities: { canCreate: true, canEdit: true } },
+        );
       if (collection === 'comments')
         return Response.json({ ...common, capabilities: { canCreate: true } });
       return Response.json(common);

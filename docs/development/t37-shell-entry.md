@@ -1,5 +1,12 @@
 # T37.3 shell and entry-flow presentation checkpoint
 
+**Acceptance update — 2026-11-12:** the coordinator [accepted PR47](https://github.com/Ljrr3045/rielia/pull/47#issuecomment-6814793798)
+and merged bounded T37.3 at `55f0f8d85521998d3d7ed883f387bd3c6cb664f8`.
+Dated review/checkpoint sections below retain their actual historical state.
+T37.4's separately integrated source/build/native proof is recorded in its
+[guide](t37-project-task-ui.md#integrated-native-validation--2026-11-12); no overall
+T37, real provider/persisted/user/device/AT or browser-chrome-zoom closure is implied.
+
 ## Current delivery status
 
 T37.1 is accepted in merged [PR #45](https://github.com/Ljrr3045/rielia/pull/45);

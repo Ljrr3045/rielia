@@ -4,10 +4,58 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Validate exact integrated T37.4 source with one production build, 26 bounded
+  native journeys and 20 selected images; retain all 177 frontend cases and higher
+  coverage floors. Record recovery, keyboard/touch, breadcrumb paint, long metadata,
+  role/form/detail/shared-row evidence and exact owned-resource cleanup.
+- Record coordinator acceptance/merge of T37.3 PR47 at `55f0f8d`; its dependency
+  is resolved. The My tasks primary-fill presentation follow-up remains T37.5-owned;
+  T37.4 acceptance/publication and final persisted/device/AT/zoom/provider QA remain.
+
+
+- Integrate exact PR47 corrective source into T37.4 recovery, retain all 177 cases
+  and corrected invitation assertions, and reconcile only two current-web
+  fingerprints after measured review. One normal gate reproduces every counter,
+  map and hit without changing higher floors or seven other baselines. Native
+  validation follows separately; no PR47 acceptance or publication is implied.
+
+
+### T37.4 bounded project/task recovery
+
+- Keep confirmed project writes visible after failed reads, using generic feedback
+  while current data/access are unavailable; read recovery never repeats a write.
+- Restore denied memory-local drafts only with current target/capability, captured
+  versions and deliberate Return; retain safe Discard/focus and prevent stale
+  dialog remount after permission loss, including an empty workspace.
+- Separate pending checklist saving from genuinely unknown exact-key recovery.
+- Add 22 meaningful frontend regressions; all 177 cases pass one normal gate after
+  exact coordinator-reviewed current-web migration. Preserve provider/config,
+  prior cases and seven other baselines while raising every aggregate floor.
+  The [guide](docs/development/t37-project-task-ui.md#bounded-sol-recovery-implementation--2026-11-12)
+  retains the failed loader attempt, unapproved 171-case checkpoint, reproduced
+  capability edge case, source boundaries and deferred native/persisted QA.
+- Preserve exact Astra presentation and T37.3 invitation/token behavior. No new
+  frontend production build, browser/runtime, publication or T37 acceptance claim.
+
+
+### T37.4 project and task presentation checkpoint
+
+- Wrap long breadcrumb context within its work column; retain complete text and
+  existing detail thresholds, pending native paint-bound verification.
+- Make task titles lead contiguous project rows, align wide metadata and expose
+  existing capability-gated Restore on narrow rows; retain native status/Move.
+- Quiet project administration, show the capture label, and improve board,
+  project/access form and detail/collaboration reading structure with existing tokens.
+- Record [source boundaries, baseline provenance and pending checks](docs/development/t37-project-task-ui.md).
+  No logic/recovery/test/dependency change or new rendering claim; independent SOL
+  validation, three owned recovery fixes, T37.3 acceptance/base sync and publication
+  remain pending. T37.4 and T37 are not closed.
+
 ### T37.3 shell, identity and workspace entry
 
-Published in [Draft PR #47](https://github.com/Ljrr3045/rielia/pull/47) targeting
-`dev`; T37.3 remains in progress.
+Accepted in [PR #47](https://github.com/Ljrr3045/rielia/pull/47#issuecomment-6814793798), merged into `dev` at
+`55f0f8d85521998d3d7ed883f387bd3c6cb664f8`. The dated corrective evidence below
+retains its historical review state.
 
 - Compose compact bilingual session guidance, a 14rem desktop work rail and
   compact secondary mobile context while keeping full primary titles and current
@@ -30,8 +78,8 @@ Published in [Draft PR #47](https://github.com/Ljrr3045/rielia/pull/47) targetin
   floors/maps/hits and seven other baselines remain exact, and one normal gate
   passes. Earlier build/captures keep historical provenance because source bytes
   now differ. Record [dispositions, source proof and limits](docs/development/t37-shell-entry.md#native-round1-corrective-batch-2026-11-12).
-  Current-head CI/native round2, T37.3 acceptance, T37.4 breadcrumb/recovery work
-  and real persisted/device/AT/zoom/provider/staging evidence remain outstanding.
+  The coordinator subsequently accepted T37.3 as linked above. T37.4 acceptance
+  and real persisted/device/AT/zoom/provider/staging evidence remain separate.
 
 ### T37.2 CSS foundations checkpoint
 

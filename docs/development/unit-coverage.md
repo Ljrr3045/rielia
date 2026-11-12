@@ -42,8 +42,9 @@ at corrected PR42 C: 138 web / 380 total cases over 118 inputs. Delivered
 [workspace owners](workspace-interactions-extraction.md) end at PR43 C: 145 web,
 216 API, 7 contracts and 19 isolated prototype cases, 387 total over 124 maintained
 inputs (68 web). Historical PR43 web L/S/F/B floors were 4131/4061/3073/3058
-basis points. Current web floors are **4347/4258/3187/3204** after the reviewed
-T37.3 migrations below; API floors are 5244/5247/4855/5252. Prototype counts do not inflate production
+basis points. The T37.3 migrations raised web floors to 4347/4258/3187/3204. Current
+T37.4 web floors are **5994/5781/4739/5362** after the reviewed recovery and
+PR47 integration migrations below; API floors are 5244/5247/4855/5252. Prototype counts do not inflate production
 metrics. Exact baseline files and linked covered/zero/null proof govern;
 historical starting values below are not current results.
 
@@ -439,6 +440,72 @@ coordinator acceptance, plus later real persisted/security/device/AT/provider/
 staging/actual-browser-zoom QA remain separate requirements.
 
 
+## T37.4 reviewed recovery baseline migration
+
+The T37.4 recovery checkpoint starts from accepted local T37.3 source/coverage
+`d3cc536`, integrating exact Astra presentation `0721c721` by merge `0b874e3`.
+The coordinator reviewed actual recovery owners and assigned conditional JSX,
+controller/lifecycle/copy and tests to SOL. This is a current-web comparable
+migration, not a pre-unit/history rewrite, automatic rebaseline or gate waiver.
+
+All 155 existing cases remain selected. Twenty-two added real component/hook
+regressions exercise confirmed write/read failures and read-only recovery,
+target/expiry/session fences, denied/authorized draft restoration, lifecycle
+captured versions, current access administration, empty/ready creation and
+pending/lost/403/409 checklist outcomes. Retained create/move result-focus tests
+still enforce canonical row/page revision barriers and existing fallbacks.
+Finite public HTTP DTOs, media/clock/RAF/idle seams and stylesheet loading are
+explicit; these tests do not establish native layout or persisted security.
+
+The first instrumented attempt fails before the new rendered file can run:
+Node ESM requires the extension on the actual installed `next/link.js`; 160 other
+cases pass. A coordinator-authorized file-local resolver executes the real Next
+exports without changing shared loaders/provider/config or substituting components.
+Its corrected 171-case candidate is preserved but unapproved. Reviewed mapped
+capability gaps prompted six actual screen journeys. These reproduce automatic
+stale create-form remount in an empty workspace; the existing close condition now
+handles ready and empty. The final complete measurement passes 177 cases.
+
+| Metric | Previous current web | Final measured/gated | Floors before → after, basis points |
+| --- | --- | --- | --- |
+| Lines | 1649/3793 | 2299/3835 | 4347 → 5994 |
+| Statements | 1818/4269 | 2500/4324 | 4258 → 5781 |
+| Functions | 335/1051 | 500/1055 | 3187 → 4739 |
+| Branches | 1665/5196 | 2845/5305 | 3204 → 5362 |
+
+Accepted baseline SHA-256 was
+`9e85d482a01099d38b2101cdcef6d83b57ba21722562239bf9c61c67f6f50f16`.
+A blocking coordinator decision approved exact candidate/final baseline
+`c69839c025e8cab983ef0c9366d92e75139989dc61c1fd86b446d119cf1b26e4`
+before it was written. One normal `pnpm unit:web` then passes all 177 cases and
+strict comparable-manifest, aggregate-floor, per-file and nonregression gates.
+Summary, manifest, normalized maps and all hit vectors are exact to measurement.
+No predictable stale normal gate was run.
+
+The inventory stays 68, with 12 expected source fingerprint deltas and 56 exact
+source fingerprints. Thirty-nine file counter sets remain exact and 29 improve;
+no file loses covered counts or increases uncovered counts. All old selected
+cases remain: 20 previous test/helper fingerprints are exact, two existing test
+files only append cases apart from a fixture import, an HTTP helper adds optional
+raw public DTO answers, and one actual-screen test file is added. Provider/runtime/
+pnpm/compiler/tool-lock/four config identities remain exact. All seven other
+current/historical baselines remain byte-identical; no exclusions, ignores,
+threshold reductions or shared gate/config change are introduced.
+
+All 56 unchanged sources retain exact normalized maps and every previously
+covered mapped endpoint. Changed-source mapping/denominator deltas are reviewed,
+not claimed byte-identical. Null-column precision remains 803 of 28,798 points,
+compared with 797 of 28,348 before; the type-only `task-collaboration-view.ts`
+remains among the inputs with zero units, N/A. Unexecuted branches, implicit arms
+and source-map limitations remain owned debt. The gain is bounded evidence,
+not universal source conformity or full application/security coverage.
+
+No install, frontend production rebuild, app/browser/Docker/runtime or native
+matrix rerun is part of this source/coverage task. Existing T37.3 build/capture
+bindings remain historical and do not prove changed T37.4 source. Native QA,
+real PostgreSQL/Nest/Next journeys, current-head CI/native review, accepted PR47
+correction integration with a fresh manifest review, and coordinator acceptance
+remain separate. See the [implementation guide](t37-project-task-ui.md).
 ## T37.3 native round1 manifest correction (2026-11-12)
 
 The four valid [PR #47 native findings](t37-shell-entry.md#native-round1-corrective-batch-2026-11-12)
@@ -467,3 +534,25 @@ build/source equivalence applies to its dated checkpoint: the two dead style
 hooks change source bytes, so no old build is represented as this new source.
 No new Next/API build, browser/device/AT/persistence/security/provider/staging
 validation ran; current-head CI/native review and coordinator acceptance remain.
+
+
+## T37.4 exact PR47 corrective-head integration
+
+The isolated recovery branch integrates only corrective `b1f3ddec`, preserving
+all 177 cases and its exact strengthened invitation assertions. One full web
+measurement retains all 68 file counters, totals/floors, normalized maps and hit
+vectors exactly: L2299/3835, S2500/4324, F500/1055, B2845/5305; floors remain
+5994/5781/4739/5362. Only identity-view and workspace-feedback test fingerprints
+change. Runtime/compiler/provider/config/tool identities, all 24 test/helper
+inputs, type-only N/A and 803/28798 null-column points remain; seven other
+baselines are byte-identical.
+
+A blocking coordinator review approved exact candidate
+`7e44c96c37036bff1e8aa65a01c1020b664a74ba411d238bcd3c82a2f63ff865`
+before writing current web baseline. One normal gate then passes 177/177 with
+exact measured summary/manifest/maps/hits equality. No gate waiver, coverage gain,
+excluded source, reduced floor or historical baseline change is claimed. That
+local integration authorization itself did not accept PR47. The coordinator
+subsequently [accepted/merged PR47](https://github.com/Ljrr3045/rielia/pull/47#issuecomment-6814793798) at `55f0f8d`; T37.4 acceptance
+remains separate. The separately authorized T37.4 production/native
+group follows this integration; HTTP fixtures cannot establish persisted security.
