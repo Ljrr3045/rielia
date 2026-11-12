@@ -668,3 +668,206 @@ for (const access of ['authorized', 'forbidden', 'revoked', 'gone'])
       first.options.headers['Idempotency-Key'],
     );
   });
+
+function overlayAt(width) {
+  return (browser) =>
+    browser.replace(browser.window, 'matchMedia', (media) => ({
+      media,
+      matches: media.includes('79.9375rem')
+        ? width < 1280
+        : media.includes('63.9375rem')
+          ? width < 1024
+          : media.includes('47.9375rem')
+            ? width < 768
+            : false,
+      addEventListener() {},
+      removeEventListener() {},
+    }));
+}
+
+for (const width of [390, 768, 1280])
+  for (const response of ['success', '503'])
+    test(`selected task form focus stays reachable after ${response} recovery at ${width}`, async (t) => {
+      const b = await mount(t, '?workspace=a&project=p&task=t1', 'en', overlayAt(width));
+      await b.click('Edit');
+      const form = getByRole(b.container, 'dialog', { name: 'Edit task', exact: true });
+      const openingFocus = form.contains(b.document.activeElement);
+      const dialogs = [...b.container.querySelectorAll('[role="dialog"]')];
+      assert.equal(dialogs.length, width < 1280 ? 2 : 1);
+      if (width < 1280) {
+        assert.equal(dialogs[0] === form, false, 'task-detail dialog precedes the form');
+        assert.equal(dialogs[0].closest('[inert]') !== null, true);
+      }
+      await b.input(
+        getByRole(form, 'textbox', { name: /^Title/ }),
+        'Original selected-task intent',
+      );
+      b.server.version = 2;
+      const read = b.server.holdNext(projectPath);
+      await b.event('popstate');
+      await b.flush();
+      assert.equal(
+        form.contains(b.document.activeElement),
+        true,
+        'loading focus belongs to the form modal',
+      );
+      assert.equal(queryByRole(form, 'textbox') === null, true);
+      assert.doesNotMatch(form.textContent, /Original selected-task intent/);
+      await act(async () =>
+        read.resolve(
+          response === '503'
+            ? Response.json({ code: 'unavailable' }, { status: 503 })
+            : Response.json(project('p', 'a', 2)),
+        ),
+      );
+      await b.flush();
+      if (response === '503') {
+        assert.equal(form.contains(b.document.activeElement), true);
+        assert.equal(queryByRole(form, 'textbox') === null, true);
+        await b.click('Load again', form);
+      }
+      assert.equal(
+        getByRole(b.container, 'dialog', { name: 'Edit task', exact: true }) === form,
+        true,
+      );
+      assert.equal(
+        form.contains(b.document.activeElement),
+        true,
+        'ready focus cannot fall behind the form into the inert detail or body',
+      );
+      assert.equal(b.document.activeElement.closest('[inert],[hidden],[aria-hidden="true"]'), null);
+      assert.equal(
+        b.document.activeElement === getByRole(form, 'textbox', { name: /^Title/ }),
+        true,
+        'prefer the current enabled autofocus field',
+      );
+      assert.equal(openingFocus, true);
+      assert.equal(
+        getByRole(form, 'textbox', { name: /^Title/ }).value,
+        'Original selected-task intent',
+      );
+      assert.equal(b.posts().length, 0);
+      b.server.mutate = () => Response.json(task(1, 'a', 'p', 3));
+      await b.click('Save changes', form);
+      assert.equal(b.posts().length, 1);
+      assert.equal(JSON.parse(b.posts()[0].options.body).expectedVersion, 1);
+    });
+
+test('selected task preserves deliberate current focus while the recovery frame is pending', async (t) => {
+  const b = await mount(t, '?workspace=a&project=p&task=t1', 'en', overlayAt(768));
+  await b.click('Edit');
+  const form = getByRole(b.container, 'dialog', { name: 'Edit task', exact: true });
+  const read = b.server.holdNext(projectPath);
+  await b.event('popstate');
+  await act(async () => read.resolve(Response.json(project('p', 'a', 2))));
+  const cancel = getByRole(form, 'button', { name: 'Cancel', exact: true });
+  cancel.focus();
+  await b.flush();
+  assert.equal(
+    b.document.activeElement === cancel,
+    true,
+    'a pending fallback cannot steal a deliberate reachable modal target',
+  );
+  assert.equal(b.posts().length, 0);
+});
+
+test('selected task unknown retry keeps its key and uses a reachable modal fallback when fields are disabled', async (t) => {
+  const b = await mount(t, '?workspace=a&project=p&task=t1', 'en', overlayAt(768));
+  await b.click('Edit');
+  const form = getByRole(b.container, 'dialog', { name: 'Edit task', exact: true });
+  await b.input(getByRole(form, 'textbox', { name: /^Title/ }), 'Unknown original intent');
+  b.server.mutate = () => Promise.reject(new Error('Lost response'));
+  await b.click('Save changes', form);
+  const first = b.posts()[0];
+  await b.event('popstate');
+  await b.flush();
+  assert.equal(getByRole(form, 'textbox', { name: /^Title/ }).disabled, true);
+  assert.equal(form.contains(b.document.activeElement), true);
+  assert.equal(
+    b.document.activeElement.closest('[inert],[hidden],[aria-hidden="true"],[disabled]'),
+    null,
+  );
+  assert.equal(b.document.activeElement === getByRole(form, 'textbox', { name: /^Title/ }), false);
+  assert.equal(b.posts().length, 1, 'focus recovery cannot resubmit');
+  b.server.mutate = () => Response.json(task(1, 'a', 'p', 2));
+  await b.click('Retry', form);
+  assert.equal(b.posts().length, 2);
+  assert.equal(b.posts()[1].options.body, first.options.body);
+  assert.equal(
+    b.posts()[1].options.headers['Idempotency-Key'],
+    first.options.headers['Idempotency-Key'],
+  );
+});
+
+test('selected task cancellation during a read cannot remount the form and returns focus to the live detail', async (t) => {
+  const b = await mount(t, '?workspace=a&project=p&task=t1', 'en', overlayAt(390));
+  await b.click('Edit');
+  const form = getByRole(b.container, 'dialog', { name: 'Edit task', exact: true });
+  await b.input(getByRole(form, 'textbox', { name: /^Title/ }), 'Retained after cancel');
+  const read = b.server.holdNext(projectPath);
+  await b.event('popstate');
+  await b.flush();
+  await act(async () =>
+    b.document.dispatchEvent(
+      new b.window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }),
+    ),
+  );
+  await b.flush();
+  assert.equal(form.isConnected, false);
+  await act(async () => read.resolve(Response.json(project('p', 'a', 2))));
+  await b.flush();
+  assert.equal(
+    queryByRole(b.container, 'dialog', { name: 'Edit task', exact: true }) === null,
+    true,
+  );
+  const detail = getByRole(b.container, 'dialog', { name: 'Task 1', exact: true });
+  assert.equal(detail.contains(b.document.activeElement), true);
+  assert.equal(b.document.activeElement.closest('[inert]'), null);
+  assert.equal(
+    b.document.body.style.overflow,
+    'hidden',
+    'only the underlying live detail lock remains',
+  );
+  await b.click('Close task detail');
+  assert.equal(b.document.body.style.overflow, '');
+  assert.equal(b.posts().length, 0);
+});
+
+test('selected task navigation guard owns focus before an outstanding form-recovery frame', async (t) => {
+  const b = await mount(t, '?workspace=a&project=p&task=t1', 'en', overlayAt(768));
+  await b.click('Edit');
+  const form = getByRole(b.container, 'dialog', { name: 'Edit task', exact: true });
+  await b.input(getByRole(form, 'textbox', { name: /^Title/ }), 'Stay with original local work');
+  const read = b.server.holdNext(projectPath);
+  await b.event('popstate');
+  await act(async () => read.resolve(Response.json(project('p', 'a', 2))));
+  // Browser-level navigation can occur even while the document background is inert.
+  // Leave the ready-state recovery frame pending while the real controller raises its guard.
+  b.window.history.pushState({}, '', '/projects?workspace=b');
+  await b.event('popstate');
+  await b.flush();
+  const guard = getByRole(b.container, 'dialog', {
+    name: 'Switch workspace with pending work',
+    exact: true,
+  });
+  assert.equal(guard.contains(b.document.activeElement), true);
+  assert.equal(
+    b.document.activeElement ===
+      getByRole(guard, 'button', { name: 'Stay in this workspace', exact: true }),
+    true,
+  );
+  assert.equal(b.document.activeElement.closest('[inert],[hidden],[aria-hidden="true"]'), null);
+  assert.equal(
+    queryByRole(b.container, 'dialog', { name: 'Edit task', exact: true }) === null,
+    true,
+  );
+  assert.match(b.window.location.search, /workspace=a/);
+  await b.click('Stay in this workspace', guard);
+  const resumed = getByRole(b.container, 'dialog', { name: 'Edit task', exact: true });
+  assert.equal(resumed.contains(b.document.activeElement), true);
+  assert.equal(
+    getByRole(resumed, 'textbox', { name: /^Title/ }).value,
+    'Stay with original local work',
+  );
+  assert.equal(b.posts().length, 0);
+});

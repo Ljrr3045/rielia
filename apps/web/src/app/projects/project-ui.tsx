@@ -209,6 +209,7 @@ export function ModalFrame({
   busy = false,
   small = false,
   wide = false,
+  formModal = false,
   onClose,
   children,
 }: {
@@ -217,6 +218,7 @@ export function ModalFrame({
   busy?: boolean;
   small?: boolean;
   wide?: boolean;
+  formModal?: boolean;
   onClose: () => void;
   children: ReactNode;
 }) {
@@ -238,6 +240,7 @@ export function ModalFrame({
       <div
         aria-labelledby={titleId}
         aria-modal="true"
+        data-project-form-modal={formModal || undefined}
         className={cx(styles.modal, small && styles.modalSmall, wide && styles.modalWide)}
         ref={ref}
         role="dialog"

@@ -130,6 +130,7 @@ export function renderProjectDialogs({
             (status === 'ready' || (status === 'empty' && form.kind === 'project-create')))) &&
         workspaceNavigation === null && (
           <ModalFrame
+            formModal
             busy={anyPending}
             eyebrow={
               form.kind === 'project-access'

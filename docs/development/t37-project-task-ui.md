@@ -15,6 +15,41 @@ Follow the [direction](t37-design-direction.md), [inventory](t37-ui-inventory.md
 [T36 contract](t36-stable-ui-contract.md) and [project owner map](project-interactions-extraction.md).
 The imported handoff and existing server authorization remain authoritative.
 
+## PR48 round2 form-modal focus correction
+
+[Round2 warning](https://github.com/Ljrr3045/rielia/pull/48#discussion_r4547515533)
+reproduces an omitted combination: selected task overlay plus Edit modal. The
+first dialog in document order is the inert task detail at 390/768px. The exact
+retained build `rnOoBwmdKkBln0mAz1EYY` reproduces actual focus on body after read
+recovery while the real form remains open. Prior round1 matrices did not cover it;
+those proofs remain historical for this changed focus path.
+
+Only form-modal DOM focus targeting changes: ModalFrame exposes explicit optional
+form ownership, its existing caller marks the form, and the effect uses that owner.
+Connected/current reachability excludes inert, hidden, aria-hidden, disabled and
+CSS-hidden ancestors. A deliberate reachable focus target is preserved; otherwise
+an enabled autofocus child precedes the container fallback. No order/aria-modal
+heuristic, new state, timeout, CSS, permission/controller or domain change.
+
+Ten meaningful selected-task/priority-guard regressions retain 185 previous cases;
+195 pass the revised measure and one normal gate. The initial 194-case candidate
+is unapproved and preserved: an uncovered marker default reduced project-ui's
+branch ratio. The coordinator authorized one real workspace-navigation guard
+regression and one revised measure; source remained unchanged. The guard preserves
+Stay focus and returns the original form/draft without a write. Exact revised
+baseline `263d596f595c8cc89b7fecacde9ec7e0ad9d3be03483c8145a5c309f9e872a75`
+was approved before writing. L/S/F/B floors rise to 6182/5960/4962/5601; no file
+covered-count/ratio or stable-map covered path regresses. New defensive debt is
+one uncovered line/two statements/one branch, with improved effect ratios.
+68 inputs/24 test-helper entries/provider/config and seven other baselines remain
+exact; 811/29,010 null-column points and type-only N/A remain explicit. A new
+production build and bounded native correction checks still gate publication.
+
+Kilo's sandbox could not hash source; this is a reviewer limitation, not a source
+defect or substitute for independently verified local/CI fingerprint integrity.
+The prior three findings remain resolved; coordinator owns the current thread,
+review/Ready and acceptance decisions. T37.5/downstream source remains separate.
+
 ## PR48 round1 recovery corrections — implementation checkpoint
 
 The completed first native review reported three credible findings

@@ -678,3 +678,29 @@ PR48 sync does not change source/test/baseline bytes. The
 [integrated native/persisted guide](t37-discovery-ui.md#corrective-integration-qa--2026-11-12)
 keeps real database effects distinct from finite fixture results and retains
 historical failures/provenance gaps. PR48/final T37 acceptance remains pending.
+
+## T37.4 reviewed round2 modal-focus migration
+
+The selected-task overlap had been omitted from previous native matrices. Ten
+meaningful real screen/priority-navigation tests retain all 185 prior cases; the
+revised measure and one normal gate pass **195**, with exact reports/maps/hits/LCOV.
+The first 194-case candidate is retained as unapproved evidence: its optional
+marker default added two uncovered UI outcomes and reduced that file's ratio.
+One coordinator-authorized real workspace-navigation guard test and revised measure
+cover priority ownership without adding production code or mirrored assertions.
+
+The exact revised current-web candidate
+`263d596f595c8cc89b7fecacde9ec7e0ad9d3be03483c8145a5c309f9e872a75`
+was approved before writing. L/S/F/B move from 2336/3847, 2542/4339, 511/1059,
+2910/5333 to **2387/3861, 2595/4354, 526/1060, 2996/5349**; floors rise from
+6072/5858/4825/5456 to **6182/5960/4962/5601**. No per-file covered count/ratio or
+stable-map covered unit regresses. New defensive disconnected/CSS-hidden checks
+retain one uncovered line/two statements/one branch in the effect, with improved
+ratios; this debt is explicit, not ignored or padded to 100%.
+
+Three source fingerprints and one existing test fingerprint change; 68 inputs,
+24 test/helper entries, provider/config/tools and seven other baselines remain
+exact. 54 file summaries/65 maps/35 hit vectors are unchanged. Null-column points
+remain 811 with 29,010 total points; implicit arms, changed-location identity limits
+and the same type-only zero-unit N/A remain. No lowered floor/exclusion, historical
+baseline rewrite, backend/policy or persistence/security claim.
