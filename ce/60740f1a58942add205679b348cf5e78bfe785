@@ -1,0 +1,38 @@
+docs/development/development-quality-roadmap.md
+  s_436a98e4642f61::t_a85bc57caef15f 37-43,315-319,446-448
+docs/development/t37-shell-entry.md
+  s_436a98e4642f61::t_a85bc57caef15f 3-36,286-373
+docs/development/progress.md
+  s_436a98e4642f61::t_a85bc57caef15f 44-88
+  s_436a98e4642f61::t_ce3cb08a3b8bb6 3-15
+docs/development/unit-coverage.md
+  s_436a98e4642f61::t_a85bc57caef15f 44,509-536
+  s_436a98e4642f61::t_ce3cb08a3b8bb6 45-47,537-557
+CHANGELOG.md
+  s_436a98e4642f61::t_ce3cb08a3b8bb6 7-13
+  s_436a98e4642f61::t_a85bc57caef15f 45-72,76-78,85,96-97
+apps/web/test/unit/workspace-feedback.test.mjs
+  s_436a98e4642f61::t_a85bc57caef15f 228-233,248-266
+scripts/unit/baselines/web.json
+  s_436a98e4642f61::t_d6d0455580c50a 1258,1344
+apps/web/src/app/identity/identity-view.tsx
+  s_436a98e4642f61::t_a85bc57caef15f 41
+docs/development/t37-project-task-ui.md
+  s_436a98e4642f61::t_ce3cb08a3b8bb6 197-214
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ce60740f1a58942add205679b348cf5e78bfe785",
+  "prompts": {},
+  "sessions": {
+    "s_436a98e4642f61": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1cd96-e5fb-78c1-ad15-35bdfb4f2e74",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
