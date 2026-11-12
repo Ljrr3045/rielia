@@ -1,0 +1,29 @@
+docs/development/progress.md
+  s_436a98e4642f61::t_40e31a2a48004d 15-17
+  s_436a98e4642f61::t_600b95ad964351 4-14,18-20,28-31
+CHANGELOG.md
+  s_436a98e4642f61::t_40e31a2a48004d 19-20
+  s_436a98e4642f61::t_600b95ad964351 9-13,21-22
+docs/development/t37-shell-entry.md
+  s_436a98e4642f61::t_600b95ad964351 175-176,180-182,209,211-251
+scripts/unit/baselines/web.json
+  s_436a98e4642f61::t_761a4417cc19bc 769,773,833-834,837,841,845,851,855,859,863,905,909,913,917,1229-1232,1258-1259,1270,1295,1298-1299,1304,1343,1360-1361,1364,1368,1372
+docs/development/unit-coverage.md
+  s_436a98e4642f61::t_600b95ad964351 383-438
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d3cc5362aa0a0c4439b2d4b91c1c02d1b9b9fbc9",
+  "prompts": {},
+  "sessions": {
+    "s_436a98e4642f61": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1cd96-e5fb-78c1-ad15-35bdfb4f2e74",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
