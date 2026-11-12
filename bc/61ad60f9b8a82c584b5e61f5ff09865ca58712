@@ -1,0 +1,37 @@
+docs/development/unit-coverage.md
+  s_56f9656cb2b0b9::t_24d2bf60d4ee78 731-743
+CONTRIBUTING.md
+  s_56f9656cb2b0b9::t_24d2bf60d4ee78 42-47
+AGENTS.md
+  s_56f9656cb2b0b9::t_24d2bf60d4ee78 48-58
+CHANGELOG.md
+  s_56f9656cb2b0b9::t_24d2bf60d4ee78 7-12
+docs/development/t37-project-task-ui.md
+  s_56f9656cb2b0b9::t_24d2bf60d4ee78 3-7,11
+apps/web/AGENTS.md
+  s_56f9656cb2b0b9::t_24d2bf60d4ee78 19-24
+docs/development/t37-discovery-ui.md
+  s_56f9656cb2b0b9::t_24d2bf60d4ee78 3-13
+docs/development/development-quality-roadmap.md
+  s_56f9656cb2b0b9::t_24d2bf60d4ee78 43-51,67-76
+docs/development/progress.md
+  s_56f9656cb2b0b9::t_24d2bf60d4ee78 3-26
+docs/development/t37-ui-acceptance.md
+  s_56f9656cb2b0b9::t_24d2bf60d4ee78 3-15,32,34,44,91,93,102
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "bc61ad60f9b8a82c584b5e61f5ff09865ca58712",
+  "prompts": {},
+  "sessions": {
+    "s_56f9656cb2b0b9": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1ce20-f7eb-7503-839d-9f1b8ffda007",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
