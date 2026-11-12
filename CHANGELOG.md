@@ -4,6 +4,66 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Correct PR49 round1 documentation finding: label the `2edecbe` coverage checkpoint
+  historical and distinguish its pending PR48 status from accepted PR48/current
+  final-T37 gates. Preserve all counts, tested artifacts and current 195-case proof.
+
+- Publish [Draft PR49](https://github.com/Ljrr3045/rielia/pull/49) for final T37.5
+  discovery/navigation and T37.6 consolidation delivery from
+  [accepted PR48](https://github.com/Ljrr3045/rielia/pull/48#issuecomment-6818479075) ancestry (`f628fd3`), preserving exact tested
+  source, all195 cases and eight baselines. Record the current one-build/four-native/
+  five-image proof and qualified historical persisted evidence without reruns.
+  Final T37 acceptance remains pending delivery CI/native/coordinator gates.
+
+- Integrate exact modal-focus correction while preserving discovery/CSS; 195
+  frontend cases pass one approved composed measure/gate with higher floors and
+  explicit guard/mapping debt. One new build passes three detail/edit overlap
+  viewport cases plus discovery smoke, with five inspected focused images and
+  exact owned cleanup. Historical persisted receipts keep their source limits;
+  T37 and PR48/final publication/acceptance remain open.
+
+- Integrate exact PR48 corrective source/final docs while preserving discovery
+  presentation and both histories. Validate 185 frontend cases with one reviewed
+  measure/gate, floors 6072/5858/4825/5456 and explicit 812/28926 mapping debt.
+- Complete eleven focused integrated native cases and three actual persisted
+  read-recovery/current-authority/version/focus scenarios. Preserve real403/409,
+  zero unintended writes, finite/fault-trigger boundaries, failed diagnostics,
+  source/build binding, crop/provenance limits and owned cleanup. Update the
+  [T37.6 proposal](docs/development/t37-ui-acceptance.md); final acceptance remains open.
+
+- Complete bounded T37.5 local discovery/native and real persisted cross-surface
+  QA:177 frontend cases, 16 unique native journeys, 18 Astra-inspected captures and
+  12 real PostgreSQL/Nest/Next journeys, with actual one-effect retry, conflict,
+  revocation/session and invitation-feedback evidence. Preserve crop/device/AT/
+  browser zoom/provider limits and verified owned cleanup.
+- Prepare the [T37.6 evidence consolidation and T11 handoff](docs/development/t37-ui-acceptance.md)
+  for the final delivery PR; T37 and PR48 acceptance/current-head gates remain open.
+
+- Integrate T37.4 native and T37.5 presentation histories for independent discovery
+  validation; explicitly review the current-web manifest migration and retain all
+  177 cases, strengthened floors and seven unrelated baselines. Native/persisted
+  evidence and coordinator acceptance remain separate gates.
+
+- Validate exact integrated T37.4 source with one production build, 26 bounded
+  native journeys and 20 selected images; retain all 177 frontend cases and higher
+  coverage floors. Record recovery, keyboard/touch, breadcrumb paint, long metadata,
+  role/form/detail/shared-row evidence and exact owned-resource cleanup.
+- Record coordinator acceptance/merge of T37.3 PR47 at `55f0f8d`; its dependency
+  is resolved. The My tasks primary-fill presentation follow-up remains T37.5-owned;
+  T37.4 acceptance/publication and final persisted/device/AT/zoom/provider QA remain.
+
+### T37.5 integrated presentation finish
+
+- Merge the exact discovery presentation checkpoint with tested T37.4 recovery
+  source, preserving histories and title-first project-grouped results.
+- Reserve sidebar selected fill/foreground for the existing active classes;
+  keep My tasks primary emphasis through title weight without overriding active
+  hover. Route selection, aria-current, focus and all behavior remain unchanged.
+- Record [source comparison and pending validation](docs/development/t37-discovery-ui.md#2026-11-12-integrated-presentation-finish--source-checkpoint).
+  PR #47 is accepted/merged at `55f0f8d`; T37.4 publication/review and final accepted
+  ancestry integration remain pending. Earlier checkpoint statements below retain
+  their historical status. Prior native images are before-change references;
+  source checks/hooks are not rendered, persisted or complete T37.5 acceptance.
 ### T37.4 project/task presentation and recovery — [Draft PR #48](https://github.com/Ljrr3045/rielia/pull/48)
 
 - Correct round2 focus ownership when task detail and form both have dialog roles:
@@ -29,6 +89,48 @@ This records repository changes. No application version has been released.
   rejection witnesses. One targeted 20-case run passes using exact-head CI reports,
   with unchanged application source/tests and all eight baselines.
 
+
+### T37.4 bounded project/task recovery
+
+- Keep confirmed project writes visible after failed reads, using generic feedback
+  while current data/access are unavailable; read recovery never repeats a write.
+- Restore denied memory-local drafts only with current target/capability, captured
+  versions and deliberate Return; retain safe Discard/focus and prevent stale
+  dialog remount after permission loss, including an empty workspace.
+- Separate pending checklist saving from genuinely unknown exact-key recovery.
+- Add 22 meaningful frontend regressions; all 177 cases pass one normal gate after
+  exact coordinator-reviewed current-web migration. Preserve provider/config,
+  prior cases and seven other baselines while raising every aggregate floor.
+  The [guide](docs/development/t37-project-task-ui.md#bounded-sol-recovery-implementation--2026-11-12)
+  retains the failed loader attempt, unapproved 171-case checkpoint, reproduced
+  capability edge case, source boundaries and deferred native/persisted QA.
+- Preserve exact Astra presentation and T37.3 invitation/token behavior. No new
+  frontend production build, browser/runtime, publication or T37 acceptance claim.
+
+### T37.5 My tasks and Search presentation checkpoint
+
+- Make the existing query label visible, emphasize Search and separate secondary
+  filters; retain scope, literal search and all authorized criteria.
+- Strengthen project headings and canonical loaded/total summaries, use title-first
+  discovery rows and give pagination/context-limit guidance distinct spacing.
+- Preserve shared T37.4 styling, all state/permission/URL/recovery rules and live
+  connection/freshness distinctions. No copy, logic, test or dependency changes.
+- Record [source-only evidence and integration gates](docs/development/t37-discovery-ui.md).
+  SOL manifest migration, functional/native/persisted QA, Astra rendered review,
+  T37.4 acceptance and later publication remain pending; T37.5 is not accepted.
+
+### T37.4 project and task presentation checkpoint
+
+- Wrap long breadcrumb context within its work column; retain complete text and
+  existing detail thresholds, pending native paint-bound verification.
+- Make task titles lead contiguous project rows, align wide metadata and expose
+  existing capability-gated Restore on narrow rows; retain native status/Move.
+- Quiet project administration, show the capture label, and improve board,
+  project/access form and detail/collaboration reading structure with existing tokens.
+- Record [source boundaries, baseline provenance and pending checks](docs/development/t37-project-task-ui.md).
+  No logic/recovery/test/dependency change or new rendering claim; independent SOL
+  validation, three owned recovery fixes, T37.3 acceptance/base sync and publication
+  remain pending. T37.4 and T37 are not closed.
 - Wrap full breadcrumb context within its work column; prioritize task titles in
   contiguous rows, retain native Move/reorder and expose permitted mobile Restore.
   Improve project/access forms and readable detail/collaboration structure.

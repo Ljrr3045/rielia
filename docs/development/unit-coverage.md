@@ -43,8 +43,9 @@ at corrected PR42 C: 138 web / 380 total cases over 118 inputs. Delivered
 216 API, 7 contracts and 19 isolated prototype cases, 387 total over 124 maintained
 inputs (68 web). Historical PR43 web L/S/F/B floors were 4131/4061/3073/3058
 basis points. The T37.3 migrations raised web floors to 4347/4258/3187/3204. Current
-T37.4 web floors are **5994/5781/4739/5362** after the reviewed recovery and
-PR47 integration migrations below; API floors are 5244/5247/4855/5252. Prototype counts do not inflate production
+T37.4/T37.5 web floors are **6182/5960/4962/5601** after reviewed modal-focus
+and composed discovery migrations below; earlier floor sets remain historical.
+API floors are 5244/5247/4855/5252. Prototype counts do not inflate production
 metrics. Exact baseline files and linked covered/zero/null proof govern;
 historical starting values below are not current results.
 
@@ -559,6 +560,34 @@ remains separate. The separately authorized T37.4 production/native
 group follows this integration; HTTP fixtures cannot establish persisted security.
 
 
+## T37.5 reviewed discovery manifest reconciliation
+
+The independent SOL validator integrates exact T37.4 checkpoint `8d7b937` and
+Astra discovery finish `ad61925`, preserving both histories and accepted dev
+ancestry at integration head `b1f2874`. One measured web run passes all 177 cases
+over the same 68 maintained inputs. All per-file counters, hit vectors, totals
+and L/S/F/B floors **5994/5781/4739/5362** equal accepted T37.4. Provider, runtime,
+configuration, inventory and all 24 test fingerprints remain exact. Only the
+`task-discovery.tsx` fingerprint changes; its physical mapping locations move with
+the reviewed title-first markup and class formatting, while map shapes, unit IDs,
+branch types and hit vectors remain unchanged. All other normalized maps match.
+
+A blocking coordinator review approves exact current-web candidate
+`cb65f8fdf2b9badef8350d4b5e4b68f75ebfdfa560cb9f093f95bc221fe914c6` before replacing
+accepted baseline `7e44c96c37036bff1e8aa65a01c1020b664a74ba411d238bcd3c82a2f63ff865`.
+One normal `pnpm unit:web -- --built` gate then passes 177/177 and reproduces the
+measured summary, manifest, full maps and hit vectors byte-for-byte. Seven other
+baselines remain byte-identical; no floor, exclusion, provider or gate changes.
+Source typecheck, affected lint, adopted formatting, handoff/links and whitespace
+checks pass. Native discovery and real persisted cross-surface QA remain separate
+steps; this reconciliation does not establish T37.5 acceptance.
+
+Final T37.5 map accounting retains 28,798 mapped points with 804 null columns,
+versus 803 accepted T37.4. Only discovery branch 79's outer end changes from
+line 732/column 98 to line 733/null after the reviewed markup formatting; no unit,
+hit vector, denominator, provider or gate changes. This is explicit mapping
+precision loss. The [final native/persisted evidence](t37-discovery-ui.md#independent-final-source-qa--2026-11-12)
+and [T37.6 proposal](t37-ui-acceptance.md) retain bounded acceptance status.
 ## T37.4 infrastructure witness correction
 
 The initial [PR48 CI run](https://github.com/Ljrr3045/rielia/actions/runs/43159616732)
@@ -617,6 +646,45 @@ owners and the unchanged type-only zero-unit N/A remain explicit. Controlled HTT
 units do not establish SQL persistence/security or native focus behavior.
 
 
+## T37.5 corrective integration baseline
+
+**Historical checkpoint at `2edecbe`.** Counts and pending status in this section
+describe that source; see the [current publication binding](#final-t3756-publication-binding).
+
+Real merge `01ebdee` preserves historical discovery `def5d5a` and exact corrected
+PR48 source `0c95bfd4`, including the infrastructure-test correction. One actual
+web measure passes **185/185**, retaining 68 maintained inputs and 24 helper/test
+entries. Blocking coordinator approval explicitly authorizes only integrated
+candidate `be0f904d7fb23970e355b2fcda5235131b4df2ecf1ad60e0b1aa37a7f2bf6260`
+before adoption at `2edecbe`; corrected PR48 approval is not reused as permission.
+
+All 68 per-file counters/hit vectors, totals and floors exactly equal corrected
+PR48 `560abd96`: L2336/3847, S2542/4339, F511/1059, B2910/5333 and floors
+**6072/5858/4825/5456**. Only discovery TSX's source fingerprint differs; its map
+IDs/shapes/branch types match with reviewed physical-location differences.
+Null-column debt is measured as **812/28926**, versus corrected PR48 811/28926
+and historical discovery `cb65f8fd` 804/28798. The additional branch-79 outer end
+column loss is retained explicitly, not claimed as identical mapping precision.
+
+Against historical discovery, four corrective source fingerprints and the
+recovery-test fingerprint change: 58 summaries, 64 map sets and 39 hit vectors
+remain exact. No per-file covered count/ratio regresses or uncovered count rises;
+stable-map owners lose no covered unit. Shifted changed-source units are not
+asserted to have one-to-one semantic identities. Both raw reports remain evidence.
+
+One normal `pnpm unit:web -- --built` gate passes 185 and reproduces the measured
+summary, manifest, normalized maps and hits byte-for-byte. Seven other baselines,
+provider/config/runtime/tools, inventory and type-only zero-unit N/A are exact.
+No exclusion, lowered floor, map omission, provider or test-tool change. Affected
+type/lint/format/handoff/diff and mandatory commit hooks pass; documentation-only
+PR48 sync does not change source/test/baseline bytes. The
+[integrated native/persisted guide](t37-discovery-ui.md#corrective-integration-qa--2026-11-12)
+keeps real database effects distinct from finite fixture results and retains
+historical failures/provenance gaps. At `2edecbe`, PR48 and final T37 acceptance
+were pending. [PR48 was subsequently accepted](https://github.com/Ljrr3045/rielia/pull/48#issuecomment-6818479075);
+the [current publication binding](#final-t3756-publication-binding) retains final
+T37 acceptance as pending.
+
 ## T37.4 reviewed round2 modal-focus migration
 
 The selected-task overlap had been omitted from previous native matrices. Ten
@@ -642,3 +710,40 @@ exact. 54 file summaries/65 maps/35 hit vectors are unchanged. Null-column point
 remain 811 with 29,010 total points; implicit arms, changed-location identity limits
 and the same type-only zero-unit N/A remain. No lowered floor/exclusion, historical
 baseline rewrite, backend/policy or persistence/security claim.
+
+
+## T37.5 composed modal-focus baseline
+
+Real merge `92ffcb1` retains exact focus source `57020a0`, historical `e67f332` and
+Astra discovery/CSS. One measure and one normal `--built` gate pass **195**, with
+68 inputs/24 helper-test entries and byte-exact measured summary/manifest/maps/
+hits/LCOV. Coordinator ASK approves exact composed candidate
+`c7e1a52842c14c772260c9598f89a3b129489cb497dd95154166452a74f06ceb` before write.
+All counters/hits/totals/floors equal corrected4 `263d596f`; only discovery source
+fingerprint/physical map positions differ, with identical IDs/shapes/types.
+L/S/F/B are 2387/3861, 2595/4354, 526/1060, 2996/5349; floors
+**6182/5960/4962/5601**. Nullable debt is **812/29010**, versus corrected4
+811/29010 and historical integrated5 812/28926.
+
+Against historical `be0f904d`, three DOM-source/one existing test fingerprints
+change; 54 summaries/65 maps/35 hit vectors are exact. Per-file covered counts/
+ratios do not regress and no stable-map covered unit is lost. New guard debt of
+one uncovered line/two statements/one branch is explicitly accepted, with higher
+effect-owner ratios; it is not asserted that all uncovered counts decrease.
+Changed-source semantic identities remain unmanufactured. Provider/config/tools,
+68/24 selection, type-only zero-unit N/A and seven other baselines stay exact.
+No lowered floor/exclusion or backend build. The [focused composed proof](t37-discovery-ui.md#composed-modal-focus-integration--2026-11-12)
+does not relabel historical database receipts as execution on this source.
+
+
+## Final T37.5/6 publication binding
+
+Accepted PR48 merge `f628fd3` is integrated with source/tests/all eight baselines
+byte-exact to the tested composed checkpoint. Current web candidate remains
+`c7e1a52842c14c772260c9598f89a3b129489cb497dd95154166452a74f06ceb`:195 cases,
+68 inputs/24 helper-test entries, floors6182/5960/4962/5601, nullable812/29010,
+accepted defensive-guard debt and type-only zero-unit N/A. Changed-source unit
+identity limits and all seven other baselines remain. Publication changes docs
+only; no measure/gate/build/browser/backend/PG repeat or baseline/config/provider/
+dependency migration. Final hosted CI checks the actual delivery head; historical
+local reports retain their original source/build identities and qualified limits.

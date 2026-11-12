@@ -40,17 +40,15 @@ accepted in merged [PR #46](https://github.com/Ljrr3045/rielia/pull/46) at
 passed. [T37.3 shell/entry work](t37-shell-entry.md) is accepted in merged
 [PR #47](https://github.com/Ljrr3045/rielia/pull/47#issuecomment-6814793798) at
 `55f0f8d85521998d3d7ed883f387bd3c6cb664f8`. [T37.4 project/task work](t37-project-task-ui.md)
-is published in [Draft PR #48](https://github.com/Ljrr3045/rielia/pull/48).
-Round1 recovery corrections retain all 177 cases and add eight: 185 pass an exact
-reviewed gate. A new source-bound build passes ten focused native journeys and
-nine coordinator-inspected images without a new visual blocker; the initial
-26 journeys/14-image Astra subset remain historical for unchanged surfaces.
-A later pure DOM focus correction addresses the missed selected-task/modal overlap:
-195 cases pass the reviewed higher gate; one new build passes three focused browser
-schedules at 390/768/1280 with four inspected current images. No persisted/backend
-rerun is needed for this targeting-only diff; current-head review and coordinator
-acceptance remain. F1 navigation fill is T37.5-owned; no T37.5
-source is included in this batch.
+is [accepted in PR48](https://github.com/Ljrr3045/rielia/pull/48#issuecomment-6818479075), reviewed `9e9c68bf`, merged `f628fd3`.
+Current-head validate/native round3 pass in 7m42s/2m46s with No Issues Found / Merge
+and all four findings resolved. Its final focus source retains195 cases, three
+focused browser schedules and four coordinator-opened current images; previous
+185/10-native and177/26-native/Astra subsets retain source-qualified history.
+T37.5 discovery/navigation and T37.6 consolidation implementation/bounded QA are
+complete for the final delivery PR, with accepted PR48 ancestry integrated.
+Overall T37 acceptance remains pending that PR's current-head CI/native/ownership
+and coordinator decision.
 T11 has not started; no Astro app is scaffolded.
 Prose or smaller files do not establish universal conformity, production readiness
 or full T01–T35 acceptance.
@@ -65,6 +63,17 @@ owns composition/interaction, architecture owns contracts and permissions, and
 [branding](../handoff/03-branding.en.md) owns voice and proposed identity/tokens.
 Record contradictions for coordinator decisions. Reference products and skills
 cannot expand these authorities.
+
+The [composed QA](t37-discovery-ui.md#composed-modal-focus-integration--2026-11-12)
+retains195 cases at source `fe0bdc9`, one successful production build
+`FS64cq9CNxiMpNAUJK4si`, four focused native cases and five SOL-inspected images.
+Coordinator verifies five hashes, opens two changed PNGs and reuses three identical
+prior opens. Nullable812/29010 and accepted defensive-guard debt stay explicit.
+Historical `2edecbe` 185/11/3 and81b177/16/12/Astra18 evidence, prior failed build,
+runner-provenance and crop/device/AT/browser-zoom/user/provider limits remain
+qualified. Publication reuses exact source/tests/eight baselines with no heavy
+rerun. The [T37.6 consolidation](t37-ui-acceptance.md) records remaining acceptance
+gates and user-scheduled T11, not new ticket authority.
 
 ## Observed baseline for the new work
 

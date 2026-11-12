@@ -16,8 +16,12 @@ while retaining one controller/locale lifetime and canonical transports.
 The [stable contract](../../docs/development/t36-stable-ui-contract.md) records
 current surfaces, version/recovery semantics, CSS consumers and explicit debt.
 T36.1–T36.6 were accepted in [PR #44](https://github.com/Ljrr3045/rielia/pull/44).
-T37 is in progress under the user's 2026-11-11 authorization; no universal
-frontend migration or completed redesign is claimed.
+T37 is in progress under the user's 2026-11-11 authorization. T37.1–4 are
+accepted through [PR48](https://github.com/Ljrr3045/rielia/pull/48#issuecomment-6818479075), merge `f628fd3`. T37.5/6 implementation
+and bounded QA are complete; the [evidence matrix](../../docs/development/t37-ui-acceptance.md)
+keeps final current-head CI/native/ownership/coordinator acceptance pending.
+Historical source-qualified persistence/visual limits and owned debt remain;
+no universal frontend migration, original-ticket acceptance or T11 start is implied.
 
 - Route files compose screens. Feature components render typed public data and
   emit explicit user intents. Keep related components, styles and copy together;

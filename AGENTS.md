@@ -45,13 +45,17 @@ or an Orca installation.
   [PR #44](https://github.com/Ljrr3045/rielia/pull/44), at `92d480d` from reviewed
   `37f2a8c`; the [stable contract](docs/development/t36-stable-ui-contract.md)
   retains explicit owned debt. The user authorized T37 on 2026-11-11
-  America/Caracas. T37 is IN PROGRESS; [frontend-local skill preparation](docs/development/frontend-skills.md)
-  and [Astra's inventory](docs/development/t37-ui-inventory.md) are T37.1
-  preparation. Initial frontend discovery succeeded with a nested archive catalog
-  finding; fresh verification at `325d732` confirms the packaging fix removes
-  that extra entry. Current-head CI/native review and coordinator acceptance
-  remain required. Dispatches explicitly
-  select local top-level skill paths. T11 follows accepted T37.
+  America/Caracas. T37 remains IN PROGRESS. T37.1–4 are accepted in
+  [PR45](https://github.com/Ljrr3045/rielia/pull/45),
+  [PR46](https://github.com/Ljrr3045/rielia/pull/46),
+  [PR47](https://github.com/Ljrr3045/rielia/pull/47) and
+  [PR48](https://github.com/Ljrr3045/rielia/pull/48#issuecomment-6818479075) (merge `f628fd3`). T37.5 discovery/navigation and
+  T37.6 [evidence consolidation](docs/development/t37-ui-acceptance.md) have complete
+  implementation/bounded QA; final delivery current-head CI/native/ownership and
+  coordinator acceptance remain required. The three pinned frontend-local skills
+  retain verified explicit local paths and `325d732` catalog correction; no
+  global/API skill or automatic duplicate-name override. T11 is unstarted and
+  follows accepted T37 plus user scheduling.
   No universal source conformity or full acceptance is implied. Original
   T01–T35 numbering/acceptance and immutable handoff remain unchanged. Future
   T30–T34 landing work uses the [later Astro/narrative direction](docs/development/landing-direction.md);
