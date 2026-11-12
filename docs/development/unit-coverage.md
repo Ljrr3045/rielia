@@ -43,8 +43,9 @@ at corrected PR42 C: 138 web / 380 total cases over 118 inputs. Delivered
 216 API, 7 contracts and 19 isolated prototype cases, 387 total over 124 maintained
 inputs (68 web). Historical PR43 web L/S/F/B floors were 4131/4061/3073/3058
 basis points. The T37.3 migrations raised web floors to 4347/4258/3187/3204. Current
-T37.4 web floors are **5994/5781/4739/5362** after the reviewed recovery and
-PR47 integration migrations below; API floors are 5244/5247/4855/5252. Prototype counts do not inflate production
+T37.4/T37.5 web floors are **6072/5858/4825/5456** after reviewed round1 recovery
+and integrated discovery migrations below; 5994/5781/4739/5362 are historical.
+API floors are 5244/5247/4855/5252. Prototype counts do not inflate production
 metrics. Exact baseline files and linked covered/zero/null proof govern;
 historical starting values below are not current results.
 
@@ -643,3 +644,37 @@ provider change or historical baseline edit. Null-column debt changes from
 803/28,798 to **811/28,926** with the new mapped code; implicit arms, unexecuted
 owners and the unchanged type-only zero-unit N/A remain explicit. Controlled HTTP
 units do not establish SQL persistence/security or native focus behavior.
+
+
+## T37.5 corrective integration baseline
+
+Real merge `01ebdee` preserves historical discovery `def5d5a` and exact corrected
+PR48 source `0c95bfd4`, including the infrastructure-test correction. One actual
+web measure passes **185/185**, retaining 68 maintained inputs and 24 helper/test
+entries. Blocking coordinator approval explicitly authorizes only integrated
+candidate `be0f904d7fb23970e355b2fcda5235131b4df2ecf1ad60e0b1aa37a7f2bf6260`
+before adoption at `2edecbe`; corrected PR48 approval is not reused as permission.
+
+All 68 per-file counters/hit vectors, totals and floors exactly equal corrected
+PR48 `560abd96`: L2336/3847, S2542/4339, F511/1059, B2910/5333 and floors
+**6072/5858/4825/5456**. Only discovery TSX's source fingerprint differs; its map
+IDs/shapes/branch types match with reviewed physical-location differences.
+Null-column debt is measured as **812/28926**, versus corrected PR48 811/28926
+and historical discovery `cb65f8fd` 804/28798. The additional branch-79 outer end
+column loss is retained explicitly, not claimed as identical mapping precision.
+
+Against historical discovery, four corrective source fingerprints and the
+recovery-test fingerprint change: 58 summaries, 64 map sets and 39 hit vectors
+remain exact. No per-file covered count/ratio regresses or uncovered count rises;
+stable-map owners lose no covered unit. Shifted changed-source units are not
+asserted to have one-to-one semantic identities. Both raw reports remain evidence.
+
+One normal `pnpm unit:web -- --built` gate passes 185 and reproduces the measured
+summary, manifest, normalized maps and hits byte-for-byte. Seven other baselines,
+provider/config/runtime/tools, inventory and type-only zero-unit N/A are exact.
+No exclusion, lowered floor, map omission, provider or test-tool change. Affected
+type/lint/format/handoff/diff and mandatory commit hooks pass; documentation-only
+PR48 sync does not change source/test/baseline bytes. The
+[integrated native/persisted guide](t37-discovery-ui.md#corrective-integration-qa--2026-11-12)
+keeps real database effects distinct from finite fixture results and retains
+historical failures/provenance gaps. PR48/final T37 acceptance remains pending.

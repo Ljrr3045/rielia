@@ -4,6 +4,15 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Integrate exact PR48 corrective source/final docs while preserving discovery
+  presentation and both histories. Validate 185 frontend cases with one reviewed
+  measure/gate, floors 6072/5858/4825/5456 and explicit 812/28926 mapping debt.
+- Complete eleven focused integrated native cases and three actual persisted
+  read-recovery/current-authority/version/focus scenarios. Preserve real403/409,
+  zero unintended writes, finite/fault-trigger boundaries, failed diagnostics,
+  source/build binding, crop/provenance limits and owned cleanup. Update the
+  [T37.6 proposal](docs/development/t37-ui-acceptance.md); final acceptance remains open.
+
 - Complete bounded T37.5 local discovery/native and real persisted cross-surface
   QA:177 frontend cases, 16 unique native journeys, 18 Astra-inspected captures and
   12 real PostgreSQL/Nest/Next journeys, with actual one-effect retry, conflict,

@@ -1,6 +1,117 @@
 # T37.5 My tasks and Search presentation checkpoint
 
+## Corrective integration QA — 2026-11-12
+
+Status: **local corrective integration evidence complete; T37 IN PROGRESS**.
+Real merge `01ebdee` preserves checkpoint `def5d5a` and exact corrective PR48
+source `0c95bfd4`, including the infrastructure witness correction. Discovery TSX
+and project CSS remain byte-identical to Astra finish `ad61925`. Baseline commit
+`2edecbe1f07e4f61a1bbb386c5f75714e07e2c68` is the source for production build
+`6xxx6OGVyAMNEdZweKT2u`; its 92-source snapshot SHA-256 is
+`f4fe9d89a90dac3c0c360bb9e5ab0a954dbd9e559202de629805fd050262e9ea`.
+Later real merge `888f0b8` incorporates exact final PR48 documentation head
+`da80fe96` without changing tested source, tests, baseline or compiled assets.
+No production fix was made during this integration QA. PR48 final acceptance and
+accepted dev ancestry still require coordinator delivery before publication.
+
+One actual web measure and one normal gate each pass **185/185**, retaining all
+177 prior cases, 68 inputs and 24 selected helper/test entries. Exact coordinator
+approval precedes adoption of candidate
+`be0f904d7fb23970e355b2fcda5235131b4df2ecf1ad60e0b1aa37a7f2bf6260`.
+L/S/F/B totals are **2336/3847, 2542/4339, 511/1059, 2910/5333** and floors
+**6072/5858/4825/5456**. All per-file counters/hits equal corrected PR48; only the
+discovery source fingerprint and physical locations differ. Nullable columns are
+**812/28926**, versus corrected PR48 811/28926 and historical discovery 804/28798.
+The extra discovery end-column loss is explicit debt. Seven other baselines,
+provider/config/tools/inventory and the type-only zero-unit N/A remain unchanged;
+see the [integrated coverage comparison](unit-coverage.md#t375-corrective-integration-baseline).
+
+Affected type/lint/format/handoff/whitespace checks pass. An initial typecheck and
+production build attempt failed on leftover owned generated dev/prod LayoutProps.
+After removing only the stopped owned development cache, the failed targets pass
+with no source change: **two production build attempts, one completed build**.
+Failed diagnostics remain evidence; the retained production assets match the
+completed build. No install, download, provider/config change or global cleanup.
+
+### Focused native correction checks
+
+**11 journeys pass** on that integrated production build using installed
+Brave 157/Playwright 1.57 and finite public HTTP fixtures. They cover held access
+Refresh success/503, reachable same-modal Cancel/Close/Tab/Escape/retry, hidden
+private fields, focus/inert/body-lock release and late-read cancellation; original
+versioned draft recovery; cross-target denied/restored/missing authority; valid
+focus after fresh capability revocation; once-only confirmed-write recovery and
+pending/unknown checklist controls. A labelled literal `%_literal` discovery smoke
+checks grouped rows, Search versus My tasks selection, detail/Back/focus and zero
+writes. These fixtures do not establish persistence or server authorization.
+
+Ten selected captures sample 390/768/1440 plus 844×390 landscape, light/dark and
+EN/ES, with no sampled viewport overflow. SOL directly opens six changed native
+images. The coordinator verifies all ten hashes, opens five new images and reuses
+five byte-identical images already opened for corrective PR48; no visual blocker
+is found in that bounded review. Historical Astra 18-image/static-layout evidence
+below remains bound to its old source, not newly executed coverage.
+
+### Targeted actual persisted recovery
+
+After production shutdown, one serial maintained helper runs real PostgreSQL
+18.6 migrations, Nest/Better Auth and a separate Next **development** runtime.
+The documented `--large-members` fixture reaches actual paged access revisions;
+the unchanged discovery/collaboration twelve-journey matrix is not repeated.
+Two independent fictional signed browser sessions use private operator endpoints.
+Actual API-created projects, membership changes and SQL readback support all
+**three targeted scenarios**:
+
+| Scenario | Actual outcome and boundary |
+| --- | --- |
+| Access Refresh success/503/cancel | Canonical revoke/regrant changes project version/activity by exactly two. Actual paged responses are HTTP 200 with changed projectVersion. A held actual project read retains one safe modal; one deliberately injected GET 503 recovers via actual retry. Cancel releases focus/body lock and a late actual snapshot cannot remount. Browser mutation POSTs: zero |
+| Cross-target denied draft/current capability/version | Real viewer submit is 403. Return while denied never shows private fields. Restored real membership does not auto-open; deliberate Return restores original version-1 intent. One explicit owner edit commits version 2; stale member save returns real 409, still expectedVersion 1. SQL shows that one owner effect and zero member receipts/duplicate writes |
+| Fresh capability revocation/focus | Actual viewer capability removes the unsent form; focus lands on visible non-inert H1 and body lock clears. Restoring authority does not auto-open; deliberate Return preserves captured version 1. Browser writes and project SQL deltas: zero |
+
+SSE delivery is held for deterministic current-read windows; a synthetic popstate
+invokes existing real hook/session/capability reads. These are labelled triggers,
+not a new SSE proof or canned persistence DTOs. Read 503 is an injected HTTP fault;
+the denial, conflict, API effects and SQL readbacks are real. Known denial followed
+by a deliberate new save gets a new key; unknown exact-key retry remains covered
+by the qualified earlier committed-response-loss proof and finite parity check.
+
+The first private attempt had two fixture assumptions fail: expecting a 409
+instead of the supported paged 200/revision projection, and omitting required
+description in an operator edit (400). Only the private script changed; only the
+two failed scenarios reran. The first passing focus case was retained. Current
+helper and both attempt runner SHA-256 values are recorded before execution;
+earlier persisted runner-SHA-null records below retain their historical limit.
+
+SOL opens all six selected persisted PNGs; the coordinator verifies six hashes
+and opens read503, cross-target denial and real409. No new visual blocker is found.
+At 390×844 the denial/revocation lower actions and conflict lower form remain
+below crop; DOM/API assertions do not make those pixels visually inspected.
+
+### Cleanup and retained limits
+
+The owned helper exits 0 after SIGTERM. Its container, volume and private signed
+state are absent; all four ports and 17 recorded owned PIDs are closed/absent.
+Private helper/browser logs remain 0600 outside the strict safe archive allowlist.
+Owned generated AGENTS/next-env changes are restored and only the stopped owned
+ignored dev cache is removed. Source, tests, baseline and 33 production JS/CSS
+assets remain exact through documentation commits. The heavy lease is released.
+
+Earlier ce607/81b source evidence, failed diagnostics, twelve-journey persisted
+receipts and Astra's old 18-image review remain qualified history. Some earlier
+persisted records have null runner SHA; no retroactive provenance is fabricated.
+Three historical 320 empty-state panels and the earlier mobile literal row are
+below crop. Physical devices/virtual keyboards, manual AT, actual browser-chrome
+zoom, real users/providers/HTTPS/staging and performance remain unperformed.
+T37.6 remains a [consolidation proposal](t37-ui-acceptance.md), with current-head
+CI/native review/ownership, accepted ancestry and coordinator acceptance pending.
+
 ## Independent final-source QA — 2026-11-12
+
+Historical checkpoint: the following 177-case/81b-source evidence predates the
+corrective integration above. Its source/build and then-pending gates describe
+that execution; its images and receipts are not fresh corrective-source runs.
+Some persisted records carry a null runner SHA and cannot establish exact script
+provenance, although their actual API/SQL observations remain retained.
 
 Status: **local functional/native/persisted evidence complete; T37.5 acceptance
 pending the final delivery PR**. This integrates exact T37.4 `8d7b937` and Astra

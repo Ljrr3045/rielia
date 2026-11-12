@@ -21,8 +21,8 @@ T01–T35, future capability, universal source conformity or public launch is im
 | T37.1 skills/inventory | Accepted [PR45](https://github.com/Ljrr3045/rielia/pull/45); pinned frontend-local packages, corrected fresh discovery and explicit local paths in [frontend skills](frontend-skills.md) and [inventory](t37-ui-inventory.md) | No global/backend skill changes or automatic duplicate-name override |
 | T37.2 foundations | Accepted [PR46](https://github.com/Ljrr3045/rielia/pull/46); [tokens/base controls and bounded native evidence](t37-ui-foundations.md) | Proposed brand/name/logo and unperformed device/AT/zoom evidence stay explicit |
 | T37.3 shell/identity/workspaces | Accepted [PR47](https://github.com/Ljrr3045/rielia/pull/47), reviewed corrective `b1f3ddec`, merged `55f0f8d`; [shell guide](t37-shell-entry.md) | Real provider/staging/users remain deferred; actual invitation feedback is also exercised in final persisted QA |
-| T37.4 projects/tasks/recovery | [PR48](https://github.com/Ljrr3045/rielia/pull/48) pending final native/coordinator acceptance; source `ce60740f`, final local `8d7b937`; 177 frontend cases, 26 native journeys, 20 selected images, 14-image Astra subset; [project/task guide](t37-project-task-ui.md) | Coordinator-supplied test-only infrastructure correction `1f101d2e` passes 20 cases against exact CI reports with source/tests/baselines unchanged. Accepted ancestry/current-head gates still need sync; no claim of PR48 acceptance |
-| T37.5 discovery/cross-surface | [Independent QA](t37-discovery-ui.md#independent-final-source-qa--2026-11-12): source `81b5180a`, production build `VWkjHy07GXvUgC1LMg5D8`, 16 unique native cases, 18 actual Astra-inspected images, 12 real persisted journeys and owned cleanup | Finite-DTO production images and actual PostgreSQL/Nest/Next dev evidence are distinct. No blocking visual finding in inspected subset; three 320 message panels remain below crop |
+| T37.4 projects/tasks/recovery | [PR48](https://github.com/Ljrr3045/rielia/pull/48) pending final native/coordinator acceptance; corrective source `0c95bfd4`, final docs `da80fe96`; 185 cases retaining 177, ten focused native journeys and nine coordinator-inspected images; [project/task guide](t37-project-task-ui.md) | Exact infrastructure correction `1f101d2e` included. Earlier ce607/8d7, 26-native/14-Astra subset remains historical for unchanged surfaces. Final accepted dev ancestry/current-head gates remain; no acceptance claim |
+| T37.5 discovery/cross-surface | [Corrective integration QA](t37-discovery-ui.md#corrective-integration-qa--2026-11-12): source `2edecbe`, build `6xxx6OGVyAMNEdZweKT2u`, 185 cases, eleven native and three targeted actual persisted scenarios; real merges preserve def5d5a/0c95/da80 histories and exact Astra presentation | Ten native hashes reviewed: five new coordinator opens plus five identical prior-image reuses. Six persisted hashes reviewed/three opened by coordinator; SOL opens all six. No visual blocker; finite DTO versus actual PostgreSQL/Nest/Next dev distinguished. Old81b 16-native/12-persisted/Astra18 proof remains qualified history |
 | T37.6 consolidation | This evidence matrix, preserved contracts, remaining gaps and T11 handoff are prepared for the same final delivery PR | Proposal only; coordinator acceptance/current-head CI/native feedback/ownership/merge remain required |
 
 ## Preserved contracts and measured limits
@@ -43,20 +43,33 @@ link/success, while Refresh's retained invitation success correctly explains a
 cleared link. Secrets and drafts remain transient, with no archive of signed
 session state/cookies/fixture login URLs.
 
-Current web coverage retains 68 inputs/all 177 cases and L/S/F/B floors
-5994/5781/4739/5362, with totals 2299/3835, 2500/4324, 500/1055, 2845/5305.
-All counters/hit vectors remain exact; only the approved discovery fingerprint
-and physical locations migrate. The [unit guide](unit-coverage.md#t375-reviewed-discovery-manifest-reconciliation)
-records the candidate and nullable precision 804/28798 versus 803 before, plus the
-type-only zero-unit N/A input. Seven other baselines and backend guardrails remain
-unchanged; owned lifecycle/coverage/CSS debt is not declared solved by T37.
+Current web coverage retains 68 inputs, 24 helper/test entries and all **185**
+cases, with L/S/F/B floors **6072/5858/4825/5456** and totals 2336/3847,
+2542/4339, 511/1059, 2910/5333. Integrated counters/hits equal corrected PR48;
+only discovery fingerprint/physical locations differ. The
+[unit guide](unit-coverage.md#t375-corrective-integration-baseline) records exact
+approved candidate `be0f904d`, nullable debt **812/28926** versus corrected PR48
+811/28926 and historical discovery 804/28798, and type-only zero-unit N/A.
+Seven other baselines/backend guardrails remain unchanged; existing debt remains.
+
+Three targeted actual persisted corrections prove current authority, safe read503
+recovery, original version1/actual409 and zero unintended writes. SSE is held for
+these windows; synthetic popstate triggers existing real session/capability reads.
+The earlier actual committed checklist exact-key retry remains source-qualified
+history. Some earlier persisted records have null runner SHA; their exact script
+provenance is unavailable. Both current attempt hashes are recorded, and no
+retroactive hash or extra runtime is used to conceal that historical limit.
+Two production build attempts produce one completed build after stale owned
+generated dev types are removed. The owned helper exits 0, container/volume/state
+are absent, four ports and 17 recorded PIDs are closed; heavy lease released.
 
 ## Evidence gaps with owners
 
 | Gap or limit | Owner and next action |
 | --- | --- |
-| Final source/base ancestry and hosted review | Coordinator syncs accepted PR48/docs/test-only fix, preserves source/baseline proof, freezes final delivery once and verifies all current-head CI/Kilo/ownership surfaces before acceptance |
-| Crop-limited empty states and mobile literal row | SOL native text/API assertions pass; Astra records the exact visually unverified panels/rows. Coordinator accepts this bounded evidence limit; no extra runtime solely for a crop |
+| Final source/base ancestry and hosted review | Exact corrective source and final PR48 docs are locally merged; coordinator supplies accepted dev ancestry, preserves tested bytes, freezes final delivery and verifies current-head CI/Kilo/ownership before acceptance |
+| Crop-limited empty states/mobile controls | Historical three 320 message panels/mobile literal row and current 390×844 denial/revocation lower actions/conflict lower form remain below crop. DOM/API results are separate; no full visual coverage claim or extra runtime solely for crops |
+| Historical persisted runner provenance | Earlier runner-SHA-null records remain explicit; current helper/both runner hashes are captured. No retroactive exact-script claim |
 | Actual browser-chrome 200% zoom, physical devices/OS virtual keyboard, manual AT | SOL/Astra record unperformed checks; later validation uses actual supported controls/devices/AT. Root-font enlargement and synthesized touch remain separately labelled |
 | Real users, providers/HTTPS/staging and scale/performance | User scheduling and applicable later work; no credentials requested now. No usability/performance/WCAG certification is inferred |
 | Existing structural/coverage/CSS debt | Existing owners and [stable contract](t36-stable-ui-contract.md); no arbitrary universal migration or coverage waiver |

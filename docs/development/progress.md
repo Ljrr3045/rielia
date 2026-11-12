@@ -1,6 +1,37 @@
 # Delivery progress and decisions
 
-## 2026-11-12 T37.5 final local QA and T37.6 proposal — EVIDENCE COMPLETE
+## 2026-11-12 T37.5 corrective integration — LOCAL PROOF COMPLETE
+
+Real merges preserve `def5d5a`, exact PR48 corrective source `0c95bfd4` and final
+docs `da80fe96`; Astra discovery/CSS bytes remain exact to `ad61925`. The
+[current guide](t37-discovery-ui.md#corrective-integration-qa--2026-11-12) records
+source `2edecbe`, completed build `6xxx6OGVyAMNEdZweKT2u`, one measured/one normal
+185-case gate, reviewed candidate `be0f904d`, floors 6072/5858/4825/5456 and
+explicit 812/28926 null-column debt. Seven other baselines remain unchanged.
+
+Eleven focused native cases and three actual PostgreSQL/Nest/Better Auth/Next dev
+recovery scenarios pass. Held reads/503/cancel keep safe modal controls; current
+authority gates denied-draft Return, original version1 yields real403/409, and
+revocation restores valid focus. SQL shows only deliberate operator effects and
+zero member write receipts. Read503 and synthetic refresh triggers are labelled;
+two private fixture assumptions are corrected with only failed cases rerun.
+
+SOL opens six native and all six persisted images; coordinator verifies ten
+native/six persisted hashes, opens five new native/three persisted PNGs and reuses
+five identical previously opened corrective images. No visual blocker in that
+subset; mobile lower controls/form remain below crop. One failed build attempt
+from stale owned generated dev types is retained; one completed production build
+and a separate helper-required Next dev runtime are recorded honestly.
+
+Helper exits 0; owned container/volume/private state are absent, four ports and
+17 recorded PIDs are closed. Private logs stay 0600 outside the strict archive
+allowlist; heavy lease released. Historical81b/ce607, failed diagnostics, old
+persisted runner-SHA-null and crop/device/AT/browser-zoom/user/provider/staging
+limits remain explicit. T37 IN PROGRESS: PR48 final acceptance/accepted ancestry,
+final delivery CI/native/ownership and coordinator acceptance remain pending.
+No production edit, publication, dev merge/deploy or T11 work occurs in this QA.
+
+## 2026-11-12 T37.5 final local QA and T37.6 proposal — HISTORICAL EVIDENCE COMPLETE
 
 The [independent final-source QA](t37-discovery-ui.md#independent-final-source-qa--2026-11-12)
 retains all 177 frontend cases and higher floors, passes 16 unique native discovery/
