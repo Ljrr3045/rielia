@@ -1,0 +1,30 @@
+docs/development/t37-discovery-ui.md
+  s_56f9656cb2b0b9::t_030b5913085afc 5,47
+  s_56f9656cb2b0b9::t_8e445533c6760f 3-4,6-44,48
+  s_56f9656cb2b0b9::t_0cb4e5a7b09bb5 49
+docs/development/unit-coverage.md
+  s_56f9656cb2b0b9::t_8e445533c6760f 46-47,707-730
+docs/development/t37-ui-acceptance.md
+  s_56f9656cb2b0b9::t_8e445533c6760f 28-31,33-37,51-52,58
+  s_56f9656cb2b0b9::t_030b5913085afc 24-25,32,49-50,67-68,73,75,84
+CHANGELOG.md
+  s_56f9656cb2b0b9::t_8e445533c6760f 7-13
+docs/development/progress.md
+  s_56f9656cb2b0b9::t_8e445533c6760f 3-17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "993208d4fa046f57f03402f560ff145c6173b78e",
+  "prompts": {},
+  "sessions": {
+    "s_56f9656cb2b0b9": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1ce20-f7eb-7503-839d-9f1b8ffda007",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
