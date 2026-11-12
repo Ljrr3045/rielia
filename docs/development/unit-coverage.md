@@ -41,8 +41,10 @@ Delivered [project interaction owners](project-interactions-extraction.md) end
 at corrected PR42 C: 138 web / 380 total cases over 118 inputs. Delivered
 [workspace owners](workspace-interactions-extraction.md) end at PR43 C: 145 web,
 216 API, 7 contracts and 19 isolated prototype cases, 387 total over 124 maintained
-inputs (68 web). Current web L/S/F/B floors are 4131/4061/3073/3058 basis points;
-API floors are 5244/5247/4855/5252. Prototype counts do not inflate production
+inputs (68 web). Historical PR43 web L/S/F/B floors were 4131/4061/3073/3058
+basis points. The T37.3 migrations raised web floors to 4347/4258/3187/3204. Current
+T37.4 web floors are **5994/5781/4739/5362** after the reviewed recovery and
+PR47 integration migrations below; API floors are 5244/5247/4855/5252. Prototype counts do not inflate production
 metrics. Exact baseline files and linked covered/zero/null proof govern;
 historical starting values below are not current results.
 
@@ -504,3 +506,52 @@ bindings remain historical and do not prove changed T37.4 source. Native QA,
 real PostgreSQL/Nest/Next journeys, current-head CI/native review, accepted PR47
 correction integration with a fresh manifest review, and coordinator acceptance
 remain separate. See the [implementation guide](t37-project-task-ui.md).
+## T37.3 native round1 manifest correction (2026-11-12)
+
+The four valid [PR #47 native findings](t37-shell-entry.md#native-round1-corrective-batch-2026-11-12)
+include transition-specific invitation assertions and the stale current-floors
+sentence above. All ten invitation-feedback cases and all prior cases remain.
+One necessary fresh web measurement passes **155/155** with the same toolchain,
+provider, config, source/test selection and 68 maintained inputs. All 68 per-file
+counters, totals, floors, normalized maps and hit vectors are exactly equal to
+the accepted T37.3 report: L1649/3793, S1818/4269, F335/1051, B1665/5196;
+floors remain **4347/4258/3187/3204** basis points. No added coverage is claimed.
+
+After a blocking exact-candidate approval, only current `web.json` migrates from
+`9e85d482a01099d38b2101cdcef6d83b57ba21722562239bf9c61c67f6f50f16` to
+`2553f6c1aff88cc0e9d3f2372058fa8f041da505c576207768927b1302ebe70f`.
+Its only changes are the identity-view source fingerprint (unused class removed)
+and the existing workspace-feedback test fingerprint (stronger assertions).
+All seven other baselines are byte-identical; no floor, ignore, exclusion,
+inventory, provider/config/tool lock or gate changes. One normal `pnpm unit:web -- --built`
+then passes 155/155 and exactly reproduces measured manifests, counters/maps/hits.
+The normal gate reuses the required contracts-only compilation, not an app build.
+
+Raw provider diagnostics and measured/normal reports are preserved in the
+external corrective report. Null-column points remain 797/28348; the explicit
+zero-unit type-only input and unexecuted-source/lifecycle debt remain. Earlier
+build/source equivalence applies to its dated checkpoint: the two dead style
+hooks change source bytes, so no old build is represented as this new source.
+No new Next/API build, browser/device/AT/persistence/security/provider/staging
+validation ran; current-head CI/native review and coordinator acceptance remain.
+
+
+## T37.4 exact PR47 corrective-head integration
+
+The isolated recovery branch integrates only corrective `b1f3ddec`, preserving
+all 177 cases and its exact strengthened invitation assertions. One full web
+measurement retains all 68 file counters, totals/floors, normalized maps and hit
+vectors exactly: L2299/3835, S2500/4324, F500/1055, B2845/5305; floors remain
+5994/5781/4739/5362. Only identity-view and workspace-feedback test fingerprints
+change. Runtime/compiler/provider/config/tool identities, all 24 test/helper
+inputs, type-only N/A and 803/28798 null-column points remain; seven other
+baselines are byte-identical.
+
+A blocking coordinator review approved exact candidate
+`7e44c96c37036bff1e8aa65a01c1020b664a74ba411d238bcd3c82a2f63ff865`
+before writing current web baseline. One normal gate then passes 177/177 with
+exact measured summary/manifest/maps/hits equality. No gate waiver, coverage gain,
+excluded source, reduced floor or historical baseline change is claimed. This is
+local source integration, not PR47 acceptance; current-head CI/native review and
+coordinator decision remain. The separately authorized T37.4 production/native
+group follows this integration; HTTP fixtures cannot establish persisted security.

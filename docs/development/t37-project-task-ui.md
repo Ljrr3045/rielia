@@ -194,3 +194,21 @@ real persisted/security journeys still need independent current-source QA and
 Astra image review. No new source-build/native binding is claimed. Later accepted
 PR47 corrections must be integrated through a fresh explicit manifest comparison;
 this checkpoint cannot overwrite their corrected source/tests.
+
+
+## Exact PR47 corrective-head integration — 2026-11-12
+
+The coordinator supplied exact clean correction `b1f3ddec` for integration into
+recovery `39c72ebb`. Both histories and all 177 cases are retained, including
+transition-specific invitation assertions. Only additive changelog/progress/unit
+guide conflicts needed resolution; there was no semantic source conflict. The
+removed dead identity hooks remain exact to the corrective commit; T37.4 source
+and Astra presentation are unchanged. No T37.5 source is integrated.
+
+The [reviewed manifest-only migration](unit-coverage.md#t374-exact-pr47-corrective-head-integration)
+and one normal gate pass with identical 177-case counters/maps/hits and unchanged
+higher floors. This source-integration authorization does not accept PR47 or
+replace current-head CI/native review. The next bounded native group uses one
+production build of this exact integrated source; results must be recorded with
+actual build, source/fixture hashes, browser version and cleanup. No new native
+or persisted proof is claimed by this integration entry.

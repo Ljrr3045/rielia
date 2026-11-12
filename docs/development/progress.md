@@ -1,5 +1,18 @@
 # Delivery progress and decisions
 
+## 2026-11-12 T37.4 exact corrective-head integration — LOCAL CHECKPOINT
+
+Recovery `39c72ebb` integrates exact coordinator-supplied PR47 correction
+`b1f3ddec`, preserving both histories, corrected invitation assertions and all
+177 cases. Only additive documentation conflicts required resolution. One measured
+and one normal frontend run pass with exact prior counters/maps/hits and unchanged
+5994/5781/4739/5362 floors, after exact candidate review before current-baseline
+write; seven other baselines remain byte-identical. See the
+[integration evidence](t37-project-task-ui.md#exact-pr47-corrective-head-integration--2026-11-12).
+No PR47/T37 acceptance or T37.5 integration is implied. The authorized one-build
+native group and real persisted QA remain separate from this unit checkpoint.
+
+
 ## 2026-11-12 T37.4 bounded recovery — NORMAL LOCAL GATE PASSED
 
 SOL integrated exact Astra `0721c721` by merge `0b874e3`, retaining the T37.3
@@ -28,6 +41,51 @@ T37.3 local source/coverage checkpoints are not final merged acceptance. Later
 accepted PR47 corrections require their own integration/manifest reconciliation;
 T37.5 source remains separate. No push/PR/Ready/merge/deploy/T37 or T11 closure.
 
+## 2026-11-12 T37.3 PR47 native round1 — CORRECTIVE DRAFT BATCH
+
+The completed [native check](https://github.com/Ljrr3045/rielia/runs/130956869143)
+at `67f5ecb` produced four valid suggestions. SOL removes only the unused identity
+class and overridden notice color, strengthens the existing refresh/selection/
+replacement/expiry assertions, and corrects current coverage-floor wording while
+retaining the historical values. See [all four dispositions and cascade proof](t37-shell-entry.md#native-round1-corrective-batch-2026-11-12).
+No policy/authentication/controller/transport or visual redesign is included.
+
+One full web measurement passes 155/155. Coordinator-approved candidate
+`2553f6c1aff88cc0e9d3f2372058fa8f041da505c576207768927b1302ebe70f`
+updates exactly two current-web manifest fingerprints; all 68 file counters,
+totals/floors/maps/hits remain exact, seven other baselines unchanged.
+One normal web gate then passes 155/155; affected lint/typecheck and applicable
+format/handoff/diff/hooks pass. Failed direct TSX preflights remain diagnostics,
+not passing behavior evidence. Cached frozen installs download nothing; only the
+contracts prerequisite/unit instrumentation run. Heavy lease is released and no
+owned app/browser runtime remains. No application build/browser/Docker rerun.
+
+The earlier 92-source build binding is historical: identity-view/globals.css bytes
+change, with unchanged appearance established by source/cascade proof. The 19
+native checks/23 captures keep their original provenance. Same [PR #47](https://github.com/Ljrr3045/rielia/pull/47)
+stays Draft; current-head CI/native round2, thread resolution and coordinator
+acceptance/merge remain required. No T37.4/T37.5 integration, T37/T11 closure or
+new persisted/security/device/AT/real-zoom/provider/staging evidence is claimed.
+
+## 2026-11-11 T37.3 corrected-source review and consolidated Draft preparation
+
+T37.1 and T37.2 are accepted in merged PRs #45/#46; T37.2 merge is
+`8647f19fc3e359716d64eb649ff0ef79775cdf13`. T37.3 remains IN PROGRESS.
+Coordinator-approved SOL descendant `d3cc5362aa0a0c4439b2d4b91c1c02d1b9b9fbc9`
+is fast-forwarded into `feat/t37-shell-entry`, preserving accepted-base ancestry.
+The normal frontend gate passes 155 cases with exact manifests/counters and raised
+floors; the earlier blocked report remains historical. All 92 compiled-source and
+23 test/helper hashes match tested `9f9f07f`; later publication edits are docs only.
+
+Astra viewed eleven actual corrected captures from build `exXrwr4o43S12E7dSkmxO`:
+compact secondary context/full primary titles, grouped header actions, top-aligned
+role/owner values and truthful confirmed-invite/unavailable-link feedback. No new
+source correction. See the [consolidated evidence and limits](t37-shell-entry.md#corrected-source-visual-review-and-publication-evidence-2026-11-11).
+SOL's 19 native cases/23 captures use HTTP/clipboard fixtures, not persistence or
+security proof. Published in [Draft PR #47](https://github.com/Ljrr3045/rielia/pull/47)
+targeting `dev`; current-head CI/native review and coordinator acceptance remain
+outstanding. The documentation-only publication update preserves tested source. T37.4 breadcrumb/three recovery
+debts, device/AT/real-zoom/provider/staging/persisted-flow limits remain explicit.
 
 
 ## 2026-11-11 T37.3 reviewed web coverage reconciliation — NORMAL LOCAL GATE PASSED

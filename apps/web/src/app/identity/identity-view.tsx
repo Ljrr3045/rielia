@@ -38,7 +38,7 @@ const MESSAGES: Record<NonNullable<IdentityMessage>, { es: string; en: string }>
 
 function Bilingual({ es, en }: { es: string; en: string }) {
   return (
-    <span className="identity-bilingual">
+    <span>
       {es} / <span lang="en">{en}</span>
     </span>
   );

@@ -225,7 +225,12 @@ for (const clear of ['refresh', 'selection', 'replacement', 'expiry']) {
   test(`${clear} clears the generated result without replaying the invitation`, async (t) => {
     const browser = await mountFeedback(t);
     await act(async () => browser.state.screen.run(invite));
-    assert.ok(queryByRole(browser.container, 'textbox'));
+    assert.equal(browser.state.outcome, 'success');
+    assert.ok(getByRole(browser.container, 'status', { name: 'Change saved' }));
+    assert.equal(
+      new URL(getByRole(browser.container, 'textbox').value).hash,
+      `#invitation=${token}`,
+    );
     if (clear === 'refresh') await act(async () => browser.state.refresh());
     if (clear === 'selection') await act(async () => browser.state.selectWorkspace('b'));
     if (clear === 'replacement') {
@@ -240,8 +245,25 @@ for (const clear of ['refresh', 'selection', 'replacement', 'expiry']) {
       assert.equal(browser.state.status, 'signed-out');
     }
     assert.equal(browser.state.invitationLink, null);
-    assert.equal(queryByRole(browser.container, 'textbox'), null);
-    assert.doesNotMatch(browser.container.textContent, /available below once/);
+    if (clear === 'refresh') {
+      assert.equal(browser.state.status, 'ready');
+      assert.equal(browser.state.outcome, 'success');
+      const notice = getByRole(browser.container, 'status', { name: 'Change saved' });
+      assert.match(notice.textContent, /Invitation created\. Its temporary link is not available/);
+      assert.match(notice.textContent, /Refresh does not restore the link/);
+      assert.doesNotMatch(notice.textContent, /available below once/);
+      assert.equal(queryByRole(browser.container, 'textbox'), null);
+    } else {
+      if (clear === 'selection' || clear === 'replacement') {
+        assert.equal(browser.state.status, 'ready');
+        assert.equal(browser.state.outcome, null);
+      }
+      if (clear === 'selection') assert.equal(browser.state.selectedWorkspaceId, 'b');
+      if (clear === 'replacement') assert.equal(browser.state.session.user.id, 'replacement');
+      assert.equal(queryByRole(browser.container, 'status'), null);
+      assert.equal(queryByRole(browser.container, 'alert'), null);
+      assert.equal(browser.container.childElementCount, 0, `${clear} removes the feedback panels`);
+    }
     assert.equal(posts(browser).length, 1);
   });
 }

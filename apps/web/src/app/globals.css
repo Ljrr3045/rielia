@@ -246,7 +246,6 @@ a {
   border: 1px solid var(--danger-text);
   border-radius: var(--radius-control);
   background: var(--danger-soft);
-  color: var(--danger-ink);
 }
 .identity-return {
   margin-bottom: var(--space-3);
