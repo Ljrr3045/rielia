@@ -1,0 +1,365 @@
+scripts/test_frontend_skills.py
+  s_01b68cbb526cdf::t_1028fe8c40fd4e 4,90-101
+  s_01b68cbb526cdf::t_512b0921580c31 1-3,5-89,102-106
+docs/development/development-quality-roadmap.md
+  s_01b68cbb526cdf::t_6052610a3d0439 419-423
+  s_01b68cbb526cdf::t_907069fa3efaf9 24-31,98,100-101,299-302
+docs/development/formatting-inventory.json
+  s_01b68cbb526cdf::t_888e621468d54e 3,68,388,392,518-520,1266-1269
+  s_01b68cbb526cdf::t_d7a7aa5cfe8e8c 1270-1281
+docs/development/frontend-agent.md
+  s_01b68cbb526cdf::t_907069fa3efaf9 48-56
+AGENTS.md
+  s_01b68cbb526cdf::t_907069fa3efaf9 44-50
+format-adoption.json
+  s_01b68cbb526cdf::t_888e621468d54e 66
+apps/web/.agents/skills/impeccable/notices/modern-screenshot-LICENSE
+  s_01b68cbb526cdf::t_0dceda303a46e9 1-9
+apps/web/.agents/skill-installation.json
+  s_01b68cbb526cdf::t_0dceda303a46e9 1-1259
+apps/web/.agents/skills/impeccable/README.md
+  s_01b68cbb526cdf::t_0dceda303a46e9 1-225
+apps/web/.agents/skills/impeccable/LICENSE
+  s_01b68cbb526cdf::t_0dceda303a46e9 1-191
+apps/web/.agents/skills/impeccable/NOTICE.md
+  s_01b68cbb526cdf::t_0dceda303a46e9 1-11
+apps/web/.agents/skills/impeccable/notices/platform-design-skills-LICENSE
+  s_01b68cbb526cdf::t_0dceda303a46e9 1-21
+apps/web/.agents/README.md
+  s_01b68cbb526cdf::t_c7fafea00d99b6 1-31,33-52
+  s_01b68cbb526cdf::t_bbf1eca550b6fa 32
+docs/development/frontend-skills.md
+  s_01b68cbb526cdf::t_c7fafea00d99b6 1-146,152-161
+  s_01b68cbb526cdf::t_314ace7c094a4e 150-151
+  s_01b68cbb526cdf::t_fe8a840cff3dbe 147-149
+apps/web/AGENTS.md
+  s_01b68cbb526cdf::t_907069fa3efaf9 18-20,62-85
+  s_01b68cbb526cdf::t_6052610a3d0439 61
+docs/development/progress.md
+  s_01b68cbb526cdf::t_8bf25fd3b4f416 3-50
+scripts/quality/policy.mjs
+  s_01b68cbb526cdf::t_512b0921580c31 55
+CHANGELOG.md
+  s_01b68cbb526cdf::t_8bf25fd3b4f416 7-21
+scripts/quality/quality.test.mjs
+  s_01b68cbb526cdf::t_512b0921580c31 369-375
+apps/web/.agents/skills/ui-ux-pro-max/upstream/codex.json
+  s_01b68cbb526cdf::t_0dceda303a46e9 1-21
+apps/web/.agents/skills/ui-ux-pro-max/LICENSE
+  s_01b68cbb526cdf::t_0dceda303a46e9 1-21
+apps/web/.agents/skills/ui-ux-pro-max/upstream/SKILL.md
+  s_01b68cbb526cdf::t_0dceda303a46e9 1-217
+docs/development/quality-tooling.md
+  s_01b68cbb526cdf::t_907069fa3efaf9 3-9
+.github/workflows/ci.yml
+  s_01b68cbb526cdf::t_512b0921580c31 33-36
+docs/development/t36-stable-ui-contract.md
+  s_01b68cbb526cdf::t_907069fa3efaf9 3-10
+.prettierignore
+  s_01b68cbb526cdf::t_512b0921580c31 13-16
+eslint.config.mjs
+  s_01b68cbb526cdf::t_512b0921580c31 15-18
+.gitattributes
+  s_01b68cbb526cdf::t_8bf25fd3b4f416 13
+  s_01b68cbb526cdf::t_eba435b415f6ba 5-12
+apps/web/.agents/skills/ui-ux-pro-max/SKILL.md
+  s_01b68cbb526cdf::t_0dceda303a46e9 6-191
+  s_01b68cbb526cdf::t_f4a42e2b9d5889 1-5,192-219
+CONTRIBUTING.md
+  s_01b68cbb526cdf::t_907069fa3efaf9 38-41,136-140,203-207
+scripts/verify-frontend-skills.py
+  s_01b68cbb526cdf::t_512b0921580c31 1-97,99-136
+  s_01b68cbb526cdf::t_7044a66722a88e 98
+apps/web/.agents/skills/frontend-design/LICENSE.txt
+  s_01b68cbb526cdf::t_650a581f907f25 1-177
+apps/web/.agents/skills/frontend-design/SKILL.md
+  s_01b68cbb526cdf::t_eca9ad040372d9 1-71
+apps/web/.agents/skills/impeccable/SKILL.md
+  s_01b68cbb526cdf::t_2c67cd07db27a7 1-86
+apps/web/.agents/skills/impeccable/agents/impeccable_asset_producer.toml
+  s_01b68cbb526cdf::t_6125508a77736e 1-47
+apps/web/.agents/skills/impeccable/agents/impeccable_documenter.toml
+  s_01b68cbb526cdf::t_463c2b5534131e 1-27
+apps/web/.agents/skills/impeccable/agents/impeccable_finish_reviewer.toml
+  s_01b68cbb526cdf::t_a03ff4fd2b5bc5 1-41
+apps/web/.agents/skills/impeccable/agents/impeccable_manual_edit_applier.toml
+  s_01b68cbb526cdf::t_51e19d2f68195a 1-96
+apps/web/.agents/skills/impeccable/agents/openai.yaml
+  s_01b68cbb526cdf::t_7136c681d8a104 1-4
+apps/web/.agents/skills/impeccable/reference/adapt.md
+  s_01b68cbb526cdf::t_fae1d05bc6067c 1-318
+apps/web/.agents/skills/impeccable/reference/adapt.native.md
+  s_01b68cbb526cdf::t_c429061bf28b61 1-58
+apps/web/.agents/skills/impeccable/reference/android.md
+  s_01b68cbb526cdf::t_cdca6baaa3bef1 1-46
+apps/web/.agents/skills/impeccable/reference/animate.md
+  s_01b68cbb526cdf::t_2c455a991b53ff 1-89
+apps/web/.agents/skills/impeccable/reference/audit.md
+  s_01b68cbb526cdf::t_d533d354c3cf03 1-139
+apps/web/.agents/skills/impeccable/reference/audit.native.md
+  s_01b68cbb526cdf::t_f6662ba9ec1b90 1-139
+apps/web/.agents/skills/impeccable/reference/bolder.md
+  s_01b68cbb526cdf::t_1ce4ed7d1c2222 1-33
+apps/web/.agents/skills/impeccable/reference/clarify.md
+  s_01b68cbb526cdf::t_bd5a293b24491d 1-94
+apps/web/.agents/skills/impeccable/reference/colorize.md
+  s_01b68cbb526cdf::t_a14084b7ca54b2 1-86
+apps/web/.agents/skills/impeccable/reference/component-review.md
+  s_01b68cbb526cdf::t_324eff021df9cf 1-63
+apps/web/.agents/skills/impeccable/reference/craft-floor.md
+  s_01b68cbb526cdf::t_a7d23fb0296eab 1-50
+apps/web/.agents/skills/impeccable/reference/craft.md
+  s_01b68cbb526cdf::t_824997fdac34b5 1-5
+apps/web/.agents/skills/impeccable/reference/critique.md
+  s_01b68cbb526cdf::t_2bd693b9a10c77 1-841
+apps/web/.agents/skills/impeccable/reference/degraded/asset-producer.md
+  s_01b68cbb526cdf::t_94c101b4a47722 1-44
+apps/web/.agents/skills/impeccable/reference/degraded/documenter.md
+  s_01b68cbb526cdf::t_853680a5b44625 1-24
+apps/web/.agents/skills/impeccable/reference/degraded/finish-reviewer.md
+  s_01b68cbb526cdf::t_db4695455a40bc 1-38
+apps/web/.agents/skills/impeccable/reference/degraded/manual-edit-applier.md
+  s_01b68cbb526cdf::t_322cf1556a38b9 1-93
+apps/web/.agents/skills/impeccable/reference/delight.md
+  s_01b68cbb526cdf::t_95c67c8e3478cf 1-70
+apps/web/.agents/skills/impeccable/reference/distill.md
+  s_01b68cbb526cdf::t_1e4095fff00678 1-111
+apps/web/.agents/skills/impeccable/reference/doctor.md
+  s_01b68cbb526cdf::t_006464d4c91c83 1-54
+apps/web/.agents/skills/impeccable/reference/document.md
+  s_01b68cbb526cdf::t_84e94b26794f99 1-416
+apps/web/.agents/skills/impeccable/reference/extract.md
+  s_01b68cbb526cdf::t_f94bec6aa8e938 1-69
+apps/web/.agents/skills/impeccable/reference/generate.md
+  s_01b68cbb526cdf::t_a98f3571179ee8 1-101
+apps/web/.agents/skills/impeccable/reference/harden.md
+  s_01b68cbb526cdf::t_9938eb26919bfb 1-362
+apps/web/.agents/skills/impeccable/reference/hooks.md
+  s_01b68cbb526cdf::t_fabe42235379d9 1-120
+apps/web/.agents/skills/impeccable/reference/init.md
+  s_01b68cbb526cdf::t_ef64bc756dc06e 1-133
+apps/web/.agents/skills/impeccable/reference/ios.md
+  s_01b68cbb526cdf::t_4ad4858a6fbedf 1-51
+apps/web/.agents/skills/impeccable/reference/layout.md
+  s_01b68cbb526cdf::t_52e0f46c8330da 1-84
+apps/web/.agents/skills/impeccable/reference/live-setup.md
+  s_01b68cbb526cdf::t_a1d85b59bf9e7e 1-104
+apps/web/.agents/skills/impeccable/reference/live.md
+  s_01b68cbb526cdf::t_e6d6de5acef200 1-329
+apps/web/.agents/skills/impeccable/reference/mode-operate.md
+  s_01b68cbb526cdf::t_9faf8ea17cd1cc 1-21
+apps/web/.agents/skills/impeccable/reference/mode-persuade.md
+  s_01b68cbb526cdf::t_7cc3fa9dbe2837 1-19
+apps/web/.agents/skills/impeccable/reference/mode-read.md
+  s_01b68cbb526cdf::t_40f5d5f6204264 1-21
+apps/web/.agents/skills/impeccable/reference/new-work.md
+  s_01b68cbb526cdf::t_f554472d7ad011 1-152
+apps/web/.agents/skills/impeccable/reference/onboard.md
+  s_01b68cbb526cdf::t_7d257ffa67db6b 1-234
+apps/web/.agents/skills/impeccable/reference/operate.md
+  s_01b68cbb526cdf::t_5b2f1a31a30dfd 1-61
+apps/web/.agents/skills/impeccable/reference/optimize.md
+  s_01b68cbb526cdf::t_f32086428d5ea2 1-257
+apps/web/.agents/skills/impeccable/reference/overdrive.md
+  s_01b68cbb526cdf::t_e470e7b97d6057 1-127
+apps/web/.agents/skills/impeccable/reference/polish.md
+  s_01b68cbb526cdf::t_9a6fc2bb17e3a5 1-105
+apps/web/.agents/skills/impeccable/reference/quieter.md
+  s_01b68cbb526cdf::t_95eee56aa4d625 1-99
+apps/web/.agents/skills/impeccable/reference/region-map.md
+  s_01b68cbb526cdf::t_058adecd404e56 1-26
+apps/web/.agents/skills/impeccable/reference/routing.md
+  s_01b68cbb526cdf::t_72dca02d74db3c 1-24
+apps/web/.agents/skills/impeccable/reference/shape.md
+  s_01b68cbb526cdf::t_b1f10b5aa6b35c 1-59
+apps/web/.agents/skills/impeccable/reference/typeset.md
+  s_01b68cbb526cdf::t_d2e02246ecb50c 1-90
+apps/web/.agents/skills/impeccable/reference/visualize.md
+  s_01b68cbb526cdf::t_58f1581de170d3 1-47
+apps/web/.agents/skills/impeccable/scripts/VERSION
+  s_01b68cbb526cdf::t_877e884409b00b 1
+apps/web/.agents/skills/impeccable/scripts/command-metadata.json
+  s_01b68cbb526cdf::t_f821e311cd524f 1-98
+apps/web/.agents/skills/impeccable/scripts/data/font-index-failures.json
+  s_01b68cbb526cdf::t_c0389b1b01cfe1 1-121
+apps/web/.agents/skills/impeccable/scripts/data/font-index.json
+  s_01b68cbb526cdf::t_dbce38910778d7 1
+apps/web/.agents/skills/impeccable/scripts/engine-checksums.txt
+  s_01b68cbb526cdf::t_9a45b94a3f508c 1-9
+apps/web/.agents/skills/impeccable/scripts/impeccable
+  s_01b68cbb526cdf::t_d9658e3d27c218 1-266
+apps/web/.agents/skills/impeccable/scripts/impeccable.cmd
+  s_01b68cbb526cdf::t_2f5ffbd59e3b05 1-306
+apps/web/.agents/skills/impeccable/scripts/live-browser-dom.js
+  s_01b68cbb526cdf::t_13a7740a7e7e69 1-320
+apps/web/.agents/skills/impeccable/scripts/live-browser-ignores.js
+  s_01b68cbb526cdf::t_b692282895ebc8 1-246
+apps/web/.agents/skills/impeccable/scripts/live-browser-session.js
+  s_01b68cbb526cdf::t_e152de97689eab 1-183
+apps/web/.agents/skills/impeccable/scripts/live-browser.js
+  s_01b68cbb526cdf::t_7bb81b306940bc 1-13857
+apps/web/.agents/skills/impeccable/scripts/modern-screenshot.umd.js
+  s_01b68cbb526cdf::t_41fb05ab5c9175 1-14
+apps/web/.agents/skills/ui-ux-pro-max/data/app-interface.csv
+  s_01b68cbb526cdf::t_21dbeb9bb36def 1-33
+apps/web/.agents/skills/ui-ux-pro-max/data/catalog-summary.json
+  s_01b68cbb526cdf::t_571803911129bd 1-78
+apps/web/.agents/skills/ui-ux-pro-max/data/charts.csv
+  s_01b68cbb526cdf::t_c242dc74ec3ab8 1-26
+apps/web/.agents/skills/ui-ux-pro-max/data/colors.csv
+  s_01b68cbb526cdf::t_e2d9d750d8c838 1-193
+apps/web/.agents/skills/ui-ux-pro-max/data/data-provenance.json
+  s_01b68cbb526cdf::t_8fedc63bebf728 1-1370
+apps/web/.agents/skills/ui-ux-pro-max/data/google-font-licenses.json
+  s_01b68cbb526cdf::t_530d4af42a2031 1-20185
+apps/web/.agents/skills/ui-ux-pro-max/data/google-fonts.csv
+  s_01b68cbb526cdf::t_1e3bd2850753c3 1-1935
+apps/web/.agents/skills/ui-ux-pro-max/data/icons.csv
+  s_01b68cbb526cdf::t_c4e90992b021df 1-106
+apps/web/.agents/skills/ui-ux-pro-max/data/landing.csv
+  s_01b68cbb526cdf::t_228e5d15aa0a8f 1-35
+apps/web/.agents/skills/ui-ux-pro-max/data/motion.csv
+  s_01b68cbb526cdf::t_e19a7db8c91581 1-18
+apps/web/.agents/skills/ui-ux-pro-max/data/phosphor-icons-upstream.json
+  s_01b68cbb526cdf::t_b1f2aedb7bef65 1-32582
+apps/web/.agents/skills/ui-ux-pro-max/data/products.csv
+  s_01b68cbb526cdf::t_d20709151a7d5b 1-193
+apps/web/.agents/skills/ui-ux-pro-max/data/react-performance.csv
+  s_01b68cbb526cdf::t_e354748ccaf7be 1-45
+apps/web/.agents/skills/ui-ux-pro-max/data/stacks/angular.csv
+  s_01b68cbb526cdf::t_50db32268a465f 1-51
+apps/web/.agents/skills/ui-ux-pro-max/data/stacks/astro.csv
+  s_01b68cbb526cdf::t_212b1372e7362f 1-54
+apps/web/.agents/skills/ui-ux-pro-max/data/stacks/avalonia.csv
+  s_01b68cbb526cdf::t_a699d183782476 1-57
+apps/web/.agents/skills/ui-ux-pro-max/data/stacks/flutter.csv
+  s_01b68cbb526cdf::t_34344c428fec55 1-53
+apps/web/.agents/skills/ui-ux-pro-max/data/stacks/html-tailwind.csv
+  s_01b68cbb526cdf::t_2b828143e698a4 1-60
+apps/web/.agents/skills/ui-ux-pro-max/data/stacks/javafx.csv
+  s_01b68cbb526cdf::t_fc6c66a0ccc641 1-76
+apps/web/.agents/skills/ui-ux-pro-max/data/stacks/jetpack-compose.csv
+  s_01b68cbb526cdf::t_a8e53c701eccdf 1-53
+apps/web/.agents/skills/ui-ux-pro-max/data/stacks/laravel.csv
+  s_01b68cbb526cdf::t_092e260e3f6335 1-51
+apps/web/.agents/skills/ui-ux-pro-max/data/stacks/nextjs.csv
+  s_01b68cbb526cdf::t_d8f230b1d9d311 1-62
+apps/web/.agents/skills/ui-ux-pro-max/data/stacks/nuxt-ui.csv
+  s_01b68cbb526cdf::t_d309e9caa0edd1 1-84
+apps/web/.agents/skills/ui-ux-pro-max/data/stacks/nuxtjs.csv
+  s_01b68cbb526cdf::t_f3e9e6fb2cc8b2 1-68
+apps/web/.agents/skills/ui-ux-pro-max/data/stacks/react-native.csv
+  s_01b68cbb526cdf::t_f68c18c74f08eb 1-52
+apps/web/.agents/skills/ui-ux-pro-max/data/stacks/react.csv
+  s_01b68cbb526cdf::t_cb284560716889 1-67
+apps/web/.agents/skills/ui-ux-pro-max/data/stacks/shadcn.csv
+  s_01b68cbb526cdf::t_778c9345c37df4 1-69
+apps/web/.agents/skills/ui-ux-pro-max/data/stacks/svelte.csv
+  s_01b68cbb526cdf::t_0823f104d0eeeb 1-56
+apps/web/.agents/skills/ui-ux-pro-max/data/stacks/swiftui.csv
+  s_01b68cbb526cdf::t_c48bfca9466e95 1-51
+apps/web/.agents/skills/ui-ux-pro-max/data/stacks/threejs.csv
+  s_01b68cbb526cdf::t_e3029a19dfa293 1-54
+apps/web/.agents/skills/ui-ux-pro-max/data/stacks/uno.csv
+  s_01b68cbb526cdf::t_a1980c08d4c952 1-60
+apps/web/.agents/skills/ui-ux-pro-max/data/stacks/uwp.csv
+  s_01b68cbb526cdf::t_aff552ffd0dafc 1-56
+apps/web/.agents/skills/ui-ux-pro-max/data/stacks/vue.csv
+  s_01b68cbb526cdf::t_05e8a6e1dc8d64 1-50
+apps/web/.agents/skills/ui-ux-pro-max/data/stacks/winui.csv
+  s_01b68cbb526cdf::t_607fdd5758fa32 1-60
+apps/web/.agents/skills/ui-ux-pro-max/data/stacks/wpf.csv
+  s_01b68cbb526cdf::t_dfe92d4504390a 1-57
+apps/web/.agents/skills/ui-ux-pro-max/data/styles.csv
+  s_01b68cbb526cdf::t_48d1fa0966351c 1-90
+apps/web/.agents/skills/ui-ux-pro-max/data/typography.csv
+  s_01b68cbb526cdf::t_9da1b77b37ff80 1-75
+apps/web/.agents/skills/ui-ux-pro-max/data/ui-reasoning.csv
+  s_01b68cbb526cdf::t_1180dff2625442 1-193
+apps/web/.agents/skills/ui-ux-pro-max/data/ux-guidelines.csv
+  s_01b68cbb526cdf::t_37fc6942b5c6c8 1-120
+apps/web/.agents/skills/ui-ux-pro-max/references/pro-rules.md
+  s_01b68cbb526cdf::t_82a53889372398 1-117
+apps/web/.agents/skills/ui-ux-pro-max/references/quick-reference.md
+  s_01b68cbb526cdf::t_59fe0eab57d0ea 1-256
+apps/web/.agents/skills/ui-ux-pro-max/scripts/core.py
+  s_01b68cbb526cdf::t_bc29473564bce7 1-1053
+apps/web/.agents/skills/ui-ux-pro-max/scripts/design_system.py
+  s_01b68cbb526cdf::t_ff51f876fe0f0a 1-1668
+apps/web/.agents/skills/ui-ux-pro-max/scripts/reasoning_contract.py
+  s_01b68cbb526cdf::t_840a071875c238 1-123
+apps/web/.agents/skills/ui-ux-pro-max/scripts/search.py
+  s_01b68cbb526cdf::t_43448568be3563 1-201
+apps/web/.agents/skills/ui-ux-pro-max/scripts/tests/fixtures/catalogs/google-api.json
+  s_01b68cbb526cdf::t_7cd13a5bca2cf7 1-36
+apps/web/.agents/skills/ui-ux-pro-max/scripts/tests/fixtures/catalogs/google-catalog.json
+  s_01b68cbb526cdf::t_c06f28f0f33f55 1-33
+apps/web/.agents/skills/ui-ux-pro-max/scripts/tests/fixtures/catalogs/google-existing.csv
+  s_01b68cbb526cdf::t_3766fb5190177d 1-3
+apps/web/.agents/skills/ui-ux-pro-max/scripts/tests/fixtures/catalogs/google-metadata.json
+  s_01b68cbb526cdf::t_4f422a45ea3058 1-17
+apps/web/.agents/skills/ui-ux-pro-max/scripts/tests/fixtures/catalogs/google-overrides.json
+  s_01b68cbb526cdf::t_910aa4e7a8e20a 1-7
+apps/web/.agents/skills/ui-ux-pro-max/scripts/tests/fixtures/catalogs/icons-curated.csv
+  s_01b68cbb526cdf::t_e0113bf0aae2ca 1-4
+apps/web/.agents/skills/ui-ux-pro-max/scripts/tests/fixtures/catalogs/phosphor-core.json
+  s_01b68cbb526cdf::t_f1fb4cbeff4430 1-23
+apps/web/.agents/skills/ui-ux-pro-max/scripts/tests/fixtures/catalogs/phosphor-package.json
+  s_01b68cbb526cdf::t_76d8bc1638b593 1-13
+apps/web/.agents/skills/ui-ux-pro-max/scripts/tests/fixtures/catalogs/phosphor-react-exports.json
+  s_01b68cbb526cdf::t_bb3e41d184c777 1-4
+apps/web/.agents/skills/ui-ux-pro-max/scripts/tests/fixtures/catalogs/phosphor-react-package.json
+  s_01b68cbb526cdf::t_4b4fa3388de0b8 1-5
+apps/web/.agents/skills/ui-ux-pro-max/scripts/tests/fixtures/relevance-baseline.json
+  s_01b68cbb526cdf::t_aa07c48db3db05 1-3366
+apps/web/.agents/skills/ui-ux-pro-max/scripts/tests/fixtures/relevance-cases.json
+  s_01b68cbb526cdf::t_a544be04aec42f 1-111
+apps/web/.agents/skills/ui-ux-pro-max/scripts/tests/fixtures/relevance-thresholds.json
+  s_01b68cbb526cdf::t_bbe923b26c795b 1-100
+apps/web/.agents/skills/ui-ux-pro-max/scripts/tests/test_catalog_refresh.py
+  s_01b68cbb526cdf::t_9d51d61a779780 1-354
+apps/web/.agents/skills/ui-ux-pro-max/scripts/tests/test_catalog_summary_line_endings.py
+  s_01b68cbb526cdf::t_97b12b52cbb329 1-78
+apps/web/.agents/skills/ui-ux-pro-max/scripts/tests/test_core.py
+  s_01b68cbb526cdf::t_4f3df7e89df754 1-343
+apps/web/.agents/skills/ui-ux-pro-max/scripts/tests/test_core_data_quality.py
+  s_01b68cbb526cdf::t_1c4af01c616ee8 1-198
+apps/web/.agents/skills/ui-ux-pro-max/scripts/tests/test_data_contracts.py
+  s_01b68cbb526cdf::t_7d415609f32fcf 1-421
+apps/web/.agents/skills/ui-ux-pro-max/scripts/tests/test_design_system_mode.py
+  s_01b68cbb526cdf::t_324f1cfed574e2 1-233
+apps/web/.agents/skills/ui-ux-pro-max/scripts/tests/test_design_system_stack.py
+  s_01b68cbb526cdf::t_de1a80d3d29d54 1-61
+apps/web/.agents/skills/ui-ux-pro-max/scripts/tests/test_native_desktop_stack_freshness.py
+  s_01b68cbb526cdf::t_6d24afe36aadd1 1-179
+apps/web/.agents/skills/ui-ux-pro-max/scripts/tests/test_relevance_evaluator.py
+  s_01b68cbb526cdf::t_5c7cf1e9f810b0 1-182
+apps/web/.agents/skills/ui-ux-pro-max/scripts/tests/test_rtl_support.py
+  s_01b68cbb526cdf::t_6ac74c437d1824 1-166
+apps/web/.agents/skills/ui-ux-pro-max/scripts/tests/test_skill_script_paths.py
+  s_01b68cbb526cdf::t_949b513d4f58fd 1-82
+apps/web/.agents/skills/ui-ux-pro-max/scripts/tests/test_style_taxonomy.py
+  s_01b68cbb526cdf::t_9c0451352466a2 1-175
+apps/web/.agents/skills/ui-ux-pro-max/scripts/tests/test_text_layout_resilience.py
+  s_01b68cbb526cdf::t_faca74fd8e58ad 1-120
+apps/web/.agents/skills/ui-ux-pro-max/scripts/tests/test_web_stack_freshness.py
+  s_01b68cbb526cdf::t_2f5e8b39596c3e 1-191
+apps/web/.agents/skills/ui-ux-pro-max/scripts/validate_data.py
+  s_01b68cbb526cdf::t_7015491eb48c90 1-1095
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ef621cb5f209d245f77abc7c7cd53b4033efcb54",
+  "prompts": {},
+  "sessions": {
+    "s_01b68cbb526cdf": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1cd17-1e3d-7401-9364-abbd8f7c3f62",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
