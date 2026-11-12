@@ -45,7 +45,9 @@ This records repository changes. No application version has been released.
   after form revocation. Preserve captured versions, local intent and once-only writes.
 - Retain all 177 cases and add eight meaningful schedules; 185 pass one measure
   and one normal gate after exact reviewed migration, raising L/S/F/B floors to
-  6072/5858/4825/5456. New-source native evidence is pending; old captures remain historical.
+  6072/5858/4825/5456. One new production build passes ten focused native journeys;
+  the coordinator inspected nine current images without a new visual blocker.
+  Owned resources are stopped; old matrices remain historical for unchanged surfaces.
 
 - Correct an obsolete CI infrastructure witness now that project/detail screens
   execute in real units; retain actual unexecuted AST denominators and all gate

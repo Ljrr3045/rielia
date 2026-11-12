@@ -42,11 +42,44 @@ tests and seven other baselines remain exact; no per-file coverage regression or
 increase in uncovered units. Mapping debt is now 811 null columns of 28,926, with
 shifted-source mapping limits and the same type-only N/A owner retained.
 
-A new production build and focused native correction schedules remain required
-before the corrective Draft push. The ce607 build, 26 journeys/20 images and
-14-state Astra subset below are **historical evidence for unchanged surfaces**;
-they are not exact-new-source proof or acceptance of these review corrections.
-No T37.5 source or whole-T37 acceptance is included.
+The clean corrective source is `0c95bfd4d855055ed9793f938b4129b113243a19`.
+Exactly one new Next 16.4.3 production build passes: `rnOoBwmdKkBln0mAz1EYY`,
+92-source snapshot `52ade99f20abf051b818db0892626cdfcc74635fba5e31ccb54d07165b4bde53`.
+Ten served client assets match compiled files byte-for-byte. Node 24.22.1/pnpm
+12.15.0 build/units and installed Brave 157.0.8103.39/Playwright 1.57.0 native
+runner are reused without downloads. No application source changes during QA.
+
+**Ten focused native journeys pass with nine selected current images.** Actual
+1440/768/390 widths and 844×390 sample ES/EN and both themes. They prove the held
+access modal remains the same connected dialog through successful and failed
+reads, exposes keyboard-reachable Close/Cancel/retry without private fields, and
+releases inert/body lock after Escape even when a late read completes. A versioned
+settings draft survives read503 and saves deliberately with its original version.
+Cross-target denied Return checks fresh authority, still-denied/revoked/missing
+outcomes and explicit restoration without automatic reopening; revocation restores
+focus to a valid current heading/main. Related confirmed-write/read503 and pending
+versus unknown checklist schedules retain once-only/exact-key behavior.
+
+All nine selected states have no viewport overflow; relevant recovery targets
+measure at least 44px and enabled text contrast at least 5.47:1. The coordinator
+directly opened all nine SHA-verified images at this source/build and found no new
+visual blocker. Revoked390 lower actions extend below its crop; activation/focus
+claims come from separate native receipts. Images do not certify AT/accessibility
+or prove current authority/database isolation. The concise selected-image index
+records actual language/theme/role/data/viewport and per-image fixture/source/build
+hashes; full computed observations and failed diagnostics are retained separately.
+The first group hit private route-timing/localized-label/controlled-checkbox
+assumptions; only affected cases reran on unchanged application source. Both
+browser runs are closed, owned Next PID 8223 stopped and loopback 43885 is absent;
+all recorded browser PIDs are absent and the heavy lease is released.
+
+The ce607 build, 26 journeys/20 images and 14-state Astra subset below remain
+**historical evidence for unchanged surfaces**, not exact-new-source proof. Final
+real PostgreSQL/Nest/Next affected persisted QA follows separately in T37.5/6.
+Actual browser zoom, physical devices/manual AT, users/providers/staging remain
+unperformed/deferred. PR48 stays Draft for the corrective batch; current-head CI,
+coordinator-controlled review and acceptance remain. No T37.5 source, Ready/Kilo
+trigger or whole-T37 acceptance is included.
 
 ## Result and ownership
 

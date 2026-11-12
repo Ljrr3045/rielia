@@ -35,7 +35,8 @@ records the physical-map-only discovery differences and seven unchanged baseline
 Affected type/lint/format/handoff/whitespace checks pass with mandatory hooks.
 Native discovery and actual PostgreSQL/Nest/Next daily-work validation follow under
 the sole runtime lease. No application fix, publication or T37.5 acceptance occurs.
-## 2026-11-12 PR48 round1 recovery corrections — IMPLEMENTED, NATIVE PENDING
+
+## 2026-11-12 PR48 round1 recovery corrections — LOCAL PROOF COMPLETE
 
 Completed native review found three credible recovery gaps; real regressions
 reproduce dialog loss during reads, unavailable cross-target denied-draft Return
@@ -44,8 +45,12 @@ retain the existing modal/feedback/controller owners, hide unverified private
 fields, preserve versioned memory-only intent and require fresh authority.
 One measure and one normal web gate pass 185 cases, retaining 177; exact reviewed
 baseline `560abd96` raises all four floors, with unchanged provider/config/inventory
-and seven other baselines. New-source production/native proof is pending before
-Draft publication; old build/26-native/14-Astra evidence remains historical.
+and seven other baselines. New build `rnOoBwmdKkBln0mAz1EYY` from `0c95bfd4`
+passes ten focused native journeys; nine source-bound images were directly reviewed
+by the coordinator without a new visual blocker. Old build/26-native/14-Astra
+evidence remains historical for unchanged surfaces. Owned browser/runtime resources
+are stopped and the heavy lease released; the corrective push remains Draft with
+current-head CI/native review and coordinator acceptance still required.
 No T37.4 acceptance, T37.5 source, Ready/review trigger or whole-T37 closure.
 
 ## 2026-11-12 PR48 infrastructure witness correction

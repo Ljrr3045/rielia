@@ -144,8 +144,9 @@ Inputs are sorted before execution: all maintained API `src/**/*.ts` except gene
 Prisma, plus `prisma.config.ts`; all web `src/**/*.{ts,tsx}` plus `next.config.ts`;
 and all four contracts sources. Prototype route/library files form a separate scope.
 API bootstrap, worker, migration, unused components, hooks and route wrappers stay
-in the denominator. `projects-view.tsx` and `task-detail.tsx` are named unexecuted
-AST witnesses; the lifecycle follow-up now executes `use-project-tasks.ts`. Prisma config retains its two branch-only counters.
+in the denominator. Actual unexecuted runtime inputs retain AST witnesses;
+`projects-view.tsx`, `task-detail.tsx` and `use-project-tasks.ts` now execute in
+meaningful screen/lifecycle units. Prisma config retains its two branch-only counters.
 
 API JavaScript comes from the real production `tsc` build with legacy decorators
 and constructor metadata. An instrumented-mirror assertion verifies Nest's actual
