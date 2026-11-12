@@ -1,6 +1,6 @@
 # Delivery progress and decisions
 
-## 2026-11-11 T37.1 discovery correction — CHECKPOINT
+## 2026-11-11 T37.1 discovery correction — FRESH CHECK VERIFIED
 
 Draft delivery remains [PR #45](https://github.com/Ljrr3045/rielia/pull/45).
 Fresh Astra high session `01a1cd29-5fae-72b3-97a7-834947304c3d`, task
@@ -20,11 +20,23 @@ Manifest installed paths change while upstream provenance paths/hashes remain
 intact. The adapted notice adds four bytes; 147 files now total 5,930,875 bytes.
 Offline integrity enforces exactly three top-level SKILL.md entries; 13 focused
 failure witnesses pass, including a nested entry listed in a changed manifest.
-Post-fix fresh-session verification is PENDING; later evidence will be integrated
-in this Draft batch. Prior preparation/discovery notes below retain their original
-checkpoint status; full T37 acceptance and app/visual implementation remain open.
+Post-fix task `task_016c2e3ce98c`, fresh Astra high session
+`01a1cd31-7804-7bf3-b496-f9e2282d9352`, verified the actual injected catalog at
+`325d73211b859debecb4e780ee7fefc0433a8172` from cwd `apps/web`, with confirmed
+auto_review/on-request/workspace-write and network access false. The three intended
+local entries remained; no nested upstream/archive candidate appeared. All three
+were explicitly selected and fully read. The global duplicate still coexisted;
+automatic bare-name precedence remains unverified. This read-only session did not
+repeat integrity, resource sampling, vendor execution or app checks. The coordinator
+accepted its bounded evidence for integration.
 
-## 2026-11-11 T37.1 frontend-local skills — TECHNICAL PREPARATION
+The final metadata batch retains the verified resource/catalog payload. Applicable
+format/docs/whitespace/hooks checks apply; no unchanged integrity/app suite is
+rerun for prose. Current-head full CI/native review and coordinator acceptance
+remain required. Prior preparation/discovery notes below are historical checkpoint
+status; full T37 acceptance and app/visual implementation remain open.
+
+## 2026-11-11 T37.1 frontend-local skills — INITIAL PREPARATION CHECKPOINT
 
 Delivery: Draft [PR #45](https://github.com/Ljrr3045/rielia/pull/45).
 Committed package checkpoint: `bc2fb2eaaf0d4d430720b72f8d2e9ea7a004f6f1`.
@@ -1791,7 +1803,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T34 | Marketing launch gate | Verify/enable public marketing launch | T31, T33; T32 if capture active | Not started |
 | T35 | B1 foundations | Principal model, immutable authorship, autonomous memberships | T04; precedes T05/T06/T12 | T35.0 bounded storage/policy/context implemented; full authorship/domain/export/credential integration incomplete |
 | T36 | Quality prerequisite 1 | Engineering standards, compatible tool enforcement and behavior-preserving frontend/backend structure | Existing bounded foundations/contracts; approved NodeAdapter | ACCEPTED bounded T36.1–T36.6 in [PR #44](https://github.com/Ljrr3045/rielia/pull/44), merged `92d480d` from reviewed `37f2a8c`; retained owned debt and [stable contract](t36-stable-ui-contract.md) remain binding |
-| T37 | Quality prerequisite 2 | Coherent redesign of existing UI using stable contracts, brand/UX and reviewed frontend-local skills | Coordinator acceptance of T36 | IN PROGRESS under 2026-11-11 authorization: [PR #45](https://github.com/Ljrr3045/rielia/pull/45) prepares pinned frontend-local skills and integrates Astra research; fresh discovery and later visual/functional acceptance pending; precedes T11 |
+| T37 | Quality prerequisite 2 | Coherent redesign of existing UI using stable contracts, brand/UX and reviewed frontend-local skills | Coordinator acceptance of T36 | IN PROGRESS under 2026-11-11 authorization: [PR #45](https://github.com/Ljrr3045/rielia/pull/45) prepares pinned skills, Astra research and verified fresh catalog/explicit local loading at `325d732`; current-head CI/native/coordinator acceptance and later visual/functional implementation remain pending; precedes T11 |
 
 Public release is one launch followed by continuous updates. Internal B1 readiness,
 private T15 deployment, and marketing T34 do not substitute for T24. B3 follows

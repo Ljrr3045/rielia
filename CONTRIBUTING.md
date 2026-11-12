@@ -135,8 +135,10 @@ See the [commands, adoption inventory, policy and limitations](docs/development/
 Preserve immutable/generated exclusions and avoid broad formatting churn.
 T37.1 prepares the three requested [frontend-local skills](docs/development/frontend-skills.md),
 with pinned complete resources/notices and offline integrity checks. Start fresh
-frontend sessions from `apps/web` and observe local/global duplicate-name
-resolution before claiming discovery. The separate
+frontend sessions from `apps/web` and explicitly select local top-level
+`.agents/skills/<name>/SKILL.md` paths. Fresh catalog discovery and explicit
+loading are verified at `325d732`; global/local copies coexist without a proven
+automatic bare-name winner. The separate
 [Astra inventory](docs/development/t37-ui-inventory.md) and
 [direction proposal](docs/development/t37-design-direction.md) are integrated
 research, not redesign implementation or acceptance.

@@ -74,7 +74,8 @@ discovery and explicit loading succeeded for all three intended local entries;
 the catalog exposed local/global copies without a unique bare-name winner.
 Every T37 dispatch must explicitly select `.agents/skills/<name>/SKILL.md` from
 `apps/web`. A nested archived source was also catalogued and is now renamed
-`SKILL.md.txt`; post-fix fresh verification remains pending. Never claim an
+`SKILL.md.txt`; fresh verification at `325d732` observed only the three intended
+local catalog entries and explicitly loaded them. Never claim an
 automatic override, overwrite global customizations or assume a repository-root
 worker sees descendant skills.
 

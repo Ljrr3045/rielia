@@ -13,7 +13,8 @@ Delivery: Draft [PR #45](https://github.com/Ljrr3045/rielia/pull/45).
   `SKILL.md.txt` with identical source bytes, update provenance/adaptation, and
   enforce exactly three top-level entries with 13 focused integrity witnesses.
   Require explicit local paths rather than claim automatic global precedence;
-  post-fix fresh-session verification remains pending.
+  a second fresh session at `325d732` confirms the three intended local entries
+  remain and the nested/archive candidate is absent.
 
 - Record bounded T36 acceptance in merged PR #44 and the user's 2026-11-11
   authorization to start T37; preserve historical pre-review proposal notes.
@@ -26,7 +27,8 @@ Delivery: Draft [PR #45](https://github.com/Ljrr3045/rielia/pull/45).
 - Integrate the separately prepared [Astra inventory](docs/development/t37-ui-inventory.md)
   and [direction proposal](docs/development/t37-design-direction.md) byte-for-byte,
   with source/base/hash provenance. Research is not redesign acceptance.
-- Document fresh `apps/web` discovery and duplicate-name verification as pending.
+- Record observed fresh `apps/web` discovery and explicit local loading, with
+  local/global coexistence and unverified automatic bare-name precedence.
   Exclude optional engines/hooks/live
   Apply, global changes, backend skills, app redesign, T11, landing and deployment.
   See [installation, evidence and limits](docs/development/frontend-skills.md).

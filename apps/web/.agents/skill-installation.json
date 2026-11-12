@@ -24,7 +24,19 @@
       "result": "Three intended local entries catalogued and explicitly loaded with readable resources; nested archival SKILL.md also catalogued with unresolved relative resources"
     },
     "duplicateNameResolution": "Catalog exposed local and global entries without a unique bare-name winner; future dispatches must explicitly select local top-level SKILL.md paths; global customization unchanged",
-    "postFixFreshFrontendSession": "PENDING"
+    "postFixFreshFrontendSession": {
+      "status": "PASS: observed injected catalog and explicit local loading",
+      "session": "01a1cd31-7804-7bf3-b496-f9e2282d9352",
+      "task": "task_016c2e3ce98c",
+      "head": "325d73211b859debecb4e780ee7fefc0433a8172",
+      "workingDirectory": "apps/web",
+      "effectiveConfiguration": "gpt-6-astra high; auto_review/on-request/workspace-write; network_access false; coordinator-verified exact session",
+      "intendedLocalEntries": 3,
+      "nestedUpstreamCandidate": false,
+      "archivalTextCandidate": false,
+      "globalDuplicate": "Present but not selected; no automatic bare-name precedence claimed",
+      "scope": "Read-only catalog/explicit entry loading; no repeated integrity/resources/vendor/app checks"
+    }
   },
   "skills": [
     {

@@ -16,7 +16,9 @@ that its skill catalog resolves each name to this checkout's `.agents/skills`:
 The initial fresh frontend session catalogued and explicitly loaded all three
 intended local entries, alongside the preexisting global `ui-ux-pro-max` and an
 unintended preserved-source entry. The preserved source is now archived under
-`upstream/SKILL.md.txt`; post-fix fresh-session proof remains pending. Require the
+`upstream/SKILL.md.txt`; a second fresh session at `325d732` observed the three
+intended local entries and no nested/archive candidate, then explicitly loaded
+all three. Require the
 explicit local top-level paths above for T37 dispatches: the catalog exposed both
 local and global copies without a unique bare-name winner. Do not claim an
 automatic override, edit global skills or infer discovery from a root session.

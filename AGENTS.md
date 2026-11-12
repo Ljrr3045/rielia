@@ -48,7 +48,9 @@ or an Orca installation.
   America/Caracas. T37 is IN PROGRESS; [frontend-local skill preparation](docs/development/frontend-skills.md)
   and [Astra's inventory](docs/development/t37-ui-inventory.md) are T37.1
   preparation. Initial frontend discovery succeeded with a nested archive catalog
-  finding; its packaging fix awaits fresh verification. Dispatches explicitly
+  finding; fresh verification at `325d732` confirms the packaging fix removes
+  that extra entry. Current-head CI/native review and coordinator acceptance
+  remain required. Dispatches explicitly
   select local top-level skill paths. T11 follows accepted T37.
   No universal source conformity or full acceptance is implied. Original
   T01–T35 numbering/acceptance and immutable handoff remain unchanged. Future

@@ -4,7 +4,9 @@
 at preparation checkpoint `bc2fb2e` catalogued and explicitly loaded all three
 intended frontend-local skills with readable resources. It also catalogued the
 preserved upstream SKILL.md with unresolved relative resources; that archive is
-now `SKILL.md.txt`, with post-fix fresh verification pending. Dispatches explicitly
+now `SKILL.md.txt`. A second fresh session at `325d732` observed the three intended
+local entries, no nested/archive candidate, and explicitly loaded all three.
+Dispatches explicitly
 select local top-level paths because local/global bare-name precedence was not
 established. See [discovery evidence](frontend-skills.md#safe-discovery-and-precedence).
 The source/base snapshot below remains unchanged.

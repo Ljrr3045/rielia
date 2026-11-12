@@ -3,8 +3,9 @@
 **Discovery addendum — 2026-11-11 America/Caracas:** subsequent fresh-session
 discovery at `bc2fb2e` loaded the three intended local entries, while also exposing
 a preserved-source SKILL.md with broken relative resources. Its non-discoverable
-`SKILL.md.txt` replacement preserves source bytes; post-fix fresh verification is
-pending. Future dispatches explicitly select local top-level paths and do not
+`SKILL.md.txt` replacement preserves source bytes; a second fresh session at
+`325d732` confirms the three intended local entries and no nested/archive candidate,
+with explicit loading. Future dispatches explicitly select local top-level paths and do not
 claim an automatic override of global skills. See
 [discovery evidence](frontend-skills.md#safe-discovery-and-precedence).
 The original research proposal and source/base status below remain unchanged.

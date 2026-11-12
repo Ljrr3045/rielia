@@ -8,7 +8,9 @@ unit/coverage baseline or handoff bytes; T11, landing and new product surfaces a
 excluded. Delivery: Draft [PR #45](https://github.com/Ljrr3045/rielia/pull/45).
 The coordinator also authorized integrating Astra's prepared research documents
 below. Initial fresh discovery succeeded with a nested archive catalog finding;
-post-fix fresh verification and full T37.1 acceptance remain pending.
+post-fix fresh verification now passes at `325d732`. Current-head CI/native review
+and coordinator acceptance of the preparation remain pending; UI implementation
+and full T37 acceptance are separate.
 
 T36.1–T36.6 were accepted in [PR #44](https://github.com/Ljrr3045/rielia/pull/44),
 merged as `92d480dcc3c35f2bc340b99ff2dd084097c7457c` from reviewed head
@@ -142,12 +144,21 @@ The adapted entry's notice points to the archival filename. Integrity now enforc
 exactly the three intended top-level catalog filenames and rejects nested entries
 even if a changed manifest lists them. The package still has 147 files, now
 5,930,875 bytes (four extra bytes in that notice); no original source bytes change.
-**Post-fix fresh-session catalog verification remains pending.**
+**Post-fix fresh-session catalog verification: PASS.** Task `task_016c2e3ce98c`,
+fresh Astra high session `01a1cd31-7804-7bf3-b496-f9e2282d9352`, used cwd
+`apps/web` at `325d73211b859debecb4e780ee7fefc0433a8172`; the coordinator verified
+auto_review/on-request/workspace-write, with network access false. Its actual
+injected catalog contained all three intended local top-level entries and the
+global duplicate, with no nested upstream or archival-text entry. The worker
+explicitly selected and fully read the three local files. It observed the archive
+and metadata without rerunning integrity or resource sampling; the 13 integrity
+witnesses above are SOL evidence. No vendor code or app checks ran in that session.
 
 The [local usage entry](../../apps/web/.agents/README.md) gives the exact read-only
 search command from `apps/web`. No Impeccable binary probe is needed for discovery.
-Post-fix fresh Astra verification remains pending; this preparation batch does
-not close full T37.1 or T37. The initial terminal footer's two unexplained warnings
+The coordinator accepted this bounded discovery evidence for integration. This
+preparation still requires current-head CI/native review and coordinator acceptance;
+it does not implement or close full T37. The initial terminal footer's two unexplained warnings
 are not attributed to skill loading. No backend-session isolation, UI quality,
 accessibility or persistence conclusion follows from discovery.
 

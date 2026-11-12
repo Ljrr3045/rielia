@@ -57,7 +57,8 @@ or treat it as proof of local setup. Independent
 [Astra research](t37-ui-inventory.md) is integrated as prepared-source evidence;
 [design direction](t37-design-direction.md) remains a proposal. Initial fresh
 frontend discovery loaded all three local entries, but also catalogued an archival
-SKILL.md; its renamed-source fix awaits a fresh check. Dispatches must explicitly
+SKILL.md; a second fresh session at `325d732` confirmed its renamed-source fix,
+with three intended local entries and no nested/archive candidate. Dispatches must explicitly
 select local top-level paths because the catalog exposed both local and global
 `ui-ux-pro-max` without an observable unique bare-name winner.
 
