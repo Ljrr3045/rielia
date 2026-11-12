@@ -1,5 +1,35 @@
 # Delivery progress and decisions
 
+## 2026-11-11 T37.1 acceptance and T37.2 visual correction checkpoint
+
+[T37.1 acceptance](https://github.com/Ljrr3045/rielia/pull/45#issuecomment-6811811563) is recorded in merged PR #45 at
+`8065c07895640da228accbd50295d79517d2afa1`, from reviewed
+`57ee1641aa453b6f08d81d29f0b5f294afece35c`. The dated preparation/review entries
+below are historical; their pending claims do not override this decision.
+The foundations branch merges that accepted base with ancestry retained and both
+dated progress entries preserved. No skill resource, dependency or discovery
+work is repeated.
+
+Independent SOL evidence on `d533cc03b364fa31035a1a8398c3ebdaba71b3a1`, build
+`s8nqehi89fhGwKchoacwA`, identifies control-size defects: Move selects compute
+12.8px on mobile, List/Board segments compute 40px high, and task-title links
+measure 18px in lists and about 19.86px on boards. The bounded CSS
+correction explicitly includes `.app .moveStatusSelect` in the existing
+narrow/coarse-pointer 16px rule and gives `.viewSegment` and list/board title
+links the shared 44px minimum. SOL's final baseline report records 13 passing
+route schedules and six focused native checks; Astra inspected 33 retained PNGs.
+No corrected-head browser pass is implied; see the [foundation guide](t37-ui-foundations.md)
+for source binding, observations and evidence limits. SOL must revalidate the
+corrected committed source before consolidated Draft publication. T37.2 and T37
+acceptance, current-head CI/Kilo and later composition work remain open; T11 follows
+accepted T37.
+
+An inherited checklist-pending finding is separately owned by SOL for T37.4:
+unknown-outcome Retry save/Discard and Saving change appear simultaneously.
+Astra inspected both light/dark captures; no CSS concealment or logic change is
+made. Final T37 acceptance must revisit that discriminator/recovery follow-up,
+in addition to the two previously documented project recovery debts.
+
 ## 2026-11-11 T37.2 CSS foundations — IMPLEMENTATION CHECKPOINT
 
 The coordinator authorized isolated presentation work from preparation
@@ -26,6 +56,40 @@ no app server/build/unit/Docker run occurs in this task. SOL owns functional and
 fixture support on the same source, followed by Astra's actual visual inspection.
 Coordinator base sync, publication, current-head CI/Kilo and bounded acceptance
 remain required; T37 stays IN PROGRESS and T11 follows accepted T37.
+
+## 2026-11-11 T37.1 first native review — CORRECTION BATCH
+
+Draft [PR #45](https://github.com/Ljrr3045/rielia/pull/45) addresses all three valid
+findings from completed native check 130892886669 on reviewed
+`ea7916b156bdf1afe9f3758e303b564f59fca618` ([summary](https://github.com/Ljrr3045/rielia/pull/45#issuecomment-6811434465)).
+The check concluded success with one warning and two suggestions, not a clean
+review. The coordinator returned the same PR to Draft before corrections.
+
+- [Roadmap status](https://github.com/Ljrr3045/rielia/pull/45#discussion_r4545050376):
+  the current requested-skills sentence now states verified initial/corrected
+  discovery; dated November 5/6 research snapshots remain unchanged.
+- [Sole transformation](https://github.com/Ljrr3045/rielia/pull/45#discussion_r4545050405):
+  preflight requires exactly one `codex-search-path-v1` entry at
+  `apps/web/.agents/skills/ui-ux-pro-max/SKILL.md`; adaptation checks use that
+  fixed path rather than an entry's opt-in. Three regressions reject a removed
+  marker with adjusted source hash, duplicate markers and a marker moved to the
+  wrong target. All 16 integrity cases and the exact-resource verifier pass.
+- [Evidence reference](https://github.com/Ljrr3045/rielia/pull/45#discussion_r4545050410):
+  a stable link to the integrity section replaces the inaccurate direction/count.
+  Current suite accounting is 16; earlier 13-case checkpoints remain historical.
+
+All 147 resource bytes/modes, source/provenance hashes, pins and installation
+manifest remain unchanged from the reviewed head. Existing fresh catalog evidence
+at `325d732` remains bound to that unchanged skill payload; no discovery session,
+install, vendor code or app/build/PG/Docker suite is repeated. The reviewed manifest
+remains the trust input, not proof of upstream authenticity. The archived source
+digest is distinct from the whole installation manifest digest.
+
+Affected format/docs/whitespace and mandatory hooks apply to this bounded batch.
+Earlier validate 130890009675/run 43129519740 success and completed native
+130892886669 are historical head evidence; this correction needs its own full CI
+and completed native review after coordinator Ready. Thread resolution, Ready,
+review request, acceptance and merge remain coordinator-owned and pending.
 
 ## 2026-11-11 T37.1 discovery correction — FRESH CHECK VERIFIED
 
@@ -1830,7 +1894,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T34 | Marketing launch gate | Verify/enable public marketing launch | T31, T33; T32 if capture active | Not started |
 | T35 | B1 foundations | Principal model, immutable authorship, autonomous memberships | T04; precedes T05/T06/T12 | T35.0 bounded storage/policy/context implemented; full authorship/domain/export/credential integration incomplete |
 | T36 | Quality prerequisite 1 | Engineering standards, compatible tool enforcement and behavior-preserving frontend/backend structure | Existing bounded foundations/contracts; approved NodeAdapter | ACCEPTED bounded T36.1–T36.6 in [PR #44](https://github.com/Ljrr3045/rielia/pull/44), merged `92d480d` from reviewed `37f2a8c`; retained owned debt and [stable contract](t36-stable-ui-contract.md) remain binding |
-| T37 | Quality prerequisite 2 | Coherent redesign of existing UI using stable contracts, brand/UX and reviewed frontend-local skills | Coordinator acceptance of T36 | IN PROGRESS under 2026-11-11 authorization: [PR #45](https://github.com/Ljrr3045/rielia/pull/45) prepares pinned skills, Astra research and verified fresh catalog/explicit local loading at `325d732`; current-head CI/native/coordinator acceptance and later visual/functional implementation remain pending; precedes T11 |
+| T37 | Quality prerequisite 2 | Coherent redesign of existing UI using stable contracts, brand/UX and reviewed frontend-local skills | Coordinator acceptance of T36 | IN PROGRESS: [T37.1 accepted](https://github.com/Ljrr3045/rielia/pull/45#issuecomment-6811811563) at `8065c078` from reviewed `57ee164`; [T37.2 foundations](t37-ui-foundations.md) have source/visual checkpoints and bounded CSS corrections awaiting SOL revalidation, publication and current-head CI/native/coordinator acceptance; precedes T11 |
 
 Public release is one launch followed by continuous updates. Internal B1 readiness,
 private T15 deployment, and marketing T34 do not substitute for T24. B3 follows

@@ -1274,7 +1274,11 @@
 }
 
 .app a.taskTitleButton {
-  display: inline;
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  max-width: 100%;
+  min-width: var(--control-height);
   padding: 0;
   border: 0;
   background: transparent;
@@ -1285,7 +1289,7 @@
   text-align: left;
   text-decoration: none;
   overflow-wrap: anywhere;
-  min-height: 0;
+  min-height: var(--control-height);
 }
 
 .app a.taskTitleButton:hover {
@@ -2484,7 +2488,7 @@
 }
 
 .viewSegment {
-  min-height: 2.5rem;
+  min-height: var(--control-height);
   padding: 0 0.75rem;
   border: 0;
   border-radius: 0.4rem;
@@ -2957,8 +2961,10 @@
 }
 
 .app .cardTitleButton {
-  display: block;
-  min-height: 0;
+  display: flex;
+  align-items: center;
+  min-width: var(--control-height);
+  min-height: var(--control-height);
   padding: 0;
   border: 0;
   background: transparent;
@@ -3859,7 +3865,8 @@
 }
 
 @media (max-width: 47.9375rem), (pointer: coarse) {
-  .app :is(input, select, textarea) {
+  .app :is(input, select, textarea),
+  .app .moveStatusSelect {
     font-size: max(var(--text-base), 16px);
   }
 }

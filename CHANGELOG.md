@@ -6,6 +6,11 @@ This records repository changes. No application version has been released.
 
 ### T37.2 CSS foundations checkpoint
 
+- Follow native visual evidence with bounded corrections: 44px List/Board
+  segments and task-title links, plus 16px Move selects on narrow/coarse-pointer
+  layouts. Merge the
+  accepted T37.1 base with both dated progress entries preserved; corrected-head
+  SOL validation, Draft publication and current-head CI/Kilo remain required.
 - Establish one shared light/dark token source in existing global CSS for
   surfaces, feedback, system typography, spacing, focus and native controls;
   reuse it in workspace/project appearance while retaining selector ancestry.
@@ -15,17 +20,25 @@ This records repository changes. No application version has been released.
   at 44px with the default root font, pending native measurements.
 - Record [source contrast calculations and pending evidence](docs/development/t37-ui-foundations.md).
   CSS-only checkpoint: no TSX/logic/test/dependency/coverage/prototype changes;
-  runtime, native visual, persisted-flow, CI/Kilo and T37.2 acceptance remain open.
-  Publication follows coordinator sequencing after PR #45; T11/landing excluded.
+  initial runtime/visual gaps are followed up in the guide, with exact source
+  binding. Corrected-head validation, persisted-flow limits, CI/Kilo and T37.2
+  acceptance remain open; T11/landing excluded.
 
 ### T37.1 frontend-local skill preparation
 
-Delivery: Draft [PR #45](https://github.com/Ljrr3045/rielia/pull/45).
+Delivery: merged PR #45 at `8065c078` from reviewed `57ee164`; [T37.1 acceptance](https://github.com/Ljrr3045/rielia/pull/45#issuecomment-6811811563).
+Dated preparation/correction evidence below retains its original scope.
+
+- Address the first native review's three findings: correct current roadmap
+  discovery status, enforce the sole transformation's exact marker/path with
+  three additional regressions (16 total), and link directly to integrity evidence.
+  Skill resources/pins and verified discovery payload remain unchanged; this
+  correction completed review before the acceptance linked above.
 
 - Follow-up discovery found all three intended local entries usable, plus an
   unintended catalog entry from the preserved upstream SKILL.md. Archive it as
   `SKILL.md.txt` with identical source bytes, update provenance/adaptation, and
-  enforce exactly three top-level entries with 13 focused integrity witnesses.
+  enforce exactly three top-level entries, covered by the current 16-case suite.
   Require explicit local paths rather than claim automatic global precedence;
   a second fresh session at `325d732` confirms the three intended local entries
   remain and the nested/archive candidate is absent.

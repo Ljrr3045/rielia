@@ -31,9 +31,12 @@ ACCEPTED; explicit debt remains owned. The user authorized starting T37 on
 Fresh frontend catalog discovery and explicit local loading are verified at
 `325d732`, including removal of an unintended archived-source candidate. Bare-name
 local/global precedence is not established; dispatches select explicit local
-top-level paths. Current-head CI/native review and coordinator acceptance remain
-required. T11 has not started.
-No screen is redesigned or Astro app scaffolded by this preparation.
+top-level paths. [T37.1 acceptance](https://github.com/Ljrr3045/rielia/pull/45#issuecomment-6811811563)
+is recorded at merge `8065c07895640da228accbd50295d79517d2afa1` from reviewed
+`57ee1641aa453b6f08d81d29f0b5f294afece35c`. The separate
+[T37.2 foundations checkpoint](t37-ui-foundations.md) and visual corrections
+remain in progress, requiring corrected-head SOL evidence and later CI/native
+review/coordinator acceptance. T11 has not started; no Astro app is scaffolded.
 Prose or smaller files do not establish universal conformity, production readiness
 or full T01–T35 acceptance.
 
@@ -299,10 +302,18 @@ coordination against contracts. Native Kilo remains the selected external review
 | T37.5 | Redesign My tasks/search and complete cross-surface QA | Current-assignee My tasks, project-grouped authorized search, paging/counts and live/reconnecting/offline states use the same records/contracts. Verify complete daily-work journeys and consistency across shell, workspace, project and task surfaces; record remaining gaps |
 | T37.6 | Accept the bounded redesign and hand T11 a coherent foundation | Coordinator reviews actual desktop/mobile behavior, visual/state consistency, a11y and persisted/recovery parity with SOL functional evidence and current-head CI/Kilo. Record any deferred real-device/AT/user evidence explicitly; T37 does not certify the entire future product |
 
+T37.2 native review also identifies an inherited T37.4 collaboration recovery
+follow-up: a pending checklist POST can show unknown-outcome Retry save/Discard
+and Saving change at the same time. SOL owns the discriminator, exact-key retry
+and disabled-action regressions; Astra owns subsequent feedback review. See the
+[bound observation](t37-ui-foundations.md#inherited-collaboration-recovery-follow-up).
+This is separate from CSS fixes and the two earlier project recovery debts;
+final T37 acceptance must revisit it.
+
 ### Requested frontend skills and authority
 
-Current T37.1 technical installation, immutable pins, safety boundaries and pending
-fresh-worker discovery are recorded in [frontend skills](frontend-skills.md).
+Current T37.1 technical installation, immutable pins, safety boundaries and verified
+initial/corrected fresh-worker discovery are recorded in [frontend skills](frontend-skills.md).
 The table below preserves the November 5/6 **research snapshot**: its "Not installed"
 status applied to that documentation PR, before the separate T37.1 installation.
 
@@ -423,6 +434,7 @@ to `dev`. Full remote CI remains obligatory. Only the coordinator transitions Re
 requests paid review, accepts the batch and merges; current-head Kilo remains a
 closed merge gate while Draft. Agreed tooling/units/formatting, scoped
 frontend/backend implementation and bounded T36.6 consolidation are accepted in
-PR #44 with owned debt. T37.1 technical preparation is in progress; its current-head
-CI/native review and coordinator decision remain
-required. T11 follows accepted T37.
+PR #44 with owned debt. T37.1 preparation is accepted in merged PR #45 as linked
+above; T37.2 foundations and visual correction/revalidation are in progress.
+Later current-head CI/native review and coordinator acceptance remain required
+for that implementation. T11 follows accepted T37.

@@ -1,10 +1,12 @@
 # T37.2 CSS foundations checkpoint
 
-Status: **implementation checkpoint; T37.2 acceptance pending**. Prepared on
-2026-11-11 America/Caracas, branch `feat/t37-ui-foundations`, from preparation
-`ea7916b156bdf1afe9f3758e303b564f59fca618`. The coordinator authorized this isolated
-CSS work while PR #45 completes review; its subsequent packaging correction is
-separate. This checkpoint is not published and does not accept T37.1 or T37.
+Status: **CSS correction checkpoint; corrected-head validation and T37.2 acceptance pending**.
+The initial implementation was committed as `d533cc03b364fa31035a1a8398c3ebdaba71b3a1`
+on `feat/t37-ui-foundations`. [T37.1 acceptance](https://github.com/Ljrr3045/rielia/pull/45#issuecomment-6811811563) now governs the preparation:
+PR #45 merged as `8065c07895640da228accbd50295d79517d2afa1` from reviewed
+`57ee1641aa453b6f08d81d29f0b5f294afece35c`. That accepted base is merged with
+ancestry retained; the original dated preparation and research proposals remain
+historical. This implementation is not published and does not accept T37.
 
 ## Scope and ownership
 
@@ -95,7 +97,7 @@ not proof that every native control renders that pair. The retained status and
 priority markers are outside these calculations and still need contextual QA.
 44px/16px values above are CSS intent, not measured targets or device evidence.
 
-## Checkpoint validation and remaining evidence
+## Initial checkpoint validation and then-pending evidence (d533cc0)
 
 One authorized `pnpm install --frozen-lockfile` completed with pnpm 12.15.0,
 Node 24.22.1, 541 reused packages and zero downloads. Lockfiles are unchanged;
@@ -122,3 +124,91 @@ Physical devices, OS keyboard, AT/screen readers, cross-browser certification,
 real OAuth/providers/staging and real-user acceptance are not claimed. The two
 existing project recovery debts remain assigned to T37.4; this stylesheet change
 does not fix or redefine either. No screenshot proves a save or authorization.
+
+## Native visual review and bounded correction (2026-11-11)
+
+SOL ran compiled Next routes from `d533cc03b364fa31035a1a8398c3ebdaba71b3a1`,
+build `s8nqehi89fhGwKchoacwA`, with disposable public HTTP DTO fixtures in a
+headless native Brave 157.0.8103.39 engine. Astra inspected 33 retained PNGs with
+their matching measurements, rather than rebuilding or recreating the fixture.
+The retained `visual-inspected.json` records exact viewed image/measurement hashes.
+SOL's completed baseline index records 13 passing reused route schedules, six
+passing focused native checks and 38 representative scenarios with 123 captures.
+The focused checks cover synthetic touch/keyboard, locale-preserved drafts,
+duplicate submit/exact retry, checkboxes, landscape actions and session reset.
+No unresolved computed variables or whole-page overflow were found in sampled
+metadata; reduced-motion samples report no animation. These are observations of
+that initial source, not evidence for the correction commit. The document root language in some metadata is ES while the product
+subtree visibly uses EN; language below describes the inspected product copy.
+
+| Inspected sample | Observation and limit |
+| --- | --- |
+| Project list, light EN 375 and long dark ES 320 | Controls and long heading wrap inside the viewport. Measurements confirm Move selects at 12.8px and List/Board segments at 40px: both need the CSS correction below. Native select truncation is visible; opening options was SOL's interaction check, not inferred from the PNG |
+| Workspace light EN 1440 / long dark ES 390 | Section headings, member roles, Agent identity and owner context remain readable. Long owner text wraps; the selected native workspace label truncates within its control. No new administration hierarchy is introduced |
+| Workspace invalid dark EN 375 and field-focus light EN 1440 | Visible label, hint, textual error, 2px error border and a separate 3px focus outline. The focused input is 44px high with 16px text; light normal-field text measures 17.853:1 and dark 13.982:1 |
+| Identity dark 390 focus / light 768 sign-out error | Bilingual copy and provider controls wrap, and keyboard focus is visible. `identity-pending-light-768` actually shows the unconfirmed sign-out error, so this image is not counted as pending-state evidence |
+| Project create light EN 390 / edit dark EN 844×390 | Form labels, native controls and full-width mobile actions remain distinct. The landscape top capture alone does not establish reachability; the later scrolled `project-landscape-actions-dark-844` shows Save/Cancel and focused Cancel. SOL separately records keyboard reach and nested Escape |
+| Task-title focus light EN 390 / board dark EN 1440 | The list title focus rectangle is only 18px high; board title bounds are about 19.86px. Rows are not clickable. Both native links receive the bounded target correction below |
+| Project board dark ES 768, light EN 1024, dark EN 1440 | Cards retain status labels, native Move alternatives and local horizontal board scrolling, without whole-page overflow in the sampled measurements. Existing shell/card composition is retained for later T37 work |
+| Project edit light ES 390 hover/disabled | Enabled hover uses white on `#115e59` at 7.584:1; disabled fields/buttons use `#475569` on `#f1f5f9` at 6.917:1 and opacity 1. Saving text remains explicit, with no false success message |
+| Project dark EN 375 pending / workspace light EN 390 pending / workspace dark EN 768 loading | Mutation messages retain blue information treatment and operation text; read loading uses a neutral dashed panel. Pending is visually distinguishable from success and read loading |
+| Primary links, dark EN project 375 hover / light ES workspace 320 focus | Intended on-action text is preserved. Dark hover measures 9.590:1; light hover-plus-focus measures 7.584:1. The 3px focus outline and 2px offset are visible; contrast against the adjacent panel matters, not only against the button fill |
+| Checklist light/dark EN 390 | Native checked/unchecked marks, textual item labels and focus remain visible. Glyph bounds are about 19.19px, with actual associated labels measured at 44×44px; a glyph alone is not its hit area |
+| Technical home light 1440 / dark 375 and prototype light 320 / dark 1440 | Readable initial viewport, theme and isolated demo presentation remain. This is a sampled global-regression inspection, not exhaustive visual equivalence. Prototype has preexisting smaller controls and remains excluded from this control migration |
+
+These computed text ratios use SOL's observed foreground/effective background
+colors. Generic border-to-own-fill and outline-to-own-fill numbers in raw control
+metadata are not treated as adjacent-surface contrast failures or certification.
+SOL's focused adjacent-surface measurements give 6.70:1 light and 8.11:1 dark
+for the 3px outline with 2px gap. Focus visibility was inspected in the PNGs;
+the authored solid-pair calculations
+above remain separately labelled. Native popup rendering, physical touch and AT
+are not established by these captures.
+
+### Bounded presentation corrections
+
+1. `.viewSegment` uses `min-height: var(--control-height)` instead of `2.5rem`,
+   raising the default minimum from 40px to 44px without changing segment state.
+   The observed class is `viewSegment`; early dispatch wording `viewButton`
+   referred to the same List/Board controls.
+2. `.app .moveStatusSelect` explicitly joins the existing narrow/coarse-pointer
+   media rule with `font-size: max(var(--text-base), 16px)`. Its two-class
+   selector previously outranked the generic input rule; matching specificity
+   later in the stylesheet resolves that exception while retaining desktop
+   density, menu ancestry, native behavior and breakpoints.
+3. `.app a.taskTitleButton` and `.app .cardTitleButton` use a centered flex box
+   with the shared 44px minimum height and width. List titles remain content-width
+   within their parent's available width; board titles retain their full width.
+   Existing wrapping, typography, focus treatment, native links and handlers stay
+   intact. The discovery title's existing full-width 44px override is retained.
+
+SOL must remeasure these selectors and the affected wrapping/focus/Move behavior
+on the corrected commit, including short and long list/board titles and discovery
+links. No after-correction browser result is claimed here. No app build, server,
+Docker, installation or functional harness was run in Astra's review task.
+Initial fixture-selector/DTO failures were corrected by SOL at the HTTP test
+boundary and are not recorded as product bugs; the completed report selects the
+corrected evidence. Neither fixture checks nor screenshots prove persistence.
+
+### Inherited collaboration recovery follow-up
+
+SOL separately reproduced simultaneous **“The outcome could not be confirmed”**
+with Retry save/Discard and **“Saving change…”** while a checklist POST is still
+pending. Astra inspected both `project-checklist-pending-light-390` and
+`project-checklist-pending-dark-390`: both contradictory panels are visible.
+The coordinator identifies the responsible `task-collaboration.tsx` source as
+unchanged from preparation `ea7916b`; it is not a CSS regression.
+
+This is an explicit **SOL-owned T37.4 collaboration recovery** follow-up, in
+addition to the two previously recorded project recovery debts. SOL must define
+and test the pending-versus-unknown discriminator, exact-key retry and disabled
+actions; Astra then reviews the resulting feedback. Do not conceal the conflict
+with CSS or infer that a color change resolves it. Final T37 acceptance must
+revisit this finding. No logic or runtime test is changed in this batch.
+
+Actual 200% browser-chrome zoom remains unperformed in SOL's headless engine;
+viewport resizing or CSS/page scale is not substituted. Width samples include
+320/375/390/768/1024/1440 and short 844×390 landscape, with browser preference
+emulation for theme/reduced motion. Physical devices, virtual keyboard, manual
+AT, real-user/provider/staging evidence and DB/security proof remain deferred.
+SOL's route/HTTP fixtures are distinct from real persisted-flow evidence.
