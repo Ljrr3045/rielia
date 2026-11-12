@@ -4,6 +4,19 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+### T37.5 integrated presentation finish
+
+- Merge the exact discovery presentation checkpoint with tested T37.4 recovery
+  source, preserving histories and title-first project-grouped results.
+- Reserve sidebar selected fill/foreground for the existing active classes;
+  keep My tasks primary emphasis through title weight without overriding active
+  hover. Route selection, aria-current, focus and all behavior remain unchanged.
+- Record [source comparison and pending validation](docs/development/t37-discovery-ui.md#2026-11-12-integrated-presentation-finish--source-checkpoint).
+  PR #47 is accepted/merged at `55f0f8d`; T37.4 publication/review and final accepted
+  ancestry integration remain pending. Earlier checkpoint statements below retain
+  their historical status. Prior native images are before-change references;
+  source checks/hooks are not rendered, persisted or complete T37.5 acceptance.
+
 - Integrate exact PR47 corrective source into T37.4 recovery, retain all 177 cases
   and corrected invitation assertions, and reconcile only two current-web
   fingerprints after measured review. One normal gate reproduces every counter,
@@ -28,6 +41,17 @@ This records repository changes. No application version has been released.
 - Preserve exact Astra presentation and T37.3 invitation/token behavior. No new
   frontend production build, browser/runtime, publication or T37 acceptance claim.
 
+### T37.5 My tasks and Search presentation checkpoint
+
+- Make the existing query label visible, emphasize Search and separate secondary
+  filters; retain scope, literal search and all authorized criteria.
+- Strengthen project headings and canonical loaded/total summaries, use title-first
+  discovery rows and give pagination/context-limit guidance distinct spacing.
+- Preserve shared T37.4 styling, all state/permission/URL/recovery rules and live
+  connection/freshness distinctions. No copy, logic, test or dependency changes.
+- Record [source-only evidence and integration gates](docs/development/t37-discovery-ui.md).
+  SOL manifest migration, functional/native/persisted QA, Astra rendered review,
+  T37.4 acceptance and later publication remain pending; T37.5 is not accepted.
 
 ### T37.4 project and task presentation checkpoint
 

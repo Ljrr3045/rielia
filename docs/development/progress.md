@@ -1,5 +1,27 @@
 # Delivery progress and decisions
 
+## 2026-11-12 T37.5 integrated presentation finish — SOURCE CHECKPOINT
+
+Merge exact discovery `abf343e84a82503583805a1da6397fa841b2f30e` into tested T37.4
+source `ce60740f1a58942add205679b348cf5e78bfe785`, preserving both histories and
+resolving only additive documentation conflicts. Retain title-first grouped
+results and all discovery semantics. The explicitly authorized shared-sidebar F1
+fix removes unconditional My tasks fill/color overrides and keeps primary title
+weight; existing active classes alone control selected colors, including hover.
+No navigation condition, aria-current, handler or capability changes.
+
+[PR #47](https://github.com/Ljrr3045/rielia/pull/47) is accepted/merged at
+`55f0f8d85521998d3d7ed883f387bd3c6cb664f8`; earlier dated pending statements below
+are historical. T37.4 current-head review/publication remains pending; final
+accepted ancestry/docs must be integrated by SOL before T37.5 publication.
+See the [finish decision and validation gates](t37-discovery-ui.md#2026-11-12-integrated-presentation-finish--source-checkpoint).
+Only source comparison, affected formatting, handoff/links, whitespace and hooks
+run here using existing dependencies. Prior ce607 native images are before-change
+references; no new unit/build/browser/persisted/visual acceptance is claimed.
+SOL current-source manifest/gate, selection/hover/focus/theme/language/narrow checks,
+grouped paging/count/detail-return journeys and final Astra image review remain.
+No T37.5/T37 closure, T11/landing/policy/prototype expansion or publication.
+
 ## 2026-11-12 T37.4 exact corrective-head integration — LOCAL CHECKPOINT
 
 Recovery `39c72ebb` integrates exact coordinator-supplied PR47 correction
@@ -118,6 +140,24 @@ checkpoint changed no baseline or threshold. The later reviewed migration above
 resolves that local blocker. Later persisted QA, publication/current-head
 CI/native review and coordinator acceptance remain open. Runtime is stopped;
 no push/PR/Ready/merge/deploy or T37/T11 acceptance claim.
+
+## 2026-11-11 T37.5 discovery presentation — SOURCE CHECKPOINT
+
+Isolated `feat/t37-discovery-ui` starts at T37.4 presentation `0721c721` with
+coordinator authorization while SOL owns recovery work separately. T37.3 PR #47
+remains Draft/CI, and T37.4 logic/QA/acceptance remain open. The
+[discovery guide](t37-discovery-ui.md) records visible query labeling, separated
+secondary filters, project grouping, title-first result rows, canonical summary
+emphasis and deliberate continuation/context-limit presentation.
+
+Only discovery JSX/classes and discovery-scoped CSS change; shared T37.4 source,
+all logic/conditions and existing localized meanings remain. Existing dependencies
+support targeted formatting, handoff/diff and mandatory hooks; no install, build,
+browser, test, coverage or new image inspection occurs. SOL must explicitly migrate
+current-web source fingerprints and run the normal scoped gate on the integrated
+source, then functional/native/persisted cross-surface QA; Astra actual-image review,
+CI/native Kilo and coordinator acceptance follow. No publication or T37.5 completion
+claim; T37 remains IN PROGRESS.
 ## 2026-11-11 T37.4 project/task presentation — IMPLEMENTATION CHECKPOINT
 
 The coordinator authorized isolated `feat/t37-project-task-ui` from accepted
