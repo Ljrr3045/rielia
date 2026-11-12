@@ -1,0 +1,39 @@
+docs/development/unit-coverage.md
+  s_56f9656cb2b0b9::t_55e49723f75156 589-644
+CHANGELOG.md
+  s_56f9656cb2b0b9::t_55e49723f75156 40,42-53,97-112
+scripts/unit/infrastructure.test.mjs
+  s_56f9656cb2b0b9::t_55e49723f75156 77-78,80-100
+docs/development/progress.md
+  s_56f9656cb2b0b9::t_55e49723f75156 38-87
+apps/web/src/app/projects/use-project-content-forms.ts
+  s_56f9656cb2b0b9::t_55e49723f75156 270-275
+docs/development/t37-project-task-ui.md
+  s_56f9656cb2b0b9::t_55e49723f75156 1-53,55-68,72-93,97-120,124-198
+apps/web/src/app/projects/use-project-interaction-effects.ts
+  s_56f9656cb2b0b9::t_55e49723f75156 229-233,235,241-249,373-381
+apps/web/test/unit/project-recovery.test.mjs
+  s_56f9656cb2b0b9::t_55e49723f75156 318-323,496-670
+apps/web/src/app/projects/project-recovery.tsx
+  s_56f9656cb2b0b9::t_55e49723f75156 518-520,522-527
+docs/development/development-quality-roadmap.md
+  s_56f9656cb2b0b9::t_55e49723f75156 40-47,321-331,458-462
+apps/web/src/app/projects/project-content-dialog.tsx
+  s_56f9656cb2b0b9::t_55e49723f75156 22,124,128-130,155-247,249-252,255-257,259-316
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "01ebdee605aae9ba92a9bc1471ce80d80d0c3586",
+  "prompts": {},
+  "sessions": {
+    "s_56f9656cb2b0b9": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1ce20-f7eb-7503-839d-9f1b8ffda007",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
