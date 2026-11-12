@@ -5,12 +5,13 @@ technical installation/integrity/documentation batch. Astra high owns independen
 surface/state inventory, reference research and visual decisions in a separate
 checkout. This package changes no application behavior, dependencies, permissions,
 unit/coverage baseline or handoff bytes; T11, landing and new product surfaces are
-excluded. Delivery: Draft [PR #45](https://github.com/Ljrr3045/rielia/pull/45).
+excluded. Delivery: merged PR #45 at `8065c07895640da228accbd50295d79517d2afa1`
+from reviewed `57ee1641aa453b6f08d81d29f0b5f294afece35c`; [T37.1 acceptance](https://github.com/Ljrr3045/rielia/pull/45#issuecomment-6811811563).
 The coordinator also authorized integrating Astra's prepared research documents
 below. Initial fresh discovery succeeded with a nested archive catalog finding;
-post-fix fresh verification now passes at `325d732`. Current-head CI/native review
-and coordinator acceptance of the preparation remain pending; UI implementation
-and full T37 acceptance are separate.
+post-fix fresh verification passes at `325d732`. The acceptance above supersedes
+dated pending preparation notes below. UI implementation and full T37 acceptance
+remain separate; no new discovery, vendor execution or install is implied.
 
 T36.1–T36.6 were accepted in [PR #44](https://github.com/Ljrr3045/rielia/pull/44),
 merged as `92d480dcc3c35f2bc340b99ff2dd084097c7457c` from reviewed head

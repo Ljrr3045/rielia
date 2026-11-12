@@ -4,15 +4,39 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+### T37.2 CSS foundations checkpoint
+
+Delivery: [Draft PR #46](https://github.com/Ljrr3045/rielia/pull/46), targeting `dev`; current-head CI/native review and acceptance remain pending.
+
+- Follow native visual evidence with bounded corrections: 44px List/Board
+  segments and task-title links, plus 16px Move selects on narrow/coarse-pointer
+  layouts. Merge the
+  accepted T37.1 base with both dated progress entries preserved; corrected-head
+  SOL validation is recorded on `999aba7`, with nine corrected PNGs reviewed;
+  current-head CI/Kilo and coordinator acceptance remain required.
+- Establish one shared light/dark token source in existing global CSS for
+  surfaces, feedback, system typography, spacing, focus and native controls;
+  reuse it in workspace/project appearance while retaining selector ancestry.
+- Align button/link variants, visible invalid fields, readable disabled controls
+  and neutral busy read panels; retain existing operation feedback and semantics.
+  Keep narrow/coarse-pointer form text at least 16px and standard control height
+  at 44px with the default root font, pending native measurements.
+- Record [source contrast calculations and pending evidence](docs/development/t37-ui-foundations.md).
+  CSS-only checkpoint: no TSX/logic/test/dependency/coverage/prototype changes;
+  initial runtime/visual gaps are followed up in the guide, with exact source
+  binding. Persisted-flow limits, CI/Kilo and T37.2
+  acceptance remain open; T11/landing excluded.
+
 ### T37.1 frontend-local skill preparation
 
-Delivery: Draft [PR #45](https://github.com/Ljrr3045/rielia/pull/45).
+Delivery: merged PR #45 at `8065c078` from reviewed `57ee164`; [T37.1 acceptance](https://github.com/Ljrr3045/rielia/pull/45#issuecomment-6811811563).
+Dated preparation/correction evidence below retains its original scope.
 
 - Address the first native review's three findings: correct current roadmap
   discovery status, enforce the sole transformation's exact marker/path with
   three additional regressions (16 total), and link directly to integrity evidence.
   Skill resources/pins and verified discovery payload remain unchanged; this
-  correction still requires its own current-head CI/native review.
+  correction completed review before the acceptance linked above.
 
 - Follow-up discovery found all three intended local entries usable, plus an
   unintended catalog entry from the preserved upstream SKILL.md. Archive it as
