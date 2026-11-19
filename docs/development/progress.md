@@ -38,6 +38,19 @@ cleaned. The earlier zero-high audit and original source-qualified QA remain
 historical; hosted CI/native/coordinator acceptance on Draft PR50 is still pending,
 and no T11.2 implementation or full T11 acceptance is implied.
 
+At `fe6c4e4`, [validate](https://github.com/Ljrr3045/rielia/actions/runs/44631698229/job/135939710048)
+and native [Kilo round 1](https://github.com/Ljrr3045/rielia/runs/135944613080)
+passed, with one [operational suggestion](https://github.com/Ljrr3045/rielia/pull/50#discussion_r4636257121)
+and Address before merge. The coordinator accepted the reader-availability
+runbook gap and returned PR50 to Draft. This correction changes only the sprint
+guide, progress and changelog: an explicit maintenance window drains readers,
+writers and long transactions, uses the existing one-shot and keeps dependents
+stopped on failure until migration/readiness succeeds. Atomic fully validated
+SQL, application/dependency/test bytes and all eight baselines remain unchanged;
+no online/zero-downtime or large-table-duration claim is added. Only prose checks
+and hooks run locally. Prior QA remains source-qualified; new-head hosted/native
+acceptance and coordinator thread disposition remain pending. T11 stays IN PROGRESS.
+
 ## 2026-11-12 PR49 round1 documentation correction — DRAFT
 
 Native check `131068806214` completed SUCCESS in 16m41s with one valid

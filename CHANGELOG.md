@@ -4,6 +4,12 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Address PR50's [round 1 reader-locking suggestion](https://github.com/Ljrr3045/rielia/pull/50#discussion_r4636257121)
+  with a documentation-only maintenance window for readers/writers and long
+  transactions, existing one-shot recovery and readiness before resuming traffic.
+  Preserve atomic fully validated SQL, source/dependencies/tests and eight baselines;
+  no online migration claim. Prose checks/hooks run; new-head hosted/native and
+  coordinator acceptance remain pending on the same Draft PR50.
 - Correct PR50's high audit failure for
   [GHSA-7589-6fvf-x4pw](https://github.com/advisories/GHSA-7589-6fvf-x4pw) with the
   coordinator-approved parent-scoped `@prisma/config>effect: 3.22.1` override and

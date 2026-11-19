@@ -63,8 +63,33 @@ policy fences. Older migrations remain exact. Backfill adds defaults without
 updating legacy/archived rows or their versions. Sprint writes advance only
 `sprintRevision`, preserving Project content version, Task revision and allocation.
 Setting edits advance Project version. Task wire payloads/replay remain unchanged.
-Only the explicit migration one-shot migrates; quiesce writers before applying
-the table-locking migration to a running installation.
+T11.1's current fixture requires a maintenance window. Its `ADD COLUMN`/`CHECK`
+DDL on `project` and `activity_event` acquires `ACCESS EXCLUSIVE` locks retained
+until transaction end; the initial `SHARE ROW EXCLUSIVE` fence does not cap later
+locks. `ADD FOREIGN KEY` alone uses `SHARE ROW EXCLUSIVE`. Full existing-row
+constraint validation can prolong reader blocking; large-table duration and
+online/zero-downtime availability have not been measured or accepted here.
+See PostgreSQL 18 [ALTER TABLE](https://www.postgresql.org/docs/18/sql-altertable.html)
+and [locking](https://www.postgresql.org/docs/18/explicit-locking.html).
+
+Use the existing [local-runtime runbook](local-runtime.md#service-and-readiness-contract):
+
+1. Stop and drain both reader and writer traffic to the affected tables,
+   including application/worker and direct database clients. Drain long-lived
+   transactions before migration; stopping writers alone does not preserve reads.
+2. With PostgreSQL healthy and traffic still stopped, run only the existing
+   explicit migration one-shot from that runbook. API/worker processes do not migrate.
+3. On failure, keep dependent application/worker traffic stopped. Follow the
+   existing database/migration-history diagnostics, investigate the cause and rerun
+   the one-shot before starting dependents; do not hide failure with a reset or retry loop.
+4. After successful migration, bring dependents back with traffic still drained.
+   Resume traffic only after the existing API readiness and worker health checks pass.
+
+The SQL remains atomic and fully validated. `NOT VALID` followed by
+`VALIDATE CONSTRAINT` in a later committed transaction is a future availability
+alternative; validation inside the same transaction does not release earlier
+strong locks. This procedure adds no deployment automation or production/staging
+execution claim.
 
 Every successful command awaits mutation → activity → minimal outbox → tagged
 reference receipt in one transaction. Original-key replay checks current authority
@@ -176,6 +201,21 @@ or source behavior change was needed. The existing Next notice required its
 supported unchanged-command retry. Owned fixture processes, containers, networks,
 volumes and image tags are cleaned; current-head hosted CI/native/coordinator
 acceptance remains pending on the same Draft PR50.
+
+## Round 1 operational documentation correction — 2026-11-19
+
+At `fe6c4e4`, [validate](https://github.com/Ljrr3045/rielia/actions/runs/44631698229/job/135939710048)
+and native [Kilo round 1](https://github.com/Ljrr3045/rielia/runs/135944613080)
+passed. The native review reported one
+[reader-locking suggestion](https://github.com/Ljrr3045/rielia/pull/50#discussion_r4636257121)
+and recommended Address before merge. The coordinator accepted the operational
+runbook gap and returned PR50 to Draft for this documentation-only correction.
+The maintenance procedure above now covers readers, writers, failure recovery
+and readiness; the fully validated migration and all source/runtime/dependency/
+test/baseline bytes are unchanged. Prior QA keeps its dated source qualification.
+Only prose checks and commit hooks run for this correction; the new documentation
+head still needs its own hosted/native review, thread disposition and coordinator
+acceptance. Full T11 remains IN PROGRESS.
 
 Use existing contribution commands: `pnpm test:projects:logic`, `pnpm check`,
 `pnpm unit:coverage`, unit infrastructure/artifacts, `pnpm test:identity`,
