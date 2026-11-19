@@ -1,6 +1,6 @@
 # Delivery progress and decisions
 
-## 2026-11-19 T11.1 planned sprint APIs — IN PROGRESS
+## 2026-11-19 T11.1 planned sprint APIs — DRAFT PR50; T11 IN PROGRESS
 
 The user authorized T11 after bounded T37 acceptance in
 [PR49](https://github.com/Ljrr3045/rielia/pull/49#issuecomment-6819605884), reviewed
@@ -17,7 +17,8 @@ Full retained PG/HTTP/restart checks and the current focused planning suite pass
 with their distinct source limits. Complete standard checks and isolated runtime
 images/recovery pass; owned runtimes are cleaned. Next's existing security notice
 required its supported unchanged-command retry; advisory debt remains explicit.
-Draft publication and current-head CI/native/coordinator acceptance remain pending;
+Published as [Draft PR50](https://github.com/Ljrr3045/rielia/pull/50) to `dev`;
+current-head CI/native/coordinator acceptance remain pending.
 [the guide](sprint-planning.md) records exact boundaries and evidence limits.
 T11/P09/US06 and affected P05/P08/P10 remain bounded; UX04/presentation, estimates,
 participation, start/close and full T11 acceptance follow in later batches.
@@ -2334,7 +2335,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T08 | B1b | List/Kanban, filters, ranking | T06 | [T08.0 logic](task-views.md) merged in PR #19 at `f8895709`; [T08.1 presentation](task-views-ui.md) in [PR #20](https://github.com/Ljrr3045/rielia/pull/20). Configurable workflows/labels/sprints and full US05/T08 remain open |
 | T09 | B1b | Subtasks, checklists, comments, history | T06 | T09.0 bounded collaboration logic merged in [PR #21](https://github.com/Ljrr3045/rielia/pull/21) at `76d7d31b`; T09.1 [presentation](task-collaboration-ui.md) delivered in [PR #22](https://github.com/Ljrr3045/rielia/pull/22) with standard checks and targeted functional/responsive QA passed. Exact current-head CI/Kody/merge evidence remains in GitHub/external final report. Full T09/P05/P14/P38, credentials and real-user/staging acceptance remain open |
 | T10 | B1b | Search, My tasks, responsive layout, SSE | T07–T09 | T10.0 bounded logic merged in [PR #23](https://github.com/Ljrr3045/rielia/pull/23) at `6bde444c`; T10.1 [presentation](task-discovery-ui.md) PR [#24](https://github.com/Ljrr3045/rielia/pull/24) includes exact root-reviewed SOL controller/test URL corrections and has accepted functional/responsive evidence. Full T10/P11/US05, labels/sprints, exports, coediting, credentials, real-user/staging and deployment remain open |
-| T11 | B1c | Sprint lifecycle and scope history | T08–T09; later user prerequisite T36 → T37 | IN PROGRESS under 2026-11-19 authorization after accepted T37/PR49; [T11.1](sprint-planning.md) planning APIs, later lifecycle/UI batches remain |
+| T11 | B1c | Sprint lifecycle and scope history | T08–T09; later user prerequisite T36 → T37 | IN PROGRESS under 2026-11-19 authorization after accepted T37/PR49; [T11.1](sprint-planning.md) planning APIs in [Draft PR50](https://github.com/Ljrr3045/rielia/pull/50), later lifecycle/UI batches remain |
 | T12 | B1c | Personal/service credentials, explicit-subject grants | T07, T35 | Not started |
 | T13 | B1c | Local MCP catalog/client/guide | T03, T11–T12 | Not started |
 | T14 | B1d | JSON/CSV export and archive recovery | T09, T12 | Not started |

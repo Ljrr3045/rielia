@@ -8,7 +8,8 @@ This records repository changes. No application version has been released.
   date/UTC boundaries, current-authority replay, versioned paging and atomic
   activity/outbox/receipts. Local standard/runtime and source-qualified PG checks
   pass; approved coverage migration passes 461 cases and 20 infrastructure checks.
-  Draft delivery/review remains pending; no full lifecycle/UI or T11 acceptance.
+  Published in [Draft PR50](https://github.com/Ljrr3045/rielia/pull/50); current-head
+  review/acceptance remain pending, with no full lifecycle/UI or T11 acceptance.
 - Record bounded T37 acceptance in PR49 (reviewed `5d3637b`, merged `20a257c`)
   and the user's 2026-11-19 T11 authorization, preserving historical evidence.
 

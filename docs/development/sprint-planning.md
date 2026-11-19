@@ -1,6 +1,8 @@
 # T11.1 persistent sprint planning
 
-Status: implemented and locally verified; Draft delivery/review pending. This bounded API/proxy slice
+Status: implemented and locally verified in
+[Draft PR50](https://github.com/Ljrr3045/rielia/pull/50); current-head CI/native
+review and coordinator acceptance remain pending. This bounded API/proxy slice
 starts from accepted T37 [PR49](https://github.com/Ljrr3045/rielia/pull/49#issuecomment-6819605884),
 reviewed `5d3637b`, merged `20a257c`, under the user's 2026-11-19 authorization.
 It addresses T11/B1c, P09/US06 and affected P05/P08/P10. UXR01 and
