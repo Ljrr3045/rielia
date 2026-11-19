@@ -121,7 +121,9 @@ export class TaskEventsService implements OnModuleDestroy {
           take: 101,
           select: {
             sequence: true,
-            activity: { select: { projectId: true, taskId: true, entityVersion: true } },
+            activity: {
+              select: { projectId: true, taskId: true, sprintId: true, entityVersion: true },
+            },
           },
         });
         if (events.length > 100) {
@@ -139,7 +141,9 @@ export class TaskEventsService implements OnModuleDestroy {
               entity: event.taskId ? 'task' : 'project',
               id: event.taskId ?? event.projectId,
               projectId: event.projectId,
-              version: event.entityVersion,
+              version: event.sprintId
+                ? projects.find((project) => project.id === event.projectId)!.version
+                : event.entityVersion,
             },
             row.sequence,
             policy,

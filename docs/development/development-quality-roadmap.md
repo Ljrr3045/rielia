@@ -25,7 +25,10 @@ records the bounded T36.6 closure accepted in
 [PR #44](https://github.com/Ljrr3045/rielia/pull/44), merged at `92d480d` from
 reviewed `37f2a8c` with successful current-head CI/native review. T36.1–T36.6 are
 ACCEPTED; explicit debt remains owned. The user authorized starting T37 on
-2026-11-11 America/Caracas. T37 is IN PROGRESS through
+2026-11-11 America/Caracas. Bounded T37 is ACCEPTED in
+[PR49](https://github.com/Ljrr3045/rielia/pull/49#issuecomment-6819605884), reviewed
+`5d3637b`, merged `20a257c`. T11 was authorized on 2026-11-19;
+[T11.1 planning](sprint-planning.md) is IN PROGRESS. Earlier evidence includes
 [T37.1 technical skill preparation](frontend-skills.md) and integrated
 [Astra inventory](t37-ui-inventory.md)/[direction proposal](t37-design-direction.md).
 Fresh frontend catalog discovery and explicit local loading are verified at
@@ -47,9 +50,9 @@ focused browser schedules and four coordinator-opened current images; previous
 185/10-native and177/26-native/Astra subsets retain source-qualified history.
 T37.5 discovery/navigation and T37.6 consolidation implementation/bounded QA are
 complete for the final delivery PR, with accepted PR48 ancestry integrated.
-Overall T37 acceptance remains pending that PR's current-head CI/native/ownership
-and coordinator decision.
-T11 has not started; no Astro app is scaffolded.
+PR49's linked final acceptance governs that bounded delivery. T11.1 planning
+APIs are now in progress; full lifecycle and presentation remain later T11
+batches. No Astro app is scaffolded.
 Prose or smaller files do not establish universal conformity, production readiness
 or full T01–T35 acceptance.
 
@@ -72,8 +75,8 @@ prior opens. Nullable812/29010 and accepted defensive-guard debt stay explicit.
 Historical `2edecbe` 185/11/3 and81b177/16/12/Astra18 evidence, prior failed build,
 runner-provenance and crop/device/AT/browser-zoom/user/provider limits remain
 qualified. Publication reuses exact source/tests/eight baselines with no heavy
-rerun. The [T37.6 consolidation](t37-ui-acceptance.md) records remaining acceptance
-gates and user-scheduled T11, not new ticket authority.
+rerun. The [T37.6 consolidation](t37-ui-acceptance.md) preserves the historical
+acceptance gates and evidence limits; PR49 records the subsequent acceptance.
 
 ## Observed baseline for the new work
 
@@ -464,7 +467,6 @@ closed merge gate while Draft. Agreed tooling/units/formatting, scoped
 frontend/backend implementation and bounded T36.6 consolidation are accepted in
 PR #44 with owned debt. T37.1 preparation is accepted in merged PR #45 as linked
 above; T37.2 foundations and T37.3 shell/entry are accepted in merged PRs #46/#47.
-T37.4's consolidated project/task evidence is published in Draft PR #48. Its
-current-head CI/native review and coordinator acceptance remain; final persisted
-QA and owned T37.5 follow-ups do not disappear by implication. No full T37
-acceptance is claimed, and T11 follows accepted T37.
+T37.4 is accepted in PR48 and final T37.5/6 in PR49 as linked above. Earlier
+dated snapshots retain their then-current status and evidence limits. T11.1 is
+the current bounded implementation; full T11 lifecycle and UI remain later work.

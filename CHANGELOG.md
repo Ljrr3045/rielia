@@ -4,6 +4,14 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Add T11.1 project planning settings and planned sprint APIs with strict local
+  date/UTC boundaries, current-authority replay, versioned paging and atomic
+  activity/outbox/receipts. Local standard/runtime and source-qualified PG checks
+  pass; approved coverage migration passes 461 cases and 20 infrastructure checks.
+  Draft delivery/review remains pending; no full lifecycle/UI or T11 acceptance.
+- Record bounded T37 acceptance in PR49 (reviewed `5d3637b`, merged `20a257c`)
+  and the user's 2026-11-19 T11 authorization, preserving historical evidence.
+
 - Correct PR49 round1 documentation finding: label the `2edecbe` coverage checkpoint
   historical and distinguish its pending PR48 status from accepted PR48/current
   final-T37 gates. Preserve all counts, tested artifacts and current 195-case proof.

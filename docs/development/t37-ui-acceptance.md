@@ -1,5 +1,11 @@
 # Bounded T37 acceptance proposal and T11 handoff
 
+**Current decision:** bounded T37 is ACCEPTED in
+[PR49](https://github.com/Ljrr3045/rielia/pull/49#issuecomment-6819605884), reviewed
+`5d3637b`, merged `20a257c`. The user authorized T11 on 2026-11-19;
+[T11.1](sprint-planning.md) is in progress. The snapshot below preserves the
+pre-acceptance state and its historical evidence limits; PR49 governs current status.
+
 Status: **T37 IN PROGRESS; T37.5 implementation/bounded QA and T37.6 consolidation
 complete, final acceptance pending**. The coordinator's current-head delivery-PR
 acceptance comment governs after CI, completed native Kilo feedback, ownership and

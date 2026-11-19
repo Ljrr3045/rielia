@@ -1,5 +1,11 @@
 # T36 first unit and coverage delivery
 
+Current status: bounded T36 and T37 are accepted, including
+[T37 PR49](https://github.com/Ljrr3045/rielia/pull/49#issuecomment-6819605884)
+at merge `20a257c`. The [T11.1 migration](#t111-planning-coverage--2026-11-19)
+below records the current approved numerical gates. Earlier delivery snapshots
+and their then-pending acceptance statements remain historical evidence.
+
 This bounded T36.2/T36.3 slice retains `node:test`, adds behavior units and enforces
 separate API, web, shared-contract and fictional-prototype coverage. It builds on
 PR #33 (`465d9e4`), without production source, policy, schema or appearance changes.
@@ -42,10 +48,10 @@ at corrected PR42 C: 138 web / 380 total cases over 118 inputs. Delivered
 [workspace owners](workspace-interactions-extraction.md) end at PR43 C: 145 web,
 216 API, 7 contracts and 19 isolated prototype cases, 387 total over 124 maintained
 inputs (68 web). Historical PR43 web L/S/F/B floors were 4131/4061/3073/3058
-basis points. The T37.3 migrations raised web floors to 4347/4258/3187/3204. Current
-T37.4/T37.5 web floors are **6182/5960/4962/5601** after reviewed modal-focus
+basis points. The T37.3 migrations raised web floors to 4347/4258/3187/3204.
+At T37.4/T37.5 delivery, web floors were **6182/5960/4962/5601** after reviewed modal-focus
 and composed discovery migrations below; earlier floor sets remain historical.
-API floors are 5244/5247/4855/5252. Prototype counts do not inflate production
+API floors were 5244/5247/4855/5252. Prototype counts do not inflate production
 metrics. Exact baseline files and linked covered/zero/null proof govern;
 historical starting values below are not current results.
 
@@ -747,3 +753,37 @@ identity limits and all seven other baselines remain. Publication changes docs
 only; no measure/gate/build/browser/backend/PG repeat or baseline/config/provider/
 dependency migration. Final hosted CI checks the actual delivery head; historical
 local reports retain their original source/build identities and qualified limits.
+
+## T11.1 planning coverage — 2026-11-19
+
+The coordinator reviewed the complete candidate fingerprints, per-file comparisons,
+nullable mappings and preserved baseline hashes before authorizing exactly the
+current API/web/contracts baseline migration. The production serializer produced
+API `622e445938c64adb93ab86952bcd9e0f7bcbeb226d15b4ea6da8242231365eff`,
+web `84b904cdfc9e45960bab878f8be3ab45e936bf0972d0dd6865f66c3ebb783687`
+and contracts `d7d68c9b61cd99a13134d681688d013782af7bdf458f4bb0ab00a6190631a36f`.
+The current prototype and four historical baselines remain byte-for-byte unchanged.
+This approves the numerical migration; product delivery and full T11 acceptance
+remain separate.
+
+Normal all-scope coverage passes 461 cases without skips: 236 API, 198 web,
+8 contracts and 19 isolated prototype. The 20 infrastructure checks and artifact
+allowlist validation pass. Covered/total values and floors use L/S/F/B order:
+
+| Scope | Maintained inputs | Covered/total L; S; F; B | Floors in basis points L/S/F/B |
+| --- | ---: | --- | --- |
+| API | 42 | 968/1643; 1060/1801; 260/468; 791/1331 | 5891/5885/5555/5942 |
+| Web | 69 | 2425/3899; 2635/4394; 535/1069; 3055/5408 | 6219/5996/5004/5649 |
+| Contracts | 5 | 128/128; 145/145; 80/80; 462/470 | 10000/10000/10000/9829 |
+| Prototype | 16 | 238/853; 269/984; 87/368; 194/954 | 2790/2733/2364/2033 |
+
+No maintained source/test is dropped. No stable-source covered count, per-file
+ratio or floor regresses. Provider/compiler/configuration remain unchanged.
+All new maintained source executes; inherited unexecuted files remain 20 API,
+19 web and 12 prototype. Existing type-only zero-unit inputs stay N/A.
+Nullable column fields are API160/9570, web816/29304, contracts20/1734 and
+prototype133/6372; missing-column positions are zero. The two remaining mutation
+and two transport branch arms stay visible debt, without ignores or exclusions.
+Old raw maps are unavailable in this checkout, so this comparison does not claim
+exact old raw endpoint/hit identity. Real PostgreSQL/HTTP/migration/restart checks
+and their source-qualified limits are recorded in the [planning guide](sprint-planning.md).

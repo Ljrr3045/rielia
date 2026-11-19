@@ -20,7 +20,7 @@ export class ProjectTaskHttp {
     req: NodeRequest,
     res: NodeResponse,
     workspaceId: string,
-    list: boolean | 'cursor' | 'tasks' | 'collaboration' | 'discovery' | 'events',
+    list: boolean | 'cursor' | 'tasks' | 'collaboration' | 'discovery' | 'events' | 'sprints',
     work: (
       context: VerifiedExecution,
       requestId: string,
@@ -72,7 +72,7 @@ export class ProjectTaskHttp {
               ? []
               : list === 'discovery'
                 ? ['scope', 'q', 'view', 'project', 'status', 'assignee', 'priority', 'cursor']
-                : list === 'cursor' || list === 'collaboration'
+                : list === 'cursor' || list === 'collaboration' || list === 'sprints'
                   ? ['cursor']
                   : list === 'tasks'
                     ? ['view', 'cursor', 'status', 'assignee', 'priority']
@@ -84,7 +84,10 @@ export class ProjectTaskHttp {
       (query['cursor'] !== undefined &&
         (typeof query['cursor'] !== 'string' ||
           !(
-            list === 'tasks' || list === 'collaboration' || list === 'discovery'
+            list === 'tasks' ||
+            list === 'collaboration' ||
+            list === 'discovery' ||
+            list === 'sprints'
               ? /^[A-Za-z0-9_-]{1,2048}$/
               : /^[A-Za-z0-9_-]{1,128}$/
           ).test(query['cursor']))) ||

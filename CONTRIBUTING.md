@@ -38,13 +38,14 @@ are consolidated in the [stable contract](docs/development/t36-stable-ui-contrac
 T36.1–T36.6 were accepted for the bounded scope in
 [PR #44](https://github.com/Ljrr3045/rielia/pull/44); owned coverage/coupling/CSS
 debt remains explicit. T37 started with the user's 2026-11-11 authorization;
-no universal architecture migration or completed redesign is claimed.
+no universal architecture migration is claimed. Bounded T37 was accepted in
+[PR49](https://github.com/Ljrr3045/rielia/pull/49#issuecomment-6819605884), reviewed
+`5d3637b`, merged `20a257c`.
 The [bounded T37 evidence consolidation](docs/development/t37-ui-acceptance.md)
 records accepted T37.1–4, including [PR48](https://github.com/Ljrr3045/rielia/pull/48#issuecomment-6818479075), and completed T37.5/6
-implementation/bounded QA. Overall T37 acceptance still requires final delivery
-current-head CI/native/ownership and coordinator decision. Historical evidence
-retains its source, fixture/persistence and provenance limits. T11 is unstarted
-and awaits explicit acceptance plus user scheduling.
+implementation/bounded QA accepted by PR49. Historical evidence retains its
+source, fixture/persistence and provenance limits. The user authorized T11 on
+2026-11-19; [T11.1 planning APIs](docs/development/sprint-planning.md) are IN PROGRESS.
 Preparing these contribution documents does not
 complete T16 or its real-project validation.
 
