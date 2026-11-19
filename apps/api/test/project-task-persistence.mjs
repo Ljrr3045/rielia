@@ -15,6 +15,7 @@ const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
 async function snapshot() {
   const rows = await pool.query(`SELECT jsonb_build_object(
     'projects',(SELECT jsonb_agg(to_jsonb(p) ORDER BY id) FROM project p),
+    'sprints',(SELECT jsonb_agg(to_jsonb(s) ORDER BY id) FROM sprint s),
     'tasks',(SELECT jsonb_agg(to_jsonb(t) ORDER BY id) FROM task t),
     'access',(SELECT jsonb_agg(to_jsonb(a) ORDER BY "workspaceId","projectId","principalId") FROM project_access a),
     'checklist',(SELECT jsonb_agg(to_jsonb(c) ORDER BY id) FROM checklist_item c),
@@ -25,6 +26,7 @@ async function snapshot() {
   const data = rows.rows[0].data;
   assert.ok(
     data.projects.length &&
+      data.sprints.length &&
       data.tasks.length &&
       data.access.length &&
       data.activity.length &&
@@ -60,6 +62,20 @@ try {
     const detail = await fetch(`${requestPath}/${row.id}`, { headers: { cookie } });
     assert.equal(detail.status, 200);
     assert.equal((await detail.json()).id, row.id);
+    const planned = await pool.query(
+      `SELECT s.id,s."workspaceId",s."projectId",s.version,h."userId",session.token FROM sprint s JOIN project p ON p.id=s."projectId" JOIN principal h ON h.id=p."createdByPrincipalId" JOIN session ON session."userId"=h."userId" WHERE p."archivedAt" IS NULL AND h.state='active' AND session."expiresAt">now() LIMIT 1`,
+    );
+    assert.ok(planned.rows[0]);
+    const sprint = planned.rows[0];
+    const planningCookie = `__Secure-better-auth.session_token=${encodeURIComponent(`${sprint.token}.${await makeSignature(sprint.token, process.env.BETTER_AUTH_SECRET)}`)}`;
+    const planningRead = await fetch(
+      `${origin}/api/v1/workspaces/${sprint.workspaceId}/projects/${sprint.projectId}/sprints/${sprint.id}`,
+      { headers: { cookie: planningCookie } },
+    );
+    assert.equal(planningRead.status, 200);
+    const retainedSprint = await planningRead.json();
+    assert.equal(retainedSprint.version, sprint.version);
+    assert.equal(retainedSprint.state, 'planned');
     const created = await fetch(requestPath, {
       method: 'POST',
       headers: {

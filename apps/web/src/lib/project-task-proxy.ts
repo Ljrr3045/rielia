@@ -15,10 +15,10 @@ export async function proxyProjectTask(request: Request): Promise<Response> {
     );
     const events = new RegExp(`^/api/v1/workspaces/${id}/events$`).test(incoming.pathname);
     const read = new RegExp(
-      `^${root}(?:/${id}(?:/(?:access(?:/${id})?|assignees|tasks(?:/${id})?))?)?$`,
+      `^${root}(?:/${id}(?:/(?:access(?:/${id})?|assignees|planning|sprints(?:/${id})?|tasks(?:/${id})?))?)?$`,
     );
     const write = new RegExp(
-      `^${root}(?:/${id}(?:/(?:archive|restore|visibility|access/${id}|tasks(?:/${id}(?:/(?:archive|restore|move))?)?))?)?$`,
+      `^${root}(?:/${id}(?:/(?:archive|restore|visibility|planning|sprints(?:/${id})?|access/${id}|tasks(?:/${id}(?:/(?:archive|restore|move))?)?))?)?$`,
     );
     const taskRoot = `${root}/${id}/tasks/${id}`;
     const collaborationRead = new RegExp(
@@ -43,7 +43,8 @@ export async function proxyProjectTask(request: Request): Promise<Response> {
     const collaboration = new RegExp(
       `^${taskRoot}/(?:relations|parent-candidates|checklist|comments|history)$`,
     ).test(incoming.pathname);
-    const cursorOnly = /\/(access|assignees)$/.test(incoming.pathname) || collaboration;
+    const sprints = new RegExp(`^${root}/${id}/sprints$`).test(incoming.pathname);
+    const cursorOnly = /\/(access|assignees)$/.test(incoming.pathname) || collaboration || sprints;
     const allowed =
       request.method !== 'GET'
         ? []
@@ -75,7 +76,9 @@ export async function proxyProjectTask(request: Request): Promise<Response> {
       (view !== null && !['active', 'archived'].includes(view)) ||
       (cursor !== null &&
         !(
-          tasks || collaboration || discovery ? /^[A-Za-z0-9_-]{1,2048}$/ : /^[A-Za-z0-9_-]{1,128}$/
+          tasks || collaboration || discovery || sprints
+            ? /^[A-Za-z0-9_-]{1,2048}$/
+            : /^[A-Za-z0-9_-]{1,128}$/
         ).test(cursor))
     )
       return fail(400);

@@ -1,5 +1,56 @@
 # Delivery progress and decisions
 
+## 2026-11-19 T11.1 planned sprint APIs — DRAFT PR50; T11 IN PROGRESS
+
+The user authorized T11 after bounded T37 acceptance in
+[PR49](https://github.com/Ljrr3045/rielia/pull/49#issuecomment-6819605884), reviewed
+`5d3637b`, merged `20a257c`. Earlier dated T37 entries retain their historical state.
+[T11.1](sprint-planning.md) adds persistent project planning settings and planned
+sprint create/list/read/edit APIs, public validators, scoped proxy/transport and
+additive storage/journal/replay rules. SOL xhigh and auto_review/on-request/
+workspace-write are verified from the current runtime; one exclusive worktree
+and serial heavy validation are used. The coordinator approved migration of
+exactly the three current baselines before writes; normal coverage passes 236 API,
+198 web, 8 shared and 19 prototype cases, with 20 infrastructure checks and
+artifact validation. Prototype and four historical baselines are byte-exact.
+Full retained PG/HTTP/restart checks and the current focused planning suite pass
+with their distinct source limits. Complete standard checks and isolated runtime
+images/recovery pass; owned runtimes are cleaned. Next's existing security notice
+required its supported unchanged-command retry; advisory debt remains explicit.
+Published as [Draft PR50](https://github.com/Ljrr3045/rielia/pull/50) to `dev`;
+current-head CI/native/coordinator acceptance remain pending.
+[the guide](sprint-planning.md) records exact boundaries and evidence limits.
+T11/P09/US06 and affected P05/P08/P10 remain bounded; UX04/presentation, estimates,
+participation, start/close and full T11 acceptance follow in later batches.
+
+PR50's [hosted validate](https://github.com/Ljrr3045/rielia/actions/runs/44626674850/job/135922411632)
+at `9133c79` failed the high audit gate after the November 19 update to
+[Effect GHSA-7589-6fvf-x4pw](https://github.com/advisories/GHSA-7589-6fvf-x4pw).
+The coordinator authorized the narrow `@prisma/config>effect: 3.22.1` override:
+Prisma config 7.10.1 pins vulnerable 3.20.0 exactly. Minimal resolution/frozen
+install pass, all ten resolved paths use 3.22.1, and current root/tooling high gates
+pass with root nine moderate/one low and tooling two moderate findings. Direct
+pins, policies, source/tests/schema/migrations and all eight baselines remain
+unchanged. Current frozen install, complete standard checks, normal 461-case
+coverage with identical digest, 20 infrastructure checks/artifacts, full PG/HTTP/
+identity/planning/restart and runtime images/recovery pass. Owned runtimes are
+cleaned. The earlier zero-high audit and original source-qualified QA remain
+historical; hosted CI/native/coordinator acceptance on Draft PR50 is still pending,
+and no T11.2 implementation or full T11 acceptance is implied.
+
+At `fe6c4e4`, [validate](https://github.com/Ljrr3045/rielia/actions/runs/44631698229/job/135939710048)
+and native [Kilo round 1](https://github.com/Ljrr3045/rielia/runs/135944613080)
+passed, with one [operational suggestion](https://github.com/Ljrr3045/rielia/pull/50#discussion_r4636257121)
+and Address before merge. The coordinator accepted the reader-availability
+runbook gap and returned PR50 to Draft. This correction changes only the sprint
+guide, progress and changelog: an explicit maintenance window drains readers,
+writers and long transactions, uses the existing one-shot and keeps dependents
+stopped on failure until migration/readiness succeeds. Atomic fully validated
+SQL, application/dependency/test bytes and all eight baselines remain unchanged;
+no online/zero-downtime or large-table-duration claim is added. Only prose checks
+and hooks run locally. Prior QA remains source-qualified; new-head hosted/native
+acceptance and coordinator thread disposition remain pending. T11 stays IN PROGRESS.
+
 ## 2026-11-12 PR49 round1 documentation correction — DRAFT
 
 Native check `131068806214` completed SUCCESS in 16m41s with one valid
@@ -2267,8 +2318,10 @@ the following records preserve the original first-wave scope and acceptance:
    open. PR #9 is merged; see [runtime scope and evidence](local-runtime.md). This is a preparatory
    split of the B1 T04 ticket, without business effects, deployment or full acceptance.
 
-Current priority is the [T36 → T37 quality prerequisite](development-quality-roadmap.md)
-before T11 and remaining dependencies. The prior bounded T10.1 presentation is
+The [T36 → T37 quality prerequisite](development-quality-roadmap.md) is accepted
+for its bounded scope. Current authorized priority is T11, starting with the
+[T11.1 planning APIs](sprint-planning.md), before remaining dependencies.
+The prior bounded T10.1 presentation is
 recorded in [PR #24](https://github.com/Ljrr3045/rielia/pull/24) on T10.0 logic
 [PR #23](https://github.com/Ljrr3045/rielia/pull/23). Its historical validation
 records remain above. Invitations/guests, full T06/T07/T08/T09/T10/T35,
@@ -2310,7 +2363,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T08 | B1b | List/Kanban, filters, ranking | T06 | [T08.0 logic](task-views.md) merged in PR #19 at `f8895709`; [T08.1 presentation](task-views-ui.md) in [PR #20](https://github.com/Ljrr3045/rielia/pull/20). Configurable workflows/labels/sprints and full US05/T08 remain open |
 | T09 | B1b | Subtasks, checklists, comments, history | T06 | T09.0 bounded collaboration logic merged in [PR #21](https://github.com/Ljrr3045/rielia/pull/21) at `76d7d31b`; T09.1 [presentation](task-collaboration-ui.md) delivered in [PR #22](https://github.com/Ljrr3045/rielia/pull/22) with standard checks and targeted functional/responsive QA passed. Exact current-head CI/Kody/merge evidence remains in GitHub/external final report. Full T09/P05/P14/P38, credentials and real-user/staging acceptance remain open |
 | T10 | B1b | Search, My tasks, responsive layout, SSE | T07–T09 | T10.0 bounded logic merged in [PR #23](https://github.com/Ljrr3045/rielia/pull/23) at `6bde444c`; T10.1 [presentation](task-discovery-ui.md) PR [#24](https://github.com/Ljrr3045/rielia/pull/24) includes exact root-reviewed SOL controller/test URL corrections and has accepted functional/responsive evidence. Full T10/P11/US05, labels/sprints, exports, coediting, credentials, real-user/staging and deployment remain open |
-| T11 | B1c | Sprint lifecycle and scope history | T08–T09; later user prerequisite T36 → T37 | Not started; follows accepted T36/T37 |
+| T11 | B1c | Sprint lifecycle and scope history | T08–T09; later user prerequisite T36 → T37 | IN PROGRESS under 2026-11-19 authorization after accepted T37/PR49; [T11.1](sprint-planning.md) planning APIs in [Draft PR50](https://github.com/Ljrr3045/rielia/pull/50), later lifecycle/UI batches remain |
 | T12 | B1c | Personal/service credentials, explicit-subject grants | T07, T35 | Not started |
 | T13 | B1c | Local MCP catalog/client/guide | T03, T11–T12 | Not started |
 | T14 | B1d | JSON/CSV export and archive recovery | T09, T12 | Not started |
@@ -2336,7 +2389,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T34 | Marketing launch gate | Verify/enable public marketing launch | T31, T33; T32 if capture active | Not started |
 | T35 | B1 foundations | Principal model, immutable authorship, autonomous memberships | T04; precedes T05/T06/T12 | T35.0 bounded storage/policy/context implemented; full authorship/domain/export/credential integration incomplete |
 | T36 | Quality prerequisite 1 | Engineering standards, compatible tool enforcement and behavior-preserving frontend/backend structure | Existing bounded foundations/contracts; approved NodeAdapter | ACCEPTED bounded T36.1–T36.6 in [PR #44](https://github.com/Ljrr3045/rielia/pull/44), merged `92d480d` from reviewed `37f2a8c`; retained owned debt and [stable contract](t36-stable-ui-contract.md) remain binding |
-| T37 | Quality prerequisite 2 | Coherent redesign of existing UI using stable contracts, brand/UX and reviewed frontend-local skills | Coordinator acceptance of T36 | IN PROGRESS: [T37.1 accepted](https://github.com/Ljrr3045/rielia/pull/45#issuecomment-6811811563) at `8065c078` from reviewed `57ee164`; [T37.2 foundations](t37-ui-foundations.md) have source/visual checkpoints and bounded CSS corrections awaiting SOL revalidation, publication and current-head CI/native/coordinator acceptance; precedes T11 |
+| T37 | Quality prerequisite 2 | Coherent redesign of existing UI using stable contracts, brand/UX and reviewed frontend-local skills | Coordinator acceptance of T36 | ACCEPTED bounded T37.1–6 through [PR49](https://github.com/Ljrr3045/rielia/pull/49#issuecomment-6819605884), reviewed `5d3637b`, merged `20a257c`; retained evidence and limits in the [acceptance guide](t37-ui-acceptance.md); T11 authorized on 2026-11-19 |
 
 Public release is one launch followed by continuous updates. Internal B1 readiness,
 private T15 deployment, and marketing T34 do not substitute for T24. B3 follows

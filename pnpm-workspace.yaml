@@ -10,6 +10,9 @@ autoInstallPeers: false
 # patched 6.16.1 floor for GHSA-6pq8-jhm2-2vcw until the adapter updates its pin.
 overrides:
   '@nestjs/platform-node>qs': 6.16.1
+  # Prisma config 7.10.1 pins Effect 3.20.0, affected by GHSA-7589-6fvf-x4pw.
+  # Remove after a supported Prisma config pins a fixed release and revalidation.
+  '@prisma/config>effect': 3.22.1
 
 # Prisma's pinned engine downloader and runtime compatibility check are needed
 # for schema tooling. All other new dependency lifecycle scripts remain denied.

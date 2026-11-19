@@ -358,8 +358,33 @@ test('same-session resume emits bounded safe id/version hints and an initial hea
   assert.equal(f.calls.events[0].take, 101);
   assert.deepEqual(f.calls.events[0].select, {
     sequence: true,
-    activity: { select: { projectId: true, taskId: true, entityVersion: true } },
+    activity: { select: { projectId: true, taskId: true, sprintId: true, entityVersion: true } },
   });
+});
+
+test('sprint journal invalidates the current project version without exposing sprint payload or version', async (t) => {
+  const f = fixture(t);
+  const initial = f.response();
+  await f.serve(initial);
+  const resume = initial.lastId();
+  initial.disconnect();
+  f.state.latest = 6n;
+  f.state.events = [
+    {
+      sequence: 6n,
+      activity: { projectId: 'p', taskId: null, sprintId: 'private-sprint', entityVersion: 44 },
+    },
+  ];
+  const res = f.response();
+  await f.serve(res, resume);
+  assert.deepEqual(res.data()[0], {
+    type: 'invalidate',
+    entity: 'project',
+    id: 'p',
+    projectId: 'p',
+    version: 1,
+  });
+  assert.equal(res.frames.join('').includes('private-sprint'), false);
 });
 
 test('unknown, foreign-session and exactly expired resume handles give the same generic reset', async (t) => {

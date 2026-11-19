@@ -4,6 +4,29 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Address PR50's [round 1 reader-locking suggestion](https://github.com/Ljrr3045/rielia/pull/50#discussion_r4636257121)
+  with a documentation-only maintenance window for readers/writers and long
+  transactions, existing one-shot recovery and readiness before resuming traffic.
+  Preserve atomic fully validated SQL, source/dependencies/tests and eight baselines;
+  no online migration claim. Prose checks/hooks run; new-head hosted/native and
+  coordinator acceptance remain pending on the same Draft PR50.
+- Correct PR50's high audit failure for
+  [GHSA-7589-6fvf-x4pw](https://github.com/advisories/GHSA-7589-6fvf-x4pw) with the
+  coordinator-approved parent-scoped `@prisma/config>effect: 3.22.1` override and
+  minimal lock resolution. Direct pins, source/tests and eight baselines remain
+  unchanged. Frozen install, standard checks, 461-case coverage/20 infrastructure
+  checks, full PG/HTTP/planning/restart and runtime images/recovery pass. Current
+  root audit has zero high/critical, nine moderate/one low; isolated tooling has
+  two moderate. Hosted/native/coordinator acceptance remains pending in Draft PR50.
+- Add T11.1 project planning settings and planned sprint APIs with strict local
+  date/UTC boundaries, current-authority replay, versioned paging and atomic
+  activity/outbox/receipts. Local standard/runtime and source-qualified PG checks
+  pass; approved coverage migration passes 461 cases and 20 infrastructure checks.
+  Published in [Draft PR50](https://github.com/Ljrr3045/rielia/pull/50); current-head
+  review/acceptance remain pending, with no full lifecycle/UI or T11 acceptance.
+- Record bounded T37 acceptance in PR49 (reviewed `5d3637b`, merged `20a257c`)
+  and the user's 2026-11-19 T11 authorization, preserving historical evidence.
+
 - Correct PR49 round1 documentation finding: label the `2edecbe` coverage checkpoint
   historical and distinguish its pending PR48 status from accepted PR48/current
   final-T37 gates. Preserve all counts, tested artifacts and current 195-case proof.

@@ -45,17 +45,20 @@ or an Orca installation.
   [PR #44](https://github.com/Ljrr3045/rielia/pull/44), at `92d480d` from reviewed
   `37f2a8c`; the [stable contract](docs/development/t36-stable-ui-contract.md)
   retains explicit owned debt. The user authorized T37 on 2026-11-11
-  America/Caracas. T37 remains IN PROGRESS. T37.1–4 are accepted in
+  America/Caracas. T37 is ACCEPTED in
+  [PR49](https://github.com/Ljrr3045/rielia/pull/49#issuecomment-6819605884),
+  reviewed `5d3637b`, merged `20a257c`. T37.1–4 are accepted in
   [PR45](https://github.com/Ljrr3045/rielia/pull/45),
   [PR46](https://github.com/Ljrr3045/rielia/pull/46),
   [PR47](https://github.com/Ljrr3045/rielia/pull/47) and
   [PR48](https://github.com/Ljrr3045/rielia/pull/48#issuecomment-6818479075) (merge `f628fd3`). T37.5 discovery/navigation and
   T37.6 [evidence consolidation](docs/development/t37-ui-acceptance.md) have complete
-  implementation/bounded QA; final delivery current-head CI/native/ownership and
-  coordinator acceptance remain required. The three pinned frontend-local skills
+  implementation/bounded QA accepted by that final decision. Historical
+  pre-acceptance evidence retains its dated limits. The three pinned frontend-local skills
   retain verified explicit local paths and `325d732` catalog correction; no
-  global/API skill or automatic duplicate-name override. T11 is unstarted and
-  follows accepted T37 plus user scheduling.
+  global/API skill or automatic duplicate-name override. The user authorized T11
+  on 2026-11-19; [T11.1 planning](docs/development/sprint-planning.md) is IN PROGRESS,
+  limited to settings and planned-sprint APIs. Full lifecycle/UI follows in later batches.
   No universal source conformity or full acceptance is implied. Original
   T01–T35 numbering/acceptance and immutable handoff remain unchanged. Future
   T30–T34 landing work uses the [later Astro/narrative direction](docs/development/landing-direction.md);

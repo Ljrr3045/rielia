@@ -9,6 +9,9 @@ import { setTimeout as delay } from 'node:timers/promises';
 
 const execute = promisify(execFile);
 const root = fileURLToPath(new URL('../', import.meta.url));
+if (process.argv.slice(2).some((arg) => arg !== '--sprints'))
+  throw new Error('Unknown identity test selection.');
+const sprintsOnly = process.argv.includes('--sprints');
 const image =
   'postgres:18.6@sha256:edb0c08dc33befd0262ab3b5cf1c4f3f8cfd8b09e88c05b45adee29d6761ddb6';
 const owner = randomBytes(12).toString('hex');
@@ -154,93 +157,79 @@ try {
     { env, signal: abort.signal },
   );
   console.log('Disposable PostgreSQL 18.6 ready; identity migration applied twice.');
-  const principals = await command(
-    'Identity integration suite',
-    process.execPath,
-    ['--test', '--test-reporter=spec', 'apps/api/test/principals.test.mjs'],
-    { env, signal: abort.signal },
-  );
-  process.stdout.write(principals.stdout);
-  const workspaces = await command(
-    'Identity integration suite',
-    process.execPath,
-    ['--test', '--test-reporter=spec', 'apps/api/test/workspaces.test.mjs'],
-    { env, signal: abort.signal },
-  );
-  process.stdout.write(workspaces.stdout);
-  const domain = await command(
-    'Identity integration suite',
-    process.execPath,
-    ['--test', '--test-reporter=spec', 'apps/api/test/project-tasks.test.mjs'],
-    { env, signal: abort.signal },
-  );
-  process.stdout.write(domain.stdout);
-  const collaboration = await command(
-    'Identity integration suite',
-    process.execPath,
-    ['--test', '--test-reporter=spec', 'apps/api/test/task-collaboration.test.mjs'],
-    { env, signal: abort.signal },
-  );
-  process.stdout.write(collaboration.stdout);
-  const discovery = await command(
-    'Task discovery integration suite',
-    process.execPath,
-    ['--test', '--test-reporter=spec', 'apps/api/test/task-discovery.test.mjs'],
-    { env, signal: abort.signal },
-  );
-  process.stdout.write(discovery.stdout);
-  const witness = join(directory, 'domain-persistence.json');
-  await command(
-    'Domain persistence snapshot',
-    process.execPath,
-    ['apps/api/test/project-task-persistence.mjs', 'snapshot', witness],
-    { env, signal: abort.signal },
-  );
-  await command('Task-owned PostgreSQL restart', 'docker', ['restart', '--time', '10', name], {
-    signal: abort.signal,
-  });
-  let restarted = false;
-  for (let attempt = 0; attempt < 60 && !abort.signal.aborted; attempt++) {
-    const result = await execute(
-      'docker',
-      ['exec', name, 'pg_isready', '-h', '127.0.0.1', '-U', 'identity', '-d', 'identity_spike'],
-      { timeout: 3000 },
-    ).catch(() => null);
-    if (result) {
-      restarted = true;
-      break;
-    }
-    await delay(250, undefined, { signal: abort.signal });
+  const suites = sprintsOnly
+    ? ['sprint-planning']
+    : [
+        'principals',
+        'workspaces',
+        'project-tasks',
+        'task-collaboration',
+        'task-discovery',
+        'sprint-planning',
+      ];
+  for (const suite of suites) {
+    const result = await command(
+      'Identity integration suite',
+      process.execPath,
+      ['--test', '--test-reporter=spec', `apps/api/test/${suite}.test.mjs`],
+      { env, signal: abort.signal },
+    );
+    process.stdout.write(result.stdout);
   }
-  if (!restarted) throw new Error('Task-owned PostgreSQL restart timed out.');
-  // Docker may allocate a new random host port on restart. Rediscover it; the
-  // durable witness compares storage, not the incidental loopback mapping.
-  const restartedPortResult = await command('Restarted database port discovery', 'docker', [
-    'port',
-    name,
-    '5432/tcp',
-  ]);
-  const restartedPort = /^127\.0\.0\.1:(\d+)\s*$/.exec(restartedPortResult.stdout)?.[1];
-  if (!restartedPort) throw new Error('Restarted database port was not loopback-only.');
-  env.DATABASE_URL = `postgresql://identity:${password}@127.0.0.1:${restartedPort}/identity_spike`;
-  privateValues.push(env.DATABASE_URL);
-  const persistence = await command(
-    'Identity integration suite',
-    process.execPath,
-    ['apps/api/test/project-task-persistence.mjs', 'verify', witness],
-    { env, signal: abort.signal },
-  );
-  process.stdout.write(persistence.stdout);
-  const tests = await command(
-    'Identity integration suite',
-    process.execPath,
-    ['--test', '--test-reporter=spec', 'apps/api/test/identity.test.mjs'],
-    { env, signal: abort.signal },
-  );
-  process.stdout.write(tests.stdout);
-  // Successful Node tests must not emit private runtime diagnostics on stderr.
-  if (tests.stderr)
-    console.log('Identity tests emitted diagnostics; inspect privately before delivery.');
+  if (!sprintsOnly) {
+    const witness = join(directory, 'domain-persistence.json');
+    await command(
+      'Domain persistence snapshot',
+      process.execPath,
+      ['apps/api/test/project-task-persistence.mjs', 'snapshot', witness],
+      { env, signal: abort.signal },
+    );
+    await command('Task-owned PostgreSQL restart', 'docker', ['restart', '--time', '10', name], {
+      signal: abort.signal,
+    });
+    let restarted = false;
+    for (let attempt = 0; attempt < 60 && !abort.signal.aborted; attempt++) {
+      const result = await execute(
+        'docker',
+        ['exec', name, 'pg_isready', '-h', '127.0.0.1', '-U', 'identity', '-d', 'identity_spike'],
+        { timeout: 3000 },
+      ).catch(() => null);
+      if (result) {
+        restarted = true;
+        break;
+      }
+      await delay(250, undefined, { signal: abort.signal });
+    }
+    if (!restarted) throw new Error('Task-owned PostgreSQL restart timed out.');
+    // Docker may allocate a new random host port on restart. Rediscover it; the
+    // durable witness compares storage, not the incidental loopback mapping.
+    const restartedPortResult = await command('Restarted database port discovery', 'docker', [
+      'port',
+      name,
+      '5432/tcp',
+    ]);
+    const restartedPort = /^127\.0\.0\.1:(\d+)\s*$/.exec(restartedPortResult.stdout)?.[1];
+    if (!restartedPort) throw new Error('Restarted database port was not loopback-only.');
+    env.DATABASE_URL = `postgresql://identity:${password}@127.0.0.1:${restartedPort}/identity_spike`;
+    privateValues.push(env.DATABASE_URL);
+    const persistence = await command(
+      'Identity integration suite',
+      process.execPath,
+      ['apps/api/test/project-task-persistence.mjs', 'verify', witness],
+      { env, signal: abort.signal },
+    );
+    process.stdout.write(persistence.stdout);
+    const tests = await command(
+      'Identity integration suite',
+      process.execPath,
+      ['--test', '--test-reporter=spec', 'apps/api/test/identity.test.mjs'],
+      { env, signal: abort.signal },
+    );
+    process.stdout.write(tests.stdout);
+    // Successful Node tests must not emit private runtime diagnostics on stderr.
+    if (tests.stderr)
+      console.log('Identity tests emitted diagnostics; inspect privately before delivery.');
+  }
 } catch (error) {
   console.error(error instanceof Error ? error.message : 'Identity validation failed.');
   process.exitCode = 1;

@@ -10,6 +10,7 @@ import {
   type ProjectAssigneePage,
   type ProjectAccessReview,
   type TaskDiscoveryItem,
+  type PlanningSettings,
 } from '@rielia/contracts';
 import type { Project as ProjectRow, Task as TaskRow } from '../generated/prisma/client.js';
 import {
@@ -26,6 +27,40 @@ export type { ReadableTaskProject } from './project-task-dto.js';
 @Injectable()
 export class ProjectTaskService {
   constructor(@Inject(PrincipalService) private readonly principals: PrincipalService) {}
+
+  /** Planning shares this owner's current project authority and transaction. */
+  planningOperation<T>(
+    context: VerifiedExecution,
+    workspaceId: string,
+    projectId: string,
+    operation: 'read' | 'write',
+    work: (
+      tx: Transaction,
+      actor: ExecutionContextResponse,
+      canWrite: boolean,
+      project: ProjectRow,
+    ) => Promise<T>,
+  ) {
+    return this.principals.domainOperation(
+      context,
+      workspaceId,
+      operation,
+      async (tx, actor, canWrite) => {
+        const project = await reads.projectRow(tx, workspaceId, projectId, actor);
+        if (operation === 'write')
+          await tx.$queryRaw`SELECT id FROM project WHERE "workspaceId"=${workspaceId} AND id=${projectId} FOR UPDATE`;
+        return work(tx, actor, canWrite, project);
+      },
+    );
+  }
+
+  /** Called only inside planningOperation; Project remains this owner's write. */
+  configurePlanning(tx: Transaction, project: ProjectRow, settings: PlanningSettings) {
+    return tx.project.update({
+      where: { workspaceId_id: { workspaceId: project.workspaceId, id: project.id } },
+      data: { ...settings, version: { increment: 1 } },
+    });
+  }
 
   projects(
     context: VerifiedExecution,
