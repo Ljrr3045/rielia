@@ -82,7 +82,7 @@ actual delegated/autonomous subjects and revocation are the existing policies.
 No agent gains human administration or the custodian's permissions. Internal
 grant tests do not implement T12 authentication or expose an MCP catalog.
 
-## Validation and remaining work
+## Original implementation verification at `9133c79`
 
 Frozen workspace/unit-tool installs preserve existing dependency pins. Current
 lint and normal deterministic coverage pass: API 236 cases, web 198,
@@ -96,8 +96,9 @@ The [unit guide](unit-coverage.md#t111-planning-coverage--2026-11-19) records to
 floors and remaining branch/null mapping debt. This is numerical approval, not
 product or full T11 acceptance.
 
-The full retained PostgreSQL/HTTP suite passes, including the nine-table restart
-digest and Sprint API readback. Focused current planning checks pass all 10 cases
+The original full retained PostgreSQL/HTTP suite passed, including the nine-table
+restart digest and Sprint API readback, before the Gregorian/UTC storage-boundary
+correction. Focused current planning checks pass all 10 cases
 after the Gregorian/UTC storage-boundary correction: actual migration/reapply,
 legacy/archive preservation, scoped settings, DST/invalid dates, tenants/private/
 viewer/grant/revocation, version/key races, paging, real committed-response loss,
@@ -117,7 +118,8 @@ and queue persistence across stack recreation/restart. It cleaned its owned
 containers, networks, volume, image tags and private fixtures. Current-head
 CI/native review and coordinator acceptance remain pending.
 
-The high/critical audit passes with zero high/critical findings; the retained
+The original local high/critical audit passed with zero high/critical findings; this
+is historical evidence before the Effect advisory update below. The retained
 graph has nine moderate and one low finding. Next 16.4.3 is within two moderate
 cache advisory ranges, both patched in 16.4.5:
 [root-param cache interaction](https://github.com/advisories/GHSA-mfr8-8qww-v76h)
@@ -125,7 +127,55 @@ and [nested cache stream metadata](https://github.com/advisories/GHSA-vc7v-qv4w-
 An installed-source search found no `use cache`, `unstable_cache` or
 `cacheComponents` use in maintained web source/config; that is not an
 exploitability certification. A separate dependency upgrade is recommended;
-this batch changes no pins or security settings.
+those original checks changed no pins or security settings. The correction below
+retains the Next pin and its advisory debt.
+
+## Effect audit correction — 2026-11-19
+
+Hosted [validate at `9133c79`](https://github.com/Ljrr3045/rielia/actions/runs/44626674850/job/135922411632)
+failed the unchanged high audit gate after
+[GHSA-7589-6fvf-x4pw](https://github.com/advisories/GHSA-7589-6fvf-x4pw)
+was updated on November 19. It affects Effect through 3.22.0 and is fixed in
+3.22.1. The pinned `@prisma/config@7.10.1` requires Effect 3.20.0 exactly.
+The current pre-fix local audit reproduces one high, nine moderate and one low
+finding; the earlier zero-high result does not describe that updated audit.
+
+The coordinator authorized only the parent-scoped
+`'@prisma/config>effect': 3.22.1` override and minimal root lock regeneration.
+All ten resolved API/web paths through Prisma config now use Effect 3.22.1.
+Prisma/client 7.10.1 and every other direct pin, both patches, the qs override,
+strict peers, script allowlists and age policy remain unchanged. No audit ignore,
+threshold relaxation, blanket age exception or nonfrozen CI install is used.
+Remove this override when a separately approved supported Prisma config pins a
+patched Effect release, then revalidate the complete graph and migration/runtime
+closure before removal.
+
+Official [Prisma config metadata](https://registry.npmjs.org/@prisma%2Fconfig/7.10.1)
+and Effect [3.20.0](https://registry.npmjs.org/effect/3.20.0)/[3.22.1](https://registry.npmjs.org/effect/3.22.1)
+manifests show unchanged transitive dependency ranges, no new engine/peer/lifecycle
+requirements, and the consumed `effect/Function` export remains available.
+The [upstream release](https://github.com/Effect-TS/effect/releases/tag/effect%403.22.1)
+includes the [linear matcher fix](https://github.com/Effect-TS/effect/commit/3cc3c6e1a64cbdc360e9d28e44f3ec3ce0ece6e3).
+Metadata compatibility is supplemented by the dependency-sensitive checks below;
+this is not an application exploitability assessment.
+
+The corrected root audit passes the existing high/critical gate with zero
+high/critical, nine moderate and one low finding. The isolated unit-tool graph
+is unchanged and its gate passes with zero high/critical and two moderate
+findings. These are dated advisory results, not universal vulnerability absence.
+Source, tests, schema/migrations and all eight approved coverage baselines remain
+byte-for-byte identical to `9133c79`. Current dependency-sensitive validation passes:
+frozen install; complete standard checks with Prisma config/generation and backend
+closure; normal 461-case coverage with the identical count digest; all 20
+infrastructure checks and artifact validation; the full real PostgreSQL/HTTP/
+identity/planning suite with migration reapply and nine-table restart/readback;
+and fresh API/worker, web and migrator image/recovery checks. This new full PG run
+uses final application source, including both storage-boundary and cursor guards;
+it does not relabel the original source-qualified proof above. No baseline write
+or source behavior change was needed. The existing Next notice required its
+supported unchanged-command retry. Owned fixture processes, containers, networks,
+volumes and image tags are cleaned; current-head hosted CI/native/coordinator
+acceptance remains pending on the same Draft PR50.
 
 Use existing contribution commands: `pnpm test:projects:logic`, `pnpm check`,
 `pnpm unit:coverage`, unit infrastructure/artifacts, `pnpm test:identity`,

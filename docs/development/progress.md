@@ -23,6 +23,21 @@ current-head CI/native/coordinator acceptance remain pending.
 T11/P09/US06 and affected P05/P08/P10 remain bounded; UX04/presentation, estimates,
 participation, start/close and full T11 acceptance follow in later batches.
 
+PR50's [hosted validate](https://github.com/Ljrr3045/rielia/actions/runs/44626674850/job/135922411632)
+at `9133c79` failed the high audit gate after the November 19 update to
+[Effect GHSA-7589-6fvf-x4pw](https://github.com/advisories/GHSA-7589-6fvf-x4pw).
+The coordinator authorized the narrow `@prisma/config>effect: 3.22.1` override:
+Prisma config 7.10.1 pins vulnerable 3.20.0 exactly. Minimal resolution/frozen
+install pass, all ten resolved paths use 3.22.1, and current root/tooling high gates
+pass with root nine moderate/one low and tooling two moderate findings. Direct
+pins, policies, source/tests/schema/migrations and all eight baselines remain
+unchanged. Current frozen install, complete standard checks, normal 461-case
+coverage with identical digest, 20 infrastructure checks/artifacts, full PG/HTTP/
+identity/planning/restart and runtime images/recovery pass. Owned runtimes are
+cleaned. The earlier zero-high audit and original source-qualified QA remain
+historical; hosted CI/native/coordinator acceptance on Draft PR50 is still pending,
+and no T11.2 implementation or full T11 acceptance is implied.
+
 ## 2026-11-12 PR49 round1 documentation correction — DRAFT
 
 Native check `131068806214` completed SUCCESS in 16m41s with one valid

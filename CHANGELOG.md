@@ -4,6 +4,14 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Correct PR50's high audit failure for
+  [GHSA-7589-6fvf-x4pw](https://github.com/advisories/GHSA-7589-6fvf-x4pw) with the
+  coordinator-approved parent-scoped `@prisma/config>effect: 3.22.1` override and
+  minimal lock resolution. Direct pins, source/tests and eight baselines remain
+  unchanged. Frozen install, standard checks, 461-case coverage/20 infrastructure
+  checks, full PG/HTTP/planning/restart and runtime images/recovery pass. Current
+  root audit has zero high/critical, nine moderate/one low; isolated tooling has
+  two moderate. Hosted/native/coordinator acceptance remains pending in Draft PR50.
 - Add T11.1 project planning settings and planned sprint APIs with strict local
   date/UTC boundaries, current-authority replay, versioned paging and atomic
   activity/outbox/receipts. Local standard/runtime and source-qualified PG checks
