@@ -4,6 +4,16 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Address [PR51 round 1](https://github.com/Ljrr3045/rielia/pull/51#issuecomment-7027804157)
+  with immutable set-Sprint response binding that preserves current-state replay,
+  a required fixture-scoped planning read across PostgreSQL/API restart, and
+  presence/order/once-only journal assertions. Approved API/web coverage updates
+  pass 531 cases with six baselines unchanged; infrastructure/artifacts, standard
+  checks and the full retained PG/security/restart sequence pass. Next's existing
+  security upgrade recommendation and moderate/low audit debt remain explicit.
+  No backend domain, SQL, dependency, UI or close/carryover change; new-head
+  CI/native/coordinator acceptance remains pending on the same Draft PR51.
+
 - Record T11.1 acceptance at reviewed `4ce5775`, merge `e215973`, and successful
   exact postmerge CI. Implement bounded [T11.2 scope/start](docs/development/sprint-scope-start.md)
   with persistent estimates/visits, immutable full start references, typed history

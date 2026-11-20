@@ -156,7 +156,12 @@ export function createTaskPlanningTransport(options: { baseURL?: string; timeout
         p,
         `${task(t)}/sprint`,
         signal,
-        transition(w, p, { taskId: t }, 'set-task-sprint'),
+        (v): v is SprintTransitionResult =>
+          transition(w, p, { taskId: t }, 'set-task-sprint')(v) &&
+          v.operation.exitedVisitId === input.expectedCurrentParticipationId &&
+          (input.targetSprintId === null
+            ? input.expectedCurrentParticipationId !== null && v.operation.enteredVisitId === null
+            : v.operation.sprintId === input.targetSprintId && v.operation.enteredVisitId !== null),
         input,
         key,
         { taskId: t },

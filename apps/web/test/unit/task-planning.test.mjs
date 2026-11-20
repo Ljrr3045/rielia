@@ -111,6 +111,92 @@ test('planning transport preserves exact explicit null/zero payload and original
   );
   assert.ok(calls.at(-1).url.endsWith('/sprints/s/start'));
 });
+test('setSprint rejects operations that do not match the requested transition or current scope', async (t) => {
+  const transfer = {
+      ...input,
+      expectedCurrentParticipationId: 'old-visit',
+      expectedSourceVersion: 2,
+    },
+    removal = { ...transfer, targetSprintId: null, expectedTargetVersion: null };
+  let value;
+  t.mock.method(globalThis, 'fetch', async () => Response.json(value));
+  const transport = createTaskPlanningTransport();
+  for (const [name, body, operation, current = planning] of [
+    ['wrong destination', input, { ...op, sprintId: 'other' }],
+    ['unexpected initial exit', input, { ...op, exitedVisitId: 'other-visit' }],
+    [
+      'missing transfer entry',
+      transfer,
+      { ...op, enteredVisitId: null, exitedVisitId: 'old-visit' },
+    ],
+    ['missing transfer exit', transfer, op],
+    ['wrong transfer exit', transfer, { ...op, exitedVisitId: 'other-visit' }],
+    ['unexpected removal entry', removal, { ...op, exitedVisitId: 'old-visit' }],
+    ['missing removal exit', removal, op],
+    ['wrong removal exit', removal, { ...op, enteredVisitId: null, exitedVisitId: 'other-visit' }],
+    [
+      'removal without original visit',
+      { ...input, targetSprintId: null, expectedTargetVersion: null },
+      op,
+    ],
+    ['foreign task', input, op, { ...planning, taskId: 'other' }],
+    ['foreign project', input, op, { ...planning, projectId: 'other', currentParticipation: null }],
+    [
+      'foreign workspace',
+      input,
+      op,
+      { ...planning, workspaceId: 'other', currentParticipation: null },
+    ],
+    ['different operation', input, { ...op, type: 'start-sprint', enteredVisitId: null }, sprint],
+  ])
+    await t.test(name, async () => {
+      value = { operation, current };
+      await assert.rejects(transport.setSprint('w', 'p', 't', body, 'captured-key', signal()), {
+        status: 502,
+      });
+    });
+});
+test('setSprint replay binds the original operation while accepting another current destination or null', async (t) => {
+  const transfer = {
+      ...input,
+      expectedCurrentParticipationId: 'old-visit',
+      expectedSourceVersion: 2,
+    },
+    removal = { ...transfer, targetSprintId: null, expectedTargetVersion: null },
+    calls = [];
+  let value;
+  t.mock.method(globalThis, 'fetch', async (_url, init) => {
+    calls.push(init);
+    return Response.json(value);
+  });
+  const transport = createTaskPlanningTransport();
+  for (const [name, body, operation] of [
+    ['entry', input, op],
+    ['transfer', transfer, { ...op, exitedVisitId: 'old-visit' }],
+    [
+      'removal',
+      removal,
+      { ...op, sprintId: 'source-sprint', enteredVisitId: null, exitedVisitId: 'old-visit' },
+    ],
+  ])
+    for (const [state, currentParticipation] of [
+      [
+        'another destination',
+        { id: 'later-visit', sprint: { ...sprint, id: 'later', url: '/sprints/later' } },
+      ],
+      ['unscheduled', null],
+    ])
+      await t.test(`${name}: ${state}`, async () => {
+        value = { operation, current: { ...planning, currentParticipation } };
+        const before = calls.length,
+          key = `captured-${name}`,
+          result = await transport.setSprint('w', 'p', 't', body, key, signal());
+        assert.deepEqual(result, value);
+        assert.equal(calls.length, before + 1);
+        assert.equal(calls.at(-1).body, JSON.stringify(body));
+        assert.equal(calls.at(-1).headers['Idempotency-Key'], key);
+      });
+});
 test('bounded scope/history transports validate exact target and encode continuation', async (t) => {
   const totals = {
     done: 0,

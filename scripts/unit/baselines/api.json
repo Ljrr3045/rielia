@@ -976,7 +976,7 @@
       "apps/api/test/unit/project-task-values-policy.test.mjs": "a3417f0f8985ae265d7b65576c0caffb213f5f720506cab62c43b4519b4523bd",
       "apps/api/test/unit/sprint-http.test.mjs": "92a32a1ce78d0dcb9ff3c308fa7ebc6b671d7ce70315f7af2d11587dbad73cb1",
       "apps/api/test/unit/sprint-planning.test.mjs": "8f473738c029817e379c9f4f4ede39ea1ac7c3c56d3f257e08a802d725d9d521",
-      "apps/api/test/unit/sprint-scope-start.test.mjs": "19488e1517b7e8e10661b480ab2aa9c1e31c962bebdb468e56187be0a07b8e53",
+      "apps/api/test/unit/sprint-scope-start.test.mjs": "026320eea55cddc1d1d804455b035b5ed2f9e642e5f88381b40aee8bf608153a",
       "apps/api/test/unit/task-collaboration-policy.test.mjs": "489d6a0daa852c1108ecc81d00726089b0651f0f5b6c8eb2eb7bfa21fb6b3331",
       "apps/api/test/unit/task-discovery-policy.test.mjs": "36f59eef992cc398bf035ef525726af0ec0dd300fbc7bf0a4233bd6fac87ec14",
       "apps/api/test/unit/task-events-lifecycle.test.mjs": "ad32f2d28bcd651f5fbf729b0b346884d49d500657035cbc3f3874b6e7e724b5",

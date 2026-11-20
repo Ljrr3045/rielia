@@ -1,5 +1,31 @@
 # Delivery progress and decisions
 
+## 2026-11-19 PR51 round 1 correction — locally verified, DRAFT
+
+Native [round 1](https://github.com/Ljrr3045/rielia/runs/136006512141) completed
+SUCCESS on `f9d0e038`, with three suggestions and a COMMENTED formal review.
+The coordinator returned the same PR51 to Draft and ratified the bounded fixes.
+Transport validates the original input-known destination/exit and entry/removal
+shape while accepting authorized current state after later transfer/removal.
+The restart harness saves a second known participant before restart and requires
+its exact scoped planning DTO afterwards, retaining the removed/archived retry
+witness and twelve-table digest. Both journal-order chains require presence and
+once-only effects before comparing order. No backend domain/SQL/dependency changes.
+
+Exact coordinator approval precedes only API/web baseline writes; the other six
+remain byte-identical. [Current coverage](unit-coverage.md#pr51-round-1-corrective-coverage)
+passes 531 cases and all 16 normal reports reproduce approved candidates exactly.
+Twenty infrastructure checks/artifacts, standard checks on the supported unchanged
+Next-notice retry, and full retained PG/HTTP/security/real restart pass. Root/tooling
+high audit gates pass with root 14 moderate/one low and tooling two moderate
+findings. Next recommends a security upgrade; no upgrade or gate suppression occurs.
+Prior runtime-image/queue/dependency evidence retains its original source limits;
+current standard builds and changed transport/restart checks are separately verified.
+[The delivery guide](sprint-scope-start.md#pr51-round-1-correction) records details.
+New-head CI/native review, thread disposition and coordinator acceptance/merge
+remain open. Full T11 stays IN PROGRESS; close/UI/integrated acceptance follow
+later. Earlier dated entries retain their historical source and acceptance state.
+
 ## 2026-11-19 T11.1 ACCEPTED; T11.2 locally verified — DRAFT PR51; T11 IN PROGRESS
 
 T11.1 is accepted in [PR50](https://github.com/Ljrr3045/rielia/pull/50#issuecomment-7025241040),

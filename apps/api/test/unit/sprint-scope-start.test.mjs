@@ -249,6 +249,10 @@ test('explicit empty start journals once in the same transaction and stores the 
   assert.equal(r.operation.enteredVisitId, null);
   assert.equal(r.current.state, 'active');
   const names = f.calls.map(([n]) => n);
+  for (const effect of ['sprint.update', 'activity', 'event', 'outbox', 'receipt']) {
+    assert.ok(names.includes(effect), `Missing required ${effect}`);
+    assert.equal(names.filter((name) => name === effect).length, 1, `${effect} must occur once`);
+  }
   assert.ok(names.indexOf('sprint.update') < names.indexOf('activity'));
   assert.ok(names.indexOf('activity') < names.indexOf('event'));
   assert.ok(names.indexOf('event') < names.indexOf('outbox'));
@@ -684,6 +688,10 @@ test('legacy Task mutation awaits the final Task observation after Activity and 
   );
   assert.equal(result.version, 4);
   const names = f.calls.map(([n]) => n);
+  for (const effect of ['activity', 'event', 'outbox', 'receipt']) {
+    assert.ok(names.includes(effect), `Missing required ${effect}`);
+    assert.equal(names.filter((name) => name === effect).length, 1, `${effect} must occur once`);
+  }
   assert.ok(names.indexOf('activity') < names.indexOf('event'));
   assert.ok(names.indexOf('event') < names.indexOf('outbox'));
   assert.ok(names.indexOf('outbox') < names.indexOf('receipt'));

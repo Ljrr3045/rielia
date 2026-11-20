@@ -127,13 +127,33 @@ async function preparePlanningRetry() {
     },
   };
   const entered = await request(origin, cookie, assign.path, assign.body, assign.key),
+    retainedTask = await request(
+      origin,
+      cookie,
+      `${root}/tasks`,
+      { title: 'Retained restart participant' },
+      randomUUID(),
+    ),
+    retainedEntry = await request(
+      origin,
+      cookie,
+      `${root}/tasks/${retainedTask.id}/sprint`,
+      {
+        expectedTaskVersion: retainedTask.version,
+        expectedCurrentParticipationId: null,
+        expectedSourceVersion: null,
+        targetSprintId: sprint.id,
+        expectedTargetVersion: entered.current.currentParticipation.sprint.version,
+      },
+      randomUUID(),
+    ),
     project = (await pool.query('SELECT version,"taskRevision" FROM project WHERE id=$1', [p.id]))
       .rows[0];
   const start = {
     path: `${root}/sprints/${sprint.id}/start`,
     key: randomUUID(),
     body: {
-      expectedVersion: entered.current.currentParticipation.sprint.version,
+      expectedVersion: retainedEntry.current.currentParticipation.sprint.version,
       expectedProjectVersion: project.version,
       expectedTaskRevision: project.taskRevision,
     },
@@ -167,6 +187,13 @@ async function preparePlanningRetry() {
     { expectedVersion: configured.projectVersion },
     randomUUID(),
   );
+  const participantPath = `${root}/tasks/${retainedTask.id}/planning`,
+    participant = await request(origin, cookie, participantPath);
+  assert.equal(participant.workspaceId, p.workspaceId);
+  assert.equal(participant.projectId, p.id);
+  assert.equal(participant.taskId, retainedTask.id);
+  assert.equal(participant.currentParticipation.id, retainedEntry.operation.enteredVisitId);
+  assert.equal(participant.currentParticipation.sprint.id, sprint.id);
   return {
     projectId: p.id,
     create,
@@ -174,6 +201,8 @@ async function preparePlanningRetry() {
     start,
     entryOperation: entered.operation,
     startOperation: began.operation,
+    participantPath,
+    participant,
   };
 }
 try {
@@ -250,36 +279,20 @@ try {
     assert.equal(retainedSprint.state, stored.state);
     if (stored.state === 'active')
       assert.equal(retainedSprint.startedAt, stored.startedAt.toISOString());
-    const active = (
-      await pool.query(
-        `SELECT s.id,s."workspaceId",s."projectId",session.token FROM sprint s JOIN project p ON p.id=s."projectId" JOIN principal h ON h.id=p."createdByPrincipalId" JOIN session ON session."userId"=h."userId" WHERE s.state='active' AND p."archivedAt" IS NULL AND session."expiresAt">now() LIMIT 1`,
-      )
-    ).rows[0];
-    assert.ok(active);
-    const activeCookie = `__Secure-better-auth.session_token=${encodeURIComponent(`${active.token}.${await makeSignature(active.token, process.env.BETTER_AUTH_SECRET)}`)}`;
+    const participant = await request(origin, retryCookie, saved.retry.participantPath);
+    assert.deepEqual(participant, saved.retry.participant);
+    assert.ok(participant.currentParticipation);
+    const active = participant.currentParticipation.sprint;
+    assert.equal(active.state, 'active');
     for (const sidecar of ['scope', 'history']) {
       const response = await fetch(
         `${origin}/api/v1/workspaces/${active.workspaceId}/projects/${active.projectId}/sprints/${active.id}/${sidecar}`,
-        { headers: { cookie: activeCookie } },
+        { headers: { cookie: retryCookie } },
       );
       assert.equal(response.status, 200);
       const value = await response.json();
       assert.equal(value.sprintId, active.id);
-      assert.ok(value.total >= 0);
-    }
-    const participant = (
-      await pool.query(
-        'SELECT "taskId" FROM sprint_participation WHERE "sprintId"=$1 AND "exitedAt" IS NULL LIMIT 1',
-        [active.id],
-      )
-    ).rows[0];
-    if (participant) {
-      const response = await fetch(
-        `${origin}/api/v1/workspaces/${active.workspaceId}/projects/${active.projectId}/tasks/${participant.taskId}/planning`,
-        { headers: { cookie: activeCookie } },
-      );
-      assert.equal(response.status, 200);
-      assert.equal((await response.json()).currentParticipation.sprint.id, active.id);
+      assert.ok(value.total > 0);
     }
     const created = await fetch(requestPath, {
       method: 'POST',

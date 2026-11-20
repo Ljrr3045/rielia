@@ -1,8 +1,10 @@
 # T11.2 persistent sprint scope and explicit start
 
-Status: implemented and locally verified in [Draft PR51](https://github.com/Ljrr3045/rielia/pull/51)
-from implementation head `24a331f`. Current-head CI/native review and coordinator
-acceptance remain pending. T11.1 was accepted in [PR50](https://github.com/Ljrr3045/rielia/pull/50#issuecomment-7025241040),
+Status: implemented and locally verified in [Draft PR51](https://github.com/Ljrr3045/rielia/pull/51).
+The initial implementation is `24a331f`; native round 1 reviewed `f9d0e038`.
+The [corrective batch](#pr51-round-1-correction) below is locally verified;
+new-head CI/native review and coordinator acceptance remain pending.
+T11.1 was accepted in [PR50](https://github.com/Ljrr3045/rielia/pull/50#issuecomment-7025241040),
 reviewed `4ce5775`, merged `e215973`; its exact postmerge
 [validate run](https://github.com/Ljrr3045/rielia/actions/runs/44638739992) passed.
 Full T11 remains IN PROGRESS after this slice.
@@ -121,7 +123,58 @@ application binaries alone is unsafe; keep traffic stopped and use a verified
 roll-forward or separately reviewed database restoration plan. No destructive
 down-migration or deployment is supplied.
 
-## Verification state
+## PR51 round 1 correction
+
+Native [round 1](https://github.com/Ljrr3045/rielia/runs/136006512141) completed
+SUCCESS on `f9d0e038`, with three suggestions and no blocking defect declared.
+The coordinator returned PR51 to Draft and authorized this bounded correction;
+the old successful check does not accept the changed head.
+
+- [Transition binding](https://github.com/Ljrr3045/rielia/pull/51#discussion_r4637500243):
+  the transport binds input-known original destination and exited visit, requires
+  entry for assignment/transfer, and requires a known original exit with no entry
+  for removal. Existing type/tenant/Task validation remains. Server-generated new
+  visit IDs and removal source Sprint cannot be derived from inputs. Current
+  participation may be another destination or null after a legitimate replay;
+  requiring it to equal the original target would violate the receipt contract.
+- [Restart witness](https://github.com/Ljrr3045/rielia/pull/51#discussion_r4637500251):
+  preparation creates a second participant in the fixture's Sprint and saves its
+  exact scoped TaskPlanning DTO after the intended mode/archive changes. Verification
+  unconditionally reads and compares it after actual PostgreSQL/API restart, then
+  reads nonempty scope/history on that known Sprint. It cannot skip a global
+  arbitrarily selected empty Sprint. The original participant is still removed;
+  its original entry/start/create keys still replay after Project archive, and
+  the twelve-table digest remains.
+- [Journal assertions](https://github.com/Ljrr3045/rielia/pull/51#discussion_r4637500256):
+  both chains require every effect to exist exactly once before testing order.
+  This closes the missing-first-call gap; the earlier adjacent comparisons already
+  rejected some missing intermediate/later calls.
+
+Nine adversarial response cases fail against the frozen transport and the corrected
+focused file passes 26/26, including original assignment/transfer/removal replay
+with another current destination or null. Coordinator-approved API/web baseline
+updates pass **531** normal cases (274/224/14/19); all 16 reports are byte-exact to
+the candidates. Six other baselines, all migrations and provider/compiler/config
+inputs remain unchanged. Twenty infrastructure checks and artifact validation pass;
+[coverage accounting](unit-coverage.md#pr51-round-1-corrective-coverage) retains
+unexecuted/type-only/null and four inherited uncovered transport-arm debt.
+
+The complete standard check passes on the supported unchanged-command retry after
+Next's existing security notice. A security upgrade is recommended; none is performed
+or suppressed here. Current high audit gates pass with root 14 moderate/one low
+and tooling two moderate findings. Full retained PG/HTTP/security suites pass
+(12/12/32/12/12/10/17/23 cases), including the required positive participant read,
+original removed/archived retries, twelve-table digest and real database/API restart.
+Owned database/container/volume/private restart state are cleaned.
+
+Backend runtime, migrations and dependencies are unchanged. Original runtime-image,
+queue and deployed-closure evidence below remains qualified to its original source;
+it is not relabelled as a new image test of the changed transport. Current standard
+builds and transport/restart checks are new evidence; hosted CI still includes the
+runtime checks. No UI, T11.3 implementation, dependency upgrade or deployment occurs.
+Coordinator owns thread disposition, Ready/native review, acceptance and merge.
+
+## Initial delivery verification
 
 Frozen workspace and isolated unit-tool installs preserve dependency pins. The
 coordinator approved exactly three current coverage baselines after independent
