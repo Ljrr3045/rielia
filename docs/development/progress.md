@@ -1,6 +1,6 @@
 # Delivery progress and decisions
 
-## 2026-11-19 T11.1 ACCEPTED; T11.2 scope/start implementation IN PROGRESS
+## 2026-11-19 T11.1 ACCEPTED; T11.2 locally verified — DRAFT PR51; T11 IN PROGRESS
 
 T11.1 is accepted in [PR50](https://github.com/Ljrr3045/rielia/pull/50#issuecomment-7025241040),
 reviewed `4ce5775`, merged `e215973`. Exact postmerge
@@ -17,7 +17,9 @@ notice retry), full retained PG/HTTP/security/twelve-table restart and expanded
 pass; current high audits pass with root 14 moderate/one low and tooling two
 moderate findings retained. Application/unit bytes stay bound to the approved
 candidate; only non-unit integration assertions were updated/extended afterwards.
-Draft publication/current-head CI/native review and coordinator acceptance remain open.
+Published as [Draft PR51](https://github.com/Ljrr3045/rielia/pull/51) to `dev`
+from implementation `24a331f`; documentation updates preserve all tested application/
+unit/baseline bytes. Current-head CI/native review and coordinator acceptance remain open.
 T11.3 close/carryover, T11.4 UX04 and T11.5 integrated acceptance remain later work;
 full T11 stays IN PROGRESS. Earlier dated entries retain their historical state.
 

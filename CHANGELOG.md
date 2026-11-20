@@ -11,7 +11,8 @@ This records repository changes. No application version has been released.
   510 cases with preserved floors/per-file ratios and five unchanged baselines; infrastructure/artifacts, standard checks, full
   retained PG/security/restart, focused 17-case scope and runtime/cleanup pass.
   Existing high audit gates pass with explicit moderate/low dependency debt.
-  Draft publication/current-head review remain pending; no full T11/UI/close
+  Published as [Draft PR51](https://github.com/Ljrr3045/rielia/pull/51); current-head
+  CI/native/coordinator acceptance remain pending, with no full T11/UI/close
   acceptance or deployment.
 
 - Address PR50's [round 1 reader-locking suggestion](https://github.com/Ljrr3045/rielia/pull/50#discussion_r4636257121)

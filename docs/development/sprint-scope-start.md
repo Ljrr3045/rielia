@@ -1,7 +1,8 @@
 # T11.2 persistent sprint scope and explicit start
 
-Status: implemented and locally verified; Draft publication and coordinator
-review/acceptance remain pending. T11.1 was accepted in [PR50](https://github.com/Ljrr3045/rielia/pull/50#issuecomment-7025241040),
+Status: implemented and locally verified in [Draft PR51](https://github.com/Ljrr3045/rielia/pull/51)
+from implementation head `24a331f`. Current-head CI/native review and coordinator
+acceptance remain pending. T11.1 was accepted in [PR50](https://github.com/Ljrr3045/rielia/pull/50#issuecomment-7025241040),
 reviewed `4ce5775`, merged `e215973`; its exact postmerge
 [validate run](https://github.com/Ljrr3045/rielia/actions/runs/44638739992) passed.
 Full T11 remains IN PROGRESS after this slice.
@@ -177,8 +178,10 @@ queue restart. It removes only its owned containers/networks/volume/image tags;
 PG fixtures likewise remove their owned databases. No provider, production or
 staging deployment was used. Earlier failed diagnostics remain failed evidence.
 
-Handoff/whitespace/publication and current-head hosted CI remain the final local/
-delivery steps. Coordinator owns Ready/native Kilo/ownership, acceptance and merge.
+Handoff/whitespace checks pass (47 imported files, 30 assets, 901 local links).
+The complete batch is published as Draft PR51; application/unit/baseline bytes
+remain exact through the documentation URL update. Current-head hosted CI remains
+a delivery gate. Coordinator owns Ready/native Kilo/ownership, acceptance and merge.
 Unit doubles do not prove SQL/security/restart properties; API-only evidence does
 not complete native UI or full T11 acceptance. Later close/UI/integrated work and
 real-user/provider/staging scheduling remain outside this slice.
