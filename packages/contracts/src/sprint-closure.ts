@@ -88,7 +88,8 @@ function consequence(v: unknown): v is ClosingConsequence {
     !isRecord(v) ||
     !id(v['participationId']) ||
     !id(v['taskId']) ||
-    !isPlanningSnapshot(v['snapshot'])
+    !isPlanningSnapshot(v['snapshot']) ||
+    typeof v['disposition'] !== 'string'
   )
     return false;
   const state = v['snapshot'].status;
@@ -96,7 +97,7 @@ function consequence(v: unknown): v is ClosingConsequence {
     ? v['disposition'] === 'done'
     : state === 'canceled'
       ? v['disposition'] === 'canceled'
-      : ['pending', 'backlog', 'carried'].includes(String(v['disposition']));
+      : ['pending', 'backlog', 'carried'].includes(v['disposition']);
 }
 export function isCloseSprintInput(v: unknown): v is CloseSprintInput {
   return (

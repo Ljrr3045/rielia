@@ -1,5 +1,37 @@
 # Delivery progress and decisions
 
+## 2026-11-20 PR52 round 1 correction — locally verified, DRAFT
+
+The coordinator accepted all seven findings from native
+[check 136586940559](https://github.com/Ljrr3045/rielia/runs/136586940559) on
+`18973d0` and returned the same [PR52](https://github.com/Ljrr3045/rielia/pull/52)
+to Draft. That successful check reported two warnings/five suggestions and a
+COMMENTED review, not approval. [The correction guide](sprint-closure.md#pr52-round-1-correction)
+maps the timestamp/session fix in the unmerged migration, mapped Prisma unique,
+strict outcome/history guards, exact closed-preview rejection, asserted race
+competitors and reliable lock-test cleanup. All 11 merged migrations remain exact.
+
+New guard regressions fail before correction and pass afterwards. Final focused
+PG/HTTP reports 17 passing cases, including an archived participant closed under
+an actual non-UTC PostgreSQL transaction session, schema uniqueness retention and
+cleanup failure cases; boundary doubles supply no SQL credit. Observed race
+statuses and committed invariants are asserted without retries or broad catches.
+Only the exact coordinator-approved contracts baseline changes; seven others stay
+byte-exact. Normal coverage passes 560 cases and reproduces all 16 candidates,
+with no per-file/global regression or new uncovered units. Twenty infrastructure
+checks/artifacts pass. Standard checks pass on the supported unchanged Next-notice
+retry; high audits retain root 14 moderate/one low and tooling two moderate
+findings. One final runtime/image/migration/recovery/cleanup run passes. No checkout install,
+dependency upgrade or gate suppression is added; required runtime image builds
+use frozen installs. Earlier full local PG/security/14-table restart evidence
+keeps its original source limits rather than being relabelled as this correction.
+
+SOL xhigh and auto_review/on-request/workspace-write are verified on both active
+turns. All changes stay in the existing owned worktree and PR52 remains Draft;
+new-head CI/native review and coordinator acceptance/merge remain separate gates.
+No comments, thread resolutions, Ready transition or Kilo trigger are performed.
+Full T11, T11.4 presentation and T11.5 integrated acceptance remain open.
+
 ## 2026-11-20 T11.2 ACCEPTED; T11.3 close/carryover — DRAFT PR52
 
 T11.2 is accepted in [PR51](https://github.com/Ljrr3045/rielia/pull/51#issuecomment-7029096363),

@@ -934,3 +934,42 @@ source/test selection, provider/compiler/configuration, runtime/tool locks and
 generated/vendor/immutable exclusions remain unchanged. No ignore or lowered
 floor is introduced. Numerical approval is separate from SQL/source/product
 acceptance; [closure evidence](sprint-closure.md) records the remaining gates.
+
+## PR52 round 1 corrective coverage
+
+The coordinator approved only the current contracts baseline after independently
+checking all eight baseline pairs, 57 proposal artifacts and 282 source/test/config
+fingerprints. Contracts SHA-256 changes from
+`1956b90be3215d0d7aa91c441630f4bfe3705a2e89d613dfc7b6f34627045ba0` to
+`50311ea860c0eea57726bb33e32f38536cc28fda9f1466d1e7643544f2459dc6`.
+The seven other baselines, including prototype and all four historical files,
+remain byte-exact. No numerical baseline was written before that approval.
+
+Normal coverage passes **560/560** cases (290 API, 228 web, 23 contracts and
+19 prototype), without skips. All 16 reports match the approved candidates
+byte-for-byte; count digest is
+`bdb6653299a1b1a957aa6029cc905b4e38735625c4821760c39f476099cf124a`.
+Twenty infrastructure checks and artifact validation pass. Contracts retain
+L186/186, S213/213 and F118/118; B776/784 becomes **782/790**, increasing its
+branch floor from 9897 to **9898** basis points. Other scopes retain the exact
+metrics and floors in the preceding dated table.
+
+Strict scalar disposition/discriminator and correlated outcome-target guards add
+one covered branch in `sprint-closure.ts` (126/126 → 127/127) and five in
+`task-planning.ts` (162/162 → 167/167). Both retain L28/28, S33/33 and F18/18.
+The two added malformed-response regressions fail against the earlier guards
+and pass after correction, while preserving valid legacy history shapes.
+No existing per-file/global ratio or covered count decreases; uncovered counts
+do not increase. All eight previously uncovered contract branches remain debt.
+
+All unchanged-source maps retain their identities and covered units. Changed
+source maps/hits are preserved without asserting semantic identity across edits.
+The API20/web19/contracts0/prototype12 unexecuted inputs and three type/reexport
+N/A inputs remain. Null columns remain API199/12286, web819/29836,
+contracts24/2780 and prototype133/6372, with no missing or fabricated columns.
+Original meaningful cases, source/test selection, generated metadata witness,
+provider/compiler/configuration, pins and generated/vendor/immutable exclusions
+remain unchanged. The final non-unit PostgreSQL test cleanup/assertion edits
+are separately verified and do not alter any measured unit input.
+Numerical approval does not accept SQL, product behavior or the changed PR head;
+[the correction guide](sprint-closure.md#pr52-round-1-correction) records those limits.

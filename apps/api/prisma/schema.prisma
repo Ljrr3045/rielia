@@ -374,6 +374,7 @@ model SprintClosingOutcome {
   targetSprintId String?
   targetParticipationId String?
   @@unique([workspaceId, projectId, sprintId, participationId])
+  @@unique([targetParticipationId], map: "sprint_closing_outcome_targetParticipationId_key")
   @@index([workspaceId, projectId, sprintId, id])
   @@index([workspaceId, projectId, taskId, id])
   @@map("sprint_closing_outcome")

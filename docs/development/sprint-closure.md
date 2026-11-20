@@ -1,7 +1,8 @@
 # T11.3 sprint close and explicit carryover
 
 Status: implemented and locally verified in [Draft PR52](https://github.com/Ljrr3045/rielia/pull/52).
-Current-head CI/native review and coordinator acceptance remain pending. This is the
+Current-head CI/native review and coordinator acceptance are separate delivery
+gates. This is the
 bounded T11/B1c, P09/US06 API/transport slice, with affected P05/P08/P10 and
 US05/US12. Full T11 remains IN PROGRESS. T11.4 owns UX04 presentation and T11.5
 owns integrated acceptance. No UI, T22 reports/charts, new grants/credentials/MCP,
@@ -155,3 +156,56 @@ Handoff/asset/local-link and whitespace checks pass, with repository commit hook
 all code/unit/SQL/dependency/baseline bytes remain those tested above. Current-head
 hosted CI remains a delivery gate. Coordinator owns Ready/native Kilo, thread
 disposition, acceptance and merge; this worker activates none of those actions.
+
+## PR52 round 1 correction
+
+Native [check 136586940559](https://github.com/Ljrr3045/rielia/runs/136586940559)
+from App2193792 completed SUCCESS on `18973d0`, reporting two warnings and five
+suggestions with an Address before merge recommendation. Its formal review was
+COMMENTED, not APPROVED. The coordinator accepted all seven for this bounded
+correction and returned the same PR52 to Draft. That old-head result does not
+accept the corrected source. No presentation, product expansion or dependency
+change is included.
+
+| Finding | Correction and meaningful evidence |
+| --- | --- |
+| Archived timestamp/session zone | The unmerged close migration formats the existing timestamp-without-timezone column directly. A real HTTP closure of an archived participant runs with `SET LOCAL TIME ZONE 'America/Caracas'` in its actual PostgreSQL transaction, proves the former expression differs from the canonical snapshot, then succeeds without Task or taskRevision changes. The transaction-local setting cannot persist in the pool. |
+| Prisma target-visit uniqueness | The model maps the existing single-field unique constraint by its exact SQL name. A schema-to-schema diff contains only that unique index; actual PostgreSQL metadata and a datasource-to-model diff verify the invariant is retained. Unrelated historical raw SQL differences are not claimed eliminated. |
+| Coercible outcome disposition | Consequence/outcome guards require a scalar string; array/object malformed cases are rejected. |
+| History discriminator and target correlation | History kind and outcome disposition must be scalar strings; carried outcomes require both target IDs, other outcomes require both null. Tests preserve earlier non-outcome kinds and exercise each malformed correlation. |
+| False-positive closed-preview assertion | Closed preview requires exactly HTTP409/invalid-transition and the equivalent service rejection. Separate web/grant hashes are compared while the same active source and consequences remain unchanged. |
+| Swallowed race failures | Both operations have explicit expected statuses/codes and committed-state assertions. Scope/target competitors may commit or return only their domain conflict; 500/validation/route errors fail. |
+| Lock-client cleanup | Setup is inside protected cleanup, rollback/release failures preserve the original error, and abort/settlement covers the pending request. Failure injection covers connect, BEGIN, lock, work and rollback; the retained real lock test verifies the success path. |
+
+Only `20261121000000_sprint_close` changes SQL; all 11 merged migrations remain
+byte-exact. Disposable databases apply the corrected unmerged migration from
+scratch. This does not provide an in-place repair for a database retaining its
+earlier unmerged checksum; do not rewrite a migration ledger. The operator
+drain/deploy/rollback limits above still apply.
+
+The final focused close suite passes **17** cases without skips, including the
+three added schema/timezone/cleanup cases. The lease failure cases use a boundary
+double and claim no SQL proof; timezone, metadata, HTTP, constraints, races and
+rollback cases use actual PostgreSQL. In this final race run close won each
+serialization; scope/target competitors returned their expected 409 conflicts,
+while the other competitors committed afterwards. Opposite scheduling is allowed
+only through exact domain outcomes; deterministic stale-preview cases retain
+their separate evidence. No retries or broad error swallowing mask failures.
+
+The two new contract regressions fail with the former guards and pass after
+correction. [Approved normal coverage](unit-coverage.md#pr52-round-1-corrective-coverage)
+passes 560 cases and matches all 16 candidates exactly; seven baselines remain
+unchanged. Earlier full PG/security/14-table restart evidence remains bound to
+its original source and is not relabelled as executing these new cases.
+
+Final-source standard checks pass formatting/tooling/lint, backend closure,
+functional/integration checks, strict types, production builds, 17 MCP cases and
+HTTP smoke on Next's supported unchanged-command retry. Both high/critical audit
+gates pass with the same root 14 moderate/one low and tooling two moderate findings;
+the Next advisory remains explicit, without upgrades or gate suppression.
+One final isolated runtime run passes corrected migration gating/reapply,
+nonroot/Express exclusion, DDL delay, lock/signal cleanup, readiness recovery and
+durable queue restart, then verifies removal of its owned resources.
+No unchanged full local PG/security/restart sequence is repeated; earlier evidence
+retains its source limits, alongside these final focused checks. New-head CI,
+new native review, thread disposition and acceptance remain coordinator gates.

@@ -376,3 +376,107 @@ test('closed scope summary and safe outcome history retain frozen values', () =>
       false,
     );
 });
+test('outcome disposition must be a scalar even when an array or object stringifies to an allowed value', () => {
+  for (const value of [
+    ['pending'],
+    ['backlog'],
+    ['carried'],
+    { toString: () => 'backlog' },
+    Object.create(null),
+  ]) {
+    assert.equal(
+      isSprintClosingOutcomePage({ ...page, items: [{ ...outcome, disposition: value }] }),
+      false,
+    );
+    assert.equal(
+      isSprintClosePreview({ ...preview, items: [{ ...item, disposition: value }] }),
+      false,
+    );
+  }
+});
+test('history preserves valid historical shapes and enforces scalar outcome kinds, dispositions and paired targets', () => {
+  const event = {
+    id: 'event',
+    sprintId: 's',
+    taskId: 't',
+    participationId: 'visit',
+    ordinal: 4,
+    kind: 'outcome',
+    action: 'close-sprint',
+    occurredAt: at,
+    before: snapshot,
+    after: snapshot,
+    actor: sprint.creator,
+    provenance: sprint.provenance,
+    closureId: 'closure',
+    disposition: 'backlog',
+    targetSprintId: null,
+    targetParticipationId: null,
+  };
+  const history = (item) => ({
+    workspaceId: 'w',
+    projectId: 'p',
+    sprintId: 's',
+    taskId: null,
+    taskRevision: 4,
+    sprintRevision: 8,
+    total: 1,
+    nextCursor: null,
+    items: [item],
+  });
+  for (const kind of [
+    'entry',
+    'exit',
+    'task-change',
+    'metadata',
+    'start',
+    'estimate',
+    'close',
+    'carryover',
+  ]) {
+    const legacy = { ...event };
+    for (const key of ['closureId', 'disposition', 'targetSprintId', 'targetParticipationId'])
+      delete legacy[key];
+    assert.ok(isPlanningHistoryPage(history({ ...legacy, kind, before: null, after: null })));
+  }
+  for (const disposition of ['done', 'canceled', 'backlog']) {
+    assert.ok(isPlanningHistoryPage(history({ ...event, disposition })));
+    for (const targets of [
+      { targetSprintId: 'dest' },
+      { targetParticipationId: 'next' },
+      { targetSprintId: 'dest', targetParticipationId: 'next' },
+    ])
+      assert.equal(isPlanningHistoryPage(history({ ...event, disposition, ...targets })), false);
+  }
+  assert.ok(
+    isPlanningHistoryPage(
+      history({
+        ...event,
+        disposition: 'carried',
+        targetSprintId: 'dest',
+        targetParticipationId: 'next',
+      }),
+    ),
+  );
+  for (const targets of [
+    { targetSprintId: null, targetParticipationId: null },
+    { targetSprintId: 'dest', targetParticipationId: null },
+    { targetSprintId: null, targetParticipationId: 'next' },
+  ])
+    assert.equal(
+      isPlanningHistoryPage(history({ ...event, disposition: 'carried', ...targets })),
+      false,
+    );
+  for (const value of [['outcome'], ['entry'], { toString: () => 'outcome' }, Object.create(null)])
+    assert.equal(
+      isPlanningHistoryPage(history({ ...event, kind: value, closureId: undefined })),
+      false,
+    );
+  for (const value of [
+    ['backlog'],
+    ['carried'],
+    { toString: () => 'backlog' },
+    Object.create(null),
+  ])
+    assert.equal(isPlanningHistoryPage(history({ ...event, disposition: value })), false);
+});

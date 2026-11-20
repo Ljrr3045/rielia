@@ -4,6 +4,17 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Correct the seven [PR52 round 1 findings](docs/development/sprint-closure.md#pr52-round-1-correction):
+  archived timestamp comparison in the unmerged migration, mapped target-visit
+  uniqueness, strict outcome/history guards, exact closed-preview rejection,
+  both race results and robust lock-test cleanup. Real non-UTC session closure
+  and final 17-case focused PG/HTTP checks pass; 560 normal unit cases reproduce
+  approved reports with only the authorized contracts baseline changing.
+  Infrastructure/artifacts, standard checks, high audits and one final runtime/
+  recovery/cleanup run pass with explicit existing debt and source limits.
+  The same PR52 stays Draft; changed-head CI/native and coordinator acceptance
+  remain required. No presentation, dependency upgrade or full T11 acceptance.
+
 - Record accepted T11.2 [PR51](https://github.com/Ljrr3045/rielia/pull/51#issuecomment-7029096363),
   merge `10f0e89`, and exact successful postmerge CI. Implement bounded
   [T11.3 close/carryover](docs/development/sprint-closure.md): immutable outcomes,

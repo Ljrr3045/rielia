@@ -257,6 +257,7 @@ function historyItem(v: unknown): v is PlanningHistoryItem {
     (v['taskId'] === null || id(v['taskId'])) &&
     (v['participationId'] === null || id(v['participationId'])) &&
     positive(v['ordinal']) &&
+    typeof v['kind'] === 'string' &&
     [
       'entry',
       'exit',
@@ -267,13 +268,15 @@ function historyItem(v: unknown): v is PlanningHistoryItem {
       'close',
       'carryover',
       'outcome',
-    ].includes(String(v['kind'])) &&
+    ].includes(v['kind']) &&
     historyActions.includes(String(v['action'])) &&
     (v['kind'] !== 'outcome' ||
       (id(v['closureId']) &&
-        ['done', 'canceled', 'backlog', 'carried'].includes(String(v['disposition'])) &&
-        (v['targetSprintId'] === null || id(v['targetSprintId'])) &&
-        (v['targetParticipationId'] === null || id(v['targetParticipationId'])))) &&
+        typeof v['disposition'] === 'string' &&
+        ['done', 'canceled', 'backlog', 'carried'].includes(v['disposition']) &&
+        (v['disposition'] === 'carried'
+          ? id(v['targetSprintId']) && id(v['targetParticipationId'])
+          : v['targetSprintId'] === null && v['targetParticipationId'] === null))) &&
     instant(v['occurredAt']) &&
     (v['before'] === null || isPlanningSnapshot(v['before'])) &&
     (v['after'] === null || isPlanningSnapshot(v['after'])) &&

@@ -108,7 +108,7 @@ BEGIN
       RAISE EXCEPTION 'Closure requires exact source and planned target' USING ERRCODE='23514';
     END IF;
   ELSE
-    IF NOT EXISTS (SELECT 1 FROM sprint_participation v JOIN task t ON t."workspaceId"=v."workspaceId" AND t."projectId"=v."projectId" AND t.id=v."taskId" WHERE v."workspaceId"=NEW."workspaceId" AND v."projectId"=NEW."projectId" AND v."sprintId"=NEW."sprintId" AND v.id=NEW."participationId" AND v."taskId"=NEW."taskId" AND v."exitedAt" IS NULL AND NEW.snapshot=jsonb_build_object('version',t.version,'status',t.status,'estimatePoints',t."estimatePoints",'parentTaskId',t."parentTaskId",'archivedAt',CASE WHEN t."archivedAt" IS NULL THEN NULL ELSE to_char(t."archivedAt" AT TIME ZONE 'UTC','YYYY-MM-DD"T"HH24:MI:SS.MS"Z"') END)) THEN
+    IF NOT EXISTS (SELECT 1 FROM sprint_participation v JOIN task t ON t."workspaceId"=v."workspaceId" AND t."projectId"=v."projectId" AND t.id=v."taskId" WHERE v."workspaceId"=NEW."workspaceId" AND v."projectId"=NEW."projectId" AND v."sprintId"=NEW."sprintId" AND v.id=NEW."participationId" AND v."taskId"=NEW."taskId" AND v."exitedAt" IS NULL AND NEW.snapshot=jsonb_build_object('version',t.version,'status',t.status,'estimatePoints',t."estimatePoints",'parentTaskId',t."parentTaskId",'archivedAt',CASE WHEN t."archivedAt" IS NULL THEN NULL ELSE to_char(t."archivedAt",'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"') END)) THEN
       RAISE EXCEPTION 'Outcome requires a canonical current source visit' USING ERRCODE='23514';
     END IF;
   END IF;

@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { randomUUID, createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
 import pg from 'pg';
 import { makeSignature } from 'better-auth/crypto';
 import { NestFactory } from '@nestjs/core';
@@ -11,6 +13,7 @@ import { configureApplication, createHttpAdapter } from '../dist/application.js'
 import { IdentityService } from '../dist/identity/identity.service.js';
 import { PrincipalService } from '../dist/principals/principal.service.js';
 import { SprintService } from '../dist/projects/sprint.service.js';
+import { ProjectTaskService } from '../dist/projects/project-task.service.js';
 import {
   isSprintClosePreview,
   isSprintClosingOutcomePage,
@@ -18,6 +21,57 @@ import {
   isSprintScopePage,
   isPlanningHistoryPage,
 } from '@rielia/contracts';
+
+const execute = promisify(execFile);
+/** Test-only lease: setup and rollback failures cannot leak a client or its request. */
+async function withLockedProjectRequest(pool, projectId, submit, inspect) {
+  let client,
+    pending,
+    value,
+    failure,
+    failed = false;
+  const abort = new AbortController();
+  try {
+    client = await pool.connect();
+    await client.query('BEGIN');
+    await client.query('SELECT id FROM project WHERE id=$1 FOR UPDATE', [projectId]);
+    pending = Promise.resolve()
+      .then(() => submit(abort.signal))
+      .then(
+        (value) => ({ value }),
+        (error) => ({ error }),
+      );
+    value = await inspect(client, async () => {
+      const result = await pending;
+      if ('error' in result) throw result.error;
+      return result.value;
+    });
+  } catch (error) {
+    failed = true;
+    failure = error;
+  } finally {
+    abort.abort();
+    let cleanupError;
+    try {
+      if (client) await client.query('ROLLBACK');
+    } catch (error) {
+      cleanupError = error;
+    } finally {
+      try {
+        client?.release(cleanupError);
+      } catch (error) {
+        cleanupError ??= error;
+      }
+      if (pending) await pending;
+    }
+    if (cleanupError && !failed) {
+      failed = true;
+      failure = cleanupError;
+    }
+  }
+  if (failed) throw failure;
+  return value;
+}
 
 test('T11.3 real PostgreSQL/HTTP immutable close and carryover', async (t) => {
   const app = await NestFactory.create(AppModule, createHttpAdapter(), {
@@ -30,7 +84,8 @@ test('T11.3 real PostgreSQL/HTTP immutable close and carryover', async (t) => {
     identity = app.get(IdentityService),
     db = identity.runtime.prisma,
     principals = app.get(PrincipalService),
-    sprints = app.get(SprintService);
+    sprints = app.get(SprintService),
+    projects = app.get(ProjectTaskService);
   const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL, max: 5 });
   t.after(async () => {
     await pool.end();
@@ -52,9 +107,10 @@ test('T11.3 real PostgreSQL/HTTP immutable close and carryover', async (t) => {
       cookie: `__Secure-better-auth.session_token=${encodeURIComponent(`${token}.${await makeSignature(token, process.env.BETTER_AUTH_SECRET)}`)}`,
     };
   }
-  async function req(user, path, body, key = randomUUID()) {
+  async function req(user, path, body, key = randomUUID(), signal) {
     const r = await fetch(`${url}/api/v1/${path}`, {
       method: body === undefined ? 'GET' : 'POST',
+      signal,
       headers: {
         cookie: user.cookie,
         ...(body === undefined
@@ -243,6 +299,152 @@ test('T11.3 real PostgreSQL/HTTP immutable close and carryover', async (t) => {
   const rawTasks = async (f) =>
     db.task.findMany({ where: { projectId: f.project.id }, orderBy: { id: 'asc' } });
   await t.test(
+    'Prisma retains the SQL target-visit unique constraint without proposing its removal',
+    async () => {
+      const name = 'sprint_closing_outcome_targetParticipationId_key';
+      const constraints = await pool.query(
+        `SELECT conname, contype, pg_get_constraintdef(oid) AS definition FROM pg_constraint WHERE conrelid='sprint_closing_outcome'::regclass AND conname=$1`,
+        [name],
+      );
+      assert.deepEqual(constraints.rows, [
+        { conname: name, contype: 'u', definition: 'UNIQUE ("targetParticipationId")' },
+      ]);
+      const { stdout } = await execute(
+        'pnpm',
+        [
+          '--filter',
+          '@rielia/api',
+          'exec',
+          'prisma',
+          'migrate',
+          'diff',
+          '--from-config-datasource',
+          '--to-schema',
+          'prisma/schema.prisma',
+          '--script',
+        ],
+        { env: process.env, timeout: 30000, maxBuffer: 2 * 1024 * 1024 },
+      );
+      // Historical raw SQL constraints are intentionally not all represented by Prisma.
+      assert.doesNotMatch(
+        stdout,
+        /DROP (?:CONSTRAINT|INDEX) "?sprint_closing_outcome_targetParticipationId_key/,
+      );
+    },
+  );
+  await t.test(
+    'archived canonical closure succeeds in the affected non-UTC PostgreSQL transaction session',
+    async () => {
+      const f = await fixture(),
+        s = await sprint(f),
+        a = await task(f);
+      await assign(f, a.id, s.id);
+      await ok(f.owner, `${f.path}/tasks/${a.id}/archive`, { expectedVersion: a.version });
+      await start(f, s.id);
+      const snapshot = (await getPlanning(f, a.id)).snapshot;
+      assert.ok(snapshot.archivedAt);
+      const input = closeBody(await preview(f, s.id, 'backlog'));
+      const tasksBefore = await rawTasks(f);
+      const revision = (await db.project.findUniqueOrThrow({ where: { id: f.project.id } }))
+        .taskRevision;
+      const original = projects.planningOperation;
+      let observed;
+      projects.planningOperation = function (context, workspaceId, projectId, operation, work) {
+        return original.call(
+          this,
+          context,
+          workspaceId,
+          projectId,
+          operation,
+          async (tx, ...rest) => {
+            if (projectId === f.project.id && operation === 'write') {
+              // SET LOCAL cannot escape this commit/rollback or contaminate a pooled session.
+              await tx.$executeRawUnsafe("SET LOCAL TIME ZONE 'America/Caracas'");
+              [observed] =
+                await tx.$queryRaw`SELECT current_setting('TimeZone') AS zone, pg_backend_pid() AS pid, to_char("archivedAt" AT TIME ZONE 'UTC','YYYY-MM-DD"T"HH24:MI:SS.MS"Z"') AS old, to_char("archivedAt",'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"') AS canonical FROM task WHERE id=${a.id}`;
+              assert.equal(observed.zone, 'America/Caracas');
+              assert.ok(observed.pid > 0);
+              assert.notEqual(observed.old, snapshot.archivedAt);
+              assert.equal(observed.canonical, snapshot.archivedAt);
+            }
+            return work(tx, ...rest);
+          },
+        );
+      };
+      try {
+        const result = await req(f.owner, `${path(f, s.id)}/close`, input);
+        assert.equal(result.status, 201, JSON.stringify(result));
+        assert.equal(result.data.current.state, 'closed');
+        assert.equal(observed.zone, 'America/Caracas');
+      } finally {
+        projects.planningOperation = original;
+      }
+      assert.deepEqual(
+        (await ok(f.owner, `${path(f, s.id)}/closure/outcomes`)).items[0].snapshot,
+        snapshot,
+      );
+      assert.deepEqual(await rawTasks(f), tasksBefore);
+      assert.equal(
+        (await db.project.findUniqueOrThrow({ where: { id: f.project.id } })).taskRevision,
+        revision,
+      );
+    },
+  );
+  await t.test(
+    'lock lease cleanup preserves setup/work errors and settles the pending request even when rollback fails',
+    async () => {
+      for (const failure of ['connect', 'BEGIN', 'lock', 'inspect', 'rollback']) {
+        const primary = new Error(failure),
+          cleanup = new Error('rollback failed');
+        let releases = 0,
+          releasedError,
+          submitted = false,
+          settled = false;
+        const client = {
+          async query(sql) {
+            if (sql === 'ROLLBACK') throw failure === 'rollback' ? primary : cleanup;
+            if (sql === failure || (failure === 'lock' && sql.startsWith('SELECT'))) throw primary;
+          },
+          release(error) {
+            releases++;
+            releasedError = error;
+          },
+        };
+        const fakePool = {
+          async connect() {
+            if (failure === 'connect') throw primary;
+            return client;
+          },
+        };
+        await assert.rejects(
+          withLockedProjectRequest(
+            fakePool,
+            'project',
+            (signal) => {
+              submitted = true;
+              return new Promise((_resolve, reject) => {
+                const finish = () => {
+                  settled = true;
+                  reject(new Error('request aborted'));
+                };
+                if (signal.aborted) finish();
+                else signal.addEventListener('abort', finish, { once: true });
+              });
+            },
+            async () => {
+              if (failure === 'inspect') throw primary;
+            },
+          ),
+          (error) => error === primary,
+        );
+        assert.equal(releases, failure === 'connect' ? 0 : 1);
+        if (releases) assert.equal(releasedError, failure === 'rollback' ? primary : cleanup);
+        assert.equal(submitted, ['inspect', 'rollback'].includes(failure));
+        assert.equal(settled, submitted);
+      }
+    },
+  );
+  await t.test(
     'aggregate carryover freezes all >100 independent archived/child/zero/null/offscale consequences without Task DML',
     async () => {
       const f = await fixture(),
@@ -428,7 +630,7 @@ test('T11.3 real PostgreSQL/HTTP immutable close and carryover', async (t) => {
     },
   );
   await t.test(
-    'concurrent close/task,scope,target,mode,archive,access and grant races preserve one atomic outcome or explicit rejection',
+    'concurrent close/task,scope,target,mode,archive,access and grant races assert both operations and committed invariants',
     async () => {
       for (const change of ['task', 'scope', 'target', 'mode', 'archive', 'access', 'grant']) {
         const f = await fixture(),
@@ -453,78 +655,134 @@ test('T11.3 real PostgreSQL/HTTP immutable close and carryover', async (t) => {
         }
         const actor = (await principals.webContext({ cookie: f.owner.cookie }, f.workspace.id))
           .context;
-        let execution = actor;
+        let execution, grant;
         if (change === 'grant') {
-          const g = await principals.recordInternalGrant(actor, {
+          grant = await principals.recordInternalGrant(actor, {
             subjectPrincipalId: f.owner.principalId,
             mode: 'delegated',
             allowedOperations: ['read', 'write'],
             expiresAt: new Date(Date.now() + 3600000),
           });
-          execution = await principals.internalGrantContext(g, f.workspace.id);
-          execution = { context: execution, grant: g };
+          execution = await principals.internalGrantContext(grant, f.workspace.id);
         }
-        const previewResult =
-            change === 'grant'
-              ? await sprints.closePreview(
-                  execution.context,
-                  f.workspace.id,
-                  f.project.id,
-                  s.id,
-                  dest.id,
-                )
-              : await preview({ ...f, owner: closingUser }, s.id, dest.id),
-          input = closeBody(previewResult),
+        const pv = execution
+          ? await sprints.closePreview(execution, f.workspace.id, f.project.id, s.id, dest.id)
+          : await preview({ ...f, owner: closingUser }, s.id, dest.id);
+        const input = closeBody(pv),
           k = randomUUID();
-        const closing =
-          change === 'grant'
-            ? sprints
-                .close(
-                  execution.context,
-                  f.workspace.id,
-                  f.project.id,
-                  s.id,
-                  k,
-                  randomUUID(),
-                  input,
-                )
-                .then((data) => ({ status: 201, data }))
-                .catch((e) => ({ status: e.getStatus(), data: e.getResponse() }))
-            : req(closingUser, `${path(f, s.id)}/close`, input, k);
-        let mutation;
-        if (change === 'task') mutation = estimate(f, a.id, 1);
-        if (change === 'scope') mutation = assign(f, a.id, null).catch(() => null);
+        // Prepare all expected versions before either competitor is submitted.
+        const taskBefore = await db.task.findUniqueOrThrow({ where: { id: a.id } });
+        const sourceBody = change === 'scope' ? await scopeBody(f, a.id, null) : null;
+        const compete = () => {
+          if (change === 'task')
+            return req(f.owner, `${f.path}/tasks/${a.id}/planning`, {
+              expectedVersion: taskBefore.version,
+              estimatePoints: 1,
+            });
+          if (change === 'scope') return req(f.owner, `${f.path}/tasks/${a.id}/sprint`, sourceBody);
+          if (change === 'target')
+            return req(f.owner, path(f, dest.id), {
+              expectedVersion: pv.expectedTargetVersion,
+              ...fields,
+              name: 'Racing target',
+            });
+          if (change === 'mode')
+            return req(f.owner, `${f.path}/planning`, {
+              expectedVersion: pv.expectedProjectVersion,
+              mode: 'kanban',
+              timeZone: 'UTC',
+              pointScale: [0, 1, 3, 5, 8],
+            });
+          if (change === 'archive')
+            return req(f.owner, `${f.path}/archive`, {
+              expectedVersion: pv.expectedProjectVersion,
+            });
+          if (change === 'access')
+            return req(f.owner, `${f.path}/access/${closingUser.principalId}`, {
+              expectedVersion: pv.expectedProjectVersion,
+              state: 'revoked',
+            });
+          return principals.revokeGrant(actor, grant).then(() => ({ status: 200, data: null }));
+        };
+        const closing = execution
+          ? sprints
+              .close(execution, f.workspace.id, f.project.id, s.id, k, randomUUID(), input)
+              .then((data) => ({ status: 201, data }))
+              .catch((e) => ({ status: e.getStatus(), data: e.getResponse() }))
+          : req(closingUser, `${path(f, s.id)}/close`, input, k);
+        const [closed, competitor] = await Promise.all([closing, compete()]);
+        t.diagnostic(
+          `${change}: close=${closed.status}/${closed.data.code ?? 'committed'}, competitor=${competitor.status}/${competitor.data?.code ?? 'committed'}`,
+        );
+        const loserCodes = {
+          task: 'close-preview-changed',
+          scope: 'close-preview-changed',
+          target: 'close-preview-changed',
+          mode: 'close-preview-changed',
+          archive: 'archived',
+        };
+        if (closed.status !== 201) {
+          const expectedStatus = change === 'access' ? 403 : change === 'grant' ? 401 : 409;
+          assert.equal(closed.status, expectedStatus, `${change}: ${JSON.stringify(closed)}`);
+          if (expectedStatus === 409) assert.equal(closed.data.code, loserCodes[change]);
+        }
+        if (['scope', 'target'].includes(change) && competitor.status !== 201) {
+          assert.equal(competitor.status, 409, `${change}: ${JSON.stringify(competitor)}`);
+          assert.equal(
+            competitor.data.code,
+            change === 'scope' ? 'current-sprint-conflict' : 'version-conflict',
+          );
+          assert.equal(closed.status, 201);
+        } else {
+          assert.equal(
+            competitor.status,
+            change === 'grant' ? 200 : 201,
+            `${change}: ${JSON.stringify(competitor)}`,
+          );
+          if (['scope', 'target'].includes(change)) assert.equal(closed.status, 409);
+        }
+        const outcomes = await db.sprintClosingOutcome.findMany({ where: { sprintId: s.id } });
+        assert.equal(outcomes.length, closed.status === 201 ? 1 : 0);
+        assert.equal(await db.sprintClosure.count({ where: { sprintId: s.id } }), outcomes.length);
+        assert.equal(
+          (await db.sprint.findUniqueOrThrow({ where: { id: s.id } })).state,
+          outcomes.length ? 'closed' : 'active',
+        );
+        const current = await db.sprintParticipation.findFirst({
+          where: { taskId: a.id, exitedAt: null },
+        });
+        if (change === 'scope' && competitor.status === 201) assert.equal(current, null);
+        else assert.equal(current.sprintId, outcomes.length ? dest.id : s.id);
+        const taskAfter = await db.task.findUniqueOrThrow({ where: { id: a.id } });
+        assert.equal(taskAfter.estimatePoints, change === 'task' ? 1 : taskBefore.estimatePoints);
+        assert.equal(taskAfter.version, taskBefore.version + (change === 'task' ? 1 : 0));
+        if (outcomes.length)
+          assert.equal(outcomes[0].snapshot.estimatePoints, taskBefore.estimatePoints);
         if (change === 'target')
-          mutation = ok(f.owner, path(f, dest.id), {
-            expectedVersion: previewResult.expectedTargetVersion,
-            ...fields,
-            name: 'Racing target',
-          }).catch(() => null);
+          assert.equal(
+            (await db.sprint.findUniqueOrThrow({ where: { id: dest.id } })).name,
+            competitor.status === 201 ? 'Racing target' : fields.name,
+          );
         if (change === 'mode')
-          mutation = ok(f.owner, `${f.path}/planning`, {
-            expectedVersion: previewResult.expectedProjectVersion,
-            mode: 'kanban',
-            timeZone: 'UTC',
-            pointScale: [0, 1, 3, 5, 8],
-          });
+          assert.equal(
+            (await db.project.findUniqueOrThrow({ where: { id: f.project.id } })).mode,
+            'kanban',
+          );
         if (change === 'archive')
-          mutation = ok(f.owner, `${f.path}/archive`, {
-            expectedVersion: previewResult.expectedProjectVersion,
-          });
-        if (change === 'access')
-          mutation = ok(f.owner, `${f.path}/access/${closingUser.principalId}`, {
-            expectedVersion: previewResult.expectedProjectVersion,
-            state: 'revoked',
-          });
-        if (change === 'grant') mutation = principals.revokeGrant(actor, execution.grant);
-        const [r] = await Promise.all([closing, mutation]);
-        assert.ok([200, 201, 401, 403, 409].includes(r.status), JSON.stringify(r));
-        const count = await db.sprintClosure.count({ where: { sprintId: s.id } });
-        assert.equal(count, r.status < 300 ? 1 : 0);
-        if (count)
-          assert.equal(await db.sprintClosingOutcome.count({ where: { sprintId: s.id } }), 1);
+          assert.ok(
+            (await db.project.findUniqueOrThrow({ where: { id: f.project.id } })).archivedAt,
+          );
         if (change === 'access')
           assert.equal((await req(closingUser, `${path(f, s.id)}/close`, input, k)).status, 403);
+        if (change === 'grant') {
+          assert.ok(
+            (await db.executionGrant.findUniqueOrThrow({ where: { id: grant } })).revokedAt,
+          );
+          await assert.rejects(
+            sprints.close(execution, f.workspace.id, f.project.id, s.id, k, randomUUID(), input),
+            (e) => e.getStatus() === 401,
+          );
+        }
       }
     },
   );
@@ -783,20 +1041,29 @@ test('T11.3 real PostgreSQL/HTTP immutable close and carryover', async (t) => {
           }),
           execution = await principals.internalGrantContext(grant, f.workspace.id),
           pv = await sprints.closePreview(execution, f.workspace.id, f.project.id, source.id),
-          key = randomUUID(),
-          result = await sprints.close(
-            execution,
-            f.workspace.id,
-            f.project.id,
-            source.id,
-            key,
-            randomUUID(),
-            closeBody(pv),
-          );
+          key = randomUUID();
+        const webPreview = await preview(f, source.id);
+        assert.equal(webPreview.expectedVersion, pv.expectedVersion);
+        assert.equal(webPreview.expectedSprintRevision, pv.expectedSprintRevision);
+        assert.equal(webPreview.expectedTaskRevision, pv.expectedTaskRevision);
+        assert.deepEqual(webPreview.items, pv.items);
+        assert.notEqual(webPreview.previewHash, pv.previewHash);
+        const result = await sprints.close(
+          execution,
+          f.workspace.id,
+          f.project.id,
+          source.id,
+          key,
+          randomUUID(),
+          closeBody(pv),
+        );
         assert.equal(result.current.state, 'closed');
-        assert.notEqual(
-          pv.previewHash,
-          (await preview(f, source.id).catch(() => ({ previewHash: 'closed' }))).previewHash,
+        const closedPreview = await req(f.owner, `${path(f, source.id)}/close-preview`);
+        assert.equal(closedPreview.status, 409);
+        assert.equal(closedPreview.data.code, 'invalid-transition');
+        await assert.rejects(
+          sprints.closePreview(execution, f.workspace.id, f.project.id, source.id),
+          (e) => e.getStatus() === 409 && e.getResponse().code === 'invalid-transition',
         );
         await principals.revokeGrant(context, grant);
         await assert.rejects(
@@ -824,23 +1091,20 @@ test('T11.3 real PostgreSQL/HTTP immutable close and carryover', async (t) => {
         parent = await task(f);
       await assign(f, a.id, s.id);
       await start(f, s.id);
-      const input = closeBody(await preview(f, s.id, dest.id)),
-        c = await pool.connect();
-      await c.query('BEGIN');
-      await c.query('SELECT id FROM project WHERE id=$1 FOR UPDATE', [f.project.id]);
-      const pending = req(f.owner, `${path(f, s.id)}/close`, input);
-      let value;
-      try {
-        await new Promise((resolve) => setTimeout(resolve, 60));
-        const released = (await c.query('SELECT clock_timestamp() AS at')).rows[0].at;
-        await c.query('COMMIT');
-        value = await pending;
-        assert.equal(value.status, 201);
-        assert.ok(Date.parse(value.data.current.closedAt) >= released.getTime());
-      } finally {
-        await c.query('ROLLBACK');
-        c.release();
-      }
+      const input = closeBody(await preview(f, s.id, dest.id));
+      await withLockedProjectRequest(
+        pool,
+        f.project.id,
+        (signal) => req(f.owner, `${path(f, s.id)}/close`, input, randomUUID(), signal),
+        async (c, response) => {
+          await new Promise((resolve) => setTimeout(resolve, 60));
+          const released = (await c.query('SELECT clock_timestamp() AS at')).rows[0].at;
+          await c.query('COMMIT');
+          const value = await response();
+          assert.equal(value.status, 201);
+          assert.ok(Date.parse(value.data.current.closedAt) >= released.getTime());
+        },
+      );
       const frozen = await ok(f.owner, `${path(f, s.id)}/closure/outcomes`),
         references = await db.sprintStartReference.findMany({ where: { sprintId: s.id } });
       await estimate(f, a.id, 1);
