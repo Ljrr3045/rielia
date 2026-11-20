@@ -12,7 +12,8 @@ This records repository changes. No application version has been released.
   cases; infrastructure/artifacts, standard checks, full PG/security/14-table
   restart, final 14-case focused close and runtime/cleanup pass with their source
   qualifications. High audits pass with explicit moderate/low and Next advisory
-  debt; no upgrade or gate suppression. Draft publication/current-head CI/native/
+  debt; no upgrade or gate suppression. Published as
+  [Draft PR52](https://github.com/Ljrr3045/rielia/pull/52); current-head CI/native/
   coordinator delivery remains pending. No UI, deployment or full T11 acceptance.
 
 - Address [PR51 round 1](https://github.com/Ljrr3045/rielia/pull/51#issuecomment-7027804157)

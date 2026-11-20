@@ -1,6 +1,7 @@
 # T11.3 sprint close and explicit carryover
 
-Status: implemented and locally verified; Draft publication is pending. This is the
+Status: implemented and locally verified in [Draft PR52](https://github.com/Ljrr3045/rielia/pull/52).
+Current-head CI/native review and coordinator acceptance remain pending. This is the
 bounded T11/B1c, P09/US06 API/transport slice, with affected P05/P08/P10 and
 US05/US12. Full T11 remains IN PROGRESS. T11.4 owns UX04 presentation and T11.5
 owns integrated acceptance. No UI, T22 reports/charts, new grants/credentials/MCP,
@@ -148,5 +149,9 @@ tags; PostgreSQL harnesses also clean their owned fixtures. No task-local server
 is retained. Doubles do not establish SQL/security/restart properties, and this
 API-only slice does not establish UI/usability or full T11 acceptance.
 
-Draft publication/current-head CI, native review and coordinator acceptance remain
-delivery gates. Coordinator owns Ready/native Kilo, thread disposition and merge.
+The implementation batch is `52cb23f`; this publication update changes prose only.
+The same [Draft PR52](https://github.com/Ljrr3045/rielia/pull/52) targets `dev`.
+Handoff/asset/local-link and whitespace checks pass, with repository commit hooks;
+all code/unit/SQL/dependency/baseline bytes remain those tested above. Current-head
+hosted CI remains a delivery gate. Coordinator owns Ready/native Kilo, thread
+disposition, acceptance and merge; this worker activates none of those actions.

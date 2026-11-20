@@ -1,6 +1,6 @@
 # Delivery progress and decisions
 
-## 2026-11-20 T11.2 ACCEPTED; T11.3 close/carryover — IN PROGRESS
+## 2026-11-20 T11.2 ACCEPTED; T11.3 close/carryover — DRAFT PR52
 
 T11.2 is accepted in [PR51](https://github.com/Ljrr3045/rielia/pull/51#issuecomment-7029096363),
 reviewed `a966441850a22a786ebe1227ce4247d4736c6ae1`, merged `10f0e89`.
@@ -22,8 +22,10 @@ qualification. Application/unit/baseline bytes stay bound to approved candidates
 High audits pass with root 14 moderate/one low and tooling two moderate findings;
 Next recommends a security upgrade, with no upgrade or gate suppression here.
 The new close grant-namespace unit arm remains explicit debt. Original handoff,
-11 older migrations and pins remain unchanged. Draft publication/current-head CI,
-native review and coordinator acceptance remain pending. T11.4/T11.5 and existing
+11 older migrations and pins remain unchanged. Published as
+[Draft PR52](https://github.com/Ljrr3045/rielia/pull/52) to `dev` from implementation
+`52cb23f`; this URL update changes prose only. Current-head hosted CI, native review
+and coordinator acceptance remain pending. T11.4/T11.5 and existing
 real-user/provider/staging deferrals remain outside this slice.
 
 ## 2026-11-19 PR51 round 1 correction — locally verified, DRAFT
@@ -2438,7 +2440,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T08 | B1b | List/Kanban, filters, ranking | T06 | [T08.0 logic](task-views.md) merged in PR #19 at `f8895709`; [T08.1 presentation](task-views-ui.md) in [PR #20](https://github.com/Ljrr3045/rielia/pull/20). Configurable workflows/labels/sprints and full US05/T08 remain open |
 | T09 | B1b | Subtasks, checklists, comments, history | T06 | T09.0 bounded collaboration logic merged in [PR #21](https://github.com/Ljrr3045/rielia/pull/21) at `76d7d31b`; T09.1 [presentation](task-collaboration-ui.md) delivered in [PR #22](https://github.com/Ljrr3045/rielia/pull/22) with standard checks and targeted functional/responsive QA passed. Exact current-head CI/Kody/merge evidence remains in GitHub/external final report. Full T09/P05/P14/P38, credentials and real-user/staging acceptance remain open |
 | T10 | B1b | Search, My tasks, responsive layout, SSE | T07–T09 | T10.0 bounded logic merged in [PR #23](https://github.com/Ljrr3045/rielia/pull/23) at `6bde444c`; T10.1 [presentation](task-discovery-ui.md) PR [#24](https://github.com/Ljrr3045/rielia/pull/24) includes exact root-reviewed SOL controller/test URL corrections and has accepted functional/responsive evidence. Full T10/P11/US05, labels/sprints, exports, coediting, credentials, real-user/staging and deployment remain open |
-| T11 | B1c | Sprint lifecycle and scope history | T08–T09; later user prerequisite T36 → T37 | IN PROGRESS; T11.1/PR50 and T11.2/PR51 accepted, [T11.3 close/carryover](sprint-closure.md) locally verified with Draft/CI/native/coordinator delivery pending; T11.4 UI and T11.5 integrated acceptance remain |
+| T11 | B1c | Sprint lifecycle and scope history | T08–T09; later user prerequisite T36 → T37 | IN PROGRESS; T11.1/PR50 and T11.2/PR51 accepted, [T11.3 close/carryover](sprint-closure.md) locally verified in [Draft PR52](https://github.com/Ljrr3045/rielia/pull/52) with CI/native/coordinator acceptance pending; T11.4 UI and T11.5 integrated acceptance remain |
 | T12 | B1c | Personal/service credentials, explicit-subject grants | T07, T35 | Not started |
 | T13 | B1c | Local MCP catalog/client/guide | T03, T11–T12 | Not started |
 | T14 | B1d | JSON/CSV export and archive recovery | T09, T12 | Not started |
