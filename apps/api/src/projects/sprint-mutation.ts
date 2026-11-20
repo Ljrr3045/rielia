@@ -14,6 +14,7 @@ import type { Transaction, VerifiedExecution } from '../principals/principal.ser
 import type { ProjectTaskService } from './project-task.service.js';
 import { canonical, identifier } from './project-task-input.js';
 import { planningView, sprintRow, sprintView } from './sprint-read.js';
+import { scopeEvent } from './sprint-participation.js';
 
 export function mutateSprint(
   projects: ProjectTaskService,
@@ -84,6 +85,8 @@ export function mutateSprint(
           changes: [],
         },
       });
+      if (sprintId && 'version' in result)
+        await scopeEvent(tx, project, sprintId, result.version, activityId, 'metadata', new Date());
       await tx.outboxEvent.create({
         data: {
           id: randomUUID(),

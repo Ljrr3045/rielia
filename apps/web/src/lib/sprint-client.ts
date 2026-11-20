@@ -1,10 +1,10 @@
 import {
   isRecord,
   isProjectPlanning,
-  isPlannedSprint,
+  isSprint,
   isSprintPage,
   type ProjectPlanning,
-  type PlannedSprint,
+  type Sprint,
   type SprintPage,
   type SprintPlanningCommand,
   type SprintPlanningResult,
@@ -70,7 +70,7 @@ export function createSprintPlanningTransport(
     if (!response.ok) {
       const current =
         isRecord(value) &&
-        (isPlannedSprint(value['current']) || isProjectPlanning(value['current'])) &&
+        (isSprint(value['current']) || isProjectPlanning(value['current'])) &&
         scoped(value['current'], w, p, s)
           ? value['current']
           : null;
@@ -89,7 +89,7 @@ export function createSprintPlanningTransport(
       if (!isProjectPlanning(value) || !scoped(value, w, p)) throw new SprintPlanningFailure(502);
       return value;
     },
-    async sprint(w: string, p: string, s: string, signal: AbortSignal): Promise<PlannedSprint> {
+    async sprint(w: string, p: string, s: string, signal: AbortSignal): Promise<Sprint> {
       const value = await request(
         `${root(w, p)}/sprints/${encodeURIComponent(s)}`,
         w,
@@ -99,7 +99,7 @@ export function createSprintPlanningTransport(
         undefined,
         s,
       );
-      if (!isPlannedSprint(value) || !scoped(value, w, p, s)) throw new SprintPlanningFailure(502);
+      if (!isSprint(value) || !scoped(value, w, p, s)) throw new SprintPlanningFailure(502);
       return value;
     },
     async sprints(w: string, p: string, signal: AbortSignal, cursor?: string): Promise<SprintPage> {
@@ -132,9 +132,7 @@ export function createSprintPlanningTransport(
       const s = command.type === 'edit-sprint' ? command.sprintId : undefined;
       const value = await request(path, w, p, signal, body, key, s);
       if (
-        !(command.type === 'configure-planning'
-          ? isProjectPlanning(value)
-          : isPlannedSprint(value)) ||
+        !(command.type === 'configure-planning' ? isProjectPlanning(value) : isSprint(value)) ||
         !scoped(value as SprintPlanningResult, w, p, s)
       )
         throw new SprintPlanningFailure(502);

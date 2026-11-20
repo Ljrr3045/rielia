@@ -17,11 +17,14 @@ import { TaskDiscoveryController } from './projects/task-discovery.controller.js
 import { TaskDiscoveryService } from './projects/task-discovery.service.js';
 import { TaskEventsService } from './projects/task-events.service.js';
 import { SprintController } from './projects/sprint.controller.js';
+import { TaskPlanningService } from './projects/task-planning.service.js';
+import { TaskPlanningController } from './projects/task-planning.controller.js';
 import { SprintService } from './projects/sprint.service.js';
 
 @Module({
   controllers: [
     SprintController,
+    TaskPlanningController,
     HealthController,
     IdentityController,
     ReadinessController,
@@ -33,6 +36,7 @@ import { SprintService } from './projects/sprint.service.js';
   ],
   providers: [
     SprintService,
+    TaskPlanningService,
     IdentityService,
     RuntimeService,
     PrincipalService,

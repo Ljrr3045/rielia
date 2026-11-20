@@ -159,12 +159,17 @@ test('proxy allows only implemented sprint paths/scalar cursors and preserves fi
     });
   });
   const root = 'https://app.example.test/api/v1/workspaces/w/projects/p';
-  for (const path of ['/planning', '/sprints', '/sprints/s', '/sprints?cursor=' + 'a'.repeat(200)])
+  for (const path of [
+    '/planning',
+    '/sprints',
+    '/sprints/s',
+    '/sprints/s/scope',
+    '/sprints?cursor=' + 'a'.repeat(200),
+  ])
     assert.equal((await proxyProjectTask(new Request(root + path))).status, 200);
   for (const path of [
     '/sprints/s/start',
     '/sprints/s/close',
-    '/sprints/s/scope',
     '/sprints?view=active',
     '/sprints?cursor=a&cursor=b',
     '/sprints/s?cursor=a',

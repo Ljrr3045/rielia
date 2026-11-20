@@ -1,6 +1,6 @@
 import { BadRequestException, ConflictException, ForbiddenException } from '@nestjs/common';
 import { Buffer } from 'node:buffer';
-import type { PlannedSprint, ProjectPlanning, SprintPage } from '@rielia/contracts';
+import type { Sprint as SprintDTO, ProjectPlanning, SprintPage } from '@rielia/contracts';
 import type { Project, Sprint } from '../generated/prisma/client.js';
 import type { Transaction } from '../principals/principal.service.js';
 import { identifier } from './project-task-input.js';
@@ -37,19 +37,25 @@ export async function sprintViews(
   project: Project,
   rows: Sprint[],
   canWrite: boolean,
-): Promise<PlannedSprint[]> {
+): Promise<SprintDTO[]> {
   const people = await loadPeople(
     tx,
     project.workspaceId,
     rows.map((row) => row.createdByPrincipalId),
   );
+  const active = await tx.sprint.findFirst({
+    where: { workspaceId: project.workspaceId, projectId: project.id, state: 'active' },
+    select: { id: true },
+  });
   return rows.map((row) => ({
     id: row.id,
     workspaceId: row.workspaceId,
     projectId: row.projectId,
     name: row.name,
     goal: row.goal,
-    state: 'planned',
+    ...(row.state === 'active'
+      ? { state: 'active' as const, startedAt: row.startedAt!.toISOString() }
+      : { state: 'planned' as const }),
     version: row.version,
     startDate: row.startDate.toISOString().slice(0, 10),
     endDateExclusive: row.endDateExclusive.toISOString().slice(0, 10),
@@ -61,11 +67,20 @@ export async function sprintViews(
     creator: people.get(row.createdByPrincipalId)!,
     provenance: {
       actorPrincipalId: row.createdByPrincipalId,
-      executionMode: row.creationMode as PlannedSprint['provenance']['executionMode'],
-      source: row.creationSource as PlannedSprint['provenance']['source'],
+      executionMode: row.creationMode as SprintDTO['provenance']['executionMode'],
+      source: row.creationSource as SprintDTO['provenance']['source'],
       grantId: row.creationGrantId,
     },
-    capabilities: { canEdit: canWrite && !project.archivedAt },
+    capabilities: {
+      canEdit: canWrite && !project.archivedAt,
+      canChangeScope: canWrite && !project.archivedAt,
+      canStart:
+        canWrite &&
+        !project.archivedAt &&
+        project.mode === 'scrum' &&
+        row.state === 'planned' &&
+        !active,
+    },
     url: `/api/v1/workspaces/${encodeURIComponent(row.workspaceId)}/projects/${encodeURIComponent(row.projectId)}/sprints/${encodeURIComponent(row.id)}`,
   }));
 }

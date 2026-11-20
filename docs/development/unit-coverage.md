@@ -787,3 +787,51 @@ and two transport branch arms stay visible debt, without ignores or exclusions.
 Old raw maps are unavailable in this checkout, so this comparison does not claim
 exact old raw endpoint/hit identity. Real PostgreSQL/HTTP/migration/restart checks
 and their source-qualified limits are recorded in the [planning guide](sprint-planning.md).
+
+## T11.2 scope/start coverage — 2026-11-19
+
+Before any baseline writes, the coordinator independently verified the eight
+before/candidate hashes, 274 source/test/config fingerprints, all existing
+per-file covered counts and exact ratios, totals/floors, retained test changes,
+provider/compiler/configuration and raw nullable endpoints. The first complete
+measurement exposed missing boundary cases; the revised affected API/contracts
+measurement retains the unchanged web/prototype reports. Approval is numerical
+only. Source, product and full T11 acceptance remain separate.
+
+Only the three current baselines migrate: API
+`b52e31931ba8a0ccbef53e7680ddfa7f29b6081a4856913b17646a8c1b1f2ede`, web
+`13b0cf8d1ad9cf5719415f939962e7f89a0a8379df477af2b89d8e494a07a875`, contracts
+`cfc806f179672c8a487c317e230217205ebbb6276ee37e58c3defa15440df105`.
+The prototype and four historical baselines remain byte-exact. Every previous
+floor and per-file exact ratio is retained or improved; no source/test/provider/
+compiler input is excluded or weakened. The compiler-metadata test remains an
+explicit generated non-file manifest entry. No exact historical raw-unit identity
+is claimed for changed source or unavailable historical maps.
+
+Normal all-scope coverage passes **510 cases**: 274 API, 203 web, 14 contracts
+and 19 prototype, without skips. All 16 summary/manifest/map/LCOV files reproduce
+the measured candidate byte-for-byte; combined count digest is
+`0884812afd1574956fd46f2d506621f4058687b625a5f814bfc107bd5b1be4b6`.
+All 20 infrastructure checks and bounded artifact validation pass.
+
+| Scope | Maintained inputs | Covered/total L; S; F; B | Floors in basis points L/S/F/B |
+| --- | ---: | --- | --- |
+| API | 49 | 1237/1918; 1339/2089; 331/544; 1085/1636 | 6449/6409/6084/6632 |
+| Web | 70 | 2468/3942; 2681/4440; 558/1092; 3117/5474 | 6260/6038/5109/5694 |
+| Contracts | 6 | 158/158; 180/180; 100/100; 623/631 | 10000/10000/10000/9873 |
+| Prototype | 16 | 238/853; 269/984; 87/368; 194/954 | 2790/2733/2364/2033 |
+
+Inherited unexecuted nonzero-unit inputs remain 20 API, 19 web and 12 prototype;
+the existing three type-only inputs remain zero-unit N/A. All new maintained
+inputs execute, without universal path coverage. Raw null-column endpoints are
+API186/11382, web818/29668, contracts21/2258 and prototype133/6372. The prior T11.1
+counts remain historical above; null columns are retained, never fabricated.
+
+New uncovered debt is explicit: participation has one statement/anonymous
+function and two branch arms; receipt/mutation has one statement/four arms;
+scope/history read has seven statement locations, four anonymous functions and
+six arms; transport has four arms. Start, task-planning controller/service/task
+owner and new shared validator statement/function paths execute, while older
+shared branch debt remains. The full maps, counts and fingerprints retain these
+gaps. Real PostgreSQL/HTTP/security/restart/runtime evidence belongs to the
+[scope/start guide](sprint-scope-start.md); deterministic doubles do not prove it.

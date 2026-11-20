@@ -82,7 +82,13 @@ function fixture(options = {}) {
     if (next.error) throw next.error;
     return globalThis.structuredClone(next.value);
   };
-  const tx = { $queryRaw: (...args) => consume('project-lock', args) };
+  const tx = {
+    $queryRaw: (...args) =>
+      args[0].join('').includes('FROM sprint')
+        ? Promise.resolve([])
+        : consume('project-lock', args),
+    sprintScopeEvent: { create: async () => undefined },
+  };
   for (const model of [
     'project',
     'sprint',
@@ -97,6 +103,7 @@ function fixture(options = {}) {
         (...args) => consume(`${model}.${method}`, args),
       ]),
     );
+  tx.sprint.findFirst = async () => null;
   let operations = 0;
   const principals = {
     domainOperation: async (c, workspace, operation, work) => {
@@ -229,7 +236,7 @@ test('create captures project zone, UTC interval, actual actor and planned-only 
     ...fields,
   });
   assert.equal(result.state, 'planned');
-  assert.deepEqual(result.capabilities, { canEdit: true });
+  assert.deepEqual(result.capabilities, { canEdit: true, canStart: true, canChangeScope: true });
   f.done();
 });
 test('edit keeps captured zone even after project changes and while project is Kanban', async () => {

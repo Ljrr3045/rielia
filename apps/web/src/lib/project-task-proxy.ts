@@ -15,10 +15,10 @@ export async function proxyProjectTask(request: Request): Promise<Response> {
     );
     const events = new RegExp(`^/api/v1/workspaces/${id}/events$`).test(incoming.pathname);
     const read = new RegExp(
-      `^${root}(?:/${id}(?:/(?:access(?:/${id})?|assignees|planning|sprints(?:/${id})?|tasks(?:/${id})?))?)?$`,
+      `^${root}(?:/${id}(?:/(?:access(?:/${id})?|assignees|planning|sprints(?:/${id}(?:/(?:scope|history))?)?|tasks(?:/${id}(?:/(?:planning|sprint-history))?)?))?)?$`,
     );
     const write = new RegExp(
-      `^${root}(?:/${id}(?:/(?:archive|restore|visibility|planning|sprints(?:/${id})?|access/${id}|tasks(?:/${id}(?:/(?:archive|restore|move))?)?))?)?$`,
+      `^${root}(?:/${id}(?:/(?:archive|restore|visibility|planning|sprints(?:/${id}(?:/start)?)?|access/${id}|tasks(?:/${id}(?:/(?:archive|restore|move|planning|sprint))?)?))?)?$`,
     );
     const taskRoot = `${root}/${id}/tasks/${id}`;
     const collaborationRead = new RegExp(
@@ -44,7 +44,11 @@ export async function proxyProjectTask(request: Request): Promise<Response> {
       `^${taskRoot}/(?:relations|parent-candidates|checklist|comments|history)$`,
     ).test(incoming.pathname);
     const sprints = new RegExp(`^${root}/${id}/sprints$`).test(incoming.pathname);
-    const cursorOnly = /\/(access|assignees)$/.test(incoming.pathname) || collaboration || sprints;
+    const planningPages = new RegExp(
+      `^${root}/${id}/(?:sprints/${id}/(?:scope|history)|tasks/${id}/sprint-history)$`,
+    ).test(incoming.pathname);
+    const cursorOnly =
+      /\/(access|assignees)$/.test(incoming.pathname) || collaboration || sprints || planningPages;
     const allowed =
       request.method !== 'GET'
         ? []
@@ -76,7 +80,7 @@ export async function proxyProjectTask(request: Request): Promise<Response> {
       (view !== null && !['active', 'archived'].includes(view)) ||
       (cursor !== null &&
         !(
-          tasks || collaboration || discovery || sprints
+          tasks || collaboration || discovery || sprints || planningPages
             ? /^[A-Za-z0-9_-]{1,2048}$/
             : /^[A-Za-z0-9_-]{1,128}$/
         ).test(cursor))

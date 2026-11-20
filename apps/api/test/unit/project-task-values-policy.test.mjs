@@ -72,7 +72,7 @@ const people = [member('creator'), member('operator'), member('assignee')];
 // Each repository method consumes explicit, already-loaded answers. No query,
 // authorization, mutation, version, trigger or transaction behavior is emulated.
 function boundary(answers = {}, currentActor = actor, canWrite = true) {
-  const tx = {};
+  const tx = { $queryRaw: async () => [], sprintParticipation: { findFirst: async () => null } };
   const calls = [];
   const remaining = new Map();
   for (const [path, values] of Object.entries(answers)) {

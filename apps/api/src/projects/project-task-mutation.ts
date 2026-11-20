@@ -9,6 +9,7 @@ import type {
 } from '../principals/principal.service.js';
 import { canonical } from './project-task-input.js';
 import * as reads from './project-task-read.js';
+import { prepareTaskObservation, observeTask } from './sprint-participation.js';
 
 export function mutateProjectTask(
   principals: PrincipalService,
@@ -29,7 +30,7 @@ export function mutateProjectTask(
     .digest('hex');
   return principals.domainOperation(context, workspaceId, 'write', async (tx, actor) => {
     if (administration) reads.requireManagement(actor);
-    if (target[0]) await reads.projectRow(tx, workspaceId, target[0], actor);
+    const project = target[0] ? await reads.projectRow(tx, workspaceId, target[0], actor) : null;
     const scope = {
       workspaceId,
       actorPrincipalId: actor.actorPrincipalId,
@@ -59,11 +60,24 @@ export function mutateProjectTask(
         actor,
       );
     }
+    if (project)
+      await tx.$queryRaw`SELECT id FROM project WHERE "workspaceId"=${workspaceId} AND id=${project.id} FOR UPDATE`;
     const before =
       target[1] && action !== 'change-access'
         ? await tx.task.findFirst({
             where: { workspaceId, projectId: target[0]!, id: target[1] },
           })
+        : null;
+    const observation =
+      project && action !== 'change-access'
+        ? await prepareTaskObservation(
+            tx,
+            project,
+            target[1],
+            action,
+            input as Record<string, unknown>,
+            before,
+          )
         : null;
     const result = await work(tx, actor);
     // Only bounded categorical/date snapshots. Never store user text, related
@@ -113,6 +127,10 @@ export function mutateProjectTask(
         changes,
       },
     });
+    if (project && observation?.visit && 'projectId' in result) {
+      const final = await reads.taskRow(tx, workspaceId, result.projectId, result.id);
+      await observeTask(tx, project, observation, final, activityId);
+    }
     await tx.outboxEvent.create({
       data: {
         id: randomUUID(),

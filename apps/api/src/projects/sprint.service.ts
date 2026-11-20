@@ -7,6 +7,9 @@ import { attribution } from './project-task-dto.js';
 import { planningInput, sprintInput, sprintInterval } from './sprint-input.js';
 import { mutateSprint } from './sprint-mutation.js';
 import { planningView, sprintPage, sprintRow, sprintView } from './sprint-read.js';
+import { lockSprints } from './sprint-participation.js';
+import { startSprint } from './sprint-start.js';
+import { sprintScope, planningHistory } from './sprint-scope-read.js';
 
 function matchVersion(actual: number, expected: number, current: SprintPlanningResult) {
   if (actual !== expected)
@@ -27,6 +30,27 @@ function mutable(archivedAt: Date | null, current: SprintPlanningResult) {
 @Injectable()
 export class SprintService {
   constructor(@Inject(ProjectTaskService) private readonly projects: ProjectTaskService) {}
+  start(
+    c: VerifiedExecution,
+    w: string,
+    p: string,
+    s: string,
+    key: string,
+    requestId: string,
+    payload: unknown,
+  ) {
+    return startSprint(this.projects, c, w, p, s, key, requestId, payload);
+  }
+  scope(c: VerifiedExecution, w: string, p: string, s: string, cursor?: string) {
+    return this.projects.planningOperation(c, w, p, 'read', (tx, _a, _write, project) =>
+      sprintScope(tx, project, s, cursor),
+    );
+  }
+  history(c: VerifiedExecution, w: string, p: string, s: string, cursor?: string) {
+    return this.projects.planningOperation(c, w, p, 'read', (tx, _a, _write, project) =>
+      planningHistory(tx, project, { sprintId: s }, cursor),
+    );
+  }
   planning(context: VerifiedExecution, w: string, p: string) {
     return this.projects.planningOperation(
       context,
@@ -112,6 +136,7 @@ export class SprintService {
       id ?? null,
       input,
       async (tx, actor, project) => {
+        if (id !== undefined) await lockSprints(tx, project, [id]);
         const old = id === undefined ? null : await sprintRow(tx, project, id);
         const current = old
           ? await sprintView(tx, project, old, true)

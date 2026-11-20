@@ -148,7 +148,11 @@ function fixture(t, options = {}) {
     ])
       tx[model][operation] = (...args) => consume(model + '.' + operation, args);
   }
-  tx.$queryRaw = (...args) => consume('rank', args);
+  tx.sprintParticipation = { findFirst: async () => null };
+  tx.$queryRaw = (...args) =>
+    args[0].join('').includes('FOR UPDATE') || args[0].join('').includes('SELECT DISTINCT v.')
+      ? Promise.resolve([])
+      : consume('rank', args);
   const principals = {
     domainOperation: async (received, scope, operation, work) => {
       assert.equal(received, context);

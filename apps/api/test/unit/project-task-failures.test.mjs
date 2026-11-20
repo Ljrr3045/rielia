@@ -104,6 +104,8 @@ function fixture(t, actorPatch = {}) {
     if (state.failAt === name) throw failure;
   };
   const tx = {
+    $queryRaw: async () => [],
+    sprintParticipation: { findFirst: async () => null },
     project: {
       findFirst: async () => {
         trace.push('project-read');

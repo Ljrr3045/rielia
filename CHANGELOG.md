@@ -4,6 +4,16 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Record T11.1 acceptance at reviewed `4ce5775`, merge `e215973`, and successful
+  exact postmerge CI. Implement bounded [T11.2 scope/start](docs/development/sprint-scope-start.md)
+  with persistent estimates/visits, immutable full start references, typed history
+  and active-state retry/transport compatibility. Approved normal coverage passes
+  510 cases with preserved floors/per-file ratios and five unchanged baselines; infrastructure/artifacts, standard checks, full
+  retained PG/security/restart, focused 17-case scope and runtime/cleanup pass.
+  Existing high audit gates pass with explicit moderate/low dependency debt.
+  Draft publication/current-head review remain pending; no full T11/UI/close
+  acceptance or deployment.
+
 - Address PR50's [round 1 reader-locking suggestion](https://github.com/Ljrr3045/rielia/pull/50#discussion_r4636257121)
   with a documentation-only maintenance window for readers/writers and long
   transactions, existing one-shot recovery and readiness before resuming traffic.
