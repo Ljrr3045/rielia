@@ -10,6 +10,9 @@ import { planningView, sprintPage, sprintRow, sprintView } from './sprint-read.j
 import { lockSprints } from './sprint-participation.js';
 import { startSprint } from './sprint-start.js';
 import { sprintScope, planningHistory } from './sprint-scope-read.js';
+import { closePreview, closeDestination } from './sprint-close-preview.js';
+import { closeSprint } from './sprint-close.js';
+import { closureView, closureOutcomes } from './sprint-closure-read.js';
 
 function matchVersion(actual: number, expected: number, current: SprintPlanningResult) {
   if (actual !== expected)
@@ -30,6 +33,45 @@ function mutable(archivedAt: Date | null, current: SprintPlanningResult) {
 @Injectable()
 export class SprintService {
   constructor(@Inject(ProjectTaskService) private readonly projects: ProjectTaskService) {}
+  closePreview(
+    c: VerifiedExecution,
+    w: string,
+    p: string,
+    s: string,
+    destination?: string,
+    cursor?: string,
+  ) {
+    const selected = closeDestination(destination);
+    return this.projects.planningOperation(
+      c,
+      w,
+      p,
+      'read',
+      async (tx, actor, write, project) =>
+        (await closePreview(tx, actor, write, project, s, selected, cursor)).preview,
+    );
+  }
+  close(
+    c: VerifiedExecution,
+    w: string,
+    p: string,
+    s: string,
+    key: string,
+    requestId: string,
+    payload: unknown,
+  ) {
+    return closeSprint(this.projects, c, w, p, s, key, requestId, payload);
+  }
+  closure(c: VerifiedExecution, w: string, p: string, s: string) {
+    return this.projects.planningOperation(c, w, p, 'read', (tx, _a, _write, project) =>
+      closureView(tx, project, s),
+    );
+  }
+  outcomes(c: VerifiedExecution, w: string, p: string, s: string, cursor?: string) {
+    return this.projects.planningOperation(c, w, p, 'read', (tx, _a, _write, project) =>
+      closureOutcomes(tx, project, s, cursor),
+    );
+  }
   start(
     c: VerifiedExecution,
     w: string,
@@ -143,6 +185,12 @@ export class SprintService {
           : planningView(project, true);
         matchVersion(old?.version ?? project.version, input.version, current);
         mutable(project.archivedAt, current);
+        if (old?.state === 'closed')
+          throw new ConflictException({
+            code: 'invalid-transition',
+            message: 'Closed sprints are immutable.',
+            current,
+          });
         if (!old && project.mode !== 'scrum')
           throw new ConflictException({
             code: 'invalid-transition',

@@ -20,13 +20,22 @@ export class ProjectTaskHttp {
     req: NodeRequest,
     res: NodeResponse,
     workspaceId: string,
-    list: boolean | 'cursor' | 'tasks' | 'collaboration' | 'discovery' | 'events' | 'sprints',
+    list:
+      | boolean
+      | 'cursor'
+      | 'tasks'
+      | 'collaboration'
+      | 'discovery'
+      | 'events'
+      | 'sprints'
+      | 'close-preview',
     work: (
       context: VerifiedExecution,
       requestId: string,
       view: ArchiveView,
       cursor?: string,
       filters?: TaskFilters,
+      destination?: string,
     ) => Promise<T>,
   ) {
     res.setHeader('Cache-Control', 'no-store');
@@ -72,11 +81,13 @@ export class ProjectTaskHttp {
               ? []
               : list === 'discovery'
                 ? ['scope', 'q', 'view', 'project', 'status', 'assignee', 'priority', 'cursor']
-                : list === 'cursor' || list === 'collaboration' || list === 'sprints'
-                  ? ['cursor']
-                  : list === 'tasks'
-                    ? ['view', 'cursor', 'status', 'assignee', 'priority']
-                    : ['view', 'cursor']
+                : list === 'close-preview'
+                  ? ['cursor', 'destination']
+                  : list === 'cursor' || list === 'collaboration' || list === 'sprints'
+                    ? ['cursor']
+                    : list === 'tasks'
+                      ? ['view', 'cursor', 'status', 'assignee', 'priority']
+                      : ['view', 'cursor']
           ).includes(key),
       ) ||
       (query['view'] !== undefined && !['active', 'archived'].includes(String(query['view']))) ||
@@ -87,11 +98,15 @@ export class ProjectTaskHttp {
             list === 'tasks' ||
             list === 'collaboration' ||
             list === 'discovery' ||
-            list === 'sprints'
+            list === 'sprints' ||
+            list === 'close-preview'
               ? /^[A-Za-z0-9_-]{1,2048}$/
               : /^[A-Za-z0-9_-]{1,128}$/
           ).test(query['cursor']))) ||
       (list === 'discovery' && !parseTaskDiscoveryQuery(query)) ||
+      (query['destination'] !== undefined &&
+        (typeof query['destination'] !== 'string' ||
+          !/^[A-Za-z0-9_-]{1,128}$/.test(query['destination']))) ||
       !isTaskFilters(filters)
     )
       throw new BadRequestException('Invalid project/task query.');
@@ -131,6 +146,7 @@ export class ProjectTaskHttp {
       (query['view'] as ArchiveView) ?? 'active',
       query['cursor'] as string | undefined,
       filters,
+      query['destination'] as string | undefined,
     );
     if (list !== 'events') res.json(data);
   }

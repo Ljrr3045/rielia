@@ -32,7 +32,12 @@ interface SprintRecord extends SprintFields {
   updatedAt: string;
   creator: DomainPerson;
   provenance: DomainProvenance;
-  capabilities: { canEdit: boolean; canStart?: boolean; canChangeScope?: boolean };
+  capabilities: {
+    canEdit: boolean;
+    canStart?: boolean;
+    canChangeScope?: boolean;
+    canClose?: boolean;
+  };
   url: string;
 }
 export interface PlannedSprint extends SprintRecord {
@@ -42,7 +47,12 @@ export interface ActiveSprint extends SprintRecord {
   state: 'active';
   startedAt: string;
 }
-export type Sprint = PlannedSprint | ActiveSprint;
+export interface ClosedSprint extends SprintRecord {
+  state: 'closed';
+  startedAt: string;
+  closedAt: string;
+}
+export type Sprint = PlannedSprint | ActiveSprint | ClosedSprint;
 export interface SprintPage {
   workspaceId: string;
   projectId: string;
@@ -150,12 +160,32 @@ export function isProjectPlanning(v: unknown): v is ProjectPlanning {
   );
 }
 export function isPlannedSprint(v: unknown): v is PlannedSprint {
-  return record(v) && v['state'] === 'planned' && !('startedAt' in v) && isSprintRecord(v);
+  return (
+    record(v) &&
+    v['state'] === 'planned' &&
+    !('startedAt' in v) &&
+    !('closedAt' in v) &&
+    isSprintRecord(v)
+  );
 }
 export function isSprint(v: unknown): v is Sprint {
   return (
     isPlannedSprint(v) ||
-    (record(v) && v['state'] === 'active' && instant(v['startedAt']) && isSprintRecord(v))
+    (record(v) &&
+      v['state'] === 'active' &&
+      instant(v['startedAt']) &&
+      !('closedAt' in v) &&
+      isSprintRecord(v)) ||
+    (record(v) &&
+      v['state'] === 'closed' &&
+      instant(v['startedAt']) &&
+      instant(v['closedAt']) &&
+      v['startedAt'] <= v['closedAt'] &&
+      isSprintRecord(v) &&
+      v.capabilities.canEdit === false &&
+      v.capabilities.canStart === false &&
+      v.capabilities.canChangeScope === false &&
+      v.capabilities.canClose === false)
   );
 }
 function isSprintRecord(v: unknown): v is SprintRecord {
@@ -190,6 +220,7 @@ function isSprintRecord(v: unknown): v is SprintRecord {
         id(p['grantId']))) &&
     record(v['capabilities']) &&
     typeof v['capabilities']['canEdit'] === 'boolean' &&
+    (!('canClose' in v['capabilities']) || typeof v['capabilities']['canClose'] === 'boolean') &&
     (!('canStart' in v['capabilities']) || typeof v['capabilities']['canStart'] === 'boolean') &&
     (!('canChangeScope' in v['capabilities']) ||
       typeof v['capabilities']['canChangeScope'] === 'boolean') &&

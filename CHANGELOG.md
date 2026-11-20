@@ -4,6 +4,29 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Correct the seven [PR52 round 1 findings](docs/development/sprint-closure.md#pr52-round-1-correction):
+  archived timestamp comparison in the unmerged migration, mapped target-visit
+  uniqueness, strict outcome/history guards, exact closed-preview rejection,
+  both race results and robust lock-test cleanup. Real non-UTC session closure
+  and final 17-case focused PG/HTTP checks pass; 560 normal unit cases reproduce
+  approved reports with only the authorized contracts baseline changing.
+  Infrastructure/artifacts, standard checks, high audits and one final runtime/
+  recovery/cleanup run pass with explicit existing debt and source limits.
+  The same PR52 stays Draft; changed-head CI/native and coordinator acceptance
+  remain required. No presentation, dependency upgrade or full T11 acceptance.
+
+- Record accepted T11.2 [PR51](https://github.com/Ljrr3045/rielia/pull/51#issuecomment-7029096363),
+  merge `10f0e89`, and exact successful postmerge CI. Implement bounded
+  [T11.3 close/carryover](docs/development/sprint-closure.md): immutable outcomes,
+  full freshness-bound preview, aggregate membership-only carryover and closed
+  state/legacy retry/transport compatibility. Approved normal coverage passes 558
+  cases; infrastructure/artifacts, standard checks, full PG/security/14-table
+  restart, final 14-case focused close and runtime/cleanup pass with their source
+  qualifications. High audits pass with explicit moderate/low and Next advisory
+  debt; no upgrade or gate suppression. Published as
+  [Draft PR52](https://github.com/Ljrr3045/rielia/pull/52); current-head CI/native/
+  coordinator delivery remains pending. No UI, deployment or full T11 acceptance.
+
 - Address [PR51 round 1](https://github.com/Ljrr3045/rielia/pull/51#issuecomment-7027804157)
   with immutable set-Sprint response binding that preserves current-state replay,
   a required fixture-scoped planning read across PostgreSQL/API restart, and

@@ -314,7 +314,7 @@ test('T11.1 actual PostgreSQL/NodeAdapter planned sprint and planning settings',
       const valid = await create(f, { startDate: '2026-11-01', endDateExclusive: '2026-11-02' });
       assert.equal(Date.parse(valid.endsAt) - Date.parse(valid.startsAt), 25 * 3600000);
       assert.equal((await request(f.owner, `${f.path}/sprints/${valid.id}/start`, {})).status, 400);
-      assert.equal((await request(f.owner, `${f.path}/sprints/${valid.id}/close`, {})).status, 404);
+      assert.equal((await request(f.owner, `${f.path}/sprints/${valid.id}/close`, {})).status, 400);
       await settings(f, { timeZone: 'Etc/GMT-1' });
       const boundaryConfig = await ok(f.owner, `${f.path}/planning`);
       const beforeUnsupported = await db.sprint.count();

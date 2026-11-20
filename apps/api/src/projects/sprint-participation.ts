@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import type { PlanningSnapshot } from '@rielia/contracts';
+import type { PlanningSnapshot, ClosingConsequence } from '@rielia/contracts';
 import {
   Prisma,
   type Project,
@@ -35,7 +35,7 @@ export async function scopeEvent(
   sprintId: string,
   ordinal: number,
   activityId: string,
-  kind: 'entry' | 'exit' | 'task-change' | 'metadata' | 'start',
+  kind: 'entry' | 'exit' | 'task-change' | 'metadata' | 'start' | 'close' | 'carryover',
   at: Date,
   visit: SprintParticipation | null = null,
   before: PlanningSnapshot | null = null,
@@ -57,6 +57,46 @@ export async function scopeEvent(
       afterSnapshot: after ? { ...after } : Prisma.DbNull,
     },
   });
+}
+/** Membership-only aggregate close port, including archived participants. No Task writes. */
+export async function closeParticipations(
+  tx: Transaction,
+  project: Project,
+  source: Sprint,
+  target: Sprint | null,
+  closureId: string,
+  at: Date,
+  items: ClosingConsequence[],
+) {
+  const where = { workspaceId: project.workspaceId, projectId: project.id };
+  const outcomes = items.map((x) => ({
+    id: x.participationId,
+    ...where,
+    sprintId: source.id,
+    closureId,
+    participationId: x.participationId,
+    taskId: x.taskId,
+    snapshot: { ...x.snapshot },
+    disposition: x.disposition,
+    targetSprintId: x.disposition === 'carried' ? target!.id : null,
+    targetParticipationId: x.disposition === 'carried' ? randomUUID() : null,
+  }));
+  if (!outcomes.length) return;
+  await tx.sprintClosingOutcome.createMany({ data: outcomes });
+  await tx.$executeRaw`UPDATE sprint_participation v SET "exitedAt"=${at},"exitedOrdinal"=${source.version},"exitReason"='closed',"exitSnapshot"=o.snapshot FROM sprint_closing_outcome o WHERE o."workspaceId"=${project.workspaceId} AND o."projectId"=${project.id} AND o."closureId"=${closureId} AND v."workspaceId"=o."workspaceId" AND v."projectId"=o."projectId" AND v."sprintId"=o."sprintId" AND v.id=o."participationId"`;
+  const carried = outcomes.filter((o) => o.targetParticipationId !== null);
+  if (carried.length)
+    await tx.sprintParticipation.createMany({
+      data: carried.map((o) => ({
+        id: o.targetParticipationId!,
+        ...where,
+        sprintId: target!.id,
+        taskId: o.taskId,
+        enteredAt: at,
+        enteredOrdinal: target!.version,
+        entrySnapshot: o.snapshot,
+      })),
+    });
 }
 /** Sprint owner performs membership-only writes on the caller's verified transaction. */
 export async function transferParticipation(

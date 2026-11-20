@@ -9,6 +9,57 @@ export class SprintController {
     @Inject(SprintService) private readonly sprints: SprintService,
     @Inject(ProjectTaskHttp) private readonly http: ProjectTaskHttp,
   ) {}
+  @Get('sprints/:sprintId/close-preview')
+  closePreview(
+    @Param('workspaceId') w: string,
+    @Param('projectId') p: string,
+    @Param('sprintId') s: string,
+    @Req() req: NodeRequest,
+    @Res() res: NodeResponse,
+  ) {
+    return this.http.respond(
+      req,
+      res,
+      w,
+      'close-preview',
+      (c, _id, _v, cursor, _filters, destination) =>
+        this.sprints.closePreview(c, w, p, s, destination, cursor),
+    );
+  }
+  @Post('sprints/:sprintId/close')
+  close(
+    @Param('workspaceId') w: string,
+    @Param('projectId') p: string,
+    @Param('sprintId') s: string,
+    @Req() req: NodeRequest,
+    @Res() res: NodeResponse,
+  ) {
+    return this.http.respond(req, res, w, false, (c, id) =>
+      this.sprints.close(c, w, p, s, req.headers['idempotency-key'] as string, id, req.body),
+    );
+  }
+  @Get('sprints/:sprintId/closure')
+  closure(
+    @Param('workspaceId') w: string,
+    @Param('projectId') p: string,
+    @Param('sprintId') s: string,
+    @Req() req: NodeRequest,
+    @Res() res: NodeResponse,
+  ) {
+    return this.http.respond(req, res, w, false, (c) => this.sprints.closure(c, w, p, s));
+  }
+  @Get('sprints/:sprintId/closure/outcomes')
+  outcomes(
+    @Param('workspaceId') w: string,
+    @Param('projectId') p: string,
+    @Param('sprintId') s: string,
+    @Req() req: NodeRequest,
+    @Res() res: NodeResponse,
+  ) {
+    return this.http.respond(req, res, w, 'sprints', (c, _id, _v, cursor) =>
+      this.sprints.outcomes(c, w, p, s, cursor),
+    );
+  }
   @Post('sprints/:sprintId/start')
   start(
     @Param('workspaceId') w: string,

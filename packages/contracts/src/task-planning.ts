@@ -34,7 +34,7 @@ export interface SprintVisit {
   entry: PlanningSnapshot;
   exitedAt: string | null;
   exitedOrdinal: number | null;
-  exitReason: 'removed' | 'transferred' | null;
+  exitReason: 'removed' | 'transferred' | 'closed' | null;
   exit: PlanningSnapshot | null;
   current: PlanningSnapshot;
   start: PlanningSnapshot | null;
@@ -56,13 +56,26 @@ export interface PlanningHistoryItem {
   taskId: string | null;
   participationId: string | null;
   ordinal: number;
-  kind: 'entry' | 'exit' | 'task-change' | 'metadata' | 'start' | 'estimate';
+  kind:
+    | 'entry'
+    | 'exit'
+    | 'task-change'
+    | 'metadata'
+    | 'start'
+    | 'estimate'
+    | 'close'
+    | 'carryover'
+    | 'outcome';
   action: string;
   occurredAt: string;
   before: PlanningSnapshot | null;
   after: PlanningSnapshot | null;
   actor: DomainPerson;
   provenance: DomainProvenance;
+  closureId?: string;
+  disposition?: 'done' | 'canceled' | 'backlog' | 'carried';
+  targetSprintId?: string | null;
+  targetParticipationId?: string | null;
 }
 interface PlanningPage {
   workspaceId: string;
@@ -79,6 +92,8 @@ export interface SprintScopePage extends PlanningPage {
   currentTotals: SprintTotals;
   startTotals: SprintTotals;
   removed: number;
+  transferred?: number;
+  closingTotals?: SprintTotals | null;
 }
 export interface PlanningHistoryPage extends PlanningPage {
   sprintId: string | null;
@@ -117,6 +132,7 @@ const instant = (v: unknown): v is string =>
   Number.isFinite(Date.parse(v)) &&
   new Date(v).toISOString() === v;
 const historyActions = [
+  'close-sprint',
   'create-sprint',
   'edit-sprint',
   'start-sprint',
@@ -180,7 +196,7 @@ function isVisit(v: unknown): v is SprintVisit {
       (instant(v['exitedAt']) &&
         positive(v['exitedOrdinal']) &&
         v['exitedOrdinal'] > v['enteredOrdinal'] &&
-        ['removed', 'transferred'].includes(String(v['exitReason'])) &&
+        ['removed', 'transferred', 'closed'].includes(String(v['exitReason'])) &&
         isPlanningSnapshot(v['exit'])))
   );
 }
@@ -199,7 +215,7 @@ function page(v: unknown): v is PlanningPage & { items: unknown[] } {
       (typeof v['nextCursor'] === 'string' && /^[A-Za-z0-9_-]{1,2048}$/.test(v['nextCursor'])))
   );
 }
-function totals(v: unknown): v is SprintTotals {
+export function isSprintTotals(v: unknown): v is SprintTotals {
   return (
     isRecord(v) &&
     [
@@ -223,8 +239,12 @@ export function isSprintScopePage(v: unknown): v is SprintScopePage {
     positive(v['sprintVersion']) &&
     v.items.every(isVisit) &&
     new Set(v.items.map((x) => x.id)).size === v.items.length &&
-    totals(v['currentTotals']) &&
-    totals(v['startTotals']) &&
+    isSprintTotals(v['currentTotals']) &&
+    isSprintTotals(v['startTotals']) &&
+    (v['closingTotals'] === undefined ||
+      v['closingTotals'] === null ||
+      isSprintTotals(v['closingTotals'])) &&
+    (v['transferred'] === undefined || count(v['transferred'])) &&
     count(v['removed'])
   );
 }
@@ -237,8 +257,26 @@ function historyItem(v: unknown): v is PlanningHistoryItem {
     (v['taskId'] === null || id(v['taskId'])) &&
     (v['participationId'] === null || id(v['participationId'])) &&
     positive(v['ordinal']) &&
-    ['entry', 'exit', 'task-change', 'metadata', 'start', 'estimate'].includes(String(v['kind'])) &&
+    typeof v['kind'] === 'string' &&
+    [
+      'entry',
+      'exit',
+      'task-change',
+      'metadata',
+      'start',
+      'estimate',
+      'close',
+      'carryover',
+      'outcome',
+    ].includes(v['kind']) &&
     historyActions.includes(String(v['action'])) &&
+    (v['kind'] !== 'outcome' ||
+      (id(v['closureId']) &&
+        typeof v['disposition'] === 'string' &&
+        ['done', 'canceled', 'backlog', 'carried'].includes(v['disposition']) &&
+        (v['disposition'] === 'carried'
+          ? id(v['targetSprintId']) && id(v['targetParticipationId'])
+          : v['targetSprintId'] === null && v['targetParticipationId'] === null))) &&
     instant(v['occurredAt']) &&
     (v['before'] === null || isPlanningSnapshot(v['before'])) &&
     (v['after'] === null || isPlanningSnapshot(v['after'])) &&
@@ -281,7 +319,7 @@ export function isSprintTransitionResult(v: unknown): v is SprintTransitionResul
     (op['exitedVisitId'] === null || id(op['exitedVisitId'])) &&
     (op['type'] === 'start-sprint'
       ? isSprint(v['current']) &&
-        v['current'].state === 'active' &&
+        (v['current'].state === 'active' || v['current'].state === 'closed') &&
         op['sprintId'] === v['current'].id &&
         op['enteredVisitId'] === null &&
         op['exitedVisitId'] === null

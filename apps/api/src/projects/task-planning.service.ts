@@ -175,6 +175,11 @@ export class TaskPlanningService {
             code: 'archived',
             message: 'Restore the task and project before changing scope.',
           });
+        if (source?.state === 'closed' || target?.state === 'closed')
+          throw new ConflictException({
+            code: 'invalid-transition',
+            message: 'Closed sprint scope is immutable.',
+          });
         if ((source?.id ?? null) === (target?.id ?? null))
           throw new ConflictException({
             code: 'invalid-transition',

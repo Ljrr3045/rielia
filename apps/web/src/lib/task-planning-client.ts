@@ -12,6 +12,15 @@ import {
   type SprintTransitionResult,
   type StartSprintInput,
   type SetTaskSprintInput,
+  isSprintClosePreview,
+  isSprintClosure,
+  isSprintClosingOutcomePage,
+  isSprintCloseResult,
+  type SprintClosePreview,
+  type SprintClosure,
+  type SprintClosingOutcomePage,
+  type SprintCloseResult,
+  type CloseSprintInput,
 } from '@rielia/contracts';
 
 export class TaskPlanningFailure extends Error {
@@ -112,6 +121,77 @@ export function createTaskPlanningTransport(options: { baseURL?: string; timeout
           v.current.id === entity.sprintId &&
           v.operation.sprintId === entity.sprintId));
   return {
+    closePreview(
+      w: string,
+      p: string,
+      s: string,
+      destination: string | null,
+      signal: AbortSignal,
+      cursor?: string,
+    ) {
+      const params = new URLSearchParams();
+      if (destination !== null) params.set('destination', destination);
+      if (cursor !== undefined) params.set('cursor', cursor);
+      const suffix = params.size ? `?${params}` : '';
+      return request(
+        w,
+        p,
+        `${sprint(s)}/close-preview${suffix}`,
+        signal,
+        (v): v is SprintClosePreview =>
+          isSprintClosePreview(v) &&
+          scoped(v, w, p) &&
+          v.sprintId === s &&
+          v.destination === destination,
+      );
+    },
+    close(
+      w: string,
+      p: string,
+      s: string,
+      input: CloseSprintInput,
+      key: string,
+      signal: AbortSignal,
+    ) {
+      return request(
+        w,
+        p,
+        `${sprint(s)}/close`,
+        signal,
+        (v): v is SprintCloseResult =>
+          isSprintCloseResult(v) &&
+          scoped(v.current, w, p) &&
+          v.operation.sprintId === s &&
+          v.closure.destination === input.destination &&
+          v.closure.previewHash === input.previewHash &&
+          v.closure.previewSchema === input.previewSchema &&
+          v.closure.sourceOrdinal === input.expectedVersion + 1 &&
+          v.closure.targetOrdinal ===
+            (input.expectedTargetVersion === null ? null : input.expectedTargetVersion + 1),
+        input,
+        key,
+        { sprintId: s },
+      );
+    },
+    closure(w: string, p: string, s: string, signal: AbortSignal) {
+      return request(
+        w,
+        p,
+        `${sprint(s)}/closure`,
+        signal,
+        (v): v is SprintClosure => isSprintClosure(v) && scoped(v, w, p) && v.sprintId === s,
+      );
+    },
+    outcomes(w: string, p: string, s: string, signal: AbortSignal, cursor?: string) {
+      return request(
+        w,
+        p,
+        `${sprint(s)}/closure/outcomes${query(cursor)}`,
+        signal,
+        (v): v is SprintClosingOutcomePage =>
+          isSprintClosingOutcomePage(v) && scoped(v, w, p) && v.sprintId === s,
+      );
+    },
     planning(w: string, p: string, t: string, signal: AbortSignal) {
       return request(
         w,
