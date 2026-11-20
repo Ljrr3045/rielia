@@ -1,0 +1,39 @@
+apps/web/src/lib/task-planning-client.ts
+  s_77b99848c1f9f0::t_484028ef5cb75a 159-164
+CHANGELOG.md
+  s_77b99848c1f9f0::t_beb04ef082fe54 7-16
+docs/development/sprint-scope-start.md
+  s_77b99848c1f9f0::t_a4f6040b65a50c 146-147
+  s_77b99848c1f9f0::t_beb04ef082fe54 3-7,126-145,148-177
+docs/development/progress.md
+  s_77b99848c1f9f0::t_beb04ef082fe54 3-28
+apps/api/test/unit/sprint-scope-start.test.mjs
+  s_77b99848c1f9f0::t_484028ef5cb75a 252-255,691-694
+apps/api/test/project-task-persistence.mjs
+  s_77b99848c1f9f0::t_484028ef5cb75a 130-149,156,190-196,204-205,282-286,290,295
+docs/development/unit-coverage.md
+  s_77b99848c1f9f0::t_beb04ef082fe54 5,838-891
+scripts/unit/baselines/api.json
+  s_77b99848c1f9f0::t_5613d9d163df78 979
+apps/web/test/unit/task-planning.test.mjs
+  s_77b99848c1f9f0::t_9258efa6e23d7c 114-126,132-136,142-143,150-175,181-182,187-199
+  s_77b99848c1f9f0::t_bd6c0f045461db 127-131,137-141,144-149,176-180,183-186
+scripts/unit/baselines/web.json
+  s_77b99848c1f9f0::t_5613d9d163df78 1121-1122,1125-1126,1129-1130,1133-1134,1265-1268,1351,1382,1401-1402,1405-1406,1409-1410,1413-1414
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a966441850a22a786ebe1227ce4247d4736c6ae1",
+  "prompts": {},
+  "sessions": {
+    "s_77b99848c1f9f0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1f62b-8242-7170-946e-7a1f66fe6c9f",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
