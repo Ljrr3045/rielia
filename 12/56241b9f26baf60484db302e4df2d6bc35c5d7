@@ -1,0 +1,50 @@
+apps/api/prisma/schema.prisma
+  s_9ae9db9c0dc13f::t_4a54e09dc68a93 377
+docs/development/unit-coverage.md
+  s_9ae9db9c0dc13f::t_8a9c0f134c8c04 937-975
+docs/development/sprint-closure.md
+  s_9ae9db9c0dc13f::t_51211440719002 159-174,176-199
+  s_9ae9db9c0dc13f::t_0a4952fc938a6e 4-5
+  s_9ae9db9c0dc13f::t_0296497a924a3f 175,200-211
+scripts/unit/baselines/contracts.json
+  s_9ae9db9c0dc13f::t_77d116d0b03236 41-42,113-114,131,157,161,173,183-184
+CHANGELOG.md
+  s_9ae9db9c0dc13f::t_0296497a924a3f 7-17
+docs/development/progress.md
+  s_9ae9db9c0dc13f::t_0296497a924a3f 3-23,25-34
+  s_9ae9db9c0dc13f::t_0a4952fc938a6e 24
+packages/contracts/src/sprint-closure.ts
+  s_9ae9db9c0dc13f::t_4a54e09dc68a93 91-92,100
+packages/contracts/src/task-planning.ts
+  s_9ae9db9c0dc13f::t_4a54e09dc68a93 260,271,275-279
+apps/api/prisma/migrations/20261121000000_sprint_close/migration.sql
+  s_9ae9db9c0dc13f::t_d8a543824e9935 111
+packages/contracts/test/sprint-closure.test.mjs
+  s_9ae9db9c0dc13f::t_d8a543824e9935 437
+  s_9ae9db9c0dc13f::t_e450fdfd266b0e 379,395-397,440-443,449-450,470,481-482
+  s_9ae9db9c0dc13f::t_898e06b53aa2d8 380-394,398-436,438-439,444-448,451-469,471-480
+apps/api/test/sprint-close.test.mjs
+  s_9ae9db9c0dc13f::t_9102b4eaba5db0 30-31,44,51,67-70,72-73
+  s_9ae9db9c0dc13f::t_d4abad3e651430 87-88,373,633,658,666,673-676,682,705-707,712-713,724-730,735-736,742-746,754-758,777,785
+  s_9ae9db9c0dc13f::t_898e06b53aa2d8 28-29,32,38-43,55-64,301-372,374-446,660,668-671,677-681,683-704,708-711,717-723,731-734,737-741,747-753,759-760,762-765,767-770,772-774,778-784,1052-1059,1064-1066,1095-1098,1100-1107
+  s_9ae9db9c0dc13f::t_a340dbb55a63bc 6-7,16,25-27,33-37,45-50,52-54,65-66,71,74-75,110,113
+  s_9ae9db9c0dc13f::t_849544052bb28a 1061-1063
+  s_9ae9db9c0dc13f::t_2b643014da6681 1044-1051,1094,1099
+  s_9ae9db9c0dc13f::t_0c63dedb4c7e29 714-716
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1256241b9f26baf60484db302e4df2d6bc35c5d7",
+  "prompts": {},
+  "sessions": {
+    "s_9ae9db9c0dc13f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1f6f8-eca3-7d51-beae-65511f5daa62",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
