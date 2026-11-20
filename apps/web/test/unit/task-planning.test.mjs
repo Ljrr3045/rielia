@@ -336,6 +336,7 @@ test('proxy exposes only implemented planning routes and retains scalar cursors/
     '/tasks/t/sprint-history?cursor=abc',
     '/sprints/s/scope?cursor=abc',
     '/sprints/s/history',
+    '/sprints/s/close-preview',
   ])
     assert.equal((await proxyProjectTask(new Request(root + path))).status, 200);
   const headers = {
@@ -353,7 +354,7 @@ test('proxy exposes only implemented planning routes and retains scalar cursors/
   }
   for (const path of [
     '/sprints/s/close',
-    '/sprints/s/close-preview',
+    '/sprints/s/close-preview?destination=a&destination=b',
     '/tasks/t/sprint',
     '/sprints/s/history?cursor=a&cursor=b',
     '/sprints/s/scope?view=active',

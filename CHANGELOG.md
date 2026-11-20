@@ -4,6 +4,17 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Record accepted T11.2 [PR51](https://github.com/Ljrr3045/rielia/pull/51#issuecomment-7029096363),
+  merge `10f0e89`, and exact successful postmerge CI. Implement bounded
+  [T11.3 close/carryover](docs/development/sprint-closure.md): immutable outcomes,
+  full freshness-bound preview, aggregate membership-only carryover and closed
+  state/legacy retry/transport compatibility. Approved normal coverage passes 558
+  cases; infrastructure/artifacts, standard checks, full PG/security/14-table
+  restart, final 14-case focused close and runtime/cleanup pass with their source
+  qualifications. High audits pass with explicit moderate/low and Next advisory
+  debt; no upgrade or gate suppression. Draft publication/current-head CI/native/
+  coordinator delivery remains pending. No UI, deployment or full T11 acceptance.
+
 - Address [PR51 round 1](https://github.com/Ljrr3045/rielia/pull/51#issuecomment-7027804157)
   with immutable set-Sprint response binding that preserves current-state replay,
   a required fixture-scoped planning read across PostgreSQL/API restart, and

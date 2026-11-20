@@ -19,6 +19,8 @@ async function snapshot() {
     'visits',(SELECT jsonb_agg(to_jsonb(v) ORDER BY id) FROM sprint_participation v),
     'startReferences',(SELECT jsonb_agg(to_jsonb(r) ORDER BY "workspaceId","projectId","sprintId","participationId") FROM sprint_start_reference r),
     'scopeEvents',(SELECT jsonb_agg(to_jsonb(e) ORDER BY id) FROM sprint_scope_event e),
+    'closures',(SELECT jsonb_agg(to_jsonb(c) ORDER BY id) FROM sprint_closure c),
+    'closingOutcomes',(SELECT jsonb_agg(to_jsonb(o) ORDER BY id) FROM sprint_closing_outcome o),
     'tasks',(SELECT jsonb_agg(to_jsonb(t) ORDER BY id) FROM task t),
     'access',(SELECT jsonb_agg(to_jsonb(a) ORDER BY "workspaceId","projectId","principalId") FROM project_access a),
     'checklist',(SELECT jsonb_agg(to_jsonb(c) ORDER BY id) FROM checklist_item c),
@@ -34,6 +36,8 @@ async function snapshot() {
       data.visits.length &&
       data.startReferences.length &&
       data.scopeEvents.length &&
+      data.closures.length &&
+      data.closingOutcomes.length &&
       data.access.length &&
       data.activity.length &&
       data.outbox.length &&
@@ -46,6 +50,7 @@ async function snapshot() {
 }
 let app;
 async function startApplication() {
+  if (app) return app.getUrl();
   app = await NestFactory.create(AppModule, createHttpAdapter(), {
     bodyParser: false,
     logger: false,
@@ -205,10 +210,155 @@ async function preparePlanningRetry() {
     participant,
   };
 }
+async function prepareClosureRetry() {
+  const origin = await startApplication();
+  const p = (
+    await pool.query(
+      `SELECT p.id,p."workspaceId" FROM project p JOIN principal h ON h.id=p."createdByPrincipalId" WHERE p."archivedAt" IS NULL AND h.state='active' AND EXISTS(SELECT 1 FROM session s WHERE s."userId"=h."userId" AND s."expiresAt">now()) LIMIT 1`,
+    )
+  ).rows[0];
+  assert.ok(p);
+  const cookie = await projectCookie(p.id),
+    workspace = `workspaces/${p.workspaceId}`;
+  const project = await request(
+      origin,
+      cookie,
+      `${workspace}/projects`,
+      { name: 'Closure restart witness', key: 'RCL' },
+      randomUUID(),
+    ),
+    root = `${workspace}/projects/${project.id}`;
+  await request(
+    origin,
+    cookie,
+    `${root}/planning`,
+    { expectedVersion: 1, mode: 'scrum', timeZone: 'UTC', pointScale: [0, 1] },
+    randomUUID(),
+  );
+  const fields = {
+    name: 'Closure restart',
+    goal: 'Immutable outcomes',
+    startDate: '2026-11-19',
+    endDateExclusive: '2026-11-20',
+  };
+  const source = await request(
+      origin,
+      cookie,
+      `${root}/sprints`,
+      { expectedProjectVersion: 2, ...fields },
+      randomUUID(),
+    ),
+    target = await request(
+      origin,
+      cookie,
+      `${root}/sprints`,
+      { expectedProjectVersion: 2, ...fields },
+      randomUUID(),
+    );
+  const task = await request(
+    origin,
+    cookie,
+    `${root}/tasks`,
+    { title: 'Retained carried participant' },
+    randomUUID(),
+  );
+  const entry = await request(
+    origin,
+    cookie,
+    `${root}/tasks/${task.id}/sprint`,
+    {
+      expectedTaskVersion: task.version,
+      expectedCurrentParticipationId: null,
+      expectedSourceVersion: null,
+      targetSprintId: source.id,
+      expectedTargetVersion: source.version,
+    },
+    randomUUID(),
+  );
+  const stored = (
+    await pool.query('SELECT version,"taskRevision" FROM project WHERE id=$1', [project.id])
+  ).rows[0];
+  await request(
+    origin,
+    cookie,
+    `${root}/sprints/${source.id}/start`,
+    {
+      expectedVersion: entry.current.currentParticipation.sprint.version,
+      expectedProjectVersion: stored.version,
+      expectedTaskRevision: stored.taskRevision,
+    },
+    randomUUID(),
+  );
+  const preview = await request(
+    origin,
+    cookie,
+    `${root}/sprints/${source.id}/close-preview?destination=${target.id}`,
+  );
+  const command = {
+    path: `${root}/sprints/${source.id}/close`,
+    key: randomUUID(),
+    body: Object.fromEntries(
+      [
+        'expectedVersion',
+        'expectedProjectVersion',
+        'expectedTaskRevision',
+        'expectedSprintRevision',
+        'expectedTargetVersion',
+        'destination',
+        'previewSchema',
+        'previewHash',
+      ].map((k) => [k, preview[k]]),
+    ),
+  };
+  const closed = await request(origin, cookie, command.path, command.body, command.key);
+  await request(
+    origin,
+    cookie,
+    `${root}/tasks/${task.id}`,
+    { expectedVersion: task.version, status: 'done' },
+    randomUUID(),
+  );
+  await request(
+    origin,
+    cookie,
+    `${root}/sprints/${target.id}`,
+    {
+      expectedVersion: preview.expectedTargetVersion + 2,
+      ...fields,
+      name: 'Later target metadata',
+    },
+    randomUUID(),
+  );
+  await request(
+    origin,
+    cookie,
+    `${root}/planning`,
+    { expectedVersion: 2, mode: 'kanban', timeZone: 'UTC', pointScale: [0] },
+    randomUUID(),
+  );
+  await request(origin, cookie, `${root}/archive`, { expectedVersion: 3 }, randomUUID());
+  const closurePath = `${root}/sprints/${source.id}/closure`,
+    outcomesPath = `${closurePath}/outcomes`,
+    participantPath = `${root}/tasks/${task.id}/planning`;
+  return {
+    projectId: project.id,
+    command,
+    closed,
+    closurePath,
+    outcomesPath,
+    closure: await request(origin, cookie, closurePath),
+    outcomes: await request(origin, cookie, outcomesPath),
+    participantPath,
+    participant: await request(origin, cookie, participantPath),
+  };
+}
 try {
   if (mode === 'snapshot') {
     const retry = await preparePlanningRetry();
-    await writeFile(path, JSON.stringify({ ...(await snapshot()), retry }), { mode: 0o600 });
+    const closureRetry = await prepareClosureRetry();
+    await writeFile(path, JSON.stringify({ ...(await snapshot()), retry, closureRetry }), {
+      mode: 0o600,
+    });
   } else {
     const saved = JSON.parse(await readFile(path, 'utf8'));
     assert.deepEqual(await snapshot(), { digest: saved.digest, counts: saved.counts });
@@ -221,6 +371,22 @@ try {
     const origin = await app.getUrl();
     const retryCookie = await projectCookie(saved.retry.projectId),
       beforeReplay = await snapshot();
+    const closingCookie = await projectCookie(saved.closureRetry.projectId),
+      c = saved.closureRetry;
+    assert.deepEqual(
+      await request(origin, closingCookie, c.command.path, c.command.body, c.command.key),
+      c.closed,
+    );
+    for (const [endpoint, expected] of [
+      [c.closurePath, c.closure],
+      [c.outcomesPath, c.outcomes],
+      [c.participantPath, c.participant],
+    ])
+      assert.deepEqual(await request(origin, closingCookie, endpoint), expected);
+    assert.equal(c.participant.currentParticipation.sprint.state, 'planned');
+    assert.ok(c.outcomes.items.length > 0);
+    assert.equal(c.outcomes.items[0].snapshot.status, 'backlog');
+    assert.equal(c.participant.snapshot.status, 'done');
     const createReplay = await request(
       origin,
       retryCookie,

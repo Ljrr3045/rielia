@@ -889,3 +889,48 @@ the full retained real PG/HTTP/security/database/API restart sequence. See the
 [corrective delivery evidence](sprint-scope-start.md#pr51-round-1-correction).
 Numerical approval, local tests and the old-head native success do not accept the
 changed head; current-head CI/native/coordinator acceptance remains separate.
+
+## T11.3 close/carryover coverage — 2026-11-20
+
+The coordinator independently verified all 282 source/test/config fingerprints,
+all eight before/candidate hashes, every existing file/global exact ratio,
+covered/uncovered count and floor, full source/test inclusion, provider/compiler/
+config/runtime/tool identities and raw maps before approving only these replacements:
+
+- API `6263a88b779cb8e6f3a90a7a7557fc4b8530d4286336c29e83f0a4a7f72d1621`
+  → `08e4f1221037f5e62eb7ba27f4231dd0a7637f5be4bd427ea7b12675ee055f2d`.
+- Web `70434c34406b8c887e324e127390811e0fd5b8dae6ab2588990b1fdaa318ff57`
+  → `a8d147e915f14f62bbaf80288f508adb51e4be54ffa59bb544af52d46ee5afbd`.
+- Contracts `cfc806f179672c8a487c317e230217205ebbb6276ee37e58c3defa15440df105`
+  → `1956b90be3215d0d7aa91c441630f4bfe3705a2e89d613dfc7b6f34627045ba0`.
+
+Prototype and four historical baselines remain byte-exact. Normal all-source
+coverage passes **558/558** (290 API, 228 web, 21 contracts, 19 prototype),
+without skips. All 16 report files reproduce approved candidates byte-for-byte;
+count digest is `9661784aa32f006e98ac10df31cf0aed7e4711b4c99c62e655233ef602fd439b`.
+
+| Scope | Inputs | Exact covered/total L; S; F; B | Floors L/S/F/B (basis points) |
+| --- | ---: | --- | --- |
+| API | 52 | 1391/2067; 1511/2253; 383/592; 1216/1763 | 6729/6706/6469/6897 |
+| Web | 70 | 2482/3956; 2697/4456; 567/1101; 3154/5511 | 6274/6052/5149/5723 |
+| Contracts | 7 | 186/186; 213/213; 118/118; 776/784 | 10000/10000/10000/9897 |
+| Prototype | 16 | 238/853; 269/984; 87/368; 194/954 | 2790/2733/2364/2033 |
+
+Every existing file's exact ratio and covered count is retained or improved;
+existing uncovered counts do not increase. API global uncovered L/S/F/B decrease
+5/8/4/4; other scopes remain equal. A new close receipt grant-namespace arm is
+uncovered unit debt. Real delegated/autonomous PostgreSQL tests do not supply
+unit credit for it. Existing web/contracts branch gaps remain explicit.
+Original cases are retained; exact assertions for newly implemented capabilities
+and close-preview routes are updated with positive and negative controls.
+
+Unchanged-source maps are exact on 42 API, 68 web, three contracts and 16 prototype
+files, with no covered unit loss. Changed-source locations do not assert exact
+old/new semantic unit identity. Nonzero unexecuted inputs stay API20/web19/
+contracts0/prototype12; the three existing type/reexport zero-unit inputs stay N/A.
+Raw null columns are API199/12286, web819/29836, contracts24/2762 and
+prototype133/6372, with zero missing columns. Generated compiler-metadata witness,
+source/test selection, provider/compiler/configuration, runtime/tool locks and
+generated/vendor/immutable exclusions remain unchanged. No ignore or lowered
+floor is introduced. Numerical approval is separate from SQL/source/product
+acceptance; [closure evidence](sprint-closure.md) records the remaining gates.

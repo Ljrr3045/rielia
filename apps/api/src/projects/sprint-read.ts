@@ -53,9 +53,15 @@ export async function sprintViews(
     projectId: row.projectId,
     name: row.name,
     goal: row.goal,
-    ...(row.state === 'active'
-      ? { state: 'active' as const, startedAt: row.startedAt!.toISOString() }
-      : { state: 'planned' as const }),
+    ...(row.state === 'closed'
+      ? {
+          state: 'closed' as const,
+          startedAt: row.startedAt!.toISOString(),
+          closedAt: row.closedAt!.toISOString(),
+        }
+      : row.state === 'active'
+        ? { state: 'active' as const, startedAt: row.startedAt!.toISOString() }
+        : { state: 'planned' as const }),
     version: row.version,
     startDate: row.startDate.toISOString().slice(0, 10),
     endDateExclusive: row.endDateExclusive.toISOString().slice(0, 10),
@@ -72,8 +78,9 @@ export async function sprintViews(
       grantId: row.creationGrantId,
     },
     capabilities: {
-      canEdit: canWrite && !project.archivedAt,
-      canChangeScope: canWrite && !project.archivedAt,
+      canEdit: canWrite && !project.archivedAt && row.state !== 'closed',
+      canChangeScope: canWrite && !project.archivedAt && row.state !== 'closed',
+      canClose: canWrite && !project.archivedAt && row.state === 'active',
       canStart:
         canWrite &&
         !project.archivedAt &&

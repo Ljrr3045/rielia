@@ -187,13 +187,24 @@ export async function sprintScope(
       entry: v.entrySnapshot as unknown as PlanningSnapshot,
       exitedAt: v.exitedAt?.toISOString() ?? null,
       exitedOrdinal: v.exitedOrdinal,
-      exitReason: v.exitReason as 'removed' | 'transferred' | null,
+      exitReason: v.exitReason as 'removed' | 'transferred' | 'closed' | null,
       exit: v.exitSnapshot as unknown as PlanningSnapshot | null,
       current: tasks.get(v.taskId)!,
       start: references.get(v.id) ?? null,
     })),
     total: await tx.sprintParticipation.count({ where }),
-    removed: await tx.sprintParticipation.count({ where: { ...where, exitedAt: { not: null } } }),
+    removed: await tx.sprintParticipation.count({ where: { ...where, exitReason: 'removed' } }),
+    transferred: await tx.sprintParticipation.count({
+      where: { ...where, exitReason: 'transferred' },
+    }),
+    closingTotals:
+      sprint.state === 'closed'
+        ? summarizeSnapshots(
+            (await tx.sprintClosingOutcome.findMany({ where, select: { snapshot: true } })).map(
+              (o) => o.snapshot as unknown as PlanningSnapshot,
+            ),
+          )
+        : null,
     currentTotals: await aggregateTotals(tx, project, s, false),
     startTotals: await aggregateTotals(tx, project, s, true),
     nextCursor: rows.length > 100 ? page.next(visible.at(-1)!.id, '0') : null,
@@ -231,8 +242,11 @@ export async function planningHistory(
     : Prisma.sql`a."taskId"=${t} AND a.action='estimate-task' AND a.changes->0->'planningBefore'->'estimatePoints' IS DISTINCT FROM a.changes->0->'planningAfter'->'estimatePoints'`;
   const ordering = s ? Prisma.sql`e.ordinal::bigint` : Prisma.sql`o.sequence`;
   const oldOrder = s ? Prisma.sql`a."entityVersion"::bigint` : Prisma.sql`o.sequence`;
+  const outcomeUnion = t
+    ? Prisma.sql`UNION ALL SELECT x.id,'outcome'::text AS source,o.sequence AS ordering FROM sprint_closing_outcome x JOIN sprint_closure c ON c.id=x."closureId" AND c."workspaceId"=x."workspaceId" AND c."projectId"=x."projectId" JOIN outbox_event o ON o."workspaceId"=c."workspaceId" AND o."activityId"=c."activityId" WHERE x."workspaceId"=${w} AND x."projectId"=${p} AND x."taskId"=${t}`
+    : Prisma.empty;
   const base = Prisma.sql`SELECT e.id,'event'::text AS source,${ordering} AS ordering FROM sprint_scope_event e JOIN outbox_event o ON o."workspaceId"=e."workspaceId" AND o."activityId"=e."activityId" WHERE e."workspaceId"=${w} AND e."projectId"=${p} AND ${filter}
-    UNION ALL SELECT a.id,'activity'::text AS source,${oldOrder} AS ordering FROM activity_event a JOIN outbox_event o ON o."workspaceId"=a."workspaceId" AND o."activityId"=a.id WHERE a."workspaceId"=${w} AND a."projectId"=${p} AND ${legacy} AND NOT EXISTS(SELECT 1 FROM sprint_scope_event e WHERE e."workspaceId"=a."workspaceId" AND e."projectId"=a."projectId" AND e."activityId"=a.id)`;
+    UNION ALL SELECT a.id,'activity'::text AS source,${oldOrder} AS ordering FROM activity_event a JOIN outbox_event o ON o."workspaceId"=a."workspaceId" AND o."activityId"=a.id WHERE a."workspaceId"=${w} AND a."projectId"=${p} AND ${legacy} AND NOT EXISTS(SELECT 1 FROM sprint_scope_event e WHERE e."workspaceId"=a."workspaceId" AND e."projectId"=a."projectId" AND e."activityId"=a.id) ${outcomeUnion}`;
   if (page.anchor) {
     const anchor = await tx.$queryRaw<Array<{ id: string }>>(
       Prisma.sql`WITH items AS (${base}) SELECT id FROM items WHERE id=${page.anchor.a} AND ordering=${BigInt(page.anchor.o)}`,
@@ -253,6 +267,19 @@ export async function planningHistory(
       id: { in: visible.filter((x) => x.source === 'event').map((x) => x.id) },
     },
   });
+  const outcomeIds = visible.filter((x) => x.source === 'outcome').map((x) => x.id);
+  const outcomes = outcomeIds.length
+    ? await tx.sprintClosingOutcome.findMany({
+        where: { workspaceId: w, projectId: p, id: { in: outcomeIds } },
+      })
+    : [];
+  const closures = outcomes.length
+    ? await tx.sprintClosure.findMany({
+        where: { workspaceId: w, projectId: p, id: { in: outcomes.map((o) => o.closureId) } },
+      })
+    : [];
+  const closureMap = new Map(closures.map((c) => [c.id, c])),
+    outcomeMap = new Map(outcomes.map((o) => [o.id, o]));
   const activities = await tx.activityEvent.findMany({
     where: {
       workspaceId: w,
@@ -260,6 +287,7 @@ export async function planningHistory(
       id: {
         in: [
           ...events.map((e) => e.activityId),
+          ...closures.map((c) => c.activityId),
           ...visible.filter((x) => x.source === 'activity').map((x) => x.id),
         ],
       },
@@ -274,22 +302,36 @@ export async function planningHistory(
     activityMap = new Map(activities.map((a) => [a.id, a]));
   const items: PlanningHistoryItem[] = visible.map((row) => {
     const event = eventMap.get(row.id),
-      a = activityMap.get(event?.activityId ?? row.id)!;
+      outcome = outcomeMap.get(row.id),
+      closure = outcome ? closureMap.get(outcome.closureId) : null,
+      a = activityMap.get(event?.activityId ?? closure?.activityId ?? row.id)!;
     const change = Array.isArray(a.changes) ? a.changes[0] : null;
     const changes = isRecord(change) ? change : {};
     return {
       id: row.id,
-      sprintId: event?.sprintId ?? a.sprintId,
-      taskId: event?.taskId ?? a.taskId,
-      participationId: event?.participationId ?? null,
+      sprintId: event?.sprintId ?? outcome?.sprintId ?? a.sprintId,
+      taskId: event?.taskId ?? outcome?.taskId ?? a.taskId,
+      participationId: event?.participationId ?? outcome?.participationId ?? null,
       ordinal: event?.ordinal ?? a.entityVersion,
-      kind: (event?.kind as PlanningHistoryItem['kind']) ?? (s ? 'metadata' : 'estimate'),
+      kind: outcome
+        ? 'outcome'
+        : ((event?.kind as PlanningHistoryItem['kind']) ?? (s ? 'metadata' : 'estimate')),
+      ...(outcome
+        ? {
+            closureId: outcome.closureId,
+            disposition: outcome.disposition as 'done' | 'canceled' | 'backlog' | 'carried',
+            targetSprintId: outcome.targetSprintId,
+            targetParticipationId: outcome.targetParticipationId,
+          }
+        : {}),
       action: a.action,
       occurredAt: (event?.occurredAt ?? a.createdAt).toISOString(),
       before:
+        (outcome?.snapshot as unknown as PlanningSnapshot | null) ??
         (event?.beforeSnapshot as unknown as PlanningSnapshot | null) ??
         (isPlanningSnapshot(changes['planningBefore']) ? changes['planningBefore'] : null),
       after:
+        (outcome?.snapshot as unknown as PlanningSnapshot | null) ??
         (event?.afterSnapshot as unknown as PlanningSnapshot | null) ??
         (isPlanningSnapshot(changes['planningAfter']) ? changes['planningAfter'] : null),
       actor: people.get(a.actorPrincipalId)!,

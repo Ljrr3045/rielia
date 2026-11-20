@@ -73,6 +73,7 @@ function fixture(options = {}) {
     controller: new SprintController(service, http),
     response,
     request,
+    http,
     calls,
     result,
     authorities: () => authorities,
@@ -171,4 +172,35 @@ test('mutation origin/JSON/key and current session denial cannot invoke planning
   assert.equal(f.authorities(), 1);
   assert.equal(f.response.payload, null);
   assert.deepEqual(f.calls, []);
+});
+test('close preview permits only scalar destination/cursor and forwards them after current authority', async () => {
+  const f = fixture();
+  let received;
+  await f.http.respond(
+    f.request('GET', { query: { destination: 'backlog', cursor: 'a'.repeat(2048) } }),
+    f.response,
+    'w',
+    'close-preview',
+    async (...args) => {
+      received = args;
+      return {};
+    },
+  );
+  assert.equal(received[3].length, 2048);
+  assert.equal(received[5], 'backlog');
+  for (const query of [
+    { destination: ['backlog', 'target'] },
+    { destination: '' },
+    { destination: '../bad' },
+    { cursor: ['a', 'b'] },
+    { actor: 'spoof' },
+    { view: 'active' },
+  ]) {
+    const x = fixture();
+    await assert.rejects(
+      x.http.respond(x.request('GET', { query }), x.response, 'w', 'close-preview', async () => {}),
+      (e) => e.getStatus() === 400,
+    );
+    assert.equal(x.authorities(), 0);
+  }
 });

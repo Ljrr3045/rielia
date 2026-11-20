@@ -277,6 +277,7 @@ model Sprint {
   goal String
   state String @default("planned")
   startedAt DateTime? @db.Timestamptz(3)
+  closedAt DateTime? @db.Timestamptz(3)
   version Int @default(1)
   startDate DateTime @db.Date
   endDateExclusive DateTime @db.Date
@@ -340,6 +341,42 @@ model SprintStartReference {
   snapshot Json
   @@id([workspaceId, projectId, sprintId, participationId])
   @@map("sprint_start_reference")
+}
+
+model SprintClosure {
+  id String @id
+  workspaceId String
+  projectId String
+  sprintId String
+  destination String?
+  targetSprintId String?
+  sourceOrdinal Int
+  targetOrdinal Int?
+  closedAt DateTime @db.Timestamptz(3)
+  previewSchema Int
+  previewHash String
+  activityId String
+  @@unique([workspaceId, projectId, sprintId])
+  @@unique([workspaceId, projectId, sprintId, id])
+  @@map("sprint_closure")
+}
+
+model SprintClosingOutcome {
+  id String @id
+  workspaceId String
+  projectId String
+  sprintId String
+  closureId String
+  participationId String
+  taskId String
+  snapshot Json
+  disposition String
+  targetSprintId String?
+  targetParticipationId String?
+  @@unique([workspaceId, projectId, sprintId, participationId])
+  @@index([workspaceId, projectId, sprintId, id])
+  @@index([workspaceId, projectId, taskId, id])
+  @@map("sprint_closing_outcome")
 }
 
 model ChecklistItem {

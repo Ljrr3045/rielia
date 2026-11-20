@@ -236,7 +236,12 @@ test('create captures project zone, UTC interval, actual actor and planned-only 
     ...fields,
   });
   assert.equal(result.state, 'planned');
-  assert.deepEqual(result.capabilities, { canEdit: true, canStart: true, canChangeScope: true });
+  assert.deepEqual(result.capabilities, {
+    canEdit: true,
+    canStart: true,
+    canChangeScope: true,
+    canClose: false,
+  });
   f.done();
 });
 test('edit keeps captured zone even after project changes and while project is Kanban', async () => {

@@ -15,10 +15,10 @@ export async function proxyProjectTask(request: Request): Promise<Response> {
     );
     const events = new RegExp(`^/api/v1/workspaces/${id}/events$`).test(incoming.pathname);
     const read = new RegExp(
-      `^${root}(?:/${id}(?:/(?:access(?:/${id})?|assignees|planning|sprints(?:/${id}(?:/(?:scope|history))?)?|tasks(?:/${id}(?:/(?:planning|sprint-history))?)?))?)?$`,
+      `^${root}(?:/${id}(?:/(?:access(?:/${id})?|assignees|planning|sprints(?:/${id}(?:/(?:scope|history|close-preview|closure(?:/outcomes)?))?)?|tasks(?:/${id}(?:/(?:planning|sprint-history))?)?))?)?$`,
     );
     const write = new RegExp(
-      `^${root}(?:/${id}(?:/(?:archive|restore|visibility|planning|sprints(?:/${id}(?:/start)?)?|access/${id}|tasks(?:/${id}(?:/(?:archive|restore|move|planning|sprint))?)?))?)?$`,
+      `^${root}(?:/${id}(?:/(?:archive|restore|visibility|planning|sprints(?:/${id}(?:/(?:start|close))?)?|access/${id}|tasks(?:/${id}(?:/(?:archive|restore|move|planning|sprint))?)?))?)?$`,
     );
     const taskRoot = `${root}/${id}/tasks/${id}`;
     const collaborationRead = new RegExp(
@@ -45,22 +45,27 @@ export async function proxyProjectTask(request: Request): Promise<Response> {
     ).test(incoming.pathname);
     const sprints = new RegExp(`^${root}/${id}/sprints$`).test(incoming.pathname);
     const planningPages = new RegExp(
-      `^${root}/${id}/(?:sprints/${id}/(?:scope|history)|tasks/${id}/sprint-history)$`,
+      `^${root}/${id}/(?:sprints/${id}/(?:scope|history|close-preview|closure/outcomes)|tasks/${id}/sprint-history)$`,
     ).test(incoming.pathname);
     const cursorOnly =
       /\/(access|assignees)$/.test(incoming.pathname) || collaboration || sprints || planningPages;
+    const closePreview = new RegExp(`^${root}/${id}/sprints/${id}/close-preview$`).test(
+      incoming.pathname,
+    );
     const allowed =
       request.method !== 'GET'
         ? []
-        : discovery
-          ? ['scope', 'q', 'project', 'view', 'cursor', 'status', 'assignee', 'priority']
-          : tasks
-            ? ['view', 'cursor', 'status', 'assignee', 'priority']
-            : collection
-              ? ['view', 'cursor']
-              : cursorOnly
-                ? ['cursor']
-                : [];
+        : closePreview
+          ? ['cursor', 'destination']
+          : discovery
+            ? ['scope', 'q', 'project', 'view', 'cursor', 'status', 'assignee', 'priority']
+            : tasks
+              ? ['view', 'cursor', 'status', 'assignee', 'priority']
+              : collection
+                ? ['view', 'cursor']
+                : cursorOnly
+                  ? ['cursor']
+                  : [];
     if (
       [...incoming.searchParams.keys()].some(
         (key) => !allowed.includes(key) || incoming.searchParams.getAll(key).length !== 1,
@@ -76,6 +81,8 @@ export async function proxyProjectTask(request: Request): Promise<Response> {
     const view = incoming.searchParams.get('view');
     if (
       !isTaskFilters(filters) ||
+      (incoming.searchParams.has('destination') &&
+        !/^[A-Za-z0-9_-]{1,128}$/.test(incoming.searchParams.get('destination')!)) ||
       (discovery && !parseTaskDiscoveryQuery(Object.fromEntries(incoming.searchParams))) ||
       (view !== null && !['active', 'archived'].includes(view)) ||
       (cursor !== null &&

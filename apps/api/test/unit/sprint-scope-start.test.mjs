@@ -379,6 +379,23 @@ test('scope rejects changed Task/visit/source/destination versions and archive b
       'invalid-transition',
     ],
     ['empty', {}, { targetSprintId: null, expectedTargetVersion: null }, 'invalid-transition'],
+    [
+      'closed target',
+      { sprint: { state: 'closed', startedAt: at, closedAt: at } },
+      {},
+      'invalid-transition',
+    ],
+    [
+      'closed source',
+      { visit, sprint: { state: 'closed', startedAt: at, closedAt: at } },
+      {
+        expectedCurrentParticipationId: 'visit',
+        expectedSourceVersion: 2,
+        targetSprintId: null,
+        expectedTargetVersion: null,
+      },
+      'invalid-transition',
+    ],
   ])
     await t.test(name, async () => {
       const f = fixture(options);
@@ -593,6 +610,122 @@ test('history hydrates actors once, projects retained activities with unknown hi
   assert.equal(taskPage.items[0].after.estimatePoints, 0);
   assert.ok(queries.every((q) => q.includes('o.sequence')));
   assert.equal((await f.service.get(f.context, 'w', 'p', 't')).snapshot.version, 2);
+});
+test('closed scope uses frozen outcomes, separates manual dispositions and rejects forged ordinal continuations', async () => {
+  const f = fixture({ sprint: { state: 'closed', startedAt: at, closedAt: at } }),
+    totals = summarizeSnapshots([snap]);
+  f.tx.sprintParticipation.findMany = async () => [
+    { ...visit, exitedAt: at, exitedOrdinal: 3, exitReason: 'closed', exitSnapshot: snap },
+  ];
+  f.tx.sprintParticipation.count = async ({ where }) => (where.exitReason ? 0 : 1);
+  f.tx.sprintStartReference.findMany = async () => [{ participationId: visit.id, snapshot: snap }];
+  f.tx.sprintClosingOutcome = { findMany: async () => [{ snapshot: snap }] };
+  f.tx.$queryRaw = async () => [totals];
+  const page = await sprintScope(f.tx, project, 's');
+  assert.deepEqual(page.closingTotals, totals);
+  assert.equal(page.removed, 0);
+  assert.equal(page.transferred, 0);
+  assert.equal(page.items[0].exitReason, 'closed');
+  assert.deepEqual(page.items[0].start, snap);
+  const bad = Buffer.from(
+    JSON.stringify({
+      v: 1,
+      kind: 'sprint-scope',
+      w: 'w',
+      p: 'p',
+      scope: 's',
+      projectVersion: 2,
+      taskRevision: 8,
+      sprintRevision: 4,
+      entityVersion: 2,
+      a: visit.id,
+      o: '1',
+    }),
+  ).toString('base64url');
+  f.tx.sprintParticipation.findFirst = async () => visit;
+  await assert.rejects(sprintScope(f.tx, project, 's', bad), denied(400));
+});
+test('task history hydrates aggregate outcome links and actors in groups with commit-order paging', async () => {
+  const f = fixture(),
+    outcome = {
+      id: 'o',
+      closureId: 'c',
+      participationId: 'visit',
+      taskId: 't',
+      sprintId: 's',
+      snapshot: snap,
+      disposition: 'carried',
+      targetSprintId: 'target',
+      targetParticipationId: 'new',
+    };
+  const activity = {
+    id: 'activity',
+    workspaceId: 'w',
+    projectId: 'p',
+    sprintId: 's',
+    taskId: null,
+    actorPrincipalId: 'h',
+    executionMode: 'human',
+    source: 'web',
+    grantId: null,
+    entityVersion: 4,
+    action: 'close-sprint',
+    createdAt: at,
+    changes: [],
+  };
+  const events = Array.from({ length: 100 }, (_, i) => ({
+    id: `e${i}`,
+    sprintId: 's',
+    taskId: 't',
+    participationId: 'visit',
+    ordinal: i + 2,
+    activityId: 'activity',
+    kind: 'task-change',
+    occurredAt: at,
+    beforeSnapshot: snap,
+    afterSnapshot: snap,
+  }));
+  let rows = [
+      { id: 'o', source: 'outcome', ordering: 1n },
+      ...events.map((e, i) => ({ id: e.id, source: 'event', ordering: BigInt(i + 2) })),
+    ],
+    anchorExists = true;
+  const calls = [];
+  f.tx.$queryRaw = async (query) =>
+    query.sql.includes('count(*)')
+      ? [{ total: 101 }]
+      : query.sql.includes('SELECT id FROM items')
+        ? anchorExists
+          ? [{ id: 'e98' }]
+          : []
+        : rows;
+  f.tx.sprintScopeEvent.findMany = async () => events;
+  f.tx.sprintClosingOutcome = {
+    findMany: async (args) => {
+      calls.push(args);
+      return [outcome];
+    },
+  };
+  f.tx.sprintClosure = { findMany: async () => [{ id: 'c', activityId: 'activity' }] };
+  f.tx.activityEvent.findMany = async () => [activity];
+  const page = await planningHistory(f.tx, project, { taskId: 't' });
+  assert.equal(page.items.length, 100);
+  assert.equal(page.items[0].kind, 'outcome');
+  assert.equal(page.items[0].closureId, 'c');
+  assert.equal(page.items[0].targetParticipationId, 'new');
+  assert.deepEqual(page.items[0].after, snap);
+  assert.equal(calls.length, 1);
+  assert.ok(page.nextCursor);
+  rows = [];
+  assert.equal(
+    (await planningHistory(f.tx, project, { taskId: 't' }, page.nextCursor)).items.length,
+    0,
+  );
+  anchorExists = false;
+  await assert.rejects(
+    planningHistory(f.tx, project, { taskId: 't' }, page.nextCursor),
+    denied(400),
+  );
 });
 test('thin scope/start/task-planning controllers preserve selected target, exact body/key and bounded cursor mode', async () => {
   const calls = [],

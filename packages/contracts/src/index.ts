@@ -168,3 +168,4 @@ export function isPage<T>(value: unknown, item: (value: unknown) => value is T):
 export * from './task-discovery.js';
 export * from './sprints.js';
 export * from './task-planning.js';
+export * from './sprint-closure.js';
