@@ -230,6 +230,7 @@ model Task {
   parentTaskId String?
   assigneePrincipalId String?
   dueDate DateTime? @db.Date
+  estimatePoints Int?
   version Int @default(1)
   archivedAt DateTime?
   createdByPrincipalId String
@@ -263,10 +264,11 @@ model ActivityEvent {
   accessPrincipalId String?
   createdAt DateTime @default(now())
   @@unique([workspaceId, id])
+  @@unique([workspaceId, projectId, id])
   @@map("activity_event")
 }
 
-// T11.1 exposes planned sprints only; SQL retains scope and journal invariants.
+// SQL enforces transitions, scoped references and append-only history.
 model Sprint {
   id String @id
   workspaceId String
@@ -274,6 +276,7 @@ model Sprint {
   name String
   goal String
   state String @default("planned")
+  startedAt DateTime? @db.Timestamptz(3)
   version Int @default(1)
   startDate DateTime @db.Date
   endDateExclusive DateTime @db.Date
@@ -288,6 +291,55 @@ model Sprint {
   updatedAt DateTime @default(now()) @db.Timestamptz(3)
   @@unique([workspaceId, projectId, id])
   @@map("sprint")
+}
+
+model SprintParticipation {
+  id String @id
+  workspaceId String
+  projectId String
+  sprintId String
+  taskId String
+  enteredAt DateTime @db.Timestamptz(3)
+  enteredOrdinal Int
+  entrySnapshot Json
+  exitedAt DateTime? @db.Timestamptz(3)
+  exitedOrdinal Int?
+  exitReason String?
+  exitSnapshot Json?
+  @@unique([workspaceId, projectId, sprintId, id, taskId])
+  @@index([workspaceId, projectId, sprintId, id])
+  @@index([workspaceId, projectId, taskId, id])
+  @@map("sprint_participation")
+}
+
+model SprintScopeEvent {
+  id String @id
+  workspaceId String
+  projectId String
+  sprintId String
+  ordinal Int
+  kind String
+  activityId String
+  participationId String?
+  taskId String?
+  occurredAt DateTime @db.Timestamptz(3)
+  beforeSnapshot Json?
+  afterSnapshot Json?
+  @@unique([workspaceId, projectId, sprintId, ordinal])
+  @@index([workspaceId, projectId, taskId, id])
+  @@map("sprint_scope_event")
+}
+
+model SprintStartReference {
+  workspaceId String
+  projectId String
+  sprintId String
+  participationId String
+  taskId String
+  startOrdinal Int
+  snapshot Json
+  @@id([workspaceId, projectId, sprintId, participationId])
+  @@map("sprint_start_reference")
 }
 
 model ChecklistItem {

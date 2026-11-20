@@ -106,6 +106,8 @@ function fixture(t) {
     receipts: [],
   };
   const tx = {
+    $queryRaw: async () => [],
+    sprintParticipation: { findFirst: async () => null },
     project: { findFirst: async () => state.project, findUniqueOrThrow: async () => state.project },
     task: {
       findUnique: async () => state.task,

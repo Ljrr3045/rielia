@@ -20,12 +20,10 @@ export interface SprintFields {
   startDate: string;
   endDateExclusive: string;
 }
-/** Only planned sprints are implemented in T11.1. */
-export interface PlannedSprint extends SprintFields {
+interface SprintRecord extends SprintFields {
   id: string;
   workspaceId: string;
   projectId: string;
-  state: 'planned';
   version: number;
   timeZone: string;
   startsAt: string;
@@ -34,15 +32,23 @@ export interface PlannedSprint extends SprintFields {
   updatedAt: string;
   creator: DomainPerson;
   provenance: DomainProvenance;
-  capabilities: { canEdit: boolean };
+  capabilities: { canEdit: boolean; canStart?: boolean; canChangeScope?: boolean };
   url: string;
 }
+export interface PlannedSprint extends SprintRecord {
+  state: 'planned';
+}
+export interface ActiveSprint extends SprintRecord {
+  state: 'active';
+  startedAt: string;
+}
+export type Sprint = PlannedSprint | ActiveSprint;
 export interface SprintPage {
   workspaceId: string;
   projectId: string;
   revision: number;
   projectVersion: number;
-  items: PlannedSprint[];
+  items: Sprint[];
   total: number;
   nextCursor: string | null;
   capabilities: { canCreate: boolean };
@@ -70,7 +76,7 @@ export type SprintPlanningCommand =
       expectedVersion: number;
       fields: SprintFields;
     };
-export type SprintPlanningResult = ProjectPlanning | PlannedSprint;
+export type SprintPlanningResult = ProjectPlanning | Sprint;
 const record = (v: unknown): v is Record<string, unknown> =>
   !!v && typeof v === 'object' && !Array.isArray(v);
 const id = (v: unknown): v is string => typeof v === 'string' && /^[A-Za-z0-9_-]{1,128}$/.test(v);
@@ -144,6 +150,15 @@ export function isProjectPlanning(v: unknown): v is ProjectPlanning {
   );
 }
 export function isPlannedSprint(v: unknown): v is PlannedSprint {
+  return record(v) && v['state'] === 'planned' && !('startedAt' in v) && isSprintRecord(v);
+}
+export function isSprint(v: unknown): v is Sprint {
+  return (
+    isPlannedSprint(v) ||
+    (record(v) && v['state'] === 'active' && instant(v['startedAt']) && isSprintRecord(v))
+  );
+}
+function isSprintRecord(v: unknown): v is SprintRecord {
   if (
     !record(v) ||
     !isSprintFields({
@@ -159,7 +174,6 @@ export function isPlannedSprint(v: unknown): v is PlannedSprint {
     id(v['id']) &&
     id(v['workspaceId']) &&
     id(v['projectId']) &&
-    v['state'] === 'planned' &&
     positive(v['version']) &&
     isPlanningTimeZone(v['timeZone']) &&
     instant(v['startsAt']) &&
@@ -176,6 +190,9 @@ export function isPlannedSprint(v: unknown): v is PlannedSprint {
         id(p['grantId']))) &&
     record(v['capabilities']) &&
     typeof v['capabilities']['canEdit'] === 'boolean' &&
+    (!('canStart' in v['capabilities']) || typeof v['capabilities']['canStart'] === 'boolean') &&
+    (!('canChangeScope' in v['capabilities']) ||
+      typeof v['capabilities']['canChangeScope'] === 'boolean') &&
     typeof v['url'] === 'string'
   );
 }
@@ -190,9 +207,7 @@ export function isSprintPage(v: unknown): v is SprintPage {
     v['items'].length <= 100 &&
     v['items'].every(
       (row) =>
-        isPlannedSprint(row) &&
-        row.workspaceId === v['workspaceId'] &&
-        row.projectId === v['projectId'],
+        isSprint(row) && row.workspaceId === v['workspaceId'] && row.projectId === v['projectId'],
     ) &&
     new Set(v['items'].map((row) => row.id)).size === v['items'].length &&
     Number.isSafeInteger(v['total']) &&

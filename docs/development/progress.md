@@ -1,5 +1,54 @@
 # Delivery progress and decisions
 
+## 2026-11-19 PR51 round 1 correction — locally verified, DRAFT
+
+Native [round 1](https://github.com/Ljrr3045/rielia/runs/136006512141) completed
+SUCCESS on `f9d0e038`, with three suggestions and a COMMENTED formal review.
+The coordinator returned the same PR51 to Draft and ratified the bounded fixes.
+Transport validates the original input-known destination/exit and entry/removal
+shape while accepting authorized current state after later transfer/removal.
+The restart harness saves a second known participant before restart and requires
+its exact scoped planning DTO afterwards, retaining the removed/archived retry
+witness and twelve-table digest. Both journal-order chains require presence and
+once-only effects before comparing order. No backend domain/SQL/dependency changes.
+
+Exact coordinator approval precedes only API/web baseline writes; the other six
+remain byte-identical. [Current coverage](unit-coverage.md#pr51-round-1-corrective-coverage)
+passes 531 cases and all 16 normal reports reproduce approved candidates exactly.
+Twenty infrastructure checks/artifacts, standard checks on the supported unchanged
+Next-notice retry, and full retained PG/HTTP/security/real restart pass. Root/tooling
+high audit gates pass with root 14 moderate/one low and tooling two moderate
+findings. Next recommends a security upgrade; no upgrade or gate suppression occurs.
+Prior runtime-image/queue/dependency evidence retains its original source limits;
+current standard builds and changed transport/restart checks are separately verified.
+[The delivery guide](sprint-scope-start.md#pr51-round-1-correction) records details.
+New-head CI/native review, thread disposition and coordinator acceptance/merge
+remain open. Full T11 stays IN PROGRESS; close/UI/integrated acceptance follow
+later. Earlier dated entries retain their historical source and acceptance state.
+
+## 2026-11-19 T11.1 ACCEPTED; T11.2 locally verified — DRAFT PR51; T11 IN PROGRESS
+
+T11.1 is accepted in [PR50](https://github.com/Ljrr3045/rielia/pull/50#issuecomment-7025241040),
+reviewed `4ce5775`, merged `e215973`. Exact postmerge
+[CI44638739992](https://github.com/Ljrr3045/rielia/actions/runs/44638739992) passed
+before new implementation. The supplied isolated worktree uses SOL xhigh with
+verified auto_review/on-request/workspace-write; the Orca-prefixed ref is retained.
+[T11.2](sprint-scope-start.md) implements estimates, immutable participation visits,
+full start references/history and explicit planned-to-active start, with transport
+only and no UI. Normal 510-case coverage reproduces the coordinator-approved
+exact three-file migration, with no old floor/per-file regression and five unchanged baselines.
+Twenty infrastructure checks/artifacts, complete standard checks (supported Next
+notice retry), full retained PG/HTTP/security/twelve-table restart and expanded
+17-case focused scope evidence pass. Isolated runtime images/recovery/cleanup
+pass; current high audits pass with root 14 moderate/one low and tooling two
+moderate findings retained. Application/unit bytes stay bound to the approved
+candidate; only non-unit integration assertions were updated/extended afterwards.
+Published as [Draft PR51](https://github.com/Ljrr3045/rielia/pull/51) to `dev`
+from implementation `24a331f`; documentation updates preserve all tested application/
+unit/baseline bytes. Current-head CI/native review and coordinator acceptance remain open.
+T11.3 close/carryover, T11.4 UX04 and T11.5 integrated acceptance remain later work;
+full T11 stays IN PROGRESS. Earlier dated entries retain their historical state.
+
 ## 2026-11-19 T11.1 planned sprint APIs — DRAFT PR50; T11 IN PROGRESS
 
 The user authorized T11 after bounded T37 acceptance in

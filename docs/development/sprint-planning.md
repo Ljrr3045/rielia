@@ -1,5 +1,10 @@
 # T11.1 persistent sprint planning
 
+T11.1 was subsequently ACCEPTED in [PR50](https://github.com/Ljrr3045/rielia/pull/50#issuecomment-7025241040),
+reviewed `4ce5775`, merged `e215973`; exact postmerge CI passed. This guide retains
+the dated implementation/review evidence below. [T11.2 scope/start](sprint-scope-start.md)
+records the next API slice; original T11 and presentation acceptance remain open.
+
 Status: implemented and locally verified in
 [Draft PR50](https://github.com/Ljrr3045/rielia/pull/50); current-head CI/native
 review and coordinator acceptance remain pending. This bounded API/proxy slice

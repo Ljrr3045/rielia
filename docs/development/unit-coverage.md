@@ -2,7 +2,7 @@
 
 Current status: bounded T36 and T37 are accepted, including
 [T37 PR49](https://github.com/Ljrr3045/rielia/pull/49#issuecomment-6819605884)
-at merge `20a257c`. The [T11.1 migration](#t111-planning-coverage--2026-11-19)
+at merge `20a257c`. The [PR51 corrective migration](#pr51-round-1-corrective-coverage)
 below records the current approved numerical gates. Earlier delivery snapshots
 and their then-pending acceptance statements remain historical evidence.
 
@@ -787,3 +787,105 @@ and two transport branch arms stay visible debt, without ignores or exclusions.
 Old raw maps are unavailable in this checkout, so this comparison does not claim
 exact old raw endpoint/hit identity. Real PostgreSQL/HTTP/migration/restart checks
 and their source-qualified limits are recorded in the [planning guide](sprint-planning.md).
+
+## T11.2 scope/start coverage — 2026-11-19
+
+Before any baseline writes, the coordinator independently verified the eight
+before/candidate hashes, 274 source/test/config fingerprints, all existing
+per-file covered counts and exact ratios, totals/floors, retained test changes,
+provider/compiler/configuration and raw nullable endpoints. The first complete
+measurement exposed missing boundary cases; the revised affected API/contracts
+measurement retains the unchanged web/prototype reports. Approval is numerical
+only. Source, product and full T11 acceptance remain separate.
+
+Only the three current baselines migrate: API
+`b52e31931ba8a0ccbef53e7680ddfa7f29b6081a4856913b17646a8c1b1f2ede`, web
+`13b0cf8d1ad9cf5719415f939962e7f89a0a8379df477af2b89d8e494a07a875`, contracts
+`cfc806f179672c8a487c317e230217205ebbb6276ee37e58c3defa15440df105`.
+The prototype and four historical baselines remain byte-exact. Every previous
+floor and per-file exact ratio is retained or improved; no source/test/provider/
+compiler input is excluded or weakened. The compiler-metadata test remains an
+explicit generated non-file manifest entry. No exact historical raw-unit identity
+is claimed for changed source or unavailable historical maps.
+
+Normal all-scope coverage passes **510 cases**: 274 API, 203 web, 14 contracts
+and 19 prototype, without skips. All 16 summary/manifest/map/LCOV files reproduce
+the measured candidate byte-for-byte; combined count digest is
+`0884812afd1574956fd46f2d506621f4058687b625a5f814bfc107bd5b1be4b6`.
+All 20 infrastructure checks and bounded artifact validation pass.
+
+| Scope | Maintained inputs | Covered/total L; S; F; B | Floors in basis points L/S/F/B |
+| --- | ---: | --- | --- |
+| API | 49 | 1237/1918; 1339/2089; 331/544; 1085/1636 | 6449/6409/6084/6632 |
+| Web | 70 | 2468/3942; 2681/4440; 558/1092; 3117/5474 | 6260/6038/5109/5694 |
+| Contracts | 6 | 158/158; 180/180; 100/100; 623/631 | 10000/10000/10000/9873 |
+| Prototype | 16 | 238/853; 269/984; 87/368; 194/954 | 2790/2733/2364/2033 |
+
+Inherited unexecuted nonzero-unit inputs remain 20 API, 19 web and 12 prototype;
+the existing three type-only inputs remain zero-unit N/A. All new maintained
+inputs execute, without universal path coverage. Raw null-column endpoints are
+API186/11382, web818/29668, contracts21/2258 and prototype133/6372. The prior T11.1
+counts remain historical above; null columns are retained, never fabricated.
+
+New uncovered debt is explicit: participation has one statement/anonymous
+function and two branch arms; receipt/mutation has one statement/four arms;
+scope/history read has seven statement locations, four anonymous functions and
+six arms; transport has four arms. Start, task-planning controller/service/task
+owner and new shared validator statement/function paths execute, while older
+shared branch debt remains. The full maps, counts and fingerprints retain these
+gaps. Real PostgreSQL/HTTP/security/restart/runtime evidence belongs to the
+[scope/start guide](sprint-scope-start.md); deterministic doubles do not prove it.
+
+## PR51 round 1 corrective coverage
+
+On 2026-11-19 the coordinator independently verified all 274 actual source/test/config
+fingerprints, all eight before/candidate hashes, all 141 per-file/global exact ratios,
+covered/uncovered counts and nondecreasing floors before approving two replacements:
+
+- API `b52e31931ba8a0ccbef53e7680ddfa7f29b6081a4856913b17646a8c1b1f2ede`
+  → `6263a88b779cb8e6f3a90a7a7557fc4b8530d4286336c29e83f0a4a7f72d1621`.
+  Only the retained scope/start unit-test fingerprint changes; all counts stay exact.
+- Web `13b0cf8d1ad9cf5719415f939962e7f89a0a8379df477af2b89d8e494a07a875`
+  → `70434c34406b8c887e324e127390811e0fd5b8dae6ab2588990b1fdaa318ff57`.
+  One transport source and its retained test fingerprint change; 21 cases are added.
+
+Contracts, prototype and four historical baselines remain byte-identical. Source/test
+selection, compiler/provider/runtime/config/tool-lock identities and all existing
+floors remain protected. No source/test removal, ignore or weakened gate occurs.
+
+Normal coverage passes **531/531**, without skips: 274 API, 224 web, 14 contracts
+and 19 prototype. All 16 summary/manifest/map/LCOV files reproduce approved candidates
+byte-for-byte; count digest is
+`7fadb8e0ffb8b2738a50cbc888047ec339000b2f309839b5fbd29185c0c045d5`.
+Twenty infrastructure checks and bounded artifact validation pass.
+
+| Scope | Maintained inputs | Covered/total L; S; F; B | Floors in basis points L/S/F/B |
+| --- | ---: | --- | --- |
+| API | 49 | 1237/1918; 1339/2089; 331/544; 1085/1636 | 6449/6409/6084/6632 |
+| Web | 70 | 2469/3943; 2682/4441; 559/1093; 3126/5483 | 6261/6039/5114/5701 |
+| Contracts | 6 | 158/158; 180/180; 100/100; 623/631 | 10000/10000/10000/9873 |
+| Prototype | 16 | 238/853; 269/984; 87/368; 194/954 | 2790/2733/2364/2033 |
+
+Only task-planning transport counts change: L42/42→43/43, S45/45→46/46,
+F23/23→24/24, B60/64→69/73. Global/per-file ratios and covered counts do not
+regress; uncovered counts do not increase. The four inherited uncovered transport
+arms remain explicit. On 49 API, 69 web, six contracts and 16 prototype stable maps,
+hit vectors remain exact and no covered unit is lost. Changed transport locations
+do not imply one-to-one old/new semantic unit identity.
+
+Inherited unexecuted nonzero inputs remain 20 API, 19 web and 12 prototype.
+The three zero-unit type-only inputs remain N/A, not 100%. Raw null-column points
+are API186/11382, web818/29700 (previously818/29668), contracts21/2258 and
+prototype133/6372; missing-column positions remain zero. The generated API
+compiler-metadata test stays an unchanged non-file witness. Generated/vendor/build/
+test/CSS/SQL/schema/handoff exclusions remain exact.
+
+Nine new adversarial cases expose frozen transport acceptances; corrected focused
+transport passes26/26, including original-operation retry with a different current
+destination or null. API journal tests require presence/order/once-only effects.
+The non-unit persistence harness remains outside unit attribution but is part of
+the complete source binding. Its known participant's unconditional readback passes
+the full retained real PG/HTTP/security/database/API restart sequence. See the
+[corrective delivery evidence](sprint-scope-start.md#pr51-round-1-correction).
+Numerical approval, local tests and the old-head native success do not accept the
+changed head; current-head CI/native/coordinator acceptance remains separate.
