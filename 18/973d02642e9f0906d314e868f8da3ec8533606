@@ -1,0 +1,23 @@
+CHANGELOG.md
+  s_4046d83a3ab7ab::t_355e256aaf9835 15-16
+docs/development/progress.md
+  s_4046d83a3ab7ab::t_cffcc35423b618 3,25-28,2443
+docs/development/sprint-closure.md
+  s_4046d83a3ab7ab::t_2271cd85b41040 3-4,152-157
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "18973d02642e9f0906d314e868f8da3ec8533606",
+  "prompts": {},
+  "sessions": {
+    "s_4046d83a3ab7ab": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1f6fb-551a-7e22-887e-32f8563fc4f2",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
