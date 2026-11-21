@@ -27,8 +27,12 @@ production deployment acceptance.
 Agree the ticket and ownership with the coordinator. Record the internal batch,
 T/P/US requirements, applicable UXR/UX or LPR/S/LP criteria, dependencies, acceptance,
 and exclusions. The [2026-11-05 quality roadmap](docs/development/development-quality-roadmap.md)
-adds **T36 → T37 → T11 → remaining work under existing dependencies**. Complete
-the bounded engineering quality work and then UI redesign before new sprint work.
+records the original T36/T37 decision. The user's 2026-11-20 sequence is
+**accepted T36 → accepted T37 → full T11 → T38 → remaining work under existing
+dependencies**. [T38 issue 53](https://github.com/Ljrr3045/rielia/issues/53) is the
+canonical planned Zod/TanStack Query direction and forms/OpenAPI/testing/
+observability evaluation. No T38 library adoption or migration starts before
+full T11 acceptance, including T11.4b presentation and T11.5 integrated acceptance.
 The source dependency graph remains: T35 follows T04 and precedes T05/T06/T12.
 Read the scoped [web](apps/web/AGENTS.md) or [API](apps/api/AGENTS.md) developer
 rules before changing those apps. These rules describe incremental migration
@@ -45,7 +49,9 @@ The [bounded T37 evidence consolidation](docs/development/t37-ui-acceptance.md)
 records accepted T37.1–4, including [PR48](https://github.com/Ljrr3045/rielia/pull/48#issuecomment-6818479075), and completed T37.5/6
 implementation/bounded QA accepted by PR49. Historical evidence retains its
 source, fixture/persistence and provenance limits. The user authorized T11 on
-2026-11-19; [T11.1 planning APIs](docs/development/sprint-planning.md) are IN PROGRESS.
+2026-11-19. T11.1–3 are accepted through [PR52](https://github.com/Ljrr3045/rielia/pull/52#issuecomment-7052975664),
+merged `6507e487`; [T11.4a client logic](docs/development/sprint-client.md) is in
+progress. T11.4b/T11.5 and full T11 acceptance remain open.
 Preparing these contribution documents does not
 complete T16 or its real-project validation.
 

@@ -4,6 +4,34 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Correct both accepted [PR54 round1 findings](docs/development/sprint-client.md#pr54-round-1-correction--2026-11-20):
+  retain the cleared signed-out status after sprint401 with a locally valid
+  parent, and reconcile latest prop navigation after draft/pending/unknown guards
+  clear. Ten added real-hook schedules reproduce nine original failures;
+  all 20 retained/new hook cases pass after correction without changing commands,
+  keys, private-context fences or backend policy. Standard checks on the supported
+  Next-notice retry, affected types/lint and audits pass. Coordinator-approved
+  exact web-only baseline `e311dac0` passes 639 normal cases with byte-identical
+  replay of all 16 reports; infrastructure/artifacts pass, seven baselines and 45
+  historical artifacts remain exact. Current-head review gates remain pending
+  on the same Draft PR54; no full T11 acceptance.
+
+- Record accepted T11.3 [PR52](https://github.com/Ljrr3045/rielia/pull/52#issuecomment-7052975664),
+  reviewed `1256241b`, merged `6507e487`, incremental second native round and
+  exact successful postmerge CI, preserving historical evidence limits.
+  Add bounded [T11.4a sprint client logic](docs/development/sprint-client.md):
+  typed reads/drafts/recovery, shared invalidation, explicit close decisions
+  and immutable outcome/history consumption. T11.4b presentation/T11.5
+  acceptance remain open. Coordinator-approved exact web-only baseline passes
+  629 normal cases with byte-identical replay of all16 candidate reports; seven
+  baselines remain exact. Infrastructure/artifacts, standard checks on the Next
+  notice retry and high audits pass with explicit existing/new debt. Published
+  as [Draft PR54](https://github.com/Ljrr3045/rielia/pull/54); current-head CI/native/
+  coordinator acceptance remain pending.
+- Synchronize the user's planned [T38](https://github.com/Ljrr3045/rielia/issues/53)
+  sequencing after full T11 acceptance, preserving accepted T36/T37 history.
+  No Zod/TanStack Query/form migration, install or T38 completion is included.
+
 - Correct the seven [PR52 round 1 findings](docs/development/sprint-closure.md#pr52-round-1-correction):
   archived timestamp comparison in the unmerged migration, mapped target-visit
   uniqueness, strict outcome/history guards, exact closed-preview rejection,

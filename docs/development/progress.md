@@ -1,5 +1,77 @@
 # Delivery progress and decisions
 
+## 2026-11-20 PR54 round 1 correction — IN PROGRESS, DRAFT
+
+Native [Kilo136657775593](https://github.com/Ljrr3045/rielia/runs/136657775593)
+completed SUCCESS on `957de8c`, reporting one warning/one suggestion across
+20 files with a COMMENTED formal review 6001405118. The coordinator
+[accepted both](https://github.com/Ljrr3045/rielia/pull/54#issuecomment-7054425637)
+and returned PR54 to Draft after completion. No formal APPROVED, merge or T11
+acceptance is implied. Active-turn SOL xhigh and auto_review/on-request/
+workspace-write were independently reverified before task execution.
+
+The [correction guide](sprint-client.md#pr54-round-1-correction--2026-11-20)
+preserves safe cleared signed-out status after sprint401 and reconciles latest
+selection props when matching-context draft/pending/unknown protection clears.
+The original hook fails nine of ten added real-hook schedules; all 20 cases
+pass after correction, including the ten retained controls. Unknown retries
+retain exact body/key; no automatic mutation, draft loss, UI or backend/tool
+expansion occurs. Standard checks pass on the supported unchanged Next-notice retry, with final
+affected lint/typecheck and all 20 hooks passing. Both high audits pass with the
+retained moderate/low debt. Web measurement passes 307 cases and proposes only
+current web `e311dac0` from `da5d187c`; composed639-case reports improve/retain
+all existing counts/ratios with no covered-unit loss on unchanged maps. The coordinator approved only web `e311dac0`, bound to checkpoint `038538d` and
+proposal `1aebdfb0`, after independent exact fingerprint/metric/raw-map review.
+Normal all-scope gates pass 639 cases and all 16 reports reproduce the approved
+candidates byte-for-byte; infrastructure 20/20 and bounded artifacts pass. Seven
+unaffected baselines and 45 historical artifacts remain exact, with no source/
+test/tool drift after approval. The correction remains on the same Draft PR54; new-head review evidence remains
+pending, and numerical approval is not source/full T11 acceptance. The old
+proposal/archive and seven unaffected baselines remain exact; no baseline write
+is authorized by the old approval. T11.4b/T11.5 and full T11 remain open.
+
+## 2026-11-20 T11.3 ACCEPTED; T11.4a client logic — DRAFT PR54
+
+T11.3 was subsequently ACCEPTED in
+[PR52](https://github.com/Ljrr3045/rielia/pull/52#issuecomment-7052975664), reviewed
+`1256241b9f26baf60484db302e4df2d6bc35c5d7`, merged
+`6507e487954fc411b11f807e0eddf850fd223805`. Native round 2
+[check 136620787511](https://github.com/Ljrr3045/rielia/runs/136620787511) succeeded
+incrementally over 11 files in `18973d0..1256241`; it is not another full review.
+The first full round [136586940559](https://github.com/Ljrr3045/rielia/runs/136586940559)
+reported seven findings, all fixed/resolved. No formal APPROVED review is claimed.
+Exact postmerge [Actions 44835623613 / validate 136631171383](https://github.com/Ljrr3045/rielia/actions/runs/44835623613/job/136631171383)
+passed. Dated then-pending evidence below remains historical. T11.4b/T11.5 and
+full T11 acceptance remain open.
+
+The isolated T11.4a batch starts from that merge on `feat/t11-sprint-client-state`.
+Active-turn SOL `gpt-6.1-sol` / `xhigh` and auto_review/on-request/workspace-write
+were independently verified before changes. [The client handoff](sprint-client.md)
+records typed memory-only resources, captured drafts, original-key recovery,
+bound close decisions and the shared project event-stream seam. Presentation,
+native/persisted end-to-end acceptance and full T11 completion remain open.
+
+User-directed scheduling now reads **accepted T36 → accepted T37 → full T11 →
+planned T38 → remaining dependencies**. [Issue 53](https://github.com/Ljrr3045/rielia/issues/53)
+is canonical T38 scope: later Zod/TanStack Query adoption planning and evaluation
+of forms, OpenAPI, testing and observability. No T38 libraries/migrations now;
+PR52 alone does not satisfy full T11 acceptance. Historical T36/T37 decisions
+and all immutable handoff bytes remain intact.
+
+
+Final-source standard checks pass on the inherited Next-notice retry; audits
+retain root14 moderate/one low and tools2 moderate findings. The coordinator
+approved only exact current-web baseline `da5d187c`, bound to checkpoint
+`de6d6c5` and proposal `6a7c61ab`; seven baselines remain exact. Normal all-scope
+coverage passes629 cases and reproduces all16 approved reports byte-for-byte;
+all20 infrastructure cases and bounded artifacts pass. The client/unit guides
+preserve explicit new uncovered/null-map debt and the earlier19/20 missing-report
+failure, corrected by that complete run. Source/tests/tools remain frozen after
+approval. Published as [Draft PR54](https://github.com/Ljrr3045/rielia/pull/54) to `dev`;
+current-head CI/native/coordinator acceptance remain pending. Actual Draft is
+verified before the URL-only push; source/tests/tools/eight baselines and all16
+reports remain unchanged. T11.4b/T11.5 and full T11 remain open.
+
 ## 2026-11-20 PR52 round 1 correction — locally verified, DRAFT
 
 The coordinator accepted all seven findings from native
