@@ -1,5 +1,21 @@
 # Delivery progress and decisions
 
+## 2026-11-21 T11.4b Draft publication — AUTOMATIC APPROVAL BLOCK; NO PUSH/PR
+
+Prepared clean disposition commit `a1232f3e` and concrete English Draft body.
+Automatic approval review rejected initial push/PR process creation: the original
+trusted task prohibits publication and the later coordinator tool message was
+not accepted as authority to change it. No bypass/retry was attempted. Read-only
+remote/GitHub checks confirm no published feature branch or branch PR; `dev`
+remains `a2de3bd`. [The approval receipt](sprint-presentation.md#publication-approval-block--2026-11-21)
+records the exact stated reason. Direct user approval of these external writes,
+or a coordinator hold, is pending; no Draft/CI/Kilo-event proof is fabricated.
+Local docs/body/evidence are reviewable with unchanged 237/180 hashes, eight
+baselines, 16 reports and prior 722-case binding. Native external Cancel/Leave is
+still an OWNED OPEN ACCEPTANCE GATE (`screen_locked`); T11.4b/T11.5/full T11 stay
+open before T38. Assignment ACTIVE; no Ready/review/merge/worker_done.
+
+
 ## 2026-11-21 T11.4b implemented batch — DRAFT PUBLICATION AUTHORIZED; NATIVE GATE OPEN
 
 The coordinator accepted the clean `2a2de50e` unavailable-preflight receipt/body

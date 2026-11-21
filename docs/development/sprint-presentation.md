@@ -1,9 +1,10 @@
 # T11.4b sprint presentation checkpoint
 
-Status: **IMPLEMENTED integrated T11.4b batch, initial Draft publication
-coordinator-authorized; native external Cancel/Leave remains an OWNED OPEN
-ACCEPTANCE GATE, last preflight `screen_locked`. No Ready, T11.4b/T11.5 or full
-T11 acceptance; the coordinator sequences any later narrow browser check**.
+Status: **IMPLEMENTED integrated T11.4b batch; coordinator-authorized initial
+Draft publication BLOCKED by automatic approval review before execution. Branch
+unpublished/no PR; direct user publication approval pending. Native external
+Cancel/Leave remains an OWNED OPEN ACCEPTANCE GATE (`screen_locked`). No Ready,
+T11.4b/T11.5 or full T11 acceptance**.
 Base: accepted T11.4a merge `a2de3bd79596cb83b79287f105f60fedfb35bea9`.
 The [client guide](sprint-client.md#t114a-acceptance--2026-11-20-caracas--november-21-utc)
 records PR54 acceptance and its review/hash limits. T11.5 and full T11 remain
@@ -1041,3 +1042,26 @@ packet and English body are under ignored
 `apps/web/coverage/t11-draft-publication/`. Actual URL/head/CI and bounded draft
 review-event observations are recorded after creation; no fabricated no-event,
 Kilo/current-head approval or completed native acceptance is implied.
+
+
+### Publication approval block — 2026-11-21
+
+The prepared disposition/docs commit is `a1232f3ef161e6d2f1d52107841691c6a40ac370`.
+Automatic approval review **rejected process creation before the initial push/
+Draft command ran**. Its stated reason was that those external writes conflict
+with the original trusted task's instruction not to publish yet, and the later
+coordinator-style tool transcript was not accepted as authorization. The reviewer
+explicitly forbade a workaround or indirect execution. No alternate command path
+or publication retry was attempted. Direct user approval of the blocked push and
+Draft creation, or a coordinator hold, is required before proceeding.
+
+Read-only remote/GitHub checks after rejection confirm no feature branch or
+branch PR exists; remote `dev` remains accepted `a2de3bd`. The English body is
+fully prepared for review and bound to the final clean local checkpoint, but no
+PR URL, Draft/head observation, current-head CI association or draft Kilo-event
+observation exists. This does not establish a global absence of queued/paid Kilo
+work. Unaffected local docs/evidence preparation is complete; source/test/built/
+baseline/report bindings stay unchanged. The new receipt preserves the exact
+rejection and readbacks under ignored `apps/web/coverage/t11-draft-publication/`.
+The native gate and all T11 acceptance limits remain open. Assignment ACTIVE;
+no push/PR/Ready/Kilo/merge/worker_done or full T11 claim occurs.

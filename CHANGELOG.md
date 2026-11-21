@@ -4,6 +4,12 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Record [the automatic approval block on initial Draft publication](docs/development/sprint-presentation.md#publication-approval-block--2026-11-21):
+  push/PR process creation was rejected before execution because later coordinator
+  tool text did not override the original publication prohibition. Keep the branch
+  unpublished, prepare the exact body/evidence for direct user approval, and retain
+  the open native Cancel/Leave and T11 acceptance gates without a bypass.
+
 - Prepare the implemented [sprint planning and closure integration](docs/development/sprint-presentation.md#coordinator-disposition-and-draft-publication--2026-11-21)
   for one coordinator-authorized Draft PR. Keep native external Cancel/Leave an
   owned open acceptance gate (`screen_locked` on the last attempt), preserve the
