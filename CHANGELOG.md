@@ -10,8 +10,9 @@ This records repository changes. No application version has been released.
   fences, both-owner navigation protection and explicit recovery/history paging.
   Coordinator-approved web-only baseline `04977cb4` passes 700 normal cases with
   exact 16-report replay; infrastructure/artifacts pass. New coverage debt,
-  including 21 unexecuted rendered callback functions, remains explicit. Frozen-head
-  persisted failure/concurrency and Astra integrated native QA remain pending;
+  including 21 unexecuted rendered callback functions, remains explicit. Bounded [frozen-head recovery/persistence evidence](docs/development/sprint-presentation.md#sol-frozen-head-recovery-and-persistence--2026-11-21)
+  now exercises real server/SQL outcomes and rendered recovery controls with
+  explicit HTTP/browser simulation limits. Astra integrated native QA remains open;
   no dependency change, PR publication or full T11 acceptance.
 
 - Complete the requested [sprint review/history presentation ports](docs/development/sprint-presentation.md#astra-reviewhistory-presentation-checkpoint--2026-11-20-caracas--november-21-utc)

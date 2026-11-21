@@ -1,5 +1,28 @@
 # Delivery progress and decisions
 
+## 2026-11-21 T11.4b frozen-head SOL recovery/persistence — BOUNDED EVIDENCE; ASTRA QA OPEN
+
+SOL alone exercised the production page at frozen `a00fd716`, recording actual
+head/runtime and all237 fingerprints before native actions and rechecking them
+after cleanup. Real Next/Nest/PostgreSQL journeys cover distinct-session409 and
+rendered compare/rebase/separate Save, actual401/private DOM fencing and explicit
+parent reverify, real commit plus controlled response timeout with exact-key/body
+rendered retry, unknown local discard, explicit start/close reviewed binding,
+frozen outcomes after a later task edit, public actor history, replaced private
+context and read-only data/history. The [receipt and boundaries](sprint-presentation.md#sol-frozen-head-recovery-and-persistence--2026-11-21)
+distinguish SQL/server outcomes from HTTP delay/drop, controlled client lease and
+DOM event/anchor arrangements. The401 held write was canceled before delivery;
+no401 POST response or real-provider authentication is claimed.
+
+All owned web/fixture/browser/database/private-state resources are removed. No
+functional source finding arose; source/tests/tools/baselines and prior700-case
+normal evidence remain exact. Only live docs change, without a duplicate full
+suite/build. All21 callback functions unexecuted in unit measurement remain debt;
+native multi-page workflows and Astra responsive/accessibility/device/AT gates
+remain open. Assignment is active at the coordinator handoff; no push/PR/Ready/
+Kilo/merge or T11.4b/T11.5/full T11 acceptance. Astra stays idle until authorized.
+
+
 ## 2026-11-21 T11.4b numerical migration — NORMAL LOCAL GATE PASSED; QA OPEN
 
 The coordinator approved only exact current-web `e311dac0` → `04977cb4`, bound

@@ -1,8 +1,8 @@
 # T11.4b sprint presentation checkpoint
 
-Status: **IN PROGRESS, production functional checkpoint; approved numerical
-migration and normal replay complete; frozen-head integrated native QA pending;
-no PR or product acceptance**.
+Status: **IN PROGRESS, approved numerical migration and normal replay complete;
+bounded SOL frozen-head recovery/persistence evidence recorded; Astra integrated
+responsive/accessibility QA pending; no PR or product acceptance**.
 Base: accepted T11.4a merge `a2de3bd79596cb83b79287f105f60fedfb35bea9`.
 The [client guide](sprint-client.md#t114a-acceptance--2026-11-20-caracas--november-21-utc)
 records PR54 acceptance and its review/hash limits. T11.5 and full T11 remain
@@ -524,3 +524,70 @@ snapshot is not final-head evidence. T11.4b, T11.5 and full T11 remain open.
    before another baseline edit. The coordinator controls the single completed
    Draft PR and later CI/native review; no worker push/PR/Ready/Kilo/merge or
    full acceptance is authorized by this handoff.
+
+
+## SOL frozen-head recovery and persistence — 2026-11-21
+
+The coordinator kept Astra idle and authorized SOL alone to use the existing
+disposable fixture in the integration checkout. Before fixture/native actions,
+SOL recorded clean head `a00fd7161972386eacb22409e7e6851656ed4d01`, all 237 exact
+source/test/tool fingerprints, runtime and actual SOL xhigh with automatic review,
+on-request/workspace-write. The same fingerprints remain exact after cleanup.
+No runtime source, functional test, tool, measurement or baseline changed in this
+phase; no new numerical approval or duplicate full suite/build was needed.
+
+One owned PostgreSQL/Nest fixture served the production Next proxy/page. Its
+initial Next child exited after readiness; listener inspection confirmed that
+before one replacement reused the same origin/API. Public transports arranged
+Scrum/Caracas, two planned sprints and three participants (pending/done/canceled;
+zero/zero/null estimates). This is API arrangement, not native creation evidence.
+The production page used its real controllers, one session/event owner, actual
+rendered dialogs/buttons and public DTOs. Native automation used enabled DOM
+button activation and native value setters/events; no disabled control, hook
+method, prototype store, preview route or backend policy was substituted.
+
+| Journey | Observed outcome and boundary |
+| --- | --- |
+| Real concurrent sessions and 409 | A rendered owner Save captured version4; only its outgoing HTTP delivery was paused. A distinct generated admin session committed version5 through the public API. Releasing the original command received real server409. The dialog displayed both decisions. Rendered Reload and explicit rebase made no write; the separate Save persisted the owner goal at version6. Public history identifies QA Administrator separately from immutable creator/provenance. |
+| Real authentication loss and parent reverify | Only the generated owner's database session was expired. Shared authentication/stream loss canceled the held mutation before delivery, so this is **not** a claimed401 POST response. A real scoped read returned401, the former private project/task/sprint/draft DOM disappeared, and Verify session was present. Canonical auth removed the expired session row. Private fixture reauthentication restored only that generated session, using private stdin without printing/archiving its token. Clicking rendered Verify session recovered the original canonical version6 without reviving or saving the denied draft. No provider flow is claimed. |
+| Real commit plus controlled response timeout | Rendered Save committed version7 through Next/Nest/PostgreSQL. Only browser response delivery was held. The actual product deadline fired at **15,004 ms** and the rendered unknown state offered recovery. Clicking Retry the same operation sent byte-identical body/key; real historical replay returned201 and canonical version remained7. This proves recovery around a simulated lost response, not a naturally occurring network outage. |
+| Unknown local discard | A separate real commit reached version8 before a controlled response drop. Clicking rendered Discard local work closed recovery without resubmission or undoing that committed goal/version. |
+| Original client expiry during verification error | Better Auth canonically renewed a short database session, so the bounded client-lease test instead shortened one public identity response to20 seconds and paused later identity delivery. Controlled popstate delivery invoked production verification and hid private DOM. Its real15-second identity transport timed out; the original20-second client lease cleared the hidden raw buffer/navigation protection. Explicit rendered Verify session then consumed genuine same-session server context without reviving/submitting the draft. This is a disclosed identity HTTP/browser boundary, **not SQL session-expiry evidence**; the separate real401 journey covers server authentication loss. |
+| External navigation guard | A temporary DOM anchor supplied an external projects-shaped URL. The actual document capture and rendered navigation dialog retained its full origin/URL. Stay preserved the raw decision and rendered Back discarded it. No external network navigation or physical modified-click/device proof is claimed. |
+| Explicit start and reviewed closure | Actual review/confirmation controls changed planned version8 → active9 → closed10. The server preview reported all three participants and complete pending count1. Changing only the raw select to backlog requested no new preview; Confirm closure still sent/persisted the reviewed planned destination. Canonical readback contains done, canceled and carried outcomes; the pending task's real participation points to that target. |
+| Frozen readback/history | A later real public task estimate changed from0 to8. All three closing outcome snapshots remained byte-equivalent and the done outcome stayed0. Reloaded production results still use frozen totals/outcomes. History proves the distinct admin actor; a Sprint DTO's immutable creator/provenance is not treated as its latest command actor. |
+| Replaced private context and read-only viewer | The fixture initially grants its viewer explicit private access. After revoking only that fictional grant through the canonical public owner transport, a real unsaved owner-only private-project form was replaced by the generated viewer session. Production verification removed the old private project and raw draft; the viewer's actual private read returned403. The viewer then loaded the public closed sprint's canonical results/history with no sprint mutation affordances. |
+
+The observation scripts initially assumed a fixed dialog lifetime, a403 from the
+fixture's still-granted viewer, and the wrong English closure heading. Temporary
+render fences invalidated those dialog references; canonical session renewal and
+the explicit fixture grant explained the other schedules. The observers/fixture
+arrangements were corrected, not production source. A held verification request
+correctly required explicit recovery after its own timeout. Failed observation
+receipts and final qualified outcomes are retained; none is relabeled as a passing
+production assertion. No functional source finding was identified in these
+bounded journeys, and no source/test/baseline correction was made.
+
+Hash-bound local evidence is retained under ignored
+`apps/web/coverage/t11-native-functional/`: pre-native fingerprints/resource
+ownership, public HTTP/key/body/result traces, DOM text, canonical history/frozen
+readback, journey outcomes, observation limits and cleanup receipt. No cookie,
+token, password or private fixture-state object is archived. The fixture exits0
+after cleanup, the replacement Next exits143, all owned tabs close, and the
+private state file, exact labeled container/volume and app listeners are removed.
+Only stopped-server generated AGENTS/next-env additions/dev route types were
+restored/removed. The existing Codex listener and all foreign resources remain.
+
+The approved numerical source/baseline binding and prior700-case exact16-report
+normal replay remain unchanged. The **21 callback functions unexecuted in unit
+measurement remain explicit debt**; manually exercising some controls does not
+change those counters or prove all rendered paging/cancel/selection paths.
+Native pages here had only two sprints and three closure outcomes, so complete
+multi-page native workflows are still open despite automated count103/paging
+coverage. Astra must still inspect the frozen integrated composition in its own
+checkout/fresh fixture at all specified widths/locales/themes, keyboard/focus,
+touch/reduced-motion/nonideal states and remaining action paths. Actual-device,
+zoom, screen-reader and unavailable checks remain explicit. This bounded SOL
+evidence does not accept the source/product/privacy/persistence/accessibility as
+a whole, T11.4b, T11.5 or full T11. The coordinator controls Astra's next import
+and the single completed Draft PR; no push/PR/Ready/Kilo/merge occurred here.
