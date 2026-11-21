@@ -1,0 +1,44 @@
+apps/web/src/lib/sprint-screen-model.ts
+  s_aa027f2693f60d::t_ea41768edaef0e 78
+  s_aa027f2693f60d::t_450d9a06d3690c 3-4,84-89,108,119,127,150
+  s_aa027f2693f60d::t_fee6853a2da37d 1-2,5-38,48-77,79-83,103-107,110-118,120-126,128-149,151-182
+  s_aa027f2693f60d::t_c4974188cd55cd 90-102,109
+  s_aa027f2693f60d::t_06dee485ebb406 39-47
+docs/development/progress.md
+  s_aa027f2693f60d::t_0eca8a1cf87a04 3-20
+docs/development/sprint-presentation.md
+  s_aa027f2693f60d::t_e2d16cccbe8761 193-199
+  s_aa027f2693f60d::t_0eca8a1cf87a04 123-192,200-210
+apps/web/test/unit/project-sprint-location.test.mjs
+  s_aa027f2693f60d::t_73457b1f435d52 1-2,7-8,11-24,37-53,61-63
+  s_aa027f2693f60d::t_3ddc04930b9c02 3-6,9-10,25-36,54-60
+CHANGELOG.md
+  s_aa027f2693f60d::t_c6b4638c2989fd 7-13
+apps/web/src/lib/sprint-form-state.ts
+  s_aa027f2693f60d::t_c4974188cd55cd 14-19,37-46,97-104,109-112,141-145,187-188
+  s_aa027f2693f60d::t_20b3deea08aada 1-13,20-31,33-36,47-96,105-108,113-140,146-186,189-191,193-200
+  s_aa027f2693f60d::t_450d9a06d3690c 32,192
+apps/web/src/lib/project-sprint-location.ts
+  s_aa027f2693f60d::t_3ddc04930b9c02 24-25
+  s_aa027f2693f60d::t_73457b1f435d52 1-23,26-44
+apps/web/test/unit/sprint-screen-model.test.mjs
+  s_aa027f2693f60d::t_c4974188cd55cd 10-17,43-49,53-56,65-75,78-82,115-120,159-162,201-207,232-235,263-266,270-278,282-286,296-299,318-322,325-331,348-351,356-359,365-368,377-378,383-387
+  s_aa027f2693f60d::t_3dd47476c75e1e 389-390
+  s_aa027f2693f60d::t_9c94ea4ee49165 1-9,18-42,50-52,57-64,76-77,83-114,121-158,163-200,208-231,236-262,267-269,279-281,287-295,300-317,323-324,332-347,352-355,360-364,369-376,379-382,388,391-406
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "7348beabee7d9ab17325464da7aef2d040886837",
+  "prompts": {},
+  "sessions": {
+    "s_aa027f2693f60d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1fbeb-0dae-7cd1-a40f-f13fa4b7d5da",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
