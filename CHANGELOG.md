@@ -4,6 +4,14 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Record accepted T11.4a [PR54](https://github.com/Ljrr3045/rielia/pull/54#issuecomment-7055439065),
+  merge `a2de3bd`, successful exact postmerge CI and retained native/hash limits.
+  Prepare an unintegrated [T11.4b presentation checkpoint](docs/development/sprint-presentation.md)
+  with sprint/scope/forms/closure/outcome components and ES/EN copy. Scoped
+  types/lint/formatting and bounded disposable-browser inspection pass; production
+  wiring, functional tests, coverage and integrated acceptance remain open.
+  No PR, baseline change, dependency upgrade or full T11/T38 acceptance.
+
 - Correct both accepted [PR54 round1 findings](docs/development/sprint-client.md#pr54-round-1-correction--2026-11-20):
   retain the cleared signed-out status after sprint401 with a locally valid
   parent, and reconcile latest prop navigation after draft/pending/unknown guards

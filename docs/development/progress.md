@@ -1,5 +1,22 @@
 # Delivery progress and decisions
 
+## 2026-11-20 T11.4a ACCEPTED; T11.4b presentation checkpoint — IN PROGRESS
+
+[PR54 acceptance](https://github.com/Ljrr3045/rielia/pull/54#issuecomment-7055439065)
+accepts reviewed `4fa0e034`, merged `a2de3bd`; exact postmerge validate136687219095
+succeeded with all 24 steps. The [client receipt](sprint-client.md#t114a-acceptance--2026-11-20-caracas--november-21-utc)
+retains incremental native round 2, two resolved first-round findings, no formal
+APPROVED and Kilo hash-recomputation limits. Earlier pending entries are historical.
+
+Astra high prepared the [T11.4b presentation checkpoint](sprint-presentation.md):
+typed sprint/scope/forms/closure/outcome components, ES/EN copy and local styles,
+with bounded native harness evidence and passing scoped types/lint/formatting.
+No production wiring, functional tests or PR is included. SOL must integrate
+selection/lifecycle/commands/recovery and measure the five new web source inputs;
+no baseline changed and no numerical gate success is claimed. Preview resources
+are stopped; the test route is removed. T11.4b, T11.5 and full T11 remain open;
+planned T38 still follows full T11, without installations/migration now.
+
 ## 2026-11-20 PR54 round 1 correction — IN PROGRESS, DRAFT
 
 Native [Kilo136657775593](https://github.com/Ljrr3045/rielia/runs/136657775593)

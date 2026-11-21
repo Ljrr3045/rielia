@@ -1,9 +1,7 @@
 # T11.4a sprint client logic and presentation handoff
 
-Status: implemented and locally verified; exact numerical approval and normal
-coverage/infrastructure/artifact gates pass. Published as
-[Draft PR54](https://github.com/Ljrr3045/rielia/pull/54) to `dev`; current-head
-CI/native/coordinator acceptance remain pending. This is the logic prerequisite for separately owned T11.4b
+Status: ACCEPTED in merged [PR54](https://github.com/Ljrr3045/rielia/pull/54#issuecomment-7055439065).
+The acceptance receipt below governs the historical pre-acceptance records. This is the logic prerequisite for separately owned T11.4b
 presentation, addressing T11/B1c, P09/US06, affected P05/P08/P10 and US05/US12,
 UX04/UXR01 and existing recovery/localization requirements. It starts from
 accepted [T11.3 PR52](https://github.com/Ljrr3045/rielia/pull/52#issuecomment-7052975664),
@@ -19,6 +17,25 @@ T11 acceptance remain open. No T12/T13, T22 reports, prototype policy, landing,
 deployment or provider/staging/user acceptance. Planned
 [T38 issue 53](https://github.com/Ljrr3045/rielia/issues/53) follows full T11;
 no schema/query/form library adoption or dependency upgrade occurs here.
+
+## T11.4a acceptance — 2026-11-20 Caracas / November 21 UTC
+
+The coordinator accepted [PR54](https://github.com/Ljrr3045/rielia/pull/54#issuecomment-7055439065),
+reviewed `4fa0e0346d2260a7a87d31cd6685456b27146061`, merged as
+`a2de3bd79596cb83b79287f105f60fedfb35bea9` at `2026-11-21T01:51:21Z`.
+Coordinator-supplied exact postmerge [CI44852600065 / validate136687219095](https://github.com/Ljrr3045/rielia/actions/runs/44852600065/job/136687219095)
+from App15368 succeeded with all 24 steps. Native second-round
+[check136681052403](https://github.com/Ljrr3045/rielia/runs/136681052403), App2193792,
+succeeded with No Issues / Merge over seven incremental files after the full
+20-file first round; both findings were fixed/resolved. No formal APPROVED is
+claimed. Kilo could not recompute hashes; the coordinator independently checked
+source/test/baseline/CI-artifact identity and retained that limitation.
+
+Accepted current-web baseline is
+`e311dac02f34422ace8ad0bf4c1a1ae80a41b9dcfbc77c8c341e4b3e4bf3857c`, with 639 normal
+cases, 307 web. These are accepted T11.4a receipts, not new presentation checks.
+The dated pending sections below remain historical. [T11.4b presentation](sprint-presentation.md)
+is in progress; T11.5 and full T11 remain open before planned T38.
 
 ## Owners and integration
 
