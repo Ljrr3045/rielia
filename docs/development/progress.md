@@ -1,5 +1,44 @@
 # Delivery progress and decisions
 
+## 2026-11-20 T11.3 ACCEPTED; T11.4a sprint client logic — IN PROGRESS
+
+T11.3 was subsequently ACCEPTED in
+[PR52](https://github.com/Ljrr3045/rielia/pull/52#issuecomment-7052975664), reviewed
+`1256241b9f26baf60484db302e4df2d6bc35c5d7`, merged
+`6507e487954fc411b11f807e0eddf850fd223805`. Native round 2
+[check 136620787511](https://github.com/Ljrr3045/rielia/runs/136620787511) succeeded
+incrementally over 11 files in `18973d0..1256241`; it is not another full review.
+The first full round [136586940559](https://github.com/Ljrr3045/rielia/runs/136586940559)
+reported seven findings, all fixed/resolved. No formal APPROVED review is claimed.
+Exact postmerge [Actions 44835623613 / validate 136631171383](https://github.com/Ljrr3045/rielia/actions/runs/44835623613/job/136631171383)
+passed. Dated then-pending evidence below remains historical. T11.4b/T11.5 and
+full T11 acceptance remain open.
+
+The isolated T11.4a batch starts from that merge on `feat/t11-sprint-client-state`.
+Active-turn SOL `gpt-6.1-sol` / `xhigh` and auto_review/on-request/workspace-write
+were independently verified before changes. [The client handoff](sprint-client.md)
+records typed memory-only resources, captured drafts, original-key recovery,
+bound close decisions and the shared project event-stream seam. Presentation,
+native/persisted end-to-end acceptance and full T11 completion remain open.
+
+User-directed scheduling now reads **accepted T36 → accepted T37 → full T11 →
+planned T38 → remaining dependencies**. [Issue 53](https://github.com/Ljrr3045/rielia/issues/53)
+is canonical T38 scope: later Zod/TanStack Query adoption planning and evaluation
+of forms, OpenAPI, testing and observability. No T38 libraries/migrations now;
+PR52 alone does not satisfy full T11 acceptance. Historical T36/T37 decisions
+and all immutable handoff bytes remain intact.
+
+
+Final-source standard checks pass on the inherited Next-notice retry; audits
+retain root14 moderate/one low and tools2 moderate findings. The exact pending
+web-only baseline proposal raises all four floors without existing-file
+regression; composed measurement is629 cases with seven accepted baselines
+unchanged. The client guide records explicit new uncovered/null-map debt and an
+early19/20 infrastructure failure caused by missing other-scope reports after
+scoped measurement. Exact coordinator approval, normal full gate/report replay,
+infrastructure/artifacts and Draft publication remain pending; no baseline has
+been written and no product acceptance is claimed.
+
 ## 2026-11-20 PR52 round 1 correction — locally verified, DRAFT
 
 The coordinator accepted all seven findings from native

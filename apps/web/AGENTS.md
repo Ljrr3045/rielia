@@ -23,8 +23,12 @@ and bounded QA are complete; the [evidence matrix](../../docs/development/t37-ui
 preserves the pre-acceptance snapshot; PR49's acceptance governs current status.
 Historical source-qualified persistence/visual limits and owned debt remain;
 no universal frontend migration or original-ticket acceptance is implied.
-The user authorized T11 on 2026-11-19; [T11.1](../../docs/development/sprint-planning.md)
-adds planning APIs/proxy/transport only, with sprint presentation still pending.
+The user authorized T11 on 2026-11-19. T11.1–3 APIs are accepted through
+[PR52](https://github.com/Ljrr3045/rielia/pull/52#issuecomment-7052975664), merged
+`6507e487`. [T11.4a client logic](../../docs/development/sprint-client.md) supplies
+the later Astra presentation contract; T11.4b/T11.5 and full T11 acceptance remain
+open. Planned [T38](https://github.com/Ljrr3045/rielia/issues/53) follows full T11;
+no query/schema/form library adoption is part of this client batch.
 
 - Route files compose screens. Feature components render typed public data and
   emit explicit user intents. Keep related components, styles and copy together;

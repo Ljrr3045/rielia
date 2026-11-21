@@ -1,5 +1,17 @@
 # T11.3 sprint close and explicit carryover
 
+T11.3 was subsequently ACCEPTED in
+[PR52](https://github.com/Ljrr3045/rielia/pull/52#issuecomment-7052975664), reviewed
+`1256241b9f26baf60484db302e4df2d6bc35c5d7`, merged
+`6507e487954fc411b11f807e0eddf850fd223805`. Native round 2
+[check 136620787511](https://github.com/Ljrr3045/rielia/runs/136620787511) succeeded
+incrementally over 11 files in `18973d0..1256241`; it is not another full review.
+The first full round [136586940559](https://github.com/Ljrr3045/rielia/runs/136586940559)
+reported seven findings, all fixed/resolved. No formal APPROVED review is claimed.
+Exact postmerge [Actions 44835623613 / validate 136631171383](https://github.com/Ljrr3045/rielia/actions/runs/44835623613/job/136631171383)
+passed. Dated then-pending evidence below remains historical. T11.4b/T11.5 and
+full T11 acceptance remain open.
+
 Status: implemented and locally verified in [Draft PR52](https://github.com/Ljrr3045/rielia/pull/52).
 Current-head CI/native review and coordinator acceptance are separate delivery
 gates. This is the

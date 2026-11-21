@@ -1,10 +1,11 @@
 'use client';
-import { useEffect, useState, useSyncExternalStore } from 'react';
+import { useCallback, useEffect, useState, useSyncExternalStore } from 'react';
 import {
   isCollaborationCommand,
   type ProjectCommand,
   type ProjectPolicyCommand,
   type ProjectTaskCommand,
+  type TaskInvalidation,
 } from '@rielia/contracts';
 const policy = (command: ProjectCommand | null): command is ProjectPolicyCommand =>
   command?.type === 'change-visibility' || command?.type === 'change-access';
@@ -39,6 +40,16 @@ function contentPageError(error: ProjectTaskState['pageError']): {
 
 export function useProjectTasks() {
   const [streamEpoch, setStreamEpoch] = useState(0);
+  const [invalidationListeners] = useState(() => new Set<(event: TaskInvalidation) => void>());
+  const subscribeInvalidation = useCallback(
+    (listener: (event: TaskInvalidation) => void) => {
+      invalidationListeners.add(listener);
+      return () => {
+        invalidationListeners.delete(listener);
+      };
+    },
+    [invalidationListeners],
+  );
   const [controller] = useState(() =>
     createProjectTaskController({
       identity: createIdentityTransport(),
@@ -62,6 +73,7 @@ export function useProjectTasks() {
     };
     const refresh = () => {
       if (document.visibilityState === 'visible') {
+        invalidationListeners.forEach((listener) => listener({ type: 'reset' }));
         void controller.backgroundRefresh(true);
         setStreamEpoch((value) => value + 1);
       }
@@ -83,7 +95,7 @@ export function useProjectTasks() {
       controller.cancelPending();
       controller.dispose();
     };
-  }, [controller]);
+  }, [controller, invalidationListeners]);
   const workspaceId = state.selection.workspaceId;
   const userId = state.session?.user.id;
   const sessionId = state.session?.session.id;
@@ -98,12 +110,21 @@ export function useProjectTasks() {
       workspaceId,
       onStatus: controller.setStreamStatus,
       onEvent: (event) => {
+        invalidationListeners.forEach((listener) => listener(event));
         if (event.type === 'denied') controller.streamDenied(event.reason);
         else if (event.type !== 'heartbeat')
           void controller.backgroundRefresh(event.type === 'reset');
       },
     });
-  }, [controller, workspaceId, userId, sessionId, streamAllowed, streamEpoch]);
+  }, [
+    controller,
+    workspaceId,
+    userId,
+    sessionId,
+    streamAllowed,
+    streamEpoch,
+    invalidationListeners,
+  ]);
   useEffect(() => {
     if (state.refreshRequired && !state.refreshDeferred && state.status === 'ready')
       void controller.flushBackgroundRefresh();
@@ -122,6 +143,7 @@ export function useProjectTasks() {
   // Preserve the existing content-form contract; policy drafts use the same
   // controller/key lifecycle and are exposed separately for the privacy panel.
   return {
+    subscribeInvalidation,
     ...state,
     mutationPending: state.pending,
     draft:

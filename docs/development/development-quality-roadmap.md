@@ -8,10 +8,16 @@ and all imported handoff bytes remain unchanged.
 
 ## Decision and acceptance boundary
 
-Add exactly two top-level tickets: **T36 — Engineering quality, tooling and
-structure**, then **T37 — UI quality redesign**. The explicit execution order is
-**T36 → T37 → T11 → remaining work under its existing dependencies**. These
-prerequisites pause new sprint/product expansion; they do not waive incomplete
+The 2026-11-05 decision added **T36 — Engineering quality, tooling and
+structure**, then **T37 — UI quality redesign**. The user's additive 2026-11-20
+decision schedules [T38](https://github.com/Ljrr3045/rielia/issues/53) after full
+T11 acceptance: **accepted T36 → accepted T37 → T11 → T38 → remaining work under
+its existing dependencies**. The issue is canonical planned scope: later Zod/
+TanStack Query adoption planning and forms/OpenAPI/testing/observability evaluation.
+No T38 installs or migrations now; finish T11.4b presentation and T11.5 integrated
+acceptance first. T11.3/PR52 alone does not satisfy that prerequisite.
+The original T36/T37
+prerequisites paused new sprint/product expansion; they do not waive incomplete
 T01–T35 acceptance, authorize later capabilities, or reorder the remaining
 dependency graph numerically. Required regression fixes within these tickets
 remain part of their bounded batches.
@@ -28,7 +34,9 @@ ACCEPTED; explicit debt remains owned. The user authorized starting T37 on
 2026-11-11 America/Caracas. Bounded T37 is ACCEPTED in
 [PR49](https://github.com/Ljrr3045/rielia/pull/49#issuecomment-6819605884), reviewed
 `5d3637b`, merged `20a257c`. T11 was authorized on 2026-11-19;
-[T11.1 planning](sprint-planning.md) is IN PROGRESS. Earlier evidence includes
+T11.1–3 are accepted through [PR52](https://github.com/Ljrr3045/rielia/pull/52#issuecomment-7052975664),
+reviewed `1256241b`, merged `6507e487`. [T11.4a client logic](sprint-client.md) is
+in progress; T11.4b/T11.5 and full T11 acceptance remain open. Earlier evidence includes
 [T37.1 technical skill preparation](frontend-skills.md) and integrated
 [Astra inventory](t37-ui-inventory.md)/[direction proposal](t37-design-direction.md).
 Fresh frontend catalog discovery and explicit local loading are verified at
@@ -50,9 +58,9 @@ focused browser schedules and four coordinator-opened current images; previous
 185/10-native and177/26-native/Astra subsets retain source-qualified history.
 T37.5 discovery/navigation and T37.6 consolidation implementation/bounded QA are
 complete for the final delivery PR, with accepted PR48 ancestry integrated.
-PR49's linked final acceptance governs that bounded delivery. T11.1 planning
-APIs are now in progress; full lifecycle and presentation remain later T11
-batches. No Astro app is scaffolded.
+PR49's linked final acceptance governs that bounded delivery. T11.1–3 API
+slices are subsequently accepted; client/presentation/integrated T11 work remains
+in progress before planned T38. No Astro app is scaffolded.
 Prose or smaller files do not establish universal conformity, production readiness
 or full T01–T35 acceptance.
 

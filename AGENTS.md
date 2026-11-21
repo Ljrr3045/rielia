@@ -30,9 +30,13 @@ or an Orca installation.
 
 ## Current scope and protected material
 
-- The user's 2026-11-05 reprioritization adds exactly two tickets: **T36 engineering
-  quality/tooling/structure → T37 UI quality redesign → T11 → remaining work under
-  existing dependencies**. [The roadmap](docs/development/development-quality-roadmap.md)
+- The user's 2026-11-05 reprioritization added T36 engineering quality/tooling/
+  structure and T37 UI quality redesign. The 2026-11-20 decision adds planned
+  [T38](https://github.com/Ljrr3045/rielia/issues/53) after **full T11 acceptance**:
+  **accepted T36 → accepted T37 → T11 → T38 → remaining work under existing
+  dependencies**. T38 plans Zod/TanStack Query adoption and evaluates forms,
+  OpenAPI, testing and observability; no T38 installation/migration is authorized now.
+  [The roadmap](docs/development/development-quality-roadmap.md)
   defines ordered subdeliveries and evidence. The agreed tooling/formatting,
   deterministic frontend/backend units, all-source numerical CI gates and bounded
   frontend/backend extractions are delivered across the T36 PR series through
@@ -57,8 +61,11 @@ or an Orca installation.
   pre-acceptance evidence retains its dated limits. The three pinned frontend-local skills
   retain verified explicit local paths and `325d732` catalog correction; no
   global/API skill or automatic duplicate-name override. The user authorized T11
-  on 2026-11-19; [T11.1 planning](docs/development/sprint-planning.md) is IN PROGRESS,
-  limited to settings and planned-sprint APIs. Full lifecycle/UI follows in later batches.
+  on 2026-11-19. T11.1–3 APIs are accepted through
+  [PR52](https://github.com/Ljrr3045/rielia/pull/52#issuecomment-7052975664),
+  reviewed `1256241b`, merged `6507e487`. [T11.4a client logic](docs/development/sprint-client.md)
+  is in progress; T11.4b presentation and T11.5 integrated acceptance remain open.
+  Full T11 acceptance precedes T38; PR52 alone does not satisfy that dependency.
   No universal source conformity or full acceptance is implied. Original
   T01–T35 numbering/acceptance and immutable handoff remain unchanged. Future
   T30–T34 landing work uses the [later Astro/narrative direction](docs/development/landing-direction.md);

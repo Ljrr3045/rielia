@@ -4,6 +4,17 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Record accepted T11.3 [PR52](https://github.com/Ljrr3045/rielia/pull/52#issuecomment-7052975664),
+  reviewed `1256241b`, merged `6507e487`, incremental second native round and
+  exact successful postmerge CI, preserving historical evidence limits.
+  Add bounded [T11.4a sprint client logic](docs/development/sprint-client.md):
+  typed reads/drafts/recovery, shared invalidation, explicit close decisions
+  and immutable outcome/history consumption. T11.4b presentation/T11.5
+  acceptance remain open; validation/publication evidence follows in the guide.
+- Synchronize the user's planned [T38](https://github.com/Ljrr3045/rielia/issues/53)
+  sequencing after full T11 acceptance, preserving accepted T36/T37 history.
+  No Zod/TanStack Query/form migration, install or T38 completion is included.
+
 - Correct the seven [PR52 round 1 findings](docs/development/sprint-closure.md#pr52-round-1-correction):
   archived timestamp comparison in the unmerged migration, mapped target-visit
   uniqueness, strict outcome/history guards, exact closed-preview rejection,
