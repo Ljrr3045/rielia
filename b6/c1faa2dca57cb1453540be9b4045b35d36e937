@@ -1,0 +1,47 @@
+docs/development/sprint-client.md
+  s_3e3d5b98dbec80::t_0fc446f2ea51c7 3-4,21-38
+  s_3e3d5b98dbec80::t_e5710db7e7c68b 39
+docs/development/sprint-presentation.md
+  s_3e3d5b98dbec80::t_0fc446f2ea51c7 1-112,117-122
+  s_3e3d5b98dbec80::t_e6fe0a3364e6c2 113-116
+apps/web/src/app/projects/sprints/sprint-task-planning.tsx
+  s_3e3d5b98dbec80::t_c02964220bd16d 1-11,27-45,96
+  s_3e3d5b98dbec80::t_77b590e8aef633 12-26,46-95
+CHANGELOG.md
+  s_3e3d5b98dbec80::t_0fc446f2ea51c7 7-14
+apps/web/src/app/projects/sprints/sprint-workspace.tsx
+  s_3e3d5b98dbec80::t_77b590e8aef633 13-26,49-51,53-62,69-74,76-80,83-97,104-109,116-133,137-151,156-158,163-167,189-218,220-223,234-242,255-258,265-270,276-287,293-307
+  s_3e3d5b98dbec80::t_3d3de24baa8e6d 187
+  s_3e3d5b98dbec80::t_9810539d510969 1-12,27-48,52,63-68,75,81-82,98-103,110-115,134-136,152-155,159-162,168-186,188,219,224-233,243-254,259-264,271-275,288-292,308-310
+docs/development/progress.md
+  s_3e3d5b98dbec80::t_0fc446f2ea51c7 3-19
+apps/web/src/app/projects/sprints/sprint-copy.ts
+  s_3e3d5b98dbec80::t_f248033c968ae7 1-5,10-19,24,29,34-35,40-53,58-59,64-66,71-73,78-79,84,89-90,103-108,117-129,162,179
+  s_3e3d5b98dbec80::t_77b590e8aef633 6-9,20-23,25-28,30-33,54-57,60-63,67-70,74-77,80-83,85-88,91-102,109-116,130-161,163-178
+  s_3e3d5b98dbec80::t_3d3de24baa8e6d 36-39
+apps/web/src/app/projects/sprints/sprint-close-review.tsx
+  s_3e3d5b98dbec80::t_c02964220bd16d 1-3,9-23,37-59,68-69,75,79-80,102,109-113,124-134,194
+  s_3e3d5b98dbec80::t_77b590e8aef633 4-8,24-36,60-67,70-74,76-78,81-101,103-108,114-123,135-193
+apps/web/src/app/projects/sprints/sprints.module.css
+  s_3e3d5b98dbec80::t_c02964220bd16d 1-151,160-411
+  s_3e3d5b98dbec80::t_3d3de24baa8e6d 152-159
+apps/web/src/app/projects/sprints/sprint-forms.tsx
+  s_3e3d5b98dbec80::t_9810539d510969 1-18,27-39,50-53,64-68,79-82,96-97,106-116,123-133,146-149,162-165,178-184,191,202
+  s_3e3d5b98dbec80::t_77b590e8aef633 19-26,40-49,54-63,69-78,83-95,98-105,117-122,134-145,150-161,166-177,185-190,192-201
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b6c1faa2dca57cb1453540be9b4045b35d36e937",
+  "prompts": {},
+  "sessions": {
+    "s_3e3d5b98dbec80": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1fbd9-ff85-75a3-93a6-4eba3a204f01",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
