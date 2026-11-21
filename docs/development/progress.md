@@ -1,5 +1,25 @@
 # Delivery progress and decisions
 
+## 2026-11-21 T11.4b SOL focus correction — EXACT PROPOSAL PENDING
+
+SOL fast-forwarded Astra's docs-only 48ec419 and corrected the reproduced logical
+focus return in the integration hook plus nonvisual scoped action/heading ports.
+The [correction guide](sprint-presentation.md#sol-scoped-focus-return-correction--2026-11-21)
+records actual SOL xhigh/automatic-review verification, unchanged Astra visual
+ownership and before 6-failure/1-pass production-component witness. All 51 retained/
+new composition cases pass, including 22 added focus lifetimes and context/safety
+regressions. Root-scoped lint, web types and source formatting pass.
+
+All 390 web cases/88 inputs pass measurement. Exact current-web candidate f1679d66
+preserves every existing file ratio/uncovered count, all 84 unchanged maps and the
+seven other baselines; all eight tracked baselines remain untouched. Proposal
+includes raw maps,237 source/test/tool fingerprints and16 report hashes. Global
+uncovered counts fall 5/5/5/3; 16 composition callbacks remain unexecuted. No
+unaffected heavy/native suite ran. Exact numerical approval, corrected normal/
+standard/infrastructure/artifact gates and Astra native focus/matrix recheck remain
+pending. Assignment stays active; no PR/push/review/merge/worker_done or full T11.
+
+
 ## 2026-11-21 T11.4b Astra native focus finding — IN PROGRESS
 
 Frozen-head `436c4837` native QA used a fresh owned Next/Nest/PostgreSQL fixture

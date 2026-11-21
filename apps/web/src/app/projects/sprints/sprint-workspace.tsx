@@ -24,6 +24,7 @@ export function SprintWorkspace({
   onClose,
   notices,
   children,
+  focusScope,
 }: {
   sprints: SprintPage | null;
   selectedId: string;
@@ -39,24 +40,41 @@ export function SprintWorkspace({
   onClose: (() => void) | null;
   notices?: ReactNode;
   children?: ReactNode;
+  focusScope?: string;
 }) {
   const lang = useLocale();
   const selectId = useId();
   const headingId = useId();
   return (
-    <section className={styles.workspace} aria-labelledby={headingId}>
+    <section
+      className={styles.workspace}
+      aria-labelledby={headingId}
+      data-sprint-focus-scope={focusScope}
+    >
       <header className={styles.toolbar}>
-        <h2 id={headingId} tabIndex={-1}>
+        <h2 id={headingId} tabIndex={-1} data-sprint-focus-heading="planning">
           {c.title[lang]}
         </h2>
         <div className={styles.actions}>
           {onSettings && (
-            <button className={ui.secondary} type="button" disabled={disabled} onClick={onSettings}>
+            <button
+              data-sprint-action="configure-planning"
+              className={ui.secondary}
+              type="button"
+              disabled={disabled}
+              onClick={onSettings}
+            >
               {c.settings[lang]}
             </button>
           )}
           {onCreate && (
-            <button className={ui.primary} type="button" disabled={disabled} onClick={onCreate}>
+            <button
+              data-sprint-action="create-sprint"
+              className={ui.primary}
+              type="button"
+              disabled={disabled}
+              onClick={onCreate}
+            >
               {c.create[lang]}
             </button>
           )}
@@ -101,7 +119,7 @@ export function SprintWorkspace({
         <>
           <div className={styles.overview}>
             <div className={styles.titleRow}>
-              <h3 className={styles.sprintTitle} tabIndex={-1}>
+              <h3 className={styles.sprintTitle} tabIndex={-1} data-sprint-focus-heading="sprint">
                 {sprint.name}
               </h3>
               <Badge tone={sprint.state === 'active' ? 'brand' : 'neutral'}>
@@ -135,17 +153,35 @@ export function SprintWorkspace({
             <p className={styles.hint}>{c.datesHint[lang]}</p>
             <div className={styles.actions}>
               {onEdit && (
-                <button className={ui.secondary} type="button" disabled={disabled} onClick={onEdit}>
+                <button
+                  data-sprint-action="edit-sprint"
+                  className={ui.secondary}
+                  type="button"
+                  disabled={disabled}
+                  onClick={onEdit}
+                >
                   {c.edit[lang]}
                 </button>
               )}
               {onStart && (
-                <button className={ui.primary} type="button" disabled={disabled} onClick={onStart}>
+                <button
+                  data-sprint-action="start-sprint"
+                  className={ui.primary}
+                  type="button"
+                  disabled={disabled}
+                  onClick={onStart}
+                >
                   {c.start[lang]}
                 </button>
               )}
               {onClose && (
-                <button className={ui.primary} type="button" disabled={disabled} onClick={onClose}>
+                <button
+                  data-sprint-action="close-sprint"
+                  className={ui.primary}
+                  type="button"
+                  disabled={disabled}
+                  onClick={onClose}
+                >
                   {c.close[lang]}
                 </button>
               )}

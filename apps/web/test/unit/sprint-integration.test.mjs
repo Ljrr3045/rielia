@@ -29,6 +29,336 @@ async function openScreen(t, options) {
   return b;
 }
 
+for (const [name, taskDetail, planned] of [
+  ['Planning settings', false, false],
+  ['Create sprint', false, false],
+  ['Edit sprint', false, false],
+  ['Review start', false, true],
+  ['Review closure', false, false],
+  ['Edit estimate', true, false],
+  ['Change participation', true, false],
+])
+  test(
+    `Escape returns to the current authorized ${name} action after its original DOM lifetime ends`,
+    { timeout: 10000 },
+    async (t) => {
+      const b = await openScreen(t, {
+        ...(taskDetail
+          ? { search: '?workspace=a&project=p&projectView=sprints&sprint=s&task=t1' }
+          : {}),
+        configure(_b, server) {
+          if (planned) {
+            server.sprint = { ...plannedSprint('s'), workspaceId: 'a' };
+            server.scope.sprintVersion = 1;
+          }
+        },
+      });
+      const opener = getByRole(b.container, 'button', { name, exact: true });
+      await act(async () => opener.focus());
+      await b.click(name);
+      if (name !== 'Review closure')
+        assert.equal(
+          opener.isConnected,
+          false,
+          'the actual production action is removed while staging',
+        );
+      assert.equal(b.document.activeElement === opener, false);
+      await act(async () =>
+        b.document.activeElement.dispatchEvent(
+          new b.window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }),
+        ),
+      );
+      await b.flush();
+      const current = getByRole(b.container, 'button', { name, exact: true });
+      assert.equal(current.disabled, false);
+      assert.equal(
+        b.document.activeElement === current,
+        true,
+        'return to the recreated logical action, not a remote project heading',
+      );
+      assert.equal(posts(b).length, 0);
+    },
+  );
+
+test(
+  'logical sprint focus return survives a locale change without matching copy',
+  { timeout: 10000 },
+  async (t) => {
+    const b = await openScreen(t);
+    await b.select('Language', 'es');
+    const opener = getByRole(b.container, 'button', { name: 'Editar sprint' });
+    await act(async () => opener.focus());
+    await b.click('Editar sprint');
+    assert.equal(opener.isConnected, false);
+    await act(async () => {
+      const locale = getByRole(b.container, 'combobox', { name: 'Idioma' });
+      locale.value = 'en';
+      locale.dispatchEvent(new b.window.Event('change', { bubbles: true }));
+    });
+    await b.click('Back', dialog(b));
+    assert.equal(
+      b.document.activeElement === getByRole(b.container, 'button', { name: 'Edit sprint' }),
+      true,
+    );
+  },
+);
+
+test(
+  'confirmed metadata save waits for verified fresh reads before returning to its replacement action',
+  { timeout: 10000 },
+  async (t) => {
+    const b = await openScreen(t);
+    const opener = getByRole(b.container, 'button', { name: 'Edit sprint' });
+    await act(async () => opener.focus());
+    await b.click('Edit sprint');
+    const held = deferred();
+    let wrote = false;
+    const priorGet = b.sprintServer.get;
+    b.sprintServer.get = (request) =>
+      wrote && request.path.endsWith('/sprints/s')
+        ? held.promise.then(() => Response.json(b.sprintServer.sprint))
+        : priorGet(request);
+    b.sprintServer.post = ({ init }) => {
+      wrote = true;
+      b.sprintServer.sprint = { ...b.sprintServer.sprint, ...JSON.parse(init.body), version: 2 };
+      return Response.json(b.sprintServer.sprint);
+    };
+    await b.input(getByRole(dialog(b), 'textbox', { name: 'Goal' }), 'Confirmed focus lifetime');
+    await b.click('Save changes', dialog(b));
+    assert.equal(opener.isConnected, false);
+    assert.equal(queryByRole(b.container, 'button', { name: 'Edit sprint' }), null);
+    await act(async () => held.resolve());
+    await b.clock.advance(500);
+    await b.flush();
+    assert.equal(
+      b.document.activeElement === getByRole(b.container, 'button', { name: 'Edit sprint' }),
+      true,
+    );
+    assert.equal(posts(b).length, 1);
+  },
+);
+
+for (const operation of ['start', 'close'])
+  test(
+    `confirmed ${operation} falls back to its current sprint heading when that action no longer exists`,
+    { timeout: 10000 },
+    async (t) => {
+      const b = await openScreen(t, {
+        configure(_b, s) {
+          if (operation === 'start') {
+            s.sprint = { ...plannedSprint('s'), workspaceId: 'a' };
+            s.scope.sprintVersion = 1;
+          }
+        },
+      });
+      const name = operation === 'start' ? 'Review start' : 'Review closure';
+      await act(async () => getByRole(b.container, 'button', { name }).focus());
+      await b.click(name);
+      if (operation === 'close') {
+        await b.select('Pending work destination', 'backlog', dialog(b));
+        await b.click('Get preview', dialog(b));
+      }
+      b.sprintServer.post = () => {
+        if (operation === 'start') {
+          b.sprintServer.sprint = {
+            ...b.sprintServer.sprint,
+            state: 'active',
+            version: 2,
+            startedAt: '2026-11-20T00:00:00.000Z',
+            capabilities: { canEdit: true, canStart: false, canClose: true, canChangeScope: true },
+          };
+          b.sprintServer.scope.sprintVersion = 2;
+          return Response.json({
+            operation: {
+              activityId: 'a',
+              type: 'start-sprint',
+              sprintId: 's',
+              enteredVisitId: null,
+              exitedVisitId: null,
+            },
+            current: b.sprintServer.sprint,
+          });
+        }
+        const result = closeResult(preview('backlog'));
+        result.current.workspaceId = 'a';
+        result.closure.workspaceId = 'a';
+        b.sprintServer.sprint = result.current;
+        b.sprintServer.closure = result.closure;
+        return Response.json(result);
+      };
+      await b.click(operation === 'start' ? 'Confirm start' : 'Confirm closure', dialog(b));
+      await b.clock.advance(500);
+      await b.flush();
+      assert.equal(queryByRole(b.container, 'button', { name }), null);
+      assert.equal(
+        b.document.activeElement ===
+          getByRole(b.container, 'heading', { name: b.sprintServer.sprint.name, exact: true }),
+        true,
+      );
+    },
+  );
+
+test(
+  'capability loss never remounts an edit action for focus; discard uses the authorized sprint heading',
+  { timeout: 10000 },
+  async (t) => {
+    const b = await openScreen(t);
+    await act(async () => getByRole(b.container, 'button', { name: 'Edit sprint' }).focus());
+    await b.click('Edit sprint');
+    b.sprintServer.sprint.capabilities.canEdit = false;
+    await act(async () => b.server.streams.at(-1).emit({ type: 'reset' }));
+    await b.clock.advance(500);
+    await b.flush();
+    assert.equal(queryByRole(b.container, 'button', { name: 'Edit sprint' }), null);
+    await b.click('Discard local work');
+    assert.equal(
+      b.document.activeElement ===
+        getByRole(b.container, 'heading', { name: b.sprintServer.sprint.name, exact: true }),
+      true,
+    );
+  },
+);
+
+for (const unavailable of [
+  'disabled',
+  'hidden',
+  'inert',
+  'aria-hidden',
+  'aria-disabled',
+  'display',
+  'visibility',
+])
+  test(`focus return skips a ${unavailable} replacement control`, { timeout: 10000 }, async (t) => {
+    const b = await openScreen(t);
+    await act(async () => getByRole(b.container, 'button', { name: 'Edit sprint' }).focus());
+    await b.click('Edit sprint');
+    await act(async () =>
+      b.document.activeElement.dispatchEvent(
+        new b.window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }),
+      ),
+    );
+    const replacement = getByRole(b.container, 'button', { name: 'Edit sprint' });
+    if (unavailable === 'disabled') replacement.disabled = true;
+    else if (unavailable === 'display') replacement.style.display = 'none';
+    else if (unavailable === 'visibility') replacement.style.visibility = 'hidden';
+    else replacement.setAttribute(unavailable, unavailable.startsWith('aria') ? 'true' : '');
+    await b.flush();
+    assert.equal(b.document.activeElement === replacement, false);
+    assert.equal(
+      b.document.activeElement ===
+        getByRole(b.container, 'heading', { name: b.sprintServer.sprint.name, exact: true }),
+      true,
+    );
+  });
+
+test(
+  'canceled focus frames wait through same-session verification and do not target a replaced session',
+  { timeout: 10000 },
+  async (t) => {
+    const b = await openScreen(t);
+    await act(async () => getByRole(b.container, 'button', { name: 'Edit sprint' }).focus());
+    await b.click('Edit sprint');
+    await act(async () =>
+      b.document.activeElement.dispatchEvent(
+        new b.window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }),
+      ),
+    );
+    const held = b.server.holdNext('/api/v1/identity/session');
+    await b.event('popstate');
+    await b.flush();
+    assert.equal(queryByRole(b.container, 'button', { name: 'Edit sprint' }), null);
+    await act(async () => held.resolve(Response.json(b.server.session)));
+    await b.clock.advance(500);
+    await b.flush();
+    assert.equal(
+      b.document.activeElement === getByRole(b.container, 'button', { name: 'Edit sprint' }),
+      true,
+    );
+    await b.click('Edit sprint');
+    await act(async () =>
+      b.document.activeElement.dispatchEvent(
+        new b.window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }),
+      ),
+    );
+    b.server.session = identitySession('replacement');
+    await b.event('focus');
+    await b.clock.advance(500);
+    b.window.history.pushState(
+      {},
+      '',
+      '/projects?workspace=a&project=p&projectView=sprints&sprint=s',
+    );
+    await b.event('popstate');
+    await b.clock.advance(500);
+    await b.flush();
+    const current = getByRole(b.container, 'button', { name: 'Edit sprint' });
+    assert.equal(
+      b.document.activeElement === current,
+      false,
+      'old owner cannot return focus into another verified identity',
+    );
+  },
+);
+
+test(
+  'opening another form or accepting guarded navigation cancels the old focus return',
+  { timeout: 10000 },
+  async (t) => {
+    const b = await openScreen(t);
+    await b.click('Edit sprint');
+    await act(async () =>
+      b.document.activeElement.dispatchEvent(
+        new b.window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }),
+      ),
+    );
+    await b.click('Planning settings');
+    assert.equal(dialog(b).contains(b.document.activeElement), true);
+    await act(async () => getByRole(b.container, 'link', { name: 'Tasks', exact: true }).click());
+    await b.flush();
+    assert.match(dialog(b).textContent, /Resolve changes before leaving/);
+    await b.click('Stay here', dialog(b));
+    assert.equal(dialog(b).contains(b.document.activeElement), true);
+    await act(async () => getByRole(b.container, 'link', { name: 'Tasks', exact: true }).click());
+    await b.flush();
+    await b.click('Discard local work and continue', dialog(b));
+    await b.clock.advance(500);
+    await b.flush();
+    assert.equal(queryByRole(b.container, 'dialog'), null);
+    assert.equal(new URL(b.window.location.href).searchParams.has('projectView'), false);
+    assert.equal(posts(b).length, 0);
+  },
+);
+
+test(
+  'a task-detail navigation after cancel cannot receive the old sprint return focus',
+  { timeout: 10000 },
+  async (t) => {
+    const b = await openScreen(t);
+    await b.click('Edit sprint');
+    await act(async () =>
+      b.document.activeElement.dispatchEvent(
+        new b.window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }),
+      ),
+    );
+    b.window.history.pushState(
+      {},
+      '',
+      '/projects?workspace=a&project=p&projectView=sprints&sprint=s&task=t1',
+    );
+    await b.event('popstate');
+    await b.clock.advance(500);
+    await b.flush();
+    assert.equal(
+      b.document.activeElement === b.container.querySelector('[data-detail-heading]'),
+      true,
+    );
+    assert.equal(
+      b.document.activeElement === getByRole(b.container, 'button', { name: 'Edit sprint' }),
+      false,
+    );
+  },
+);
+
 test(
   'production sprint entry uses one identity/SSE owner, canonical scope/settings and real view hrefs',
   { timeout: 10000 },

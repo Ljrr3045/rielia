@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import type { SprintFields } from '@rielia/contracts';
 import type { useProjectTasks } from './use-project-tasks';
 import { useProjectSprints } from './use-project-sprints';
@@ -23,6 +23,39 @@ type Editing = {
   start: SprintStartReview | null;
   close: { destination: string } | null;
 };
+type FocusAction = SprintFormKind | 'start-sprint' | 'close-sprint';
+type FocusReturn = { action: FocusAction; identity: string; url: string };
+function focusAvailable(element: HTMLElement) {
+  if (!element.isConnected || element.matches(':disabled')) return false;
+  for (let node: HTMLElement | null = element; node; node = node.parentElement) {
+    if (
+      node.hidden ||
+      node.hasAttribute('inert') ||
+      node.getAttribute('aria-hidden') === 'true' ||
+      node.getAttribute('aria-disabled') === 'true'
+    )
+      return false;
+    const style = window.getComputedStyle(node);
+    if (
+      style.display === 'none' ||
+      style.visibility === 'hidden' ||
+      style.visibility === 'collapse'
+    )
+      return false;
+  }
+  return true;
+}
+function focusReadsPending(action: FocusAction, state: ReturnType<typeof useProjectSprints>) {
+  const resources =
+    action === 'configure-planning' || action === 'create-sprint'
+      ? [state.resources.planning]
+      : action === 'estimate-task' || action === 'set-task-sprint'
+        ? [state.resources.task]
+        : action === 'start-sprint'
+          ? [state.resources.planning, state.resources.sprint, state.resources.scope]
+          : [state.resources.sprint];
+  return resources.some((resource) => resource.status === 'idle' || resource.status === 'loading');
+}
 
 /** One sprint lifecycle beside the existing task/session/event owner. No presentation imports. */
 export function useProjectSprintIntegration(parent: ProjectSprintOwner) {
@@ -38,7 +71,8 @@ export function useProjectSprintIntegration(parent: ProjectSprintOwner) {
   const editingRef = useRef(editing);
   const latest = useRef({ parent, sprints, model });
   latest.current = { parent, sprints, model };
-  const opener = useRef<HTMLElement | null>(null);
+  const focusScope = useId();
+  const opener = useRef<FocusReturn | null>(null);
   const restoreWanted = useRef(false);
   const identity = sprintFormIdentity(sprints);
   const visibleEditing =
@@ -47,8 +81,9 @@ export function useProjectSprintIntegration(parent: ProjectSprintOwner) {
     editingRef.current = value;
     setEditing(value);
   }
-  function rememberOpener() {
-    opener.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  function rememberOpener(action: FocusAction, identity: string) {
+    restoreWanted.current = false;
+    opener.current = { action, identity, url: parent.url };
   }
   function discard(restore = true) {
     if (!latest.current.sprints.discardDraft()) return false;
@@ -56,6 +91,7 @@ export function useProjectSprintIntegration(parent: ProjectSprintOwner) {
     setErrors({});
     setReason(null);
     restoreWanted.current = restore;
+    if (!restore) opener.current = null;
     return true;
   }
   useEffect(
@@ -83,8 +119,19 @@ export function useProjectSprintIntegration(parent: ProjectSprintOwner) {
       setErrors({});
       setReason(null);
       opener.current = null;
+      restoreWanted.current = false;
     }
   }, [identity, sprints.status]);
+  useEffect(() => {
+    if (sprints.status === 'verifying') return;
+    if (
+      opener.current &&
+      (opener.current.identity !== identity || opener.current.url !== parent.url)
+    ) {
+      opener.current = null;
+      restoreWanted.current = false;
+    }
+  }, [identity, parent.url, sprints.status]);
   useEffect(() => {
     if (sprints.mutation.status === 'confirmed') {
       updateEditing(null);
@@ -123,14 +170,59 @@ export function useProjectSprintIntegration(parent: ProjectSprintOwner) {
     }
   }, [model.visible, sprints.resources, sprints.mutation.status]);
   useEffect(() => {
-    if (!restoreWanted.current || !model.visible || parent.integratedNavigation) return;
-    restoreWanted.current = false;
+    const target = opener.current;
+    if (
+      !restoreWanted.current ||
+      !target ||
+      editing ||
+      !model.visible ||
+      parent.integratedNavigation ||
+      focusReadsPending(target.action, sprints)
+    )
+      return;
     const frame = requestAnimationFrame(() => {
-      if (opener.current?.isConnected) opener.current.focus();
-      else document.querySelector<HTMLElement>('[data-detail-heading], #projects-main h1')?.focus();
+      const current = latest.current;
+      if (
+        opener.current !== target ||
+        editingRef.current ||
+        !current.model.visible ||
+        current.parent.integratedNavigation ||
+        current.parent.url !== target.url ||
+        sprintFormIdentity(current.sprints) !== target.identity ||
+        focusReadsPending(target.action, current.sprints)
+      )
+        return;
+      restoreWanted.current = false;
+      opener.current = null;
+      const scopes = [
+        ...document.querySelectorAll<HTMLElement>('[data-sprint-focus-scope]'),
+      ].filter((node) => node.dataset['sprintFocusScope'] === focusScope);
+      const action = scopes
+        .flatMap((node) => [
+          ...node.querySelectorAll<HTMLButtonElement>('button[data-sprint-action]'),
+        ])
+        .find((node) => node.dataset['sprintAction'] === target.action && focusAvailable(node));
+      const heading =
+        target.action === 'configure-planning' || target.action === 'create-sprint'
+          ? 'planning'
+          : target.action === 'estimate-task' || target.action === 'set-task-sprint'
+            ? 'task'
+            : 'sprint';
+      const fallback = scopes
+        .flatMap((node) => [...node.querySelectorAll<HTMLElement>('[data-sprint-focus-heading]')])
+        .find((node) => node.dataset['sprintFocusHeading'] === heading && focusAvailable(node));
+      (action ?? fallback)?.focus();
     });
     return () => cancelAnimationFrame(frame);
-  }, [editing, model.visible, parent.integratedNavigation]);
+  }, [
+    editing,
+    model.visible,
+    parent.integratedNavigation,
+    parent.url,
+    identity,
+    sprints.resources,
+    focusScope,
+  ]);
   useEffect(() => {
     if (
       visibleEditing?.form?.type !== 'estimate-task' &&
@@ -207,7 +299,7 @@ export function useProjectSprintIntegration(parent: ProjectSprintOwner) {
     setReason(opened.reason);
     if (!opened.form) return;
     setFeedbackTarget(type === 'estimate-task' || type === 'set-task-sprint' ? 'task' : 'sprint');
-    rememberOpener();
+    rememberOpener(type, opened.form.identity);
     setErrors({});
     updateEditing({ identity: opened.form.identity, form: opened.form, start: null, close: null });
     if (type === 'set-task-sprint')
@@ -252,14 +344,14 @@ export function useProjectSprintIntegration(parent: ProjectSprintOwner) {
     if (!model.actions.start || !model.startReview || !identity) return;
     if (sprints.stage({ type: 'start-sprint' }) !== 'ready') return;
     setFeedbackTarget('sprint');
-    rememberOpener();
+    rememberOpener('start-sprint', identity);
     setReason(null);
     updateEditing({ identity, form: null, start: model.startReview, close: null });
   }
   function beginClose() {
     if (!model.actions.close || !identity) return;
     setFeedbackTarget('sprint');
-    rememberOpener();
+    rememberOpener('close-sprint', identity);
     setReason(null);
     updateEditing({ identity, form: null, start: null, close: { destination: '' } });
   }
@@ -322,6 +414,7 @@ export function useProjectSprintIntegration(parent: ProjectSprintOwner) {
       }
     : parent;
   return {
+    focusScope,
     feedbackTarget,
     retryAllowed: !!sprints.recovery && model.visible && !model.parentBlocked,
     parent: renderParent,

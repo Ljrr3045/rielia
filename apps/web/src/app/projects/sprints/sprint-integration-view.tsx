@@ -347,6 +347,7 @@ export function SprintIntegrationWorkspace({ integration: i }: { integration: In
   const sprint = i.model.sprint;
   return (
     <SprintWorkspace
+      focusScope={i.focusScope}
       sprints={resources.sprints.data}
       sprint={sprint}
       selectedId={i.parent.sprintLocation.sprintId ?? ''}
@@ -483,6 +484,7 @@ export function SprintIntegrationTask({ integration: i }: { integration: Integra
   return (
     <div data-sprint-task-planning>
       <SprintTaskPlanning
+        focusScope={i.focusScope}
         planning={task}
         history={{
           resource: resources.taskHistory,

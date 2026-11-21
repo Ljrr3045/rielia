@@ -37,6 +37,7 @@ export function SprintTaskPlanning({
   estimateForm,
   participationForm,
   feedback,
+  focusScope,
 }: {
   planning: TaskPlanning;
   history: SprintHistoryPort;
@@ -45,12 +46,19 @@ export function SprintTaskPlanning({
   estimateForm: SprintEstimateFormPort | null;
   participationForm: SprintParticipationFormPort | null;
   feedback?: ReactNode;
+  focusScope?: string;
 }) {
   const lang = useLocale();
   const id = useId();
   return (
-    <section className={styles.taskPlanning} aria-labelledby={`${id}-heading`}>
-      <h3 id={`${id}-heading`}>{c.taskPlanning[lang]}</h3>
+    <section
+      className={styles.taskPlanning}
+      aria-labelledby={`${id}-heading`}
+      data-sprint-focus-scope={focusScope}
+    >
+      <h3 id={`${id}-heading`} tabIndex={-1} data-sprint-focus-heading="task">
+        {c.taskPlanning[lang]}
+      </h3>
       {feedback}
       <dl className={styles.snapshot}>
         <div>
@@ -68,12 +76,22 @@ export function SprintTaskPlanning({
       </dl>
       <div className={styles.actions}>
         {onEditEstimate && estimateForm === null && (
-          <button className={ui.secondary} type="button" onClick={onEditEstimate}>
+          <button
+            data-sprint-action="estimate-task"
+            className={ui.secondary}
+            type="button"
+            onClick={onEditEstimate}
+          >
             {r.editEstimate[lang]}
           </button>
         )}
         {onEditParticipation && participationForm === null && (
-          <button className={ui.secondary} type="button" onClick={onEditParticipation}>
+          <button
+            data-sprint-action="set-task-sprint"
+            className={ui.secondary}
+            type="button"
+            onClick={onEditParticipation}
+          >
             {r.editParticipation[lang]}
           </button>
         )}

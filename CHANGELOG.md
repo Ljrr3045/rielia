@@ -4,6 +4,14 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Correct [sprint logical focus return](docs/development/sprint-presentation.md#sol-scoped-focus-return-correction--2026-11-21)
+  after staging recreates its invoking action. Scope return to the current
+  verified context and authorized visible control, with safe feature-heading
+  fallback and cancellation across new forms/navigation/identity changes.
+  All 51 composition cases and390 web measurement cases pass;22 regressions are
+  added, including the old six-failure witness. No visual redesign or baseline
+  write; exact numerical approval and corrected native QA remain pending.
+
 - Record the frozen-head [T11.4b native QA focus finding](docs/development/sprint-presentation.md#astra-frozen-head-native-qa-finding--2026-11-21):
   real settings/create/readback passed bounded checks, but canceling sprint
   metadata returns focus to the project heading instead of its available edit

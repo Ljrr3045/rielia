@@ -1,9 +1,8 @@
 # T11.4b sprint presentation checkpoint
 
-Status: **IN PROGRESS, approved numerical migration and normal replay complete;
-bounded SOL frozen-head recovery/persistence evidence recorded; Astra integrated
-responsive/accessibility QA stopped at a reproduced focus-return finding;
-no PR or product acceptance**.
+Status: **IN PROGRESS, SOL focus-return correction implemented with new numerical
+proposal pending; corrected-head normal gates and Astra native recheck remain
+open; no PR or product acceptance**.
 Base: accepted T11.4a merge `a2de3bd79596cb83b79287f105f60fedfb35bea9`.
 The [client guide](sprint-client.md#t114a-acceptance--2026-11-20-caracas--november-21-utc)
 records PR54 acceptance and its review/hash limits. T11.5 and full T11 remain
@@ -660,3 +659,105 @@ source/test/tool fingerprints still match, including approved web baseline
 `04977cb421e2eb3e0d842c8b0c3295f19b6b2403e2d2cecf9788a41c1a01ccd8`.
 Documentation/whitespace checks apply to this receipt; prior 700-case normal
 evidence is not rerun or broadened. No PR/push/review/merge or full acceptance.
+
+
+## SOL scoped focus-return correction — 2026-11-21
+
+The coordinator accepted Astra's no-resize button → input → H1 trace as a
+functional defect and authorized this integration checkout to fast-forward to
+docs-only `48ec419f5b41d90c0dc13361ade667aa01b1a350`. Actual SOL
+`gpt-6.1-sol`/`xhigh`, automatic review and on-request/workspace-write were verified
+before edits. Astra remains idle in its own checkout; its trace/report were read
+and copied as evidence without editing that checkout. The native finding remains
+source-qualified to its original head; no corrected native pass is claimed here.
+
+`use-project-sprint-integration.ts` now captures a logical action with the verified
+session/workspace/project/sprint/task identity and canonical URL in memory. An
+opaque hook-local React ID scopes the rendered action ports; authentication IDs
+are not placed in DOM attributes. `SprintWorkspace` and `SprintTaskPlanning`
+accept an optional nonvisual scope and expose stable semantic action/heading
+markers. The SOL composition supplies that scope. Conditional public-capability
+ports remain unchanged: no unauthorized button is kept mounted to preserve focus,
+and labels/locales are not used as selectors. CSS, tokens, copy and layout are
+unchanged; the Task planning heading gains only programmatic fallback focus.
+
+Cancel and confirmed completion resolve the current authorized action after
+staging has removed the original node. Restoration waits for current verified
+reads, survives canceled frames during temporary same-session verification, and
+rechecks the latest context/URL before focusing. New editing, replaced identity,
+project/task/navigation lifetimes and accepted guard discard cancel the old
+intent. The resolver rejects disabled, hidden, inert, semantically hidden/disabled
+or CSS-invisible targets/ancestors. When an action has ceased to exist (for
+example successful start/close or revoked edit authority), only the matching
+current scoped feature heading is an eligible fallback. It does not move focus
+into another context or an active navigation/form dialog.
+
+### Regression evidence and check limits
+
+The initial bounded control on the old runtime fails **six of seven** cancellation
+journeys: settings, create, metadata edit, start, estimate and participation.
+Each explicitly focuses/activates the actual production control and proves its
+node disconnects, then presses Escape and finds the enabled replacement. Raw
+close review passes the old control because its opener remains mounted. The
+first failing DOM-object assertion made Node's diagnostic formatter stall; only
+the identified owned test PIDs were stopped, and boolean diagnostics produced
+the bounded 6-failure/1-pass receipt. That interrupted attempt is not pass evidence.
+
+All **51 production composition cases pass** after correction, retaining the 29
+previous cases and adding 22 focus regressions. They cover all seven action
+lifetimes, ES/EN label independence, confirmed metadata save across held fresh
+reads, completed start/close fallback, revoked authority, disabled/hidden/inert/
+semantic/CSS-hidden targets, temporary verification, replaced identity, task-detail
+navigation, a newly opened form and Stay/discard guarded navigation. The held-read
+test double initially reused a consumed Response across independent reads;
+returning a fresh Response for each read corrected that boundary without a
+production change. Real hooks/components/controllers remain in use; finite
+HTTP/browser/CSS doubles do not prove the 320px native or accessibility result.
+
+Scoped root ESLint, web TypeScript and source formatting pass. Measurement of all
+**390 web cases/88 maintained inputs** passes with no skips. The accepted
+368-case before reports/raw maps are the prior byte-identical normal replay;
+all 88 before source and test bindings were independently matched against
+`48ec419` before using them. Unchanged API/contracts/prototype source/reports were
+preserved without repeating their suites. Proposed future normal count is 722,
+not a claimed normal-gate result.
+
+### Exact numerical proposal; no baseline write
+
+Only current web is proposed:
+`04977cb421e2eb3e0d842c8b0c3295f19b6b2403e2d2cecf9788a41c1a01ccd8` →
+`f1679d66f7ad53aa65e691cac2188c8c39f5aac31c600c2ff53013ffac462076`.
+
+| Metric | Accepted before | Proposed after | Floor before → proposed (basis points) |
+| --- | --- | --- | --- |
+| Lines | 3407/4892 | 3445/4925 | 6964 → 6994 |
+| Statements | 3748/5551 | 3789/5587 | 6751 → 6781 |
+| Functions | 796/1347 | 810/1356 | 5909 → 5973 |
+| Branches | 4429/6913 | 4483/6964 | 6406 → 6437 |
+
+All 88 existing files retain/improve exact ratios and uncovered counts; global
+uncovered L/S/F/B decrease 5/5/5/3. All 84 unchanged-source maps remain exact,
+retaining 8152 covered S/F/B units with one gain, zero losses and 38 exact hit
+vectors. Changed-source semantic counter identity is not asserted. Null columns
+remain 951, over 37472 mapped points versus 37216 before; no columns are invented.
+The integration hook has all 48 functions covered. The composition's previously
+unexecuted callback functions decrease from 21 to **16** in this measurement;
+remaining rendered-path and native debt is still explicit. No test/input removal,
+exclusion, floor reduction, library, provider/config/tool change or historical
+archive edit is made. All eight tracked baselines are untouched, including seven
+protected unaffected files. All 237 physical source/test/tool fingerprints and
+all 16 candidate report hashes/sizes are supplied with the proposal; only four
+runtime source fingerprints and one retained test fingerprint change.
+
+Local ignored evidence is under `apps/web/coverage/t11-focus-return/`: Astra's
+copied trace, before/after focused logs, accepted before maps, exact proposal,
+per-file/global covered/uncovered comparisons, unchanged-map witnesses, nullable
+endpoints and source/test/tool/report fingerprints. Existing archives remain
+unchanged. No app/browser/fixture service was started for this correction.
+
+Exact coordinator approval must precede any baseline write. Corrected-head normal
+root gates/report replay, applicable final standard/infrastructure/artifact
+checks and Astra's exact native focus reproduction plus unfinished responsive/
+accessibility/multipage matrix remain open. Earlier numerical/native receipts
+retain their original source limits; they do not accept this source change.
+No push/PR/Ready/Kilo/merge/worker_done or T11.4b/T11.5/full T11 acceptance occurs.
