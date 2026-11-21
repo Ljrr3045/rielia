@@ -1,0 +1,24 @@
+docs/development/sprint-presentation.md
+  s_aa027f2693f60d::t_4ecacd018885d1 5-6,972-1010
+CHANGELOG.md
+  s_aa027f2693f60d::t_4ecacd018885d1 7-12
+docs/development/progress.md
+  s_aa027f2693f60d::t_4ecacd018885d1 3-9,12-18
+  s_aa027f2693f60d::t_f5bafb373be6c2 10-11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2a2de50e3d527086ffe692cd68504edf1cf3b1b4",
+  "prompts": {},
+  "sessions": {
+    "s_aa027f2693f60d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1fbeb-0dae-7cd1-a40f-f13fa4b7d5da",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
