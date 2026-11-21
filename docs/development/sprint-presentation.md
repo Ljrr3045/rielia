@@ -1,10 +1,9 @@
 # T11.4b sprint presentation checkpoint
 
-Status: **IN PROGRESS, integrated implementation and bounded corrected native/
-multipage evidence recorded; production cross-document cancellation observed,
-but browser confirmation remains an unresolved host boundary and the final
-external-browser preflight is blocked by a locked Mac; coordinator Draft
-publication decision and T11.5/full T11 acceptance remain open**.
+Status: **IMPLEMENTED integrated T11.4b batch, initial Draft publication
+coordinator-authorized; native external Cancel/Leave remains an OWNED OPEN
+ACCEPTANCE GATE, last preflight `screen_locked`. No Ready, T11.4b/T11.5 or full
+T11 acceptance; the coordinator sequences any later narrow browser check**.
 Base: accepted T11.4a merge `a2de3bd79596cb83b79287f105f60fedfb35bea9`.
 The [client guide](sprint-client.md#t114a-acceptance--2026-11-20-caracas--november-21-utc)
 records PR54 acceptance and its review/hash limits. T11.5 and full T11 remain
@@ -1008,3 +1007,37 @@ functional gates are reused with their unchanged source binding; applicable
 prose/format/handoff/whitespace/hooks checks pass. No push/PR/Ready/Kilo/merge/
 worker_done or product acceptance occurs; assignment stays ACTIVE for the
 coordinator's concrete Draft publication and boundary disposition decision.
+
+
+## Coordinator disposition and Draft publication — 2026-11-21
+
+The coordinator reviewed and independently archived the final unavailable
+external-browser packet (`0fd9d1ed`, 15 payloads) and exact English body
+(`0c156628`), verified clean `2a2de50e` and its docs-only diff, and retained native
+external Cancel/Leave as an **OWNED OPEN ACCEPTANCE GATE**. The last desktop
+preflight was `screen_locked`; the coordinator asked the user asynchronously to
+unlock. No new UI attempt is authorized during publication. The implemented
+integrated batch may be published as **one Draft PR to `dev` for reviewability**;
+this is not completion/acceptance of T11.4b, T11.5 or full T11 and not a Ready
+transition. T38 remains after full T11 without new libraries now.
+
+Pre-publication verification retains actual SOL xhigh with automatic review/
+on-request/workspace-write, clean own branch and fetched `origin/dev` ancestry
+at accepted `a2de3bd79596cb83b79287f105f60fedfb35bea9`. The coordinator's live
+GitHub readback reports sole collaborator/authenticated `Ljrr3045`, no invitations,
+`collaborators_only` admission and no existing branch PR. The worker independently
+verified that identity and will recheck branch-PR absence immediately before the
+initial push, then immediately create the authorized Draft with the reviewed
+English body. Subsequent pushes require actual Draft state and no live Kilo;
+Ready or unexpected reviewer activity requires a coordinator decision.
+
+All 237 source/test/tool, 180 built, eight baseline and 16 normal-report bindings
+remain exact. Prior 722 cases, infrastructure/artifact/standard evidence and
+manual limits are reused with their source qualifications; no heavy local suite,
+new measurement, baseline or native schedule is repeated for these docs. Sixteen
+unexecuted composition functions, null columns, representative matrix/device/AT/
+zoom and real-user/provider/staging limits remain owned. The local publication
+packet and English body are under ignored
+`apps/web/coverage/t11-draft-publication/`. Actual URL/head/CI and bounded draft
+review-event observations are recorded after creation; no fabricated no-event,
+Kilo/current-head approval or completed native acceptance is implied.

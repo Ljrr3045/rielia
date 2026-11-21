@@ -1,5 +1,19 @@
 # Delivery progress and decisions
 
+## 2026-11-21 T11.4b implemented batch — DRAFT PUBLICATION AUTHORIZED; NATIVE GATE OPEN
+
+The coordinator accepted the clean `2a2de50e` unavailable-preflight receipt/body
+as bounded evidence and authorized one initial Draft PR for the implemented
+integrated batch. Native external Cancel/Leave remains an **OWNED OPEN ACCEPTANCE
+GATE**, with last `screen_locked` availability; no UI retry during publication,
+Ready or T11.4b/T11.5/full T11 acceptance. The [disposition](sprint-presentation.md#coordinator-disposition-and-draft-publication--2026-11-21)
+retains exact 237/180 source/built hashes, eight baselines and 16 normal reports,
+722 source-qualified tests and explicit native/unit limits. Base remains accepted
+`a2de3bd`; initial branch-PR absence/push/Draft and real URL/head evidence follow
+under coordinator publication authorization. No full local suite is repeated for
+this docs-only batch. T38 follows full T11; assignment ACTIVE.
+
+
 ## 2026-11-21 T11.4b final alternate-host preflight — UNAVAILABLE; CANCEL/LEAVE GATE OPEN
 
 The coordinator reviewed/archived clean `033ea401` and authorized one bounded

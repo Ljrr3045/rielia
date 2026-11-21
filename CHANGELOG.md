@@ -4,6 +4,12 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Prepare the implemented [sprint planning and closure integration](docs/development/sprint-presentation.md#coordinator-disposition-and-draft-publication--2026-11-21)
+  for one coordinator-authorized Draft PR. Keep native external Cancel/Leave an
+  owned open acceptance gate (`screen_locked` on the last attempt), preserve the
+  722-case source-qualified evidence and explicit manual/unit limits, and leave
+  T11.4b/T11.5/full T11 acceptance and Ready with the coordinator.
+
 - Record [the final bounded external-browser preflight](docs/development/sprint-presentation.md#final-bounded-external-confirmation-preflight--2026-11-21):
   macOS Orca reports `screen_locked` before window access, so no browser/fixture
   action or personal-data change occurs. Native Cancel/Leave remains an owned
