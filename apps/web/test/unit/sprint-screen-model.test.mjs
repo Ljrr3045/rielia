@@ -27,6 +27,7 @@ function parent() {
     project: { id: 'p', workspaceId: 'w' },
     task: { id: 't', workspaceId: 'w', projectId: 'p' },
     draftGuard: { kind: 'none' },
+    sprintLocation: { view: 'sprints', sprintId: 's' },
   };
 }
 const model = (b, p = parent(), now) => sprintScreenModel(b.state(), p, now);

@@ -1,6 +1,7 @@
 # T11.4b sprint presentation checkpoint
 
-Status: **IN PROGRESS, unintegrated checkpoint; no PR or product acceptance**.
+Status: **IN PROGRESS, production functional checkpoint; numerical approval and
+Astra integrated native QA pending; no PR or product acceptance**.
 Base: accepted T11.4a merge `a2de3bd79596cb83b79287f105f60fedfb35bea9`.
 The [client guide](sprint-client.md#t114a-acceptance--2026-11-20-caracas--november-21-utc)
 records PR54 acceptance and its review/hash limits. T11.5 and full T11 remain
@@ -8,10 +9,15 @@ open; planned [T38](https://github.com/Ljrr3045/rielia/issues/53) follows full T
 
 Scope: T11/B1c, P09/US06; affected P05/P08/P10/P33, US05/US08/US12;
 UXR01 and UX01/03/04/05/07/09. Existing T37 project shell, tokens, locale and
-modal controls govern. No new policy, transport, hook, route, test, dependency,
-prototype state, T12/T13, T22 chart/report, landing or deployment is introduced.
+modal controls govern. The dated Astra handoffs below introduce presentation
+ports only; the current SOL integration section records production wiring and
+functional tests. No new backend policy, API, dependency, prototype state,
+T12/T13, T22 chart/report, landing or deployment is introduced.
 
-## Presentation and typed ports
+The earlier checkpoints below retain their original evidence limits. The current
+production integration section at the end supersedes their pending wiring status.
+
+## Initial presentation and typed ports
 
 All new source is under `apps/web/src/app/projects/sprints/`. Components render
 public DTOs and emit explicit user intents. They are not yet imported by the
@@ -286,3 +292,165 @@ gates before the coordinator-directed single Draft PR. Signed-out recovery,
 private-context replacement, confirmed versus unknown outcomes, all close-preview
 bindings/paging and complete persistent journeys remain explicit integrated
 checks. T11.4b, T11.5 and full T11 remain open; T38 still follows full T11.
+
+
+## SOL production functional checkpoint — 2026-11-21 Caracas / November 21 UTC
+
+The integration checkout fast-forwarded to Astra's reviewed presentation descendant
+`64664613de5796ff0264ff554edc02b5c748c67e`, preserving both authors' original
+commits. SOL's actual resumed turn verifies `gpt-6.1-sol` / `xhigh`, automatic
+review, on-request/workspace-write and cwd `apps/web`. All functional changes,
+including mixed TSX and tests, belong to SOL. Astra's nine presentation inputs,
+CSS, tokens, copy and layout are retained; native integrated presentation QA is
+still Astra/coordinator work.
+
+### Production owners and behavior
+
+`use-project-sprint-integration.ts` mounts exactly one `useProjectSprints` beside
+the existing `useProjectTasks` owner. It consumes that owner's verified session,
+selection and invalidation port; it adds no session request, event connection,
+store or task copy. `sprint-integration-view.tsx` supplies functional composition
+through the existing shell, work area, ModalFrame and Task detail. The existing
+locale lifetime, modified links and Task detail return remain in place.
+
+The canonical URL representation is
+`/projects?workspace=…&project=…&projectView=sprints&sprint=…`; an optional `task`
+preserves contextual detail. Selection transitions clear former private resources
+before publishing the new context. The synchronous parent and sprint projections
+prevent former project/task/sprint data, drafts and feedback from mounting during
+verification, signed-out/forbidden states or identity/context replacement. A
+sprint401 removes the former private parent DOM and offers explicit parent session
+verification. Temporary verification retains raw drafts only for the same
+verified session until its original expiry; replacement and denial clear them.
+
+Both owners protect drafts, pending writes and unknown outcomes across sprint,
+project, workspace, view, ordinary links, Back and beforeunload. The latest
+blocked destination is retained. Stay keeps local decisions; explicit discard
+clears local recovery without claiming to undo a possible server commit. Pending
+has no discard. Confirmed completion or explicit discard releases the deferred
+intent; field changes, invalidation, refresh and rebase never submit. Task-only
+same-workspace browsing and the existing workspace guard retain accepted T37
+behavior when no sprint lifetime is protected.
+
+Forms stage before editing, capture versions and retain raw strings. Public
+validators convert settings, planned metadata, null/zero/off-scale estimates and
+explicit participation. Start displays captured canonical goal/dates/exclusive
+end/zone/totals and requires review plus explicit command. Close loads complete
+server pending totals and authorized destination/consequence pages; confirmation
+uses the reviewed preview binding even if the raw select changes. Changed/stale
+decisions require a new preview. Public capabilities control nullable mutation
+ports, including archived/Kanban/read-only limits. Unknown retries use the same
+key and body; 409 retains separate captured/current values for explicit canonical
+reload, comparison and rebase. Closed views consume frozen outcomes and public
+actor/provenance history, with independent resource and paging recovery.
+
+### Functional and persisted evidence
+
+All **368 web cases pass without skips**: the retained 307 plus 31 screen/form/URL
+contracts, 29 production component/real-hook journeys and one standalone task-owner
+compatibility case. The latter and the composed pending-task case cover both
+directions of shared navigation protection. Tests also cover signed-out private
+DOM fences, read-only forms, temporary verification/replacement, capability loss,
+null/zero/off-scale, captured start, exact unknown recovery, 409 comparison/rebase,
+complete close count 103, reviewed destination, changed pages, frozen outcomes,
+actor history, ordinary/modified links, Back, discarded/confirmed deferred
+navigation, narrow sidebar/modal inertness and focus. All old tests and source
+inputs remain. The test-only CSS loader now recognizes the imported sprint styles.
+Two added
+expiry cases first reproduce a raw-buffer retention failure during stalled/error
+parent verification; after correction, expiry clears the buffer and a later
+same-session renewal cannot revive it. Two external projects-shaped URL cases
+first reproduce lost-origin/task-guard bypass; after correction, both owners keep
+the full external destination and their local work. The production dialog also
+identifies the actual external URL. These are integration corrections, not
+changes to the accepted backend policy.
+Finite HTTP/browser/stream doubles do not prove SQL persistence or native access.
+
+Three copied-source production witnesses pass their unmodified control and fail
+their expected assertions after removing the parent private-data fence, removing
+the raw close-review guard or adding automatic repreview on a raw destination
+change. The temporary copies are removed; production source is never mutated.
+An initial direct focused invocation lacked the TSX loader and could not resolve
+extensionless imports; the established loader retry passes both added cases.
+
+The existing disposable fixture supplied real Next proxies, Nest and PostgreSQL.
+Orca's actual production page saved Scrum/Caracas settings, created a planned
+goal/date sprint, saved estimate zero, explicitly assigned the task, reviewed and
+started the sprint, reviewed closure and confirmed it. Two extra done/canceled
+participants and a planned destination were arranged through the real public
+transports; their arrangement is not a UI-creation claim. Complete preview scope
+was three, with one done, one canceled and one pending participant. Changing the
+raw select to backlog after reviewing the planned destination still committed
+that reviewed destination. Public readback confirms the carried participation
+and separate immutable done/canceled/carried outcomes. A later real estimate
+change from zero to eight left the closed outcome at zero. Reloaded owner and
+viewer pages expose canonical dates, exclusive end, frozen results and actor
+history; the viewer's sprint panel has no mutation controls.
+
+The persisted run used the uncommitted integration snapshot before the later
+expiry and external-link corrections; it does not certify the final frozen head,
+and no pre-run runtime fingerprint receipt is claimed. Repeat relevant journeys
+on that frozen head during integrated QA.
+
+This is bounded native functional evidence, not Astra's full visual/accessibility
+acceptance. Date fields used native value setters with DOM input/change events.
+Orca focus/refresh verification invalidated dialog references during start/close;
+bounded DOM activation of the visible enabled review/confirm controls completed
+those actions. Disabled controls were never bypassed. Native persisted 401/409/
+timeout/concurrent-session journeys, all specified widths/locales, touch, zoom,
+screen reader and actual-device acceptance remain explicit follow-up work.
+The fixture's initial Next child exited; one owned replacement used the same
+origin/API. All owned servers, QA database/container/volume, private fixture file
+and browser tab were stopped/removed. No hidden persistent service remains.
+
+### Numerical proposal and remaining gates
+
+A temporary archive of accepted `a2de3bd` reproduces the exact 307-case web baseline
+`e311dac02f34422ace8ad0bf4c1a1ae80a41b9dcfbc77c8c341e4b3e4bf3857c` and its raw maps.
+Current measurement includes **88 inputs**: 74 retained plus nine Astra inputs,
+three SOL contract inputs and two SOL production owners. No exclusion, ignore,
+test removal, tool change or tracked baseline write occurs.
+
+| Metric     | Accepted  | Proposed  | Floor before → proposed (basis points) |
+| ---------- | --------- | --------- | -------------------------------------- |
+| Lines      | 2869/4341 | 3407/4892 | 6609 → 6964                            |
+| Statements | 3159/4929 | 3748/5551 | 6409 → 6751                            |
+| Functions  | 641/1174  | 796/1347  | 5459 → 5909                            |
+| Branches   | 3545/5915 | 4429/6913 | 5993 → 6406                            |
+
+Ignored candidate current-web SHA-256 is
+`04977cb421e2eb3e0d842c8b0c3295f19b6b2403e2d2cecf9788a41c1a01ccd8`.
+Every existing file retains/improves exact ratio and uncovered count. All 68
+unchanged-source maps remain exact with no loss of a previously covered S/F/B
+unit. Changed-source counter IDs are not claimed semantically identical. New
+inputs still have 40 uncovered lines, 68 statements, 26 functions and 150 branches;
+after existing-file gains, global uncovered counts rise 13/33/18/114 respectively.
+This is disclosed new UI debt for explicit review, not a reduction of old gates.
+Null columns remain unknown: 951/37216 mapped points versus 823/32322 before.
+The type-only zero-unit reconciliation remains unchanged.
+
+Separate unchanged API 290/contracts 23/prototype 19 measurements pass and reproduce
+their accepted current baseline bytes; combined serial measurements comprise 700
+cases. All eight tracked baselines, locks, tooling and historical archives stay
+unchanged. Normal root all-source gates, byte-identical candidate replay,
+infrastructure/artifact validation and numerical acceptance remain pending exact
+coordinator approval. Candidate reports, per-file/global ratios/uncovered maps,
+nullable endpoints, source/test/tool fingerprints, witnesses and source-qualified
+persisted evidence are retained under ignored
+`apps/web/coverage/t11-integration-contracts/`; the older manifest there describes
+only the dormant contract checkpoint, while `proposal/` describes this integration.
+
+The first final check found an unqualified test Headers reference, corrected to
+`globalThis.Headers`; the next reached typechecking and found duplicate route
+declarations left by the stopped QA server. Removing only `.next/dev/types`
+corrected that generated-cache issue. The final frozen-source `pnpm check` passes
+on the supported unchanged retry after the inherited Next security advisory:
+formatting, quality tooling, lint, backend closure, logic/integration checks,
+strict types, production builds, 17 MCP checks and ES/EN/API-down smoke. Next
+recommends a separate security upgrade; no upgrade, pin or suppression is part
+of this batch. Offline handoff verification passes 47 files, 30 assets and 935
+local links in 87 documents; whitespace and commit hooks apply before the ask.
+No PR/push/Ready/Kilo/merge or fake APPROVED evidence occurs. The coordinator must
+approve the exact numerical replacement, then obtain Astra integrated native QA
+on a frozen committed integration head before publishing the single completed
+Draft PR. T11.4b, T11.5 and full T11 remain open; T38 follows full T11.

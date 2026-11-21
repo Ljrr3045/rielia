@@ -4,6 +4,15 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Integrate the production [sprint functional checkpoint](docs/development/sprint-presentation.md#sol-production-functional-checkpoint--2026-11-21-caracas--november-21-utc)
+  with one shared-context sprint owner, captured planning/start/closure forms,
+  Task detail estimates/participation, public capability gates, private render
+  fences, both-owner navigation protection and explicit recovery/history paging.
+  All 368 web cases pass; bounded real local persistence confirms reviewed carryover
+  and frozen outcomes. Exact numerical approval and Astra integrated native QA
+  remain pending, with new UI coverage debt explicit; no baseline/dependency
+  change, PR publication or full T11 acceptance.
+
 - Complete the requested [sprint review/history presentation ports](docs/development/sprint-presentation.md#astra-reviewhistory-presentation-checkpoint--2026-11-20-caracas--november-21-utc)
   over SOL's typed contracts: captured start, history/provenance, conflict
   comparison, guarded-navigation copy and nullable task edit/form ports.

@@ -1,5 +1,35 @@
 # Delivery progress and decisions
 
+## 2026-11-21 T11.4b production functional checkpoint — IN PROGRESS
+
+SOL imported Astra's reviewed `6466461` descendant by authorized fast-forward,
+preserving commits/authors, then integrated one sprint owner beside the existing
+task/session/event owner. The [integration guide](sprint-presentation.md#sol-production-functional-checkpoint--2026-11-21-caracas--november-21-utc)
+records captured forms/start/closure, shared latest-navigation guards, synchronous
+private render fences, public capabilities, exact-key recovery, 409 comparison,
+history/paging and functional focus ownership. Astra's presentation/CSS remains
+unchanged; no new dependency/backend policy or prototype state is introduced.
+
+All 368 web cases pass, retaining 307 and adding 61 meaningful cases; unchanged
+API 290/contracts 23/prototype 19 measurements also pass. The exact accepted web
+before-run reproduces `e311dac0`; candidate `04977cb4` includes all 88 inputs with
+improved global floors and no existing-file ratio/uncovered regression. New UI
+uncovered units and null mappings remain disclosed. No tracked baseline is
+written; exact numerical approval, normal all-source replay and infrastructure/
+artifacts remain pending. Bounded real Next/Nest/PostgreSQL/Orca journeys confirm
+planning, zero estimate, explicit participation/start, reviewed close destination,
+frozen outcomes after a later task edit and read-only history. Fixture services,
+database resources, private state and tab are stopped/removed. Native persisted
+failure/concurrency and full Astra responsive/accessibility QA remain open.
+
+The final-source standard check passes on the inherited Next advisory retry;
+the separate recommended security upgrade is outside this scope. Handoff and
+whitespace pass. The persisted browser snapshot predates the final expiry and
+external-link corrections; frozen-head native journeys remain required.
+Documentation and hook results are retained with the approval evidence. No push/PR, Ready/Kilo,
+review approval, full T11 or T38 acceptance is claimed. Assignment remains active
+across coordinator decisions; T11.4b/T11.5/full T11 stay open before T38.
+
 ## 2026-11-20 T11.4b review/history presentation checkpoint — IN PROGRESS
 
 Astra fast-forwarded SOL's `7348bea` contract checkpoint and completed the

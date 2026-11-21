@@ -10,7 +10,7 @@ import type {
 
 export type SprintScreenParent = Pick<
   ProjectTaskState,
-  'session' | 'status' | 'selection' | 'project' | 'task' | 'draftGuard'
+  'session' | 'status' | 'selection' | 'project' | 'task' | 'draftGuard' | 'sprintLocation'
 >;
 export interface SprintHistoryPort {
   resource: SprintResource<PlanningHistoryPage>;
@@ -76,6 +76,7 @@ export function sprintScreenModel(
     context.workspaceId === parent.selection.workspaceId &&
     context.projectId === parent.selection.projectId &&
     state.selection.taskId === parent.selection.taskId &&
+    state.selection.sprintId === parent.sprintLocation.sprintId &&
     parent.project?.workspaceId === context.workspaceId &&
     parent.project.id === context.projectId;
   const guard = visible ? sprintNavigationGuard(state) : 'none';
@@ -114,7 +115,8 @@ export function sprintScreenModel(
     state.selection.taskId === task?.taskId
       ? task
       : null;
-  const start = canBegin ? prepareSprintCommand(state, { type: 'start-sprint' }) : null;
+  const start =
+    visible && !parentBlocked ? prepareSprintCommand(state, { type: 'start-sprint' }) : null;
   const startReview: SprintStartReview | null =
     start && typeof start !== 'string' && start.type === 'start-sprint' && selectedSprint && scope
       ? {
@@ -162,7 +164,7 @@ export function sprintScreenModel(
       configure: canBegin && planning?.capabilities.canConfigurePlanning === true,
       create: canBegin && planning?.capabilities.canCreateSprint === true,
       edit: canBegin && selectedSprint?.capabilities.canEdit === true,
-      start: startReview !== null,
+      start: canBegin && startReview !== null,
       close: canBegin && selectedSprint?.capabilities.canClose === true,
       estimate: canBegin && selectedTask?.capabilities.canEstimate === true,
       participation: canBegin && selectedTask?.capabilities.canChangeScope === true,

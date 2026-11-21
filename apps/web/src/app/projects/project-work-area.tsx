@@ -40,6 +40,10 @@ import {
 import Link from 'next/link';
 import styles from './projects.module.css';
 export interface ProjectWorkAreaPorts {
+  sprintContent?: ReactNode;
+  sprintNavigation?: ReactNode;
+  sprintStatus?: ReactNode;
+  showSprints?: boolean;
   anyDraft: boolean;
   anyPending: boolean;
   assignees: ProjectTaskState['assignees'];
@@ -144,6 +148,10 @@ export interface ProjectWorkAreaPorts {
 }
 
 export function renderProjectWorkArea({
+  sprintContent,
+  sprintNavigation,
+  sprintStatus,
+  showSprints = false,
   anyDraft,
   anyPending,
   assignees,
@@ -304,6 +312,7 @@ export function renderProjectWorkArea({
   }
   return (
     <>
+      {sprintStatus}
       {status === 'loading' && (
         <StateCard
           body={copy.status.loadingBody}
@@ -744,123 +753,130 @@ export function renderProjectWorkArea({
               status={streamStatus}
             />
 
-            <TaskViewBar
-              assigneeError={policyPageErrors.assignees !== undefined}
-              assigneeLoading={assignees === null && policyPageErrors.assignees === undefined}
-              assigneeStatus={taskFilterAssigneeStatus}
-              assignees={assignees}
-              assigneesNext={assignees !== null && assignees.nextCursor !== null}
-              disabled={anyPending}
-              onFilters={(filters) => {
-                void setTaskFilters(filters);
-              }}
-              onLayout={(layout) => {
-                void setTaskLayout(layout);
-              }}
-              onLoadMoreAssignees={() => {
-                void loadMore('assignees');
-              }}
-              onRefresh={() => {
-                void refresh();
-              }}
-              onToggleArchive={toggleTasksView}
-              selectedTaskAssignee={selectedTaskAssignee}
-              taskSummary={taskSummary}
-              taskView={taskView}
-              viewsTasks={views.tasks}
-            />
-
-            {!feedbackInForm && recoveryBlock}
-
-            {taskView.layout === 'list' &&
-              canCapture &&
-              (draft === null ||
-                (draft.type === 'create-task' && draft.projectId === project.id)) && (
-                <TaskCaptureForm
-                  disabled={!canCapture}
-                  inputRef={captureRef}
-                  onChange={stageCapture}
-                  onSubmit={submitCapture}
-                  pending={pending === 'create-task'}
-                  value={captureTitle}
+            {sprintNavigation}
+            {showSprints ? (
+              sprintContent
+            ) : (
+              <>
+                <TaskViewBar
+                  assigneeError={policyPageErrors.assignees !== undefined}
+                  assigneeLoading={assignees === null && policyPageErrors.assignees === undefined}
+                  assigneeStatus={taskFilterAssigneeStatus}
+                  assignees={assignees}
+                  assigneesNext={assignees !== null && assignees.nextCursor !== null}
+                  disabled={anyPending}
+                  onFilters={(filters) => {
+                    void setTaskFilters(filters);
+                  }}
+                  onLayout={(layout) => {
+                    void setTaskLayout(layout);
+                  }}
+                  onLoadMoreAssignees={() => {
+                    void loadMore('assignees');
+                  }}
+                  onRefresh={() => {
+                    void refresh();
+                  }}
+                  onToggleArchive={toggleTasksView}
+                  selectedTaskAssignee={selectedTaskAssignee}
+                  taskSummary={taskSummary}
+                  taskView={taskView}
+                  viewsTasks={views.tasks}
                 />
-              )}
 
-            {taskView.layout === 'list' && tasks !== null && (
-              <TaskList
-                archivedView={isArchivedTasks}
-                canCreate={canCapture}
-                canMove={canMoveTask}
-                changed={taskPageChanged}
-                columnCounts={tasks.columnCounts}
-                filtersActive={filtersActive}
-                hasMore={tasks.nextCursor !== null}
-                onClearFilters={() => {
-                  void setTaskFilters({});
-                }}
-                onCreate={() => captureRef.current?.focus()}
-                onLoadMore={() => {
-                  void loadMore('tasks');
-                }}
-                onMove={(target, status) => performMove(target, status, null)}
-                onMoveBefore={(target, beforeTaskId) =>
-                  performMoveBefore(target, target.status, beforeTaskId)
-                }
-                onMoveEnd={(target) => performMoveEnd(target, target.status)}
-                onOpen={selectTaskFromList}
-                onRestore={(target, opener) => requestTaskArchive(true, target, opener)}
-                partial={taskPagePartial}
-                pending={blocked || anyDraft}
-                pendingTaskId={pendingTaskId}
-                readOnly={readOnlyTasks}
-                tasks={taskList}
-                total={taskSummary.status === 'ready' ? taskSummary.total : null}
-              />
+                {!feedbackInForm && recoveryBlock}
+
+                {taskView.layout === 'list' &&
+                  canCapture &&
+                  (draft === null ||
+                    (draft.type === 'create-task' && draft.projectId === project.id)) && (
+                    <TaskCaptureForm
+                      disabled={!canCapture}
+                      inputRef={captureRef}
+                      onChange={stageCapture}
+                      onSubmit={submitCapture}
+                      pending={pending === 'create-task'}
+                      value={captureTitle}
+                    />
+                  )}
+
+                {taskView.layout === 'list' && tasks !== null && (
+                  <TaskList
+                    archivedView={isArchivedTasks}
+                    canCreate={canCapture}
+                    canMove={canMoveTask}
+                    changed={taskPageChanged}
+                    columnCounts={tasks.columnCounts}
+                    filtersActive={filtersActive}
+                    hasMore={tasks.nextCursor !== null}
+                    onClearFilters={() => {
+                      void setTaskFilters({});
+                    }}
+                    onCreate={() => captureRef.current?.focus()}
+                    onLoadMore={() => {
+                      void loadMore('tasks');
+                    }}
+                    onMove={(target, status) => performMove(target, status, null)}
+                    onMoveBefore={(target, beforeTaskId) =>
+                      performMoveBefore(target, target.status, beforeTaskId)
+                    }
+                    onMoveEnd={(target) => performMoveEnd(target, target.status)}
+                    onOpen={selectTaskFromList}
+                    onRestore={(target, opener) => requestTaskArchive(true, target, opener)}
+                    partial={taskPagePartial}
+                    pending={blocked || anyDraft}
+                    pendingTaskId={pendingTaskId}
+                    readOnly={readOnlyTasks}
+                    tasks={taskList}
+                    total={taskSummary.status === 'ready' ? taskSummary.total : null}
+                  />
+                )}
+
+                {taskView.layout === 'board' && (
+                  <TaskBoard
+                    canCreate={canCapture && draft === null}
+                    canMove={canMoveTask}
+                    capture={
+                      columnCaptureOpen &&
+                      (taskView.filters.status === undefined ||
+                        taskView.filters.status === captureStatus)
+                        ? { status: captureStatus, title: captureTitle }
+                        : null
+                    }
+                    capturePending={pending === 'create-task'}
+                    filtersActive={filtersActive}
+                    onBeginCapture={beginColumnCapture}
+                    onCancelCapture={cancelColumnCapture}
+                    onCaptureChange={stageCapture}
+                    onClearFilters={() => {
+                      void setTaskFilters({});
+                    }}
+                    onLoadColumn={(status) => {
+                      void loadTaskColumn(status);
+                    }}
+                    onMove={performMove}
+                    onMoveBefore={performMoveBefore}
+                    onMoveEnd={performMoveEnd}
+                    onOpenTask={selectTaskFromList}
+                    onRefresh={() => {
+                      void refresh();
+                    }}
+                    onSetColumn={(status) => {
+                      void setTaskColumn(status);
+                    }}
+                    onSubmitCapture={submitColumnCapture}
+                    pendingTaskId={pendingTaskId}
+                    readOnly={readOnlyTasks}
+                    taskColumnErrors={taskColumnErrors}
+                    taskColumns={taskColumns}
+                    taskColumnsChanged={taskColumnsChanged}
+                    taskView={taskView}
+                  />
+                )}
+
+                {taskView.layout === 'list' && taskPageErrorBlock}
+              </>
             )}
-
-            {taskView.layout === 'board' && (
-              <TaskBoard
-                canCreate={canCapture && draft === null}
-                canMove={canMoveTask}
-                capture={
-                  columnCaptureOpen &&
-                  (taskView.filters.status === undefined ||
-                    taskView.filters.status === captureStatus)
-                    ? { status: captureStatus, title: captureTitle }
-                    : null
-                }
-                capturePending={pending === 'create-task'}
-                filtersActive={filtersActive}
-                onBeginCapture={beginColumnCapture}
-                onCancelCapture={cancelColumnCapture}
-                onCaptureChange={stageCapture}
-                onClearFilters={() => {
-                  void setTaskFilters({});
-                }}
-                onLoadColumn={(status) => {
-                  void loadTaskColumn(status);
-                }}
-                onMove={performMove}
-                onMoveBefore={performMoveBefore}
-                onMoveEnd={performMoveEnd}
-                onOpenTask={selectTaskFromList}
-                onRefresh={() => {
-                  void refresh();
-                }}
-                onSetColumn={(status) => {
-                  void setTaskColumn(status);
-                }}
-                onSubmitCapture={submitColumnCapture}
-                pendingTaskId={pendingTaskId}
-                readOnly={readOnlyTasks}
-                taskColumnErrors={taskColumnErrors}
-                taskColumns={taskColumns}
-                taskColumnsChanged={taskColumnsChanged}
-                taskView={taskView}
-              />
-            )}
-
-            {taskView.layout === 'list' && taskPageErrorBlock}
           </section>
 
           {renderTaskDetail()}

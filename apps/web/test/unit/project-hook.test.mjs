@@ -50,6 +50,44 @@ const hint = (version) => ({
 const emit = (browser, value) => act(async () => browser.server.streams.at(-1).emit(value));
 
 test(
+  'standalone task navigation retains its page while a write is pending without queuing a later view',
+  { timeout: 30000 },
+  async (t) => {
+    const { browser, hook } = await mounted(t);
+    await act(async () => hook.state.stage(createDraft()));
+    const held = browser.server.holdNext((request) => request.options.method === 'POST');
+    let saving;
+    await act(async () => {
+      saving = hook.state.submit();
+    });
+    const originalURL = hook.state.url;
+    await act(async () => {
+      await hook.state.setTaskScope('mine');
+      await hook.state.setSearchQuery('pending search');
+      await hook.state.setDiscoveryProject('p');
+      await hook.state.setTaskLayout('board');
+      await hook.state.setTaskFilters({ status: 'todo' });
+      await hook.state.setTaskColumn('done');
+    });
+    assert.equal(hook.state.url, originalURL);
+    assert.equal(hook.state.integratedNavigation, null);
+    assert.equal(hook.state.mutationPending, 'create-task');
+    assert.equal(browser.posts().length, 1);
+    await act(async () => {
+      held.resolve(Response.json(task(115), { status: 201 }));
+      await saving;
+    });
+    await browser.clock.advance(500);
+    assert.equal(hook.state.taskScope, 'project');
+    assert.equal(hook.state.taskView.layout, 'list');
+    assert.equal(hook.state.taskView.column, 'backlog');
+    assert.deepEqual(hook.state.taskView.filters, {});
+    assert.equal(hook.state.integratedNavigation, null);
+    assert.equal(browser.posts().length, 1);
+  },
+);
+
+test(
   'real stream hints during a held page coalesce and retain the latest reset',
   { timeout: 30_000 },
   async (t) => {
