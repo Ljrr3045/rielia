@@ -1127,3 +1127,37 @@ accept production/source/native QA, a PR or full T11. Frozen-head persisted
 401/409/timeout/concurrent-session journeys and Astra responsive/accessibility
 validation remain open. Further source/test/measurement changes need a fresh
 exact proposal before another baseline edit.
+
+## T11.4b focus-return correction — approved exact replay
+
+The coordinator approved only current web `04977cb4` →
+`f1679d66f7ad53aa65e691cac2188c8c39f5aac31c600c2ff53013ffac462076`, bound to
+clean functional head `1df6fd46340cf60fed76800ff6061a1dd962388e` and proposal
+`7f5e3e5aa6bb77adfe9542a349e5e03f8336aa8b644f856ac3f50b911bf7f7d6`.
+The [focus handoff](sprint-presentation.md#focus-correction-approved-replay-and-native-handoff--2026-11-21)
+records independent review, before 6-fail/1-pass versus after 51/51 component cases,
+and separate corrected-native limits. Inventory remains 88 web inputs; no source/
+test removal, exclusion, floor reduction or tool/config/provider change occurs.
+
+Web L/S/F/B are 3445/4925, 3789/5587, 810/1356, 4483/6964, with floors
+6994/6781/5973/6437 basis points. All 88 existing files retain/improve covered
+counts, exact ratios and uncovered counts; global uncovered decreases 5/5/5/3.
+All 84 unchanged-source maps retain 8152 covered S/F/B units with 1 gain, zero losses
+and 38 exact hit vectors; changed-source semantic IDs are not equated. Null
+columns remain 951 over 37472 mapped points versus 37216; type-only N/A is retained.
+The hook has 48/48 functions covered, while composition unexecuted functions
+decrease 21→16. This does not close every rendered callback or native workflow.
+
+After adopting only the approved web bytes, normal root gates pass **722/722**
+without skips (API 290/web 390/contracts 23/prototype 19); all 16 reports reproduce
+approved bytes/sizes, count digest
+`7d1c75a2d0c8b1ca737687dfbe3aee75348c52bc90d28ab5b2a48b994c15031e`.
+Infrastructure 20/20 and bounded 17-file artifacts pass without upload. All 237
+physical fingerprints, 44 approved payloads and 8 authorized baseline hashes
+remain exact; seven other baselines and old archives are unchanged. Receipts,
+normal reports and safe artifacts are retained under ignored
+`apps/web/coverage/t11-focus-normal/`. Corrected-head native 320 ES focus return
+and the unfinished Astra responsive/accessibility/multipage matrix remain open;
+neither numerical adoption nor source review accepts product/full T11. Any later
+source/test/measurement change requires refreshed exact proposal before another
+baseline edit.

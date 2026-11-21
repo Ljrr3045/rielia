@@ -8,9 +8,12 @@ This records repository changes. No application version has been released.
   after staging recreates its invoking action. Scope return to the current
   verified context and authorized visible control, with safe feature-heading
   fallback and cancellation across new forms/navigation/identity changes.
-  All 51 composition cases and390 web measurement cases pass;22 regressions are
-  added, including the old six-failure witness. No visual redesign or baseline
-  write; exact numerical approval and corrected native QA remain pending.
+  All 51 composition cases and 390 web measurement cases pass; 22 regressions are
+  added, including the old six-failure witness. Coordinator-approved web-only
+  `f1679d66` passes 722 normal cases with exact 16-report replay; standard,
+  infrastructure and artifacts pass. Sixteen composition functions remain
+  unexecuted, and corrected native QA is pending; no visual redesign or full T11
+  acceptance.
 
 - Record the frozen-head [T11.4b native QA focus finding](docs/development/sprint-presentation.md#astra-frozen-head-native-qa-finding--2026-11-21):
   real settings/create/readback passed bounded checks, but canceling sprint

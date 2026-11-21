@@ -308,7 +308,7 @@
     },
     "apps/web/src/app/projects/project-shell.tsx": {
       "branches": {
-        "covered": 86,
+        "covered": 87,
         "total": 128
       },
       "functions": {
@@ -470,19 +470,19 @@
     },
     "apps/web/src/app/projects/sprints/sprint-integration-view.tsx": {
       "branches": {
-        "covered": 207,
+        "covered": 208,
         "total": 260
       },
       "functions": {
-        "covered": 46,
+        "covered": 51,
         "total": 67
       },
       "lines": {
-        "covered": 120,
+        "covered": 125,
         "total": 145
       },
       "statements": {
-        "covered": 130,
+        "covered": 135,
         "total": 162
       }
     },
@@ -1442,20 +1442,20 @@
     },
     "apps/web/src/lib/use-project-sprint-integration.ts": {
       "branches": {
-        "covered": 148,
-        "total": 175
+        "covered": 200,
+        "total": 226
       },
       "functions": {
-        "covered": 39,
-        "total": 39
+        "covered": 48,
+        "total": 48
       },
       "lines": {
-        "covered": 147,
-        "total": 151
+        "covered": 180,
+        "total": 184
       },
       "statements": {
-        "covered": 157,
-        "total": 173
+        "covered": 193,
+        "total": 209
       }
     },
     "apps/web/src/lib/use-project-sprints.ts": {
@@ -1586,10 +1586,10 @@
     }
   },
   "floors": {
-    "branches": 6406,
-    "functions": 5909,
-    "lines": 6964,
-    "statements": 6751
+    "branches": 6437,
+    "functions": 5973,
+    "lines": 6994,
+    "statements": 6781
   },
   "manifest": {
     "compiler": {
@@ -1636,11 +1636,11 @@
       "apps/web/src/app/projects/sprints/sprint-copy.ts": "0672e7d9d359f5efa2323999b5de93a7997553d2334de8810588b5aedeaadd92",
       "apps/web/src/app/projects/sprints/sprint-forms.tsx": "0804a293f9c008205e8e679dc4b0c7ea8f3a8b0ccf389b6d77b85586ec3234e2",
       "apps/web/src/app/projects/sprints/sprint-history.tsx": "8d73e7694ae961f39446b319b224c7eb91c9635a46d8349f9fc38e13dedaf1a2",
-      "apps/web/src/app/projects/sprints/sprint-integration-view.tsx": "c06689283616d28f9705fbf073b661313b3ed19ffa231960afbfadc25737e2a6",
+      "apps/web/src/app/projects/sprints/sprint-integration-view.tsx": "57c2645077d37c8b9dee2d0ebb5d23189abda52cd58bfe6eb1a0692836b9b807",
       "apps/web/src/app/projects/sprints/sprint-navigation-review.tsx": "f1416a0c73db9f8fcc5ef7a34506137ef4ce5ef1687ba417db4cebbec6355279",
       "apps/web/src/app/projects/sprints/sprint-start-review.tsx": "df83b5a9247e490df392c6bd1b2759306b242e0b351d21c089bae516b4b0185f",
-      "apps/web/src/app/projects/sprints/sprint-task-planning.tsx": "5a2e327a204f1408a599243983e6ae6a6eefe782dfb5f6b66d0eb2cd0937ee7f",
-      "apps/web/src/app/projects/sprints/sprint-workspace.tsx": "a7c29954439cde4ef9e47eb659b5958672af649cf34779ced2be16d4f140dda1",
+      "apps/web/src/app/projects/sprints/sprint-task-planning.tsx": "6ba9fff2096f5a1f8a7cf4211d37476b50c9f0db4a81fc8daf36d0766cb78322",
+      "apps/web/src/app/projects/sprints/sprint-workspace.tsx": "3f17300d5c10d9cc40146100ee177d05be46fc6cce677902e8e45149f781c1ac",
       "apps/web/src/app/projects/strings.ts": "13a65633bada725ac918affcfd2836e9681315ca46a49aee0dcf1e61e2654d79",
       "apps/web/src/app/projects/task-board.tsx": "318a9b956f56a4486da0bfdb543a3615f0045fff17461d879e637bbf4ecb34e8",
       "apps/web/src/app/projects/task-checklist.tsx": "8993b7dab92034b352d35b7086d69d6a9586b35bbf7429dcaf408158db6c0d7c",
@@ -1690,7 +1690,7 @@
       "apps/web/src/lib/task-events-client.ts": "fa19799acddb06cbd979bf3562916fa4dcaa4bc3963fb48c8da0e9cf775c8490",
       "apps/web/src/lib/task-planning-client.ts": "540598c225ae636da525a769a91e1199ab9d66e15b36cded5df80fdaae49b6a1",
       "apps/web/src/lib/use-identity.ts": "390c04926405c545257cd3f13555dd54281e9908230b1127447da05161adb4d9",
-      "apps/web/src/lib/use-project-sprint-integration.ts": "59a63735f34f90f8cacf5bc17ee7bb72d2f5e12d9df228e0091ae8198d31c538",
+      "apps/web/src/lib/use-project-sprint-integration.ts": "b50bf54144d41be30b59a41fac467b5c43aa5fc328db894e6f766d97b025b688",
       "apps/web/src/lib/use-project-sprints.ts": "31c181d840c553427c1461a52f907f1bbfdf0aba22651dd7b3b613a117bf64e7",
       "apps/web/src/lib/use-project-tasks.ts": "71604b8dc675d88440a1a764f1e19fdd56cc2b5997db7323dac58b0c7b8b5857",
       "apps/web/src/lib/use-workspaces.ts": "d5fa3c82053dd8811b9f2e41f6cc30fd5cbb635e3810f10fc7a99d309025fcec",
@@ -1726,7 +1726,7 @@
       "apps/web/test/unit/sprint-controller.test.mjs": "65e7ecfccf4d9c1d714938d1216105f0cb63d8f5032b9b77e6f671d536657d4e",
       "apps/web/test/unit/sprint-hook.test.mjs": "ed51f29d537aba2c3f81fcc03ad0e80abbf8badeb13a2aaba189c874f993f7eb",
       "apps/web/test/unit/sprint-integration-harness.mjs": "1f5bfc485632fb503b8571c09905ccfefa8886c4bf15eb51edfe56d9ec9bef34",
-      "apps/web/test/unit/sprint-integration.test.mjs": "6e4753c0ae78b7d725a487a7d456e06a3dbb126a61f2a8a471303c0e558921d5",
+      "apps/web/test/unit/sprint-integration.test.mjs": "f614d8e275e93f966a9ceeb8e3a6af9cd92bb7360dfa7879431ed39f4011b49e",
       "apps/web/test/unit/sprint-planning.test.mjs": "f7212a8f3b717f62f88f1d5ed1a29102b750bf0a23eb18cfceb988044d2bcb8d",
       "apps/web/test/unit/sprint-screen-model.test.mjs": "c88bb693a0b830257283ef4ab57746feec9ef5c5c7e5e5a22cc80d5775cd3325",
       "apps/web/test/unit/task-planning.test.mjs": "665c1bf84e86f2d88d8ad3ae8f34c13816b517de0e360a0fcce6c86c9f9af4eb",
@@ -1748,20 +1748,20 @@
   "scope": "web",
   "total": {
     "branches": {
-      "covered": 4429,
-      "total": 6913
+      "covered": 4483,
+      "total": 6964
     },
     "functions": {
-      "covered": 796,
-      "total": 1347
+      "covered": 810,
+      "total": 1356
     },
     "lines": {
-      "covered": 3407,
-      "total": 4892
+      "covered": 3445,
+      "total": 4925
     },
     "statements": {
-      "covered": 3748,
-      "total": 5551
+      "covered": 3789,
+      "total": 5587
     }
   }
 }

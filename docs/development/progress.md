@@ -1,5 +1,24 @@
 # Delivery progress and decisions
 
+## 2026-11-21 T11.4b focus correction — APPROVED NORMAL LOCAL GATES; NATIVE RECHECK OPEN
+
+Coordinator-approved web-only `04977cb4` → `f1679d66` is bound to clean functional
+head `1df6fd46` and proposal `7f5e3e5a`. Independent review checked all 237 hashes,
+eight untouched baseline hashes, 88-file exact nonregression and 84 unchanged raw
+maps. Only those approved web bytes were adopted; seven other baselines and all
+source/test/tool fingerprints remain exact. Corrected normal root gates pass
+722/722 without skips and all 16 reports replay exactly, digest `7d1c75a2`.
+Infrastructure 20/20, bounded artifacts and final standard checks pass; no native
+schedule, library change, publication or external review action was added.
+
+The [frozen handoff](sprint-presentation.md#focus-correction-approved-replay-and-native-handoff--2026-11-21)
+keeps the 16 unexecuted composition functions and native mapping/accessibility/
+multipage limits explicit. Astra remains idle until the coordinator authorizes
+her separate fast-forward and fresh own fixture, beginning with the exact
+no-resize 320 ES Escape-to-replacement-action repro. Numerical/source review is
+not corrected native or product acceptance. Assignment stays active; T11.4b/
+T11.5/full T11 remain open before T38; no push/PR/Ready/Kilo/merge/worker_done.
+
 ## 2026-11-21 T11.4b SOL focus correction — EXACT PROPOSAL PENDING
 
 SOL fast-forwarded Astra's docs-only 48ec419 and corrected the reproduced logical

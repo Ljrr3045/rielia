@@ -1,8 +1,8 @@
 # T11.4b sprint presentation checkpoint
 
-Status: **IN PROGRESS, SOL focus-return correction implemented with new numerical
-proposal pending; corrected-head normal gates and Astra native recheck remain
-open; no PR or product acceptance**.
+Status: **IN PROGRESS, focus-return correction implemented and approved normal/
+final local gates complete; Astra corrected-head native reproduction and unfinished
+responsive/accessibility/multipage QA remain open; no PR or product acceptance**.
 Base: accepted T11.4a merge `a2de3bd79596cb83b79287f105f60fedfb35bea9`.
 The [client guide](sprint-client.md#t114a-acceptance--2026-11-20-caracas--november-21-utc)
 records PR54 acceptance and its review/hash limits. T11.5 and full T11 remain
@@ -761,3 +761,54 @@ checks and Astra's exact native focus reproduction plus unfinished responsive/
 accessibility/multipage matrix remain open. Earlier numerical/native receipts
 retain their original source limits; they do not accept this source change.
 No push/PR/Ready/Kilo/merge/worker_done or T11.4b/T11.5/full T11 acceptance occurs.
+
+## Focus correction approved replay and native handoff — 2026-11-21
+
+The proposal above retains the pre-approval record. The coordinator read the
+four-runtime-file correction and independently verified the clean source head
+`1df6fd46340cf60fed76800ff6061a1dd962388e`, 44 proposal payloads, all 237 physical
+fingerprints, eight untouched baselines, 88-file covered-count/exact-ratio/
+uncovered nonregression, compiler/config/tool identities and raw-map witnesses.
+Only current web was approved and adopted:
+`04977cb421e2eb3e0d842c8b0c3295f19b6b2403e2d2cecf9788a41c1a01ccd8` →
+`f1679d66f7ad53aa65e691cac2188c8c39f5aac31c600c2ff53013ffac462076`, bound to packet
+`7f5e3e5aa6bb77adfe9542a349e5e03f8336aa8b644f856ac3f50b911bf7f7d6`.
+The seven other baselines, old evidence and approved source/test/tool binding
+remain unchanged. The coordinator preserved the proposal independently.
+
+Corrected normal root all-source gates pass **722/722 without skips**:
+API 290/web 390/contracts 23/prototype 19. All 16 normalized reports reproduce
+the approved bytes and sizes, with count digest
+`7d1c75a2d0c8b1ca737687dfbe3aee75348c52bc90d28ab5b2a48b994c15031e`.
+All 20 infrastructure cases and bounded 17-file artifacts pass; no upload ran.
+Replay verifies all 237 physical fingerprints, all 44 original proposal payloads
+and all eight authorized baseline hashes. The final corrected-source standard
+`pnpm check` passes on the supported unchanged retry after the inherited Next
+security advisory: formatting, quality tooling, lint, backend closure,
+logic/integration checks, types,
+production builds, 17 MCP tests and ES/EN/API-down smoke. No dependency upgrade,
+pin change, global configuration change or native database schedule was repeated.
+Local normal reports, validated artifacts, logs and hash receipts are retained
+under ignored `apps/web/coverage/t11-focus-normal/`.
+
+The approved numerical evidence preserves the **16 unexecuted composition
+functions** and unknown/null-column limits; it does not certify every rendered
+path. The bounded coordinator source review and automated return-to-action tests do
+not accept the corrected 320 ES native case. Earlier native screenshots/flows
+remain bound to their earlier source. T11.4b, T11.5 and full T11 remain open.
+
+At the clean frozen descendant, the coordinator should authorize Astra's own
+fast-forward import after verifying clean ancestry and actual `gpt-6-astra`,
+effort `high`, with automatic review/on-request/workspace-write. Astra then records fresh head/source/
+runtime fingerprints before actions and starts a fresh fixture in that checkout;
+there is no shared server ownership. First repeat the no-resize 320 ES dark
+metadata case: focus/activate enabled Edit sprint, verify original node disconnects,
+then native Escape must focus the current enabled Edit sprint control. Check
+sibling settings/create/start/close/task planning cancel/confirmation and safe
+fallback without relaxing capability/private-context gates. Continue the unfinished
+320/390/1280/1440 ES/EN/theme/motion/keyboard/focus/touch/nonideal and actual
+multi-page destination/scope/history/outcome matrix. Record unavailable device/
+zoom/AT checks honestly, keep functional findings with SOL and presentation with
+Astra, stop owned resources and preserve exact-head evidence. Only the coordinator
+controls the single completed Draft PR. No push/PR/Ready/Kilo/merge/worker_done
+or native/product/full T11 acceptance occurs in this local-gate handoff.
