@@ -1,5 +1,21 @@
 # Delivery progress and decisions
 
+## 2026-11-20 T11.4b review/history presentation checkpoint — IN PROGRESS
+
+Astra fast-forwarded SOL's `7348bea` contract checkpoint and completed the
+[requested presentation ports](sprint-presentation.md#astra-reviewhistory-presentation-checkpoint--2026-11-20-caracas--november-21-utc):
+captured start confirmation, canonical planning history, separate conflict
+comparison, both navigation guards and nullable task edit/form lifetimes.
+No SOL logic/test owner or production route changed. Bounded native disposable
+inspection covers 320/390/1280/1440, ES/EN, focus return and explicit callbacks;
+it provides no persistent-product evidence. Harness/server/tab are removed/stopped.
+
+Four additional runtime owners bring presentation to nine and the current batch
+with SOL contracts to twelve web denominator inputs. No baseline or numerical
+acceptance is changed. Production composition, functional tests, complete local/
+native/persisted/numerical checks and the coordinator-directed Draft PR remain
+pending. T11.4b/T11.5/full T11 stay open before T38.
+
 ## 2026-11-20 T11.4b SOL functional-contract checkpoint — IN PROGRESS
 
 The assigned integration branch fast-forwarded the original Astra `b6c1faa`

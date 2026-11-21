@@ -4,6 +4,13 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Complete the requested [sprint review/history presentation ports](docs/development/sprint-presentation.md#astra-reviewhistory-presentation-checkpoint--2026-11-20-caracas--november-21-utc)
+  over SOL's typed contracts: captured start, history/provenance, conflict
+  comparison, guarded-navigation copy and nullable task edit/form ports.
+  Bounded native harness evidence remains separate from product integration;
+  no logic/test/baseline changes or full T11 acceptance. Four additional runtime
+  owners await SOL's completed-batch coverage and integrated verification.
+
 - Prepare SOL-owned [sprint integration contracts](docs/development/sprint-presentation.md#sol-functional-contract-checkpoint--2026-11-20-caracas--november-21-utc)
   for verified-context data fences, public-capability actions, captured raw forms
   and contextual sprint URLs, with 110 focused controller/hook/contract cases

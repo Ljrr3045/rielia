@@ -23,7 +23,7 @@ No second locale, focus trap, identity owner or task store is added.
 | --- | --- |
 | `sprint-workspace.tsx` | `SprintWorkspace` takes canonical `SprintPage`, selected ID/detail, disabled/loading flags, guarded select/paging callbacks and nullable create/settings/edit/start/close callbacks; children host scope/history/results. `SprintScope` takes canonical visit page, authorized task labels and task/paging callbacks. `SprintTotalsView` renders only server totals; it explicitly identifies top-level accounting. `SprintNotice` renders localized status copy plus supplied recovery controls. |
 | `sprint-forms.tsx` | `SprintFieldsForm` takes `SprintFields`, captured zone, localized field errors, disabled/pending flags and raw `(field, string)` changes. `SprintSettingsForm` accepts string fields for mode/zone/comma-separated scale; it does not parse or validate. Both take `FormEventHandler<HTMLFormElement>` and cancel callbacks. |
-| `sprint-task-planning.tsx` | Separate estimate and participation forms take raw strings, authorized options, disabled/pending flags, feedback nodes and explicit form-submit handlers. Estimate blank and participation blank remain raw input; SOL converts them to the appropriate nullable intent. No submit occurs on selection. |
+| `sprint-task-planning.tsx` | Canonical task planning/history with independent nullable edit callbacks and nullable `SprintEstimateFormPort` / `SprintParticipationFormPort`. Forms take raw strings, authorized options, disabled/pending flags, errors, feedback and explicit submit/cancel handlers. Null ports show no mutation form/buttons; SOL owns capture-before-edit and conversion. |
 | `sprint-close-review.tsx` | `SprintCloseReview` takes raw destination, authorized destination options, canonical preview, separately supplied reviewed-destination label, disabled/confirmDisabled/pending flags, and explicit preview/confirm/cancel callbacks. `SprintClosedResults` renders frozen closure totals and outcome snapshots, independent of current task status. |
 | `sprint-copy.ts`, `sprints.module.css` | ES/EN copy, responsive feature styles, existing semantic theme tokens; no new assets/packages. |
 
@@ -63,15 +63,14 @@ title snapshots (the public snapshot has no title); missing labels retain IDs.
    close retries retain the original binding/key. Complete destination paging and
    preview consequence paging can be supplied through the close component's
    children slot. Never use loaded-row counts as total pending work.
-6. Integrate explicit start review, typed sprint/task planning history with
-   actor/provenance, source-specific resource errors, blocked-navigation dialog
-   and conflict comparison. These compositions remain unfinished; coordinate any
-   additional presentation ports with Astra. Closed views use immutable results,
+6. Integrate the review/history/navigation presentation ports completed below,
+   including source-specific resource recovery. Production compositions remain
+   unfinished; coordinate any additional presentation ports with Astra. Closed views use immutable results,
    not live scope as a substitute. Keep existing task detail available for explicit
    estimates/scope assignment and preserve public canonical task identity.
 7. Add meaningful component/real-hook/integrated regressions and all-source
-   coverage measurement before the single completed Draft PR. Five TS/TSX runtime
-   inputs are new (four component owners plus copy); they enter the web denominator.
+   coverage measurement before the single completed Draft PR. Nine presentation
+   TS/TSX runtime inputs plus three SOL contract owners now enter the web denominator.
    No baseline/floor/exclusion/test change or numerical acceptance occurs here.
 
 ## Checkpoint evidence and limits
@@ -208,3 +207,82 @@ PostgreSQL/Nest/Next integrated journeys and native integrated QA remain pending
 for the completed batch. No services were started for this checkpoint. No push,
 PR, Ready/Kilo/review action or full T11 claim occurs. T11.4b/T11.5/full T11 stay
 open; T38 follows full T11 without new libraries now.
+
+
+## Astra review/history presentation checkpoint — 2026-11-20 Caracas / November 21 UTC
+
+At the coordinator's direction, this presentation checkout fast-forwarded from
+`b6c1faa` to SOL's `7348beabee7d9ab17325464da7aef2d040886837`, preserving the
+original commit and author. The resumed turn verified Astra high with automatic
+approval review, on-request/workspace-write and the same explicit local skills.
+SOL's three logic owners and tests remain unchanged. This supersedes the missing
+presentation list above; **production integration and acceptance remain open**.
+
+| Presentation owner | Integration contract |
+| --- | --- |
+| `sprint-start-review.tsx` | `SprintStartDialog` takes the captured `SprintStartReview`, pending/confirmDisabled flags, feedback and explicit confirm/cancel callbacks. Existing `ModalFrame` shows goal, local dates, exclusive end, captured zone and canonical totals; command preconditions remain internal. |
+| `sprint-history.tsx` | `SprintHistory` consumes `SprintHistoryPort`, sprint/task scope and optional authorized task labels. It renders canonical order, actor/agent identity and provenance, before/after snapshots, outcomes, server total, initial/loading/error/changed/stale/empty states and supplied reload/load-more actions. `SprintPlanningSnapshot` is shared only with conflict comparison. |
+| `sprint-conflict-review.tsx` | `SprintConflictComparison` renders retained command values and current authorized DTO separately. Parent supplies nullable reload/rebase/discard callbacks and a retained-decision destination label. Rebase reflects `canRebase`; close has no rebase control and requires discard/new preview. Parent chooses the existing modal/inline host. |
+| `sprint-navigation-review.tsx` | `SprintNavigationDialog` consumes both guards in `SprintNavigationReviewPort`, with explicit stay and nullable discard. Parent supplies a human-readable label bound to the exact latest `destinationURL`; presentation does not parse, link to, or navigate it. Unknown copy explains that local discard cannot undo a possibly committed write. |
+| `sprint-task-planning.tsx` | Canonical data/history is always separate from independently nullable edit/form ports. Each raw-string form has errors, feedback, pending/disabled state, explicit submit and cancel; participation also accepts destination-paging content. Null edit/form ports render no mutation controls. |
+
+The parent still owns command capture, freshness, capabilities, field conversion,
+validation, submission, pending/unknown recovery, destination binding, latest
+navigation guards and context fences. Do not pass editable API versions/hashes
+or infer authority in JSX. Start and navigation use an introductory focus target
+inside the existing modal trap so narrow-screen opening retains the review text;
+no focus lifecycle code changed. Task form autofocus markers are hooks for the
+existing integration focus owner, not an implemented inline-focus lifecycle.
+The task-history fallback uses canonical IDs when no authorized label is supplied.
+
+### Native evidence and bounded validation
+
+A disposable local Next route rendered these real components with illustrative
+typed inputs and intent-only callbacks, visibly labelled as lacking server or
+persistence. Native Orca inspection opened ES dark history/start at 1440,
+EN light conflict at 1280, read-only/editable task planning at 390, and stale
+start, unknown/draft/pending navigation, close conflict and changed history at
+320; ES pending navigation was also opened at 390. Long text wrapped and measured
+320/390 document widths matched the viewport. Mobile coarse-pointer and reduced
+motion were observed. No actual phone, screen reader or integrated touch journey
+is claimed.
+
+The first 320 start capture revealed opening at the footer hid the review text;
+the autofocus marker moved to the introduction. The corrected capture and DOM
+inspection show that target inside the dialog. Shift+Tab moved to Back, Tab
+wrapped to Close, and Escape restored the Start review trigger. Pending navigation
+omitted discard while retaining both owner explanations. Read-only task DOM had
+zero forms and only the read-only history Load more button. Changing estimate
+and destination selections did not increment the intent counter; keyboard Save
+incremented only the corresponding explicit submit callback. Cancel removed the
+form. A pointer Save attempt was intercepted by the Next development badge;
+keyboard activation verified the control without hiding or changing that badge.
+This proves presentation callback wiring only, not policy, persistence or recovery.
+Idle/loading/error/changed/stale/empty history messages and action availability
+were inspected independently from the harness state selector.
+
+Twelve opened PNGs, discarded harness, source fingerprints and a concise report
+are retained locally under ignored
+`apps/web/coverage/t11-presentation-reviews/`. Two start captures are explicitly
+pre-correction evidence. The preview route was removed, its owned server/tab
+closed, generated next-env restored and stopped-server dev types removed.
+No production route, temporary store, dependency, generated file, logic/test
+owner or numerical baseline is changed.
+
+Scoped Prettier/ESLint, fresh route types and web TypeScript are the validation
+scope; documentation/integrity and whitespace checks also apply. An initial
+TypeScript check rejected a nonexistent system actor branch; removing it to match
+the public human/agent union corrected the issue. No unit suite, full check,
+build, coverage gate or real API/SQL/native integrated acceptance is claimed.
+Four new runtime component owners bring presentation from five to **nine** inputs;
+with SOL's three new logic owners, this batch currently adds **twelve** runtime
+inputs to the web denominator. SOL must cover presentation behavior and measure
+the completed source inventory; no floor/exclusion/baseline workaround is made.
+
+Next: SOL imports this committed descendant, composes the single production
+owner, implements capture/edit/focus/guard lifetimes and meaningful component/
+integrated regressions, then completes required local/native/persisted/numerical
+gates before the coordinator-directed single Draft PR. Signed-out recovery,
+private-context replacement, confirmed versus unknown outcomes, all close-preview
+bindings/paging and complete persistent journeys remain explicit integrated
+checks. T11.4b, T11.5 and full T11 remain open; T38 still follows full T11.

@@ -409,3 +409,137 @@
     font-size: var(--text-base);
   }
 }
+
+.reviewBody {
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.reviewBody > p,
+.reviewBody > .goal,
+.reviewBody > .metadata,
+.reviewBody > .totals {
+  margin: 0;
+}
+
+.reviewSubheading,
+.guardList h3 {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.guardList {
+  display: grid;
+  gap: var(--space-4);
+  border-block: 1px solid var(--divider);
+  padding-block: var(--space-4);
+}
+
+.guardList p {
+  margin: var(--space-2) 0 0;
+  overflow-wrap: anywhere;
+}
+
+.history,
+.conflict {
+  margin: var(--space-6) 0 0;
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--divider);
+  min-width: 0;
+}
+
+.historyList {
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.historyItem {
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--divider);
+  overflow-wrap: anywhere;
+}
+
+.historyActor {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.historyMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  margin: var(--space-2) 0;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.historyTask {
+  margin: var(--space-3) 0;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.comparison {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-6);
+  margin-block: var(--space-4);
+}
+
+.comparison > div {
+  min-width: 0;
+}
+
+.comparison h4 {
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.snapshot {
+  margin: 0;
+  min-width: 0;
+}
+
+.snapshot > div {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-2) 0;
+}
+
+.snapshot dt {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.snapshot dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+
+.multiline {
+  white-space: pre-wrap;
+}
+
+.conflict > .actions {
+  margin-top: var(--space-4);
+}
+
+@media (max-width: 767px) {
+  .comparison {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-4);
+  }
+
+  .comparison > div + div {
+    border-top: 1px solid var(--divider);
+    padding-top: var(--space-4);
+  }
+}

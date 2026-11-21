@@ -177,3 +177,124 @@ export const sprintNoticeCopy = {
     en: 'The closure preview is no longer current. Discard this decision and request a new preview before confirming.',
   },
 } satisfies Record<string, Bilingual>;
+
+export const sprintReviewCopy = {
+  confirmStart: { es: 'Confirmar inicio', en: 'Confirm start' },
+  starting: { es: 'Iniciando…', en: 'Starting…' },
+  capturedScope: {
+    es: 'Alcance revisado al abrir esta decisión',
+    en: 'Scope reviewed when this decision was opened',
+  },
+  history: { es: 'Historial de planificación', en: 'Planning history' },
+  sprintHistory: { es: 'Historial del sprint', en: 'Sprint history' },
+  taskHistory: { es: 'Historial de planificación de la tarea', en: 'Task planning history' },
+  historyHint: {
+    es: 'Cambios registrados con su autor y origen. Las tareas conservan su historial al cambiar de sprint.',
+    en: 'Recorded changes with their author and source. Tasks keep their history when moved between sprints.',
+  },
+  historyIdle: {
+    es: 'Carga el historial para consultar los cambios registrados.',
+    en: 'Load history to view the recorded changes.',
+  },
+  historyLoading: { es: 'Cargando historial…', en: 'Loading history…' },
+  historyRefreshing: { es: 'Actualizando historial…', en: 'Refreshing history…' },
+  historyEmpty: {
+    es: 'Todavía no hay cambios de planificación registrados.',
+    en: 'No planning changes have been recorded yet.',
+  },
+  historyError: {
+    es: 'No se pudo cargar el historial. Vuelve a cargarlo para intentarlo de nuevo.',
+    en: 'History could not be loaded. Reload it to try again.',
+  },
+  historyChanged: {
+    es: 'El historial cambió. Vuelve a cargarlo antes de continuar con las siguientes páginas.',
+    en: 'History changed. Reload it before continuing to the next pages.',
+  },
+  historyStale: {
+    es: 'Este historial necesita actualizarse. Los registros visibles corresponden a la última lectura.',
+    en: 'This history needs refreshing. Visible records are from the last read.',
+  },
+  reload: { es: 'Volver a cargar', en: 'Reload' },
+  loadHistory: { es: 'Cargar historial', en: 'Load history' },
+  before: { es: 'Antes', en: 'Before' },
+  after: { es: 'Después', en: 'After' },
+  status: { es: 'Estado', en: 'Status' },
+  parent: { es: 'Tarea principal', en: 'Parent task' },
+  topLevel: { es: 'Sin tarea principal', en: 'No parent task' },
+  archive: { es: 'Archivo', en: 'Archive' },
+  notArchived: { es: 'No archivada', en: 'Not archived' },
+  noSnapshot: { es: 'Sin instantánea registrada', en: 'No recorded snapshot' },
+  outcome: { es: 'Resultado', en: 'Outcome' },
+  target: { es: 'Sprint de destino', en: 'Destination sprint' },
+  compare: { es: 'Revisar cambios en conflicto', en: 'Review conflicting changes' },
+  draft: { es: 'Tu decisión conservada', en: 'Your retained decision' },
+  serverCurrent: { es: 'Versión devuelta por el servidor', en: 'Version returned by the server' },
+  compareHint: {
+    es: 'Revisa ambas versiones. Cargar datos actuales no reemplaza tu borrador ni guarda cambios.',
+    en: 'Review both versions. Loading current data does not replace your draft or save changes.',
+  },
+  rebase: {
+    es: 'Conservar mis cambios sobre los datos revisados',
+    en: 'Keep my changes on the reviewed data',
+  },
+  rebaseHint: {
+    es: 'Esta decisión actualiza la base de tu borrador. Guardar sigue siendo una acción separada.',
+    en: 'This updates the basis of your draft. Saving remains a separate action.',
+  },
+  rebaseUnavailable: {
+    es: 'Carga los datos actuales y revísalos antes de conservar tus cambios.',
+    en: 'Load and review the current data before keeping your changes.',
+  },
+  discardDecision: { es: 'Descartar esta decisión', en: 'Discard this decision' },
+  closeConflict: {
+    es: 'El cierre requiere una nueva vista previa. Descarta esta decisión, solicita la vista previa y vuelve a confirmar explícitamente.',
+    en: 'Closure requires a new preview. Discard this decision, request the preview and explicitly confirm again.',
+  },
+  startDecision: { es: 'Iniciar el sprint revisado', en: 'Start the reviewed sprint' },
+  closeDecision: {
+    es: 'Cerrar el sprint con el destino revisado',
+    en: 'Close the sprint with the reviewed destination',
+  },
+  leaveTitle: { es: 'Resolver cambios antes de salir', en: 'Resolve changes before leaving' },
+  leaveHint: {
+    es: 'La navegación está en espera. Revisa el trabajo pendiente antes de continuar.',
+    en: 'Navigation is waiting. Review the unresolved work before continuing.',
+  },
+  requestedDestination: { es: 'Destino solicitado', en: 'Requested destination' },
+  taskWork: { es: 'Cambios del proyecto o de tareas', en: 'Project or task changes' },
+  sprintWork: { es: 'Cambios de planificación', en: 'Planning changes' },
+  stay: { es: 'Quedarme aquí', en: 'Stay here' },
+  discardContinue: { es: 'Descartar lo local y continuar', en: 'Discard local work and continue' },
+  discardHint: {
+    es: 'Descartar elimina el borrador o la recuperación local. No deshace cambios que el servidor ya haya guardado.',
+    en: 'Discarding removes the local draft or recovery. It does not undo changes the server may already have saved.',
+  },
+  editEstimate: { es: 'Editar estimación', en: 'Edit estimate' },
+  editParticipation: { es: 'Cambiar participación', en: 'Change participation' },
+  cancelEdit: { es: 'Cancelar edición', en: 'Cancel editing' },
+} satisfies Record<string, Bilingual>;
+
+export const sprintGuardCopy = {
+  none: { es: 'Sin cambios pendientes.', en: 'No unresolved changes.' },
+  draft: { es: 'Hay un borrador sin guardar.', en: 'There is an unsaved draft.' },
+  pending: {
+    es: 'Esperando respuesta del servidor. No se puede descartar mientras la operación está en curso.',
+    en: 'Waiting for the server. This cannot be discarded while the operation is in progress.',
+  },
+  recovery: {
+    es: 'El resultado del servidor es desconocido. El cambio puede haberse guardado; descartar la recuperación local no lo deshace.',
+    en: 'The server outcome is unknown. The change may have been saved; discarding local recovery does not undo it.',
+  },
+} satisfies Record<string, Bilingual>;
+
+export const sprintHistoryKindCopy = {
+  entry: { es: 'Tarea incorporada al sprint', en: 'Task added to sprint' },
+  exit: { es: 'Participación finalizada', en: 'Participation ended' },
+  'task-change': { es: 'Tarea actualizada', en: 'Task updated' },
+  metadata: { es: 'Datos del sprint actualizados', en: 'Sprint details updated' },
+  start: { es: 'Sprint iniciado', en: 'Sprint started' },
+  estimate: { es: 'Estimación actualizada', en: 'Estimate updated' },
+  close: { es: 'Sprint cerrado', en: 'Sprint closed' },
+  carryover: { es: 'Trabajo recibido de otro sprint', en: 'Work carried from another sprint' },
+  outcome: { es: 'Resultado del cierre registrado', en: 'Closure outcome recorded' },
+} satisfies Record<string, Bilingual>;
