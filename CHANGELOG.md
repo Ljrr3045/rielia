@@ -4,6 +4,13 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Record implemented sprint planning/task participation/start/close/history
+  workflows in [Draft PR55](https://github.com/Ljrr3045/rielia/pull/55), initially
+  published by the authorized coordinator at `47da8cec`. Capture the real Draft/
+  validate association and bounded review-event observation, preserve source-
+  qualified 722-case/manual evidence, and retain native Cancel/Leave as an owned
+  open acceptance gate. No Ready or T11.4b/T11.5/full T11 acceptance is implied.
+
 - Record [the automatic approval block on initial Draft publication](docs/development/sprint-presentation.md#publication-approval-block--2026-11-21):
   push/PR process creation was rejected before execution because later coordinator
   tool text did not override the original publication prohibition. Keep the branch

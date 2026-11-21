@@ -1,5 +1,23 @@
 # Delivery progress and decisions
 
+## 2026-11-21 T11.4b [Draft PR55](https://github.com/Ljrr3045/rielia/pull/55) — LOCAL URL RECEIPT; NATIVE GATE OPEN
+
+The authorized coordinator published initial `47da8cec` through supported
+root automatic review after direct user-role approval. Independent 07:35–07:36 UTC
+readback confirms OPEN/isDraft, `dev`, author `Ljrr3045` and exact head. Initial
+[validate](https://github.com/Ljrr3045/rielia/actions/runs/44880810429/job/136775464109)
+was IN_PROGRESS at capture (App 15368/run 44880810429/check 136775464109), associated
+with PR55/head `47da8cec`/base `a2de3bd`. No Kilo check or visible comments/reviews/
+requests appeared in the captured surfaces; no global queue/spend absence is
+claimed. The [source-qualified receipt](sprint-presentation.md#draft-pr55-url-and-initial-status-receipt--2026-11-21)
+retains historical worker approval rejections and unchanged 237/180 hashes,
+eight baselines, 16 reports and 722 local cases. This docs-only URL/status commit
+and refreshed English body await coordinator remote publication; worker performs
+no remote mutation or heavy/native repeat. Native Cancel/Leave remains an OWNED
+OPEN ACCEPTANCE GATE (`screen_locked` last preflight), with 16 unit-unexecuted
+functions and manual limits. No Ready/review/merge or T11.4b/T11.5/full T11
+acceptance; T38 after full T11; assignment ACTIVE.
+
 ## 2026-11-21 T11.4b Draft publication — AUTOMATIC APPROVAL BLOCK; NO PUSH/PR
 
 Prepared clean disposition commit `a1232f3e` and concrete English Draft body.

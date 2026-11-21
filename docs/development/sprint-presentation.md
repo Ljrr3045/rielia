@@ -1,10 +1,9 @@
 # T11.4b sprint presentation checkpoint
 
-Status: **IMPLEMENTED integrated T11.4b batch; coordinator-authorized initial
-Draft publication BLOCKED by automatic approval review before execution. Branch
-unpublished/no PR; direct user publication approval pending. Native external
-Cancel/Leave remains an OWNED OPEN ACCEPTANCE GATE (`screen_locked`). No Ready,
-T11.4b/T11.5 or full T11 acceptance**.
+Status: **IMPLEMENTED integrated T11.4b batch in [Draft PR55](https://github.com/Ljrr3045/rielia/pull/55),
+OPEN/isDraft verified at initial head `47da8cec`. Native external Cancel/Leave
+remains an OWNED OPEN ACCEPTANCE GATE (last preflight `screen_locked`). No Ready,
+Kilo request, T11.4b/T11.5 or full T11 acceptance; coordinator owns remote writes**.
 Base: accepted T11.4a merge `a2de3bd79596cb83b79287f105f60fedfb35bea9`.
 The [client guide](sprint-client.md#t114a-acceptance--2026-11-20-caracas--november-21-utc)
 records PR54 acceptance and its review/hash limits. T11.5 and full T11 remain
@@ -1065,3 +1064,47 @@ baseline/report bindings stay unchanged. The new receipt preserves the exact
 rejection and readbacks under ignored `apps/web/coverage/t11-draft-publication/`.
 The native gate and all T11 acceptance limits remain open. Assignment ACTIVE;
 no push/PR/Ready/Kilo/merge/worker_done or full T11 claim occurs.
+
+## Draft PR55 URL and initial status receipt — 2026-11-21
+
+Following direct user-role approval in the coordinator conversation, the
+coordinator's supported automatic-review escalation admitted the exact initial
+push of `47da8cec93889b41757319123e2875920aa790b4` and immediate Draft creation.
+This was not a permission-profile change or bypass. The two worker-context
+rejections and all earlier packets remain unchanged historical evidence. The
+worker did not retry publication or perform a GitHub mutation.
+
+Independent readback at **2026-11-21 07:35–07:36 UTC** confirms
+[PR55](https://github.com/Ljrr3045/rielia/pull/55) **OPEN, `isDraft=true`**, author
+`Ljrr3045`, base `dev`, head `47da8cec93889b41757319123e2875920aa790b4`.
+The [initial validate job](https://github.com/Ljrr3045/rielia/actions/runs/44880810429/job/136775464109)
+was **IN_PROGRESS** at capture, check `136775464109`, GitHub Actions App
+`15368`; run `44880810429` reports `pull_request`, head/branch `47da8cec` /
+`feat/t11-sprint-ui-integration` and PR55 association against accepted base
+`a2de3bd`. This is an initial-head/status snapshot, not a completed CI result or
+validation of a later docs candidate; the checkout's synthetic-merge SHA was not
+independently read from logs here. No Kilo App `2193792` entry appears in the
+captured complete one-check set; captured issue comments, submitted reviews,
+review requests and inline comments are zero. These are bounded GitHub-surface
+observations only, not proof that global paid/queued Kilo work is absent.
+
+The local URL/status receipt is docs-only. All 237 source/test/tool and 180 built
+hashes, eight baselines and 16 normal reports remain exact; the 722-case local
+binding, standard/infrastructure/artifacts and qualified native evidence retain
+their original sources. No full suite/build/measurement/native fixture is
+repeated. The English body candidate and observed API/check/PR associations,
+archive hashes, documentation checks and clean commit are retained under ignored
+`apps/web/coverage/t11-pr55-local-receipt/` for coordinator review/publication.
+The worker makes **no further remote write**. Before publishing the candidate,
+the coordinator must verify actual Draft/no live Kilo, push the prepared docs and
+refresh body/head/current CI evidence without marking Ready or requesting review.
+
+Native external Cancel/Leave is still an **OWNED OPEN ACCEPTANCE GATE**: a
+trusted canceled production unload followed by embedded raw-draft loss remains
+observed; external confirmation was unavailable with `screen_locked`. No UI retry
+occurs until the user confirms the Mac is unlocked and the coordinator sequences
+a narrow check. Sixteen
+unit-unexecuted composition functions, null columns, representative matrix/
+device/AT/zoom and real-user/provider/staging limits remain explicit. Draft
+publication closes neither T11.4b/T11.5 nor full T11; T38 follows full T11.
+No Ready/Kilo/merge/deploy/worker_done; assignment ACTIVE.
