@@ -1,0 +1,25 @@
+docs/development/progress.md
+  s_3e3d5b98dbec80::t_d0860d706758ca 14,16-17
+  s_3e3d5b98dbec80::t_05621da719bf53 3-13,15,18
+docs/development/sprint-presentation.md
+  s_3e3d5b98dbec80::t_05621da719bf53 5-6,595-604,606-613,615-646,648-649,651-657,659-660,662
+  s_3e3d5b98dbec80::t_d0860d706758ca 582,605,614,647,650,658,661
+CHANGELOG.md
+  s_3e3d5b98dbec80::t_05621da719bf53 7-12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "48ec419f5b41d90c0dc13361ade667aa01b1a350",
+  "prompts": {},
+  "sessions": {
+    "s_3e3d5b98dbec80": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1fbd9-ff85-75a3-93a6-4eba3a204f01",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
