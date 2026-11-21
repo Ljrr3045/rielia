@@ -1,0 +1,30 @@
+docs/development/sprint-presentation.md
+  s_aa027f2693f60d::t_5887df6ba70d0d 786-788,796,801-802
+  s_aa027f2693f60d::t_e1cb9b788287a3 3-5,764-785,789-795,797-800,803-814
+docs/development/unit-coverage.md
+  s_aa027f2693f60d::t_e1cb9b788287a3 1130-1163
+CHANGELOG.md
+  s_aa027f2693f60d::t_e1cb9b788287a3 12-16
+  s_aa027f2693f60d::t_5887df6ba70d0d 11
+docs/development/progress.md
+  s_aa027f2693f60d::t_e1cb9b788287a3 3-11,13-21
+  s_aa027f2693f60d::t_5887df6ba70d0d 12
+scripts/unit/baselines/web.json
+  s_aa027f2693f60d::t_cb6f89e149dce1 311,473,477,481,485,1445-1446,1449-1450,1453-1454,1457-1458,1589-1592,1639,1642-1643,1693,1729,1751-1752,1755-1756,1759-1760,1763-1764
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1dba13af48963a40904751f27b57c63933e093d7",
+  "prompts": {},
+  "sessions": {
+    "s_aa027f2693f60d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1fbeb-0dae-7cd1-a40f-f13fa4b7d5da",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
