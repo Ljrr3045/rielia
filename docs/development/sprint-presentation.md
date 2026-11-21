@@ -1,7 +1,8 @@
 # T11.4b sprint presentation checkpoint
 
-Status: **IN PROGRESS, production functional checkpoint; numerical approval and
-Astra integrated native QA pending; no PR or product acceptance**.
+Status: **IN PROGRESS, production functional checkpoint; approved numerical
+migration and normal replay complete; frozen-head integrated native QA pending;
+no PR or product acceptance**.
 Base: accepted T11.4a merge `a2de3bd79596cb83b79287f105f60fedfb35bea9`.
 The [client guide](sprint-client.md#t114a-acceptance--2026-11-20-caracas--november-21-utc)
 records PR54 acceptance and its review/hash limits. T11.5 and full T11 remain
@@ -454,3 +455,72 @@ No PR/push/Ready/Kilo/merge or fake APPROVED evidence occurs. The coordinator mu
 approve the exact numerical replacement, then obtain Astra integrated native QA
 on a frozen committed integration head before publishing the single completed
 Draft PR. T11.4b, T11.5 and full T11 remain open; T38 follows full T11.
+
+
+## Approved numerical migration and normal replay — 2026-11-21
+
+The proposal above preserves the pre-approval checkpoint. The coordinator approved
+only current-web baseline
+`e311dac02f34422ace8ad0bf4c1a1ae80a41b9dcfbc77c8c341e4b3e4bf3857c` →
+`04977cb421e2eb3e0d842c8b0c3295f19b6b2403e2d2cecf9788a41c1a01ccd8`, bound to
+clean source head `311cd0601b08af7b065b0cd3aed80510dc660709` and packet
+`2585983abc005c9d0e291ce31fba91ee10e9589b6baec8faf24b37371f549bb5`.
+Independent coordinator review verified all 237 physical fingerprints, eight
+original baseline hashes, all 74 existing per-file exact ratios and uncovered
+counts, 88 inputs, compiler/config/provider/runtime/tool identities and raw maps.
+The coordinator archived the numerical proposal and its review separately.
+Only those approved web bytes were adopted; the other seven baselines, tools,
+floors and exclusions are unchanged. No source or test changed after approval.
+
+Normal root all-source gates pass **700/700 without skips**: API 290, web 368,
+contracts 23 and isolated prototype 19. All 16 normalized reports reproduce the
+approved candidate bytes and sizes. Count digest is
+`14a4847e4c684f5f22e7543615c7392026b2c6aba960289b5a7e853d2f83cb53`.
+The 20 infrastructure cases and bounded artifact validation pass; all 16 report
+payloads remain exact in the 17-file artifact set. No upload/publication ran.
+The normal replay rechecks all 237 source/test/tool fingerprints, all 86 original
+packet payloads and all eight authorized baseline hashes. Local receipts and
+copied normal reports/artifacts are retained under ignored
+`apps/web/coverage/t11-integration-normal/`. The completed final-source standard
+check remains applicable to this documentation/baseline-only descendant.
+
+The coordinator accepted **bounded numerical debt only**: new-input uncovered
+L/S/F/B 40/68/26/150, net global increases 13/33/18/114, and retained null-column
+limits. In particular, `sprint-integration-view.tsx` has **21 unexecuted callback
+functions**, including retry, paging, cancel and selection wrappers. Hook coverage
+does not prove those rendered action paths. This migration does not establish
+complete rendered-path, source, product, privacy, persistence, accessibility,
+native QA, PR or full T11 acceptance. The earlier uncommitted persisted browser
+snapshot is not final-head evidence. T11.4b, T11.5 and full T11 remain open.
+
+### Serial frozen-head integrated QA handoff
+
+1. The coordinator freezes the clean delivered descendant and, after checking
+   ancestry/cleanliness, imports it into Astra's separate presentation checkout.
+   Verify actual Astra high and automatic-review/on-request/workspace-write;
+   SOL logic remains SOL xhigh. Keep one active worker/heavy phase at a time.
+2. Before any native action, record the actual checked-out head and runtime/source
+   fingerprints. Use the existing disposable `apps/api/test/project-task-qa.mjs`
+   with a fresh private fixture-state path; read only necessary nonsecret ports
+   and IDs. Verify the actual Next/Nest listeners, one fixture and one web owner.
+   Do not reuse an illustrative presentation harness or expose fixture cookies.
+3. SOL owns the serial final-head persisted 401/reverification, 409 comparison/
+   explicit rebase, timeout/unknown exact-key recovery and concurrent-session
+   schedules. Record actual commands, statuses, binding/key identity, canonical
+   readback and cleanup, distinguishing any controlled network boundary from
+   real SQL persistence. No credential/provider/staging or API expansion follows.
+4. Astra checks the frozen production composition at 320/390/1280/1440, ES/EN,
+   themes/reduced motion, keyboard/focus/return, overlays, touch and nonideal
+   states, including the unexecuted callback paths. Exercise planning/settings,
+   null/zero/off-scale estimate, explicit participation, captured start, complete
+   close-preview paging/binding, frozen history/outcomes, read-only/denied fences,
+   Back/modified/external links and both-owner draft/recovery protection. Record
+   unavailable actual-device/zoom/AT checks honestly. Screenshots alone do not
+   prove workflows. Route functional findings to SOL and presentation findings
+   to Astra through the coordinator; no silent mixed ownership.
+5. Stop owned services, browser tabs and disposable database resources, preserve
+   evidence with exact source bindings, then report complete/remaining UI parts.
+   Source/test/measurement changes require a refreshed exact numerical proposal
+   before another baseline edit. The coordinator controls the single completed
+   Draft PR and later CI/native review; no worker push/PR/Ready/Kilo/merge or
+   full acceptance is authorized by this handoff.

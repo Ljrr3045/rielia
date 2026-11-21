@@ -1,5 +1,27 @@
 # Delivery progress and decisions
 
+## 2026-11-21 T11.4b numerical migration — NORMAL LOCAL GATE PASSED; QA OPEN
+
+The coordinator approved only exact current-web `e311dac0` → `04977cb4`, bound
+to frozen functional head `311cd060` and proposal packet `2585983a`, after independent
+source/test/tool, baseline, per-file and raw-map review. SOL adopted only those
+web bytes. Normal root gates pass 700/700 without skips; all 16 reports reproduce
+the approved candidate exactly, count digest `14a4847e`. All 20 infrastructure
+cases and bounded artifacts pass. Seven other baselines and the approved source/
+test/tool binding remain exact. No duplicate standard/build/database phase ran
+for this documentation/baseline-only descendant.
+
+Accepted debt is numerical only: new inputs retain 40/68/26/150 uncovered L/S/F/B,
+including 21 unexecuted integration callback functions. Their rendered retry,
+paging, cancel, selection and related paths are not completely tested by hook
+coverage. The [QA handoff](sprint-presentation.md#approved-numerical-migration-and-normal-replay--2026-11-21)
+keeps final-head persisted 401/409/timeout/concurrent-session journeys and Astra
+responsive/accessibility/native validation open. Earlier browser evidence is a
+pre-freeze snapshot. No service, push/PR/Ready/Kilo/merge or full T11 acceptance;
+assignment remains active at the coordinator handoff. T11.4b/T11.5/full T11 stay
+open before T38.
+
+
 ## 2026-11-21 T11.4b production functional checkpoint — IN PROGRESS
 
 SOL imported Astra's reviewed `6466461` descendant by authorized fast-forward,

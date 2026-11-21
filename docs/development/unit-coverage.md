@@ -1088,3 +1088,42 @@ digest is `120a967b40d226f5ae0d7db162b879463ef626c13d32a431ada955d7ad32b049`.
 Twenty infrastructure cases and bounded artifact validation pass. Numerical
 approval does not accept the corrected source or full T11; new-head hosted CI,
 native review and coordinator dispositions remain separate delivery gates.
+
+
+## T11.4b production integration — approved numerical migration
+
+The coordinator approved only current web `e311dac0` →
+`04977cb421e2eb3e0d842c8b0c3295f19b6b2403e2d2cecf9788a41c1a01ccd8`, bound to
+clean functional head `311cd0601b08af7b065b0cd3aed80510dc660709` and exact proposal
+`2585983abc005c9d0e291ce31fba91ee10e9589b6baec8faf24b37371f549bb5`.
+The [integration receipt](sprint-presentation.md#approved-numerical-migration-and-normal-replay--2026-11-21)
+records independent review, ownership and separate native limits. The accepted
+307-case before-run reproduces `e311dac0` exactly. Current inventory is 88 web
+inputs: all 74 retained plus nine presentation, three contract and two production
+integration owners. Existing per-file ratios/uncovered counts do not regress;
+68 unchanged maps retain 5219 previously covered S/F/B units with 51 gains and
+zero losses. Changed-source semantic counter identity is not asserted.
+
+Web L/S/F/B are 3407/4892, 3748/5551, 796/1347 and 4429/6913; floors are
+6964/6751/5909/6406 basis points. Explicit numerical debt is accepted for the
+14 new inputs: uncovered 40/68/26/150; net global increases 13/33/18/114.
+In particular, 21 integration callback functions remain unexecuted, including
+rendered retry/paging/cancel/selection wrappers. Covered hooks do not prove
+complete rendered paths. Null columns remain 951/37216 mapped points versus
+823/32322 before; the type-only zero-unit N/A is retained. There is no exclusion,
+ignore, test removal, reduced old gate, provider/config/tool change or historical
+archive rewrite. Seven other baseline files remain byte-exact.
+
+After adopting only the approved web bytes, normal all-source gates pass
+**700/700** without skips: API 290/web 368/contracts 23/prototype 19. All 16 reports
+reproduce the approved bytes; digest is
+`14a4847e4c684f5f22e7543615c7392026b2c6aba960289b5a7e853d2f83cb53`.
+Twenty infrastructure cases and bounded 17-file artifacts pass, with no upload.
+The 237 physical source/test/tool fingerprints and all 86 original proposal
+payloads remain unchanged. Local normal receipts/reports/artifacts are retained
+under ignored `apps/web/coverage/t11-integration-normal/`; the coordinator also
+preserved the approved proposal independently. Numerical approval does not
+accept production/source/native QA, a PR or full T11. Frozen-head persisted
+401/409/timeout/concurrent-session journeys and Astra responsive/accessibility
+validation remain open. Further source/test/measurement changes need a fresh
+exact proposal before another baseline edit.

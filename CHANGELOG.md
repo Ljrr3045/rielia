@@ -8,10 +8,11 @@ This records repository changes. No application version has been released.
   with one shared-context sprint owner, captured planning/start/closure forms,
   Task detail estimates/participation, public capability gates, private render
   fences, both-owner navigation protection and explicit recovery/history paging.
-  All 368 web cases pass; bounded real local persistence confirms reviewed carryover
-  and frozen outcomes. Exact numerical approval and Astra integrated native QA
-  remain pending, with new UI coverage debt explicit; no baseline/dependency
-  change, PR publication or full T11 acceptance.
+  Coordinator-approved web-only baseline `04977cb4` passes 700 normal cases with
+  exact 16-report replay; infrastructure/artifacts pass. New coverage debt,
+  including 21 unexecuted rendered callback functions, remains explicit. Frozen-head
+  persisted failure/concurrency and Astra integrated native QA remain pending;
+  no dependency change, PR publication or full T11 acceptance.
 
 - Complete the requested [sprint review/history presentation ports](docs/development/sprint-presentation.md#astra-reviewhistory-presentation-checkpoint--2026-11-20-caracas--november-21-utc)
   over SOL's typed contracts: captured start, history/provenance, conflict
