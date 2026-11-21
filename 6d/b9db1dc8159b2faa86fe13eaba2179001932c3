@@ -1,0 +1,28 @@
+scripts/unit/baselines/web.json
+  s_c03582dc7b40ac::t_10d2afc82e59b4 1013,1017,1021,1025,1065-1082,1085,1101-1136,1157,1165,1169,1175,1209-1226,1229,1233-1234,1237-1238,1241-1242,1337-1340,1420,1422-1423,1428-1429,1457,1459-1460,1481-1482,1485-1486,1489-1490,1493-1494
+docs/development/sprint-client.md
+  s_c03582dc7b40ac::t_65b0b04f6c5288 3-5,151-153,209-240,243-244
+  s_c03582dc7b40ac::t_75d7ab4d405f15 241-242
+docs/development/unit-coverage.md
+  s_c03582dc7b40ac::t_65b0b04f6c5288 5-6,976-1018
+CHANGELOG.md
+  s_c03582dc7b40ac::t_65b0b04f6c5288 13-17
+docs/development/progress.md
+  s_c03582dc7b40ac::t_65b0b04f6c5288 33-41
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "6db9db1dc8159b2faa86fe13eaba2179001932c3",
+  "prompts": {},
+  "sessions": {
+    "s_c03582dc7b40ac": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1fb4d-67c5-7622-a43c-007800e7be5e",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
