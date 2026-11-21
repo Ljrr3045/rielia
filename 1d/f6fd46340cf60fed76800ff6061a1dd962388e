@@ -1,0 +1,45 @@
+apps/web/test/unit/sprint-integration.test.mjs
+  s_aa027f2693f60d::t_99d6e5e4572027 118-120,130
+  s_aa027f2693f60d::t_f910c15aaf96bc 46-48,59-64,66-70,74,77-78
+  s_aa027f2693f60d::t_bb013f883620f0 105,140-141,160,200,221,231-234,240-246,252-253,302,331,361
+  s_aa027f2693f60d::t_1405950b955598 39,65,75-76
+  s_aa027f2693f60d::t_f9a1fd62d1a11d 83-104,106-117,121-129,131-139,142-159,161-199,201-220,222-230,235-239,247-251,254-301,303-330,332-360
+  s_aa027f2693f60d::t_907288769b68a7 32-38,40-45,49-58,71-73,79-82
+docs/development/progress.md
+  s_aa027f2693f60d::t_5671e6c193cdd4 5,9-10,13-14,17
+  s_aa027f2693f60d::t_b749dfc96da3d1 3-4,6-8,11-12,15-16,18-22
+apps/web/src/lib/use-project-sprint-integration.ts
+  s_aa027f2693f60d::t_b12b3023cb0493 31-37,39-44,49-57,127-130,174-182,185-194,197-213,217-225
+  s_aa027f2693f60d::t_7ffc8f67daaa9d 2,26-30,38,45-48,58,74-75,84-86,94,122,125,131-133,173,184,195-196,214,302,347,354,417
+  s_aa027f2693f60d::t_7034923005874e 126,134
+apps/web/src/app/projects/sprints/sprint-workspace.tsx
+  s_aa027f2693f60d::t_b12b3023cb0493 49-53,60-66,71-77,156-162,167-173,178-184
+  s_aa027f2693f60d::t_7ffc8f67daaa9d 27,43,55,122
+apps/web/src/app/projects/sprints/sprint-integration-view.tsx
+  s_aa027f2693f60d::t_7ffc8f67daaa9d 350,487
+docs/development/sprint-presentation.md
+  s_aa027f2693f60d::t_5671e6c193cdd4 704,706-707,720,722,738-740,742-744,748-749
+  s_aa027f2693f60d::t_b749dfc96da3d1 3-5,662-703,705,708-719,721,723-737,741,745-747,750-763
+CHANGELOG.md
+  s_aa027f2693f60d::t_b749dfc96da3d1 7-10,12-14
+  s_aa027f2693f60d::t_5671e6c193cdd4 11
+apps/web/src/app/projects/sprints/sprint-task-planning.tsx
+  s_aa027f2693f60d::t_b12b3023cb0493 54-61,79-84,89-94
+  s_aa027f2693f60d::t_7ffc8f67daaa9d 40,49
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1df6fd46340cf60fed76800ff6061a1dd962388e",
+  "prompts": {},
+  "sessions": {
+    "s_aa027f2693f60d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1fbeb-0dae-7cd1-a40f-f13fa4b7d5da",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
