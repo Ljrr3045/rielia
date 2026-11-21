@@ -4,6 +4,13 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Prepare SOL-owned [sprint integration contracts](docs/development/sprint-presentation.md#sol-functional-contract-checkpoint--2026-11-20-caracas--november-21-utc)
+  for verified-context data fences, public-capability actions, captured raw forms
+  and contextual sprint URLs, with 110 focused controller/hook/contract cases
+  passing. Production composition, missing Astra review/history/navigation
+  presentation, numerical approval and persisted/native integrated QA remain
+  open; no full T11 acceptance or dependency/baseline change.
+
 - Record accepted T11.4a [PR54](https://github.com/Ljrr3045/rielia/pull/54#issuecomment-7055439065),
   merge `a2de3bd`, successful exact postmerge CI and retained native/hash limits.
   Prepare an unintegrated [T11.4b presentation checkpoint](docs/development/sprint-presentation.md)

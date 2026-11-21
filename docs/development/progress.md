@@ -1,5 +1,23 @@
 # Delivery progress and decisions
 
+## 2026-11-20 T11.4b SOL functional-contract checkpoint — IN PROGRESS
+
+The assigned integration branch fast-forwarded the original Astra `b6c1faa`
+checkpoint from accepted `a2de3bd`, preserving author/commit. Verified SOL xhigh
+and auto_review/on-request/workspace-write supplied [typed integration contracts](sprint-presentation.md#sol-functional-contract-checkpoint--2026-11-20-caracas--november-21-utc)
+for exact-context/private-data projections, server-capability actions, captured
+raw forms, start/close/conflict review and additive sprint URLs. These owners are
+not yet imported by the production screen; no product render/persistence claim.
+
+All 110 focused controller/hook/new contract cases pass without skips; contracts
+build, scoped lint/formatting and web types pass. New start/history/conflict/
+navigation and read-only Task planning presentation is requested through the
+coordinator before completing composition. No baseline changed: five imported
+presentation plus three functional runtime inputs await final all-source evidence
+and exact approval. Standard/integrated PostgreSQL/native/numerical final gates
+remain pending. No PR/push or service is retained. T11.4b/T11.5/full T11 remain
+open before planned T38.
+
 ## 2026-11-20 T11.4a ACCEPTED; T11.4b presentation checkpoint — IN PROGRESS
 
 [PR54 acceptance](https://github.com/Ljrr3045/rielia/pull/54#issuecomment-7055439065)

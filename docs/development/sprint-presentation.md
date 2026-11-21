@@ -120,3 +120,91 @@ keyboard/touch/zoom/AT/device, field errors, all resource and mutation states,
 focus/return across composed overlays, navigation/draft guards, reauthentication,
 real persistence/failure/concurrency/close/history journeys, full gates and review.
 A screenshot or fixture callback does not close any of those checks.
+
+
+## SOL functional-contract checkpoint — 2026-11-20 Caracas / November 21 UTC
+
+The coordinator-authorized integration checkout started clean at accepted
+`a2de3bd79596cb83b79287f105f60fedfb35bea9` and fast-forwarded to Astra's original
+`b6c1faa2dca57cb1453540be9b4045b35d36e937`, preserving its author and commit.
+The active turn verified actual `gpt-6.1-sol` / `xhigh`, `auto_review`,
+`on-request`, `workspace-write` and cwd `apps/web`; no other worker was started.
+This is a **dormant functional-contract checkpoint at the missing-presentation
+boundary**, not production integration or T11.4b acceptance. Existing presentation,
+CSS, controllers, transports, shell and route behavior are unchanged.
+
+New SOL-owned contracts under `apps/web/src/lib`:
+
+| Owner | Behavior and presentation handoff |
+| --- | --- |
+| `sprint-screen-model.ts` | Projects exact verified parent/controller identity and loaded Project before exposing resources, drafts/recovery feedback or actions; hides during loading/error/denial/replacement/expiry. Task planning also requires matching selected canonical Task. Action availability consumes fresh public capabilities. Supplies `SprintStartReview`, `SprintConflictReview`, `SprintHistoryPort`, `SprintCloseReviewBinding` and `SprintNavigationReviewPort`. |
+| `sprint-form-state.ts` | `beginSprintForm` stages before editing, capturing original concurrency preconditions. Raw fields retain null versus zero and canonical off-scale options. Public validators and field error discriminators prepare explicit submit; no date/time-zone policy is reimplemented. Source participation versions are captured at opening; an explicit target read precedes target conversion. `submitSprintForm` cannot replace pending/unknown commands, rebase or retry automatically. |
+| `project-sprint-location.ts` | Additive `/projects?workspace=…&project=…&projectView=sprints&sprint=…` representation; sprint selection may be absent. Existing task/filter/layout parameters survive, including `task` for contextual detail and return. Scalar/ID/orphan/discovery errors are rejected. Serializer emits a real href without navigation, preserving native modified-link handling for the later composition. |
+
+The projection is a contract for conditional mounting, not an implemented render
+fence in `ProjectsScreen`. The existing production screen does not import these
+owners yet. Form buffers must be held inside the eventual single integration
+owner, hidden during verification and cleared on confirmed identity/context loss
+or original expiry; the accepted hook retains its existing verification behavior.
+No second session fetch, SSE connection, hook instance, store or task copy exists.
+
+### Concrete missing presentation requested from Astra
+
+- Start review must display the captured `SprintStartReview` (goal, local dates,
+  exclusive end, captured zone, canonical totals and preconditions) in the existing
+  `ModalFrame`, with explicit confirm/cancel and stale/review feedback. Capture
+  this review when opening; later reads cannot silently replace that decision.
+- Sprint and Task planning history consume `SprintHistoryPort` and the complete
+  public `PlanningHistoryPage` items, including effective actor/provenance,
+  initial/error/changed/stale/paging states and independent reload/load-more.
+- Conflict comparison consumes `SprintConflictReview`: editable captured command
+  and authorized current DTO remain separate. `canRebase` stays false until an
+  explicit canonical refresh; close decisions instead require discard/new preview.
+- Blocked navigation renders `SprintNavigationReviewPort` for both owner guards.
+  The destination URL is the latest requested intent. Pending has no discard;
+  unknown recovery explains that local discard cannot undo a possibly committed
+  write. SOL still owns interception, Back reconciliation and callbacks.
+- Task planning needs a read-only data/history composition with **no mutation
+  form/buttons** when the corresponding callbacks are absent. The current imported
+  `SprintTaskPlanning` always renders both forms, so disabled flags alone do not
+  meet this contract. Preserve its visual system while adding nullable form/action
+  ports and explicit edit/cancel affordances for capture-before-edit lifetimes.
+
+These are requested typed presentation seams, not dead production controls.
+Destination/preview consequence paging, source-specific recovery/error controls,
+validation focus and composed modal focus/return still need integration and QA.
+
+### Focused verification and remaining gates
+
+Both frozen installs (workspace and isolated unit tools) reused the existing
+store without downloads or pin/lock changes. The first attempted focused command
+triggered pnpm's automatic dependency install in the empty checkout and was
+stopped after sandbox DNS failures; it is not test evidence. Explicit authorized
+frozen installation corrected that prerequisite.
+
+The final focused run passes **110/110**, no skips: 59 retained controller cases,
+20 retained real-hook cases (including both PR54 corrections), 28 new screen/form
+contract cases and three new URL cases. New witnesses exercise verified-context
+projection, read-only capabilities, source/version capture, invalid raw fields,
+null/zero/off-scale, explicit target reads, complete canonical start totals,
+reviewed close destination, stale decisions, 401 parent verification, 409
+refresh/compare/rebase and same-body/key unknown recovery. Boundary HTTP/browser
+doubles provide no SQL/persistence/native accessibility or production-render credit.
+The 31-case unmodified control also passes in a disposable copy; deliberate
+removal of the session fence, substitution of the reviewed close destination and
+blank-estimate conversion to zero each fail the expected assertions. Only copied
+source is mutated and the scratch copy is removed. These witnesses strengthen
+the contract tests without claiming production composition proof.
+Contracts build, scoped root-config ESLint/Prettier, adopted `pnpm format:check`
+and web route-types/TypeScript pass. Local ignored evidence and source/test/baseline fingerprints are retained
+under `apps/web/coverage/t11-integration-contracts/`.
+
+No numerical baseline is written or proposed here. The accepted current-web hash
+remains `e311dac02f34422ace8ad0bf4c1a1ae80a41b9dcfbc77c8c341e4b3e4bf3857c`.
+Five imported presentation runtime inputs plus these three new functional owners
+must all enter the final all-source denominator. Full `pnpm check`, all-source
+measurement/approved migration/normal gates/infrastructure/artifacts, real local
+PostgreSQL/Nest/Next integrated journeys and native integrated QA remain pending
+for the completed batch. No services were started for this checkpoint. No push,
+PR, Ready/Kilo/review action or full T11 claim occurs. T11.4b/T11.5/full T11 stay
+open; T38 follows full T11 without new libraries now.
