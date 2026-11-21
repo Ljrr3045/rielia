@@ -1,5 +1,21 @@
 # Delivery progress and decisions
 
+## 2026-11-21 T11.4b final alternate-host preflight — UNAVAILABLE; CANCEL/LEAVE GATE OPEN
+
+The coordinator reviewed/archived clean `033ea401` and authorized one bounded
+external-browser attempt. SOL verified the required actual model/permission
+profile and unchanged 237/180 source/built, eight baseline and 16 normal-report
+bindings. Orca computer-use returned `screen_locked` before Brave window access;
+no browser action/window, fixture/session/secret URL, personal-content read or
+cookie/history/settings/profile change occurred. No foreground or desktop-permission
+change was requested. The [final preflight](sprint-presentation.md#final-bounded-external-confirmation-preflight--2026-11-21)
+records the precise runtime limitation. Native Cancel/explicit Leave stays an
+owned unverified acceptance gate for coordinator disposition; no further broad
+QA or guessed source fix is implied. A refreshed concrete English Draft body is
+prepared locally. Prior 722-case numerical binding and bounded native evidence
+retain their limits; T11.4b/T11.5/full T11 remain open before T38, with no
+publication/review/merge or worker_done. Assignment ACTIVE.
+
 ## 2026-11-21 T11.4b boundary consolidation — PRODUCTION CANCELLATION OBSERVED; NATIVE CONFIRMATION OPEN
 
 SOL imported the coordinator-authorized docs-only `15b2ccd` after accepted clean

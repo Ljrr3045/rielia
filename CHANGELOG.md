@@ -4,6 +4,12 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Record [the final bounded external-browser preflight](docs/development/sprint-presentation.md#final-bounded-external-confirmation-preflight--2026-11-21):
+  macOS Orca reports `screen_locked` before window access, so no browser/fixture
+  action or personal-data change occurs. Native Cancel/Leave remains an owned
+  unverified acceptance gate; preserve unchanged source/baseline/722-case evidence
+  and refresh the concrete Draft PR body for coordinator disposition.
+
 - Consolidate [the sprint/task cross-document guard boundary](docs/development/sprint-presentation.md#sol-cross-document-guard-boundary-and-consolidation--2026-11-21):
   trusted activated production unloads are canceled for both changed drafts, but
   Orca Back still exits and exposes no controllable confirmation. Canonical data

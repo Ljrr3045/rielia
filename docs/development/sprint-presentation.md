@@ -2,7 +2,8 @@
 
 Status: **IN PROGRESS, integrated implementation and bounded corrected native/
 multipage evidence recorded; production cross-document cancellation observed,
-but browser confirmation remains an unresolved host boundary; coordinator Draft
+but browser confirmation remains an unresolved host boundary and the final
+external-browser preflight is blocked by a locked Mac; coordinator Draft
 publication decision and T11.5/full T11 acceptance remain open**.
 Base: accepted T11.4a merge `a2de3bd79596cb83b79287f105f60fedfb35bea9`.
 The [client guide](sprint-client.md#t114a-acceptance--2026-11-20-caracas--november-21-utc)
@@ -968,3 +969,42 @@ AGENTS/next-env changes were restored and stopped-server dev types removed.
 Only the pre-existing Codex listener remains. No credentials/private fixture
 state were printed or archived. No push/PR/Ready/Kilo/merge/worker_done occurs;
 the assignment remains ACTIVE at the coordinator's publication/boundary decision.
+
+## Final bounded external confirmation preflight — 2026-11-21
+
+The coordinator reviewed/archived the preceding 70-payload boundary packet and
+English PR body, accepted neither the embedded protection flow nor an invented
+source fix, and authorized one final external-browser confirmation attempt.
+At clean `033ea401e1ff4475c3d84d6eebcf4d397250446d`, SOL again verified actual
+`gpt-6.1-sol` / `xhigh`, automatic review/on-request/workspace-write and recorded
+the unchanged 237 source/test/tool, 180 built, eight baseline and 16 normal-report
+bindings before any browser or fixture action.
+
+SOL read the explicit `orca-computer-use` skill and version-matched guide.
+The macOS provider advertises background input and window/AX/click/key support,
+with separate `surfaces.dialogs` false. Its Brave window inventory returned
+**`screen_locked`: the Mac is locked or asleep and windows cannot be observed or
+controlled**. The first read-only wrapper did not expose the JSON error; a second
+read-only capture retained that exact failure. No browser action, owned window,
+fixture, generated session or secret URL was created; personal tabs, cookies,
+history, settings and profiles were not read or changed. No foreground/restore,
+permission/configuration change, install or broad-access request occurred.
+
+This final alternate-host attempt is **unavailable**, not a native Cancel/Leave
+pass. The earlier trusted production cancellation and embedded raw-draft loss
+remain separate observed facts. Cancel preserving the same document/raw values
+and explicit Leave with unchanged canonical data remain an **owned unverified
+acceptance gate for coordinator disposition**. No further broad QA or guessed
+web patch follows from this preflight. T11.4b/T11.5/full T11 remain open before
+T38, preserving 16 unit-unexecuted functions, null-column and representative
+matrix/device/AT/zoom limits.
+
+Ignored `apps/web/coverage/t11-external-confirmation/` contains before/after hash
+receipts, capabilities, the exact sanitized inventory error, verdict, cleanup/
+resource record, manifest and refreshed English Draft PR body. No fixture or
+app service needed cleanup; the prior owned resources remain removed. Only
+these live guide/progress/changelog updates are committed. Numerical and heavy
+functional gates are reused with their unchanged source binding; applicable
+prose/format/handoff/whitespace/hooks checks pass. No push/PR/Ready/Kilo/merge/
+worker_done or product acceptance occurs; assignment stays ACTIVE for the
+coordinator's concrete Draft publication and boundary disposition decision.
