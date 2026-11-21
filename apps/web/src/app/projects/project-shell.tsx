@@ -22,6 +22,7 @@ import {
 import Link from 'next/link';
 import styles from './projects.module.css';
 export interface ProjectShellPorts {
+  additionalModalOpen?: boolean;
   activeProjectId: string | null;
   anyPending: boolean;
   blocked: boolean;
@@ -66,6 +67,7 @@ export interface ProjectShellPorts {
 }
 
 export function renderProjectShell({
+  additionalModalOpen = false,
   activeProjectId,
   anyPending,
   blocked,
@@ -132,7 +134,11 @@ export function renderProjectShell({
       <header
         className={styles.topbar}
         inert={
-          overlayOpen || drawerOpen || form !== null || workspaceNavigation !== null
+          additionalModalOpen ||
+          overlayOpen ||
+          drawerOpen ||
+          form !== null ||
+          workspaceNavigation !== null
             ? true
             : undefined
         }
@@ -202,7 +208,7 @@ export function renderProjectShell({
               ? !drawerOpen
                 ? true
                 : undefined
-              : overlayOpen || form !== null || workspaceNavigation !== null
+              : additionalModalOpen || overlayOpen || form !== null || workspaceNavigation !== null
                 ? true
                 : undefined
           }
@@ -413,7 +419,11 @@ export function renderProjectShell({
         <main
           className={styles.main}
           id="projects-main"
-          inert={drawerOpen || form !== null || workspaceNavigation !== null ? true : undefined}
+          inert={
+            additionalModalOpen || drawerOpen || form !== null || workspaceNavigation !== null
+              ? true
+              : undefined
+          }
           tabIndex={-1}
         >
           <div className={styles.mobileHeader}>

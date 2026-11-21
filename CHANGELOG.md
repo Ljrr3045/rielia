@@ -4,6 +4,96 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Record implemented sprint planning/task participation/start/close/history
+  workflows in [Draft PR55](https://github.com/Ljrr3045/rielia/pull/55), initially
+  published by the authorized coordinator at `47da8cec`. Capture the real Draft/
+  validate association and bounded review-event observation, preserve source-
+  qualified 722-case/manual evidence, and retain native Cancel/Leave as an owned
+  open acceptance gate. No Ready or T11.4b/T11.5/full T11 acceptance is implied.
+
+- Record [the automatic approval block on initial Draft publication](docs/development/sprint-presentation.md#publication-approval-block--2026-11-21):
+  push/PR process creation was rejected before execution because later coordinator
+  tool text did not override the original publication prohibition. Keep the branch
+  unpublished, prepare the exact body/evidence for direct user approval, and retain
+  the open native Cancel/Leave and T11 acceptance gates without a bypass.
+
+- Prepare the implemented [sprint planning and closure integration](docs/development/sprint-presentation.md#coordinator-disposition-and-draft-publication--2026-11-21)
+  for one coordinator-authorized Draft PR. Keep native external Cancel/Leave an
+  owned open acceptance gate (`screen_locked` on the last attempt), preserve the
+  722-case source-qualified evidence and explicit manual/unit limits, and leave
+  T11.4b/T11.5/full T11 acceptance and Ready with the coordinator.
+
+- Record [the final bounded external-browser preflight](docs/development/sprint-presentation.md#final-bounded-external-confirmation-preflight--2026-11-21):
+  macOS Orca reports `screen_locked` before window access, so no browser/fixture
+  action or personal-data change occurs. Native Cancel/Leave remains an owned
+  unverified acceptance gate; preserve unchanged source/baseline/722-case evidence
+  and refresh the concrete Draft PR body for coordinator disposition.
+
+- Consolidate [the sprint/task cross-document guard boundary](docs/development/sprint-presentation.md#sol-cross-document-guard-boundary-and-consolidation--2026-11-21):
+  trusted activated production unloads are canceled for both changed drafts, but
+  Orca Back still exits and exposes no controllable confirmation. Canonical data
+  stays unchanged; native Cancel/Leave remains unverified for coordinator
+  disposition. Preserve the 722-case source/coverage binding, accepted bounded
+  corrected focus/multipage evidence and explicit native/unit debt; no source or
+  baseline change, PR or full T11 acceptance.
+
+- Record corrected-head [native sprint QA](docs/development/sprint-presentation.md#astra-corrected-head-native-matrix--2026-11-21):
+  fixed 320 ES Escape return, persisted forms/task planning, real 103-participant
+  closure and multipage/frozen results, bounded guards/recovery and server
+  capability states. Owned resources are removed; source/tests/baselines remain
+  unchanged. Physical-device/AT/zoom and cross-document navigation checks remain
+  open for coordinator disposition; no full T11 acceptance or publication.
+
+- Correct [sprint logical focus return](docs/development/sprint-presentation.md#sol-scoped-focus-return-correction--2026-11-21)
+  after staging recreates its invoking action. Scope return to the current
+  verified context and authorized visible control, with safe feature-heading
+  fallback and cancellation across new forms/navigation/identity changes.
+  All 51 composition cases and 390 web measurement cases pass; 22 regressions are
+  added, including the old six-failure witness. Coordinator-approved web-only
+  `f1679d66` passes 722 normal cases with exact 16-report replay; standard,
+  infrastructure and artifacts pass. Sixteen composition functions remain
+  unexecuted; corrected native evidence is recorded above with remaining limits.
+  No visual redesign or full T11 acceptance.
+
+- Record the frozen-head [T11.4b native QA focus finding](docs/development/sprint-presentation.md#astra-frozen-head-native-qa-finding--2026-11-21):
+  real settings/create/readback passed bounded checks, but canceling sprint
+  metadata returns focus to the project heading instead of its available edit
+  control. SOL correction and remaining integrated QA are pending; owned
+  fixture resources are removed and source/tests/baselines remain unchanged.
+
+- Integrate the production [sprint functional checkpoint](docs/development/sprint-presentation.md#sol-production-functional-checkpoint--2026-11-21-caracas--november-21-utc)
+  with one shared-context sprint owner, captured planning/start/closure forms,
+  Task detail estimates/participation, public capability gates, private render
+  fences, both-owner navigation protection and explicit recovery/history paging.
+  Coordinator-approved web-only baseline `04977cb4` passes 700 normal cases with
+  exact 16-report replay; infrastructure/artifacts pass. New coverage debt,
+  including 21 unexecuted rendered callback functions, remains explicit. Bounded [frozen-head recovery/persistence evidence](docs/development/sprint-presentation.md#sol-frozen-head-recovery-and-persistence--2026-11-21)
+  now exercises real server/SQL outcomes and rendered recovery controls with
+  explicit HTTP/browser simulation limits. Astra integrated native QA remains open;
+  no dependency change, PR publication or full T11 acceptance.
+
+- Complete the requested [sprint review/history presentation ports](docs/development/sprint-presentation.md#astra-reviewhistory-presentation-checkpoint--2026-11-20-caracas--november-21-utc)
+  over SOL's typed contracts: captured start, history/provenance, conflict
+  comparison, guarded-navigation copy and nullable task edit/form ports.
+  Bounded native harness evidence remains separate from product integration;
+  no logic/test/baseline changes or full T11 acceptance. Four additional runtime
+  owners await SOL's completed-batch coverage and integrated verification.
+
+- Prepare SOL-owned [sprint integration contracts](docs/development/sprint-presentation.md#sol-functional-contract-checkpoint--2026-11-20-caracas--november-21-utc)
+  for verified-context data fences, public-capability actions, captured raw forms
+  and contextual sprint URLs, with 110 focused controller/hook/contract cases
+  passing. Production composition, missing Astra review/history/navigation
+  presentation, numerical approval and persisted/native integrated QA remain
+  open; no full T11 acceptance or dependency/baseline change.
+
+- Record accepted T11.4a [PR54](https://github.com/Ljrr3045/rielia/pull/54#issuecomment-7055439065),
+  merge `a2de3bd`, successful exact postmerge CI and retained native/hash limits.
+  Prepare an unintegrated [T11.4b presentation checkpoint](docs/development/sprint-presentation.md)
+  with sprint/scope/forms/closure/outcome components and ES/EN copy. Scoped
+  types/lint/formatting and bounded disposable-browser inspection pass; production
+  wiring, functional tests, coverage and integrated acceptance remain open.
+  No PR, baseline change, dependency upgrade or full T11/T38 acceptance.
+
 - Correct both accepted [PR54 round1 findings](docs/development/sprint-client.md#pr54-round-1-correction--2026-11-20):
   retain the cleared signed-out status after sprint401 with a locally valid
   parent, and reconcile latest prop navigation after draft/pending/unknown guards

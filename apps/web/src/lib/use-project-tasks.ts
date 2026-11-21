@@ -79,11 +79,17 @@ export function useProjectTasks() {
       }
     };
     const offline = () => controller.setStreamStatus('offline');
+    const beforeUnload = (event: BeforeUnloadEvent) => {
+      if (!controller.navigationProtected()) return;
+      event.preventDefault();
+      event.returnValue = '';
+    };
     window.addEventListener('popstate', location);
     window.addEventListener('pageshow', refresh);
     window.addEventListener('focus', refresh);
     window.addEventListener('online', refresh);
     window.addEventListener('offline', offline);
+    window.addEventListener('beforeunload', beforeUnload);
     document.addEventListener('visibilitychange', refresh);
     return () => {
       window.removeEventListener('popstate', location);
@@ -91,6 +97,7 @@ export function useProjectTasks() {
       window.removeEventListener('focus', refresh);
       window.removeEventListener('online', refresh);
       window.removeEventListener('offline', offline);
+      window.removeEventListener('beforeunload', beforeUnload);
       document.removeEventListener('visibilitychange', refresh);
       controller.cancelPending();
       controller.dispose();
@@ -178,6 +185,12 @@ export function useProjectTasks() {
         ? state.pageError
         : null,
     refresh: controller.refresh,
+    setSprintLocation: controller.setSprintLocation,
+    registerNavigationBlocker: controller.registerNavigationBlocker,
+    resumeNavigation: controller.resumeNavigation,
+    resolveIntegratedNavigation: controller.resolveIntegratedNavigation,
+    navigateAway: controller.navigateAway,
+    navigationProtected: controller.navigationProtected,
     selectWorkspace: controller.selectWorkspace,
     selectProject: controller.selectProject,
     selectTask: controller.selectTask,

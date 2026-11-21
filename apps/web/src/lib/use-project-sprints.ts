@@ -6,6 +6,7 @@ import { createSprintPlanningTransport } from './sprint-client.ts';
 import { createTaskPlanningTransport } from './task-planning-client.ts';
 import { createSprintController } from './sprint-controller.ts';
 import { emptySprintState, type SprintClientContext } from './sprint-client-state.ts';
+import { sprintNavigationGuard } from './sprint-screen-model.ts';
 
 export interface SprintProjectPort extends Pick<
   ProjectTaskState,
@@ -151,5 +152,6 @@ export function useProjectSprints(
     reload: controller.reload,
     loadMore: controller.loadMore,
     dismissResult: controller.dismissResult,
+    getNavigationGuard: () => sprintNavigationGuard(controller.getState()),
   };
 }
