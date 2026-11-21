@@ -1,0 +1,45 @@
+apps/web/src/app/projects/sprints/sprint-start-review.tsx
+  s_3e3d5b98dbec80::t_ce141e349bd97b 32-34,73
+  s_3e3d5b98dbec80::t_b1051aef4bfe78 1-12,21-28,77,80
+  s_3e3d5b98dbec80::t_796b9cea6419d1 13-20,29-31,35-72,74-76,78-79
+apps/web/src/app/projects/sprints/sprint-history.tsx
+  s_3e3d5b98dbec80::t_690d2824b75ac0 17-40,44-48,57-93,95-168
+  s_3e3d5b98dbec80::t_90627db3abd973 1-16,41-43,49-56,94,169
+CHANGELOG.md
+  s_3e3d5b98dbec80::t_a1cee487dc5a88 7-13
+apps/web/src/app/projects/sprints/sprint-navigation-review.tsx
+  s_3e3d5b98dbec80::t_b1051aef4bfe78 1-9,14-17,55,58
+  s_3e3d5b98dbec80::t_ce141e349bd97b 21-23
+  s_3e3d5b98dbec80::t_796b9cea6419d1 10-13,18-20,24-54,56-57
+docs/development/progress.md
+  s_3e3d5b98dbec80::t_a1cee487dc5a88 3-18
+apps/web/src/app/projects/sprints/sprint-copy.ts
+  s_3e3d5b98dbec80::t_a1968ba9bce076 180-249
+  s_3e3d5b98dbec80::t_40507a6b41deab 250-300
+apps/web/src/app/projects/sprints/sprint-task-planning.tsx
+  s_3e3d5b98dbec80::t_744b73b45b749f 4-6,8-9,13-23,25-26,28-47,54-62,64-66,68-82,87-88,91
+  s_3e3d5b98dbec80::t_9b5ac41789dabe 83-86,89-90,92-186
+docs/development/sprint-presentation.md
+  s_3e3d5b98dbec80::t_a1cee487dc5a88 26,66-68,72-73,210-288
+apps/web/src/app/projects/sprints/sprint-conflict-review.tsx
+  s_3e3d5b98dbec80::t_90627db3abd973 1-74
+  s_3e3d5b98dbec80::t_4c72b9be54da58 75-201
+apps/web/src/app/projects/sprints/sprints.module.css
+  s_3e3d5b98dbec80::t_e40139514262b7 412-545
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "64664613de5796ff0264ff554edc02b5c748c67e",
+  "prompts": {},
+  "sessions": {
+    "s_3e3d5b98dbec80": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1fbd9-ff85-75a3-93a6-4eba3a204f01",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
