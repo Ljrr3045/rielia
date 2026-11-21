@@ -13,8 +13,9 @@ This records repository changes. No application version has been released.
   acceptance remain open. Coordinator-approved exact web-only baseline passes
   629 normal cases with byte-identical replay of all16 candidate reports; seven
   baselines remain exact. Infrastructure/artifacts, standard checks on the Next
-  notice retry and high audits pass with explicit existing/new debt. Draft
-  publication/current-head CI/native acceptance remain pending.
+  notice retry and high audits pass with explicit existing/new debt. Published
+  as [Draft PR54](https://github.com/Ljrr3045/rielia/pull/54); current-head CI/native/
+  coordinator acceptance remain pending.
 - Synchronize the user's planned [T38](https://github.com/Ljrr3045/rielia/issues/53)
   sequencing after full T11 acceptance, preserving accepted T36/T37 history.
   No Zod/TanStack Query/form migration, install or T38 completion is included.

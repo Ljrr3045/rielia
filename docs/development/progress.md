@@ -1,6 +1,6 @@
 # Delivery progress and decisions
 
-## 2026-11-20 T11.3 ACCEPTED; T11.4a sprint client logic — IN PROGRESS
+## 2026-11-20 T11.3 ACCEPTED; T11.4a client logic — DRAFT PR54
 
 T11.3 was subsequently ACCEPTED in
 [PR52](https://github.com/Ljrr3045/rielia/pull/52#issuecomment-7052975664), reviewed
@@ -37,8 +37,10 @@ coverage passes629 cases and reproduces all16 approved reports byte-for-byte;
 all20 infrastructure cases and bounded artifacts pass. The client/unit guides
 preserve explicit new uncovered/null-map debt and the earlier19/20 missing-report
 failure, corrected by that complete run. Source/tests/tools remain frozen after
-approval. Draft publication and current-head CI/native/coordinator acceptance
-remain pending; T11.4b/T11.5 and full T11 remain open.
+approval. Published as [Draft PR54](https://github.com/Ljrr3045/rielia/pull/54) to `dev`;
+current-head CI/native/coordinator acceptance remain pending. Actual Draft is
+verified before the URL-only push; source/tests/tools/eight baselines and all16
+reports remain unchanged. T11.4b/T11.5 and full T11 remain open.
 
 ## 2026-11-20 PR52 round 1 correction — locally verified, DRAFT
 

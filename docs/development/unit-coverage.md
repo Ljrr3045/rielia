@@ -977,6 +977,9 @@ Numerical approval does not accept SQL, product behavior or the changed PR head;
 
 ## T11.4a client coverage — 2026-11-20
 
+Published in [Draft PR54](https://github.com/Ljrr3045/rielia/pull/54); current-head
+CI/native/coordinator acceptance remains separate from this numerical approval.
+
 The coordinator independently checked the eight before/current/candidate hash
 pairs, all 16 report hashes/sizes, 203 physical source/test/config fingerprints
 plus the explicitly synthetic unchanged compiler-metadata witness, existing

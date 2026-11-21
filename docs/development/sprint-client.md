@@ -1,7 +1,8 @@
 # T11.4a sprint client logic and presentation handoff
 
 Status: implemented and locally verified; exact numerical approval and normal
-coverage/infrastructure/artifact gates pass. Draft publication and new-head
+coverage/infrastructure/artifact gates pass. Published as
+[Draft PR54](https://github.com/Ljrr3045/rielia/pull/54) to `dev`; current-head
 CI/native/coordinator acceptance remain pending. This is the logic prerequisite for separately owned T11.4b
 presentation, addressing T11/B1c, P09/US06, affected P05/P08/P10 and US05/US12,
 UX04/UXR01 and existing recovery/localization requirements. It starts from
@@ -242,3 +243,20 @@ hooks, handoff/local-link and whitespace checks. Source-bound standard build/
 HTTP smoke and audits are reused without repeating unchanged heavy phases.
 Publication remains Draft; coordinator owns Ready, native Kilo, thread disposition,
 acceptance and merge. T11.4b/T11.5, full T11 and planned T38 remain open.
+
+
+## Draft publication
+
+[PR54](https://github.com/Ljrr3045/rielia/pull/54) is OPEN and Draft against `dev`,
+initially published at `6db9db1dc8159b2faa86fe13eaba2179001932c3`. Actual Draft
+state is verified before the documentation URL push. `origin/dev` remains
+`6507e487` and is an ancestor; only Ljrr3045 is a collaborator, no invitations or
+external open PRs were found, and collaborators-only admission remains active.
+Only hosted validate is observed in progress at initial publication; no native
+review is requested or paid-job absence certified. Coordinator owns that gate.
+
+This URL/progress update changes documentation only. Source/tests/tools, all eight
+baselines and all 16 reproduced reports remain exactly bound to the approved
+checkpoint. Prose/handoff/whitespace and mandatory hooks cover the update; no
+unchanged build/unit/PG/runtime phase repeats. Current-head CI/native feedback
+and coordinator acceptance remain pending; T11.4b/T11.5 and full T11 remain open.
