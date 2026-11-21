@@ -1019,3 +1019,49 @@ in this fresh checkout; exact changed-source old/new unit identity is not
 manufactured. Final maps/hits and fingerprints remain in the bounded local
 proposal/report set. Numerical approval does not accept code, presentation or
 full T11; [the client guide](sprint-client.md) records ownership and later gates.
+
+
+## PR54 round 1 corrective coverage
+
+The bounded [client correction](sprint-client.md#pr54-round-1-correction--2026-11-20)
+addresses both coordinator-accepted native round1 findings on `957de8c`.
+Ten added real-hook cases reproduce nine failures on the reviewed hook and
+pass with all ten retained cases after correction. Coverage measurement and
+exact candidate review remain pending; current web baseline remains
+`da5d187c9ba70631b9f4ae29180a69862bbde7b59f973448bbd046075866db73`.
+No tracked baseline is written before exact coordinator approval, and the seven
+other baseline files, original proposal/archive and historical source limits
+remain protected. Numerical approval and new-head source/review acceptance are
+separate gates.
+
+
+The separate corrective proposal is
+`e311dac02f34422ace8ad0bf4c1a1ae80a41b9dcfbc77c8c341e4b3e4bf3857c` for
+current web only; packet SHA-256 is
+`1aebdfb08dccc1aa26cffcb0cce1e5e15863ed3711e07f203344f7a30031ddfb`.
+All eight baseline pairs, 16 report hashes/sizes, 203 physical fingerprints plus
+the unchanged synthetic compiler witness and exact per-file/raw map comparisons
+are prepared without a tracked baseline write. Seven other baselines and all 45
+original proposal files remain exact. Inventory stays74 web inputs; only the
+hook/source and its retained test fingerprint change.
+
+Web measurement passes 307 cases, retaining all original cases and adding ten
+real-hook schedules. With unchanged API290/contracts23/prototype19 this composes
+639 cases; normal gate acceptance remains pending. L/S/F/B are proposed as
+2869/4341,3159/4929,641/1174,3545/5915 (before 2867/4339,3157/4928,
+641/1174,3535/5906), floors 6609/6409/5459/5993 (before 6607/6406/5459/5985).
+No existing covered count, exact ratio or uncovered count regresses. Hook L50/50
+becomes 52/52, S59/59 becomes 60/60, F13/13 stays equal, B51/52 becomes 60/61.
+Unchanged controller S294/301 and B235/244 each gain one covered unit; its other
+metrics stay equal. Aggregate uncovered S/B decrease 1/1 and L/F remain equal.
+
+All 73 unchanged web maps retain 7210 covered S/F/B units with two gains and no
+loss; 66 hit vectors remain exact. Other scopes retain all maps/hits (52/7/16).
+Changed-hook raw maps remain available, without claiming identical semantic IDs
+across new guard locations. Nullable columns are web 823/32322 versus 823/32296;
+API 199/12286, contracts 24/2780 and prototype 133/6372 remain equal. Inventories,
+unexecuted inputs, type-only N/A, provider/compiler/configuration/tool lock and
+meaningful retained tests are unchanged. Exact coordinator approval must precede
+baseline adoption; then the normal all-scope gate/report reproduction and 20-case
+infrastructure/artifact checks remain required. No numerical or source acceptance
+is inferred from measurement or the old-head successful native check.

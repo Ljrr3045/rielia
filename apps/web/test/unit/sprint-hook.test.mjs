@@ -71,6 +71,282 @@ async function hookFixture(t, strict = false) {
   };
 }
 
+for (const operation of ['read', 'write']) {
+  test(
+    `PR54 ${operation} 401 remains signed-out with a locally valid parent and permits verified recovery`,
+    { timeout: 30_000 },
+    async (t) => {
+      const b = await hookFixture(t);
+      const parent = b.source();
+      await act(async () => b.hook.state.stage({ type: 'edit-sprint', fields }));
+      if (operation === 'read') {
+        b.server.get = ({ path }) =>
+          path.endsWith('/planning')
+            ? Response.json({ code: 'signed-out' }, { status: 401 })
+            : undefined;
+        await act(async () => b.hook.state.refresh());
+      } else {
+        b.server.post = () => Response.json({ code: 'signed-out' }, { status: 401 });
+        await act(async () => b.hook.state.submit());
+      }
+      assert.equal(b.source(), parent);
+      assert.equal(parent.status, 'ready');
+      assert.ok(Date.parse(parent.session.session.expiresAt) > fixedNow);
+      assert.equal(b.hook.state.status, 'signed-out');
+      assert.equal(b.hook.state.context, null);
+      assert.equal(b.hook.state.draft, null);
+      assert.equal(b.hook.state.recovery, null);
+      for (const resource of Object.values(b.hook.state.resources))
+        assert.equal(resource.data, null);
+      const requests = b.server.requests.length;
+      await b.render(parent);
+      await act(async () => b.hook.state.refresh());
+      assert.equal(b.hook.state.status, 'signed-out');
+      assert.equal(
+        b.server.requests.length,
+        requests,
+        'local parent validity cannot silently reauthorize a denied controller',
+      );
+      b.server.get = null;
+      await b.render({ ...parent, status: 'loading', session: null });
+      assert.equal(b.hook.state.resources.sprint.data, null);
+      await b.render(parent);
+      assert.equal(b.hook.state.status, 'ready');
+      assert.equal(b.hook.state.resources.sprint.status, 'ready');
+      assert.equal(b.hook.state.context.sessionId, parent.session.session.id);
+      assert.equal(b.hook.state.draft, null);
+      assert.equal(
+        b.server.requests.filter((r) => r.init.method === 'POST').length,
+        operation === 'write' ? 1 : 0,
+      );
+    },
+  );
+}
+
+test(
+  'PR54 controller403 remains forbidden and defers prop navigation until explicit access refresh',
+  { timeout: 30_000 },
+  async (t) => {
+    const b = await hookFixture(t);
+    b.server.get = ({ path }) =>
+      path.endsWith('/planning')
+        ? Response.json({ code: 'forbidden' }, { status: 403 })
+        : undefined;
+    await act(async () => b.hook.state.refresh());
+    assert.equal(b.source().status, 'ready');
+    assert.equal(b.hook.state.status, 'forbidden');
+    for (const resource of Object.values(b.hook.state.resources)) assert.equal(resource.data, null);
+    const requests = b.server.requests.length;
+    await b.render(b.source(), { sprintId: 's', taskId: null });
+    assert.equal(b.hook.state.status, 'forbidden');
+    assert.equal(b.hook.state.selection.sprintId, null);
+    assert.equal(
+      b.server.requests.length,
+      requests,
+      'a pending selection cannot bypass access denial',
+    );
+    b.server.get = null;
+    await act(async () => b.hook.state.refresh());
+    assert.equal(b.hook.state.status, 'ready');
+    assert.equal(b.hook.state.selection.sprintId, 's');
+    assert.equal(b.hook.state.selection.taskId, null);
+    assert.equal(b.hook.state.resources.sprint.status, 'ready');
+    assert.equal(b.server.requests.filter((r) => r.init.method === 'POST').length, 0);
+  },
+);
+
+test(
+  'PR54 latest prop selection reconciles after discard without repeated effects or writes',
+  { timeout: 30_000 },
+  async (t) => {
+    const b = await hookFixture(t);
+    await act(async () => b.hook.state.stage({ type: 'edit-sprint', fields }));
+    const draft = b.hook.state.draft;
+    await b.render(b.source(), { sprintId: 's', taskId: null });
+    await b.render(b.source(), { sprintId: null, taskId: null });
+    assert.deepEqual(b.hook.state.selection, { sprintId: 's', taskId: 't', targetId: null });
+    assert.equal(b.hook.state.draft, draft);
+    await act(async () => b.hook.state.discardDraft());
+    assert.deepEqual(b.hook.state.selection, { sprintId: null, taskId: null, targetId: null });
+    assert.equal(b.hook.state.resources.sprint.data, null);
+    assert.equal(b.hook.state.resources.task.data, null);
+    const requests = b.server.requests.length;
+    await b.render(b.source());
+    await b.render(b.source());
+    assert.equal(
+      b.server.requests.length,
+      requests,
+      'settled navigation must not start a render/refetch loop',
+    );
+    assert.equal(b.server.requests.filter((r) => r.init.method === 'POST').length, 0);
+  },
+);
+
+test(
+  'PR54 pending write retains its target and reconciles prop navigation only after confirmed success',
+  { timeout: 30_000 },
+  async (t) => {
+    const b = await hookFixture(t);
+    const held = deferred();
+    b.server.post = () => held.promise;
+    await act(async () => b.hook.state.stage({ type: 'edit-sprint', fields }));
+    let saving;
+    await act(async () => {
+      saving = b.hook.state.submit();
+    });
+    const recovery = b.hook.state.recovery;
+    await b.render(b.source(), { sprintId: null, taskId: null });
+    assert.equal(b.hook.state.mutation.status, 'pending');
+    assert.equal(b.hook.state.selection.sprintId, 's');
+    assert.equal(b.hook.state.recovery, recovery);
+    assert.equal(b.server.requests.filter((r) => r.init.method === 'POST').length, 1);
+    await act(async () => {
+      held.resolve(Response.json(sprint));
+      await saving;
+    });
+    assert.ok(b.hook.renders.some((render) => render.mutation.status === 'confirmed'));
+    assert.deepEqual(b.hook.state.selection, { sprintId: null, taskId: null, targetId: null });
+    assert.equal(b.hook.state.recovery, null);
+    assert.equal(b.refreshed(), 1);
+    assert.equal(b.server.requests.filter((r) => r.init.method === 'POST').length, 1);
+  },
+);
+
+test(
+  'PR54 ambiguous recovery blocks prop navigation until the exact original retry confirms',
+  { timeout: 30_000 },
+  async (t) => {
+    const b = await hookFixture(t);
+    b.server.post = () => {
+      throw new Error('Committed response lost');
+    };
+    await act(async () =>
+      b.hook.state.stage({ type: 'edit-sprint', fields: { ...fields, goal: 'Captured goal' } }),
+    );
+    await act(async () => b.hook.state.submit());
+    const recovery = b.hook.state.recovery;
+    const posts = () => b.server.requests.filter((r) => r.init.method === 'POST');
+    assert.equal(b.hook.state.mutation.status, 'unknown');
+    await b.render(b.source(), { sprintId: null, taskId: null });
+    assert.equal(b.hook.state.selection.sprintId, 's');
+    assert.equal(b.hook.state.recovery, recovery);
+    assert.equal(b.hook.state.recovery.command.fields.goal, 'Captured goal');
+    await act(async () => b.hook.state.cancelPending());
+    assert.equal(b.hook.state.selection.sprintId, 's');
+    assert.equal(posts().length, 1);
+    b.server.post = () => Response.json(sprint);
+    await act(async () => b.hook.state.retrySave());
+    assert.deepEqual(b.hook.state.selection, { sprintId: null, taskId: null, targetId: null });
+    assert.equal(b.hook.state.recovery, null);
+    assert.equal(posts().length, 2);
+    assert.equal(posts()[1].init.body, posts()[0].init.body);
+    assert.equal(
+      posts()[1].init.headers['Idempotency-Key'],
+      posts()[0].init.headers['Idempotency-Key'],
+    );
+  },
+);
+
+test(
+  'PR54 explicit unknown-outcome discard releases requested navigation without replaying a mutation',
+  { timeout: 30_000 },
+  async (t) => {
+    const b = await hookFixture(t);
+    b.server.post = () => {
+      throw new Error('Unknown response');
+    };
+    await act(async () => b.hook.state.stage({ type: 'edit-sprint', fields }));
+    await act(async () => b.hook.state.submit());
+    await b.render(b.source(), { sprintId: null, taskId: null });
+    assert.equal(b.hook.state.mutation.status, 'unknown');
+    assert.equal(b.hook.state.selection.sprintId, 's');
+    await act(async () => b.hook.state.discardDraft());
+    assert.deepEqual(b.hook.state.selection, { sprintId: null, taskId: null, targetId: null });
+    assert.equal(b.hook.state.recovery, null);
+    assert.equal(b.server.requests.filter((r) => r.init.method === 'POST').length, 1);
+  },
+);
+
+test(
+  'PR54 definitive write failure retains draft and navigation guard until explicit discard',
+  { timeout: 30_000 },
+  async (t) => {
+    const b = await hookFixture(t);
+    b.server.post = () => Response.json({ code: 'validation-error' }, { status: 400 });
+    await act(async () => b.hook.state.stage({ type: 'edit-sprint', fields }));
+    await act(async () => b.hook.state.submit());
+    const draft = b.hook.state.draft;
+    await b.render(b.source(), { sprintId: null, taskId: null });
+    assert.equal(b.hook.state.mutation.status, 'failed');
+    assert.equal(b.hook.state.draft, draft);
+    assert.equal(b.hook.state.selection.sprintId, 's');
+    await act(async () => b.hook.state.discardDraft());
+    assert.deepEqual(b.hook.state.selection, { sprintId: null, taskId: null, targetId: null });
+    assert.equal(b.server.requests.filter((r) => r.init.method === 'POST').length, 1);
+  },
+);
+
+test(
+  'PR54 context replacement clears blocked navigation and rejects an obsolete pending completion',
+  { timeout: 30_000 },
+  async (t) => {
+    const b = await hookFixture(t);
+    const held = deferred();
+    let signal;
+    b.server.post = ({ init }) => {
+      signal = init.signal;
+      return held.promise;
+    };
+    await act(async () => b.hook.state.stage({ type: 'edit-sprint', fields }));
+    let saving;
+    await act(async () => {
+      saving = b.hook.state.submit();
+    });
+    await b.render(b.source(), { sprintId: null, taskId: null });
+    const index = b.hook.renders.length;
+    b.server.get = () => Response.json({ code: 'unavailable' }, { status: 503 });
+    await b.render({ ...b.source(), session: identitySession('replacement') });
+    assert.equal(signal.aborted, true);
+    assert.equal(b.hook.state.context.userId, 'replacement');
+    assert.deepEqual(b.hook.state.selection, { sprintId: null, taskId: null, targetId: null });
+    for (const render of b.hook.renders.slice(index)) {
+      assert.equal(render.draft, null);
+      assert.equal(render.recovery, null);
+      assert.equal(render.resources.sprint.data, null);
+    }
+    await act(async () => {
+      held.resolve(Response.json(sprint));
+      await saving;
+    });
+    assert.equal(b.hook.state.mutation.result, null);
+    assert.equal(b.hook.state.recovery, null);
+    assert.equal(b.refreshed(), 0);
+    assert.equal(b.server.requests.filter((r) => r.init.method === 'POST').length, 1);
+  },
+);
+
+test(
+  'PR54 same-session verification retains blocked intent and reconciles props after discard',
+  { timeout: 30_000 },
+  async (t) => {
+    const b = await hookFixture(t);
+    const parent = b.source();
+    await act(async () => b.hook.state.stage({ type: 'edit-sprint', fields }));
+    const draft = b.hook.state.draft;
+    await b.render(parent, { sprintId: null, taskId: null });
+    await b.render({ ...parent, status: 'loading', session: null });
+    assert.equal(b.hook.state.status, 'verifying');
+    assert.equal(b.hook.state.draft, null);
+    await b.render(parent);
+    assert.deepEqual(b.hook.state.draft, draft);
+    assert.equal(b.hook.state.selection.sprintId, 's');
+    assert.equal(b.hook.state.needsReview, true);
+    await act(async () => b.hook.state.discardDraft());
+    assert.deepEqual(b.hook.state.selection, { sprintId: null, taskId: null, targetId: null });
+    assert.equal(b.server.requests.filter((r) => r.init.method === 'POST').length, 0);
+  },
+);
+
 for (const strict of [false, true]) {
   test(
     `sprint hook uses real transports/controller, shared invalidation and confirmed parent refresh; StrictMode=${strict}`,

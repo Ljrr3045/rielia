@@ -1,5 +1,31 @@
 # Delivery progress and decisions
 
+## 2026-11-20 PR54 round 1 correction — IN PROGRESS, DRAFT
+
+Native [Kilo136657775593](https://github.com/Ljrr3045/rielia/runs/136657775593)
+completed SUCCESS on `957de8c`, reporting one warning/one suggestion across
+20 files with a COMMENTED formal review 6001405118. The coordinator
+[accepted both](https://github.com/Ljrr3045/rielia/pull/54#issuecomment-7054425637)
+and returned PR54 to Draft after completion. No formal APPROVED, merge or T11
+acceptance is implied. Active-turn SOL xhigh and auto_review/on-request/
+workspace-write were independently reverified before task execution.
+
+The [correction guide](sprint-client.md#pr54-round-1-correction--2026-11-20)
+preserves safe cleared signed-out status after sprint401 and reconciles latest
+selection props when matching-context draft/pending/unknown protection clears.
+The original hook fails nine of ten added real-hook schedules; all 20 cases
+pass after correction, including the ten retained controls. Unknown retries
+retain exact body/key; no automatic mutation, draft loss, UI or backend/tool
+expansion occurs. Standard checks pass on the supported unchanged Next-notice retry, with final
+affected lint/typecheck and all 20 hooks passing. Both high audits pass with the
+retained moderate/low debt. Web measurement passes 307 cases and proposes only
+current web `e311dac0` from `da5d187c`; composed639-case reports improve/retain
+all existing counts/ratios with no covered-unit loss on unchanged maps. Exact
+coordinator approval, normal complete report/gate replay, infrastructure/artifacts
+and new-head review evidence remain pending. The old
+proposal/archive and seven unaffected baselines remain exact; no baseline write
+is authorized by the old approval. T11.4b/T11.5 and full T11 remain open.
+
 ## 2026-11-20 T11.3 ACCEPTED; T11.4a client logic — DRAFT PR54
 
 T11.3 was subsequently ACCEPTED in

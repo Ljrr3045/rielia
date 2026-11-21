@@ -260,3 +260,105 @@ baselines and all 16 reproduced reports remain exactly bound to the approved
 checkpoint. Prose/handoff/whitespace and mandatory hooks cover the update; no
 unchanged build/unit/PG/runtime phase repeats. Current-head CI/native feedback
 and coordinator acceptance remain pending; T11.4b/T11.5 and full T11 remain open.
+
+
+## PR54 round 1 correction — 2026-11-20
+
+Native [Kilo check 136657775593](https://github.com/Ljrr3045/rielia/runs/136657775593)
+from App2193792 completed SUCCESS on `957de8c6ea842ef4ff7096b650f106990b39b592`,
+covering 20 files with one warning and one suggestion. Formal review 6001405118
+is COMMENTED, not APPROVED. The coordinator
+[accepted both findings](https://github.com/Ljrr3045/rielia/pull/54#issuecomment-7054425637)
+and returned the same PR54 to Draft after the completed review. Earlier
+publication/validation records remain source-qualified historical evidence;
+that old-head successful check does not accept this correction or full T11.
+
+| Finding | Corrected behavior and regression proof |
+| --- | --- |
+| [Cleared signed-out state masked as inactive](https://github.com/Ljrr3045/rielia/pull/54#discussion_r4649380503) | When a sprint read or write returns 401, the hook exposes the controller's cleared `signed-out` state even while the parent session is locally valid. A null controller context has no private data left to mask. Non-null contexts still require exact user/session/workspace/project identity before rendering; temporary verification and expiry semantics remain. |
+| [Refused prop navigation dropped](https://github.com/Ljrr3045/rielia/pull/54#discussion_r4649380508) | The latest selection props remain a pending read/navigation intent. The hook reconciles them once the matching controller is ready and draft/pending/recovery guards clear. A changed prop cannot discard a draft, clear an unknown command/key, or submit a write. No extra queue/store is introduced. |
+
+For 401 recovery, presentation can now render the explicit signed-out condition
+and use its existing parent identity/reauthentication flow. An unchanged locally
+valid parent is not sufficient to silently reauthorize the denied sprint owner:
+blind controller refresh stays signed-out. A fresh parent verification cycle or
+new authenticated context initializes authorized sprint reads again, with the
+old draft/key/data already cleared.403 remains forbidden with no private content;
+the existing explicit access-refresh behavior is unchanged.
+
+For prop navigation, the latest prop value wins after explicit discard or a
+confirmed write/retry. A definitive failed write retains the editable draft and
+therefore keeps navigation blocked. Unknown recovery keeps its exact original
+body/key and target until explicit retry confirmation or explicit local discard;
+canceling a pending write does not release that protection. Same-session
+verification retains hidden recoverable state until resumed/expired, and a
+different context clears it and rejects old completions. An imperative `select`
+still returns false while protected; declarative prop reconciliation does not
+require presentation to recreate a dropped intent. Unchanged settled dependencies
+do not re-run selection or create a refetch/effect loop.
+
+Ten added real-hook cases reproduce nine failures and one preserved context
+control against the untouched reviewed hook, including both accepted findings.
+After correction all 20 hook cases pass, retaining the original ten. They cover
+read/write 401, explicit 403 access refresh, verified recovery, latest-prop discard, pending success, exact-key
+ambiguous retry, explicit unknown discard, ordinary failed-draft protection,
+obsolete context completion and same-session verification. Finite HTTP/browser
+boundaries exercise real React/controller/transports, without SQL/native UI
+credit. Original/corrected logs live separately under
+`coverage/t11-client-round1-proposal/`; the earlier proposal/archive stays exact.
+
+Status: standard checks pass on the supported Next-notice retry; final affected
+lint/typecheck and all 20 hook cases pass. Exact numerical approval, normal complete
+gate/infrastructure/artifacts and corrective Draft publication remain pending. No baseline is changed before coordinator approval. Only the
+hook, its regression suite and correction documentation change behavior/evidence;
+no UI, backend/contracts, pins, tool migrations or T38 work is included.
+
+
+### Corrective measurement proposal
+
+The final formatted hook test is bound to SHA-256
+`ed51f29d537aba2c3f81fcc03ad0e80abbf8badeb13a2aaba189c874f993f7eb`.
+With the exact reviewed hook in an isolated finite test fixture it reports nine
+expected failures and one passing context control; with the corrective hook it
+passes all 20 retained/new cases. The earlier nine-case log remains a separate
+preliminary witness. No copied controller/policy substitute or new Git worktree
+is used: React/controllers/transports remain real with finite HTTP/browser seams.
+
+Standard `pnpm check` passes after its inherited Next security notice stops the
+first invocation; the failed log is preserved and the unchanged-command retry
+passes without upgrades or suppression. After final guard ordering and the 403
+control, affected frontend typecheck/lint and the complete hook suite pass again.
+Unchanged backend/build phases are not repeated. Both high audits pass, retaining
+root 14 moderate/one low and tools 2 moderate findings; Next still recommends a
+separately approved security upgrade. No PG/runtime repeat is justified by this
+hook-only correction; prior source-qualified proof and new-head CI remain.
+
+The exact proposed current-web baseline is
+`e311dac02f34422ace8ad0bf4c1a1ae80a41b9dcfbc77c8c341e4b3e4bf3857c`, replacing
+`da5d187c9ba70631b9f4ae29180a69862bbde7b59f973448bbd046075866db73` only after
+coordinator approval. The separate packet at `coverage/t11-client-round1-proposal/`
+has proposal hash
+`1aebdfb08dccc1aa26cffcb0cce1e5e15863ed3711e07f203344f7a30031ddfb`.
+It retains all eight baseline pairs, all 16 reports, 203 physical fingerprints and
+the unchanged synthetic compiler witness, exact file deltas and raw-map/hit
+comparison. No tracked baseline has been changed; all 45 historical proposal files
+and seven unaffected baselines remain byte-exact.
+
+Final web measurement passes 307 cases over the same 74 inputs. Composed with
+unchanged fingerprint-verified API290/contracts23/prototype19 reports, this is
+639 measured cases, not normal-gate acceptance. Web L/S/F/B moves from
+2867/4339,3157/4928,641/1174,3535/5906 to
+**2869/4341,3159/4929,641/1174,3545/5915**, and proposed floors are
+**6609/6409/5459/5993** versus 6607/6406/5459/5985. Every existing file retains/
+improves exact covered counts, ratios and uncovered counts; no new uncovered
+units are introduced. Aggregate uncovered S/B decrease 1/1, L/F stay equal.
+
+All 73 unchanged web source maps preserve 7210 covered S/F/B units and add two;
+66 hit vectors remain exact. Changed-hook maps are retained without inventing
+old/new semantic unit identity across new guards/locations. All 52 API, seven
+contracts and 16 prototype maps/hits stay exact. Nullable columns are
+web 823/32322 (previously 823/32296), API 199/12286, contracts 24/2780 and
+prototype 133/6372; missing precision is not fabricated. Original source/test
+inventories, provider/compiler/config/tool identities, unexecuted inputs and N/A
+owners remain protected. After exact approval the complete normal639-case gate
+must reproduce all 16 reports, then pass infrastructure/artifacts before push.

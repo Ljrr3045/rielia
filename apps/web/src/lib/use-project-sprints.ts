@@ -50,6 +50,16 @@ export function useProjectSprints(
   const verifying =
     !session && allowed && (project.status === 'loading' || project.status === 'error');
   const identity = context ? JSON.stringify([userId, sessionId, workspaceId, projectId]) : null;
+  const currentIdentity = state.context
+    ? JSON.stringify([
+        state.context.userId,
+        state.context.sessionId,
+        state.context.workspaceId,
+        state.context.projectId,
+      ])
+    : null;
+  const selectionBlocked =
+    state.mutation.status === 'pending' || state.recovery !== null || state.draft !== null;
   useEffect(() => () => controller.dispose(), [controller]);
   useEffect(() => {
     if (denied) {
@@ -77,9 +87,19 @@ export function useProjectSprints(
     projectId,
   ]);
   useEffect(() => {
-    if (!context) return;
+    // Keep the latest prop intent pending until the same-context guards clear.
+    if (!context || identity !== currentIdentity || state.status !== 'ready' || selectionBlocked)
+      return;
     void controller.select(selection.sprintId, selection.taskId);
-  }, [controller, identity, selection.sprintId, selection.taskId]);
+  }, [
+    controller,
+    identity,
+    currentIdentity,
+    state.status,
+    selection.sprintId,
+    selection.taskId,
+    selectionBlocked,
+  ]);
   useEffect(() => {
     if (!context) return;
     let active = true;
@@ -107,16 +127,9 @@ export function useProjectSprints(
     if (state.mutation.status === 'confirmed') void latestProject.current.refresh();
   }, [state.mutation]);
   // Effects run after render: never expose a former execution context during that interval.
-  const currentIdentity = state.context
-    ? JSON.stringify([
-        state.context.userId,
-        state.context.sessionId,
-        state.context.workspaceId,
-        state.context.projectId,
-      ])
-    : null;
+  // A cleared controller contains no private state; preserve its denial status.
   const visible =
-    identity === currentIdentity
+    !state.context || identity === currentIdentity
       ? state
       : {
           ...emptySprintState(),
