@@ -4,6 +4,14 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Consolidate [the sprint/task cross-document guard boundary](docs/development/sprint-presentation.md#sol-cross-document-guard-boundary-and-consolidation--2026-11-21):
+  trusted activated production unloads are canceled for both changed drafts, but
+  Orca Back still exits and exposes no controllable confirmation. Canonical data
+  stays unchanged; native Cancel/Leave remains unverified for coordinator
+  disposition. Preserve the 722-case source/coverage binding, accepted bounded
+  corrected focus/multipage evidence and explicit native/unit debt; no source or
+  baseline change, PR or full T11 acceptance.
+
 - Record corrected-head [native sprint QA](docs/development/sprint-presentation.md#astra-corrected-head-native-matrix--2026-11-21):
   fixed 320 ES Escape return, persisted forms/task planning, real 103-participant
   closure and multipage/frozen results, bounded guards/recovery and server

@@ -1,5 +1,27 @@
 # Delivery progress and decisions
 
+## 2026-11-21 T11.4b boundary consolidation — PRODUCTION CANCELLATION OBSERVED; NATIVE CONFIRMATION OPEN
+
+SOL imported the coordinator-authorized docs-only `15b2ccd` after accepted clean
+`1dba13af`; Astra's corrected focus and representative 103-participant/
+second-page destination/history/outcome evidence are accepted as bounded QA.
+One fresh minimal fixture isolated the remaining full-document Back boundary.
+Both changed task/sprint drafts had trusted input, actual Chromium activation
+and a trusted unload already canceled by production. Orca 1.4.261 nevertheless
+crossed documents; documented dialog control reported `browser_no_dialog`.
+Raw memory drafts were lost in this host schedule. Native Cancel/explicit Leave
+remain unverified and require coordinator disposition; no missing web handler or
+justified source fix was isolated. No automatic persisted write occurred.
+
+The [boundary receipt](sprint-presentation.md#sol-cross-document-guard-boundary-and-consolidation--2026-11-21)
+records exact reproduction, source/unit limits and cleanup. All 237 source/test/
+tool, 180 built and eight baseline hashes remain unchanged; the prior 722-case/
+16-report binding is preserved without repeating heavy schedules. Sixteen
+unit-unexecuted composition functions and representative matrix/device/AT/zoom
+limits remain open. An English Draft PR body is prepared locally for the
+coordinator's concrete publication decision. No publication/review/merge occurs;
+T11.4b/T11.5/full T11 and this assignment stay open before T38.
+
 ## 2026-11-21 T11.4b Astra corrected native matrix — BOUNDED RECEIPT, REVIEW OPEN
 
 Fresh owned production fixture at frozen `1dba13af` passes the exact 320 ES dark

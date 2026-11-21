@@ -1,8 +1,9 @@
 # T11.4b sprint presentation checkpoint
 
-Status: **IN PROGRESS, corrected-head native focus and bounded integrated/
-multipage QA recorded; coordinator review and remaining native-boundary/
-accessibility acceptance open; no PR or product acceptance**.
+Status: **IN PROGRESS, integrated implementation and bounded corrected native/
+multipage evidence recorded; production cross-document cancellation observed,
+but browser confirmation remains an unresolved host boundary; coordinator Draft
+publication decision and T11.5/full T11 acceptance remain open**.
 Base: accepted T11.4a merge `a2de3bd79596cb83b79287f105f60fedfb35bea9`.
 The [client guide](sprint-client.md#t114a-acceptance--2026-11-20-caracas--november-21-utc)
 records PR54 acceptance and its review/hash limits. T11.5 and full T11 remain
@@ -889,3 +890,81 @@ Only the pre-existing Codex listener remains. No unrelated process, checkout or
 historical archive is altered. The assignment stays at coordinator review:
 no push/PR/Ready/Kilo/merge/worker_done, and T11.4b/T11.5/full T11 remain open
 before planned T38.
+
+## SOL cross-document guard boundary and consolidation — 2026-11-21
+
+The coordinator accepted `1dba13af` as a clean corrected checkpoint for serial
+Astra QA, then accepted the corrected focus and representative integrated/
+multipage evidence as bounded evidence, not product acceptance. SOL imported
+Astra's docs-only `15b2ccdab9222182ff890589e3b1f22629168456` with the authorized
+fast-forward. This resumed turn verified actual `gpt-6.1-sol` / `xhigh`, automatic
+review/on-request/workspace-write before execution. No source, test, baseline,
+package, provider or global configuration change is delivered here.
+
+The only new native schedule isolates the unresolved cross-document Back case.
+A receipt recorded all **237 source/test/tool**, **180 built API/contracts** and
+**eight baseline** hashes before one minimal owned project-task-qa fixture.
+One planned sprint was arranged through the accepted public transport; the
+fixture's existing task was reused. No bulk pagination or earlier failure schedule
+was repeated. The initial fixture Next child exited after readiness; its live
+Nest/PostgreSQL fixture was retained, the vacant original web port was verified,
+and one owned replacement Next listener reused that origin. Its existing Next
+security upgrade reminder remains outside this no-upgrade checkpoint.
+
+For each owner, normal full-document navigation first established a known
+same-origin `/?qaBefore=sprint` or `/?qaBefore=task` history entry, followed by the
+actual production sprint/task URL. Supported Orca pointer and keyboard actions
+reported **trusted events** and Chromium `navigator.userActivation.hasBeenActive`
+**true**. A passive QA observer, installed after the existing production listener,
+recorded the actual unload event; it never canceled, replaced or dispatched one.
+Changed raw sprint name and task title values were visible before Back. The
+observer's sessionStorage held only fictional public QA values and was cleared.
+Initial focus/verification replacement interrupted early sprint click/typing samples;
+those attempts are retained and are not counted as changed-draft evidence. An
+explicit rendered review followed by current enabled controls and native typing
+produced the recorded changed value without bypassing a disabled control.
+
+In **both cases**, the actual `beforeunload` event was `isTrusted: true`, the
+production handler had already set `defaultPrevented: true` and empty
+`returnValue`, and sticky user activation was present. Nevertheless, **Orca Back
+crossed the full-document entry and the raw in-memory draft document was lost**.
+The documented dialog capability was discovered once; `dialog dismiss` returned
+`browser_no_dialog` / no JavaScript dialog open. Orca 1.4.261 on macOS, runtime
+`b59280dd-959c-49fd-922d-756c345ac66d`, supplied no controllable confirmation for
+this observed schedule. This is a concrete unresolved browser-host boundary,
+not a passing Cancel/Leave flow or proof of missing web guard installation. No
+web source fix was inferred from an event that production correctly canceled;
+coordinator disposition or a supported native-browser/human confirmation check
+is still required. Native Cancel retaining document/draft and explicit native
+Leave exiting remain **unverified**. No safety prompt was disabled, fake trusted
+flag supplied, unload handler overridden or synthetic event counted as native.
+
+The unchanged hook reads `navigationProtected()` at unload; that method includes
+task pending/draft/retry and the registered sprint guard. Existing source-bound
+real-hook/component tests cover raw close-review unload cancellation before/
+after discard, same-document Back/Stay and protected links, plus draft/pending/
+unknown transitions. Their DOM/browser doubles are distinct from native browser
+confirmation. Same-document custom navigation remains covered by the earlier
+qualified SOL/Astra receipts; it was not mislabeled as cross-document proof.
+Pending/unknown schedules were not repeated because they do not isolate the
+unavailable dialog. Real public readback after both Back actions confirms task
+and sprint remain version 1 with unchanged canonical fields; no Save was invoked.
+
+After cleanup all 237 source/test/tool and 180 built hashes, all eight baselines
+and all 16 normal report hashes remain exact. The accepted **722-case** normal
+binding/digest `7d1c75a2`, 20 infrastructure cases, 17 safe artifacts and standard
+checks are reused with their source limits, not rerun or inflated by manual QA.
+The **16 unit-unexecuted composition functions**, null-column limits, representative
+rather than exhaustive responsive matrix, device/AT/zoom and real-user/provider/
+staging limits remain explicit. Historical evidence is unchanged. This receipt
+closes neither T11.4b/T11.5 nor full T11; T38 remains after full T11.
+
+Ignored evidence is under `apps/web/coverage/t11-cross-document-guard/`: before/
+after bindings, all browser attempts, passive events, canonical readback,
+source/unit witnesses, cleanup, manifest and a concrete English Draft PR body
+for coordinator review. Owned browser, replacement Next, fixture, labeled
+PostgreSQL container/volume and private temporary state are removed; generated
+AGENTS/next-env changes were restored and stopped-server dev types removed.
+Only the pre-existing Codex listener remains. No credentials/private fixture
+state were printed or archived. No push/PR/Ready/Kilo/merge/worker_done occurs;
+the assignment remains ACTIVE at the coordinator's publication/boundary decision.
