@@ -1,5 +1,23 @@
 # Delivery progress and decisions
 
+## 2026-11-21 T11.4b Astra corrected native matrix — BOUNDED RECEIPT, REVIEW OPEN
+
+Fresh owned production fixture at frozen `1dba13af` passes the exact 320 ES dark
+Escape-to-replacement-action repro and settled sibling cancellation paths. The
+[native receipt](sprint-presentation.md#astra-corrected-head-native-matrix--2026-11-21)
+records persisted forms/estimates/participation, 103-participant server-reviewed
+closure, real destination/scope/history/outcome paging, frozen readback, both-owner
+draft guards, pending/unknown recovery and canonical read-only/denied/archive/
+Kanban restrictions. Nine opened captures cover representative four widths,
+ES/EN/themes/motion; physical device/AT/zoom and cross-document/beforeunload
+remain unverified. Prior SOL 409/401/latest-intent evidence retains its limits.
+
+No source/test/baseline changes; 232 selected source/test/tool and 180 built-runtime
+hashes remain exact. All owned resources are stopped and generated files restored.
+Prior 722 normal gates and 16 unexecuted composition functions are unchanged; manual
+QA adds no coverage hits. Coordinator review/disposition remains open; no PR/push/
+review/merge/worker_done or T11.4b/T11.5/full T11 acceptance before T38.
+
 ## 2026-11-21 T11.4b focus correction — APPROVED NORMAL LOCAL GATES; NATIVE RECHECK OPEN
 
 Coordinator-approved web-only `04977cb4` → `f1679d66` is bound to clean functional
@@ -59,7 +77,7 @@ QA does not close the 21 unexecuted callbacks. T11.4b/T11.5/full T11 stay open.
 
 SOL alone exercised the production page at frozen `a00fd716`, recording actual
 head/runtime and all237 fingerprints before native actions and rechecking them
-after cleanup. Real Next/Nest/PostgreSQL journeys cover distinct-session409 and
+after cleanup. Real Next/Nest/PostgreSQL journeys cover distinct-session 409 and
 rendered compare/rebase/separate Save, actual401/private DOM fencing and explicit
 parent reverify, real commit plus controlled response timeout with exact-key/body
 rendered retry, unknown local discard, explicit start/close reviewed binding,

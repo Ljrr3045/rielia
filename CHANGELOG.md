@@ -4,6 +4,13 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Record corrected-head [native sprint QA](docs/development/sprint-presentation.md#astra-corrected-head-native-matrix--2026-11-21):
+  fixed 320 ES Escape return, persisted forms/task planning, real 103-participant
+  closure and multipage/frozen results, bounded guards/recovery and server
+  capability states. Owned resources are removed; source/tests/baselines remain
+  unchanged. Physical-device/AT/zoom and cross-document navigation checks remain
+  open for coordinator disposition; no full T11 acceptance or publication.
+
 - Correct [sprint logical focus return](docs/development/sprint-presentation.md#sol-scoped-focus-return-correction--2026-11-21)
   after staging recreates its invoking action. Scope return to the current
   verified context and authorized visible control, with safe feature-heading
@@ -12,8 +19,8 @@ This records repository changes. No application version has been released.
   added, including the old six-failure witness. Coordinator-approved web-only
   `f1679d66` passes 722 normal cases with exact 16-report replay; standard,
   infrastructure and artifacts pass. Sixteen composition functions remain
-  unexecuted, and corrected native QA is pending; no visual redesign or full T11
-  acceptance.
+  unexecuted; corrected native evidence is recorded above with remaining limits.
+  No visual redesign or full T11 acceptance.
 
 - Record the frozen-head [T11.4b native QA focus finding](docs/development/sprint-presentation.md#astra-frozen-head-native-qa-finding--2026-11-21):
   real settings/create/readback passed bounded checks, but canceling sprint

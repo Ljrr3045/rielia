@@ -1,8 +1,8 @@
 # T11.4b sprint presentation checkpoint
 
-Status: **IN PROGRESS, focus-return correction implemented and approved normal/
-final local gates complete; Astra corrected-head native reproduction and unfinished
-responsive/accessibility/multipage QA remain open; no PR or product acceptance**.
+Status: **IN PROGRESS, corrected-head native focus and bounded integrated/
+multipage QA recorded; coordinator review and remaining native-boundary/
+accessibility acceptance open; no PR or product acceptance**.
 Base: accepted T11.4a merge `a2de3bd79596cb83b79287f105f60fedfb35bea9`.
 The [client guide](sprint-client.md#t114a-acceptance--2026-11-20-caracas--november-21-utc)
 records PR54 acceptance and its review/hash limits. T11.5 and full T11 remain
@@ -812,3 +812,80 @@ zoom/AT checks honestly, keep functional findings with SOL and presentation with
 Astra, stop owned resources and preserve exact-head evidence. Only the coordinator
 controls the single completed Draft PR. No push/PR/Ready/Kilo/merge/worker_done
 or native/product/full T11 acceptance occurs in this local-gate handoff.
+
+
+## Astra corrected-head native matrix — 2026-11-21
+
+The coordinator-authorized clean fast-forward imported frozen `1dba13af48963a40904751f27b57c63933e093d7`.
+Actual Astra high, automatic review/on-request/workspace-write and the three
+explicit checkout-local skills were verified before a fresh owned fixture.
+Production Next/Nest/PostgreSQL ran without source, test, baseline or package
+changes. Existing built API/contracts bytes were fingerprinted and reused; no
+heavy gate was repeated. This receipt supplements the earlier SOL functional
+schedules and preserves their source/simulation limits.
+
+The exact no-resize **320 ES dark metadata → native Escape** repro now focuses
+the current enabled Edit sprint after staging disconnects its original node.
+Settled sibling checks return create/settings/start/close cancellation and inline
+estimate/participation cancel to their current actions; start Shift+Tab stays in
+the dialog. Successful closure uses a feature-heading fallback. Stale native refs
+and incidental transient BODY samples were not counted as proof; current-node
+repetitions and focus observations are preserved.
+
+| Bounded production journey | Observed result |
+| --- | --- |
+| Forms and task planning | Empty-create validation and invalid scale feedback; invalid scale receives focus. Explicit settings save, metadata goal edit and one native form-created sprint persist. Estimate saves preserve zero versus null; canonical off-scale 8 remains selectable. Explicit participation assigns the same canonical task, without duplication. |
+| Real pagination | Public setup creates 100 destinations and 102 source participations; UI adds the original task, giving 103 participants. Sprint selector 100/101→101/101, scope 100/102→102/102, history 100/103→103/103; close destination second page exposes destination 006, preview 100→103, frozen outcomes 100→103 and final history 100→107. No reduced page size. |
+| Start and close | Complete server totals show 1 done/1 canceled/101 pending, 8 points and 102 unestimated. Explicit start persists. Raw destination changes do not submit or replace reviewed binding; explicit preview/confirm carries 101 pending tasks to reviewed destination 006. Closed source is version 107. |
+| Frozen results | Public later task estimate 8→0 leaves full closure and 103 outcomes byte-identical; original frozen estimate remains 8. Closed mutation actions are absent. |
+| Guards and recovery | Sprint Back/Stay preserves raw draft without canonical save. Separate task-owner draft blocks detail navigation; explicit discard continues without saving title. A held real 201 response shows pending/no saved claim and no navigation discard; Back resumes only after confirmation. Stop waiting on another held response exposes unknown recovery; explicit retry confirms the original operation. |
+| Nonideal/server capabilities | One disclosed 503 read produces loading/error and rendered retry recovers. Actual viewer, private denial, signed-out recovery, archived planning, Kanban and one-active-sprint restrictions render according to canonical capabilities. Former task/sprint content is absent on the observed denied/signed-out routes. |
+
+API setup of bulk data is separate from native creation/edits. Controlled HTTP
+response delays and one 503 are explicit boundary schedules, not real outages.
+Interaction uses Orca native keyboard/Back/type plus disclosed DOM activation of
+visible enabled controls/native field setters; no disabled gate or private-data
+fence was bypassed. Automatic reverification sometimes required explicit reload/
+review; it never justified automatic submit. Long lists can show authorized ID
+fallbacks when their corresponding label has not been paged in.
+
+Nine opened captures cover representative 320/390/1280/1440 actual layouts,
+ES/EN, light/dark, long text and IDs, close/frozen summaries, viewer and guarded/
+unknown states. Measured page widths show no horizontal overflow. Mobile coarse
+input and reduced-motion preferences were enabled. This is not a full viewport ×
+locale × theme cross-product, physical touch/gesture, OS zoom or assistive-
+technology certification; the development-only Next insight badge appears in
+captures. No new presentation redesign was necessary or delivered.
+
+### Evidence limits and coordinator decision
+
+No confirmed new source defect was isolated in this pass. A second Back after
+Stay crossed a prior full-document history entry and did not yield a usable guard
+receipt; earlier DOM-only navigation lacked Chromium user activation for
+beforeunload. **Cross-document/beforeunload protection remains unverified**, not a
+passing journey; coordinator/SOL must disposition that native boundary. Latest-
+intent multi-request, modified/external-link, distinct-session 409 comparison,
+exact idempotency-key identity and same-document 401 private fences retain the
+prior SOL schedule evidence, not a fresh complete replay here. Physical-device,
+AT/zoom and real-user/provider/staging checks remain open. Screenshots do not
+certify those flows, and this receipt does not grant full accessibility or T11
+acceptance.
+
+Ignored evidence is in `apps/web/coverage/t11-native-corrected/`: REPORT,
+pre/post fingerprints, browser actions (including failed attempts), API setup,
+immutable readback, nine opened captures and cleanup receipt. All 232 selected
+source/test/tool and 180 built-runtime fingerprints remain exact; all eight
+baselines are unchanged, including approved current web `f1679d66`. The earlier
+722-case normal/20-case infrastructure/17-artifact/standard receipts remain
+source-qualified; manual QA adds no unit hits and does not close the **16
+unexecuted composition functions**. Documentation validation passes: immutable handoff47 files/30 assets and947
+local links, adopted formatting, and whitespace checks. Remote URLs and heading
+fragments are outside the verifier.
+
+Owned Next/API/session-switch listeners, fixture process, labeled PostgreSQL
+container/volume and private session file are removed. The browser/fixture shell
+are closed; generated next-env is restored and stopped-server dev types removed.
+Only the pre-existing Codex listener remains. No unrelated process, checkout or
+historical archive is altered. The assignment stays at coordinator review:
+no push/PR/Ready/Kilo/merge/worker_done, and T11.4b/T11.5/full T11 remain open
+before planned T38.
