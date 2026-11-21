@@ -1,0 +1,30 @@
+CHANGELOG.md
+  s_c03582dc7b40ac::t_c3b707151b4e7b 14-15
+  s_c03582dc7b40ac::t_4536ec9aea2b07 13,16-17
+docs/development/sprint-client.md
+  s_c03582dc7b40ac::t_4536ec9aea2b07 310,319-321,368-391,393-400
+  s_c03582dc7b40ac::t_c3b707151b4e7b 311-312,392
+docs/development/unit-coverage.md
+  s_c03582dc7b40ac::t_4536ec9aea2b07 5,1026-1028,1071-1090
+scripts/unit/baselines/web.json
+  s_c03582dc7b40ac::t_9cf4b19b5b6de6 1121,1133,1211-1212,1219-1220,1223-1224,1337,1339-1340,1428,1460,1481-1482,1489-1490,1493-1494
+docs/development/progress.md
+  s_c03582dc7b40ac::t_c3b707151b4e7b 25-29
+  s_c03582dc7b40ac::t_4536ec9aea2b07 23-24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4fa0e0346d2260a7a87d31cd6685456b27146061",
+  "prompts": {},
+  "sessions": {
+    "s_c03582dc7b40ac": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1fb4d-67c5-7622-a43c-007800e7be5e",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
