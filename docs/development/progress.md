@@ -1,5 +1,19 @@
 # Delivery progress and decisions
 
+## 2026-11-21 T11.4b resumed native check — CONTROL PERMISSION BLOCKER; GATE OPEN
+
+At published clean `bd011271`, Brave window inventory is available with zero
+windows. Quiet programmatic creation preflight returns `-1744` (user consent
+would be required, no prompt requested); one supported background private-window
+shortcut returns `permission_denied` for Orca Computer Use Accessibility.
+Post-inventory remains zero. No fixture/window/session, personal-data or desktop
+permission/configuration change occurs. The [bounded receipt](sprint-presentation.md#resumed-external-native-setup-control-permissions-unavailable--2026-11-21)
+records this actual control blocker; Cancel/Leave stays OWNED OPEN ACCEPTANCE
+GATE, not an app failure or native pass. Source/built/baseline/report hashes and
+prior current-head CI success remain unchanged/qualified. Only local docs/body
+are prepared for coordinator disposition; no remote write or heavy replay.
+T11.4b/T11.5/full T11 remain open before T38; assignment ACTIVE.
+
 ## 2026-11-21 T11.4b [Draft PR55](https://github.com/Ljrr3045/rielia/pull/55) — LOCAL URL RECEIPT; NATIVE GATE OPEN
 
 The authorized coordinator published initial `47da8cec` through supported

@@ -1,8 +1,10 @@
 # T11.4b sprint presentation checkpoint
 
 Status: **IMPLEMENTED integrated T11.4b batch in [Draft PR55](https://github.com/Ljrr3045/rielia/pull/55),
-OPEN/isDraft verified at initial head `47da8cec`. Native external Cancel/Leave
-remains an OWNED OPEN ACCEPTANCE GATE (last preflight `screen_locked`). No Ready,
+OPEN/isDraft verified at published head `bd011271`. Native external Cancel/Leave
+remains an OWNED OPEN ACCEPTANCE GATE. Resumed inventory is available, but
+background control needs Accessibility and programmatic creation needs consent.
+No Ready,
 Kilo request, T11.4b/T11.5 or full T11 acceptance; coordinator owns remote writes**.
 Base: accepted T11.4a merge `a2de3bd79596cb83b79287f105f60fedfb35bea9`.
 The [client guide](sprint-client.md#t114a-acceptance--2026-11-20-caracas--november-21-utc)
@@ -1108,3 +1110,45 @@ unit-unexecuted composition functions, null columns, representative matrix/
 device/AT/zoom and real-user/provider/staging limits remain explicit. Draft
 publication closes neither T11.4b/T11.5 nor full T11; T38 follows full T11.
 No Ready/Kilo/merge/deploy/worker_done; assignment ACTIVE.
+
+## Resumed external native setup: control permissions unavailable — 2026-11-21
+
+After user `continua`, the coordinator authorized only the narrow external
+Cancel/Leave check at clean published `bd011271`. SOL verified actual `gpt-6.1-sol` / `xhigh`,
+automatic review/on-request/workspace-write, the explicit computer-use skill and
+version-matched guide, and unchanged 237 source/test/tool, 180 built, eight
+baseline and 16 report hashes before any window action. Read-only Brave inventory
+now succeeds, with zero windows and its existing process still running; this
+changes the earlier `screen_locked` availability result without proving control.
+
+The supported launcher leaves an already-running app alone. Brave's installed
+scripting dictionary supports incognito window creation and visibility. Before
+sending any creation event, a public macOS automation preflight for `core/crel`,
+with **`askUserIfNeeded=false`**, returns **`-1744`,
+`errAEEventWouldRequireUserConsent`** for this worker process. It sends no
+AppleEvent and requests no prompt. One supported background Orca shortcut for a
+new private window then returns **`permission_denied`: Accessibility permission is
+required for Orca Computer Use**. No foreground/restore, setting change, consent
+request, alternate control provider or repeat of the failed action follows.
+Post-action read-only inventory still has zero windows; the existing Brave
+process is untouched. No personal window/tab/profile/history/cookie content is
+read or changed, and no fixture/session/database/private URL is created.
+
+This is an actual setup/control blocker, not a web defect or a passing native
+flow. Activation, browser Back/prompt/Cancel/Leave and canonical readback were
+not reached in this attempt. The earlier trusted production cancellation and
+embedded raw-draft loss retain their original source limits. Native external
+Cancel/Leave remains an **OWNED OPEN ACCEPTANCE GATE**; the coordinator must
+disposition usable background control under the explicit no-permission-change/
+no-foreground scope. No browser prompt, beforeunload or trusted-event behavior
+was overridden or simulated. Zero owned resources require cleanup.
+
+Ignored evidence is under `apps/web/coverage/t11-external-cancel-leave-resume/`:
+source/runtime receipt, sanitized inventories, supported launcher/dictionary and
+non-prompting automation evidence, exact failed shortcut, cleanup, manifest and
+updated local English PR body. Only bounded live docs change; prior CI success
+on `bd011271`, numerical/source/artifact bindings and historical archives remain
+qualified and unchanged. No full suite/build/722-case or bulk-data replay, source/
+test/baseline patch or remote mutation occurs. T11.4b/T11.5/full T11 and 16
+unit-unexecuted functions/manual limits remain open before T38. Root owns remote
+publication; assignment ACTIVE, no Ready/Kilo/merge/deploy/worker_done.

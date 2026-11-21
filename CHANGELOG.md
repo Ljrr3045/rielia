@@ -4,6 +4,12 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Record [the resumed external native setup blocker](docs/development/sprint-presentation.md#resumed-external-native-setup-control-permissions-unavailable--2026-11-21):
+  inventory now succeeds, but background control lacks Accessibility and quiet
+  programmatic creation would require consent. No test window/fixture is created,
+  no permission or personal-data change occurs, and native Cancel/Leave remains
+  an owned open acceptance gate for coordinator disposition.
+
 - Record implemented sprint planning/task participation/start/close/history
   workflows in [Draft PR55](https://github.com/Ljrr3045/rielia/pull/55), initially
   published by the authorized coordinator at `47da8cec`. Capture the real Draft/
