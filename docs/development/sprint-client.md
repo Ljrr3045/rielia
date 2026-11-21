@@ -307,14 +307,17 @@ boundaries exercise real React/controller/transports, without SQL/native UI
 credit. Original/corrected logs live separately under
 `coverage/t11-client-round1-proposal/`; the earlier proposal/archive stays exact.
 
-Status: standard checks pass on the supported Next-notice retry; final affected
-lint/typecheck and all 20 hook cases pass. Exact numerical approval, normal complete
-gate/infrastructure/artifacts and corrective Draft publication remain pending. No baseline is changed before coordinator approval. Only the
+Status: locally verified with exact numerical approval and normal complete
+gate/infrastructure/artifact replay. The correction remains on the same Draft PR54; new-head hosted/native review
+and coordinator acceptance remain pending. No baseline is changed before coordinator approval. Only the
 hook, its regression suite and correction documentation change behavior/evidence;
 no UI, backend/contracts, pins, tool migrations or T38 work is included.
 
 
 ### Corrective measurement proposal
+
+This is the pre-approval snapshot; the exact approval and normal replay below
+govern current numerical status. Candidate logs and hashes remain unchanged.
 
 The final formatted hook test is bound to SHA-256
 `ed51f29d537aba2c3f81fcc03ad0e80abbf8badeb13a2aaba189c874f993f7eb`.
@@ -362,3 +365,36 @@ prototype 133/6372; missing precision is not fabricated. Original source/test
 inventories, provider/compiler/config/tool identities, unexecuted inputs and N/A
 owners remain protected. After exact approval the complete normal639-case gate
 must reproduce all 16 reports, then pass infrastructure/artifacts before push.
+
+
+### Corrective approval and normal replay
+
+The coordinator approved only current `web.json` from
+`da5d187c9ba70631b9f4ae29180a69862bbde7b59f973448bbd046075866db73` to
+`e311dac02f34422ace8ad0bf4c1a1ae80a41b9dcfbc77c8c341e4b3e4bf3857c`, bound to
+checkpoint `038538d4f6bcbef0179b768d6f461621986a7fae` and proposal
+`1aebdfb08dccc1aa26cffcb0cce1e5e15863ed3711e07f203344f7a30031ddfb`.
+Independent review checked all eight baseline pairs/current files, all 16 report
+hashes/sizes, 203 physical fingerprints and unchanged compiler/provider/config/
+tools; every existing file's counts/exact ratios/uncovered counts; all 45
+historical artifacts; exact reviewed/corrective hook, final test/helper bindings;
+the nine-failure/one-control negative witness and 20-case passing hook run; and
+the raw map/hit comparison. The unchanged synthetic compiler witness remains
+explicit. This is exact numerical approval, not PR/source/full T11 acceptance.
+
+Before adoption, all bound fingerprints, eight original baseline hashes and
+historical artifacts were verified again. Only the approved web bytes were
+written; seven other baselines remain byte-exact. No source/test/tool changes
+followed approval. Normal `pnpm unit:coverage -- --built` passes **639/639** without
+skips: API290/web307/contracts23/prototype19. All 16 reports reproduce approved
+candidates byte-for-byte; deterministic count digest is
+`120a967b40d226f5ae0d7db162b879463ef626c13d32a431ada955d7ad32b049`.
+All numerical/per-file/nonregression gates pass. Infrastructure passes 20/20 and
+bounded artifact validation reports all scopes complete.
+
+The prior Next-notice failure remains retained alongside the supported unchanged
+retry success. No local PG/runtime or unchanged heavy build repeats after the
+affected verification. New-head hosted CI/native review and coordinator thread
+disposition/acceptance remain required. The same PR54 stays Draft through the
+corrective commits, base verification and push; no Ready/Kilo/comment/resolution/
+merge or worktree cleanup is performed by this worker. T11.4b/T11.5 remain open.

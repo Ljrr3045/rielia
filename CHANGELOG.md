@@ -10,9 +10,11 @@ This records repository changes. No application version has been released.
   clear. Ten added real-hook schedules reproduce nine original failures;
   all 20 retained/new hook cases pass after correction without changing commands,
   keys, private-context fences or backend policy. Standard checks on the supported
-  Next-notice retry, affected types/lint and audits pass; web measurement passes 307
-  with an exact web-only candidate awaiting approval before normal gate replay.
-  Current-head review gates remain pending on the same Draft PR54; no full T11 acceptance.
+  Next-notice retry, affected types/lint and audits pass. Coordinator-approved
+  exact web-only baseline `e311dac0` passes 639 normal cases with byte-identical
+  replay of all 16 reports; infrastructure/artifacts pass, seven baselines and 45
+  historical artifacts remain exact. Current-head review gates remain pending
+  on the same Draft PR54; no full T11 acceptance.
 
 - Record accepted T11.3 [PR52](https://github.com/Ljrr3045/rielia/pull/52#issuecomment-7052975664),
   reviewed `1256241b`, merged `6507e487`, incremental second native round and

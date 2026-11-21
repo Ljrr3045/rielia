@@ -20,9 +20,13 @@ expansion occurs. Standard checks pass on the supported unchanged Next-notice re
 affected lint/typecheck and all 20 hooks passing. Both high audits pass with the
 retained moderate/low debt. Web measurement passes 307 cases and proposes only
 current web `e311dac0` from `da5d187c`; composed639-case reports improve/retain
-all existing counts/ratios with no covered-unit loss on unchanged maps. Exact
-coordinator approval, normal complete report/gate replay, infrastructure/artifacts
-and new-head review evidence remain pending. The old
+all existing counts/ratios with no covered-unit loss on unchanged maps. The coordinator approved only web `e311dac0`, bound to checkpoint `038538d` and
+proposal `1aebdfb0`, after independent exact fingerprint/metric/raw-map review.
+Normal all-scope gates pass 639 cases and all 16 reports reproduce the approved
+candidates byte-for-byte; infrastructure 20/20 and bounded artifacts pass. Seven
+unaffected baselines and 45 historical artifacts remain exact, with no source/
+test/tool drift after approval. The correction remains on the same Draft PR54; new-head review evidence remains
+pending, and numerical approval is not source/full T11 acceptance. The old
 proposal/archive and seven unaffected baselines remain exact; no baseline write
 is authorized by the old approval. T11.4b/T11.5 and full T11 remain open.
 

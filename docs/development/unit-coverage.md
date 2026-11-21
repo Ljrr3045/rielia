@@ -2,7 +2,7 @@
 
 Current status: bounded T36 and T37 are accepted, including
 [T37 PR49](https://github.com/Ljrr3045/rielia/pull/49#issuecomment-6819605884)
-at merge `20a257c`. The [T11.4a client migration](#t114a-client-coverage--2026-11-20)
+at merge `20a257c`. The [PR54 round 1 correction](#pr54-round-1-corrective-coverage)
 below records the current approved web gate, retaining the other accepted gates. Earlier delivery snapshots
 and their then-pending acceptance statements remain historical evidence.
 
@@ -1023,6 +1023,9 @@ full T11; [the client guide](sprint-client.md) records ownership and later gates
 
 ## PR54 round 1 corrective coverage
 
+The initial paragraphs retain the pre-approval proposal snapshot. The exact
+approval and normal replay below govern current numerical status.
+
 The bounded [client correction](sprint-client.md#pr54-round-1-correction--2026-11-20)
 addresses both coordinator-accepted native round1 findings on `957de8c`.
 Ten added real-hook cases reproduce nine failures on the reviewed hook and
@@ -1065,3 +1068,23 @@ meaningful retained tests are unchanged. Exact coordinator approval must precede
 baseline adoption; then the normal all-scope gate/report reproduction and 20-case
 infrastructure/artifact checks remain required. No numerical or source acceptance
 is inferred from measurement or the old-head successful native check.
+
+
+The coordinator approved **only** current web
+`da5d187c9ba70631b9f4ae29180a69862bbde7b59f973448bbd046075866db73` →
+`e311dac02f34422ace8ad0bf4c1a1ae80a41b9dcfbc77c8c341e4b3e4bf3857c`, bound to
+checkpoint `038538d4f6bcbef0179b768d6f461621986a7fae` and proposal
+`1aebdfb08dccc1aa26cffcb0cce1e5e15863ed3711e07f203344f7a30031ddfb`.
+Independent checks reproduce all eight baseline pairs, 16 report hashes/sizes,
+203 physical fingerprints plus the unchanged synthetic compiler witness,
+existing per-file exact metrics/manifest projection and raw map/hit preservation.
+All 45 historical artifacts and seven unaffected baselines stay byte-exact.
+No source/test/tool drift follows approval; changed-hook semantic identity and
+nullable mapping limitations remain as disclosed, without new uncovered debt.
+
+Normal all-scope gates pass **639/639**, without skips: API290/web307/contracts23/
+prototype19. All 16 reports reproduce approved candidates byte-for-byte; count
+digest is `120a967b40d226f5ae0d7db162b879463ef626c13d32a431ada955d7ad32b049`.
+Twenty infrastructure cases and bounded artifact validation pass. Numerical
+approval does not accept the corrected source or full T11; new-head hosted CI,
+native review and coordinator dispositions remain separate delivery gates.
