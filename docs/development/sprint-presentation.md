@@ -2,7 +2,8 @@
 
 Status: **IN PROGRESS, approved numerical migration and normal replay complete;
 bounded SOL frozen-head recovery/persistence evidence recorded; Astra integrated
-responsive/accessibility QA pending; no PR or product acceptance**.
+responsive/accessibility QA stopped at a reproduced focus-return finding;
+no PR or product acceptance**.
 Base: accepted T11.4a merge `a2de3bd79596cb83b79287f105f60fedfb35bea9`.
 The [client guide](sprint-client.md#t114a-acceptance--2026-11-20-caracas--november-21-utc)
 records PR54 acceptance and its review/hash limits. T11.5 and full T11 remain
@@ -578,7 +579,7 @@ private state file, exact labeled container/volume and app listeners are removed
 Only stopped-server generated AGENTS/next-env additions/dev route types were
 restored/removed. The existing Codex listener and all foreign resources remain.
 
-The approved numerical source/baseline binding and prior700-case exact16-report
+The approved numerical source/baseline binding and prior 700-case exact16-report
 normal replay remain unchanged. The **21 callback functions unexecuted in unit
 measurement remain explicit debt**; manually exercising some controls does not
 change those counters or prove all rendered paging/cancel/selection paths.
@@ -591,3 +592,71 @@ zoom, screen-reader and unavailable checks remain explicit. This bounded SOL
 evidence does not accept the source/product/privacy/persistence/accessibility as
 a whole, T11.4b, T11.5 or full T11. The coordinator controls Astra's next import
 and the single completed Draft PR; no push/PR/Ready/Kilo/merge occurred here.
+
+
+## Astra frozen-head native QA finding — 2026-11-21
+
+The coordinator authorized a fast-forward to clean `436c4837135a7535ffcc2fa3dbb9bc61f0ab00b2`.
+The actual resumed turn verified `gpt-6-astra` / `high`, automatic approval review,
+on-request/workspace-write and the three explicit checkout-local skill paths.
+Before any fixture/browser action, this checkout recorded 232 source/test/tool
+fingerprints and runtime identity. The missing API runtime required one local
+generate/TypeScript build; 180 API/contracts built files were then fingerprinted.
+The effective pnpm runtime was Node 24.22.1/pnpm 12.15.0; shell Node 26.12.1 was
+recorded separately and was not used to run the fixture. No heavy suite was
+repeated, source patched or baseline changed.
+
+One fresh owned fixture served the real production page through Next/Nest and
+PostgreSQL. Native controls saved Scrum/Caracas settings, surfaced required-field
+errors on an empty create attempt, and created a planned sprint with goal and
+local dates. Date input used native DOM value setters/input/change events;
+other field/save actions used Orca controls. Canonical public readback confirmed
+the settings and planned version 1 with exclusive end `2026-12-07`; its history
+had only the creation record. Opening/canceling metadata did not mutate it.
+
+### Finding: metadata dialog loses its logical return control
+
+At 320 ES dark, opening **Editar sprint** focused its name input. Native
+Shift+Tab stayed inside the dialog; Escape closed it but focused the project H1,
+although an enabled **Editar sprint** control was again rendered. A second
+bounded reproduction without resizing confirms the mechanism:
+
+1. Focus and activate the visible enabled Edit sprint button (DOM activation
+   used for this reproduction to avoid Orca stale refs during verification).
+2. The opener element becomes disconnected when staging removes its action.
+   The modal then focuses its input.
+3. Native Escape closes the modal. The replacement Edit sprint button is enabled
+   and connected, but focus lands on the project heading, scrolling away from
+   the invoking control.
+
+The DOM focus trace records button → input → H1. This is a functional
+focus-lifecycle finding for SOL, not a CSS correction: inspect
+`use-project-sprint-integration.ts` opener/restore effect (around lines45–57 and
+124–133), `sprint-screen-model.ts` canBegin/action projection and the conditional
+action composition. Preserve private-context fences and capability gating while
+restoring the logical action when it exists; the old element reference alone is
+insufficient. The first ordinary click also encountered transient verification;
+that observation is not presented as the isolated repro.
+
+Astra stopped the native phase at this ownership boundary without changing
+logic/tests/presentation. The full 320/390/1280/1440 ES/EN/theme/motion matrix,
+persisted edit/null-zero-offscale/participation/start/close flows, destination/
+scope/history/outcome multipage data and actions, read-only/denied/private fences,
+Back/modified/external navigation and both-owner guards remain open for the
+resumed QA pass. Only 1440 Kanban/empty and 320 metadata/return were visually
+inspected; 320 width matched scrollWidth, inputs/buttons measured 44px high with
+16px font and coarse-pointer emulation was observed. Physical-device touch,
+zoom and screen-reader checks were not performed. Earlier SOL evidence retains
+its own bounds; manual observations do not change the 21 unexecuted callbacks.
+
+Three opened PNGs, canonical readback, exact focus trace, pre-source/built-runtime
+fingerprints and cleanup receipt are retained under ignored
+`apps/web/coverage/t11-native-presentation/`. The owned fixture received SIGTERM
+and returned to its shell; its Next/Nest/fixture listeners, exact labeled
+container/volume and private state file were confirmed absent. The browser tab
+and fixture terminal were closed; only the existing Codex listener remained.
+Generated next-env was restored and stopped-server dev types removed. All 232
+source/test/tool fingerprints still match, including approved web baseline
+`04977cb421e2eb3e0d842c8b0c3295f19b6b2403e2d2cecf9788a41c1a01ccd8`.
+Documentation/whitespace checks apply to this receipt; prior 700-case normal
+evidence is not rerun or broadened. No PR/push/review/merge or full acceptance.

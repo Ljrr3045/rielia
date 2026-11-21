@@ -1,5 +1,21 @@
 # Delivery progress and decisions
 
+## 2026-11-21 T11.4b Astra native focus finding — IN PROGRESS
+
+Frozen-head `436c4837` native QA used a fresh owned Next/Nest/PostgreSQL fixture
+after actual Astra high/automatic-review verification and pre-action fingerprints.
+Rendered settings/create and canonical readback passed their bounded checks.
+A reproducible [metadata dialog focus-return finding](sprint-presentation.md#astra-frozen-head-native-qa-finding--2026-11-21)
+returns Escape to the project heading after staging disconnects the opener,
+despite a replacement enabled Edit sprint control. This is referred to SOL;
+no source/test/baseline correction is made by Astra.
+
+The fixture/browser/private state/database resources are stopped and removed;
+all 232 source/test/tool fingerprints remain exact. Native coverage stops at
+this finding: the remaining viewport/locale/theme/interaction/paging/persisted
+matrix remains open. Prior 700-case numerical evidence is unchanged, and manual
+QA does not close the 21 unexecuted callbacks. T11.4b/T11.5/full T11 stay open.
+
 ## 2026-11-21 T11.4b frozen-head SOL recovery/persistence — BOUNDED EVIDENCE; ASTRA QA OPEN
 
 SOL alone exercised the production page at frozen `a00fd716`, recording actual

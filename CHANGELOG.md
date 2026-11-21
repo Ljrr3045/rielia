@@ -4,6 +4,12 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Record the frozen-head [T11.4b native QA focus finding](docs/development/sprint-presentation.md#astra-frozen-head-native-qa-finding--2026-11-21):
+  real settings/create/readback passed bounded checks, but canceling sprint
+  metadata returns focus to the project heading instead of its available edit
+  control. SOL correction and remaining integrated QA are pending; owned
+  fixture resources are removed and source/tests/baselines remain unchanged.
+
 - Integrate the production [sprint functional checkpoint](docs/development/sprint-presentation.md#sol-production-functional-checkpoint--2026-11-21-caracas--november-21-utc)
   with one shared-context sprint owner, captured planning/start/closure forms,
   Task detail estimates/participation, public capability gates, private render
