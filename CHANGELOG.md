@@ -10,7 +10,11 @@ This records repository changes. No application version has been released.
   Add bounded [T11.4a sprint client logic](docs/development/sprint-client.md):
   typed reads/drafts/recovery, shared invalidation, explicit close decisions
   and immutable outcome/history consumption. T11.4b presentation/T11.5
-  acceptance remain open; validation/publication evidence follows in the guide.
+  acceptance remain open. Coordinator-approved exact web-only baseline passes
+  629 normal cases with byte-identical replay of all16 candidate reports; seven
+  baselines remain exact. Infrastructure/artifacts, standard checks on the Next
+  notice retry and high audits pass with explicit existing/new debt. Draft
+  publication/current-head CI/native acceptance remain pending.
 - Synchronize the user's planned [T38](https://github.com/Ljrr3045/rielia/issues/53)
   sequencing after full T11 acceptance, preserving accepted T36/T37 history.
   No Zod/TanStack Query/form migration, install or T38 completion is included.

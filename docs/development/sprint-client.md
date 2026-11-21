@@ -1,7 +1,8 @@
 # T11.4a sprint client logic and presentation handoff
 
-Status: implemented and standard-checked; exact numerical approval, the normal
-coverage gate and Draft publication remain pending. This is the logic prerequisite for separately owned T11.4b
+Status: implemented and locally verified; exact numerical approval and normal
+coverage/infrastructure/artifact gates pass. Draft publication and new-head
+CI/native/coordinator acceptance remain pending. This is the logic prerequisite for separately owned T11.4b
 presentation, addressing T11/B1c, P09/US06, affected P05/P08/P10 and US05/US12,
 UX04/UXR01 and existing recovery/localization requirements. It starts from
 accepted [T11.3 PR52](https://github.com/Ljrr3045/rielia/pull/52#issuecomment-7052975664),
@@ -147,6 +148,9 @@ belong to T11.4b/T11.5 and are not claimed by this dormant logic batch.
 
 ## Frozen local candidate — 2026-11-20
 
+This is the pre-approval snapshot; the subsequent approval and replay below
+govern current numerical status. Earlier failures remain failures.
+
 Final-source `pnpm check` passes formatting/tooling, lint, the 286-package
 Express-free backend closure, focused logic and six real HTTP integration cases,
 strict types, production builds, 17 MCP cases and production ES/EN/API-down smoke.
@@ -202,3 +206,39 @@ contracts, transports and pins; accepted PR52 proof retains its source limits an
 new-head CI still requires the full configured suites. No application server or
 Docker fixture remains; the only observed workspace listener belongs to this
 active Codex session and is left intact.
+
+
+## Exact approval and normal replay — 2026-11-20
+
+The coordinator approved only current `web.json` from
+`a8d147e915f14f62bbaf80288f508adb51e4be54ffa59bb544af52d46ee5afbd` to
+`da5d187c9ba70631b9f4ae29180a69862bbde7b59f973448bbd046075866db73`, bound to
+source checkpoint `de6d6c5542c60cf3ccdc9ccfd8afff247b7846b0` and proposal
+`6a7c61ab73abfd802fdf7d768cdc1c694f22cbab080095433a4e245cb02de9b6`.
+Independent review checked eight hash pairs, 16 report hashes/sizes, 203 physical
+fingerprints plus the explicitly synthetic unchanged compiler witness, every
+existing file's exact counts/ratios, manifest projection and unchanged compiler/
+provider/configuration/tool identities. The documented L3/S18/F0/B22 new debt,
+net S+12/B+14, nullable limits and unavailable historical raw identity are bounded
+owned debt. This is numerical approval, not source/product/full T11 acceptance.
+
+Before adoption, the packet, all physical fingerprints and eight original
+baseline hashes were verified again. Only the exact approved web bytes were
+written. Seven other files, including all historical baselines, remain exact.
+No source/test/tool changes followed approval.
+
+Normal `pnpm unit:coverage -- --built` passes **629/629** without skips:
+290 API, 297 web, 23 contracts and 19 isolated prototype. All 16 normal report
+files reproduce approved candidates byte-for-byte; count digest is
+`44598bc87c50777826c81e2515f9b6fc7f202d6ff42fb82515ddb6d059d43091`.
+The numerical/per-file/nonregression gates pass with the proposed table's exact
+counts/floors. All 20 infrastructure checks now pass on the complete report set,
+and bounded artifact validation reports every scope complete. The earlier 19/20
+missing-report failure is corrected by the complete run, not waived or hidden.
+
+The [unit ledger](unit-coverage.md#t114a-client-coverage--2026-11-20) records the
+same limits. Final documentation/baseline commits use mandatory staged/commit
+hooks, handoff/local-link and whitespace checks. Source-bound standard build/
+HTTP smoke and audits are reused without repeating unchanged heavy phases.
+Publication remains Draft; coordinator owns Ready, native Kilo, thread disposition,
+acceptance and merge. T11.4b/T11.5, full T11 and planned T38 remain open.

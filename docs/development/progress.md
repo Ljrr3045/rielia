@@ -30,14 +30,15 @@ and all immutable handoff bytes remain intact.
 
 
 Final-source standard checks pass on the inherited Next-notice retry; audits
-retain root14 moderate/one low and tools2 moderate findings. The exact pending
-web-only baseline proposal raises all four floors without existing-file
-regression; composed measurement is629 cases with seven accepted baselines
-unchanged. The client guide records explicit new uncovered/null-map debt and an
-early19/20 infrastructure failure caused by missing other-scope reports after
-scoped measurement. Exact coordinator approval, normal full gate/report replay,
-infrastructure/artifacts and Draft publication remain pending; no baseline has
-been written and no product acceptance is claimed.
+retain root14 moderate/one low and tools2 moderate findings. The coordinator
+approved only exact current-web baseline `da5d187c`, bound to checkpoint
+`de6d6c5` and proposal `6a7c61ab`; seven baselines remain exact. Normal all-scope
+coverage passes629 cases and reproduces all16 approved reports byte-for-byte;
+all20 infrastructure cases and bounded artifacts pass. The client/unit guides
+preserve explicit new uncovered/null-map debt and the earlier19/20 missing-report
+failure, corrected by that complete run. Source/tests/tools remain frozen after
+approval. Draft publication and current-head CI/native/coordinator acceptance
+remain pending; T11.4b/T11.5 and full T11 remain open.
 
 ## 2026-11-20 PR52 round 1 correction — locally verified, DRAFT
 

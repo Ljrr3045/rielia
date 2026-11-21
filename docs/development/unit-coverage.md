@@ -2,8 +2,8 @@
 
 Current status: bounded T36 and T37 are accepted, including
 [T37 PR49](https://github.com/Ljrr3045/rielia/pull/49#issuecomment-6819605884)
-at merge `20a257c`. The [PR51 corrective migration](#pr51-round-1-corrective-coverage)
-below records the current approved numerical gates. Earlier delivery snapshots
+at merge `20a257c`. The [T11.4a client migration](#t114a-client-coverage--2026-11-20)
+below records the current approved web gate, retaining the other accepted gates. Earlier delivery snapshots
 and their then-pending acceptance statements remain historical evidence.
 
 This bounded T36.2/T36.3 slice retains `node:test`, adds behavior units and enforces
@@ -973,3 +973,46 @@ remain unchanged. The final non-unit PostgreSQL test cleanup/assertion edits
 are separately verified and do not alter any measured unit input.
 Numerical approval does not accept SQL, product behavior or the changed PR head;
 [the correction guide](sprint-closure.md#pr52-round-1-correction) records those limits.
+
+
+## T11.4a client coverage — 2026-11-20
+
+The coordinator independently checked the eight before/current/candidate hash
+pairs, all 16 report hashes/sizes, 203 physical source/test/config fingerprints
+plus the explicitly synthetic unchanged compiler-metadata witness, existing
+file covered/uncovered counts and exact ratios, totals, manifest projection and
+unchanged compiler/provider/configuration/tool identities. Approval is bound to
+checkpoint `de6d6c5542c60cf3ccdc9ccfd8afff247b7846b0` and proposal SHA-256
+`6a7c61ab73abfd802fdf7d768cdc1c694f22cbab080095433a4e245cb02de9b6`.
+Only current web baseline changes:
+`a8d147e915f14f62bbaf80288f508adb51e4be54ffa59bb544af52d46ee5afbd` →
+`da5d187c9ba70631b9f4ae29180a69862bbde7b59f973448bbd046075866db73`.
+Seven others, including prototype and all four historical files, remain exact.
+
+Normal all-scope coverage passes **629/629**, without skips: API290/web297/
+contracts23/prototype19. All 16 reports reproduce the approved candidates
+byte-for-byte; count digest is
+`44598bc87c50777826c81e2515f9b6fc7f202d6ff42fb82515ddb6d059d43091`.
+Twenty infrastructure cases and bounded artifact validation pass. The early
+19/20 infrastructure failure on missing API output after scoped measurement
+remains recorded; the complete normal run supplies the corrected final proof.
+
+Web grows from 70 to 74 maintained inputs. L/S/F/B covered/total changes from
+2482/3956, 2697/4456, 567/1101, 3154/5511 to **2867/4339, 3157/4928,
+641/1174, 3535/5906**; floors rise from6274/6052/5149/5723 to
+**6607/6406/5459/5985** basis points. Every existing file retains/improves
+covered counts, exact ratios and uncovered counts. Four new runtime owners add
+explicit uncovered debt of L3/S18/F0/B22; all new functions execute. Net global
+uncovered S/B increase12/14 after retained-source gains. These are accepted
+bounded gaps, not exclusions or claims of complete path coverage.
+
+All original cases remain. The 69 added cases cover real controller/transport and
+React-hook intent/recovery/context/stream behavior, with no unit credit claimed
+for SQL/security/native UI properties. Unexecuted nonzero inputs remain API20/
+web19/contracts0/prototype12, and the three type/reexport N/A inputs remain.
+Raw nullable columns are API199/12286, web823/32296, contracts24/2780 and
+prototype133/6372. No endpoints are fabricated. Historical raw maps are absent
+in this fresh checkout; exact changed-source old/new unit identity is not
+manufactured. Final maps/hits and fingerprints remain in the bounded local
+proposal/report set. Numerical approval does not accept code, presentation or
+full T11; [the client guide](sprint-client.md) records ownership and later gates.
