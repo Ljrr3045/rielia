@@ -1,0 +1,27 @@
+docs/development/sprint-presentation.md
+  s_aa027f2693f60d::t_c61eae23f76ce4 3-11,1288-1351
+scripts/unit/baselines/web.json
+  s_aa027f2693f60d::t_e890247ccf0c70 311,347,401,405,409,413,455,473-474,477-478,481-482,485-486,491,527-528,545-546,549-550,553-554,557-558,725,729,733,737,869,877,881,1211-1212,1215-1216,1219-1220,1223-1224,1301,1313,1337-1338,1345-1346,1349-1350,1445-1446,1449-1450,1453-1454,1457-1458,1589-1592,1636,1639,1642-1643,1680,1687,1693,1729,1751-1752,1755-1756,1759-1760,1763-1764
+docs/development/unit-coverage.md
+  s_aa027f2693f60d::t_c61eae23f76ce4 1214-1255
+CHANGELOG.md
+  s_aa027f2693f60d::t_c61eae23f76ce4 7-16
+docs/development/progress.md
+  s_aa027f2693f60d::t_c61eae23f76ce4 3-28
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "379de0e8af0bac76bca758af50c47b74d20f47bd",
+  "prompts": {},
+  "sessions": {
+    "s_aa027f2693f60d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1fbeb-0dae-7cd1-a40f-f13fa4b7d5da",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
