@@ -1,0 +1,19 @@
+apps/web/src/app/projects/sprints/sprint-copy.ts
+  s_3e3d5b98dbec80::t_6da73129254f7d 294
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a60983e7da4a981a375def614bcb93f6546740b6",
+  "prompts": {},
+  "sessions": {
+    "s_3e3d5b98dbec80": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1fbd9-ff85-75a3-93a6-4eba3a204f01",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
