@@ -1,0 +1,23 @@
+docs/development/t11-acceptance.md
+  s_28940d5a7af39a::t_abfb98dc691545 3-5
+docs/development/progress.md
+  s_28940d5a7af39a::t_abfb98dc691545 5-6,30,2974
+CONTRIBUTING.md
+  s_28940d5a7af39a::t_abfb98dc691545 53-62
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2bdafb2f35b74e1ba31dfffa2a239c2b09f4b4a2",
+  "prompts": {},
+  "sessions": {
+    "s_28940d5a7af39a": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a20a04-8769-7e50-aae6-bfb873b4a5f6",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
