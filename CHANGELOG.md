@@ -4,6 +4,15 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Consolidate [original T11 lifecycle acceptance evidence](docs/development/t11-acceptance.md)
+  as **READY FOR REVIEW**, correcting current PR54/55 status while preserving dated
+  checkpoints. Bind accepted APIs/client/presentation, exact `214d00b3` postmerge
+  CI and a minimal 320 ES keyboard closure to Backlog with canonical unchanged-task
+  and list/board/detail readback. Retain sprint-filter ownership, user-omitted
+  UNVERIFIED Cancel/Leave and measured/native/security/deferred-validation limits.
+  Final documentation-head CI/Kilo and coordinator acceptance/merge remain;
+  full T11 and T38 are not accepted by this documentation batch.
+
 - Record [bounded native checks for all seven PR55 corrections](docs/development/sprint-presentation.md#resumed-seven-correction-native-qa--2026-11-23-caracas)
   at frozen `379de0e8`: navigation/draft guards, parent-only leave review and auth
   fences, unchanged participation, off-page chooser, scope paging, Backlog labels

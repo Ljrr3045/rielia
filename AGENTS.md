@@ -64,8 +64,16 @@ or an Orca installation.
   on 2026-11-19. T11.1–3 APIs are accepted through
   [PR52](https://github.com/Ljrr3045/rielia/pull/52#issuecomment-7052975664),
   reviewed `1256241b`, merged `6507e487`. [T11.4a client logic](docs/development/sprint-client.md)
-  is in progress; T11.4b presentation and T11.5 integrated acceptance remain open.
-  Full T11 acceptance precedes T38; PR52 alone does not satisfy that dependency.
+  is accepted in PR54, reviewed `4fa0e034`, merged `a2de3bd`;
+  [T11.4b presentation](docs/development/sprint-presentation.md) is accepted in
+  [PR55](https://github.com/Ljrr3045/rielia/pull/55#issuecomment-7112015425),
+  reviewed `9100844`, merged `214d00b3`. [T11.5 evidence consolidation](docs/development/t11-acceptance.md)
+  is complete; original T11 lifecycle acceptance is **READY FOR REVIEW**, pending
+  current-head CI/native Kilo, feedback/ownership/base checks and the coordinator's
+  final acceptance and merge. Cross-document Cancel/Leave remains user-omitted
+  UNVERIFIED debt with possible draft loss; sprint filters remain T08/T10/US05 debt.
+  Full US05/P08/T08/T10, US12 and device/accessibility conformity are not accepted.
+  Final T11 lifecycle acceptance precedes T38; no T38 adoption is authorized now.
   No universal source conformity or full acceptance is implied. Original
   T01–T35 numbering/acceptance and immutable handoff remain unchanged. Future
   T30–T34 landing work uses the [later Astro/narrative direction](docs/development/landing-direction.md);

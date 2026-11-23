@@ -1,19 +1,21 @@
 # T11.4b sprint presentation checkpoint
 
-Status: **LOCALLY VERIFIED CORRECTION CHECKPOINT for [Draft PR55](https://github.com/Ljrr3045/rielia/pull/55),
-published reviewed head `0faf74f5`, corrected functional source `3d37c755` above
-preserved Astra copy `a60983e7`. The coordinator approved exact web baseline
-`89cdc952`; standard, normal 738-case, infrastructure and artifact gates pass
-with the qualifications below. The seven bounded corrected-head Astra checks
-passed on November 23; current-head CI, requested native review and coordinator
-thread dispositions remain pending.
-External native Cancel/Leave stays user-accepted UNVERIFIED debt and possible
-unsaved-draft-loss risk, omitted only for this review batch. T11.4b/T11.5/full T11
-remain open; coordinator owns remote writes, Ready and merge**.
+Status: **bounded T11.4b ACCEPTED in merged [PR55](https://github.com/Ljrr3045/rielia/pull/55#issuecomment-7112015425)**,
+reviewed `91008442511f7e3cccc6d3c5dcbc6080fbf18ec3`, merged
+`214d00b3ec3a4128edf43348fc42df05dec49b78`. The accepted functional source is
+`3d37c755`, preserving Astra copy `a60983e7` and approved web baseline `89cdc952`.
+All seven findings were corrected/resolved; requested incremental Kilo round two
+and exact postmerge CI passed. The [T11 acceptance matrix](t11-acceptance.md)
+consolidates those receipts, source-qualified native evidence and the accepted
+minimal T11.5 Backlog witness. Original T11 lifecycle acceptance is **READY FOR
+REVIEW**; current documentation-head review and final coordinator acceptance
+remain pending. External cross-document Cancel/Leave remains user-omitted
+**UNVERIFIED** debt with possible unsaved-draft loss, not a passed test or
+universal UX waiver.
 Base: accepted T11.4a merge `a2de3bd79596cb83b79287f105f60fedfb35bea9`.
 The [client guide](sprint-client.md#t114a-acceptance--2026-11-20-caracas--november-21-utc)
-records PR54 acceptance and its review/hash limits. T11.5 and full T11 remain
-open; planned [T38](https://github.com/Ljrr3045/rielia/issues/53) follows full T11.
+records PR54 acceptance and its review/hash limits. Final T11 lifecycle acceptance
+remains open before planned [T38](https://github.com/Ljrr3045/rielia/issues/53).
 
 Scope: T11/B1c, P09/US06; affected P05/P08/P10/P33, US05/US08/US12;
 UXR01 and UX01/03/04/05/07/09. Existing T37 project shell, tokens, locale and
@@ -22,8 +24,9 @@ ports only; the current SOL integration section records production wiring and
 functional tests. No new backend policy, API, dependency, prototype state,
 T12/T13, T22 chart/report, landing or deployment is introduced.
 
-The earlier checkpoints below retain their original evidence limits. The current
-production integration section at the end supersedes their pending wiring status.
+The dated checkpoints below retain their original evidence limits and then-pending
+status. The linked PR55 acceptance and consolidated matrix govern current status;
+they do not relabel earlier native checks as final-source or universal proof.
 
 ## Initial presentation and typed ports
 

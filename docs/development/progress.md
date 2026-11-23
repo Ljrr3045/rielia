@@ -1,5 +1,33 @@
 # Delivery progress and decisions
 
+## 2026-11-23 T11.5 integrated evidence — READY FOR REVIEW
+
+The [original T11 lifecycle matrix](t11-acceptance.md) consolidates accepted
+PR50–52 APIs, [PR54 client logic](sprint-client.md#t114a-acceptance--2026-11-20-caracas--november-21-utc)
+and [PR55 presentation/integration](https://github.com/Ljrr3045/rielia/pull/55#issuecomment-7112015425),
+reviewed `9100844`, merged `214d00b3`. Exact postmerge CI passed all 24 steps:
+738 normal cases, 20 infrastructure cases, 147 real PostgreSQL/HTTP cases,
+Docker migration/restart/recovery and 17 artifact files with all 16 reports
+matching accepted bytes. Earlier native checks retain their source/method limits.
+
+The coordinator accepted one additional minimal 320 ES keyboard Backlog-close
+witness at exact `214d00b3`: explicit preview/confirmation received real HTTP201;
+canonical closure/outcome/unscheduled participation, unchanged Task DTO/SQL row/
+planning snapshot/taskRevision and list/board/detail readback passed. A stale
+preview required a new explicit preview. All 237 source/test/tool fingerprints,
+eight baselines and 180 API/contracts outputs remained exact; owned resources
+were removed and generated route imports restored. No new source/test/baseline
+change or broad suite replay was needed.
+
+T11.5 evidence is complete; original T11 lifecycle acceptance is **READY FOR
+REVIEW**, pending this documentation head's CI/native Kilo, completed feedback,
+ownership/base checks and final coordinator acceptance/merge. Sprint filters stay
+owned by T08/T10/US05; full US05/P08/T08/T10 remain unaccepted. User-omitted external
+Cancel/Leave stays UNVERIFIED with possible draft loss; full US12/device/
+accessibility conformity is not implied. Other measured/native/security and
+deferred provider/staging/user limits remain in the matrix. T38 waits for final
+T11 lifecycle acceptance; no library adoption or remote action occurs here.
+
 ## 2026-11-23 T11.4b seven-correction native QA — BOUNDED PASS; REVIEW GATE OPEN
 
 The resumed Astra session verified all seven bounded correction areas at frozen
@@ -2942,7 +2970,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T08 | B1b | List/Kanban, filters, ranking | T06 | [T08.0 logic](task-views.md) merged in PR #19 at `f8895709`; [T08.1 presentation](task-views-ui.md) in [PR #20](https://github.com/Ljrr3045/rielia/pull/20). Configurable workflows/labels/sprints and full US05/T08 remain open |
 | T09 | B1b | Subtasks, checklists, comments, history | T06 | T09.0 bounded collaboration logic merged in [PR #21](https://github.com/Ljrr3045/rielia/pull/21) at `76d7d31b`; T09.1 [presentation](task-collaboration-ui.md) delivered in [PR #22](https://github.com/Ljrr3045/rielia/pull/22) with standard checks and targeted functional/responsive QA passed. Exact current-head CI/Kody/merge evidence remains in GitHub/external final report. Full T09/P05/P14/P38, credentials and real-user/staging acceptance remain open |
 | T10 | B1b | Search, My tasks, responsive layout, SSE | T07–T09 | T10.0 bounded logic merged in [PR #23](https://github.com/Ljrr3045/rielia/pull/23) at `6bde444c`; T10.1 [presentation](task-discovery-ui.md) PR [#24](https://github.com/Ljrr3045/rielia/pull/24) includes exact root-reviewed SOL controller/test URL corrections and has accepted functional/responsive evidence. Full T10/P11/US05, labels/sprints, exports, coediting, credentials, real-user/staging and deployment remain open |
-| T11 | B1c | Sprint lifecycle and scope history | T08–T09; later user prerequisite T36 → T37 | IN PROGRESS; T11.1/PR50 and T11.2/PR51 accepted, [T11.3 close/carryover](sprint-closure.md) locally verified in [Draft PR52](https://github.com/Ljrr3045/rielia/pull/52) with CI/native/coordinator acceptance pending; T11.4 UI and T11.5 integrated acceptance remain |
+| T11 | B1c | Sprint lifecycle and scope history | T08–T09; later user prerequisite T36 → T37 | Original lifecycle **READY FOR REVIEW**; T11.1–3/PR50–52, T11.4a/PR54 and T11.4b/PR55 accepted through merge `214d00b3`. [T11.5 evidence](t11-acceptance.md) complete, including the accepted minimal Backlog witness; current-head CI/native Kilo, feedback/ownership/base checks and final coordinator acceptance/merge remain. Sprint-filter and cross-cutting UX debts do not close adjacent tickets; T38 waits for final T11 acceptance |
 | T12 | B1c | Personal/service credentials, explicit-subject grants | T07, T35 | Not started |
 | T13 | B1c | Local MCP catalog/client/guide | T03, T11–T12 | Not started |
 | T14 | B1d | JSON/CSV export and archive recovery | T09, T12 | Not started |
