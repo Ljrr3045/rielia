@@ -1,5 +1,24 @@
 # Delivery progress and decisions
 
+## 2026-11-23 T11.4b seven-correction native QA — BOUNDED PASS; REVIEW GATE OPEN
+
+The resumed Astra session verified all seven bounded correction areas at frozen
+`379de0e8`, with [native observations and explicit limits](sprint-presentation.md#resumed-seven-correction-native-qa--2026-11-23-caracas).
+Same-document intent replacement/Stay, My tasks/Search parent guards and auth
+fences, unchanged/rebased participation, off-page selection/counts, guarded scope
+paging, Backlog versus unselected closure and neutral ES/EN history have recorded
+outcomes. One real fixture supplied canonical data; controlled concurrency/read
+responses are distinguished from actual backend persistence. Native 390/1280
+captures and keyboard/focus checks are bounded, not a broader acceptance replay.
+
+Owned resources are gone; paused evidence, source/built fingerprints and all eight
+baselines remain unchanged. No new coverage denominator or heavy test/build run;
+prior 738/20/17 gates and 11 unexecuted functions/null952/37598 retain their limits.
+The earlier target-navigation failure remains unexplained despite no recurrence.
+External Cancel/Leave stays user-accepted UNVERIFIED debt. T11.4b/T11.5/full T11
+and current-head CI/Kilo/ownership/thread decisions remain open before T38.
+Docs-only checkpoint awaits coordinator review; no remote write or worker_done.
+
 ## 2026-11-22 T11.4b approved correction replay — LOCAL GATES PASS; NARROW QA PENDING
 
 The coordinator independently approved exact web `f1679d66` → `89cdc952` at clean

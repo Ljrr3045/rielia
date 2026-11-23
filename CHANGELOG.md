@@ -4,6 +4,14 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Record [bounded native checks for all seven PR55 corrections](docs/development/sprint-presentation.md#resumed-seven-correction-native-qa--2026-11-23-caracas)
+  at frozen `379de0e8`: navigation/draft guards, parent-only leave review and auth
+  fences, unchanged participation, off-page chooser, scope paging, Backlog labels
+  and neutral ES/EN history. Distinguish controlled responses from real backend
+  writes, retain source/baseline and earlier evidence identities, and remove owned
+  QA resources. This docs-only receipt does not rerun full gates or close T11.5,
+  full T11, current-head CI/review, or omitted UNVERIFIED external Cancel/Leave.
+
 - Apply the coordinator-approved web baseline `89cdc952` for the source-bound
   [round-one correction batch](docs/development/sprint-presentation.md#approved-round-one-numerical-replay--2026-11-22-caracas),
   preserving all seven other baselines and historical evidence. Standard passes

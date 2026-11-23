@@ -4,8 +4,9 @@ Status: **LOCALLY VERIFIED CORRECTION CHECKPOINT for [Draft PR55](https://github
 published reviewed head `0faf74f5`, corrected functional source `3d37c755` above
 preserved Astra copy `a60983e7`. The coordinator approved exact web baseline
 `89cdc952`; standard, normal 738-case, infrastructure and artifact gates pass
-with the qualifications below. Narrow corrected-head Astra QA, current-head CI,
-requested native review and coordinator thread dispositions remain pending.
+with the qualifications below. The seven bounded corrected-head Astra checks
+passed on November 23; current-head CI, requested native review and coordinator
+thread dispositions remain pending.
 External native Cancel/Leave stays user-accepted UNVERIFIED debt and possible
 unsaved-draft-loss risk, omitted only for this review batch. T11.4b/T11.5/full T11
 remain open; coordinator owns remote writes, Ready and merge**.
@@ -1349,3 +1350,62 @@ changed head; current-head CI, completed requested-round review, ownership and
 coordinator thread dispositions remain required before acceptance. T11.4b/T11.5/
 full T11 stay open; T38 follows full T11. No worker remote write, Ready/Kilo toggle,
 thread resolution, deployment, merge or worker_done is performed.
+
+## Resumed seven-correction native QA — 2026-11-23 Caracas
+
+At frozen `379de0e8` (functional `3d37c755`, preserved copy `a60983e7`), the
+resumed Astra high / automatic-review session completed the seven bounded
+changed-interaction checks in one fresh real PostgreSQL/Nest/Next fixture.
+Minimal HTTP/session and native selected-route readiness preceded larger data.
+The ignored local packet `apps/web/coverage/t11-native-resumed/REPORT.md`,
+action receipts, per-finding outcomes, screenshots and manifest preserve evidence.
+The paused `t11-narrow-continuation` packet remains byte-exact. No recurrence of
+the prior target-navigation error occurred; its earlier cause remains unknown.
+
+| Corrected area | Bounded observed result |
+| --- | --- |
+| Latest navigation intent | Retained task draft deferred Sprints; newer same-document Back removed that decision, retained the draft and focused the task link. Discard stayed on the newer task view. Separate Stay returned focus to Sprints and preserved the exact draft value. |
+| Parent-only leave review | My tasks and Search ordinary links displayed one reachable focused modal outside inert content. Stay restored initiating-link focus; discard completed the requested internal navigation. A real protected-workspace 401 removed former content/review and exposed session recovery; held genuine recovery reads showed verification loading only. |
+| Unchanged participation | Current sprint and Backlog disabled Save while leaving destination editable; changed selection enabled an explicit confirmed write. Controlled real-backend 201/409 concurrency retained the decision; rebase/reopen did not issue another POST and the canonical destination disabled Save. |
+| Off-page chooser | With 101 canonical sprints, the selected off-page sprint appeared once while the count stayed 100/101; next page deduplicated at 101/101. Reload and actual viewer selection retained the choice; viewer had no write actions and a read-only message. |
+| Scope paging | With 101 canonical participations, invalidated/held refresh and controlled read error disabled paging while task links remained usable. A link opened real task detail; return and normal paging reached 101 unique rows. |
+| Backlog versus unselected close | Retained null participation in the real 409 summary read Backlog (no sprint). Raw close selection remained Choose destination, with a distinct Backlog option and disabled confirmation; no close was submitted. |
+| Metadata history | Actual creation and UI-saved edit both displayed the neutral ES/EN label, with two canonical history entries and server-confirmed edit. |
+
+The race forwarded actual commands with distinct keys and received real 201/409;
+it did not fabricate persistence. The authentication check omitted credentials
+for one real workspace read, then held/released a genuine session read during
+explicit Refresh. An earlier synthetic identity-endpoint 401 only caused refresh
+failure and is not credited as signed-out evidence. Scope refresh issued two
+matching reads; the latest held response received a controlled 503. That error
+is a boundary exercise, not a spontaneous backend outage. A disposable setup
+script's incorrect nested DTO field produced a 403 before scope assignment;
+continuation reused the existing rows without duplication. No product defect or
+source change is inferred from that driver error or incidental stale browser refs.
+
+Opened native captures cover a 390-by-844 keyboard/coarse-pointer guard and an
+exact 1280-by-900 desktop sprint view. The guard had no horizontal overflow,
+44-pixel controls, native Tab/Shift+Tab within the guard and verified focus return. Navigation
+reset some viewport sizes; the desktop capture reapplied the requested size.
+This does not replay the broader accepted matrix or physical touch/AT/zoom.
+The untruncated trace has 2,372 metadata entries, including 970 without a status;
+those are unknown, not successes. Exactly three browser participation POSTs
+(initial 201, concurrent 201, original 409) establish no rebase auto-submit.
+The 60 captured console entries contain no warning/error. No auth payloads or
+cookies are archived.
+
+Owned servers, browser page, terminal, container, volume and private state were
+removed; only the recorded generated file was restored. All 227 recorded
+source/test/tool/config and 180 built API/contracts fingerprints match. No new
+source enters the coverage denominator; all eight baselines remain unchanged.
+Prior 738 normal / 20 infrastructure / 17 artifact checks retain their source-bound
+qualifications and were not rerun. Eleven unexecuted composition functions and
+null952/37598 remain prior measured debt. Only docs/handoff/format/whitespace
+checks and normal commit hooks apply to this evidence update.
+
+External cross-document native Cancel/Leave remains deliberately omitted,
+user-accepted UNVERIFIED debt. Different-user replacement, broader device/AT/zoom,
+provider/staging and full persisted acceptance are not certified by this run.
+T11.4b/T11.5/full T11, current-head CI/Kilo/ownership/thread dispositions and the
+coordinator review gate remain open; T38 still follows full T11. No remote write,
+Ready transition, resolution, merge or worker_done occurs in this checkpoint.
