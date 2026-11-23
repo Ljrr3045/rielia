@@ -1,7 +1,8 @@
 # T11 original lifecycle acceptance evidence
 
-Status: **READY FOR REVIEW** on 2026-11-23 America/Caracas. T11.5 evidence is
-complete, including the coordinator-accepted minimal Backlog witness. Final T11
+Status: **READY FOR REVIEW** in [Draft PR56](https://github.com/Ljrr3045/rielia/pull/56),
+targeting `dev`, on 2026-11-23 America/Caracas. T11.5 evidence is complete,
+including the coordinator-accepted minimal Backlog witness. Final T11
 lifecycle acceptance remains pending this documentation head's successful CI and
 requested native Kilo, completed feedback/thread dispositions, ownership and
 unchanged-head/base checks, then the coordinator's final acceptance and merge.
