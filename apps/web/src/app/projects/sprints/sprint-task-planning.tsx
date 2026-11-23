@@ -24,6 +24,7 @@ export interface SprintEstimateFormPort extends SprintTaskFieldPort {
   points: readonly string[];
 }
 export interface SprintParticipationFormPort extends SprintTaskFieldPort {
+  submitDisabled: boolean;
   destinations: readonly SprintDestinationOption[];
   destinationPaging?: ReactNode;
 }
@@ -186,7 +187,11 @@ export function SprintTaskPlanning({
             <button
               className={ui.primary}
               type="submit"
-              disabled={participationForm.disabled || participationForm.pending}
+              disabled={
+                participationForm.disabled ||
+                participationForm.pending ||
+                participationForm.submitDisabled
+              }
             >
               {participationForm.pending ? c.saving[lang] : c.apply[lang]}
             </button>

@@ -1,13 +1,14 @@
 # T11.4b sprint presentation checkpoint
 
-Status: **IMPLEMENTED integrated T11.4b batch in [Draft PR55](https://github.com/Ljrr3045/rielia/pull/55),
-OPEN/isDraft verified at published head `bd011271`. On 2026-11-22 America/Caracas,
-the user omitted only external native Cancel/Leave verification for this review
-batch, accepting UNVERIFIED debt and possible unsaved-draft loss. This check no
-longer blocks advancing to Kilo review; it has not passed and establishes neither
-browser-host nor web correctness. Coordinator publication/current-head CI,
-requested native Kilo review and ownership gates remain required. T11.4b/T11.5
-and full T11 remain unaccepted; coordinator owns remote writes and Ready**.
+Status: **LOCAL CORRECTION BATCH for [Draft PR55](https://github.com/Ljrr3045/rielia/pull/55),
+published reviewed head `0faf74f5`. Native round 1 completed SUCCESS with seven
+accepted findings; its bot review is COMMENTED, not APPROVED. Astra copy commit
+`a60983e7` is imported unchanged and six SOL functional corrections are locally
+tested. Web numerical candidate `89cdc952` awaits explicit baseline approval,
+normal/current-head gates and the next requested review; no thread is resolved
+by this worker. External native Cancel/Leave remains user-accepted UNVERIFIED
+debt and possible unsaved-draft-loss risk, omitted only for this review batch.
+T11.4b/T11.5/full T11 remain open; coordinator owns remote writes, Ready and merge**.
 Base: accepted T11.4a merge `a2de3bd79596cb83b79287f105f60fedfb35bea9`.
 The [client guide](sprint-client.md#t114a-acceptance--2026-11-20-caracas--november-21-utc)
 records PR54 acceptance and its review/hash limits. T11.5 and full T11 remain
@@ -1213,3 +1214,74 @@ PR55/body/check readback, proposed English body, documentation checks, commit an
 manifest. Historical packets are immutable, including
 `t11-native-external-confirmation/` and `t11-pr55-current-ci/`. Assignment remains
 ACTIVE for the coordinator's final Draft publication/review sequence.
+
+## Native round-one corrections and numerical proposal — 2026-11-22 Caracas
+
+Native check `137457056702`, App `2193792/kilo-code-bot`, completed **SUCCESS** on
+`0faf74f59f70fab719c8e474459ac198a51319b2` at 2026-11-23 03:06:31 UTC. The
+[summary](https://github.com/Ljrr3045/rielia/pull/55#issuecomment-7090464584)
+contains **three warnings and four suggestions**, all accepted by coordinator
+triage. The [submitted bot review](https://github.com/Ljrr3045/rielia/pull/55#pullrequestreview-6016120236)
+is **COMMENTED**; all seven threads were current/unresolved at capture. The
+coordinator converted the same PR55 to Draft before this correction batch.
+No worker review reply/resolution, remote write, Ready toggle or new review occurs.
+
+Astra's accepted copy-only commit `a60983e7da4a981a375def614bcb93f6546740b6`
+is imported with its original commit/author. SOL implements the remaining six
+functional corrections, retaining visual components, CSS, tokens and layouts:
+
+| Finding | Correction and bounded regression |
+| --- | --- |
+| [4661436630](https://github.com/Ljrr3045/rielia/pull/55#discussion_r4661436630) | Accepted T37 task/workspace navigation clears obsolete integrated/workspace intentions; a newer integrated departure replaces the older workspace decision. Tests preserve task drafts and original workspace Stay/discard behavior, reject concurrent decisions and prevent later discard from jumping to an old Sprints URL. |
+| [4661436633](https://github.com/Ljrr3045/rielia/pull/55#discussion_r4661436633) | Separate `SprintParticipationFormPort.submitDisabled` from field disabling. Initial same-sprint/backlog Apply is disabled while selection remains editable. `submitSprintForm` also refuses an unchanged canonical destination, including retained conflict/rebase decisions. Tests force submit events and perform an actual changed-destination command; unknown recovery keeps its separate exact-key path. API policy is unchanged. |
+| [4661436635](https://github.com/Ljrr3045/rielia/pull/55#discussion_r4661436635) | The integration hook supplies a typed parent navigation review only for a ready, unexpired verified parent. Existing navigation presentation can render before the project-sprint visibility fence; only this parent decision is available in My tasks/search. Modal/inert/focus ownership follows the same port. Tests cover Stay/discard, auth loss, temporary same-session verification and replacement, with no former private task/sprint fields mounted. |
+| [4661436639](https://github.com/Ljrr3045/rielia/pull/55#discussion_r4661436639) | Append the exact authorized canonical selected sprint when absent from the loaded chooser page; deduplicate it and keep genuine page loaded/total counts. A read-only deep-link test uses 100 other options, retains selection after refresh and verifies no duplicate or edit affordance. |
+| [4661436643](https://github.com/Ljrr3045/rielia/pull/55#discussion_r4661436643) | Separate scope `loadMoreDisabled` from task-link disabling. Loading/changed/stale/error or pending state blocks continuation; authorized task navigation remains available unless the original pending guard applies. Tests exercise changed/error reloads, loading, pending and a live task link. |
+| [4661436647](https://github.com/Ljrr3045/rielia/pull/55#discussion_r4661436647) | Only retained participation `targetSprintId: null` maps to Backlog. A rendered 409 comparison test distinguishes it from a null, unselected close-preview destination, which still cannot confirm. |
+| [4661436650](https://github.com/Ljrr3045/rielia/pull/55#discussion_r4661436650) | Imported neutral metadata copy: ES `Datos del sprint registrados` / EN `Sprint details recorded`. Real history consumers render both canonical creation/edit entries in each locale; no API history-kind change. |
+
+Sixteen cases are added to the retained integration suite; every original test
+body/inventory remains. A serial source-substitution witness runs these against
+reviewed `0faf74f5`: **16/16 fail**, including the two old-copy consumer cases.
+All seven substituted files are restored in `finally` with exact byte checks.
+The affected owner/component suites pass **154/154**; final canonical web
+measurement passes **406/406**, no skips, including the final test bodies.
+Web typecheck, affected lint, formatting and whitespace pass. Initial direct-test
+launcher configuration/IPC failures remain disclosed in ignored local logs; only
+the valid direct runner and canonical compiled measurement receive test credit.
+These use real hooks/controllers/components with finite HTTP/stream/browser/
+clock/CSS boundaries, not real DB persistence or native accessibility proof.
+
+The [numerical proposal](unit-coverage.md#t114b-native-round-one-correction-proposal--2026-11-22-caracas)
+keeps all **88 web inputs**, 237 physical source/test/tool fingerprints and every
+old suite. Candidate web SHA-256 is
+`89cdc95277c032522ca612d36a8028797a2c8b9affcbb94b5bdf4f000cc24429`;
+accepted `f1679d66` and all eight tracked baselines remain unchanged pending
+coordinator approval. Per-file ratios/uncovered counts do not regress. The
+composition still has **11 unexecuted functions**; the hook measures 50/50
+functions without implying complete lifecycle coverage. Null mapping endpoints
+are **952/37598**, previously 951/37472. No exclusions, lower floors, test removal
+or source omission are used. The other three scope reports are retained prior
+source-qualified bytes, not rerun. Normal 738-case replay, applicable remaining
+gates/current-head CI and requested-round native review remain pending.
+
+New ignored evidence lives under `apps/web/coverage/t11-kilo-round1-corrections/`:
+review/triage/import receipt, original reports and eight baseline hashes, failing
+reviewed-source witness/restoration, valid checks, exact candidate/comparisons,
+uncovered/null maps, fingerprints and final clean committed-head manifest. Earlier
+native round-one and omission packets stay immutable. Native self-reported
+33-file scope matched git paths but supplies no per-file hash/tool-transcript or
+fresh-full-model attestation; PR54's earlier limits remain explicit. Old-head
+validate/Kilo results do not approve the changed correction head.
+
+After approved numerical/functional gates, narrow native QA should cover only
+these changed interactions: latest task/workspace and My tasks/search decisions
+with focus/Stay/discard, unchanged versus changed participation/rebase, authorized
+off-page chooser selection/counts, scope pager states versus task links, Backlog
+conflict versus unselected closure and ES/EN metadata history. The accepted prior
+matrix/persistence journeys are not repeated by this batch. The user-omitted
+external native Cancel/Leave check stays **UNVERIFIED accepted debt**, outside
+this correction scope. Representative/device/AT/zoom/provider/staging limits and
+T11.4b/T11.5/full T11 stay open; T38 follows full T11. Coordinator alone sequences
+Draft publication, current-head CI, completed review triage/ownership and any
+later Ready round; no acceptance or merge is implied by this local proposal.

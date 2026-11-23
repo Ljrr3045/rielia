@@ -3,7 +3,11 @@ import { useEffect, useId, useRef, useState } from 'react';
 import type { SprintFields } from '@rielia/contracts';
 import type { useProjectTasks } from './use-project-tasks';
 import { useProjectSprints } from './use-project-sprints';
-import { sprintScreenModel, type SprintStartReview } from './sprint-screen-model';
+import {
+  sprintScreenModel,
+  type SprintStartReview,
+  type SprintNavigationReviewPort,
+} from './sprint-screen-model';
 import {
   beginSprintForm,
   sprintFormIdentity,
@@ -413,6 +417,30 @@ export function useProjectSprintIntegration(parent: ProjectSprintOwner) {
         closeWarning: null,
       }
     : parent;
+  const navigationReview: SprintNavigationReviewPort | null =
+    parent.integratedNavigation &&
+    renderParent.status === 'ready' &&
+    renderParent.session !== null &&
+    Date.parse(renderParent.session.session.expiresAt) > Date.now()
+      ? {
+          destinationURL: parent.integratedNavigation.url,
+          taskGuard: renderParent.draftGuard.kind,
+          sprintGuard: model.visible
+            ? sprints.getNavigationGuard() === 'none' && visibleEditing
+              ? 'draft'
+              : sprints.getNavigationGuard()
+            : 'none',
+          onStay: () => {
+            void parent.resolveIntegratedNavigation('stay');
+          },
+          onDiscard:
+            parent.mutationPending || sprints.mutation.status === 'pending'
+              ? null
+              : () => {
+                  void parent.resolveIntegratedNavigation('discard');
+                },
+        }
+      : null;
   return {
     focusScope,
     feedbackTarget,
@@ -423,12 +451,13 @@ export function useProjectSprintIntegration(parent: ProjectSprintOwner) {
     editing: visibleEditing,
     errors,
     reason,
+    navigationReview,
     modalOpen: !!(
       visibleEditing?.start ||
       visibleEditing?.close ||
       (visibleEditing?.form &&
         !['estimate-task', 'set-task-sprint'].includes(visibleEditing.form.type)) ||
-      (model.visible && parent.integratedNavigation)
+      navigationReview
     ),
     begin,
     changeField,

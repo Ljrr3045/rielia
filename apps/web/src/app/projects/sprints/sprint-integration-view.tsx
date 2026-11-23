@@ -288,7 +288,7 @@ export function SprintIntegrationFeedback({ integration: i }: { integration: Int
             conflict.draft.type === 'close-sprint'
               ? conflict.draft.input.destination
               : conflict.draft.type === 'set-task-sprint'
-                ? conflict.draft.input.targetSprintId
+                ? (conflict.draft.input.targetSprintId ?? 'backlog')
                 : null,
             lang,
           )}
@@ -412,6 +412,7 @@ export function SprintIntegrationWorkspace({ integration: i }: { integration: In
               page={resources.scope.data}
               labels={labels}
               disabled={i.sprints.mutation.status === 'pending'}
+              loadMoreDisabled={resources.scope.stale || resources.scope.status !== 'ready'}
               loadingMore={resources.scope.loadingMore}
               onTask={(id) => {
                 void i.parent.selectTask(id);
@@ -535,6 +536,8 @@ export function SprintIntegrationTask({ integration: i }: { integration: Integra
             ? {
                 value: form.fields.destination,
                 disabled: disabled || resources.target.status === 'loading',
+                submitDisabled:
+                  form.fields.destination === (task.currentParticipation?.sprint.id ?? ''),
                 pending,
                 destinations: destinations(i, false),
                 error: i.errors.destination ? errorText[i.errors.destination][lang] : null,
@@ -559,31 +562,15 @@ export function SprintIntegrationTask({ integration: i }: { integration: Integra
 }
 export function SprintIntegrationDialogs({ integration: i }: { integration: Integration }) {
   const lang = useLocale();
-  if (!i.model.visible) return null;
-  const navigation = i.parent.integratedNavigation;
+  const navigation = i.navigationReview;
   if (navigation)
     return (
       <SprintNavigationDialog
-        destinationLabel={navigationLabel(i, navigation.url, lang)}
-        review={{
-          destinationURL: navigation.url,
-          taskGuard: i.parent.draftGuard.kind,
-          sprintGuard:
-            i.sprints.getNavigationGuard() === 'none' && i.editing
-              ? 'draft'
-              : i.sprints.getNavigationGuard(),
-          onStay: () => {
-            void i.parent.resolveIntegratedNavigation('stay');
-          },
-          onDiscard:
-            i.parent.mutationPending || i.sprints.mutation.status === 'pending'
-              ? null
-              : () => {
-                  void i.parent.resolveIntegratedNavigation('discard');
-                },
-        }}
+        destinationLabel={navigationLabel(i, navigation.destinationURL, lang)}
+        review={navigation}
       />
     );
+  if (!i.model.visible) return null;
   const editing = i.editing;
   if (!editing) return null;
   const pending = i.sprints.mutation.status === 'pending';

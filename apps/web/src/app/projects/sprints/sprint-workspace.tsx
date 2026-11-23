@@ -45,6 +45,9 @@ export function SprintWorkspace({
   const lang = useLocale();
   const selectId = useId();
   const headingId = useId();
+  const choices = [...(sprints?.items ?? [])];
+  if (sprint && sprint.id === selectedId && !choices.some((item) => item.id === selectedId))
+    choices.push(sprint);
   return (
     <section
       className={styles.workspace}
@@ -91,7 +94,7 @@ export function SprintWorkspace({
             onChange={(event) => onSelect(event.currentTarget.value)}
           >
             <option value="">{c.noSelection[lang]}</option>
-            {sprints?.items.map((item) => (
+            {choices.map((item) => (
               <option key={item.id} value={item.id}>
                 {item.name} ({c[item.state][lang]})
               </option>
@@ -274,6 +277,7 @@ export function SprintScope({
   onLoadMore,
   loadingMore,
   disabled,
+  loadMoreDisabled = false,
   notice,
 }: {
   page: SprintScopePage;
@@ -282,6 +286,7 @@ export function SprintScope({
   onLoadMore: () => void;
   loadingMore: boolean;
   disabled: boolean;
+  loadMoreDisabled?: boolean;
   notice?: ReactNode;
 }) {
   const lang = useLocale();
@@ -334,7 +339,7 @@ export function SprintScope({
           <button
             className={ui.secondary}
             type="button"
-            disabled={disabled || loadingMore}
+            disabled={disabled || loadingMore || loadMoreDisabled}
             onClick={onLoadMore}
           >
             {loadingMore ? c.loadingMore[lang] : c.loadMore[lang]}

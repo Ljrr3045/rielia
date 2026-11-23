@@ -1,5 +1,32 @@
 # Delivery progress and decisions
 
+## 2026-11-22 T11.4b native round-one corrections — LOCAL BATCH; BASELINE APPROVAL PENDING
+
+The coordinator accepted all seven findings from native PR55 round one and
+returned the same PR to Draft at reviewed `0faf74f5`. SOL fast-forward imported
+Astra's copy-only `a60983e7` unchanged and corrected six functional issues: stale
+navigation intentions, unchanged participation submits, missing My tasks/search
+leave review, off-page selected sprint options, stale scope paging and retained
+Backlog wording. ES/EN creation/edit history tests exercise Astra's neutral copy.
+[The bounded receipt](sprint-presentation.md#native-round-one-corrections-and-numerical-proposal--2026-11-22-caracas)
+links every finding to its correction/test and preserves old review/omission
+packets. Sixteen added cases fail on reviewed source and pass in the corrected
+batch; affected suites pass 154/154, final canonical web measure 406/406. Web
+typecheck, affected lint, format and whitespace pass; no new services/native matrix.
+
+[The exact numerical proposal](unit-coverage.md#t114b-native-round-one-correction-proposal--2026-11-22-caracas)
+retains 88 inputs and 237 physical fingerprints, per-file ratios/uncovered
+nonregression, raises every global floor and preserves all tests. Web candidate
+`89cdc952` awaits approval; all eight tracked baselines, including accepted
+`f1679d66`, remain unchanged. Future 738 normal cases/digest are predictions,
+not completed normal gates; other scope reports are retained prior evidence.
+Eleven composition functions remain unexecuted; null mappings are 952/37598.
+Root alone owns Draft pushes, review replies/resolutions and the next Ready
+round. No current-head review/approval or full acceptance is claimed. The
+user-omitted external native Cancel/Leave check remains UNVERIFIED accepted debt,
+outside this batch; device/AT/zoom/provider/staging and T11.4b/T11.5/full T11 remain
+open before T38. Assignment ACTIVE at the explicit baseline gate.
+
 ## 2026-11-22 T11.4b review batch — USER-ACCEPTED UNVERIFIED NATIVE DEBT
 
 After the specific Back/Cancel/Leave behavior and possible unsaved-draft-loss risk

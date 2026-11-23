@@ -1161,3 +1161,53 @@ and the unfinished Astra responsive/accessibility/multipage matrix remain open;
 neither numerical adoption nor source review accepts product/full T11. Any later
 source/test/measurement change requires refreshed exact proposal before another
 baseline edit.
+
+## T11.4b native round-one correction proposal — 2026-11-22 Caracas
+
+This is an **unapproved web-only baseline proposal**, following native PR55 round
+one on `0faf74f5` and accepted Astra copy commit `a60983e7`. Six SOL functional
+corrections and 16 retained-suite additions cover all seven accepted findings.
+The reviewed-source witness fails all 16 new cases and restores current source
+bytes; final canonical `pnpm unit:web -- --built --measure` passes **406/406**.
+No tracked baseline is written. Accepted web SHA-256 remains
+`f1679d66f7ad53aa65e691cac2188c8c39f5aac31c600c2ff53013ffac462076`;
+candidate is `89cdc95277c032522ca612d36a8028797a2c8b9affcbb94b5bdf4f000cc24429`.
+The seven other baseline files remain byte-identical. Approval, final normal
+replay and current-head gates remain pending; measurement is not gate acceptance.
+
+| Metric | Accepted covered/total | Candidate covered/total | Accepted floor | Candidate floor |
+| --- | --- | --- | --- | --- |
+| Lines | 3445/4925 | 3527/4938 | 6994 | 7142 |
+| Statements | 3789/5587 | 3879/5601 | 6781 | 6925 |
+| Functions | 810/1356 | 834/1358 | 5973 | 6141 |
+| Branches | 4483/6964 | 4641/6994 | 6437 | 6635 |
+
+Floors use integer hundredths. All 88 web inputs/type-only N/A and selected
+suite/helper inventory remain; the original integration test body is preserved
+byte-for-byte with additions. Seven source fingerprints change including the
+imported copy, plus one retained test; no tool/provider/compiler/config/lock
+change. All 237 physical fingerprints are retained. Every file preserves or
+improves exact ratios and uncovered counts; full source maps are retained rather
+than assuming changed-source counter IDs are semantically identical. Moving the
+two navigation callbacks from composition to its hook is explicit in the diff.
+Across 81 unchanged-source maps, 6408 previously covered units remain, 187 units
+gain coverage, none lose coverage and 35 hit vectors remain exact.
+
+The composition still has **11 unexecuted functions** (previously 16); the hook
+measures 50/50 functions. Neither result establishes every rendered/lifecycle or
+native accessibility path. Provider null columns are **952/37598 endpoints**
+(previously 951/37472); all endpoint and L/S/F/B uncovered maps remain available.
+No source/test exclusion, lower floor or removed test conceals that debt.
+
+The exact ignored proposal, candidate JSON, per-file comparisons, all 16 report
+fingerprints and 237 source/test/tool hashes live under
+`apps/web/coverage/t11-kilo-round1-corrections/proposal/`. The 12 non-web report
+files are prior accepted source-qualified bytes, not freshly rerun cases. The
+future normal-count expectation is **738** (290 API, 406 web, 23 contracts,
+19 prototype); predicted count digest is
+`a90263901ce0220411fc38593c42dc92c26042d33550c1540bf2e8f880cbe757`.
+That prediction is not a completed normal replay. All eight current baseline
+hashes and historical evidence remain protected pending explicit coordinator
+approval. The [integration receipt](sprint-presentation.md#native-round-one-corrections-and-numerical-proposal--2026-11-22-caracas)
+records test witnesses, functional/native limits and the unchanged user-accepted
+UNVERIFIED external Cancel/Leave debt. T11.4b/T11.5/full T11 remain open before T38.

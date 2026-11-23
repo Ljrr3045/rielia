@@ -188,6 +188,12 @@ export async function submitSprintForm(
     return { reason: 'unavailable', errors: {} };
   const parsed = parseSprintForm(form);
   if (!parsed.intent) return { reason: 'invalid', errors: parsed.errors };
+  if (
+    parsed.intent.type === 'set-task-sprint' &&
+    parsed.intent.targetSprintId ===
+      (state.resources.task.data?.currentParticipation?.sprint.id ?? null)
+  )
+    return { reason: 'unavailable', errors: {} };
   const reason = owner.changeDraft(parsed.intent);
   return { reason: reason === 'ready' ? await owner.submit() : reason, errors: {} };
 }

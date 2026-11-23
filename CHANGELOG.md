@@ -4,6 +4,19 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Correct [all seven accepted PR55 round-one findings](docs/development/sprint-presentation.md#native-round-one-corrections-and-numerical-proposal--2026-11-22-caracas)
+  in one local batch: replace obsolete task/workspace navigation intentions,
+  prevent unchanged participation writes while keeping selection editable, show
+  a safe parent leave decision in My tasks/search, retain authorized off-page
+  sprint selection, separate stale scope paging from task navigation and label
+  retained Backlog correctly. Preserve Astra's imported neutral ES/EN metadata
+  history copy. Add 16 regressions with a failing reviewed-source witness;
+  canonical web measure passes 406 cases. Propose web-only `89cdc952` with higher
+  floors and no per-file ratio/uncovered regression; all tracked baselines remain
+  unchanged pending approval. Eleven composition functions/null mapping debt,
+  user-accepted UNVERIFIED native Cancel/Leave, later focused native QA and
+  T11.4b/T11.5/full T11 remain explicit; no publication/review/merge acceptance.
+
 - Record the user's 2026-11-22 **“omitamos y continuemos”** decision in the
   [current sprint review disposition](docs/development/sprint-presentation.md#user-accepted-native-verification-omission--2026-11-22).
   Omit only external native Cancel/Leave verification for this T11.4b batch as

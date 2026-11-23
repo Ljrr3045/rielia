@@ -409,6 +409,12 @@ export function createProjectTaskController(options: {
       (navigationBlocker && navigationBlocker.getGuard() !== 'none')
     );
   }
+  function clearNavigationDecision() {
+    deferredNavigation = null;
+    workspaceNavigation = null;
+    if (state.integratedNavigation || state.workspaceNavigation)
+      publish({ ...state, integratedNavigation: null, workspaceNavigation: null });
+  }
   function guardNavigation(url: string, run: () => Promise<void>, restoreHistory = false) {
     if (!navigationBlocker || !navigationProtected()) return false;
     const destination = new URL(url, 'https://location.invalid');
@@ -420,8 +426,10 @@ export function createProjectTaskController(options: {
       destination.origin === 'https://location.invalid' &&
       destination.pathname === '/projects' &&
       destination.searchParams.get('workspace') !== state.selection.workspaceId
-    )
+    ) {
+      clearNavigationDecision();
       return false; // The existing task-only workspace guard owns its original return/focus contract.
+    }
     if (
       !state.pending &&
       navigationBlocker.getGuard() === 'none' &&
@@ -430,10 +438,13 @@ export function createProjectTaskController(options: {
       destination.pathname === '/projects' &&
       destination.searchParams.get('workspace') === state.selection.workspaceId &&
       readProjectSprintLocation(destination.search)?.view === 'tasks'
-    )
+    ) {
+      clearNavigationDecision();
       return false;
+    }
     deferredNavigation = { url, run };
-    publish({ ...state, integratedNavigation: { url } });
+    workspaceNavigation = null;
+    publish({ ...state, workspaceNavigation: null, integratedNavigation: { url } });
     if (restoreHistory) options.navigate?.(state.url, true);
     return true;
   }

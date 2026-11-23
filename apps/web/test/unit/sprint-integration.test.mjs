@@ -1316,3 +1316,423 @@ test(
     assert.equal(b.container.querySelector('main').hasAttribute('inert'), false);
   },
 );
+
+test('round-one: accepted task Back cancels an obsolete sprint departure without losing the task draft', async (t) => {
+  const b = await sprintIntegrationBrowser(t, { search: '?workspace=a&project=p&task=t1' });
+  const h = await b.owners();
+  await act(async () => h.state.parent.stage(createDraft()));
+  await act(async () => h.state.selectView('sprints'));
+  assert.ok(h.state.parent.integratedNavigation);
+  b.window.history.pushState({}, '', '/projects?workspace=a&project=p&task=t2');
+  await b.event('popstate');
+  assert.equal(h.state.parent.selection.taskId, 't2');
+  assert.equal(h.state.parent.draft.fields.title, 'Retained intent');
+  assert.equal(h.state.parent.integratedNavigation, null);
+  await act(async () => h.state.parent.discardDraft());
+  await b.clock.advance(500);
+  assert.equal(h.state.parent.selection.taskId, 't2');
+  assert.equal(h.state.parent.sprintLocation.view, 'tasks');
+  assert.equal(h.state.parent.integratedNavigation, null);
+  assert.equal(posts(b).length + b.posts().length, 0);
+});
+
+test('round-one: a newer workspace decision replaces the integrated departure and keeps the original task guard', async (t) => {
+  const b = await sprintIntegrationBrowser(t, { search: '?workspace=a&project=p' });
+  const h = await b.owners();
+  await act(async () => h.state.parent.stage(createDraft()));
+  await act(async () => h.state.selectView('sprints'));
+  b.window.history.pushState({}, '', '/projects?workspace=b');
+  await b.event('popstate');
+  assert.equal(h.state.parent.selection.workspaceId, 'a');
+  assert.equal(h.state.parent.workspaceNavigation.workspaceId, 'b');
+  assert.equal(h.state.parent.integratedNavigation, null);
+  await act(async () => h.state.parent.resolveWorkspaceNavigation('stay'));
+  assert.equal(h.state.parent.draft.fields.title, 'Retained intent');
+  await act(async () => h.state.parent.selectWorkspace('b'));
+  await act(async () => h.state.parent.resolveWorkspaceNavigation('discard'));
+  await b.clock.advance(500);
+  assert.equal(h.state.parent.selection.workspaceId, 'b');
+  assert.equal(h.state.parent.sprintLocation.view, 'tasks');
+  assert.equal(h.state.parent.integratedNavigation, null);
+  assert.equal(h.state.parent.workspaceNavigation, null);
+  assert.equal(posts(b).length + b.posts().length, 0);
+});
+
+test('round-one: the latest integrated departure replaces a workspace decision rather than leaving two choices armed', async (t) => {
+  const b = await sprintIntegrationBrowser(t, { search: '?workspace=a&project=p' });
+  const h = await b.owners();
+  let departures = 0;
+  await act(async () => h.state.parent.stage(createDraft()));
+  await act(async () => h.state.parent.selectWorkspace('b'));
+  assert.ok(h.state.parent.workspaceNavigation);
+  await act(async () => h.state.parent.navigateAway('/workspaces', () => departures++));
+  assert.equal(h.state.parent.workspaceNavigation, null);
+  assert.equal(h.state.parent.integratedNavigation.url, '/workspaces');
+  await act(async () => h.state.parent.resolveIntegratedNavigation('stay'));
+  await act(async () => h.state.parent.resolveWorkspaceNavigation('discard'));
+  assert.ok(h.state.parent.draft);
+  assert.equal(h.state.parent.selection.workspaceId, 'a');
+  assert.equal(departures, 0);
+  await act(async () => h.state.parent.navigateAway('/workspaces', () => departures++));
+  await act(async () => h.state.parent.resolveIntegratedNavigation('discard'));
+  assert.equal(departures, 1);
+  assert.equal(h.state.parent.draft, null);
+});
+
+for (const current of ['s', null])
+  test(`round-one: unchanged participation ${current ?? 'backlog'} cannot submit but the destination remains editable`, async (t) => {
+    const b = await openScreen(t, {
+      search: '?workspace=a&project=p&task=t1',
+      configure(_b, s) {
+        if (current === null) s.task.currentParticipation = null;
+      },
+    });
+    const section = getByRole(b.container, 'heading', {
+      name: 'Task planning',
+      exact: true,
+    }).closest('section');
+    await b.click('Change participation', section);
+    const select = getByRole(section, 'combobox', { name: 'Sprint participation' });
+    const submit = () => getByRole(section, 'button', { name: 'Save participation' });
+    assert.equal(select.value, current ?? '');
+    assert.equal(select.disabled, false);
+    assert.equal(submit().disabled, true);
+    await act(async () =>
+      section
+        .querySelector('form')
+        .dispatchEvent(new b.window.Event('submit', { bubbles: true, cancelable: true })),
+    );
+    assert.equal(posts(b).length, 0, 'submit handler also rejects the unchanged decision');
+    await b.select('Sprint participation', 'target', section);
+    assert.equal(submit().disabled, false);
+    await b.select('Sprint participation', current ?? '', section);
+    assert.equal(submit().disabled, true);
+    assert.equal(select.disabled, false);
+    await act(async () =>
+      section
+        .querySelector('form')
+        .dispatchEvent(new b.window.Event('submit', { bubbles: true, cancelable: true })),
+    );
+    assert.equal(posts(b).length, 0);
+    await b.select('Sprint participation', 'target', section);
+    b.sprintServer.post = ({ init }) => {
+      const input = JSON.parse(init.body);
+      assert.equal(input.expectedCurrentParticipationId, current === null ? null : 'visit');
+      assert.equal(input.targetSprintId, 'target');
+      b.sprintServer.task.currentParticipation = { id: 'new', sprint: b.sprintServer.target };
+      return Response.json({
+        operation: {
+          type: 'set-task-sprint',
+          activityId: 'a',
+          sprintId: 'target',
+          enteredVisitId: 'new',
+          exitedVisitId: current === null ? null : 'visit',
+        },
+        current: b.sprintServer.task,
+      });
+    };
+    await b.click('Save participation', section);
+    await b.clock.advance(500);
+    assert.equal(posts(b).length, 1);
+    assert.equal(
+      getByRole(b.container, 'heading', { name: 'Task planning', exact: true })
+        .closest('section')
+        .querySelector('form'),
+      null,
+    );
+  });
+
+test('round-one: a retained participation decision that becomes canonical after conflict/rebase cannot resubmit', async (t) => {
+  const b = await sprintIntegrationBrowser(t, { search: '?workspace=a&project=p&task=t1' });
+  const h = await b.owners();
+  await act(async () => h.state.begin('set-task-sprint'));
+  await act(async () => h.state.changeField('destination', 'target'));
+  b.sprintServer.post = () => {
+    b.sprintServer.task.snapshot.version++;
+    b.sprintServer.task.currentParticipation = { id: 'other', sprint: b.sprintServer.target };
+    return Response.json(
+      { code: 'version-conflict', current: b.sprintServer.task },
+      { status: 409 },
+    );
+  };
+  await act(async () => h.state.submitForm());
+  assert.equal(h.state.sprints.mutation.status, 'conflict');
+  await act(async () => h.state.sprints.refresh());
+  await act(async () => h.state.rebase());
+  assert.equal(h.state.editing.form.fields.destination, 'target');
+  assert.equal(posts(b).length, 1);
+  await act(async () => h.state.submitForm());
+  assert.equal(
+    posts(b).length,
+    1,
+    'rebase and explicit submit cannot repeat an unchanged transition',
+  );
+  assert.ok(h.state.editing.form, 'the retained form stays editable for a different decision');
+});
+
+for (const scope of ['mine', 'search'])
+  test(`round-one: ${scope} has a reachable parent-only leave review with Stay and explicit discard`, async (t) => {
+    const b = await openScreen(t, { search: '?workspace=a&project=p&task=t1' });
+    b.server.responses.set('/api/v1/workspaces/a/task-discovery', {
+      workspaceId: 'a',
+      principalId: 'human',
+      query: { scope, q: '', view: 'active', filters: {} },
+      revision: 'a'.repeat(64),
+      items: [],
+      total: 0,
+      nextCursor: null,
+    });
+    await b.click('Edit');
+    await b.input(
+      getByRole(dialog(b), 'textbox', { name: /^Title/ }),
+      'Private retained task decision',
+    );
+    b.window.history.pushState({}, '', `/projects?workspace=a&taskScope=${scope}`);
+    await b.event('popstate');
+    await b.flush();
+    assert.equal(queryByRole(b.container, 'dialog'), null);
+    assert.doesNotMatch(b.container.textContent, /Private retained task decision|Task planning/);
+    await act(async () => b.container.querySelector('a[href="/workspaces"]').click());
+    await b.flush();
+    assert.equal(dialog(b).contains(b.document.activeElement), true);
+    assert.equal(b.container.querySelector('main').hasAttribute('inert'), true);
+    assert.equal(b.container.querySelectorAll('[role="dialog"]').length, 1);
+    assert.match(dialog(b).textContent, /Workspaces|Task work/);
+    assert.doesNotMatch(dialog(b).textContent, /Private retained task decision|Sprint work/);
+    await b.click('Stay here', dialog(b));
+    assert.equal(queryByRole(b.container, 'dialog'), null);
+    assert.equal(b.container.querySelector('main').hasAttribute('inert'), false);
+    const link = b.document.createElement('a');
+    link.href = '/projects?workspace=a&project=p&projectView=sprints&sprint=s';
+    b.document.body.append(link);
+    await act(async () => link.click());
+    await b.flush();
+    assert.ok(dialog(b));
+    await b.click('Discard local work and continue', dialog(b));
+    await b.clock.advance(500);
+    await b.flush();
+    assert.equal(queryByRole(b.container, 'dialog'), null);
+    assert.equal(new URL(b.window.location.href).searchParams.get('projectView'), 'sprints');
+    assert.equal(getByRole(b.container, 'combobox', { name: 'Choose sprint' }).value, 's');
+    assert.equal(posts(b).length + b.posts().length, 0);
+    link.remove();
+  });
+
+for (const reason of ['signed-out', 'forbidden'])
+  test(`round-one: parent-only navigation review cannot survive ${reason} with former private work`, async (t) => {
+    const b = await openScreen(t, { search: '?workspace=a&project=p&task=t1' });
+    await b.click('Edit');
+    await b.input(
+      getByRole(dialog(b), 'textbox', { name: /^Title/ }),
+      'Do not remount private work',
+    );
+    b.window.history.pushState({}, '', '/projects?workspace=a&taskScope=mine');
+    await b.event('popstate');
+    await act(async () => b.container.querySelector('a[href="/workspaces"]').click());
+    await b.flush();
+    assert.ok(dialog(b));
+    await act(async () => b.server.streams.at(-1).emit({ type: 'denied', reason }));
+    await b.flush();
+    assert.equal(queryByRole(b.container, 'dialog'), null);
+    assert.doesNotMatch(
+      b.container.textContent,
+      /Do not remount private work|Task planning|Resolve changes before leaving/,
+    );
+    assert.equal(posts(b).length + b.posts().length, 0);
+  });
+
+test('round-one: an authorized deep-linked sprint outside the first100 options stays selected without inflating page counts', async (t) => {
+  const b = await openScreen(t, {
+    configure(_b, s) {
+      s.list.items = Array.from({ length: 100 }, (_, index) => ({
+        ...plannedSprint(`page${index}`),
+        workspaceId: 'a',
+      }));
+      s.list.total = 101;
+      s.list.nextCursor = 'tail';
+      s.sprint.capabilities = {
+        canEdit: false,
+        canStart: false,
+        canClose: false,
+        canChangeScope: false,
+      };
+      s.planning.capabilities = { canConfigurePlanning: false, canCreateSprint: false };
+    },
+  });
+  let chooser = getByRole(b.container, 'combobox', { name: 'Choose sprint' });
+  assert.equal(chooser.value, 's');
+  assert.equal([...chooser.options].filter((option) => option.value === 's').length, 1);
+  assert.match(b.container.textContent, /Loaded 100 of 101/);
+  assert.equal(queryByRole(b.container, 'button', { name: 'Edit sprint' }), null);
+  b.sprintServer.list.items[99] = b.sprintServer.sprint;
+  await act(async () => b.server.streams.at(-1).emit({ type: 'reset' }));
+  await b.clock.advance(500);
+  chooser = getByRole(b.container, 'combobox', { name: 'Choose sprint' });
+  assert.equal(chooser.value, 's');
+  assert.equal([...chooser.options].filter((option) => option.value === 's').length, 1);
+  assert.match(b.container.textContent, /Loaded 100 of 101/);
+  assert.equal(posts(b).length, 0);
+});
+
+test('round-one: scope paging respects loading/changed/error state while authorized task links stay available', async (t) => {
+  let tail = deferred();
+  const b = await openScreen(t, {
+    configure(_b, s) {
+      s.scope.total = 2;
+      s.scope.nextCursor = 'tail';
+      const original = s.get;
+      s.get = (request) =>
+        request.path.endsWith('/scope') && request.query.has('cursor')
+          ? tail.promise
+          : original(request);
+    },
+  });
+  const section = () =>
+    getByRole(b.container, 'heading', { name: 'Scope', exact: true }).closest('section');
+  const taskLink = () => getByRole(section(), 'button', { name: /QA-1/ });
+  const pager = () => getByRole(section(), 'button', { name: /Load(ing)? more/ });
+  assert.equal(pager().disabled, false);
+  await b.click('Load more', section());
+  assert.equal(pager().disabled, true);
+  assert.equal(taskLink().disabled, false);
+  await act(async () =>
+    tail.resolve(Response.json({ ...b.sprintServer.scope, taskRevision: 99, nextCursor: null })),
+  );
+  assert.equal(pager().disabled, true, 'changed first page must be reloaded before paging');
+  assert.equal(taskLink().disabled, false);
+  const reads = b.sprintServer.requests.length;
+  await b.click('Load more', section());
+  assert.equal(b.sprintServer.requests.length, reads);
+  await b.click('Reload');
+  assert.equal(pager().disabled, false);
+  tail = deferred();
+  await b.click('Load more', section());
+  await act(async () => tail.reject(new Error('Scope continuation unavailable')));
+  assert.equal(pager().disabled, true, 'error with retained rows cannot offer a dead continuation');
+  assert.equal(taskLink().disabled, false);
+  await b.click('Reload');
+  assert.equal(pager().disabled, false);
+  await b.click('Edit sprint');
+  const pending = deferred();
+  b.sprintServer.post = () => pending.promise;
+  await b.click('Save changes', dialog(b));
+  assert.equal(pager().disabled, true);
+  assert.equal(
+    taskLink().disabled,
+    true,
+    'existing pending mutation guard still protects task navigation',
+  );
+  await act(async () => pending.resolve(Response.json({ ...b.sprintServer.sprint, version: 3 })));
+  await b.clock.advance(500);
+  assert.equal(taskLink().disabled, false);
+  await act(async () => taskLink().click());
+  await b.flush();
+  await b.clock.advance(500);
+  assert.equal(new URL(b.window.location.href).searchParams.get('task'), 't1');
+});
+
+test('round-one: retained participation Backlog is distinct from an unselected close destination', async (t) => {
+  const b = await openScreen(t, {
+    search: '?workspace=a&project=p&projectView=sprints&sprint=s&task=t1',
+  });
+  await b.click('Review closure');
+  assert.equal(getByRole(dialog(b), 'combobox', { name: 'Pending work destination' }).value, '');
+  await b.click('Get preview', dialog(b));
+  assert.match(dialog(b).textContent, /No sprint selected/);
+  assert.equal(getByRole(dialog(b), 'button', { name: 'Confirm closure' }).disabled, true);
+  await b.click('Back', dialog(b));
+  const section = getByRole(b.container, 'heading', { name: 'Task planning', exact: true }).closest(
+    'section',
+  );
+  await b.click('Change participation', section);
+  await b.select('Sprint participation', '', section);
+  b.sprintServer.post = () =>
+    Response.json({ code: 'version-conflict', current: b.sprintServer.task }, { status: 409 });
+  await b.click('Save participation', section);
+  const currentSection = getByRole(b.container, 'heading', {
+    name: 'Review conflicting changes',
+    exact: true,
+  }).closest('section');
+  const comparison = currentSection.querySelector('[data-sprint-conflict]') ?? currentSection;
+  assert.match(comparison.textContent, /Backlog \(no sprint\)/);
+  assert.doesNotMatch(comparison.textContent, /No sprint selected/);
+  assert.equal(posts(b).length, 1);
+  await b.click('Discard this decision', currentSection);
+  assert.equal(posts(b).length, 1);
+});
+
+for (const lang of ['es', 'en'])
+  test(`round-one: ${lang} creation and edit history use the imported neutral metadata wording`, async (t) => {
+    const b = await openScreen(t, {
+      configure(_b, s) {
+        s.history.items = ['create-sprint', 'edit-sprint'].map((action, index) => ({
+          ...historyEntry(`h${index + 1}`, 'metadata'),
+          taskId: null,
+          participationId: null,
+          action,
+          before: null,
+          after: null,
+        }));
+        s.history.total = 2;
+      },
+    });
+    if (lang === 'es') await b.select('Language', 'es');
+    const history = getByRole(b.container, 'heading', {
+      name: lang === 'es' ? 'Historial del sprint' : 'Sprint history',
+      exact: true,
+    }).closest('section');
+    const rows = [...history.querySelectorAll('ol > li')];
+    assert.equal(rows.length, 2);
+    for (const row of rows) {
+      assert.ok(
+        row.textContent.includes(
+          lang === 'es' ? 'Datos del sprint registrados' : 'Sprint details recorded',
+        ),
+      );
+      assert.doesNotMatch(
+        row.textContent,
+        /Sprint details updated|Detalles del sprint actualizados/,
+      );
+    }
+    assert.equal(posts(b).length, 0);
+  });
+
+test('round-one: parent-only leave review is hidden during verification, restored only for the same session and cleared on replacement', async (t) => {
+  const b = await sprintIntegrationBrowser(t, { search: '?workspace=a&project=p' });
+  b.server.responses.set('/api/v1/workspaces/a/task-discovery', {
+    workspaceId: 'a',
+    principalId: 'human',
+    query: { scope: 'mine', q: '', view: 'active', filters: {} },
+    revision: 'a'.repeat(64),
+    items: [],
+    total: 0,
+    nextCursor: null,
+  });
+  const h = await b.owners();
+  let departures = 0;
+  await act(async () => h.state.parent.stage(createDraft()));
+  await act(async () => h.state.parent.setTaskScope('mine'));
+  await act(async () => h.state.parent.navigateAway('/workspaces', () => departures++));
+  assert.equal(h.state.model.visible, false);
+  assert.equal(h.state.modalOpen, true);
+  const held = b.server.holdNext('/api/v1/identity/session');
+  let checking;
+  await act(async () => {
+    checking = h.state.parent.refresh();
+  });
+  assert.equal(h.state.modalOpen, false);
+  assert.equal(h.state.model.resources, null);
+  await act(async () => {
+    held.resolve(Response.json(b.server.session));
+    await checking;
+  });
+  assert.equal(h.state.modalOpen, true);
+  assert.equal(h.state.parent.draft.fields.title, 'Retained intent');
+  b.server.session = identitySession('replacement');
+  await act(async () => h.state.parent.refresh());
+  assert.equal(h.state.modalOpen, false);
+  assert.equal(h.state.parent.integratedNavigation, null);
+  assert.equal(h.state.parent.draft, null);
+  assert.equal(departures, 0);
+  assert.equal(posts(b).length + b.posts().length, 0);
+});
