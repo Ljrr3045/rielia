@@ -1,0 +1,47 @@
+apps/web/src/app/projects/sprints/sprint-integration-view.tsx
+  s_aa027f2693f60d::t_787bae3549bd60 291,415,539-540,565,569-570,573
+apps/web/src/lib/sprint-form-state.ts
+  s_aa027f2693f60d::t_e5fb89f7af55ad 191-196
+apps/web/test/unit/sprint-integration.test.mjs
+  s_aa027f2693f60d::t_17c2df13400cd3 1319-1389,1394-1399,1405-1410,1416-1422,1433-1436,1443-1452,1457-1464,1470-1475,1485,1490-1494,1496-1524,1529-1530,1532-1536,1541-1546,1551-1552,1559-1583,1588-1589,1594,1596-1597,1601-1603,1605-1608,1610-1619,1625-1627,1630-1634,1647-1648,1651,1657-1659,1661-1667,1676-1679,1684-1686,1696-1698
+  s_aa027f2693f60d::t_cbecf1415ada2e 1390-1393,1400-1404,1411-1415,1423-1432,1453-1456,1465-1469,1476-1484,1486-1489,1525-1528,1537-1540,1547-1550,1553-1558,1584-1587,1598-1600,1620-1624,1644-1646,1649-1650,1668-1675,1680-1683,1687-1695
+  s_aa027f2693f60d::t_640c946bebec0c 1592-1593,1595,1604,1609,1656
+  s_aa027f2693f60d::t_4d2287d0e11157 1437-1442,1495,1531,1590-1591,1652,1654-1655
+  s_aa027f2693f60d::t_f8b877a022bf50 1660,1699-1702,1710-1719,1723-1724,1730-1732,1734-1738
+  s_aa027f2693f60d::t_b90074f57e4f4f 1703-1709,1720-1722,1725-1728
+  s_aa027f2693f60d::t_2f2dc610689ddf 1729,1733
+  s_aa027f2693f60d::t_da072616e52aeb 1628-1629,1635-1643,1653
+docs/development/sprint-presentation.md
+  s_aa027f2693f60d::t_60a404121fef56 3-11,1217-1287
+CHANGELOG.md
+  s_aa027f2693f60d::t_60a404121fef56 7-19
+docs/development/unit-coverage.md
+  s_aa027f2693f60d::t_60a404121fef56 1164-1213
+apps/web/src/app/projects/sprints/sprint-task-planning.tsx
+  s_aa027f2693f60d::t_e5fb89f7af55ad 27,190-194
+docs/development/progress.md
+  s_aa027f2693f60d::t_60a404121fef56 3-29
+apps/web/src/app/projects/sprints/sprint-workspace.tsx
+  s_aa027f2693f60d::t_787bae3549bd60 48-50,97,280,289,342
+apps/web/src/lib/use-project-sprint-integration.ts
+  s_aa027f2693f60d::t_787bae3549bd60 7-10,420-443,454,460
+  s_aa027f2693f60d::t_1af9151e36f1ad 6
+apps/web/src/lib/project-task-controller.ts
+  s_aa027f2693f60d::t_e5fb89f7af55ad 412-417,429-430,432,441-442,444,446-447
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3d37c7552fda29e5d5c1fbf5c71bd679b2898197",
+  "prompts": {},
+  "sessions": {
+    "s_aa027f2693f60d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1fbeb-0dae-7cd1-a40f-f13fa4b7d5da",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
