@@ -1,0 +1,27 @@
+docs/development/t11-acceptance.md
+  s_28940d5a7af39a::t_e859bb23285792 3
+docs/development/development-quality-roadmap.md
+  s_28940d5a7af39a::t_e859bb23285792 17-20,41-49,71-73
+docs/development/progress.md
+  s_28940d5a7af39a::t_e859bb23285792 5,2974
+apps/web/AGENTS.md
+  s_28940d5a7af39a::t_e859bb23285792 28-38
+CONTRIBUTING.md
+  s_28940d5a7af39a::t_e859bb23285792 58
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "46d9286f1b0d5b6d1bd2a82f0451bd470edf4b95",
+  "prompts": {},
+  "sessions": {
+    "s_28940d5a7af39a": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a20a04-8769-7e50-aae6-bfb873b4a5f6",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
