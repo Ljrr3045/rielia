@@ -1,5 +1,32 @@
 # Delivery progress and decisions
 
+## 2026-11-22 T11.4b review batch — USER-ACCEPTED UNVERIFIED NATIVE DEBT
+
+After the specific Back/Cancel/Leave behavior and possible unsaved-draft-loss risk
+were explained, the user replied **“omitamos y continuemos”** (America/Caracas).
+[The current disposition](sprint-presentation.md#user-accepted-native-verification-omission--2026-11-22)
+omits only external native Cancel/Leave verification for this T11.4b review batch.
+It remains **user-accepted UNVERIFIED debt with risk**, not a passing test or
+browser-host/web correctness proof; this check no longer blocks advancing to Kilo
+review. Earlier dated blocker entries below and all failure/permission-discrepancy
+packets remain historical evidence. No further UI/permission/helper/browser
+troubleshooting occurs. Coordinator/user owns scheduling later viable native
+verification; SOL owns functional verification and any evidenced fix.
+
+The local batch combines the unpublished `579b26d4` receipt and this disposition,
+with an English body for [Draft PR55](https://github.com/Ljrr3045/rielia/pull/55).
+Published OPEN/isDraft head remains `bd011271`, base `a2de3bd`; its
+[validate](https://github.com/Ljrr3045/rielia/actions/runs/44881650922/job/136778041029)
+is SUCCESS, not CI for the later local docs candidate. All 237 source/test/tool,
+180 built, eight baseline and 16 report hashes stay exact; prior 722/722 cases
+retain source `1df6fd4` and the accepted digest. Only docs/format/handoff/whitespace
+and normal commit hooks run; no source/test/baseline, service or remote mutation.
+The coordinator owns final Draft publication, current-head CI and one Ready/native
+Kilo round; privacy/permissions, ownership and review gates remain required.
+Sixteen unexecuted functions, 951/37472 null mappings, representative/native
+limits, device/AT/zoom and T11.4b/T11.5/full T11 remain open. T38 follows full T11;
+assignment ACTIVE, with no full acceptance or automatic merge.
+
 ## 2026-11-21 T11.4b resumed native check — CONTROL PERMISSION BLOCKER; GATE OPEN
 
 At published clean `bd011271`, Brave window inventory is available with zero

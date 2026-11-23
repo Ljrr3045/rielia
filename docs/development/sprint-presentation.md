@@ -1,11 +1,13 @@
 # T11.4b sprint presentation checkpoint
 
 Status: **IMPLEMENTED integrated T11.4b batch in [Draft PR55](https://github.com/Ljrr3045/rielia/pull/55),
-OPEN/isDraft verified at published head `bd011271`. Native external Cancel/Leave
-remains an OWNED OPEN ACCEPTANCE GATE. Resumed inventory is available, but
-background control needs Accessibility and programmatic creation needs consent.
-No Ready,
-Kilo request, T11.4b/T11.5 or full T11 acceptance; coordinator owns remote writes**.
+OPEN/isDraft verified at published head `bd011271`. On 2026-11-22 America/Caracas,
+the user omitted only external native Cancel/Leave verification for this review
+batch, accepting UNVERIFIED debt and possible unsaved-draft loss. This check no
+longer blocks advancing to Kilo review; it has not passed and establishes neither
+browser-host nor web correctness. Coordinator publication/current-head CI,
+requested native Kilo review and ownership gates remain required. T11.4b/T11.5
+and full T11 remain unaccepted; coordinator owns remote writes and Ready**.
 Base: accepted T11.4a merge `a2de3bd79596cb83b79287f105f60fedfb35bea9`.
 The [client guide](sprint-client.md#t114a-acceptance--2026-11-20-caracas--november-21-utc)
 records PR54 acceptance and its review/hash limits. T11.5 and full T11 remain
@@ -1152,3 +1154,62 @@ qualified and unchanged. No full suite/build/722-case or bulk-data replay, sourc
 test/baseline patch or remote mutation occurs. T11.4b/T11.5/full T11 and 16
 unit-unexecuted functions/manual limits remain open before T38. Root owns remote
 publication; assignment ACTIVE, no Ready/Kilo/merge/deploy/worker_done.
+
+## User-accepted native verification omission — 2026-11-22
+
+After the coordinator explained native Back with an unsaved task/sprint draft,
+Cancel preserving the draft, Leave discarding it, the 722 passing cases and the
+possible unsaved-draft-loss risk, the user explicitly replied **“omitamos y
+continuemos”** in the root conversation on **2026-11-22 America/Caracas**. This
+omits **only external native Cancel/Leave verification for the current T11.4b
+review batch** as **user-accepted UNVERIFIED debt with risk**. This particular
+check no longer blocks advancing to Kilo review. It is not a passed test, proof
+of browser-host/web correctness, T11 acceptance or automatic merge approval.
+
+The observed embedded boundary remains: trusted, activated production unloads
+were canceled, yet Orca Back crossed documents and lost raw task/sprint drafts;
+canonical persisted fields/versions stayed unchanged. No web defect was isolated
+or fix invented. The dated `screen_locked`, quiet `-1744` automation preflight
+and background Accessibility-denial receipts above remain historical evidence.
+The subsequent preserved packet at clean `579b26d4` also records both permissions
+reading granted before/after, while the single supported background request
+still returns `permission_denied`; no owned window/fixture or native flow is
+reached. The cause is undetermined. That permission-discrepancy packet and all
+previous failures/blocked snapshots remain unchanged. Their former blocking
+disposition is superseded only by the user's narrow omission decision. No further
+browser, permission, helper or UI troubleshooting occurs in this batch.
+
+**Debt owner and later verification:** the coordinator/user owns scheduling when
+viable; SOL owns functional verification and any fix justified by a reproduced
+failure. A later supported external-browser/native-control check, or a narrow
+user-run manual check, must bind the exact source/session/browser, exercise both
+task and sprint unsaved drafts through actual Back/Cancel and explicit Leave,
+and verify canonical persisted values. Until then, loss of unsaved drafts during
+cross-document navigation remains an accepted review risk, not certified behavior.
+Device/gesture, assistive-technology and OS-zoom checks, the representative matrix
+limits, 16 unit-unexecuted composition functions and 951/37472 null mappings remain
+explicit. This disposition waives no privacy/permission, current-head CI, Kilo,
+ownership or other acceptance requirement. T11.4b/T11.5/full T11 remain open;
+T38 follows full T11, with no library adoption here.
+
+This local docs-only batch includes the previously unpublished `579b26d4` setup
+receipt plus the current user disposition, progress and changelog. Its proposed
+English PR55 body is prepared for coordinator publication. All 237 source/test/
+tool hashes, 180 built hashes, eight baselines and 16 normal reports remain exact;
+722/722 normal cases and digest `7d1c75a2d0c8b1ca737687dfbe3aee75348c52bc90d28ab5b2a48b994c15031e`
+retain their functional-source `1df6fd4` binding. No source/test/baseline or immutable
+handoff changes, heavy replay, service or remote mutation occur. The published
+`bd011271` [validate](https://github.com/Ljrr3045/rielia/actions/runs/44881650922/job/136778041029)
+is SUCCESS (24/24 steps; GitHub Actions App 15368), with its inherited Node-action
+deprecation warning preserved; it does not certify this later local docs head.
+The coordinator must verify actual Draft/no live review, publish the final batch,
+obtain current-head CI and then control one Ready/native Kilo round and its triage.
+No current-head Kilo result, fake APPROVED, merge or T11 acceptance is claimed;
+PR54's incremental/native hash-tool limits remain explicit.
+
+Ignored evidence is under `apps/web/coverage/t11-native-omission-review-batch/`:
+actual SOL/profile and before/after source bindings, user disposition, published
+PR55/body/check readback, proposed English body, documentation checks, commit and
+manifest. Historical packets are immutable, including
+`t11-native-external-confirmation/` and `t11-pr55-current-ci/`. Assignment remains
+ACTIVE for the coordinator's final Draft publication/review sequence.

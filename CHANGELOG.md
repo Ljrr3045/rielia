@@ -4,6 +4,18 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Record the user's 2026-11-22 **“omitamos y continuemos”** decision in the
+  [current sprint review disposition](docs/development/sprint-presentation.md#user-accepted-native-verification-omission--2026-11-22).
+  Omit only external native Cancel/Leave verification for this T11.4b batch as
+  user-accepted **UNVERIFIED debt**, including possible unsaved-draft loss. This
+  check no longer blocks advancing to Kilo review; no passed native test or
+  browser-host/web correctness is claimed. Prior blocker/publication entries
+  below remain historical snapshots, with all failure and permission-discrepancy
+  evidence preserved. Coordinator/user owns later viable verification; current-
+  head CI, native Kilo, ownership/privacy/permission gates and T11.5/full T11 remain
+  required. Prepare the combined local docs-only receipt/body for Draft PR55;
+  source/tests/baselines and prior 722-case evidence stay unchanged.
+
 - Record [the resumed external native setup blocker](docs/development/sprint-presentation.md#resumed-external-native-setup-control-permissions-unavailable--2026-11-21):
   inventory now succeeds, but background control lacks Accessibility and quiet
   programmatic creation would require consent. No test window/fixture is created,
