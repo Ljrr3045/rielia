@@ -291,7 +291,7 @@ export const sprintHistoryKindCopy = {
   entry: { es: 'Tarea incorporada al sprint', en: 'Task added to sprint' },
   exit: { es: 'Participación finalizada', en: 'Participation ended' },
   'task-change': { es: 'Tarea actualizada', en: 'Task updated' },
-  metadata: { es: 'Datos del sprint actualizados', en: 'Sprint details updated' },
+  metadata: { es: 'Datos del sprint registrados', en: 'Sprint details recorded' },
   start: { es: 'Sprint iniciado', en: 'Sprint started' },
   estimate: { es: 'Estimación actualizada', en: 'Estimate updated' },
   close: { es: 'Sprint cerrado', en: 'Sprint closed' },
