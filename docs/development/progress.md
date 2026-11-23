@@ -1,5 +1,403 @@
 # Delivery progress and decisions
 
+## 2026-11-23 T11.4b seven-correction native QA — BOUNDED PASS; REVIEW GATE OPEN
+
+The resumed Astra session verified all seven bounded correction areas at frozen
+`379de0e8`, with [native observations and explicit limits](sprint-presentation.md#resumed-seven-correction-native-qa--2026-11-23-caracas).
+Same-document intent replacement/Stay, My tasks/Search parent guards and auth
+fences, unchanged/rebased participation, off-page selection/counts, guarded scope
+paging, Backlog versus unselected closure and neutral ES/EN history have recorded
+outcomes. One real fixture supplied canonical data; controlled concurrency/read
+responses are distinguished from actual backend persistence. Native 390/1280
+captures and keyboard/focus checks are bounded, not a broader acceptance replay.
+
+Owned resources are gone; paused evidence, source/built fingerprints and all eight
+baselines remain unchanged. No new coverage denominator or heavy test/build run;
+prior 738/20/17 gates and 11 unexecuted functions/null952/37598 retain their limits.
+The earlier target-navigation failure remains unexplained despite no recurrence.
+External Cancel/Leave stays user-accepted UNVERIFIED debt. T11.4b/T11.5/full T11
+and current-head CI/Kilo/ownership/thread decisions remain open before T38.
+Docs-only checkpoint awaits coordinator review; no remote write or worker_done.
+
+## 2026-11-22 T11.4b approved correction replay — LOCAL GATES PASS; NARROW QA PENDING
+
+The coordinator independently approved exact web `f1679d66` → `89cdc952` at clean
+functional `3d37c755`, preserving Astra `a60983e7` and all seven other baselines.
+[The serial replay receipt](sprint-presentation.md#approved-round-one-numerical-replay--2026-11-22-caracas)
+records standard PASS on the identical supported continuation after Next's
+inherited security-upgrade reminder, normal **738/738** with actual digest
+`a90263901ce0220411fc38593c42dc92c26042d33550c1540bf2e8f880cbe757`, all 16
+report hashes/sizes exact, infrastructure **20/20** and **17** validated bounded
+artifact files. No upload, upgrade, pin/config/suppression change or extra local
+Docker/PostgreSQL identity run occurs; unchanged backend/runtime gates still
+need current-head CI. Fresh build bindings cover 318 outputs including 135 Next
+production outputs; 180 prior API/contracts hashes remain identical. No native
+or persisted user journey is inferred from those builds or standard HTTP checks.
+
+Only approved baseline/docs change after functional `3d37c755`; all 237 physical
+source/test/tool fingerprints and the approved proposal/feedback/omission packets
+remain exact. [Numerical details](unit-coverage.md#t114b-approved-correction-normal-replay--2026-11-22-caracas)
+retain 88 web inputs, every old test, higher floors, per-file nonregression,
+11 unexecuted composition functions and null952/37598. Root will sequence narrow
+frozen-head Astra QA, Draft publication/current-head CI and requested native
+review/ownership/thread dispositions. User-omitted external Cancel/Leave stays
+UNVERIFIED accepted debt outside this batch; device/AT/zoom/provider/staging and
+T11.4b/T11.5/full T11 remain open before T38. Assignment ACTIVE; no worker remote
+write, Ready/review toggle, resolution, merge or worker_done.
+
+## 2026-11-22 T11.4b native round-one corrections — LOCAL BATCH; BASELINE APPROVAL PENDING
+
+The coordinator accepted all seven findings from native PR55 round one and
+returned the same PR to Draft at reviewed `0faf74f5`. SOL fast-forward imported
+Astra's copy-only `a60983e7` unchanged and corrected six functional issues: stale
+navigation intentions, unchanged participation submits, missing My tasks/search
+leave review, off-page selected sprint options, stale scope paging and retained
+Backlog wording. ES/EN creation/edit history tests exercise Astra's neutral copy.
+[The bounded receipt](sprint-presentation.md#native-round-one-corrections-and-numerical-proposal--2026-11-22-caracas)
+links every finding to its correction/test and preserves old review/omission
+packets. Sixteen added cases fail on reviewed source and pass in the corrected
+batch; affected suites pass 154/154, final canonical web measure 406/406. Web
+typecheck, affected lint, format and whitespace pass; no new services/native matrix.
+
+[The exact numerical proposal](unit-coverage.md#t114b-native-round-one-correction-proposal--2026-11-22-caracas)
+retains 88 inputs and 237 physical fingerprints, per-file ratios/uncovered
+nonregression, raises every global floor and preserves all tests. Web candidate
+`89cdc952` awaits approval; all eight tracked baselines, including accepted
+`f1679d66`, remain unchanged. Future 738 normal cases/digest are predictions,
+not completed normal gates; other scope reports are retained prior evidence.
+Eleven composition functions remain unexecuted; null mappings are 952/37598.
+Root alone owns Draft pushes, review replies/resolutions and the next Ready
+round. No current-head review/approval or full acceptance is claimed. The
+user-omitted external native Cancel/Leave check remains UNVERIFIED accepted debt,
+outside this batch; device/AT/zoom/provider/staging and T11.4b/T11.5/full T11 remain
+open before T38. Assignment ACTIVE at the explicit baseline gate.
+
+## 2026-11-22 T11.4b review batch — USER-ACCEPTED UNVERIFIED NATIVE DEBT
+
+After the specific Back/Cancel/Leave behavior and possible unsaved-draft-loss risk
+were explained, the user replied **“omitamos y continuemos”** (America/Caracas).
+[The current disposition](sprint-presentation.md#user-accepted-native-verification-omission--2026-11-22)
+omits only external native Cancel/Leave verification for this T11.4b review batch.
+It remains **user-accepted UNVERIFIED debt with risk**, not a passing test or
+browser-host/web correctness proof; this check no longer blocks advancing to Kilo
+review. Earlier dated blocker entries below and all failure/permission-discrepancy
+packets remain historical evidence. No further UI/permission/helper/browser
+troubleshooting occurs. Coordinator/user owns scheduling later viable native
+verification; SOL owns functional verification and any evidenced fix.
+
+The local batch combines the unpublished `579b26d4` receipt and this disposition,
+with an English body for [Draft PR55](https://github.com/Ljrr3045/rielia/pull/55).
+Published OPEN/isDraft head remains `bd011271`, base `a2de3bd`; its
+[validate](https://github.com/Ljrr3045/rielia/actions/runs/44881650922/job/136778041029)
+is SUCCESS, not CI for the later local docs candidate. All 237 source/test/tool,
+180 built, eight baseline and 16 report hashes stay exact; prior 722/722 cases
+retain source `1df6fd4` and the accepted digest. Only docs/format/handoff/whitespace
+and normal commit hooks run; no source/test/baseline, service or remote mutation.
+The coordinator owns final Draft publication, current-head CI and one Ready/native
+Kilo round; privacy/permissions, ownership and review gates remain required.
+Sixteen unexecuted functions, 951/37472 null mappings, representative/native
+limits, device/AT/zoom and T11.4b/T11.5/full T11 remain open. T38 follows full T11;
+assignment ACTIVE, with no full acceptance or automatic merge.
+
+## 2026-11-21 T11.4b resumed native check — CONTROL PERMISSION BLOCKER; GATE OPEN
+
+At published clean `bd011271`, Brave window inventory is available with zero
+windows. Quiet programmatic creation preflight returns `-1744` (user consent
+would be required, no prompt requested); one supported background private-window
+shortcut returns `permission_denied` for Orca Computer Use Accessibility.
+Post-inventory remains zero. No fixture/window/session, personal-data or desktop
+permission/configuration change occurs. The [bounded receipt](sprint-presentation.md#resumed-external-native-setup-control-permissions-unavailable--2026-11-21)
+records this actual control blocker; Cancel/Leave stays OWNED OPEN ACCEPTANCE
+GATE, not an app failure or native pass. Source/built/baseline/report hashes and
+prior current-head CI success remain unchanged/qualified. Only local docs/body
+are prepared for coordinator disposition; no remote write or heavy replay.
+T11.4b/T11.5/full T11 remain open before T38; assignment ACTIVE.
+
+## 2026-11-21 T11.4b [Draft PR55](https://github.com/Ljrr3045/rielia/pull/55) — LOCAL URL RECEIPT; NATIVE GATE OPEN
+
+The authorized coordinator published initial `47da8cec` through supported
+root automatic review after direct user-role approval. Independent 07:35–07:36 UTC
+readback confirms OPEN/isDraft, `dev`, author `Ljrr3045` and exact head. Initial
+[validate](https://github.com/Ljrr3045/rielia/actions/runs/44880810429/job/136775464109)
+was IN_PROGRESS at capture (App 15368/run 44880810429/check 136775464109), associated
+with PR55/head `47da8cec`/base `a2de3bd`. No Kilo check or visible comments/reviews/
+requests appeared in the captured surfaces; no global queue/spend absence is
+claimed. The [source-qualified receipt](sprint-presentation.md#draft-pr55-url-and-initial-status-receipt--2026-11-21)
+retains historical worker approval rejections and unchanged 237/180 hashes,
+eight baselines, 16 reports and 722 local cases. This docs-only URL/status commit
+and refreshed English body await coordinator remote publication; worker performs
+no remote mutation or heavy/native repeat. Native Cancel/Leave remains an OWNED
+OPEN ACCEPTANCE GATE (`screen_locked` last preflight), with 16 unit-unexecuted
+functions and manual limits. No Ready/review/merge or T11.4b/T11.5/full T11
+acceptance; T38 after full T11; assignment ACTIVE.
+
+## 2026-11-21 T11.4b Draft publication — AUTOMATIC APPROVAL BLOCK; NO PUSH/PR
+
+Prepared clean disposition commit `a1232f3e` and concrete English Draft body.
+Automatic approval review rejected initial push/PR process creation: the original
+trusted task prohibits publication and the later coordinator tool message was
+not accepted as authority to change it. No bypass/retry was attempted. Read-only
+remote/GitHub checks confirm no published feature branch or branch PR; `dev`
+remains `a2de3bd`. [The approval receipt](sprint-presentation.md#publication-approval-block--2026-11-21)
+records the exact stated reason. Direct user approval of these external writes,
+or a coordinator hold, is pending; no Draft/CI/Kilo-event proof is fabricated.
+Local docs/body/evidence are reviewable with unchanged 237/180 hashes, eight
+baselines, 16 reports and prior 722-case binding. Native external Cancel/Leave is
+still an OWNED OPEN ACCEPTANCE GATE (`screen_locked`); T11.4b/T11.5/full T11 stay
+open before T38. Assignment ACTIVE; no Ready/review/merge/worker_done.
+
+
+## 2026-11-21 T11.4b implemented batch — DRAFT PUBLICATION AUTHORIZED; NATIVE GATE OPEN
+
+The coordinator accepted the clean `2a2de50e` unavailable-preflight receipt/body
+as bounded evidence and authorized one initial Draft PR for the implemented
+integrated batch. Native external Cancel/Leave remains an **OWNED OPEN ACCEPTANCE
+GATE**, with last `screen_locked` availability; no UI retry during publication,
+Ready or T11.4b/T11.5/full T11 acceptance. The [disposition](sprint-presentation.md#coordinator-disposition-and-draft-publication--2026-11-21)
+retains exact 237/180 source/built hashes, eight baselines and 16 normal reports,
+722 source-qualified tests and explicit native/unit limits. Base remains accepted
+`a2de3bd`; initial branch-PR absence/push/Draft and real URL/head evidence follow
+under coordinator publication authorization. No full local suite is repeated for
+this docs-only batch. T38 follows full T11; assignment ACTIVE.
+
+
+## 2026-11-21 T11.4b final alternate-host preflight — UNAVAILABLE; CANCEL/LEAVE GATE OPEN
+
+The coordinator reviewed/archived clean `033ea401` and authorized one bounded
+external-browser attempt. SOL verified the required actual model/permission
+profile and unchanged 237/180 source/built, eight baseline and 16 normal-report
+bindings. Orca computer-use returned `screen_locked` before Brave window access;
+no browser action/window, fixture/session/secret URL, personal-content read or
+cookie/history/settings/profile change occurred. No foreground or desktop-permission
+change was requested. The [final preflight](sprint-presentation.md#final-bounded-external-confirmation-preflight--2026-11-21)
+records the precise runtime limitation. Native Cancel/explicit Leave stays an
+owned unverified acceptance gate for coordinator disposition; no further broad
+QA or guessed source fix is implied. A refreshed concrete English Draft body is
+prepared locally. Prior 722-case numerical binding and bounded native evidence
+retain their limits; T11.4b/T11.5/full T11 remain open before T38, with no
+publication/review/merge or worker_done. Assignment ACTIVE.
+
+## 2026-11-21 T11.4b boundary consolidation — PRODUCTION CANCELLATION OBSERVED; NATIVE CONFIRMATION OPEN
+
+SOL imported the coordinator-authorized docs-only `15b2ccd` after accepted clean
+`1dba13af`; Astra's corrected focus and representative 103-participant/
+second-page destination/history/outcome evidence are accepted as bounded QA.
+One fresh minimal fixture isolated the remaining full-document Back boundary.
+Both changed task/sprint drafts had trusted input, actual Chromium activation
+and a trusted unload already canceled by production. Orca 1.4.261 nevertheless
+crossed documents; documented dialog control reported `browser_no_dialog`.
+Raw memory drafts were lost in this host schedule. Native Cancel/explicit Leave
+remain unverified and require coordinator disposition; no missing web handler or
+justified source fix was isolated. No automatic persisted write occurred.
+
+The [boundary receipt](sprint-presentation.md#sol-cross-document-guard-boundary-and-consolidation--2026-11-21)
+records exact reproduction, source/unit limits and cleanup. All 237 source/test/
+tool, 180 built and eight baseline hashes remain unchanged; the prior 722-case/
+16-report binding is preserved without repeating heavy schedules. Sixteen
+unit-unexecuted composition functions and representative matrix/device/AT/zoom
+limits remain open. An English Draft PR body is prepared locally for the
+coordinator's concrete publication decision. No publication/review/merge occurs;
+T11.4b/T11.5/full T11 and this assignment stay open before T38.
+
+## 2026-11-21 T11.4b Astra corrected native matrix — BOUNDED RECEIPT, REVIEW OPEN
+
+Fresh owned production fixture at frozen `1dba13af` passes the exact 320 ES dark
+Escape-to-replacement-action repro and settled sibling cancellation paths. The
+[native receipt](sprint-presentation.md#astra-corrected-head-native-matrix--2026-11-21)
+records persisted forms/estimates/participation, 103-participant server-reviewed
+closure, real destination/scope/history/outcome paging, frozen readback, both-owner
+draft guards, pending/unknown recovery and canonical read-only/denied/archive/
+Kanban restrictions. Nine opened captures cover representative four widths,
+ES/EN/themes/motion; physical device/AT/zoom and cross-document/beforeunload
+remain unverified. Prior SOL 409/401/latest-intent evidence retains its limits.
+
+No source/test/baseline changes; 232 selected source/test/tool and 180 built-runtime
+hashes remain exact. All owned resources are stopped and generated files restored.
+Prior 722 normal gates and 16 unexecuted composition functions are unchanged; manual
+QA adds no coverage hits. Coordinator review/disposition remains open; no PR/push/
+review/merge/worker_done or T11.4b/T11.5/full T11 acceptance before T38.
+
+## 2026-11-21 T11.4b focus correction — APPROVED NORMAL LOCAL GATES; NATIVE RECHECK OPEN
+
+Coordinator-approved web-only `04977cb4` → `f1679d66` is bound to clean functional
+head `1df6fd46` and proposal `7f5e3e5a`. Independent review checked all 237 hashes,
+eight untouched baseline hashes, 88-file exact nonregression and 84 unchanged raw
+maps. Only those approved web bytes were adopted; seven other baselines and all
+source/test/tool fingerprints remain exact. Corrected normal root gates pass
+722/722 without skips and all 16 reports replay exactly, digest `7d1c75a2`.
+Infrastructure 20/20, bounded artifacts and final standard checks pass; no native
+schedule, library change, publication or external review action was added.
+
+The [frozen handoff](sprint-presentation.md#focus-correction-approved-replay-and-native-handoff--2026-11-21)
+keeps the 16 unexecuted composition functions and native mapping/accessibility/
+multipage limits explicit. Astra remains idle until the coordinator authorizes
+her separate fast-forward and fresh own fixture, beginning with the exact
+no-resize 320 ES Escape-to-replacement-action repro. Numerical/source review is
+not corrected native or product acceptance. Assignment stays active; T11.4b/
+T11.5/full T11 remain open before T38; no push/PR/Ready/Kilo/merge/worker_done.
+
+## 2026-11-21 T11.4b SOL focus correction — EXACT PROPOSAL PENDING
+
+SOL fast-forwarded Astra's docs-only 48ec419 and corrected the reproduced logical
+focus return in the integration hook plus nonvisual scoped action/heading ports.
+The [correction guide](sprint-presentation.md#sol-scoped-focus-return-correction--2026-11-21)
+records actual SOL xhigh/automatic-review verification, unchanged Astra visual
+ownership and before 6-failure/1-pass production-component witness. All 51 retained/
+new composition cases pass, including 22 added focus lifetimes and context/safety
+regressions. Root-scoped lint, web types and source formatting pass.
+
+All 390 web cases/88 inputs pass measurement. Exact current-web candidate f1679d66
+preserves every existing file ratio/uncovered count, all 84 unchanged maps and the
+seven other baselines; all eight tracked baselines remain untouched. Proposal
+includes raw maps,237 source/test/tool fingerprints and16 report hashes. Global
+uncovered counts fall 5/5/5/3; 16 composition callbacks remain unexecuted. No
+unaffected heavy/native suite ran. Exact numerical approval, corrected normal/
+standard/infrastructure/artifact gates and Astra native focus/matrix recheck remain
+pending. Assignment stays active; no PR/push/review/merge/worker_done or full T11.
+
+
+## 2026-11-21 T11.4b Astra native focus finding — IN PROGRESS
+
+Frozen-head `436c4837` native QA used a fresh owned Next/Nest/PostgreSQL fixture
+after actual Astra high/automatic-review verification and pre-action fingerprints.
+Rendered settings/create and canonical readback passed their bounded checks.
+A reproducible [metadata dialog focus-return finding](sprint-presentation.md#astra-frozen-head-native-qa-finding--2026-11-21)
+returns Escape to the project heading after staging disconnects the opener,
+despite a replacement enabled Edit sprint control. This is referred to SOL;
+no source/test/baseline correction is made by Astra.
+
+The fixture/browser/private state/database resources are stopped and removed;
+all 232 source/test/tool fingerprints remain exact. Native coverage stops at
+this finding: the remaining viewport/locale/theme/interaction/paging/persisted
+matrix remains open. Prior 700-case numerical evidence is unchanged, and manual
+QA does not close the 21 unexecuted callbacks. T11.4b/T11.5/full T11 stay open.
+
+## 2026-11-21 T11.4b frozen-head SOL recovery/persistence — BOUNDED EVIDENCE; ASTRA QA OPEN
+
+SOL alone exercised the production page at frozen `a00fd716`, recording actual
+head/runtime and all237 fingerprints before native actions and rechecking them
+after cleanup. Real Next/Nest/PostgreSQL journeys cover distinct-session 409 and
+rendered compare/rebase/separate Save, actual401/private DOM fencing and explicit
+parent reverify, real commit plus controlled response timeout with exact-key/body
+rendered retry, unknown local discard, explicit start/close reviewed binding,
+frozen outcomes after a later task edit, public actor history, replaced private
+context and read-only data/history. The [receipt and boundaries](sprint-presentation.md#sol-frozen-head-recovery-and-persistence--2026-11-21)
+distinguish SQL/server outcomes from HTTP delay/drop, controlled client lease and
+DOM event/anchor arrangements. The401 held write was canceled before delivery;
+no401 POST response or real-provider authentication is claimed.
+
+All owned web/fixture/browser/database/private-state resources are removed. No
+functional source finding arose; source/tests/tools/baselines and prior700-case
+normal evidence remain exact. Only live docs change, without a duplicate full
+suite/build. All21 callback functions unexecuted in unit measurement remain debt;
+native multi-page workflows and Astra responsive/accessibility/device/AT gates
+remain open. Assignment is active at the coordinator handoff; no push/PR/Ready/
+Kilo/merge or T11.4b/T11.5/full T11 acceptance. Astra stays idle until authorized.
+
+
+## 2026-11-21 T11.4b numerical migration — NORMAL LOCAL GATE PASSED; QA OPEN
+
+The coordinator approved only exact current-web `e311dac0` → `04977cb4`, bound
+to frozen functional head `311cd060` and proposal packet `2585983a`, after independent
+source/test/tool, baseline, per-file and raw-map review. SOL adopted only those
+web bytes. Normal root gates pass 700/700 without skips; all 16 reports reproduce
+the approved candidate exactly, count digest `14a4847e`. All 20 infrastructure
+cases and bounded artifacts pass. Seven other baselines and the approved source/
+test/tool binding remain exact. No duplicate standard/build/database phase ran
+for this documentation/baseline-only descendant.
+
+Accepted debt is numerical only: new inputs retain 40/68/26/150 uncovered L/S/F/B,
+including 21 unexecuted integration callback functions. Their rendered retry,
+paging, cancel, selection and related paths are not completely tested by hook
+coverage. The [QA handoff](sprint-presentation.md#approved-numerical-migration-and-normal-replay--2026-11-21)
+keeps final-head persisted 401/409/timeout/concurrent-session journeys and Astra
+responsive/accessibility/native validation open. Earlier browser evidence is a
+pre-freeze snapshot. No service, push/PR/Ready/Kilo/merge or full T11 acceptance;
+assignment remains active at the coordinator handoff. T11.4b/T11.5/full T11 stay
+open before T38.
+
+
+## 2026-11-21 T11.4b production functional checkpoint — IN PROGRESS
+
+SOL imported Astra's reviewed `6466461` descendant by authorized fast-forward,
+preserving commits/authors, then integrated one sprint owner beside the existing
+task/session/event owner. The [integration guide](sprint-presentation.md#sol-production-functional-checkpoint--2026-11-21-caracas--november-21-utc)
+records captured forms/start/closure, shared latest-navigation guards, synchronous
+private render fences, public capabilities, exact-key recovery, 409 comparison,
+history/paging and functional focus ownership. Astra's presentation/CSS remains
+unchanged; no new dependency/backend policy or prototype state is introduced.
+
+All 368 web cases pass, retaining 307 and adding 61 meaningful cases; unchanged
+API 290/contracts 23/prototype 19 measurements also pass. The exact accepted web
+before-run reproduces `e311dac0`; candidate `04977cb4` includes all 88 inputs with
+improved global floors and no existing-file ratio/uncovered regression. New UI
+uncovered units and null mappings remain disclosed. No tracked baseline is
+written; exact numerical approval, normal all-source replay and infrastructure/
+artifacts remain pending. Bounded real Next/Nest/PostgreSQL/Orca journeys confirm
+planning, zero estimate, explicit participation/start, reviewed close destination,
+frozen outcomes after a later task edit and read-only history. Fixture services,
+database resources, private state and tab are stopped/removed. Native persisted
+failure/concurrency and full Astra responsive/accessibility QA remain open.
+
+The final-source standard check passes on the inherited Next advisory retry;
+the separate recommended security upgrade is outside this scope. Handoff and
+whitespace pass. The persisted browser snapshot predates the final expiry and
+external-link corrections; frozen-head native journeys remain required.
+Documentation and hook results are retained with the approval evidence. No push/PR, Ready/Kilo,
+review approval, full T11 or T38 acceptance is claimed. Assignment remains active
+across coordinator decisions; T11.4b/T11.5/full T11 stay open before T38.
+
+## 2026-11-20 T11.4b review/history presentation checkpoint — IN PROGRESS
+
+Astra fast-forwarded SOL's `7348bea` contract checkpoint and completed the
+[requested presentation ports](sprint-presentation.md#astra-reviewhistory-presentation-checkpoint--2026-11-20-caracas--november-21-utc):
+captured start confirmation, canonical planning history, separate conflict
+comparison, both navigation guards and nullable task edit/form lifetimes.
+No SOL logic/test owner or production route changed. Bounded native disposable
+inspection covers 320/390/1280/1440, ES/EN, focus return and explicit callbacks;
+it provides no persistent-product evidence. Harness/server/tab are removed/stopped.
+
+Four additional runtime owners bring presentation to nine and the current batch
+with SOL contracts to twelve web denominator inputs. No baseline or numerical
+acceptance is changed. Production composition, functional tests, complete local/
+native/persisted/numerical checks and the coordinator-directed Draft PR remain
+pending. T11.4b/T11.5/full T11 stay open before T38.
+
+## 2026-11-20 T11.4b SOL functional-contract checkpoint — IN PROGRESS
+
+The assigned integration branch fast-forwarded the original Astra `b6c1faa`
+checkpoint from accepted `a2de3bd`, preserving author/commit. Verified SOL xhigh
+and auto_review/on-request/workspace-write supplied [typed integration contracts](sprint-presentation.md#sol-functional-contract-checkpoint--2026-11-20-caracas--november-21-utc)
+for exact-context/private-data projections, server-capability actions, captured
+raw forms, start/close/conflict review and additive sprint URLs. These owners are
+not yet imported by the production screen; no product render/persistence claim.
+
+All 110 focused controller/hook/new contract cases pass without skips; contracts
+build, scoped lint/formatting and web types pass. New start/history/conflict/
+navigation and read-only Task planning presentation is requested through the
+coordinator before completing composition. No baseline changed: five imported
+presentation plus three functional runtime inputs await final all-source evidence
+and exact approval. Standard/integrated PostgreSQL/native/numerical final gates
+remain pending. No PR/push or service is retained. T11.4b/T11.5/full T11 remain
+open before planned T38.
+
+## 2026-11-20 T11.4a ACCEPTED; T11.4b presentation checkpoint — IN PROGRESS
+
+[PR54 acceptance](https://github.com/Ljrr3045/rielia/pull/54#issuecomment-7055439065)
+accepts reviewed `4fa0e034`, merged `a2de3bd`; exact postmerge validate136687219095
+succeeded with all 24 steps. The [client receipt](sprint-client.md#t114a-acceptance--2026-11-20-caracas--november-21-utc)
+retains incremental native round 2, two resolved first-round findings, no formal
+APPROVED and Kilo hash-recomputation limits. Earlier pending entries are historical.
+
+Astra high prepared the [T11.4b presentation checkpoint](sprint-presentation.md):
+typed sprint/scope/forms/closure/outcome components, ES/EN copy and local styles,
+with bounded native harness evidence and passing scoped types/lint/formatting.
+No production wiring, functional tests or PR is included. SOL must integrate
+selection/lifecycle/commands/recovery and measure the five new web source inputs;
+no baseline changed and no numerical gate success is claimed. Preview resources
+are stopped; the test route is removed. T11.4b, T11.5 and full T11 remain open;
+planned T38 still follows full T11, without installations/migration now.
+
 ## 2026-11-20 PR54 round 1 correction — IN PROGRESS, DRAFT
 
 Native [Kilo136657775593](https://github.com/Ljrr3045/rielia/runs/136657775593)

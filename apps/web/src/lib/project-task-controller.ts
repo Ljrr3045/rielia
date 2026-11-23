@@ -46,6 +46,16 @@ import {
   type TaskDiscoveryQuery,
 } from '@rielia/contracts';
 import type { TaskStreamStatus } from './task-events-client.ts';
+import {
+  readProjectSprintLocation,
+  writeProjectSprintLocation,
+  type ProjectSprintLocation,
+} from './project-sprint-location.ts';
+
+export interface ProjectNavigationBlocker {
+  getGuard: () => 'none' | 'draft' | 'pending' | 'recovery';
+  discard: () => boolean;
+}
 
 export interface ProjectTaskSelection {
   workspaceId: string | null;
@@ -74,6 +84,8 @@ export interface TaskSummary {
   canCreate: boolean;
 }
 export interface ProjectTaskState {
+  sprintLocation: ProjectSprintLocation;
+  integratedNavigation: { url: string } | null;
   workspaceNavigation: { workspaceId: string | null } | null;
   taskScope: TaskScope;
   searchQuery: string;
@@ -171,7 +183,10 @@ function urlFor(
   s: ProjectTaskSelection,
   views: ProjectTaskState['views'],
   taskView: TaskView,
-  discovery: Pick<ProjectTaskState, 'taskScope' | 'searchQuery' | 'discoveryProjectId'>,
+  discovery: Pick<
+    ProjectTaskState,
+    'taskScope' | 'searchQuery' | 'discoveryProjectId' | 'sprintLocation'
+  >,
 ): string {
   const path = !s.workspaceId
     ? '/projects'
@@ -190,7 +205,10 @@ function urlFor(
   if (discovery.searchQuery) url.searchParams.set('q', discovery.searchQuery);
   if (discovery.discoveryProjectId)
     url.searchParams.set('searchProject', discovery.discoveryProjectId);
-  return url.pathname + url.search;
+  return (
+    writeProjectSprintLocation(url.pathname + url.search, discovery.sprintLocation) ??
+    url.pathname + url.search
+  );
 }
 function sameTarget(a: ProjectCommand, b: ProjectCommand): boolean {
   return (
@@ -212,6 +230,8 @@ export function createProjectTaskController(options: {
   navigate?: (url: string, replace?: boolean) => void;
 }) {
   let state: ProjectTaskState = {
+    sprintLocation: { view: 'tasks', sprintId: null },
+    integratedNavigation: null,
     status: 'loading',
     session: null,
     workspaces: null,
@@ -260,6 +280,9 @@ export function createProjectTaskController(options: {
   let backgroundTimer: ReturnType<typeof setTimeout> | undefined;
   let disposed = false;
   let workspaceNavigation: (() => Promise<void>) | null = null;
+  let navigationBlocker: ProjectNavigationBlocker | null = null;
+  let deferredNavigation: { url: string; run: () => Promise<void> } | null = null;
+  let navigationScheduled = false;
   let discoveryContext: { key: string; page: TaskDiscoveryPage } | null = null;
   let retry: { command: ProjectCommand; key: string } | null = null;
   const listeners = new Set<() => void>();
@@ -351,6 +374,18 @@ export function createProjectTaskController(options: {
       moveNeedsDestination: next.draft?.type === 'move-task' && next.outcome === 'conflict',
     };
     for (const listener of listeners) listener();
+    if (
+      deferredNavigation &&
+      !navigationScheduled &&
+      state.status === 'ready' &&
+      !navigationProtected()
+    ) {
+      navigationScheduled = true;
+      queueMicrotask(() => {
+        navigationScheduled = false;
+        void resumeNavigation();
+      });
+    }
     if (releaseRefresh) {
       clearTimeout(backgroundTimer);
       backgroundTimer = setTimeout(() => {
@@ -366,6 +401,91 @@ export function createProjectTaskController(options: {
   const current = (request: { generation: number }) => generation === request.generation;
   const fresh = () =>
     state.session !== null && Date.parse(state.session.session.expiresAt) > Date.now();
+  function navigationProtected() {
+    return !!(
+      state.pending ||
+      state.draft ||
+      retry ||
+      (navigationBlocker && navigationBlocker.getGuard() !== 'none')
+    );
+  }
+  function clearNavigationDecision() {
+    deferredNavigation = null;
+    workspaceNavigation = null;
+    if (state.integratedNavigation || state.workspaceNavigation)
+      publish({ ...state, integratedNavigation: null, workspaceNavigation: null });
+  }
+  function guardNavigation(url: string, run: () => Promise<void>, restoreHistory = false) {
+    if (!navigationBlocker || !navigationProtected()) return false;
+    const destination = new URL(url, 'https://location.invalid');
+    // T37 keeps task drafts/recovery reachable while browsing tasks in the same workspace.
+    // Preserve that memory-only journey; entering sprint views or leaving the workspace still guards it.
+    if (
+      !state.pending &&
+      navigationBlocker.getGuard() === 'none' &&
+      destination.origin === 'https://location.invalid' &&
+      destination.pathname === '/projects' &&
+      destination.searchParams.get('workspace') !== state.selection.workspaceId
+    ) {
+      clearNavigationDecision();
+      return false; // The existing task-only workspace guard owns its original return/focus contract.
+    }
+    if (
+      !state.pending &&
+      navigationBlocker.getGuard() === 'none' &&
+      state.sprintLocation.view === 'tasks' &&
+      destination.origin === 'https://location.invalid' &&
+      destination.pathname === '/projects' &&
+      destination.searchParams.get('workspace') === state.selection.workspaceId &&
+      readProjectSprintLocation(destination.search)?.view === 'tasks'
+    ) {
+      clearNavigationDecision();
+      return false;
+    }
+    deferredNavigation = { url, run };
+    workspaceNavigation = null;
+    publish({ ...state, workspaceNavigation: null, integratedNavigation: { url } });
+    if (restoreHistory) options.navigate?.(state.url, true);
+    return true;
+  }
+  async function resumeNavigation() {
+    if (!deferredNavigation || navigationProtected() || !fresh() || state.status !== 'ready')
+      return;
+    const next = deferredNavigation;
+    deferredNavigation = null;
+    publish({ ...state, integratedNavigation: null });
+    await next.run();
+  }
+  type NavigationState = Pick<
+    ProjectTaskState,
+    | 'selection'
+    | 'views'
+    | 'taskView'
+    | 'taskScope'
+    | 'searchQuery'
+    | 'discoveryProjectId'
+    | 'sprintLocation'
+  >;
+  async function go(change: Partial<NavigationState>, reload = true): Promise<void> {
+    const next: NavigationState = {
+      selection: state.selection,
+      views: state.views,
+      taskView: state.taskView,
+      taskScope: state.taskScope,
+      searchQuery: state.searchQuery,
+      discoveryProjectId: state.discoveryProjectId,
+      sprintLocation: state.sprintLocation,
+      ...change,
+    };
+    const url = urlFor(next.selection, next.views, next.taskView, next);
+    if (guardNavigation(url, () => go(next, reload))) return;
+    const { selection, ...metadata } = next;
+    if (reload) await changeSelection(selection, metadata);
+    else {
+      publish({ ...state, ...metadata });
+      select(selection);
+    }
+  }
   function guardWorkspace(workspaceId: string | null, navigate: () => Promise<void>) {
     if (
       state.selection.workspaceId === null ||
@@ -393,10 +513,12 @@ export function createProjectTaskController(options: {
     if (navigate) options.navigate?.(url);
   }
   function expire() {
+    deferredNavigation = null;
     discoveryContext = null;
     begin();
     publish({
       ...state,
+      integratedNavigation: null,
       ...cleared,
       discoveryFocusTaskId: null,
       discovery: discoveryEmpty,
@@ -414,6 +536,11 @@ export function createProjectTaskController(options: {
     });
   }
   function readFailure(error: unknown) {
+    if (
+      (error instanceof ProjectTaskFailure || error instanceof WorkspaceFailure) &&
+      [401, 403].includes(error.status)
+    )
+      deferredNavigation = null;
     discoveryContext = null;
     if (
       (error instanceof ProjectTaskFailure || error instanceof WorkspaceFailure) &&
@@ -440,7 +567,7 @@ export function createProjectTaskController(options: {
       accessConflict: null,
       ...((error instanceof ProjectTaskFailure || error instanceof WorkspaceFailure) &&
       error.status === 403
-        ? { result: null }
+        ? { result: null, integratedNavigation: null }
         : {}),
       requestId: error instanceof ProjectTaskFailure ? error.requestId : null,
     });
@@ -836,12 +963,15 @@ export function createProjectTaskController(options: {
       const sessionChanged =
         owner !== null && (owner !== session.user.id || sessionId !== session.session.id);
       if (sessionChanged) {
+        deferredNavigation = null;
         discoveryContext = null;
         workspaceNavigation = null;
         retry = null;
         publish({
           ...state,
           workspaceNavigation: null,
+          integratedNavigation: null,
+          sprintLocation: { view: 'tasks', sprintId: null },
           discovery: discoveryEmpty,
           searchQuery: '',
           discoveryProjectId: null,
@@ -876,12 +1006,21 @@ export function createProjectTaskController(options: {
       if (current(request)) readFailure(error);
     }
   }
-  async function changeSelection(selection: ProjectTaskSelection) {
-    if (guardWorkspace(selection.workspaceId, () => changeSelection(selection))) return;
+  async function changeSelection(
+    selection: ProjectTaskSelection,
+    metadata: Partial<NavigationState> = {},
+  ) {
+    if (guardWorkspace(selection.workspaceId, () => changeSelection(selection, metadata))) return;
     if (
       state.selection.workspaceId !== null &&
       selection.workspaceId !== state.selection.workspaceId
     ) {
+      metadata = {
+        ...metadata,
+        searchQuery: '',
+        discoveryProjectId: null,
+        taskView: { ...(metadata.taskView ?? state.taskView), filters: {} },
+      };
       discoveryContext = null;
       retry = null;
       publish({
@@ -899,16 +1038,23 @@ export function createProjectTaskController(options: {
       });
     }
     const request = begin();
-    select(selection);
+    const sameTarget =
+      selection.workspaceId === state.selection.workspaceId &&
+      selection.projectId === state.selection.projectId &&
+      selection.taskId === state.selection.taskId;
     publish({
       ...state,
+      ...metadata,
       ...cleared,
+      selection: { ...selection },
       discovery: discoveryEmpty,
-      parentCandidatesWanted: state.parentCandidatesWanted,
+      parentCandidatesWanted: sameTarget && state.parentCandidatesWanted,
       status: 'loading',
       pending: null,
       retryTarget: retry ? structuredClone(retry.command) : null,
+      ...(!sameTarget && state.outcome === 'success' ? { outcome: null, result: null } : {}),
     });
+    select(selection);
     if (!fresh()) {
       await refresh();
       return;
@@ -1018,6 +1164,7 @@ export function createProjectTaskController(options: {
     }
   }
   function stage(command: ProjectCommand) {
+    if (navigationBlocker && navigationBlocker.getGuard() !== 'none') return;
     if (state.pending) return;
     if (retry) {
       publish({ ...state, outcome: 'invalid' });
@@ -1526,6 +1673,47 @@ export function createProjectTaskController(options: {
       clearTimeout(backgroundTimer);
       begin();
     },
+    registerNavigationBlocker(blocker: ProjectNavigationBlocker) {
+      navigationBlocker = blocker;
+      return () => {
+        if (navigationBlocker === blocker) navigationBlocker = null;
+      };
+    },
+    navigationProtected,
+    resumeNavigation,
+    async resolveIntegratedNavigation(choice: 'stay' | 'discard') {
+      if (choice === 'stay') {
+        deferredNavigation = null;
+        publish({ ...state, integratedNavigation: null });
+        return;
+      }
+      if (!deferredNavigation || state.pending || navigationBlocker?.getGuard() === 'pending')
+        return;
+      if (navigationBlocker && !navigationBlocker.discard()) return;
+      retry = null;
+      publish({
+        ...state,
+        draft: null,
+        retryTarget: null,
+        conflict: null,
+        closeWarning: null,
+        accessConflict: null,
+        commentConflict: null,
+        checklistConflict: null,
+        outcome: null,
+      });
+      await resumeNavigation();
+    },
+    async navigateAway(url: string, navigate: () => void) {
+      const run = async () => {
+        navigate();
+      };
+      if (!guardNavigation(url, run)) await run();
+    },
+    setSprintLocation(sprintLocation: ProjectSprintLocation) {
+      const url = writeProjectSprintLocation(state.url, sprintLocation);
+      return url ? go({ sprintLocation }, false) : Promise.resolve();
+    },
     async resolveWorkspaceNavigation(choice: 'stay' | 'discard') {
       if (choice === 'stay') {
         workspaceNavigation = null;
@@ -1567,25 +1755,36 @@ export function createProjectTaskController(options: {
         ? fetchDiscovery({ generation, signal: abort.signal }, true)
         : Promise.resolve(),
     async setTaskScope(taskScope: TaskScope) {
-      if (!['project', 'mine', 'search'].includes(taskScope) || state.pending) return;
+      if (
+        !['project', 'mine', 'search'].includes(taskScope) ||
+        (state.pending && !navigationBlocker)
+      )
+        return;
       const filters = { ...state.taskView.filters };
       if (taskScope === 'mine') delete filters.assignee;
-      publish({ ...state, taskScope, taskView: { ...state.taskView, filters } });
-      await changeSelection({ ...state.selection, projectId: null, taskId: null });
+      await go({
+        taskScope,
+        taskView: { ...state.taskView, filters },
+        selection: { ...state.selection, projectId: null, taskId: null },
+        sprintLocation: { view: 'tasks', sprintId: null },
+      });
     },
     async setSearchQuery(searchQuery: string) {
-      if (!isTaskSearch(searchQuery) || state.pending) return;
-      publish({
-        ...state,
+      if (!isTaskSearch(searchQuery) || (state.pending && !navigationBlocker)) return;
+      await go({
         searchQuery: searchQuery.trim(),
         taskScope: state.taskScope === 'project' ? 'search' : state.taskScope,
+        selection: { ...state.selection, projectId: null, taskId: null },
+        sprintLocation: { view: 'tasks', sprintId: null },
       });
-      await changeSelection({ ...state.selection, projectId: null, taskId: null });
     },
     async setDiscoveryProject(projectId: string | null) {
-      if ((projectId !== null && !id(projectId)) || state.pending) return;
-      publish({ ...state, discoveryProjectId: projectId });
-      await changeSelection({ ...state.selection, projectId: null, taskId: null });
+      if ((projectId !== null && !id(projectId)) || (state.pending && !navigationBlocker)) return;
+      await go({
+        discoveryProjectId: projectId,
+        selection: { ...state.selection, projectId: null, taskId: null },
+        sprintLocation: { view: 'tasks', sprintId: null },
+      });
     },
     openDiscoveryTask(item: TaskDiscoveryItem) {
       if (
@@ -1597,15 +1796,18 @@ export function createProjectTaskController(options: {
       )
         return Promise.resolve();
       publish({ ...state, discoveryFocusTaskId: item.id });
-      return changeSelection({
-        workspaceId: item.workspaceId,
-        projectId: item.projectId,
-        taskId: item.id,
+      return go({
+        selection: {
+          workspaceId: item.workspaceId,
+          projectId: item.projectId,
+          taskId: item.id,
+        },
+        sprintLocation: { view: 'tasks', sprintId: null },
       });
     },
     returnToDiscovery: () =>
       state.taskScope !== 'project'
-        ? changeSelection({ ...state.selection, projectId: null, taskId: null })
+        ? go({ selection: { ...state.selection, projectId: null, taskId: null } })
         : Promise.resolve(),
     refresh,
     stage,
@@ -1667,51 +1869,63 @@ export function createProjectTaskController(options: {
         });
     },
     async setTaskLayout(layout: TaskView['layout']) {
-      if (!['list', 'board'].includes(layout) || state.pending) return;
-      publish({ ...state, taskView: { ...state.taskView, layout } });
-      await changeSelection({ ...state.selection });
+      if (!['list', 'board'].includes(layout) || (state.pending && !navigationBlocker)) return;
+      await go({ taskView: { ...state.taskView, layout } });
     },
     async setTaskFilters(filters: TaskFilters) {
       if (
         !isTaskFilters(filters) ||
         (state.taskScope === 'mine' && filters.assignee !== undefined) ||
-        state.pending
+        (state.pending && !navigationBlocker)
       )
         return;
-      publish({
-        ...state,
+      await go({
         taskView: {
           ...state.taskView,
           filters: { ...filters },
           column: filters.status ?? state.taskView.column,
         },
       });
-      await changeSelection({ ...state.selection });
     },
     async setTaskColumn(column: TaskStatus) {
-      if (!taskStatuses.includes(column) || state.pending) return;
-      publish({ ...state, taskView: { ...state.taskView, column } });
-      await changeSelection({ ...state.selection });
+      if (!taskStatuses.includes(column) || (state.pending && !navigationBlocker)) return;
+      await go({ taskView: { ...state.taskView, column } });
     },
     selectWorkspace: (workspaceId: string | null) =>
-      changeSelection({ workspaceId, projectId: null, taskId: null }),
+      go({
+        selection: { workspaceId, projectId: null, taskId: null },
+        sprintLocation: { view: 'tasks', sprintId: null },
+      }),
     selectProject: (projectId: string | null) => {
-      publish({ ...state, taskScope: 'project' });
-      return changeSelection({ ...state.selection, projectId, taskId: null });
+      return go({
+        taskScope: 'project',
+        selection: { ...state.selection, projectId, taskId: null },
+        sprintLocation: { view: 'tasks', sprintId: null },
+      });
     },
-    selectTask: (taskId: string | null) => changeSelection({ ...state.selection, taskId }),
+    selectTask: (taskId: string | null) => go({ selection: { ...state.selection, taskId } }),
     async setView(collection: 'projects' | 'tasks', view: ArchiveView) {
       if (!['active', 'archived'].includes(view)) return;
-      publish({ ...state, views: { ...state.views, [collection]: view } });
-      await changeSelection(
-        collection === 'projects'
-          ? { ...state.selection, projectId: null, taskId: null }
-          : { ...state.selection, taskId: null },
-      );
+      await go({
+        views: { ...state.views, [collection]: view },
+        selection:
+          collection === 'projects'
+            ? { ...state.selection, projectId: null, taskId: null }
+            : { ...state.selection, taskId: null },
+        ...(collection === 'projects'
+          ? { sprintLocation: { view: 'tasks', sprintId: null } as const }
+          : {}),
+      });
     },
     async openLocation(search: string, restoreHistoryTarget = false) {
       disposed = false;
+      if (
+        `/projects${search}` !== state.url &&
+        guardNavigation(`/projects${search}`, () => this.openLocation(search, true), true)
+      )
+        return;
       const query = new URLSearchParams(search);
+      const sprintLocation = readProjectSprintLocation(search);
       const w = query.get('workspace');
       const p = query.get('project');
       const t = query.get('task');
@@ -1728,6 +1942,7 @@ export function createProjectTaskController(options: {
           .map((key) => [key, query.get(key)]),
       );
       if (
+        sprintLocation === null ||
         (w !== null && !id(w)) ||
         (p !== null && (!id(p) || !w)) ||
         (t !== null && (!id(t) || !p)) ||
@@ -1779,6 +1994,9 @@ export function createProjectTaskController(options: {
       begin();
       publish({
         ...state,
+        ...cleared,
+        status: 'loading',
+        sprintLocation,
         taskScope: taskScope as TaskScope,
         searchQuery: searchQuery.trim(),
         discoveryProjectId: searchProject,

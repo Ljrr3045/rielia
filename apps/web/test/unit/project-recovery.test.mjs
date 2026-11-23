@@ -17,12 +17,12 @@ const css = registerHooks({
   resolve(specifier, context, next) {
     // Node ESM requires the extension; execute the real installed Next Link.
     if (specifier === 'next/link') return next('next/link.js', context);
-    if (specifier === './projects.module.css')
+    if (specifier.endsWith('/projects.module.css') || specifier.endsWith('/sprints.module.css'))
       return { url: new URL(specifier, context.parentURL).href, shortCircuit: true };
     return next(specifier, context);
   },
   load(url, context, next) {
-    if (url.endsWith('/projects.module.css'))
+    if (url.endsWith('/projects.module.css') || url.endsWith('/sprints.module.css'))
       return { format: 'module', source: 'export default {};', shortCircuit: true };
     return next(url, context);
   },

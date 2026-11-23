@@ -16,6 +16,14 @@ import {
 } from '@rielia/contracts';
 import type { MoveEligibility } from '../../lib/project-task-controller';
 import { useProjectTasks } from '../../lib/use-project-tasks';
+import { useProjectSprintIntegration } from '../../lib/use-project-sprint-integration';
+import {
+  SprintIntegrationWorkspace,
+  SprintIntegrationTask,
+  SprintIntegrationDialogs,
+  SprintProjectNavigation,
+  SprintIntegrationStatus,
+} from './sprints/sprint-integration-view';
 
 import { LocaleProvider } from './project-ui';
 
@@ -47,7 +55,9 @@ export function ProjectsView() {
 }
 
 function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: Lang) => void }) {
-  const projectTasks = useProjectTasks();
+  const projectOwner = useProjectTasks();
+  const sprintIntegration = useProjectSprintIntegration(projectOwner);
+  const projectTasks = sprintIntegration.parent;
 
   const {
     status,
@@ -159,9 +169,13 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
 
   const moveBlocked = movePending !== null || moveRetryTarget !== null;
 
-  const blocked = contentBlocked || policyBlocked || moveBlocked || mutationPending !== null;
+  const sprintBlocked =
+    sprintIntegration.sprints.getNavigationGuard() !== 'none' || sprintIntegration.editing !== null;
+  const blocked =
+    contentBlocked || policyBlocked || moveBlocked || mutationPending !== null || sprintBlocked;
 
-  const anyPending = mutationPending !== null;
+  const anyPending =
+    mutationPending !== null || sprintIntegration.sprints.mutation.status === 'pending';
 
   const anyDraft =
     draft !== null || moveDraft !== null || policyDraft !== null || collaborationDraft !== null;
@@ -707,7 +721,14 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   }
 
   function renderTaskDetail() {
-    if (task === null) return null;
+    if (
+      status !== 'ready' ||
+      task === null ||
+      task.id !== selection.taskId ||
+      task.projectId !== selection.projectId ||
+      task.workspaceId !== selection.workspaceId
+    )
+      return null;
     return (
       <div>
         <TaskDetail
@@ -722,42 +743,45 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
                 : copy.common.backToProject
           }
           collaboration={
-            <TaskCollaboration
-              collaborationSource={lastOutcomeSourceRef.current === 'collaboration'}
-              hook={{
-                collaboration: projectTasks.collaboration,
-                mutationPending: projectTasks.mutationPending,
-                collaborationDraft: projectTasks.collaborationDraft,
-                collaborationRetryTarget: projectTasks.collaborationRetryTarget,
-                draftGuard: projectTasks.draftGuard,
-                refresh: projectTasks.refresh,
-                draft: projectTasks.draft,
-                retryTarget: projectTasks.retryTarget,
-                collaborationPending: projectTasks.collaborationPending,
-                closeWarning: projectTasks.closeWarning,
-                commentConflict: projectTasks.commentConflict,
-                checklistConflict: projectTasks.checklistConflict,
-                outcome: projectTasks.outcome,
-                conflict: projectTasks.conflict,
-                result: projectTasks.result,
-                task: projectTasks.task,
-                tasks: projectTasks.tasks,
-                taskColumns: projectTasks.taskColumns,
-                selectTask: projectTasks.selectTask,
-                returnToDraft: projectTasks.returnToDraft,
-                rebaseDraft: projectTasks.rebaseDraft,
-                dismissOutcome: projectTasks.dismissOutcome,
-                setParentCandidatesWanted: projectTasks.setParentCandidatesWanted,
-                loadCollaborationMore: projectTasks.loadCollaborationMore,
-              }}
-              onDiscard={discardCollaboration}
-              onReloadConflict={reloadCollaborationConflict}
-              onRetry={retryCollaboration}
-              onStage={stageCollaboration}
-              onSubmit={submitCollaboration}
-              projectArchived={projectArchived}
-              task={task}
-            />
+            <>
+              <SprintIntegrationTask integration={sprintIntegration} />
+              <TaskCollaboration
+                collaborationSource={lastOutcomeSourceRef.current === 'collaboration'}
+                hook={{
+                  collaboration: projectTasks.collaboration,
+                  mutationPending: projectTasks.mutationPending,
+                  collaborationDraft: projectTasks.collaborationDraft,
+                  collaborationRetryTarget: projectTasks.collaborationRetryTarget,
+                  draftGuard: projectTasks.draftGuard,
+                  refresh: projectTasks.refresh,
+                  draft: projectTasks.draft,
+                  retryTarget: projectTasks.retryTarget,
+                  collaborationPending: projectTasks.collaborationPending,
+                  closeWarning: projectTasks.closeWarning,
+                  commentConflict: projectTasks.commentConflict,
+                  checklistConflict: projectTasks.checklistConflict,
+                  outcome: projectTasks.outcome,
+                  conflict: projectTasks.conflict,
+                  result: projectTasks.result,
+                  task: projectTasks.task,
+                  tasks: projectTasks.tasks,
+                  taskColumns: projectTasks.taskColumns,
+                  selectTask: projectTasks.selectTask,
+                  returnToDraft: projectTasks.returnToDraft,
+                  rebaseDraft: projectTasks.rebaseDraft,
+                  dismissOutcome: projectTasks.dismissOutcome,
+                  setParentCandidatesWanted: projectTasks.setParentCandidatesWanted,
+                  loadCollaborationMore: projectTasks.loadCollaborationMore,
+                }}
+                onDiscard={discardCollaboration}
+                onReloadConflict={reloadCollaborationConflict}
+                onRetry={retryCollaboration}
+                onStage={stageCollaboration}
+                onSubmit={submitCollaboration}
+                projectArchived={projectArchived}
+                task={task}
+              />
+            </>
           }
           description={
             task.description.length > 0 ? <TaskDescription source={task.description} /> : undefined
@@ -784,7 +808,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
           }}
           onEdit={openTaskEdit}
           onRestore={(opener) => requestTaskArchive(true, task, opener)}
-          modalOpen={form !== null}
+          modalOpen={form !== null || sprintIntegration.modalOpen}
           overlay={detailOverlay}
           projectArchived={projectArchived}
           task={task}
@@ -871,6 +895,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   });
 
   return renderProjectShell({
+    additionalModalOpen: sprintIntegration.modalOpen,
     activeProjectId,
     anyPending,
     blocked,
@@ -907,6 +932,10 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
     workspaceNavigation,
     workspaces,
     workArea: renderProjectWorkArea({
+      sprintContent: <SprintIntegrationWorkspace integration={sprintIntegration} />,
+      sprintNavigation: <SprintProjectNavigation integration={sprintIntegration} />,
+      sprintStatus: <SprintIntegrationStatus integration={sprintIntegration} />,
+      showSprints: projectOwner.sprintLocation.view === 'sprints',
       anyDraft,
       anyPending,
       assignees,
@@ -1002,50 +1031,56 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
       views,
       workspace,
     }),
-    dialogs: renderProjectDialogs({
-      status,
-      anyPending,
-      assigneeOptions,
-      assignees,
-      canCreatePrivate,
-      closeForm,
-      closeWarningNode,
-      confirmLifecycle,
-      discardCurrentDraft,
-      discardDraft,
-      feedbackNode,
-      form,
-      formAuthorized,
-      lang,
-      loadMore,
-      mutationPending,
-      outcome,
-      pageError,
-      pageErrorBlock,
-      pending,
-      policyBlocked,
-      policyDraft,
-      policyFeedbackNode,
-      policyMember,
-      policyPageErrors,
-      policyPending,
-      policyRetryTarget,
-      project,
-      projectAccess,
-      projectValue,
-      refresh,
-      resolveWorkspaceChoice,
-      retryTarget,
-      reviewAccess,
-      stageProject,
-      stageTask,
-      stageVisibilityChange,
-      submitPolicy,
-      submitProjectForm,
-      submitTaskForm,
-      taskValue,
-      workspaceNavigation,
-      workspaces,
-    }),
+    dialogs: (
+      <>
+        {!projectOwner.integratedNavigation &&
+          renderProjectDialogs({
+            status,
+            anyPending,
+            assigneeOptions,
+            assignees,
+            canCreatePrivate,
+            closeForm,
+            closeWarningNode,
+            confirmLifecycle,
+            discardCurrentDraft,
+            discardDraft,
+            feedbackNode,
+            form,
+            formAuthorized,
+            lang,
+            loadMore,
+            mutationPending,
+            outcome,
+            pageError,
+            pageErrorBlock,
+            pending,
+            policyBlocked,
+            policyDraft,
+            policyFeedbackNode,
+            policyMember,
+            policyPageErrors,
+            policyPending,
+            policyRetryTarget,
+            project,
+            projectAccess,
+            projectValue,
+            refresh,
+            resolveWorkspaceChoice,
+            retryTarget,
+            reviewAccess,
+            stageProject,
+            stageTask,
+            stageVisibilityChange,
+            submitPolicy,
+            submitProjectForm,
+            submitTaskForm,
+            taskValue,
+            workspaceNavigation,
+            workspaces,
+          })}
+        <SprintIntegrationDialogs integration={sprintIntegration} />
+      </>
+    ),
   });
 }
