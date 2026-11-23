@@ -2,7 +2,7 @@
 
 ## 2026-11-23 T11.5 integrated evidence — READY FOR REVIEW
 
-[Draft PR56](https://github.com/Ljrr3045/rielia/pull/56) consolidates the
+[PR56](https://github.com/Ljrr3045/rielia/pull/56) consolidates the
 [original T11 lifecycle matrix](t11-acceptance.md) and accepted
 PR50–52 APIs, [PR54 client logic](sprint-client.md#t114a-acceptance--2026-11-20-caracas--november-21-utc)
 and [PR55 presentation/integration](https://github.com/Ljrr3045/rielia/pull/55#issuecomment-7112015425),
@@ -2971,7 +2971,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T08 | B1b | List/Kanban, filters, ranking | T06 | [T08.0 logic](task-views.md) merged in PR #19 at `f8895709`; [T08.1 presentation](task-views-ui.md) in [PR #20](https://github.com/Ljrr3045/rielia/pull/20). Configurable workflows/labels/sprints and full US05/T08 remain open |
 | T09 | B1b | Subtasks, checklists, comments, history | T06 | T09.0 bounded collaboration logic merged in [PR #21](https://github.com/Ljrr3045/rielia/pull/21) at `76d7d31b`; T09.1 [presentation](task-collaboration-ui.md) delivered in [PR #22](https://github.com/Ljrr3045/rielia/pull/22) with standard checks and targeted functional/responsive QA passed. Exact current-head CI/Kody/merge evidence remains in GitHub/external final report. Full T09/P05/P14/P38, credentials and real-user/staging acceptance remain open |
 | T10 | B1b | Search, My tasks, responsive layout, SSE | T07–T09 | T10.0 bounded logic merged in [PR #23](https://github.com/Ljrr3045/rielia/pull/23) at `6bde444c`; T10.1 [presentation](task-discovery-ui.md) PR [#24](https://github.com/Ljrr3045/rielia/pull/24) includes exact root-reviewed SOL controller/test URL corrections and has accepted functional/responsive evidence. Full T10/P11/US05, labels/sprints, exports, coediting, credentials, real-user/staging and deployment remain open |
-| T11 | B1c | Sprint lifecycle and scope history | T08–T09; later user prerequisite T36 → T37 | Original lifecycle **READY FOR REVIEW**; T11.1–3/PR50–52, T11.4a/PR54 and T11.4b/PR55 accepted through merge `214d00b3`. [T11.5 evidence](t11-acceptance.md) complete in [Draft PR56](https://github.com/Ljrr3045/rielia/pull/56), including the accepted minimal Backlog witness; current-head CI/native Kilo, feedback/ownership/base checks and final coordinator acceptance/merge remain. Sprint-filter and cross-cutting UX debts do not close adjacent tickets; T38 waits for final T11 acceptance |
+| T11 | B1c | Sprint lifecycle and scope history | T08–T09; later user prerequisite T36 → T37 | Original lifecycle **READY FOR REVIEW**; T11.1–3/PR50–52, T11.4a/PR54 and T11.4b/PR55 accepted through merge `214d00b3`. [T11.5 evidence](t11-acceptance.md) complete in [PR56](https://github.com/Ljrr3045/rielia/pull/56), including the accepted minimal Backlog witness; current-head CI/native Kilo, feedback/ownership/base checks and final coordinator acceptance/merge remain. Sprint-filter and cross-cutting UX debts do not close adjacent tickets; T38 waits for final T11 acceptance |
 | T12 | B1c | Personal/service credentials, explicit-subject grants | T07, T35 | Not started |
 | T13 | B1c | Local MCP catalog/client/guide | T03, T11–T12 | Not started |
 | T14 | B1d | JSON/CSV export and archive recovery | T09, T12 | Not started |

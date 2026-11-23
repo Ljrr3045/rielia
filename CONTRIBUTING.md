@@ -55,7 +55,7 @@ accepted in PR54, reviewed `4fa0e034`, merged `a2de3bd`.
 [T11.4b presentation/integration](docs/development/sprint-presentation.md) is
 accepted in [PR55](https://github.com/Ljrr3045/rielia/pull/55#issuecomment-7112015425),
 reviewed `9100844`, merged `214d00b3`. [T11.5 evidence](docs/development/t11-acceptance.md)
-is complete in [Draft PR56](https://github.com/Ljrr3045/rielia/pull/56); original
+is complete in [PR56](https://github.com/Ljrr3045/rielia/pull/56); original
 T11 lifecycle acceptance is **READY FOR REVIEW**, pending current-head CI/native
 Kilo, feedback/ownership/base checks and final coordinator acceptance/merge.
 Sprint-filter, user-omitted UNVERIFIED Cancel/Leave and cross-cutting evidence
