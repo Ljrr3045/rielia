@@ -1,5 +1,31 @@
 # Delivery progress and decisions
 
+## 2026-11-22 T11.4b approved correction replay — LOCAL GATES PASS; NARROW QA PENDING
+
+The coordinator independently approved exact web `f1679d66` → `89cdc952` at clean
+functional `3d37c755`, preserving Astra `a60983e7` and all seven other baselines.
+[The serial replay receipt](sprint-presentation.md#approved-round-one-numerical-replay--2026-11-22-caracas)
+records standard PASS on the identical supported continuation after Next's
+inherited security-upgrade reminder, normal **738/738** with actual digest
+`a90263901ce0220411fc38593c42dc92c26042d33550c1540bf2e8f880cbe757`, all 16
+report hashes/sizes exact, infrastructure **20/20** and **17** validated bounded
+artifact files. No upload, upgrade, pin/config/suppression change or extra local
+Docker/PostgreSQL identity run occurs; unchanged backend/runtime gates still
+need current-head CI. Fresh build bindings cover 318 outputs including 135 Next
+production outputs; 180 prior API/contracts hashes remain identical. No native
+or persisted user journey is inferred from those builds or standard HTTP checks.
+
+Only approved baseline/docs change after functional `3d37c755`; all 237 physical
+source/test/tool fingerprints and the approved proposal/feedback/omission packets
+remain exact. [Numerical details](unit-coverage.md#t114b-approved-correction-normal-replay--2026-11-22-caracas)
+retain 88 web inputs, every old test, higher floors, per-file nonregression,
+11 unexecuted composition functions and null952/37598. Root will sequence narrow
+frozen-head Astra QA, Draft publication/current-head CI and requested native
+review/ownership/thread dispositions. User-omitted external Cancel/Leave stays
+UNVERIFIED accepted debt outside this batch; device/AT/zoom/provider/staging and
+T11.4b/T11.5/full T11 remain open before T38. Assignment ACTIVE; no worker remote
+write, Ready/review toggle, resolution, merge or worker_done.
+
 ## 2026-11-22 T11.4b native round-one corrections — LOCAL BATCH; BASELINE APPROVAL PENDING
 
 The coordinator accepted all seven findings from native PR55 round one and

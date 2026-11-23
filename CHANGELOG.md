@@ -4,6 +4,16 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Apply the coordinator-approved web baseline `89cdc952` for the source-bound
+  [round-one correction batch](docs/development/sprint-presentation.md#approved-round-one-numerical-replay--2026-11-22-caracas),
+  preserving all seven other baselines and historical evidence. Standard passes
+  on Next's supported identical retry after its disclosed security reminder;
+  normal **738/738** reproduces the approved 16 reports/digest, infrastructure
+  **20/20** and **17** bounded artifact files pass. Record fresh build hashes,
+  source lineage and remaining limits without extra Docker/identity/native runs
+  or upgrades. Narrow Astra QA/current-head CI/review remain pending; omitted
+  native Cancel/Leave stays UNVERIFIED accepted debt and full T11 stays open.
+
 - Correct [all seven accepted PR55 round-one findings](docs/development/sprint-presentation.md#native-round-one-corrections-and-numerical-proposal--2026-11-22-caracas)
   in one local batch: replace obsolete task/workspace navigation intentions,
   prevent unchanged participation writes while keeping selection editable, show

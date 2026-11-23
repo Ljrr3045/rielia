@@ -1211,3 +1211,45 @@ hashes and historical evidence remain protected pending explicit coordinator
 approval. The [integration receipt](sprint-presentation.md#native-round-one-corrections-and-numerical-proposal--2026-11-22-caracas)
 records test witnesses, functional/native limits and the unchanged user-accepted
 UNVERIFIED external Cancel/Leave debt. T11.4b/T11.5/full T11 remain open before T38.
+
+## T11.4b approved correction normal replay — 2026-11-22 Caracas
+
+The coordinator approved exactly the proposal above, bound to clean functional
+`3d37c7552fda29e5d5c1fbf5c71bd679b2898197`. The web baseline is now
+`89cdc95277c032522ca612d36a8028797a2c8b9affcbb94b5bdf4f000cc24429`; all seven
+other baseline files, including historical pre-unit inputs, remain byte-exact.
+Approval preserved every file's covered count/exact ratio/uncovered count and
+raised all four global floors without changing source inventory, tests, provider,
+compiler, configs or locks. The dated proposal above remains the pre-approval
+snapshot; this receipt supersedes its pending numerical/replay status only.
+
+Following successful standard builds, normal `pnpm unit:coverage -- --built`
+passes **738/738**, no skips (290 API, 406 web, 23 contracts, 19 prototype).
+The actual deterministic count digest is
+`a90263901ce0220411fc38593c42dc92c26042d33550c1540bf2e8f880cbe757`.
+All **16 report hashes/sizes** reproduce the exact approved proposal; all four
+scopes are freshly executed in this normal replay. This is normal comparability/
+per-file/global gate acceptance, not another maintenance-mode measurement.
+`pnpm test:unit-infrastructure` passes **20/20** and `pnpm unit:artifacts` validates
+**17 bounded files** with complete scope status; no upload occurs.
+
+`pnpm check` passes on the identical supported retry after Next's inherited
+security-upgrade reminder stopped its first build command. Both logs and the
+upgrade recommendation remain disclosed, with no pin/config/suppression change.
+The source/test/tool set remains 237 physical fingerprints at functional
+`3d37c755`; only approved baseline/docs change in the receipt descendant.
+The fresh build record contains 318 output hashes, including 135 Next production
+outputs and the unchanged 180 API/contracts hashes. This does not assert every
+incremental file was newly emitted or constitute native/persisted-flow evidence.
+No extra local Docker/PostgreSQL identity run is performed; backend/runtime CI
+gates remain required on the eventual current published head.
+
+The new ignored `apps/web/coverage/t11-kilo-round1-correction-normal/` packet
+retains approval, all eight baseline fingerprints, actual counts/digest, 16
+normal reports, fresh build bindings and check/commit evidence. The approved
+88-payload proposal and all historical baselines/evidence remain unchanged.
+Eleven composition functions remain unexecuted, hook 50/50 does not prove all
+lifecycle paths, and 952/37598 provider null endpoints remain unknown. Current-
+head CI, narrow Astra native QA and the next requested review remain pending;
+external native Cancel/Leave stays user-accepted UNVERIFIED debt outside this
+batch. T11.4b/T11.5/full T11 remain open before T38.

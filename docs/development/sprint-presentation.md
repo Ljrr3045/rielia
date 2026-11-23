@@ -1,14 +1,14 @@
 # T11.4b sprint presentation checkpoint
 
-Status: **LOCAL CORRECTION BATCH for [Draft PR55](https://github.com/Ljrr3045/rielia/pull/55),
-published reviewed head `0faf74f5`. Native round 1 completed SUCCESS with seven
-accepted findings; its bot review is COMMENTED, not APPROVED. Astra copy commit
-`a60983e7` is imported unchanged and six SOL functional corrections are locally
-tested. Web numerical candidate `89cdc952` awaits explicit baseline approval,
-normal/current-head gates and the next requested review; no thread is resolved
-by this worker. External native Cancel/Leave remains user-accepted UNVERIFIED
-debt and possible unsaved-draft-loss risk, omitted only for this review batch.
-T11.4b/T11.5/full T11 remain open; coordinator owns remote writes, Ready and merge**.
+Status: **LOCALLY VERIFIED CORRECTION CHECKPOINT for [Draft PR55](https://github.com/Ljrr3045/rielia/pull/55),
+published reviewed head `0faf74f5`, corrected functional source `3d37c755` above
+preserved Astra copy `a60983e7`. The coordinator approved exact web baseline
+`89cdc952`; standard, normal 738-case, infrastructure and artifact gates pass
+with the qualifications below. Narrow corrected-head Astra QA, current-head CI,
+requested native review and coordinator thread dispositions remain pending.
+External native Cancel/Leave stays user-accepted UNVERIFIED debt and possible
+unsaved-draft-loss risk, omitted only for this review batch. T11.4b/T11.5/full T11
+remain open; coordinator owns remote writes, Ready and merge**.
 Base: accepted T11.4a merge `a2de3bd79596cb83b79287f105f60fedfb35bea9`.
 The [client guide](sprint-client.md#t114a-acceptance--2026-11-20-caracas--november-21-utc)
 records PR54 acceptance and its review/hash limits. T11.5 and full T11 remain
@@ -1285,3 +1285,67 @@ this correction scope. Representative/device/AT/zoom/provider/staging limits and
 T11.4b/T11.5/full T11 stay open; T38 follows full T11. Coordinator alone sequences
 Draft publication, current-head CI, completed review triage/ownership and any
 later Ready round; no acceptance or merge is implied by this local proposal.
+
+## Approved round-one numerical replay — 2026-11-22 Caracas
+
+The coordinator independently inspected the correction/source/test diff and
+reviewed-source witness at clean functional head
+`3d37c7552fda29e5d5c1fbf5c71bd679b2898197`, verified all 88 proposal payloads,
+237 physical fingerprints, unchanged 88-file web inventory and every per-file
+covered-count/ratio/uncovered comparison, then approved **only** the exact web
+baseline `89cdc95277c032522ca612d36a8028797a2c8b9affcbb94b5bdf4f000cc24429`.
+That candidate replaces `f1679d66`; the seven other current/historical baselines
+remain byte-exact. This acceptance is numerical and bounded; it does not accept
+product/privacy/persistence behavior, native accessibility or full T11.
+
+The authorized phases run serially, using installed frozen tools:
+
+- `pnpm check` **PASS** on the identical supported continuation after an inherited
+  Next `SecurityFatalError` stopped the initial command to show its upgrade
+  recommendation. Both logs are retained. Next reports continuing after the
+  reminder on retry; no source, dependency pin, configuration or suppression is
+  changed to get past it. Its recommendation to upgrade remains disclosed for
+  separately scoped work. The initial failed attempt is not recorded as a pass.
+- Normal `pnpm unit:coverage -- --built` **738/738 PASS**, no skips: 290 API,
+  406 web, 23 contracts, 19 prototype. `--built` reuses the successful standard
+  builds and is not a maintenance/baseline-write mode. Actual deterministic count
+  digest is `a90263901ce0220411fc38593c42dc92c26042d33550c1540bf2e8f880cbe757`;
+  all 16 report hashes/sizes reproduce the approved proposal exactly. The prior
+  prediction is now confirmed by this real normal run across all four scopes.
+- `pnpm test:unit-infrastructure` **20/20 PASS**; `pnpm unit:artifacts` prepares
+  and validates **17 bounded files** with every scope complete. No artifact is
+  uploaded and SDK-boundary doubles are not remote upload proof.
+
+Fresh successful standard build bindings cover **318 outputs**: 166 API
+JavaScript/source-map files, 14 contracts runtime/declaration files, three local
+MCP files and 135 Next production server/static/manifest files. All 180 prior
+API/contracts hashes remain identical; unchanged incremental files are not
+claimed as newly emitted. Fresh Next output hashes bind the corrected source,
+not a browser or persisted user journey. No additional local Docker/runtime or
+PostgreSQL identity integration run occurs for this frontend correction; those
+unchanged backend/runtime gates remain required in current-head CI. Standard
+HTTP/liveness checks do not establish real-provider or sprint DB acceptance.
+No native service/browser work, old-source witness repeat, installation or
+upgrade occurs after numerical approval.
+
+The baseline/check receipt is a descendant of functional `3d37c755`, itself a
+fast-forward descendant of preserved Astra `a60983e7` and reviewed `0faf74f5`.
+Only approved baseline bytes and bounded docs change after the functional head;
+all 237 source/test/tool fingerprints stay exact. The ignored packet
+`apps/web/coverage/t11-kilo-round1-correction-normal/` preserves coordinator
+approval, before/after hashes for all eight baselines, serial check logs, the
+initial Next stop and successful continuation, fresh build bindings, actual
+normal counts/digest and 16 reports, infrastructure/artifact evidence and the
+final clean committed-head manifest. Approved proposal, original native feedback
+and the omission packets remain immutable.
+
+Narrow Astra QA is pending only for the changed interactions listed above; the
+coordinator must sequence it from the frozen clean checkpoint. The accepted broad
+matrix is not repeated, and external native Cancel/Leave remains **UNVERIFIED
+user-accepted debt**, outside this batch. Eleven unexecuted composition functions,
+952/37598 null endpoints, representative/device/AT/zoom/provider/staging limits
+remain explicit. No old-head native SUCCESS/COMMENTED or CI success approves this
+changed head; current-head CI, completed requested-round review, ownership and
+coordinator thread dispositions remain required before acceptance. T11.4b/T11.5/
+full T11 stay open; T38 follows full T11. No worker remote write, Ready/Kilo toggle,
+thread resolution, deployment, merge or worker_done is performed.
