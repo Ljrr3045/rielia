@@ -486,5 +486,8 @@ frontend/backend implementation and bounded T36.6 consolidation are accepted in
 PR #44 with owned debt. T37.1 preparation is accepted in merged PR #45 as linked
 above; T37.2 foundations and T37.3 shell/entry are accepted in merged PRs #46/#47.
 T37.4 is accepted in PR48 and final T37.5/6 in PR49 as linked above. Earlier
-dated snapshots retain their then-current status and evidence limits. T11.1 is
-the current bounded implementation; full T11 lifecycle and UI remain later work.
+dated snapshots retain their then-current status and evidence limits. T11.1–4 are
+accepted; [T11.5 evidence](t11-acceptance.md) is complete in
+[PR56](https://github.com/Ljrr3045/rielia/pull/56). Original T11 lifecycle acceptance
+is **READY FOR REVIEW**, pending current-head CI/native Kilo, feedback/ownership/
+base checks and final coordinator acceptance/merge.
