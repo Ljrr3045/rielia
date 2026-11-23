@@ -50,8 +50,16 @@ records accepted T37.1–4, including [PR48](https://github.com/Ljrr3045/rielia/
 implementation/bounded QA accepted by PR49. Historical evidence retains its
 source, fixture/persistence and provenance limits. The user authorized T11 on
 2026-11-19. T11.1–3 are accepted through [PR52](https://github.com/Ljrr3045/rielia/pull/52#issuecomment-7052975664),
-merged `6507e487`; [T11.4a client logic](docs/development/sprint-client.md) is in
-progress. T11.4b/T11.5 and full T11 acceptance remain open.
+merged `6507e487`; [T11.4a client logic](docs/development/sprint-client.md) is
+accepted in PR54, reviewed `4fa0e034`, merged `a2de3bd`.
+[T11.4b presentation/integration](docs/development/sprint-presentation.md) is
+accepted in [PR55](https://github.com/Ljrr3045/rielia/pull/55#issuecomment-7112015425),
+reviewed `9100844`, merged `214d00b3`. [T11.5 evidence](docs/development/t11-acceptance.md)
+is complete in [PR56](https://github.com/Ljrr3045/rielia/pull/56); original
+T11 lifecycle acceptance is **READY FOR REVIEW**, pending current-head CI/native
+Kilo, feedback/ownership/base checks and final coordinator acceptance/merge.
+Sprint-filter, user-omitted UNVERIFIED Cancel/Leave and cross-cutting evidence
+limits remain explicit; final T11 acceptance still precedes T38.
 Preparing these contribution documents does not
 complete T16 or its real-project validation.
 

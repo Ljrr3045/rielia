@@ -25,10 +25,17 @@ Historical source-qualified persistence/visual limits and owned debt remain;
 no universal frontend migration or original-ticket acceptance is implied.
 The user authorized T11 on 2026-11-19. T11.1–3 APIs are accepted through
 [PR52](https://github.com/Ljrr3045/rielia/pull/52#issuecomment-7052975664), merged
-`6507e487`. [T11.4a client logic](../../docs/development/sprint-client.md) supplies
-the later Astra presentation contract; T11.4b/T11.5 and full T11 acceptance remain
-open. Planned [T38](https://github.com/Ljrr3045/rielia/issues/53) follows full T11;
-no query/schema/form library adoption is part of this client batch.
+`6507e487`. [T11.4a client logic](../../docs/development/sprint-client.md) is accepted
+in PR54, reviewed `4fa0e034`, merged `a2de3bd`;
+[T11.4b presentation/integration](../../docs/development/sprint-presentation.md) is
+accepted in [PR55](https://github.com/Ljrr3045/rielia/pull/55#issuecomment-7112015425),
+reviewed `9100844`, merged `214d00b3`. [T11.5 evidence](../../docs/development/t11-acceptance.md)
+is complete in [PR56](https://github.com/Ljrr3045/rielia/pull/56); original T11
+lifecycle acceptance is **READY FOR REVIEW**, pending current-head CI/native Kilo,
+feedback/ownership/base checks and final coordinator acceptance/merge. Scope and
+evidence debts remain explicit in the matrix. Planned
+[T38](https://github.com/Ljrr3045/rielia/issues/53) still follows final full T11
+acceptance; no query/schema/form library adoption is authorized here.
 
 - Route files compose screens. Feature components render typed public data and
   emit explicit user intents. Keep related components, styles and copy together;

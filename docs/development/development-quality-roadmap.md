@@ -14,8 +14,10 @@ decision schedules [T38](https://github.com/Ljrr3045/rielia/issues/53) after ful
 T11 acceptance: **accepted T36 → accepted T37 → T11 → T38 → remaining work under
 its existing dependencies**. The issue is canonical planned scope: later Zod/
 TanStack Query adoption planning and forms/OpenAPI/testing/observability evaluation.
-No T38 installs or migrations now; finish T11.4b presentation and T11.5 integrated
-acceptance first. T11.3/PR52 alone does not satisfy that prerequisite.
+No T38 installs or migrations now. T11.4a/b are accepted and T11.5 evidence is
+complete; [original T11 lifecycle acceptance](t11-acceptance.md) in
+[PR56](https://github.com/Ljrr3045/rielia/pull/56) still awaits final review and
+coordinator acceptance. T11.3/PR52 alone does not satisfy that prerequisite.
 The original T36/T37
 prerequisites paused new sprint/product expansion; they do not waive incomplete
 T01–T35 acceptance, authorize later capabilities, or reorder the remaining
@@ -36,7 +38,15 @@ ACCEPTED; explicit debt remains owned. The user authorized starting T37 on
 `5d3637b`, merged `20a257c`. T11 was authorized on 2026-11-19;
 T11.1–3 are accepted through [PR52](https://github.com/Ljrr3045/rielia/pull/52#issuecomment-7052975664),
 reviewed `1256241b`, merged `6507e487`. [T11.4a client logic](sprint-client.md) is
-in progress; T11.4b/T11.5 and full T11 acceptance remain open. Earlier evidence includes
+accepted in PR54, reviewed `4fa0e034`, merged `a2de3bd`;
+[T11.4b presentation/integration](sprint-presentation.md) is accepted in
+[PR55](https://github.com/Ljrr3045/rielia/pull/55#issuecomment-7112015425), reviewed
+`9100844`, merged `214d00b3`. [T11.5 evidence](t11-acceptance.md) is complete in
+[PR56](https://github.com/Ljrr3045/rielia/pull/56); original T11 lifecycle acceptance
+is **READY FOR REVIEW**, pending current-head CI/native Kilo, feedback/ownership/
+base checks and final coordinator acceptance/merge. Retained scope and evidence
+limits remain in the matrix; T38 still follows final T11 acceptance.
+Earlier evidence includes
 [T37.1 technical skill preparation](frontend-skills.md) and integrated
 [Astra inventory](t37-ui-inventory.md)/[direction proposal](t37-design-direction.md).
 Fresh frontend catalog discovery and explicit local loading are verified at
@@ -58,9 +68,9 @@ focused browser schedules and four coordinator-opened current images; previous
 185/10-native and177/26-native/Astra subsets retain source-qualified history.
 T37.5 discovery/navigation and T37.6 consolidation implementation/bounded QA are
 complete for the final delivery PR, with accepted PR48 ancestry integrated.
-PR49's linked final acceptance governs that bounded delivery. T11.1–3 API
-slices are subsequently accepted; client/presentation/integrated T11 work remains
-in progress before planned T38. No Astro app is scaffolded.
+PR49's linked final acceptance governs that bounded delivery. T11.1–4 are
+subsequently accepted; T11.5 evidence is complete and original T11 lifecycle
+acceptance is READY FOR REVIEW in PR56 before planned T38. No Astro app is scaffolded.
 Prose or smaller files do not establish universal conformity, production readiness
 or full T01–T35 acceptance.
 
@@ -476,5 +486,8 @@ frontend/backend implementation and bounded T36.6 consolidation are accepted in
 PR #44 with owned debt. T37.1 preparation is accepted in merged PR #45 as linked
 above; T37.2 foundations and T37.3 shell/entry are accepted in merged PRs #46/#47.
 T37.4 is accepted in PR48 and final T37.5/6 in PR49 as linked above. Earlier
-dated snapshots retain their then-current status and evidence limits. T11.1 is
-the current bounded implementation; full T11 lifecycle and UI remain later work.
+dated snapshots retain their then-current status and evidence limits. T11.1–4 are
+accepted; [T11.5 evidence](t11-acceptance.md) is complete in
+[PR56](https://github.com/Ljrr3045/rielia/pull/56). Original T11 lifecycle acceptance
+is **READY FOR REVIEW**, pending current-head CI/native Kilo, feedback/ownership/
+base checks and final coordinator acceptance/merge.
