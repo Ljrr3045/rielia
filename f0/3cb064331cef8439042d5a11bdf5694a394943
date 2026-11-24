@@ -1,0 +1,91 @@
+apps/web/src/lib/sprint-client.ts
+  s_a9a6185c99ef9f::t_c368416a90f7f7 134-138,140
+  s_a9a6185c99ef9f::t_38ec7fb664edbd 139
+apps/api/test/unit/sprint-planning.test.mjs
+  s_a9a6185c99ef9f::t_1f8f0ad1dd8045 10,188-193,208-210,223,237,242-247,252-255,271
+  s_a9a6185c99ef9f::t_38ec7fb664edbd 194-207,211-222,224-236,238-241,248-251,256-270
+  s_a9a6185c99ef9f::t_1e2a53e512445b 272
+format-adoption.json
+  s_a9a6185c99ef9f::t_beaecbe9418ec8 219
+scripts/unit/pipeline.mjs
+  s_a9a6185c99ef9f::t_38ec7fb664edbd 288-292
+  s_a9a6185c99ef9f::t_c368416a90f7f7 286-287,293
+apps/api/test/sprint-planning.test.mjs
+  s_a9a6185c99ef9f::t_a1b84e6e657d85 182,213,216-222
+packages/contracts/test/sprints.test.mjs
+  s_a9a6185c99ef9f::t_62c3c9e73b12c4 11-20,142-175,184-215,220-221,229-232,242-251,263-275,280-281,285-300,306-307,316-317,320,329
+  s_a9a6185c99ef9f::t_38ec7fb664edbd 176-183,216-219,222-228,233-241,252-262,276-279,282-284,301-305,308-315,318-319,321-328
+docs/development/progress.md
+  s_a9a6185c99ef9f::t_6a6ade8991fc0d 20-21
+  s_a9a6185c99ef9f::t_f6a2779e208137 3,16-17,22-40,95
+  s_a9a6185c99ef9f::t_a88ef6c4f431f9 5-15,18-19,41-42,82-87,94
+  s_a9a6185c99ef9f::t_693751642c2b9a 4
+docs/development/t38-sprint-schemas.md
+  s_a9a6185c99ef9f::t_beaecbe9418ec8 1-2,5-112,276-281
+  s_a9a6185c99ef9f::t_2b6978bfd69bf1 3-4,127-128,154,156-161,171,199-227,231,233-257,263-275
+  s_a9a6185c99ef9f::t_6a6ade8991fc0d 113-126,129-153,155,162-169,198
+  s_a9a6185c99ef9f::t_798deea05619df 170,172-197
+  s_a9a6185c99ef9f::t_ea3ca896fca392 228-230,232,258-262
+docs/development/t38-boundary-inventory.md
+  s_a9a6185c99ef9f::t_f6a2779e208137 7-8
+  s_a9a6185c99ef9f::t_a88ef6c4f431f9 3-6,9-13,27,106,120-122
+packages/contracts/test/guards.test.mjs
+  s_a9a6185c99ef9f::t_d526ce82b429da 279,284-292,297-301,307-321
+  s_a9a6185c99ef9f::t_2edfef5cbabe72 280-283,293-296,302-306
+packages/contracts/tsconfig.json
+  s_a9a6185c99ef9f::t_da8d861bc18b1c 6
+scripts/unit/baselines/api.json
+  s_a9a6185c99ef9f::t_e62cb982626369 455-456,463-464,467-468,941,943-944,961,990,1036,1049-1050,1057-1058,1061-1062
+packages/contracts/src/sprint-schemas.ts
+  s_a9a6185c99ef9f::t_bc87954461f519 1-10,14-126,133-210
+  s_a9a6185c99ef9f::t_38ec7fb664edbd 11-13
+  s_a9a6185c99ef9f::t_859c20bb82119e 127-132
+packages/contracts/src/sprints.ts
+  s_a9a6185c99ef9f::t_d636064e01ba53 1-17,44-46,48-49,51-52,54-55,57-58,60-61,63-64,66-67
+scripts/unit/baselines/contracts.json
+  s_a9a6185c99ef9f::t_e62cb982626369 23,57-74,77-78,81-82,85-86,89-90,149,169,176-177,191,193,202-203,206-207,210-211,214-215
+scripts/unit/baselines/prototype.json
+  s_a9a6185c99ef9f::t_e62cb982626369 313
+apps/api/src/projects/sprint-input.ts
+  s_a9a6185c99ef9f::t_38ec7fb664edbd 13-15,24,40
+  s_a9a6185c99ef9f::t_c368416a90f7f7 2-9,21-23,25,29-31,36-37,39,41-47
+  s_a9a6185c99ef9f::t_cbaa578f20d564 16-19
+CHANGELOG.md
+  s_a9a6185c99ef9f::t_f6a2779e208137 8,15-22,37-41
+  s_a9a6185c99ef9f::t_a88ef6c4f431f9 7,9-13,24-25
+  s_a9a6185c99ef9f::t_6a6ade8991fc0d 14,23
+docs/development/unit-coverage.md
+  s_a9a6185c99ef9f::t_167fc13e29fdf0 3,20,24
+  s_a9a6185c99ef9f::t_798deea05619df 7-9,11
+  s_a9a6185c99ef9f::t_f6a2779e208137 4-6,10,12-19
+scripts/unit/baselines/web.json
+  s_a9a6185c99ef9f::t_e62cb982626369 1283-1284,1291-1292,1295-1296,1589,1591-1592,1609,1684,1730,1751-1752,1759-1760,1763-1764
+scripts/unit/infrastructure.test.mjs
+  s_a9a6185c99ef9f::t_c368416a90f7f7 543-573
+apps/web/test/unit/sprint-planning.test.mjs
+  s_a9a6185c99ef9f::t_a1b84e6e657d85 153-162,169-172,191-198,207-209,212-227,232-247,262-265
+  s_a9a6185c99ef9f::t_38ec7fb664edbd 163-168,173-190,199-206,210-211,228-231,248-261
+docs/development/t38-tooling-plan.md
+  s_a9a6185c99ef9f::t_a88ef6c4f431f9 5-12,27-29,36-38,372
+  s_a9a6185c99ef9f::t_f6a2779e208137 3-4,373
+packages/contracts/package.json
+  s_a9a6185c99ef9f::t_0ee7ecf7057b8a 12-14
+pnpm-lock.yaml
+  s_a9a6185c99ef9f::t_cdae3bd1f9d948 291-295
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f03cb064331cef8439042d5a11bdf5694a394943",
+  "prompts": {},
+  "sessions": {
+    "s_a9a6185c99ef9f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a20b1e-831d-79f1-9d14-8f782f37706d",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
