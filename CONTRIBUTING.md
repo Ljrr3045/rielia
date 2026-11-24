@@ -30,9 +30,14 @@ and exclusions. The [2026-11-05 quality roadmap](docs/development/development-qu
 records the original T36/T37 decision. The user's 2026-11-20 sequence is
 **accepted T36 → accepted T37 → full T11 → T38 → remaining work under existing
 dependencies**. [T38 issue 53](https://github.com/Ljrr3045/rielia/issues/53) is the
-canonical planned Zod/TanStack Query direction and forms/OpenAPI/testing/
-observability evaluation. No T38 library adoption or migration starts before
-full T11 acceptance, including T11.4b presentation and T11.5 integrated acceptance.
+canonical Zod/TanStack Query direction and forms/OpenAPI/testing/
+observability evaluation. Original T11/T11.5 is now accepted in
+[PR56](https://github.com/Ljrr3045/rielia/pull/56#issuecomment-7114539999), reviewed
+`a9d159f`, merged `f020a423`, satisfying that prerequisite. The user authorized
+starting T38 on **2026-11-23 America/Caracas**. Its
+[inventory/decision/pilot guide](docs/development/t38-tooling-plan.md) separates
+bounded compatibility releases from production adoption; candidates are not a
+bulk installation list.
 The source dependency graph remains: T35 follows T04 and precedes T05/T06/T12.
 Read the scoped [web](apps/web/AGENTS.md) or [API](apps/api/AGENTS.md) developer
 rules before changing those apps. These rules describe incremental migration
@@ -55,11 +60,11 @@ accepted in PR54, reviewed `4fa0e034`, merged `a2de3bd`.
 [T11.4b presentation/integration](docs/development/sprint-presentation.md) is
 accepted in [PR55](https://github.com/Ljrr3045/rielia/pull/55#issuecomment-7112015425),
 reviewed `9100844`, merged `214d00b3`. [T11.5 evidence](docs/development/t11-acceptance.md)
-is complete in [PR56](https://github.com/Ljrr3045/rielia/pull/56); original
-T11 lifecycle acceptance is **READY FOR REVIEW**, pending current-head CI/native
-Kilo, feedback/ownership/base checks and final coordinator acceptance/merge.
+and original T11 lifecycle are **ACCEPTED** in PR56's final decision, with
+reviewed-head CI/Kilo and exact-merge CI passed. That decision supersedes the
+deliberately frozen READY FOR REVIEW evidence matrix.
 Sprint-filter, user-omitted UNVERIFIED Cancel/Leave and cross-cutting evidence
-limits remain explicit; final T11 acceptance still precedes T38.
+limits remain explicit; T38 now proceeds through its ordered coordinator gates.
 Preparing these contribution documents does not
 complete T16 or its real-project validation.
 

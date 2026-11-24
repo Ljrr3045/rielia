@@ -9,10 +9,13 @@ incrementally over 11 files in `18973d0..1256241`; it is not another full review
 The first full round [136586940559](https://github.com/Ljrr3045/rielia/runs/136586940559)
 reported seven findings, all fixed/resolved. No formal APPROVED review is claimed.
 Exact postmerge [Actions 44835623613 / validate 136631171383](https://github.com/Ljrr3045/rielia/actions/runs/44835623613/job/136631171383)
-passed. Dated then-pending evidence below remains historical. T11.4b/T11.5 and
-full T11 acceptance remain open.
+passed. Original T11/T11.5 and bounded presentation were subsequently
+[accepted in PR56](https://github.com/Ljrr3045/rielia/pull/56#issuecomment-7114539999),
+reviewed `a9d159f`, merged `f020a423`. The user authorized
+[T38's staged engineering work](t38-tooling-plan.md) on 2026-11-23.
+Dated then-pending evidence below remains historical.
 
-Status: implemented and locally verified in [Draft PR52](https://github.com/Ljrr3045/rielia/pull/52).
+Historical implementation snapshot: implemented and locally verified in [Draft PR52](https://github.com/Ljrr3045/rielia/pull/52).
 Current-head CI/native review and coordinator acceptance are separate delivery
 gates. This is the
 bounded T11/B1c, P09/US06 API/transport slice, with affected P05/P08/P10 and

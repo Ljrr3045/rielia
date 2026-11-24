@@ -5,8 +5,13 @@ reviewed `a966441850a22a786ebe1227ce4247d4736c6ae1`, merged `10f0e89`.
 Exact postmerge [validate](https://github.com/Ljrr3045/rielia/actions/runs/44665402349/job/136053330577)
 passed. The dated implementation/review snapshots below remain historical.
 [T11.3 close/carryover](sprint-closure.md) records the next bounded slice.
+Original T11/T11.5 was subsequently
+[accepted in PR56](https://github.com/Ljrr3045/rielia/pull/56#issuecomment-7114539999),
+reviewed `a9d159f`, merged `f020a423`. The user authorized
+[T38's staged engineering work](t38-tooling-plan.md) on 2026-11-23; earlier
+then-pending statements below retain their dated limits.
 
-Status: implemented and locally verified in [Draft PR51](https://github.com/Ljrr3045/rielia/pull/51).
+Historical implementation snapshot: implemented and locally verified in [Draft PR51](https://github.com/Ljrr3045/rielia/pull/51).
 The initial implementation is `24a331f`; native round 1 reviewed `f9d0e038`.
 The [corrective batch](#pr51-round-1-correction) below is locally verified;
 new-head CI/native review and coordinator acceptance remain pending.

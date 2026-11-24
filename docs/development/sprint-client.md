@@ -11,12 +11,13 @@ reviewed `1256241b9f26baf60484db302e4df2d6bc35c5d7`, merged
 full-round findings, absent formal APPROVED and exact successful postmerge CI.
 Earlier then-pending records remain historical.
 
-No JSX, CSS, route composition or new product/API flow is added. T11.4b native/
-responsive/localized presentation, T11.5 persisted integrated acceptance and full
-T11 acceptance remain open. No T12/T13, T22 reports, prototype policy, landing,
-deployment or provider/staging/user acceptance. Planned
-[T38 issue 53](https://github.com/Ljrr3045/rielia/issues/53) follows full T11;
-no schema/query/form library adoption or dependency upgrade occurs here.
+No JSX, CSS, route composition or new product/API flow was added by T11.4a.
+Original T11/T11.5 and bounded T11.4b presentation were subsequently
+[accepted in PR56](https://github.com/Ljrr3045/rielia/pull/56#issuecomment-7114539999),
+reviewed `a9d159f`, merged `f020a423`. The user authorized
+[T38's staged engineering work](t38-tooling-plan.md) on 2026-11-23; this guide's
+dated receipts and T11.4a-only scope remain historical. No T12/T13, T22 reports,
+prototype policy, landing, deployment or provider/staging/user acceptance is implied.
 
 ## T11.4a acceptance — 2026-11-20 Caracas / November 21 UTC
 

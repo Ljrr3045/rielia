@@ -19,6 +19,12 @@ retained facade/DI, same PrincipalService transaction and query/lock/await order
 Other services retain coupling and explicit debt. No shared database package,
 universal repository layer or complete source migration is implied.
 
+Original T11/T11.5 is [accepted in PR56](https://github.com/Ljrr3045/rielia/pull/56#issuecomment-7114539999),
+reviewed `a9d159f`, merged `f020a423`. The user authorized T38 on 2026-11-23
+America/Caracas; its [inventory and staged gates](../../docs/development/t38-tooling-plan.md)
+cover schema/transport/configuration adoption. A standalone frontend pilot
+does not prove backend NodeAdapter/deployment closure or authorize a policy rewrite.
+
 - Keep Nest modules/providers/guards and the official NodeAdapter. Preserve exact
   approved runtime pins, patches and API/worker/migration dependency-closure
   checks. Express, its adapter/types/optional peers, and a separate routing

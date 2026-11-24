@@ -30,12 +30,14 @@ in PR54, reviewed `4fa0e034`, merged `a2de3bd`;
 [T11.4b presentation/integration](../../docs/development/sprint-presentation.md) is
 accepted in [PR55](https://github.com/Ljrr3045/rielia/pull/55#issuecomment-7112015425),
 reviewed `9100844`, merged `214d00b3`. [T11.5 evidence](../../docs/development/t11-acceptance.md)
-is complete in [PR56](https://github.com/Ljrr3045/rielia/pull/56); original T11
-lifecycle acceptance is **READY FOR REVIEW**, pending current-head CI/native Kilo,
-feedback/ownership/base checks and final coordinator acceptance/merge. Scope and
-evidence debts remain explicit in the matrix. Planned
-[T38](https://github.com/Ljrr3045/rielia/issues/53) still follows final full T11
-acceptance; no query/schema/form library adoption is authorized here.
+and original T11 lifecycle are **ACCEPTED** in
+[PR56](https://github.com/Ljrr3045/rielia/pull/56#issuecomment-7114539999), reviewed
+`a9d159f`, merged `f020a423`, with reviewed-head and exact-merge CI passed.
+That final decision supersedes the deliberately frozen source matrix; its scope
+and evidence debts remain. The user authorized [T38](https://github.com/Ljrr3045/rielia/issues/53)
+on 2026-11-23 America/Caracas. Follow the
+[finite inventory and bounded adoption gates](../../docs/development/t38-tooling-plan.md):
+schema/Query pilot selection is separate from production cache/form migration.
 
 - Route files compose screens. Feature components render typed public data and
   emit explicit user intents. Keep related components, styles and copy together;
