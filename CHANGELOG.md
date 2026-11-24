@@ -5,7 +5,8 @@ This records repository changes. No application version has been released.
 ## Unreleased
 
 - Record [T38.1 acceptance in PR57](https://github.com/Ljrr3045/rielia/pull/57#issuecomment-7118652391)
-  and implement the bounded [T38.2a Sprint schema slice](docs/development/t38-sprint-schemas.md).
+  and implement the bounded [T38.2a Sprint schema slice](docs/development/t38-sprint-schemas.md),
+  prepared in [Draft PR58](https://github.com/Ljrr3045/rielia/pull/58).
   Add exact contracts Zod4.6.7, inferred request/DTO schemas and compatibility
   guards, strict backend input parsing and thin web validation. Reject malformed
   Sprint person-kind/provenance-mode arrays/objects while retaining valid scalar

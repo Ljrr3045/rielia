@@ -12,6 +12,14 @@ passed all 24 steps. Native Kilo round two `edb5b893-f38b-42d9-afb6-32206da0f03d
 was clean after five documentation findings were corrected. These are preserved
 coordinator receipts, not checks rerun by this migration.
 
+Prepared in [Draft PR58](https://github.com/Ljrr3045/rielia/pull/58), targeting
+`dev`. The coordinator initially published implementation head
+`f03cb064331cef8439042d5a11bdf5694a394943`, tree
+`802b54c683c5345c40077cda0bba2b7a17abc9c2`. The local source/run receipts below
+remain bound to that delivery; this subsequent reference-only documentation
+batch does not regenerate or rebind application evidence. Current-head hosted
+CI/native Kilo, feedback/base/ownership checks and final acceptance are pending.
+
 ## Scope and owners
 
 Traceability: original T11; P09/P10/P38; US06/US11/US12; retained UX04/05/06
@@ -258,17 +266,18 @@ provider was used. Timings are observations, not comparative performance claims.
 
 Offline handoff verification passes 47 imported files, 30 asset hashes/sizes and
 1017 local links in 91 documents. Remote URLs and heading fragments are not
-verified by that tool. Whitespace checks pass. Normal hooks remain required for
-the local commit.
+verified by that tool. Whitespace checks and normal pre-commit/commit-message
+hooks passed for implementation commit `f03cb064`. This later documentation
+batch retains its own applicable link/whitespace/hooks receipt.
 
 Root and isolated-tool `audit --audit-level=high` gates pass: root reports one
 low/fourteen moderate findings; tools report two moderate findings, with no
 high/critical findings in those snapshots. The inherited Next security-upgrade
 recommendation and advisory debt remain; no package upgrade/security remediation
-is included. Final documentation/whitespace/hooks and a bounded local commit
-prepare coordinator-owned Draft publication, current-head CI/native Kilo,
-feedback/base/ownership checks and final acceptance; no remote action is made
-by the worker.
+is included. The bounded implementation was committed with normal hooks and
+published by the coordinator as recorded above. Current-head CI/native Kilo,
+feedback/base/ownership checks and final acceptance remain separate delivery
+gates; the worker makes no remote action.
 
 Ignored local evidence remains under `coverage/t38-sprint-schemas/`, including
 both proposals, exact adoption/normal reproduction and all failure/continuation

@@ -2,6 +2,13 @@
 
 ## 2026-11-23 T38.2a Sprint shared schemas — LOCAL COMPLETE; REVIEW PENDING
 
+Prepared in [Draft PR58](https://github.com/Ljrr3045/rielia/pull/58), targeting
+`dev`. The coordinator published implementation head
+`f03cb064331cef8439042d5a11bdf5694a394943`; local validation receipts below retain
+that source/run binding. This later documentation-reference batch reruns only
+applicable offline link/whitespace/hooks checks. Current-head hosted CI, native
+Kilo and final coordinator acceptance remain pending.
+
 [T38.1 is accepted in PR57](https://github.com/Ljrr3045/rielia/pull/57#issuecomment-7118652391),
 reviewed `b12e3220`, merged `4dab8594`, identical tree `8573ea3d`.
 [Exact-merge validate138135467847](https://github.com/Ljrr3045/rielia/actions/runs/45301675698/job/138135467847)
