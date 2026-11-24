@@ -1,0 +1,27 @@
+package.json
+  s_f11e57d56a33d0::t_650990c55d5b7e 25
+docs/development/progress.md
+  s_f11e57d56a33d0::t_9f41019bee81d7 8-9,12-18
+  s_f11e57d56a33d0::t_830b1364319e87 19
+docs/development/t38-workspace-schemas.md
+  s_f11e57d56a33d0::t_9f41019bee81d7 20-21,347-370
+  s_f11e57d56a33d0::t_f7ebd6363e3820 371
+CHANGELOG.md
+  s_f11e57d56a33d0::t_9f41019bee81d7 29,32-35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d9699cf23cad09dea336c89ce7f398b3654a0a03",
+  "prompts": {},
+  "sessions": {
+    "s_f11e57d56a33d0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a20b7f-7eae-7f53-b31b-7f769146f211",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
