@@ -35,7 +35,13 @@ or an Orca installation.
   [T38](https://github.com/Ljrr3045/rielia/issues/53) after **full T11 acceptance**:
   **accepted T36 → accepted T37 → T11 → T38 → remaining work under existing
   dependencies**. T38 plans Zod/TanStack Query adoption and evaluates forms,
-  OpenAPI, testing and observability; no T38 installation/migration is authorized now.
+  OpenAPI, testing and observability. Full original T11/T11.5 was
+  [accepted in PR56](https://github.com/Ljrr3045/rielia/pull/56#issuecomment-7114539999),
+  reviewed `a9d159f`, merged `f020a423`, with reviewed-head and exact-merge CI passed.
+  The user authorized starting T38 on **2026-11-23 America/Caracas**.
+  [T38 inventory and decisions](docs/development/t38-tooling-plan.md) govern its
+  bounded coordinator gates; isolated compatibility proof does not authorize
+  production adoption or installation of every evaluated candidate.
   [The roadmap](docs/development/development-quality-roadmap.md)
   defines ordered subdeliveries and evidence. The agreed tooling/formatting,
   deterministic frontend/backend units, all-source numerical CI gates and bounded
@@ -68,12 +74,14 @@ or an Orca installation.
   [T11.4b presentation](docs/development/sprint-presentation.md) is accepted in
   [PR55](https://github.com/Ljrr3045/rielia/pull/55#issuecomment-7112015425),
   reviewed `9100844`, merged `214d00b3`. [T11.5 evidence consolidation](docs/development/t11-acceptance.md)
-  is complete; original T11 lifecycle acceptance is **READY FOR REVIEW**, pending
-  current-head CI/native Kilo, feedback/ownership/base checks and the coordinator's
-  final acceptance and merge. Cross-document Cancel/Leave remains user-omitted
+  is complete and the original lifecycle is **ACCEPTED** by PR56's linked final
+  decision, which supersedes the deliberately frozen READY FOR REVIEW source
+  matrix. Cross-document Cancel/Leave remains user-omitted
   UNVERIFIED debt with possible draft loss; sprint filters remain T08/T10/US05 debt.
   Full US05/P08/T08/T10, US12 and device/accessibility conformity are not accepted.
-  Final T11 lifecycle acceptance precedes T38; no T38 adoption is authorized now.
+  The full original T11 prerequisite is satisfied; T38 is in progress under
+  [issue 53](https://github.com/Ljrr3045/rielia/issues/53), with no subdelivery
+  accepted merely by planning or pilot execution.
   No universal source conformity or full acceptance is implied. Original
   T01–T35 numbering/acceptance and immutable handoff remain unchanged. Future
   T30–T34 landing work uses the [later Astro/narrative direction](docs/development/landing-direction.md);

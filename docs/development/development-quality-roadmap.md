@@ -12,12 +12,14 @@ The 2026-11-05 decision added **T36 — Engineering quality, tooling and
 structure**, then **T37 — UI quality redesign**. The user's additive 2026-11-20
 decision schedules [T38](https://github.com/Ljrr3045/rielia/issues/53) after full
 T11 acceptance: **accepted T36 → accepted T37 → T11 → T38 → remaining work under
-its existing dependencies**. The issue is canonical planned scope: later Zod/
-TanStack Query adoption planning and forms/OpenAPI/testing/observability evaluation.
-No T38 installs or migrations now. T11.4a/b are accepted and T11.5 evidence is
-complete; [original T11 lifecycle acceptance](t11-acceptance.md) in
-[PR56](https://github.com/Ljrr3045/rielia/pull/56) still awaits final review and
-coordinator acceptance. T11.3/PR52 alone does not satisfy that prerequisite.
+its existing dependencies**. Original T11/T11.5 was
+[accepted in PR56](https://github.com/Ljrr3045/rielia/pull/56#issuecomment-7114539999),
+reviewed `a9d159f`, merged `f020a423`, satisfying the full prerequisite.
+The user authorized starting T38 on **2026-11-23 America/Caracas**. Issue 53 is
+canonical scope: staged Zod/TanStack Query adoption and forms/OpenAPI/testing/
+observability evaluation. The [T38 inventory/decision/pilot plan](t38-tooling-plan.md)
+records concrete compatibility gates and exclusions; no production migration
+or installation of the whole shortlist follows a standalone pilot.
 The original T36/T37
 prerequisites paused new sprint/product expansion; they do not waive incomplete
 T01–T35 acceptance, authorize later capabilities, or reorder the remaining
@@ -42,10 +44,10 @@ accepted in PR54, reviewed `4fa0e034`, merged `a2de3bd`;
 [T11.4b presentation/integration](sprint-presentation.md) is accepted in
 [PR55](https://github.com/Ljrr3045/rielia/pull/55#issuecomment-7112015425), reviewed
 `9100844`, merged `214d00b3`. [T11.5 evidence](t11-acceptance.md) is complete in
-[PR56](https://github.com/Ljrr3045/rielia/pull/56); original T11 lifecycle acceptance
-is **READY FOR REVIEW**, pending current-head CI/native Kilo, feedback/ownership/
-base checks and final coordinator acceptance/merge. Retained scope and evidence
-limits remain in the matrix; T38 still follows final T11 acceptance.
+[PR56](https://github.com/Ljrr3045/rielia/pull/56); original T11 lifecycle is
+**ACCEPTED** by its linked final decision. Reviewed-head CI/Kilo and exact-merge
+CI passed. That decision supersedes the deliberately frozen READY FOR REVIEW
+matrix. Retained scope/evidence limits remain; T38 is now in progress.
 Earlier evidence includes
 [T37.1 technical skill preparation](frontend-skills.md) and integrated
 [Astra inventory](t37-ui-inventory.md)/[direction proposal](t37-design-direction.md).
@@ -69,15 +71,16 @@ focused browser schedules and four coordinator-opened current images; previous
 T37.5 discovery/navigation and T37.6 consolidation implementation/bounded QA are
 complete for the final delivery PR, with accepted PR48 ancestry integrated.
 PR49's linked final acceptance governs that bounded delivery. T11.1–4 are
-subsequently accepted; T11.5 evidence is complete and original T11 lifecycle
-acceptance is READY FOR REVIEW in PR56 before planned T38. No Astro app is scaffolded.
+subsequently accepted; original T11/T11.5 is accepted in PR56, and T38 is
+user-authorized under the bounded gates above. No Astro app is scaffolded.
 Prose or smaller files do not establish universal conformity, production readiness
 or full T01–T35 acceptance.
 
 Traceability: architecture §§1.4–1.5, 2–4 and 8.2/8.6; T01/T04–T10/T35; product
 P01–P11/P33/P38, US01–US08/US11–US12/US24–US25; UXR01–UXR04/UXR06 and
-UX01–UX03/UX05–UX07/UX09/UX11 for existing product surfaces. UX04 applies when
-T11 later implements sprints. T37 does not implement T11 to satisfy that criterion.
+UX01–UX03/UX05–UX07/UX09/UX11 for existing product surfaces. UX04 applies to the
+subsequently accepted original T11 sprint lifecycle and its T38 engineering
+support. Historical T37 scope did not implement T11 to satisfy that criterion.
 
 Product owns scope, the [UI/UX guide](../handoff/04-ui-ux-development-guide.en.md)
 owns composition/interaction, architecture owns contracts and permissions, and
@@ -488,6 +491,7 @@ above; T37.2 foundations and T37.3 shell/entry are accepted in merged PRs #46/#4
 T37.4 is accepted in PR48 and final T37.5/6 in PR49 as linked above. Earlier
 dated snapshots retain their then-current status and evidence limits. T11.1–4 are
 accepted; [T11.5 evidence](t11-acceptance.md) is complete in
-[PR56](https://github.com/Ljrr3045/rielia/pull/56). Original T11 lifecycle acceptance
-is **READY FOR REVIEW**, pending current-head CI/native Kilo, feedback/ownership/
-base checks and final coordinator acceptance/merge.
+[PR56](https://github.com/Ljrr3045/rielia/pull/56). Original T11/T11.5 is
+**ACCEPTED** by PR56's linked final decision at reviewed `a9d159f`, merged
+`f020a423`; source-qualified limits remain. T38 was user-authorized on November
+23 and proceeds through its own bounded gates, without accepting other tickets.

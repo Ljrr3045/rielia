@@ -3,9 +3,14 @@
 T11.1 was subsequently ACCEPTED in [PR50](https://github.com/Ljrr3045/rielia/pull/50#issuecomment-7025241040),
 reviewed `4ce5775`, merged `e215973`; exact postmerge CI passed. This guide retains
 the dated implementation/review evidence below. [T11.2 scope/start](sprint-scope-start.md)
-records the next API slice; original T11 and presentation acceptance remain open.
+records the next API slice. Original T11/T11.5 and bounded presentation were
+subsequently [accepted in PR56](https://github.com/Ljrr3045/rielia/pull/56#issuecomment-7114539999),
+reviewed `a9d159f`, merged `f020a423`. The user authorized
+[T38's staged engineering work](t38-tooling-plan.md) on 2026-11-23; retained
+adjacent-ticket/native/provider/staging limits remain explicit.
 
-Status: implemented and locally verified in
+Historical initial implementation snapshot, superseded by the acceptances above:
+implemented and locally verified in
 [Draft PR50](https://github.com/Ljrr3045/rielia/pull/50); current-head CI/native
 review and coordinator acceptance remain pending. This bounded API/proxy slice
 starts from accepted T37 [PR49](https://github.com/Ljrr3045/rielia/pull/49#issuecomment-6819605884),

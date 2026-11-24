@@ -4,6 +4,22 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Record the user's 2026-11-23 authorization of [T38](https://github.com/Ljrr3045/rielia/issues/53)
+  after [original T11/T11.5 acceptance in PR56](https://github.com/Ljrr3045/rielia/pull/56#issuecomment-7114539999),
+  and synchronize current guidance while preserving dated history/frozen evidence.
+  Add the [finite inventory](docs/development/t38-boundary-inventory.md), exact
+  candidate decisions and [bounded standalone P1 receipt](docs/development/t38-tooling-plan.md):
+  coordinator-accepted LOCAL evidence from 31 source-bound/Query-API cases,
+  strict TS6, two minimal Next builds, measured
+  fixture costs and explicit advisory/license/provenance gaps. Preserve the two
+  reported/dispositioned bootstrap and pilot age-policy incidents. No tracked app
+  dependency/source/test/baseline change, production migration, new tool-stack
+  acceptance, full T38 acceptance or adjacent-ticket completion is included.
+  Documentation is prepared in [Draft PR57](https://github.com/Ljrr3045/rielia/pull/57);
+  current-head CI/native Kilo and formal
+  T38.1 acceptance remain required. Record selected next-slice Sprint scalar
+  hardening without authorizing production execution or shared G02/G06 changes.
+
 - Consolidate [original T11 lifecycle acceptance evidence](docs/development/t11-acceptance.md)
   as **READY FOR REVIEW**, correcting current PR54/55 status while preserving dated
   checkpoints. Bind accepted APIs/client/presentation, exact `214d00b3` postmerge

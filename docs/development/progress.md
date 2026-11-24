@@ -1,5 +1,63 @@
 # Delivery progress and decisions
 
+## 2026-11-23 T38.1 inventory and standalone compatibility — IN PROGRESS
+
+The user authorized starting [T38/issue53](https://github.com/Ljrr3045/rielia/issues/53)
+after original T11/T11.5 was
+[accepted in PR56](https://github.com/Ljrr3045/rielia/pull/56#issuecomment-7114539999),
+reviewed `a9d159f`, merged `f020a423`. Reviewed-head CI/Kilo and
+[exact-merge validate138028155905](https://github.com/Ljrr3045/rielia/actions/runs/45270336784/job/138028155905)
+passed; that decision supersedes the deliberately frozen READY FOR REVIEW
+matrix. Earlier dated pending statements below are historical. The sequence is
+accepted T36 → accepted T37 → accepted T11 → T38 → remaining dependencies.
+
+The [finite maintained inventory](t38-boundary-inventory.md) records 66 HTTP
+operations, 42 shared guard/parser entries, six browser transports, 18 product
+form templates and explicit query/config/cursor/receipt owners and exclusions.
+[Decisions and the executed P1 receipt](t38-tooling-plan.md) select Zod4.6.7 and
+Query/core5.108.4 for the isolated pilot only. openapi-typescript7.13.0's TS5 peer
+does not fit strict TS6; other form/testing/diagnostic additions retain later gates.
+
+Coordinator-released standalone P1 passed strict TS6, 31 bounded guard/parser/
+real-Query-API cases and two serial minimal Next builds without retries. All
+selected tarball/installed-file integrity matched. Fixture static-JS delta is
++119206 raw/+34808 gzip9 bytes; production bundle/request/build/CI costs remain
+unmeasured. Host graph31 and lock audit78-entry accounting differ; seven inherited
+Next moderate findings, no high/critical, and four notice-scan gaps remain
+explicit. The coordinator accepted this bounded **LOCAL P1** evidence. The pilot
+preserves output stringification debt; the next proposal selects Sprint-only
+strict scalar kind/mode hardening, without shared G02/global or G06 history
+changes. That design decision does not authorize starting P2.
+No app security/persistence/browser/NodeAdapter proof is
+inferred from this temporary fixture.
+
+The receipt preserves two reported/dispositioned operational incidents: unexpected
+cached app bootstrap/lifecycle execution while discovering Node, followed by
+pnpm's automatic pilot-local age exceptions. The coordinator released safe direct
+executables and accepted only the two exact Query pilot exceptions under strict
+local age policy. Neither event is hidden or production adoption evidence.
+This documentation batch changes no tracked app source/manifests/locks/tests or
+numerical baseline. P1 reused prior full application/T11 proof and ran no
+browser/server/DB/container.
+
+This consolidated documentation/P1 batch is prepared in
+[Draft PR57](https://github.com/Ljrr3045/rielia/pull/57), targeting `dev`. Formal
+T38.1 delivery still needs current-head CI/native Kilo, feedback/ownership/base
+checks and coordinator acceptance. Accepted local P1 is a separate decision. Production
+schemas/cache/forms and numerical proposals require their next explicit gates.
+Omitted external Cancel/Leave remains UNVERIFIED with possible draft loss;
+sprint filters remain T08/T10/US05. Adjacent-ticket/full US12/device/accessibility/
+provider/staging/user acceptance remains separate.
+
+| T38 slice | Current state / next evidence |
+| --- | --- |
+| T38.1 inventory/decisions/compatibility | IN PROGRESS; bounded LOCAL P1 accepted, documentation in [Draft PR57](https://github.com/Ljrr3045/rielia/pull/57); current-head CI/native Kilo and formal coordinator acceptance pending |
+| T38.2 shared schemas | NOT STARTED in production; proposed H30–35/G03/X04 slice with selected Sprint-only scalar hardening; shared G02/G06 changes excluded and execution/numerical gates remain |
+| T38.3 contract-driven transport | NOT STARTED; canonical OpenAPI and TS6/generator compatibility decision precede a generated client |
+| T38.4 queries/forms | NOT STARTED in production; sole resource-cache ownership, identity/SSE/recovery and separate RHF parity gates |
+| T38.5 testing/diagnostics | NOT STARTED in maintained tooling/runtime; shortlist evaluation does not authorize bulk installs or adjacent observability tickets |
+| T38.6 consolidation | NOT STARTED; every inventory row migrated or explicitly accepted with an owner/exclusion, measured production costs and current-head review gates |
+
 ## 2026-11-23 T11.5 integrated evidence — READY FOR REVIEW
 
 [PR56](https://github.com/Ljrr3045/rielia/pull/56) consolidates the
@@ -2949,7 +3007,7 @@ T02.0 is separately authorized supporting scope, not T00 expansion. Full source 
 `Not started` means no full-ticket implementation or acceptance evidence is
 recorded here. T02.0's fixture does not satisfy the full identity spike.
 Dependencies below reproduce the plan, not inferred completion; the explicit
-T36 → T37 → T11 override above governs new work before remaining dependencies. B labels
+T36 → T37 → accepted T11 → T38 override above governs new work before remaining dependencies. B labels
 are internal sequencing; T30–T34 form a separate future marketing track. T35 is a
 foundational prerequisite within the B1 track, not the final ticket to execute.
 
@@ -2971,7 +3029,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T08 | B1b | List/Kanban, filters, ranking | T06 | [T08.0 logic](task-views.md) merged in PR #19 at `f8895709`; [T08.1 presentation](task-views-ui.md) in [PR #20](https://github.com/Ljrr3045/rielia/pull/20). Configurable workflows/labels/sprints and full US05/T08 remain open |
 | T09 | B1b | Subtasks, checklists, comments, history | T06 | T09.0 bounded collaboration logic merged in [PR #21](https://github.com/Ljrr3045/rielia/pull/21) at `76d7d31b`; T09.1 [presentation](task-collaboration-ui.md) delivered in [PR #22](https://github.com/Ljrr3045/rielia/pull/22) with standard checks and targeted functional/responsive QA passed. Exact current-head CI/Kody/merge evidence remains in GitHub/external final report. Full T09/P05/P14/P38, credentials and real-user/staging acceptance remain open |
 | T10 | B1b | Search, My tasks, responsive layout, SSE | T07–T09 | T10.0 bounded logic merged in [PR #23](https://github.com/Ljrr3045/rielia/pull/23) at `6bde444c`; T10.1 [presentation](task-discovery-ui.md) PR [#24](https://github.com/Ljrr3045/rielia/pull/24) includes exact root-reviewed SOL controller/test URL corrections and has accepted functional/responsive evidence. Full T10/P11/US05, labels/sprints, exports, coediting, credentials, real-user/staging and deployment remain open |
-| T11 | B1c | Sprint lifecycle and scope history | T08–T09; later user prerequisite T36 → T37 | Original lifecycle **READY FOR REVIEW**; T11.1–3/PR50–52, T11.4a/PR54 and T11.4b/PR55 accepted through merge `214d00b3`. [T11.5 evidence](t11-acceptance.md) complete in [PR56](https://github.com/Ljrr3045/rielia/pull/56), including the accepted minimal Backlog witness; current-head CI/native Kilo, feedback/ownership/base checks and final coordinator acceptance/merge remain. Sprint-filter and cross-cutting UX debts do not close adjacent tickets; T38 waits for final T11 acceptance |
+| T11 | B1c | Sprint lifecycle and scope history | T08–T09; later user prerequisite T36 → T37 | Original lifecycle/T11.5 **ACCEPTED** in [PR56](https://github.com/Ljrr3045/rielia/pull/56#issuecomment-7114539999), reviewed `a9d159f`, merged `f020a423`, reviewed-head CI/Kilo and exact-merge CI passed. Final decision supersedes the frozen [READY FOR REVIEW matrix](t11-acceptance.md); retained scope/native/deferred debts do not accept adjacent tickets. Full original T11 prerequisite for user-authorized T38 is satisfied |
 | T12 | B1c | Personal/service credentials, explicit-subject grants | T07, T35 | Not started |
 | T13 | B1c | Local MCP catalog/client/guide | T03, T11–T12 | Not started |
 | T14 | B1d | JSON/CSV export and archive recovery | T09, T12 | Not started |
@@ -2998,6 +3056,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T35 | B1 foundations | Principal model, immutable authorship, autonomous memberships | T04; precedes T05/T06/T12 | T35.0 bounded storage/policy/context implemented; full authorship/domain/export/credential integration incomplete |
 | T36 | Quality prerequisite 1 | Engineering standards, compatible tool enforcement and behavior-preserving frontend/backend structure | Existing bounded foundations/contracts; approved NodeAdapter | ACCEPTED bounded T36.1–T36.6 in [PR #44](https://github.com/Ljrr3045/rielia/pull/44), merged `92d480d` from reviewed `37f2a8c`; retained owned debt and [stable contract](t36-stable-ui-contract.md) remain binding |
 | T37 | Quality prerequisite 2 | Coherent redesign of existing UI using stable contracts, brand/UX and reviewed frontend-local skills | Coordinator acceptance of T36 | ACCEPTED bounded T37.1–6 through [PR49](https://github.com/Ljrr3045/rielia/pull/49#issuecomment-6819605884), reviewed `5d3637b`, merged `20a257c`; retained evidence and limits in the [acceptance guide](t37-ui-acceptance.md); T11 authorized on 2026-11-19 |
+| T38 | Engineering tooling | Shared runtime schemas, contract transport, client queries and evaluated supporting tools | Accepted T36 → T37 → full original T11; user start authorization 2026-11-23 | IN PROGRESS; [issue53](https://github.com/Ljrr3045/rielia/issues/53), [inventory](t38-boundary-inventory.md), [decisions/P1 receipt](t38-tooling-plan.md). Bounded LOCAL P1 accepted; documentation in [Draft PR57](https://github.com/Ljrr3045/rielia/pull/57), with current-head CI/native Kilo and formal T38.1 acceptance pending. No production migration or full T38 acceptance |
 
 Public release is one launch followed by continuous updates. Internal B1 readiness,
 private T15 deployment, and marketing T34 do not substitute for T24. B3 follows

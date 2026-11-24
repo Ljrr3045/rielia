@@ -7,15 +7,18 @@ reviewed `91008442511f7e3cccc6d3c5dcbc6080fbf18ec3`, merged
 All seven findings were corrected/resolved; requested incremental Kilo round two
 and exact postmerge CI passed. The [T11 acceptance matrix](t11-acceptance.md)
 consolidates those receipts, source-qualified native evidence and the accepted
-minimal T11.5 Backlog witness. Original T11 lifecycle acceptance is **READY FOR
-REVIEW**; current documentation-head review and final coordinator acceptance
-remain pending. External cross-document Cancel/Leave remains user-omitted
+minimal T11.5 Backlog witness. Original T11/T11.5 is **ACCEPTED** in
+[PR56's final decision](https://github.com/Ljrr3045/rielia/pull/56#issuecomment-7114539999),
+reviewed `a9d159f`, merged `f020a423`, with reviewed-head and exact-merge CI passed.
+That decision supersedes the deliberately frozen READY FOR REVIEW matrix.
+External cross-document Cancel/Leave remains user-omitted
 **UNVERIFIED** debt with possible unsaved-draft loss, not a passed test or
 universal UX waiver.
 Base: accepted T11.4a merge `a2de3bd79596cb83b79287f105f60fedfb35bea9`.
 The [client guide](sprint-client.md#t114a-acceptance--2026-11-20-caracas--november-21-utc)
-records PR54 acceptance and its review/hash limits. Final T11 lifecycle acceptance
-remains open before planned [T38](https://github.com/Ljrr3045/rielia/issues/53).
+records PR54 acceptance and its review/hash limits. The full original T11
+prerequisite is satisfied; the user authorized [T38](t38-tooling-plan.md) on
+2026-11-23 America/Caracas, under its own bounded adoption gates.
 
 Scope: T11/B1c, P09/US06; affected P05/P08/P10/P33, US05/US08/US12;
 UXR01 and UX01/03/04/05/07/09. Existing T37 project shell, tokens, locale and
