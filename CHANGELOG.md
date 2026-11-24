@@ -18,8 +18,11 @@ This records repository changes. No application version has been released.
   infrastructure20/artifacts17, selected real PG/HTTP57, runtime/closure/recovery
   and high audits pass with cleanup. One old G04 checklist branch, low/moderate
   findings and Next's inherited security recommendation remain. No new package,
-  Query/UI/policy/producer/DB change. T38.2d publication/review/acceptance and full
-  T38.2/T38 remain open; later docs do not rebind source-qualified runs.
+  Query/UI/policy/producer/DB change. Published in
+  [Draft PR61](https://github.com/Ljrr3045/rielia/pull/61), targeting `dev`, at initial
+  implementation head `b704c1e23ed8bc293970f3fb62d801430de94cab` (tree `05a3cee1`).
+  Current-head CI/native review/final acceptance and full T38.2/T38 remain open;
+  this docs-only reference batch does not rebind source-qualified runs.
 
 - Record [T38.2b acceptance in PR59](https://github.com/Ljrr3045/rielia/pull/59#issuecomment-7122689772)
   at reviewed `d9699cf`, merge `c655f0f0`, identical tree, reviewed/exact-merge

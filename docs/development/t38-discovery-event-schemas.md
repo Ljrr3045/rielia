@@ -1,12 +1,17 @@
 # T38.2d discovery, query and invalidation schemas
 
-**LOCAL GATES COMPLETE; PUBLICATION/REVIEW/ACCEPTANCE PENDING,
-2026-11-24 America/Caracas.** This coordinator-released slice of
+**DRAFT PR61; LOCAL GATES COMPLETE; CURRENT-HEAD CI/NATIVE REVIEW PENDING,
+2026-11-24 America/Caracas.** The coordinator published
+[Draft PR61](https://github.com/Ljrr3045/rielia/pull/61), targeting `dev`, at initial
+implementation head `b704c1e23ed8bc293970f3fb62d801430de94cab` (tree
+`05a3cee17ff2a085b911fd8140048426ce2301be`). This documentation-only reference
+batch retains the original source/run/failure identities below and replays no
+application suites. This coordinator-released slice of
 [T38/issue 53](https://github.com/Ljrr3045/rielia/issues/53) covers H49–50/G05,
 discovery X03, X06 event validation and discovery-only API HTTP/X09 query
-admission. Full T38.2/T38 remains open. No PR for this slice has been published
-in this source snapshot; remote publication, CI, native Kilo and acceptance
-remain coordinator gates.
+admission is not yet accepted. Full T38.2/T38 remains open. Current-head hosted
+CI/native Kilo, feedback/ownership/base checks and final acceptance remain
+coordinator gates.
 
 The base is accepted [T38.2c/PR60](https://github.com/Ljrr3045/rielia/pull/60#issuecomment-7125188276),
 reviewed `fdd0450b1fa8f1ee868bd87375b9a8aa59d2e585`, merged
