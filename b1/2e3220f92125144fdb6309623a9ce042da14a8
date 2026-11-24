@@ -1,0 +1,22 @@
+docs/development/t38-tooling-plan.md
+  s_c8c1739d01200e::t_d093d2ba652e98 43-44,56
+  s_c8c1739d01200e::t_0c788dd4b90fed 57-58
+docs/development/t38-boundary-inventory.md
+  s_c8c1739d01200e::t_d093d2ba652e98 86-87,253,259-260
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b12e3220f92125144fdb6309623a9ce042da14a8",
+  "prompts": {},
+  "sessions": {
+    "s_c8c1739d01200e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a20ab7-9103-7412-b3a5-063f59be8e72",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
