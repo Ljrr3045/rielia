@@ -1,6 +1,7 @@
 # T38 tool decisions and compatibility pilot
 
-**T38.1 IN PROGRESS, 2026-11-23 America/Caracas; ready for PR review.** The
+**T38.1 IN PROGRESS, 2026-11-23 America/Caracas; prepared in
+[Draft PR57](https://github.com/Ljrr3045/rielia/pull/57), targeting `dev`.** The
 user authorized starting T38 that day. Original T11/T11.5 was
 [accepted in PR56](https://github.com/Ljrr3045/rielia/pull/56#issuecomment-7114539999),
 reviewed `a9d159f0115258aee76b2b02fef733ab53fd22ee`, merged
@@ -345,8 +346,9 @@ reviewing its schemas/tests, measurements and complete packet. Preserved evidenc
 identity: `2026-11-23-t38/consolidated-p1`; original `worker-manifest.json` SHA-256
 `16af2e7ff06ae058f13c8b9b7b37137f1e9e094fc57d4970840ff472e4585415`.
 It binds this source-bound pilot and its prepublication documentation snapshot,
-not later source/documentation heads. Formal T38.1 delivery is ready for PR
-review, pending current-head CI/native Kilo, feedback/ownership/base checks and
+not later source/documentation heads. The PR57 publication reference does not
+rebind prior pilot runs to this documentation head. Formal T38.1 delivery is
+pending current-head CI/native Kilo, feedback/ownership/base checks and
 coordinator acceptance. No production migration, NodeAdapter closure, full
 generator compatibility or native UX acceptance is implied. The next release
 request remains P2/H30–35/G03/X04 and its exact schema/type/test/coverage plan;

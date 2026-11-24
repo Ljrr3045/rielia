@@ -40,7 +40,8 @@ This documentation batch changes no tracked app source/manifests/locks/tests or
 numerical baseline. P1 reused prior full application/T11 proof and ran no
 browser/server/DB/container.
 
-This consolidated documentation/P1 batch is **ready for PR review**. Formal
+This consolidated documentation/P1 batch is prepared in
+[Draft PR57](https://github.com/Ljrr3045/rielia/pull/57), targeting `dev`. Formal
 T38.1 delivery still needs current-head CI/native Kilo, feedback/ownership/base
 checks and coordinator acceptance. Accepted local P1 is a separate decision. Production
 schemas/cache/forms and numerical proposals require their next explicit gates.
@@ -50,7 +51,7 @@ provider/staging/user acceptance remains separate.
 
 | T38 slice | Current state / next evidence |
 | --- | --- |
-| T38.1 inventory/decisions/compatibility | IN PROGRESS; bounded LOCAL P1 accepted, documentation ready for PR review; current-head CI/native Kilo and formal coordinator acceptance pending |
+| T38.1 inventory/decisions/compatibility | IN PROGRESS; bounded LOCAL P1 accepted, documentation in [Draft PR57](https://github.com/Ljrr3045/rielia/pull/57); current-head CI/native Kilo and formal coordinator acceptance pending |
 | T38.2 shared schemas | NOT STARTED in production; proposed H30–35/G03/X04 slice with selected Sprint-only scalar hardening; shared G02/G06 changes excluded and execution/numerical gates remain |
 | T38.3 contract-driven transport | NOT STARTED; canonical OpenAPI and TS6/generator compatibility decision precede a generated client |
 | T38.4 queries/forms | NOT STARTED in production; sole resource-cache ownership, identity/SSE/recovery and separate RHF parity gates |
@@ -3055,7 +3056,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T35 | B1 foundations | Principal model, immutable authorship, autonomous memberships | T04; precedes T05/T06/T12 | T35.0 bounded storage/policy/context implemented; full authorship/domain/export/credential integration incomplete |
 | T36 | Quality prerequisite 1 | Engineering standards, compatible tool enforcement and behavior-preserving frontend/backend structure | Existing bounded foundations/contracts; approved NodeAdapter | ACCEPTED bounded T36.1–T36.6 in [PR #44](https://github.com/Ljrr3045/rielia/pull/44), merged `92d480d` from reviewed `37f2a8c`; retained owned debt and [stable contract](t36-stable-ui-contract.md) remain binding |
 | T37 | Quality prerequisite 2 | Coherent redesign of existing UI using stable contracts, brand/UX and reviewed frontend-local skills | Coordinator acceptance of T36 | ACCEPTED bounded T37.1–6 through [PR49](https://github.com/Ljrr3045/rielia/pull/49#issuecomment-6819605884), reviewed `5d3637b`, merged `20a257c`; retained evidence and limits in the [acceptance guide](t37-ui-acceptance.md); T11 authorized on 2026-11-19 |
-| T38 | Engineering tooling | Shared runtime schemas, contract transport, client queries and evaluated supporting tools | Accepted T36 → T37 → full original T11; user start authorization 2026-11-23 | IN PROGRESS; [issue53](https://github.com/Ljrr3045/rielia/issues/53), [inventory](t38-boundary-inventory.md), [decisions/P1 receipt](t38-tooling-plan.md). Bounded LOCAL P1 accepted; documentation ready for PR review, with current-head CI/native Kilo and formal T38.1 acceptance pending. No production migration or full T38 acceptance |
+| T38 | Engineering tooling | Shared runtime schemas, contract transport, client queries and evaluated supporting tools | Accepted T36 → T37 → full original T11; user start authorization 2026-11-23 | IN PROGRESS; [issue53](https://github.com/Ljrr3045/rielia/issues/53), [inventory](t38-boundary-inventory.md), [decisions/P1 receipt](t38-tooling-plan.md). Bounded LOCAL P1 accepted; documentation in [Draft PR57](https://github.com/Ljrr3045/rielia/pull/57), with current-head CI/native Kilo and formal T38.1 acceptance pending. No production migration or full T38 acceptance |
 
 Public release is one launch followed by continuous updates. Internal B1 readiness,
 private T15 deployment, and marketing T34 do not substitute for T24. B3 follows

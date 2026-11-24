@@ -15,7 +15,8 @@ This records repository changes. No application version has been released.
   reported/dispositioned bootstrap and pilot age-policy incidents. No tracked app
   dependency/source/test/baseline change, production migration, new tool-stack
   acceptance, full T38 acceptance or adjacent-ticket completion is included.
-  Documentation is ready for PR review; current-head CI/native Kilo and formal
+  Documentation is prepared in [Draft PR57](https://github.com/Ljrr3045/rielia/pull/57);
+  current-head CI/native Kilo and formal
   T38.1 acceptance remain required. Record selected next-slice Sprint scalar
   hardening without authorizing production execution or shared G02/G06 changes.
 
