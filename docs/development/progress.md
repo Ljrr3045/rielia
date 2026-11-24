@@ -2,6 +2,13 @@
 
 ## 2026-11-23 T38.2a ACCEPTED; T38.2b public schemas in progress
 
+The coordinator published [Draft PR59](https://github.com/Ljrr3045/rielia/pull/59),
+targeting `dev`, at initial implementation head
+`dfe072141b2f68840045e46591f60623d58ea0bb` (tree `1170c8d5`). The source-bound
+local runs below retain their original identities; this reference-only docs
+batch replays no application checks. Current-head hosted CI/native Kilo,
+feedback/base/ownership checks and final acceptance remain pending.
+
 [PR58 acceptance](https://github.com/Ljrr3045/rielia/pull/58#issuecomment-7120471111)
 reviewed `5e2671bd`, merged `e1ebe3ac`, identical tree `2e8086cc`. Reviewed-head
 CI138171467198 and exact-merge CI138179184674 passed 24 steps each; native Kilo
@@ -36,8 +43,9 @@ retaining default CI/sprint selection and canonical/security assertions. One
 Docker runtime/complete deployed noExpress/recovery run and both high audits
 pass, with owned fixtures cleaned. Audit snapshots retain one low/fourteen
 moderate application and two moderate tools findings. Next advisory persists;
-no upgrade or baseline/source drift occurs. Local handoff proceeds with normal
-hooks; publication/CI/Kilo/final acceptance and full T38.2/T38 remain open.
+no upgrade or baseline/source drift occurs. Initial local handoff completed with
+normal hooks and coordinator Draft publication; current-head CI/Kilo/final
+acceptance and full T38.2/T38 remain open.
 
 ## 2026-11-23 T38.2a Sprint shared schemas — LOCAL COMPLETE; REVIEW PENDING
 

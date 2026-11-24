@@ -7,7 +7,9 @@ This records repository changes. No application version has been released.
 - Record [T38.2a acceptance in PR58](https://github.com/Ljrr3045/rielia/pull/58#issuecomment-7120471111)
   at reviewed `5e2671bd`, merge `e1ebe3ac`, with reviewed/exact-merge CI and native
   Kilo passed, superseding its frozen pending status below. Implement the released
-  [T38.2b public workspace/identity/infrastructure schema slice](docs/development/t38-workspace-schemas.md)
+  [T38.2b public workspace/identity/infrastructure schema slice](docs/development/t38-workspace-schemas.md),
+  prepared in [Draft PR59](https://github.com/Ljrr3045/rielia/pull/59) at initial
+  implementation `dfe0721`,
   with inferred types, facades, exact body error/normalization and transport
   compatibility. Only approved non-JSON decorated-record/sparse-array rejection
   changes behavior. Strict compilation/type probe and 98 focused cases pass;
@@ -24,7 +26,9 @@ This records repository changes. No application version has been released.
   default CI/sprint behavior remains. One Docker runtime/deployed noExpress/
   recovery check and both high audits pass with owned cleanup. Low/moderate
   findings and Next recommendation remain; no upgrades. Normal-hook local handoff
-  precedes coordinator publication/current-head CI/Kilo/final acceptance.
+  and coordinator Draft publication are complete. This reference-only docs batch
+  retains original source/run bindings without replaying application checks;
+  current-head hosted CI/native Kilo and final acceptance remain pending.
   Configuration and private workspace receipts retain
   named follow-up ownership. No new dependency, UI/policy/DB or full T38 acceptance.
 

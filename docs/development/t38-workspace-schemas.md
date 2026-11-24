@@ -1,6 +1,6 @@
 # T38.2b workspace, identity and infrastructure schemas
 
-**LOCAL GATES PASS; PUBLICATION/FINAL REVIEW PENDING, 2026-11-24
+**LOCAL GATES PASS; DRAFT PR59, FINAL REVIEW PENDING, 2026-11-24
 America/Caracas.** The coordinator released H01–04/H55–66/G01/X01–02 after
 [T38.2a acceptance in PR58](https://github.com/Ljrr3045/rielia/pull/58#issuecomment-7120471111),
 reviewed `5e2671bdd58b1052db848f536381b65864fdd724`, merged
@@ -12,6 +12,15 @@ and exact-merge
 passed 24 steps each. Native Kilo `4be37ffe-9502-49bc-bf3f-093f495cc20b`,
 check `138176502915`, completed a clean 25-file static review. These are
 coordinator receipts reused without replaying accepted T11/T38.1/T38.2a checks.
+
+Prepared in [Draft PR59](https://github.com/Ljrr3045/rielia/pull/59), targeting
+`dev`, published by the coordinator at initial implementation head
+`dfe072141b2f68840045e46591f60623d58ea0bb`, tree
+`1170c8d5f35b277ddd2626fc5f39e675908ec74d`. Local source/run identities below
+retain their original bindings; this later reference-only documentation batch
+replays no application checks and does not rebind that evidence. Current-head
+hosted CI/native Kilo, feedback/base/ownership checks and final acceptance remain
+pending.
 
 Traceability: T38.2, bounded T02/T04/T05/T07/T35, P01–03/P38,
 US01–03/US24–25; retained UX07/09 recovery. No UI, domain policy, database or
@@ -34,7 +43,7 @@ full T38.2/T38 and adjacent-ticket acceptance remain open.
 - `principal-schemas.ts` derives informational execution/attribution and enum
   types. Readonly stays type-level; schemas do not freeze objects. Parsing or
   copying a valid DTO creates no WeakMap evidence. H04 gets no new outbound
-  runtime layer; serialized HTTP validation remains a separately gated check.
+  runtime layer; serialized HTTP validation passed in the Stage D real suite.
 - `infrastructure-schemas.ts` owns liveness/readiness. Health consumers retain
   the facade; MCP reuses the shape with its existing strict output policy.
   Bounded MCP literal projection, strict empty input and config stay unchanged.
@@ -240,10 +249,11 @@ precision stay unchanged. Unchanged-source mapped units gain API134/web67/
 contracts1/prototype0, losing zero with unchanged maps. No dependency credit or
 universal source conformity is claimed.
 
-Separate `coverage/t38-workspace-schemas/proposal2/` awaits independent numerical
-approval. All eight tracked baselines remain byte-exact; no normal replay,
-infrastructure/artifact packaging, Stage D or final acceptance follows measured
-execution alone.
+Historical pre-adoption checkpoint: separate
+`coverage/t38-workspace-schemas/proposal2/` awaited independent numerical
+approval, with all eight tracked baselines still byte-exact. Normal replay,
+infrastructure/artifact packaging and Stage D remained gated after measurement;
+the subsequent exact approval and actual normal proof are recorded below.
 
 ## Approved numerical adoption and normal proof
 
@@ -276,10 +286,12 @@ through the run. Full infrastructure passes **20/20**; artifact validation
 packages **17 bounded files**, all complete, without upload. Whitespace checks
 pass. These later documentation receipts do not rebind application runs.
 
-Stage D harness/real PostgreSQL/HTTP/runtime/audits, local commit, current-head
-CI/native Kilo and final acceptance remain coordinator-gated. Next advisory,
-production cost-comparison UNVERIFIED and named configuration/private-receipt
-debt retain their earlier status. No further standard/build replay occurred.
+Historical Stage C checkpoint: Stage D harness/real PostgreSQL/HTTP/runtime/
+audits and local commit were still coordinator-gated before their later release
+and completion below. Current-head CI/native Kilo and final acceptance remain
+pending. Next advisory, production cost-comparison UNVERIFIED and named
+configuration/private-receipt debt retain their earlier status. No further
+standard/build replay occurred.
 
 ## Selected real HTTP and runtime evidence
 
@@ -328,12 +340,14 @@ to Stage C. The runner-generated metadata fixture is compared through its
 approved/normal manifest rather than treated as a physical source file. No
 unit/standard/build rerun is needed for these integration-only assertions and
 later evidence prose. Final offline links/whitespace and normal-hook local
-handoff receipts accompany the coordinator delivery; remote publication,
-current-head CI/native Kilo and final acceptance remain separate.
+handoff receipts accompany the coordinator delivery. The initial implementation
+was published in Draft PR59; current-head CI/native Kilo and final acceptance
+remain separate.
 
 Ignored evidence: `coverage/t38-workspace-schemas/`. Production cost comparison
 requires equivalent retained evidence and remains unverified. Query/RHF/OpenAPI,
 testing/browser/diagnostic additions, UI/DB/deployment, credentials/staging are
 excluded. Omitted native Cancel/Leave remains UNVERIFIED with possible draft
 loss; sprint filters remain T08/T10/US05. Current-head CI/native Kilo/final review
-remain coordinator gates. No remote mutation or final acceptance is claimed.
+remain coordinator gates. The worker made no remote mutations; final acceptance
+is not claimed.
