@@ -1,0 +1,23 @@
+CHANGELOG.md
+  s_c8c1739d01200e::t_799e8947d9cd0b 18-19
+docs/development/progress.md
+  s_c8c1739d01200e::t_799e8947d9cd0b 43-44,54,3059
+docs/development/t38-tooling-plan.md
+  s_c8c1739d01200e::t_799e8947d9cd0b 3-4,349-351
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a9b9105acc84f2bed1b87cf6a3b0232a7dc51885",
+  "prompts": {},
+  "sessions": {
+    "s_c8c1739d01200e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a20ab7-9103-7412-b3a5-063f59be8e72",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
