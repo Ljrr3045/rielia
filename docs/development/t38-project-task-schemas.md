@@ -1,12 +1,16 @@
 # T38.2c project, task and access schemas
 
-**LOCAL IMPLEMENTATION AND VALIDATION COMPLETE; PUBLICATION/REVIEW PENDING,
-2026-11-24 America/Caracas.** This is the coordinator-released H05–22/G02 and
-bounded X03 slice of [T38/issue 53](https://github.com/Ljrr3045/rielia/issues/53),
-based on `c655f0f04fdc6750a69d63ddcbfb0178d23d88d7`. It does not accept full
-T38.2/T38 or adjacent product tickets. The coordinator owns publication, current-
-head CI/native Kilo, ownership/base checks and final acceptance; no PR URL is
-invented here.
+**DRAFT PR60; LOCAL VALIDATION COMPLETE; CURRENT-HEAD CI/NATIVE REVIEW PENDING,
+2026-11-24 America/Caracas.** The coordinator published
+[Draft PR60](https://github.com/Ljrr3045/rielia/pull/60), targeting `dev`, at initial
+implementation head `6757bac82e90eae89b21d5461f80a838a8d35572` (tree `4c60c0b1`).
+This is the coordinator-released H05–22/G02 and bounded X03 slice of
+[T38/issue 53](https://github.com/Ljrr3045/rielia/issues/53), based on
+`c655f0f04fdc6750a69d63ddcbfb0178d23d88d7`. T38.2c is not yet accepted; full
+T38.2/T38 and adjacent product tickets remain open. Current-head hosted CI/native
+Kilo, feedback/ownership/base checks and final acceptance remain coordinator
+gates. This documentation-only reference batch preserves the original source/run
+identities below and replays no application suites.
 
 The predecessor [T38.2b is ACCEPTED in PR59](https://github.com/Ljrr3045/rielia/pull/59#issuecomment-7122689772):
 reviewed `d9699cf23cad09dea336c89ce7f398b3654a0a03`, merged `c655f0f0`, identical

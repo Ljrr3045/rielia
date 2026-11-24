@@ -20,8 +20,11 @@ This records repository changes. No application version has been released.
   Preserve failed scratch/lint/Next/Docker-PATH attempts and authorized focused
   continuations; Next's inherited security recommendation and low/moderate
   findings remain unresolved. Source-qualified evidence is not rebound to later
-  docs commits. Publication/current-head review and full T38.2/T38 stay open;
-  configuration/private JSON and other families retain explicit owners.
+  docs commits. Published in [Draft PR60](https://github.com/Ljrr3045/rielia/pull/60)
+  at initial implementation head `6757bac82e90eae89b21d5461f80a838a8d35572`;
+  current-head CI/native review and final acceptance remain pending. Full
+  T38.2/T38 stay open; configuration/private JSON and other families retain
+  explicit owners.
 
 
 - Record [T38.2a acceptance in PR58](https://github.com/Ljrr3045/rielia/pull/58#issuecomment-7120471111)
