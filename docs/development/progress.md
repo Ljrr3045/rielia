@@ -5,9 +5,17 @@
 The coordinator published [Draft PR59](https://github.com/Ljrr3045/rielia/pull/59),
 targeting `dev`, at initial implementation head
 `dfe072141b2f68840045e46591f60623d58ea0bb` (tree `1170c8d5`). The source-bound
-local runs below retain their original identities; this reference-only docs
-batch replays no application checks. Current-head hosted CI/native Kilo,
+local runs below retain their original identities; reference-only commit
+`699175c` replayed no application checks. Current-head hosted CI/native Kilo,
 feedback/base/ownership checks and final acceptance remain pending.
+
+Initial-head [CI138220779050](https://github.com/Ljrr3045/rielia/actions/runs/45327586391/job/138220779050)
+failed at identity logic because clean contracts `dist` was absent when the
+controller imported shared runtime schemas. The released script prerequisite
+builds contracts before the unchanged identity test files. One verified-absent
+output proof passes fresh contracts compilation and 5/5 cases, preserving prior
+generated files and all comparable unit/baseline fingerprints. No full suite
+replay or CI workflow/pin/lock change occurs; hosted validation remains pending.
 
 [PR58 acceptance](https://github.com/Ljrr3045/rielia/pull/58#issuecomment-7120471111)
 reviewed `5e2671bd`, merged `e1ebe3ac`, identical tree `2e8086cc`. Reviewed-head

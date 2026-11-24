@@ -17,8 +17,8 @@ Prepared in [Draft PR59](https://github.com/Ljrr3045/rielia/pull/59), targeting
 `dev`, published by the coordinator at initial implementation head
 `dfe072141b2f68840045e46591f60623d58ea0bb`, tree
 `1170c8d5f35b277ddd2626fc5f39e675908ec74d`. Local source/run identities below
-retain their original bindings; this later reference-only documentation batch
-replays no application checks and does not rebind that evidence. Current-head
+retain their original bindings. Reference-only commit `699175c` replayed no
+application checks and did not rebind that evidence. Current-head
 hosted CI/native Kilo, feedback/base/ownership checks and final acceptance remain
 pending.
 
@@ -343,6 +343,31 @@ later evidence prose. Final offline links/whitespace and normal-hook local
 handoff receipts accompany the coordinator delivery. The initial implementation
 was published in Draft PR59; current-head CI/native Kilo and final acceptance
 remain separate.
+
+## Initial-head CI prerequisite correction
+
+The coordinator reported initial-head
+[CI138220779050](https://github.com/Ljrr3045/rielia/actions/runs/45327586391/job/138220779050)
+failed in `pnpm check` at `test:identity:logic`, after the preceding phases passed:
+`identity-controller.ts` could not load `@rielia/contracts/dist/index.js` on a
+clean runner. The new runtime schema import requires built contracts; previously
+prepared local output had masked this entrypoint prerequisite. The earlier local
+sequence retains its actual source/run scope and is not clean-runner CI proof.
+
+The released root `package.json` script adds
+`pnpm --filter @rielia/contracts build &&` before the same two identity test files,
+matching the existing workspace/project logic prerequisite pattern. No pin,
+lockfile, install, CI workflow, production/unit source or baseline changes occur.
+The root script is outside current unit comparable config fingerprints, verified
+against actual manifests rather than triggering a baseline rewrite.
+
+One focused proof safely moved only this checkout's generated contracts `dist`
+into owned ignored scratch, verified absence, and ran the corrected pinned
+script once. A fresh contracts build and **5/5** identity logic cases pass,
+without skips. All 28 fresh generated files exactly reproduce the preserved
+prior bytes; original output remains available. No full standard/build/normal/
+PG/runtime suite is replayed. Current-head hosted CI/native Kilo and final
+acceptance remain pending after this focused local correction.
 
 Ignored evidence: `coverage/t38-workspace-schemas/`. Production cost comparison
 requires equivalent retained evidence and remains unverified. Query/RHF/OpenAPI,

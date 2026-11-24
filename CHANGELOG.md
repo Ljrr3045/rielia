@@ -26,9 +26,13 @@ This records repository changes. No application version has been released.
   default CI/sprint behavior remains. One Docker runtime/deployed noExpress/
   recovery check and both high audits pass with owned cleanup. Low/moderate
   findings and Next recommendation remain; no upgrades. Normal-hook local handoff
-  and coordinator Draft publication are complete. This reference-only docs batch
+  and coordinator Draft publication are complete. Reference-only commit `699175c`
   retains original source/run bindings without replaying application checks;
   current-head hosted CI/native Kilo and final acceptance remain pending.
+  Correct initial-head CI's missing contracts-build prerequisite in identity
+  logic. A single verified-absent generated-output proof builds contracts and
+  passes 5/5 identity cases, preserving prior output and all unit baselines;
+  no full suite/workflow/pin/lock or production-source change is included.
   Configuration and private workspace receipts retain
   named follow-up ownership. No new dependency, UI/policy/DB or full T38 acceptance.
 
