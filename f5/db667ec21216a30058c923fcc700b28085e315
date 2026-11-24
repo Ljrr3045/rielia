@@ -1,0 +1,64 @@
+CHANGELOG.md
+  s_c8c1739d01200e::t_f1c91504537244 12-13,18-20
+  s_c8c1739d01200e::t_e6adf04bca6e7e 7-11,14-17,21
+docs/development/sprint-scope-start.md
+  s_c8c1739d01200e::t_350fece7085caf 8-12,14
+docs/development/sprint-presentation.md
+  s_c8c1739d01200e::t_f3e50900d5ed31 10-14,19-21
+AGENTS.md
+  s_c8c1739d01200e::t_aa9bcb3708b62e 38-44,77-79,82-84
+CONTRIBUTING.md
+  s_c8c1739d01200e::t_aa9bcb3708b62e 33-40,63-65,67
+docs/development/t38-tooling-plan.md
+  s_c8c1739d01200e::t_0fba3fa959bd03 17-20,36-37,42,195-200,203-209,220-221
+  s_c8c1739d01200e::t_f1c91504537244 3,233-243,333-335,343-351,359,368,375-376
+  s_c8c1739d01200e::t_c78786dffbf7fa 294
+  s_c8c1739d01200e::t_41410c2214d902 1-2,4-8,11-16,21-35,38-41,43-194,201-202,210-219,222-232,244-259,355-358,360-367,369-374,377-381
+  s_c8c1739d01200e::t_efe2454742bd3b 260-293,295-332,336-342,352-354
+  s_4dbcc168a4644d::t_a31866172c9db8 9-10
+docs/development/sprint-planning.md
+  s_c8c1739d01200e::t_350fece7085caf 6-10,12-13
+docs/development/sprint-closure.md
+  s_c8c1739d01200e::t_f3e50900d5ed31 12-16,18
+docs/development/sprint-client.md
+  s_c8c1739d01200e::t_f3e50900d5ed31 14-20
+apps/api/AGENTS.md
+  s_c8c1739d01200e::t_aa9bcb3708b62e 22-27
+docs/development/t38-boundary-inventory.md
+  s_c8c1739d01200e::t_41410c2214d902 1-12,16-50,52-129,140-161,167-231,233-260,263-278
+  s_c8c1739d01200e::t_a7ac9adb3d34b5 13-15,261-262
+  s_c8c1739d01200e::t_f1c91504537244 133-138
+  s_c8c1739d01200e::t_1650a5435f122d 51,162-166,232
+  s_c8c1739d01200e::t_efe2454742bd3b 130-132,139
+apps/web/AGENTS.md
+  s_c8c1739d01200e::t_aa9bcb3708b62e 33-40
+docs/development/development-quality-roadmap.md
+  s_c8c1739d01200e::t_350fece7085caf 15-22,47-50,74-75,81-83,494-497
+docs/development/progress.md
+  s_c8c1739d01200e::t_e6adf04bca6e7e 3-26,32-38,46-52,55-59,3009,3031
+  s_c8c1739d01200e::t_f1c91504537244 27-31,39-45,53-54,3058
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f5db667ec21216a30058c923fcc700b28085e315",
+  "prompts": {},
+  "sessions": {
+    "s_4dbcc168a4644d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9d80bd43-6ff6-4b2a-82b0-1b071bf8df38",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    },
+    "s_c8c1739d01200e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a20ab7-9103-7412-b3a5-063f59be8e72",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
