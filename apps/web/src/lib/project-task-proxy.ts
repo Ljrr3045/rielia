@@ -1,5 +1,5 @@
 /** Fixed API destination and allowlist; selectors never select an upstream. */
-import { isTaskFilters, parseTaskDiscoveryQuery } from '@rielia/contracts';
+import { isTaskFilters, taskDiscoveryHttpQuerySchema } from '@rielia/contracts';
 export async function proxyProjectTask(request: Request): Promise<Response> {
   const fail = (status: number) =>
     Response.json(
@@ -83,7 +83,9 @@ export async function proxyProjectTask(request: Request): Promise<Response> {
       !isTaskFilters(filters) ||
       (incoming.searchParams.has('destination') &&
         !/^[A-Za-z0-9_-]{1,128}$/.test(incoming.searchParams.get('destination')!)) ||
-      (discovery && !parseTaskDiscoveryQuery(Object.fromEntries(incoming.searchParams))) ||
+      (discovery &&
+        !taskDiscoveryHttpQuerySchema.safeParse(Object.fromEntries(incoming.searchParams))
+          .success) ||
       (view !== null && !['active', 'archived'].includes(view)) ||
       (cursor !== null &&
         !(

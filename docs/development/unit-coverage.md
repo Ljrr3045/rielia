@@ -1,6 +1,31 @@
 # T36 first unit and coverage delivery
 
-Current [T38.2c project/task/access schema migration](t38-project-task-schemas.md)
+Current [T38.2d discovery/event schema migration](t38-discovery-event-schemas.md)
+has exact coordinator-approved adoption of API/web/contracts current baselines,
+retaining prototype/four historical bytes. Rejected proposal one passed 798
+measured cases but contracts547/549 missed protected9965 after 26 covered branch
+units moved out of handwritten guards. One released adjacent archived-projection
+test passes seven affected cases; contracts-only50 measures548/549. Combined
+proposal two retains verified proposal-one API/web/prototype origins rather than
+claiming a second coherent measurement or digest. All 692 retained file metric
+comparisons preserve/improve exact ratios and uncovered counts.
+
+Fresh actual normal **799/799** (API307/web423/contracts50/prototype19) reproduces
+all 16 approved reports, with digest
+`96c6a99b5394c414d0d3e1a1e6210db45b7419f33629c07ece4356be455128ca` and identity
+`c69174f9280f5063c20e58c64ffc05a4e73852e0fff06b286f9488408f769117`.
+Infrastructure20/20 and 17 bounded artifact files/2942922 bytes pass without
+upload. Floors L/S/F/B are API7371/7350/7123/7353, web7258/7041/6166/6689,
+contracts10000/10000/10000/9981 and unchanged prototype2790/2733/2364/2033.
+Inventories53/88/17/16 retain type-only N/A and unexecuted owners. New G05/G02
+owners are fully covered; the one old G04 checklist branch remains explicit debt.
+Unchanged-source raw maps retain all covered units; archived-reference gain is
+an explicitly adjacent compatibility test, not a direct G04 Task-schema dependency.
+Nullable mapping limits and no dependency-internal credit remain in the guide.
+Real HTTP57/runtime/high audits and later docs do not rebind normal identities.
+Publication/current-head review/T38.2d acceptance and full T38.2/T38 remain open.
+
+Accepted [T38.2c project/task/access schema migration](t38-project-task-schemas.md)
 has exact coordinator-approved numerical adoption and fresh normal **786/786**
 (API305/web419/contracts43/prototype19), with all16approved report hashes/sizes
 reproduced. Actual digest is

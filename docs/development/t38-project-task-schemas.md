@@ -1,5 +1,23 @@
 # T38.2c project, task and access schemas
 
+**ACCEPTED in [PR60](https://github.com/Ljrr3045/rielia/pull/60#issuecomment-7125188276),
+2026-11-24 America/Caracas.** Reviewed
+`fdd0450b1fa8f1ee868bd87375b9a8aa59d2e585`, merged
+`8c7e897bcfb47502d844c151c9fc2c5f4f5e0d4f`, identical tree
+`adcd0147a18da5aa73a8acfb2be6cfd0ec175b6f`. Reviewed-head
+[CI45346536704](https://github.com/Ljrr3045/rielia/actions/runs/45346536704/job/138282481671)
+and exact-merge
+[CI45349417965](https://github.com/Ljrr3045/rielia/actions/runs/45349417965/job/138291825734)
+passed 24 steps each; native Kilo round `a29c7df5-9106-476c-af04-6355a4f17683`,
+check138288110677, was clean across 29 files. The settled clean checkout was
+removed through Orca, with its branch/evidence retained and all 93 foreign
+coordinator entries preserved. This final decision supersedes pending wording
+in the preserved snapshot below without rebinding its original runs.
+The later [T38.2d discovery/event slice](t38-discovery-event-schemas.md) has its
+own source-qualified local evidence and acceptance gate. Full T38.2/T38 remains open.
+
+## Preserved pre-acceptance publication snapshot
+
 **DRAFT PR60; LOCAL VALIDATION COMPLETE; CURRENT-HEAD CI/NATIVE REVIEW PENDING,
 2026-11-24 America/Caracas.** The coordinator published
 [Draft PR60](https://github.com/Ljrr3045/rielia/pull/60), targeting `dev`, at initial
