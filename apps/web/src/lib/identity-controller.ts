@@ -1,9 +1,12 @@
-export type IdentityProvider = 'google' | 'github';
+import {
+  identityConfigurationSchema,
+  identitySessionSchema,
+  type IdentityConfiguration,
+  type IdentityProvider,
+  type IdentitySession,
+} from '@rielia/contracts';
+export type { IdentityProvider, IdentitySession } from '@rielia/contracts';
 export type IdentityMessage = 'sign-in-incomplete' | 'sign-in-failed' | 'sign-out-failed' | null;
-export interface IdentitySession {
-  user: { id: string; name: string; email: string; emailVerified: boolean };
-  session: { id: string; expiresAt: string };
-}
 export interface IdentityState {
   status: 'loading' | 'disabled' | 'signed-out' | 'signed-in' | 'unavailable';
   providers: readonly IdentityProvider[];
@@ -18,50 +21,15 @@ export interface IdentityTransport {
   signOut(): Promise<void>;
 }
 
-function record(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null;
-}
-export function parseIdentityConfiguration(value: unknown): {
-  enabled: boolean;
-  providers: IdentityProvider[];
-} {
-  if (
-    !record(value) ||
-    typeof value['enabled'] !== 'boolean' ||
-    !Array.isArray(value['providers']) ||
-    !value['providers'].every((provider) => provider === 'google' || provider === 'github')
-  )
-    throw new Error('Invalid identity configuration response.');
-  return {
-    enabled: value['enabled'],
-    providers: [...new Set(value['providers'] as IdentityProvider[])],
-  };
+export function parseIdentityConfiguration(value: unknown): IdentityConfiguration {
+  const parsed = identityConfigurationSchema.safeParse(value);
+  if (!parsed.success) throw new Error('Invalid identity configuration response.');
+  return parsed.data;
 }
 export function parseIdentitySession(value: unknown): IdentitySession | null {
-  if (value === null) return null;
-  if (!record(value) || !record(value['user']) || !record(value['session']))
-    throw new Error('Invalid identity session response.');
-  const user = value['user'];
-  const data = value['session'];
-  if (
-    typeof user['id'] !== 'string' ||
-    typeof user['name'] !== 'string' ||
-    typeof user['email'] !== 'string' ||
-    typeof user['emailVerified'] !== 'boolean' ||
-    typeof data['id'] !== 'string' ||
-    typeof data['expiresAt'] !== 'string' ||
-    !Number.isFinite(Date.parse(data['expiresAt']))
-  )
-    throw new Error('Invalid identity session response.');
-  return {
-    user: {
-      id: user['id'],
-      name: user['name'],
-      email: user['email'],
-      emailVerified: user['emailVerified'],
-    },
-    session: { id: data['id'], expiresAt: data['expiresAt'] },
-  };
+  const parsed = identitySessionSchema.safeParse(value);
+  if (!parsed.success) throw new Error('Invalid identity session response.');
+  return parsed.data;
 }
 
 /** Presentation-independent state machine. Transport failures never mean signed out. */

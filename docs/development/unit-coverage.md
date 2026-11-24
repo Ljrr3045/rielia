@@ -1,5 +1,31 @@
 # T36 first unit and coverage delivery
 
+Current T38.2b: [workspace/identity/infrastructure schemas](t38-workspace-schemas.md)
+have 98 focused cases, strict compilation/type proof and a resumed equivalent
+standard sequence. Proposal one's 765/765 measurement was rejected at protected
+web-function/contracts-branch floors after covered parser removal. The released
+test-only proxy and generic/discovery cursor compatibility supplement passes
+20 focused cases and coherent 771/771 measurement. Proposal two web functions
+836/1356 measure 6165 above protected 6141; contracts branches 657/661 measure
+9939 above protected 9928. All floors retain/improve; four old G04 uncovered
+branches remain. Exact independent approval subsequently adopts only API/web/
+contracts current baseline bytes; prototype/four historical files stay byte-exact.
+Fresh normal 771/771 reproduces all 16 approved report hashes/sizes and digest;
+full infrastructure20/20 and 17 bounded artifact files pass without upload.
+Selected real PG/HTTP47/47 and one Docker runtime/deployed-closure/recovery run
+also pass; integration-only assertions/harness changes preserve approved unit
+source/test/compiler/provider/baseline fingerprints. Root/tools high audits
+retain low/moderate debt and Next's inherited recommendation. No production G05
+migration or final T38 acceptance is claimed.
+New type-only contracts DTO helper
+stays in the maintained-source manifest with explicit zero-unit N/A reconciliation.
+No baseline is changed by source/test/config fingerprint drift alone. Removing
+covered handwritten G01 branches requires real structural accounting against the
+protected contracts floor; released G05 cursor controls cover one old unit.
+[PR58 acceptance](https://github.com/Ljrr3045/rielia/pull/58#issuecomment-7120471111)
+at merge `e1ebe3ac` governs the accepted T38.2a gate below; historical pending
+statements retain their original source/run context.
+
 Current T38.2a status: the [Sprint schema receipt](t38-sprint-schemas.md) records
 the released schema/type/compiler/dependency-mirror boundary and **approved exact
 numerical migration**. Four current baselines adopt only reviewed candidate bytes;

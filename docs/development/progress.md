@@ -1,5 +1,60 @@
 # Delivery progress and decisions
 
+## 2026-11-23 T38.2a ACCEPTED; T38.2b public schemas in progress
+
+The coordinator published [Draft PR59](https://github.com/Ljrr3045/rielia/pull/59),
+targeting `dev`, at initial implementation head
+`dfe072141b2f68840045e46591f60623d58ea0bb` (tree `1170c8d5`). The source-bound
+local runs below retain their original identities; reference-only commit
+`699175c` replayed no application checks. Current-head hosted CI/native Kilo,
+feedback/base/ownership checks and final acceptance remain pending.
+
+Initial-head [CI138220779050](https://github.com/Ljrr3045/rielia/actions/runs/45327586391/job/138220779050)
+failed at identity logic because clean contracts `dist` was absent when the
+controller imported shared runtime schemas. The released script prerequisite
+builds contracts before the unchanged identity test files. One verified-absent
+output proof passes fresh contracts compilation and 5/5 cases, preserving prior
+generated files and all comparable unit/baseline fingerprints. No full suite
+replay or CI workflow/pin/lock change occurs; hosted validation remains pending.
+
+[PR58 acceptance](https://github.com/Ljrr3045/rielia/pull/58#issuecomment-7120471111)
+reviewed `5e2671bd`, merged `e1ebe3ac`, identical tree `2e8086cc`. Reviewed-head
+CI138171467198 and exact-merge CI138179184674 passed 24 steps each; native Kilo
+`4be37ffe-9502-49bc-bf3f-093f495cc20b` completed a clean 25-file static review.
+This disposition supersedes the frozen pending snapshot below, preserving its
+source/run receipts. No accepted T11/T38.1/T38.2a checks are replayed.
+
+The coordinator released [T38.2b H01–04/H55–66/G01/X01–02](t38-workspace-schemas.md):
+canonical workspace inputs/outputs, identity/informational context and health/
+readiness schemas, inferred DTOs and facades. Strict contracts/API compilation,
+TS6 compatibility and 98 focused cases pass. Only approved non-JSON decorated
+record/sparse-array rejection changes behavior. Configuration and private route-
+aware workspace receipts are assessed, named debt for a separate release.
+Standard verification completed as a resumed equivalent sequence with retained
+lint, restricted-loopback, Page alias narrowing and inherited Next-reminder
+failure/correction receipts. All consumer typechecks, affected integrations,
+one released web retry, MCP 17 cases and final smoke pass. Next's security-upgrade
+recommendation remains unresolved. After a released exact filesystem test seam,
+first measurement passes 765/765 but proposal one was rejected: covered parser
+removal failed protected web-function/contracts-branch floors. The coordinator
+released only offline actual proxy tests and paired generic/discovery cursor
+compatibility controls. Focused 20/20 and fresh coherent 771/771 measurement pass;
+proposal two raises web functions to 6165 and contracts branches to 9939, with
+all floors retained/improved and no production/config changes. Exact independent
+numerical approval was subsequently granted for the exact three current baseline
+bytes, preserving prototype/four historical files. On 2026-11-24, one fresh
+normal 771/771 run reproduces all 16 approved reports/digest; infrastructure20/20
+and 17 bounded artifact files pass without upload. Source/test/config/provider
+bytes stayed frozen through Stage C. Released integration-only selector checks
+pass five no-resource invalid-flag controls and selected real PG/HTTP47/47,
+retaining default CI/sprint selection and canonical/security assertions. One
+Docker runtime/complete deployed noExpress/recovery run and both high audits
+pass, with owned fixtures cleaned. Audit snapshots retain one low/fourteen
+moderate application and two moderate tools findings. Next advisory persists;
+no upgrade or baseline/source drift occurs. Initial local handoff completed with
+normal hooks and coordinator Draft publication; current-head CI/Kilo/final
+acceptance and full T38.2/T38 remain open.
+
 ## 2026-11-23 T38.2a Sprint shared schemas — LOCAL COMPLETE; REVIEW PENDING
 
 Prepared in [Draft PR58](https://github.com/Ljrr3045/rielia/pull/58), targeting
@@ -99,7 +154,7 @@ provider/staging/user acceptance remains separate.
 | T38 slice | Current state / next evidence |
 | --- | --- |
 | T38.1 inventory/decisions/compatibility | ACCEPTED in PR57 at merge `4dab8594`; exact-merge CI and native review passed; bounded P1 limits retained |
-| T38.2 shared schemas | H30–35/G03/X04 LOCAL COMPLETE; approved numerical adoption, 747 normal cases, 20 infrastructure, 17 artifacts and focused real PG/runtime pass; publication/review/acceptance pending; other families remain gated |
+| T38.2 shared schemas | H30–35/G03/X04 ACCEPTED in PR58 at merge `e1ebe3ac`; H01–04/H55–66/G01/X01–02 local implementation/focused validation in progress; numerical/real checks and other families remain gated |
 | T38.3 contract-driven transport | NOT STARTED; canonical OpenAPI and TS6/generator compatibility decision precede a generated client |
 | T38.4 queries/forms | NOT STARTED in production; sole resource-cache ownership, identity/SSE/recovery and separate RHF parity gates |
 | T38.5 testing/diagnostics | NOT STARTED in maintained tooling/runtime; shortlist evaluation does not authorize bulk installs or adjacent observability tickets |

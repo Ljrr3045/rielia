@@ -526,6 +526,21 @@ test(
       { items: [{ ...discovery.items[0], description: 'private' }] },
       { nextCursor: ['bad'] },
     ]);
+    // G01 keeps a generic cursor; retained G05 has a narrower wire policy.
+    // Keep the complete accepted discovery/item scope valid in every case.
+    for (const [nextCursor, generic, scoped] of [
+      [null, true, true],
+      ['cursor_1-Ab', true, true],
+      ['a'.repeat(2048), true, true],
+      ['', false, false],
+      ['arbitrary cursor/with spaces', true, false],
+      ['a'.repeat(2049), true, false],
+      [1, false, false],
+    ]) {
+      const page = { ...discovery, nextCursor };
+      assert.equal(isPage(page, isRecord), generic, `Generic cursor: ${String(nextCursor)}`);
+      assert.equal(isTaskDiscoveryPage(page), scoped, `Discovery cursor: ${String(nextCursor)}`);
+    }
     for (const valid of [
       { type: 'reset' },
       { type: 'heartbeat' },
