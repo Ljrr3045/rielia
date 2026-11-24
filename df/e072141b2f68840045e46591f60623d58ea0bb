@@ -1,0 +1,135 @@
+apps/web/src/lib/workspace-client.ts
+  s_f11e57d56a33d0::t_224b33eac8891a 3,7,66-69,150-152
+docs/development/unit-coverage.md
+  s_f11e57d56a33d0::t_d27f4a42a196e8 5-10,24
+  s_f11e57d56a33d0::t_7f5c3dae2ed987 11-14
+  s_f11e57d56a33d0::t_ea7212352bb612 4,20
+  s_f11e57d56a33d0::t_6f9938b318ef7c 3,21-23,25-28
+  s_f11e57d56a33d0::t_a58b53c82815b0 15-19
+packages/contracts/test/guards.test.mjs
+  s_f11e57d56a33d0::t_ea8eff08339f5e 529-543
+scripts/unit/baselines/contracts.json
+  s_f11e57d56a33d0::t_03760c4a5f1534 3-38,41-42,45-46,49-50,53-90,111-128,203,236-253,257,281-285,287,293-294,305,309,317-318,321-322,325-326,329-330
+packages/contracts/src/infrastructure-schemas.ts
+  s_f11e57d56a33d0::t_40efb1ed783bab 1-11
+apps/web/src/lib/identity-controller.ts
+  s_f11e57d56a33d0::t_224b33eac8891a 1-8,24-27,30-32
+apps/api/test/workspaces.test.mjs
+  s_f11e57d56a33d0::t_150083cbfd103f 14-23,73-84,87,93-94,128-129,131,224,237-241,262,265,309,313-314
+  s_f11e57d56a33d0::t_bcf314b5287617 85-86,88-92,225-236
+packages/mcp-local/src/main.ts
+  s_f11e57d56a33d0::t_224b33eac8891a 4,22
+packages/contracts/src/index.ts
+  s_f11e57d56a33d0::t_0e87a65fcf5dc7 1-17,22,28,31,34,37
+apps/api/test/principals.test.mjs
+  s_f11e57d56a33d0::t_150083cbfd103f 15,120-122
+packages/contracts/src/schema-types.ts
+  s_f11e57d56a33d0::t_40efb1ed783bab 1-12
+docs/development/progress.md
+  s_f11e57d56a33d0::t_a58b53c82815b0 33-40
+  s_f11e57d56a33d0::t_d27f4a42a196e8 23-28
+  s_f11e57d56a33d0::t_5557b6109923c1 18-21
+  s_f11e57d56a33d0::t_ec9355a04098e9 141
+  s_f11e57d56a33d0::t_74949a5ce111be 3-17,41
+  s_f11e57d56a33d0::t_ea7212352bb612 22
+  s_f11e57d56a33d0::t_7f5c3dae2ed987 29-32
+apps/api/test/unit/workspace-http.test.mjs
+  s_f11e57d56a33d0::t_84a739b560b0b0 1-2,5-8,10,14,26,71,76-77,117,142,192
+  s_f11e57d56a33d0::t_cee07001be4f5c 81,124
+  s_f11e57d56a33d0::t_b42fe63559e4d5 144-147,151-153,166-187
+  s_f11e57d56a33d0::t_47b3b6e3b732e3 9,11-13,15-25,27-70,72-75,78-80,82-116,118-123,125-141
+  s_f11e57d56a33d0::t_250bfdf2585f99 3-4,143,148-150,154-165,188-191
+apps/api/test/unit/principal-policy.test.mjs
+  s_f11e57d56a33d0::t_84a739b560b0b0 5,181-185
+  s_4dbcc168a4644d::t_2071cf1bbb800c 186-187
+docs/development/t38-tooling-plan.md
+  s_f11e57d56a33d0::t_6f9938b318ef7c 3,5-8,13
+  s_f11e57d56a33d0::t_7f5c3dae2ed987 9-10
+  s_f11e57d56a33d0::t_a58b53c82815b0 11-12
+apps/api/test/unit/workspace-input.test.mjs
+  s_f11e57d56a33d0::t_b88cd6dace8584 1-81
+  s_f11e57d56a33d0::t_9e4655bd3cb581 82-148
+packages/contracts/src/workspace-schemas.ts
+  s_f11e57d56a33d0::t_40efb1ed783bab 1-26,30-100,108-119,125,131-132
+  s_f11e57d56a33d0::t_b72b526d4942df 27-29,101,106-107,120-124,126-130
+  s_f11e57d56a33d0::t_694369b3f5fc78 102-105
+docs/development/t38-boundary-inventory.md
+  s_f11e57d56a33d0::t_74949a5ce111be 7-9,15-17,85-86,101-104
+  s_f11e57d56a33d0::t_ec9355a04098e9 48
+docs/development/t38-sprint-schemas.md
+  s_f11e57d56a33d0::t_6f9938b318ef7c 3-13
+apps/api/test/identity.test.mjs
+  s_f11e57d56a33d0::t_fdce9b5fa8d97b 14-18,295-297,310-319,330-334,525-526,640-643,657-659,774-776
+packages/contracts/test/workspace-schemas.test.mjs
+  s_f11e57d56a33d0::t_649be441a0532d 1-134
+  s_f11e57d56a33d0::t_0926ae476cafac 135-289
+apps/api/src/runtime/readiness.controller.ts
+  s_f11e57d56a33d0::t_224b33eac8891a 3,11
+scripts/unit/config.mjs
+  s_f11e57d56a33d0::t_649be441a0532d 21
+docs/development/t38-workspace-schemas.md
+  s_f11e57d56a33d0::t_ea7212352bb612 153-164,166-197
+  s_f11e57d56a33d0::t_a58b53c82815b0 3,283-332
+  s_f11e57d56a33d0::t_d27f4a42a196e8 151-152,165,198-246
+  s_f11e57d56a33d0::t_2ecf4886a24301 139-150
+  s_f11e57d56a33d0::t_7f5c3dae2ed987 247-282
+  s_f11e57d56a33d0::t_74949a5ce111be 1-2,4-111,333-339
+  s_f11e57d56a33d0::t_5557b6109923c1 112-138
+scripts/unit/baselines/api.json
+  s_f11e57d56a33d0::t_03760c4a5f1534 63,67,71,117,121,125,203,207,211,215,783,787,791,833,837,841,845,859,863,903-920,923,927,931,935,941-942,946,949-950,953-954,959-962,1029,1033,1035,1049,1060-1061,1070-1071,1074-1075,1078-1079,1082-1083
+scripts/unit/baselines/web.json
+  s_f11e57d56a33d0::t_03760c4a5f1534 1139-1140,1143-1144,1147-1148,1151-1152,1157,1161,1165,1169,1517-1518,1525-1526,1529-1530,1571,1575,1579,1583,1589-1592,1676,1697,1738,1752-1753,1756-1757,1760-1761,1764-1765
+packages/contracts/src/principal-schemas.ts
+  s_f11e57d56a33d0::t_40efb1ed783bab 1-39
+apps/web/test/unit/workspace-transport.test.mjs
+  s_f11e57d56a33d0::t_f9a760eff15447 4-9,11-40,43-46,48-52,56,58-111,113,115-128,130-135,139,141-190,192,194-197,199-211,213-258,267-269,273-277,291-293,298-300,303-308,310-316,324-335,343-347,367,385-387,396,403,411,416,433,438,442,456
+  s_f11e57d56a33d0::t_b88cd6dace8584 1-3,10,41-42,47,53-55,57,112,114,129,136-138,140,191,193,198,212,459
+  s_f11e57d56a33d0::t_35bc78cd56c34c 259-266,270-272,278-290,294-297,301-302,309,317-323,336-342,348-366,368-384,388-395,397-402,404-410,412-415,417-432,434-437,439-441,443-455,457-458
+scripts/test-identity.mjs
+  s_f11e57d56a33d0::t_150083cbfd103f 15,18-20,169-186,195-196,198
+packages/contracts/src/dense-array-schema.ts
+  s_f11e57d56a33d0::t_40efb1ed783bab 1-10
+apps/api/src/workspaces/workspace-input.ts
+  s_f11e57d56a33d0::t_08e2f5eaf1394a 1-35,38-74
+  s_f11e57d56a33d0::t_649be441a0532d 36-37
+CHANGELOG.md
+  s_f11e57d56a33d0::t_ea7212352bb612 28
+  s_f11e57d56a33d0::t_5557b6109923c1 14-15
+  s_f11e57d56a33d0::t_d27f4a42a196e8 16-18
+  s_f11e57d56a33d0::t_6f9938b318ef7c 7-13,29-30
+  s_f11e57d56a33d0::t_a58b53c82815b0 22-27
+  s_f11e57d56a33d0::t_7f5c3dae2ed987 19-21
+apps/api/src/workspaces/workspace.service.ts
+  s_f11e57d56a33d0::t_22aff755a5690b 24-33,173,269,325,344-345,400,402-403,407,415,435,437,439,444
+CONTRIBUTING.md
+  s_f11e57d56a33d0::t_a58b53c82815b0 286-292
+format-adoption.json
+  s_f11e57d56a33d0::t_fd0d42898c5fb9 59,88,210,220-221,223-224,226,233,238
+  s_f11e57d56a33d0::t_57e9e66596ddab 87
+packages/contracts/src/identity-schemas.ts
+  s_f11e57d56a33d0::t_40efb1ed783bab 1-26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "dfe072141b2f68840045e46591f60623d58ea0bb",
+  "prompts": {},
+  "sessions": {
+    "s_4dbcc168a4644d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9d80bd43-6ff6-4b2a-82b0-1b071bf8df38",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    },
+    "s_f11e57d56a33d0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a20b7f-7eae-7f53-b31b-7f769146f211",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
