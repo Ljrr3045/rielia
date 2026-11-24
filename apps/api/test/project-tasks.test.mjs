@@ -13,6 +13,16 @@ import { configureApplication, createHttpAdapter } from '../dist/application.js'
 import { IdentityService } from '../dist/identity/identity.service.js';
 import { PrincipalService } from '../dist/principals/principal.service.js';
 import { ProjectTaskService } from '../dist/projects/project-task.service.js';
+import {
+  isProject,
+  isProjectPage,
+  isTask,
+  isTaskPage,
+  isProjectAccessPage,
+  isProjectAccessReview,
+  isProjectAssigneePage,
+  isPlanningHistoryPage,
+} from '@rielia/contracts';
 
 test('T06 real PostgreSQL and HTTP project/task vertical', async (t) => {
   async function start() {
@@ -106,6 +116,176 @@ test('T06 real PostgreSQL and HTTP project/task vertical', async (t) => {
       prisma.projectTaskOperation.count(),
     ]);
   const status = (n) => (error) => error.getStatus() === n;
+
+  await t.test(
+    'T38.2c serialized project/task/access readbacks retain normalization, same-key retry and historical people',
+    async () => {
+      const f = await fixture();
+      const projectKey = randomUUID();
+      let project = await ok(
+        f.owner,
+        f.path,
+        {
+          name: '  Schema project  ',
+          key: 'SC',
+          description: null,
+          visibility: 'private',
+        },
+        projectKey,
+      );
+      assert.ok(isProject(project));
+      assert.equal(project.name, 'Schema project');
+      assert.equal(project.description, '');
+      assert.equal(project.creator.principalId, f.owner.principalId);
+      const replay = await ok(
+        f.owner,
+        f.path,
+        {
+          name: 'Schema project',
+          key: 'SC',
+          description: '',
+          visibility: 'private',
+        },
+        projectKey,
+      );
+      assert.equal(replay.id, project.id);
+      assert.ok(isProject(replay));
+      const p = `${f.path}/${project.id}`;
+      assert.ok(isProjectPage(await ok(f.owner, f.path)));
+      assert.ok(isProject(await ok(f.owner, p)));
+      project = await ok(f.owner, p, {
+        expectedVersion: project.version,
+        name: '  Edited project  ',
+        description: '  Kept\ntext  ',
+      });
+      assert.ok(isProject(project));
+      assert.equal(project.name, 'Edited project');
+      assert.equal(project.description, '  Kept\ntext  ');
+      project = await ok(f.owner, `${p}/archive`, { expectedVersion: project.version });
+      assert.ok(isProject(project));
+      assert.notEqual(project.archivedAt, null);
+      assert.ok(isProjectPage(await ok(f.owner, `${f.path}?view=archived`)));
+      project = await ok(f.owner, `${p}/restore`, { expectedVersion: project.version });
+      assert.ok(isProject(project));
+      assert.equal(project.archivedAt, null);
+      for (const visibility of ['workspace', 'private']) {
+        project = await ok(f.owner, `${p}/visibility`, {
+          expectedVersion: project.version,
+          visibility,
+        });
+        assert.ok(isProject(project));
+        assert.equal(project.visibility, visibility);
+      }
+      const member = await join(f);
+      project = await ok(f.owner, `${p}/access/${member.principalId}`, {
+        expectedVersion: project.version,
+        state: 'active',
+      });
+      assert.ok(isProject(project));
+      const access = await ok(f.owner, `${p}/access`);
+      assert.ok(isProjectAccessPage(access));
+      assert.equal(access.workspaceId, f.workspace.id);
+      assert.equal(access.projectId, project.id);
+      const review = await ok(f.owner, `${p}/access/${member.principalId}`);
+      assert.ok(isProjectAccessReview(review));
+      assert.equal(review.member.principalId, member.principalId);
+      assert.equal(review.member.explicitAccess, 'active');
+      const assignees = await ok(f.owner, `${p}/assignees`);
+      assert.ok(isProjectAssigneePage(assignees));
+      assert.ok(
+        assignees.items.some(
+          (person) => person.principalId === member.principalId && person.active,
+        ),
+      );
+      const tasks = `${p}/tasks`,
+        taskKey = randomUUID();
+      let task = await ok(
+        f.owner,
+        tasks,
+        { title: '  Schema task  ', description: null, dueDate: '2028-02-29' },
+        taskKey,
+      );
+      assert.ok(isTask(task));
+      assert.equal(task.title, 'Schema task');
+      assert.equal(task.description, '');
+      assert.equal(task.dueDate, '2028-02-29');
+      assert.equal(task.assigneePrincipalId, null);
+      const taskReplay = await ok(
+        f.owner,
+        tasks,
+        {
+          title: 'Schema task',
+          description: '',
+          type: 'task',
+          priority: 'none',
+          status: 'backlog',
+          assigneePrincipalId: null,
+          dueDate: '2028-02-29',
+        },
+        taskKey,
+      );
+      assert.ok(isTask(taskReplay));
+      assert.equal(taskReplay.id, task.id);
+      const tpath = `${tasks}/${task.id}`;
+      assert.ok(isTask(await ok(f.owner, tpath)));
+      assert.ok(
+        isTaskPage(await ok(f.owner, `${tasks}?status=backlog&assignee=unassigned&priority=none`)),
+      );
+      task = await ok(f.owner, tpath, {
+        expectedVersion: task.version,
+        description: '  Edited\nbody  ',
+        status: 'todo',
+        assigneePrincipalId: member.principalId,
+      });
+      assert.ok(isTask(task));
+      assert.equal(task.description, '  Edited\nbody  ');
+      assert.equal(task.assignee.principalId, member.principalId);
+      task = await ok(f.owner, `${tpath}/move`, {
+        expectedVersion: task.version,
+        expectedOrderVersion: task.orderVersion,
+        status: 'done',
+        beforeTaskId: null,
+      });
+      assert.ok(isTask(task));
+      assert.equal(task.status, 'done');
+      task = await ok(f.owner, `${tpath}/archive`, { expectedVersion: task.version });
+      assert.ok(isTask(task));
+      assert.notEqual(task.archivedAt, null);
+      task = await ok(f.owner, `${tpath}/restore`, { expectedVersion: task.version });
+      assert.ok(isTask(task));
+      assert.equal(task.archivedAt, null);
+      const planning = await ok(f.owner, `${tpath}/planning`, {
+        expectedVersion: task.version,
+        estimatePoints: 1,
+      });
+      assert.equal(planning.snapshot.estimatePoints, 1);
+      const history = await ok(f.owner, `${tpath}/sprint-history`);
+      assert.ok(isPlanningHistoryPage(history));
+      assert.ok(
+        history.items.some(
+          (entry) =>
+            entry.action === 'estimate-task' &&
+            entry.actor.kind === 'human' &&
+            entry.actor.principalId === f.owner.principalId &&
+            entry.provenance.executionMode === 'human',
+        ),
+      );
+      project = await ok(f.owner, p);
+      project = await ok(f.owner, `${p}/access/${member.principalId}`, {
+        expectedVersion: project.version,
+        state: 'revoked',
+      });
+      assert.ok(isProject(project));
+      const revoked = await ok(f.owner, `${p}/access/${member.principalId}`);
+      assert.ok(isProjectAccessReview(revoked));
+      assert.equal(revoked.member.explicitAccess, 'revoked');
+      const historical = await ok(f.owner, tpath);
+      assert.ok(isTask(historical));
+      assert.equal(historical.assignee.principalId, member.principalId);
+      assert.equal(historical.assignee.active, false);
+      assert.equal((await request(member, tpath)).status, 403);
+    },
+  );
 
   await t.test(
     'T08 actual additive migration backfills scoped status ranks without changing existing archived rows or versions',

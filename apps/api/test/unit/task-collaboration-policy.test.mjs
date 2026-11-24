@@ -14,6 +14,52 @@ const status = (code, responseCode) => (error) => {
   return true;
 };
 
+test('retained collaboration text admission rejects malformed checklist/comments before its mutation port', () => {
+  let mutations = 0;
+  const service = new TaskCollaborationService({
+    collaborationMutation: () => {
+      mutations++;
+      assert.fail('Invalid text reached project mutation');
+    },
+  });
+  const context = Object.freeze({ boundary: 'unused for rejected service input' });
+  for (const [action, input, message] of [
+    [
+      'add-checklist-item',
+      { expectedVersion: 1, text: 'bad\0text', beforeItemId: null },
+      'Invalid text.',
+    ],
+    [
+      'add-checklist-item',
+      { expectedVersion: 1, text: 'x'.repeat(501), beforeItemId: null },
+      'Invalid text.',
+    ],
+    [
+      'add-checklist-item',
+      { expectedVersion: 1, text: 'line\nbreak', beforeItemId: null },
+      'Invalid text.',
+    ],
+    ['add-comment', { expectedVersion: 1, body: null }, 'Invalid text.'],
+    ['add-comment', { expectedVersion: 1, body: 'bad\0text' }, 'Invalid text.'],
+    ['add-comment', { expectedVersion: 1, body: 'x'.repeat(10001) }, 'Invalid text.'],
+    ['add-comment', { expectedVersion: 1, body: ' \n ' }, 'A comment is required.'],
+    [
+      'add-comment',
+      { expectedVersion: 0, body: 'bad\0text' },
+      'A positive expectedVersion is required.',
+    ],
+  ])
+    assert.throws(
+      () => service.mutate(context, 'w', 'p', 'task', key, 'request', action, input),
+      (error) => {
+        assert.equal(error.getStatus(), 400);
+        assert.equal(error.message, message);
+        return true;
+      },
+    );
+  assert.equal(mutations, 0);
+});
+
 // Real project composition supplies archive/version/parent policy and DTOs.
 // Repository methods return named records, not an in-memory ORM or SQL engine.
 function fixture(t) {

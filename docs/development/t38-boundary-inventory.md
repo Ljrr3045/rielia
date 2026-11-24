@@ -12,9 +12,14 @@ eight compatibility guards, and Sprint input/transport owners consume them.
 Current source/check/numerical/acceptance limits are recorded in that slice's
 receipt. [Issue 53](https://github.com/Ljrr3045/rielia/issues/53) remains canonical;
 [the decision/pilot plan](t38-tooling-plan.md) retains later gates.
-[T38.2b](t38-workspace-schemas.md) owns released H01–04/H55–66/G01/X01–02 public
-schemas; local evidence does not accept full T38.2. Counts below remain bound
-to the original inventory snapshot.
+[T38.2b](t38-workspace-schemas.md) is ACCEPTED in PR59, reviewed `d9699cf`,
+merged `c655f0f0`, with reviewed/exact-merge CI and native review passed.
+[T38.2c](t38-project-task-schemas.md) locally implements H05–22/G02/bounded X03:
+project/task/access/assignee schemas, inferred DTOs and strict request/query
+adapters. Its approved numerical migration/normal786/infra20/artifacts17 and
+real HTTP57/runtime proof do not accept its eventual PR or full T38.2/T38.
+Counts below remain bound to the original inventory snapshot; new schema/guard
+exports are recorded in each slice's guide, not silently added to old counts.
 
 Counts describe maintained first-party source at this base, not complete product
 acceptance: **66 declared HTTP operations = 34 GET + 32 POST**, in ten Nest
@@ -136,7 +141,8 @@ are informational/type-only, with no standalone guard; verified execution's
 WeakMap trust remains in `apps/api/src/principals/principal.service.ts` and must
 never be reconstructed by parsing/serializing a public DTO.
 
-Known schema debt includes identity's two parsers in the client controller;
+**Historical debt at the inventory base.** Known schema debt includes identity's
+two parsers in the client controller;
 inline `CreatedInvitation`, project/access/assignee/comment-review envelopes;
 scoped conflict/current/accessCurrent/closeWarning and error-code checks in
 transports; generic page capabilities; backend body schemas absent from contracts;
@@ -155,6 +161,20 @@ and unchanged valid wire/extra-key compatibility. This is a design decision,
 not permission to begin P2. Shared G02/global consumers and G06 historical action
 tightening remain outside that first slice; wider ownership changes need an
 exact caller/test scope decision. No cast may substitute for sound schema types.
+
+**Current T38.2c disposition, November 24.** The scoped release now migrates
+G02's six original entrypoints and adds typed project/access/assignee/review page
+guards. Global person kind and G02 project/task provenance mode/source are strict
+scalars; the known optional private-page capability is boolean when present, and
+task pages reject non-JSON sparse arrays. The [caller census and compatibility
+receipt](t38-project-task-schemas.md) records approved indirect G04/G05/G06 effects.
+Other G04/G06 mode/source/action coercion remains deferred, not claimed sound or
+migrated. Strict input and loose output schemas retain the actual family-specific
+ID/date/cursor/presence rules and duplicates; no Sprint policy is imported.
+H01–04/H55–66 and H30–35 retain their accepted owners. Comment-review/close-warning,
+discovery/SSE, collaboration, scope/start/close/history, all eight private JSON
+owners and C01–12 remain separately assessed debt. No universal server-output
+parser, private receipt or runtime configuration migration is implied.
 
 Inputs must retain strict unknown-key rejection. Existing response guards often
 tolerate additional keys; choose that policy per response rather than silently

@@ -4,6 +4,29 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Record [T38.2b acceptance in PR59](https://github.com/Ljrr3045/rielia/pull/59#issuecomment-7122689772)
+  at reviewed `d9699cf`, merge `c655f0f0`, identical tree, reviewed/exact-merge
+  CI and clean native Kilo; retain dated receipts and completed cleanup evidence.
+  Implement bounded [T38.2c project/task/access schemas](docs/development/t38-project-task-schemas.md):
+  inferred shared DTOs, strict body/query adapters and transport facades preserve
+  normalization, errors, extras, scope and backend authority. Explicitly reject
+  malformed shared-person/G02 provenance scalars, nonboolean known optional
+  private-page capabilities and non-JSON sparse task arrays. No new dependency,
+  policy, UI or DB migration. Preserve rejected proposal one; adopt only exact
+  approved proposal-two current API/web/contracts baselines. Normal786/786
+  reproduces all16reports; infrastructure20 and17bounded artifact files pass.
+  Standalone `--projects` selector/9negative probes and real PG/HTTP57/57,
+  one deployed runtime/closure/recovery run and high audits pass with cleanup.
+  Preserve failed scratch/lint/Next/Docker-PATH attempts and authorized focused
+  continuations; Next's inherited security recommendation and low/moderate
+  findings remain unresolved. Source-qualified evidence is not rebound to later
+  docs commits. Published in [Draft PR60](https://github.com/Ljrr3045/rielia/pull/60)
+  at initial implementation head `6757bac82e90eae89b21d5461f80a838a8d35572`;
+  current-head CI/native review and final acceptance remain pending. Full
+  T38.2/T38 stay open; configuration/private JSON and other families retain
+  explicit owners.
+
+
 - Record [T38.2a acceptance in PR58](https://github.com/Ljrr3045/rielia/pull/58#issuecomment-7120471111)
   at reviewed `5e2671bd`, merge `e1ebe3ac`, with reviewed/exact-merge CI and native
   Kilo passed, superseding its frozen pending status below. Implement the released

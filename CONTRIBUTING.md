@@ -290,6 +290,15 @@ sprint suites and their domain-persistence restart witness; the default full
 command and CI coverage remain unchanged. See the bounded
 [T38.2b evidence and limits](docs/development/t38-workspace-schemas.md).
 
+After the same contracts/API builds, `node scripts/test-identity.mjs --projects`
+selects project/task, collaboration and discovery HTTP regressions once. This
+flag must stand alone; invalid combinations reject before resource setup. This
+selection skips the unrelated domain DB-restart/identity tail; the existing
+default CI/workspace/sprint selections retain their behavior. Its bounded canonical
+readback and focused planning-history proof, cleanup and source bindings are in
+[T38.2c evidence](docs/development/t38-project-task-schemas.md). It does not rerun
+or accept the full original T11 lifecycle.
+
 `pnpm test:runtime` builds pinned multi-stage API/web images with frozen installs,
 then runs an isolated Compose project on random loopback ports. It verifies
 migration failure/gating/repeatability, readiness versus liveness, DB recovery,

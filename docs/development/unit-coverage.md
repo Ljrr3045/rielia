@@ -1,5 +1,26 @@
 # T36 first unit and coverage delivery
 
+Current [T38.2c project/task/access schema migration](t38-project-task-schemas.md)
+has exact coordinator-approved numerical adoption and fresh normal **786/786**
+(API305/web419/contracts43/prototype19), with all16approved report hashes/sizes
+reproduced. Actual digest is
+`7dbc37e16d78094b035ea1ad1aa514c76febf466dbb7bc5b9e58a7e3dc282c09`;
+infrastructure20/20 and17bounded artifact files pass without upload.
+Only API/web/contracts current files change; prototype/four historical bytes
+remain exact. Protected floors retain/improve. New schema owners execute fully;
+two old G04 archive/checklist branches remain debt after released enum controls.
+Changed-source owner accounting and nullable map limits remain explicit; no
+library-internal coverage credit or source exclusion. Proposal1's782measurement
+was rejected, and proposal2 combines independently measured scopes before this
+fresh normal proof. The guide records all237physical fingerprints, the synthetic
+compiler witness and source/test/owner comparisons. Integration-only real HTTP57,
+runtime/audits and later docs do not rebind normal source identities.
+[T38.2b acceptance in PR59](https://github.com/Ljrr3045/rielia/pull/59#issuecomment-7122689772)
+governs its previously pending snapshot below. Full T38.2/T38 remains open.
+
+## Preserved earlier delivery snapshots
+
+
 Current T38.2b: [workspace/identity/infrastructure schemas](t38-workspace-schemas.md)
 have 98 focused cases, strict compilation/type proof and a resumed equivalent
 standard sequence. Proposal one's 765/765 measurement was rejected at protected

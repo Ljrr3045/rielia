@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { test } from 'node:test';
 import { ProjectTaskService } from '../../dist/projects/project-task.service.js';
 import { canonical } from '../../dist/projects/project-task-input.js';
@@ -149,6 +150,79 @@ const invalid = (message) => (error) => {
   assert.equal(error.message, message);
   return true;
 };
+
+test('public project creation binds normalized input to server attribution and its atomic effect ports', async () => {
+  const description = '  Description\nkept  ';
+  const saved = {
+    ...project,
+    id: 'new-project',
+    name: 'New project',
+    key: 'NP',
+    description,
+    visibility: 'private',
+    version: 1,
+    createdByPrincipalId: 'operator',
+  };
+  const f = boundary({
+    'projectTaskOperation.findUnique': [null],
+    'project.create': [saved],
+    'membership.findMany': [people],
+    'activityEvent.create': [null],
+    'outboxEvent.create': [null],
+    'projectTaskOperation.create': [null],
+  });
+  const result = await f.service.createProject(f.context, workspaceId, key, requestId, {
+    name: '  New project  ',
+    key: 'NP',
+    description,
+    visibility: 'private',
+  });
+  const [{ data }] = f.observed('project.create');
+  assert.equal(data.workspaceId, workspaceId);
+  assert.equal(data.name, 'New project');
+  assert.equal(data.description, description);
+  assert.equal(data.key, 'NP');
+  assert.equal(data.visibility, 'private');
+  assert.equal(data.createdByPrincipalId, 'operator');
+  assert.equal(data.creationMode, 'human');
+  assert.equal(data.creationSource, 'web');
+  assert.equal(data.creationGrantId, null);
+  assert.equal(result.id, saved.id);
+  assert.equal(result.creator.principalId, 'operator');
+  assert.deepEqual(result.provenance, {
+    actorPrincipalId: 'operator',
+    executionMode: 'human',
+    source: 'web',
+    grantId: null,
+  });
+  assert.equal(result.capabilities.canManageAccess, true);
+  const [{ data: event }] = f.observed('activityEvent.create');
+  const [{ data: outbox }] = f.observed('outboxEvent.create');
+  const [{ data: receipt }] = f.observed('projectTaskOperation.create');
+  assert.equal(event.action, 'create-project');
+  assert.equal(event.projectId, saved.id);
+  assert.equal(event.taskId, null);
+  assert.equal(event.actorPrincipalId, 'operator');
+  assert.equal(event.requestId, requestId);
+  assert.deepEqual(event.changedFields, ['name', 'key', 'description', 'visibility']);
+  assert.equal(outbox.activityId, event.id);
+  assert.deepEqual(outbox.payload, { activityId: event.id });
+  assert.equal(outbox.type, 'domain.activity');
+  assert.equal(receipt.workspaceId, workspaceId);
+  assert.equal(receipt.actorPrincipalId, 'operator');
+  assert.equal(receipt.executionScope, 'web');
+  assert.equal(receipt.key, key);
+  assert.deepEqual(receipt.response, result);
+  const normalized = { description, key: 'NP', name: 'New project', visibility: 'private' };
+  assert.equal(
+    receipt.requestHash,
+    createHash('sha256')
+      .update(JSON.stringify(['create-project', [], normalized]))
+      .digest('hex'),
+  );
+  assert.deepEqual(f.authorizations, ['write']);
+  f.done();
+});
 
 test('task creation accepts a leap day, trims title and preserves optional description bytes', async () => {
   const description = '  Optional text\r\n\tsecond line  ';

@@ -1,6 +1,9 @@
 import {
-  isPage,
   isRecord,
+  isProjectPage,
+  isProjectAccessPage,
+  isProjectAssigneePage,
+  isProjectAccessReview,
   isProject,
   isTask,
   isTaskPage,
@@ -8,7 +11,6 @@ import {
   type TaskFilters,
   type TaskPage,
   isProjectAccessMember,
-  isDomainPerson,
   type ArchiveView,
   type DomainPage,
   type Project,
@@ -180,25 +182,6 @@ export function createProjectTaskTransport(
       (t === undefined || value.id === t)
     );
   }
-  async function collection<T>(
-    path: string,
-    signal: AbortSignal,
-    check: (value: unknown) => value is T,
-    view: ArchiveView,
-    cursor?: string,
-  ): Promise<DomainPage<T>> {
-    const query = new URLSearchParams({ view });
-    if (cursor) query.set('cursor', cursor);
-    const value = await request(`${path}?${query}`, signal);
-    if (
-      !isPage(value, check) ||
-      !isRecord(value) ||
-      !isRecord(value['capabilities']) ||
-      typeof value['capabilities']['canCreate'] !== 'boolean'
-    )
-      throw new ProjectTaskFailure(502);
-    return value as unknown as DomainPage<T>;
-  }
   return {
     async discover(w, query, signal, cursor) {
       if (!isTaskDiscoveryQuery(query)) throw new ProjectTaskFailure(400);
@@ -268,8 +251,14 @@ export function createProjectTaskTransport(
         throw new ProjectTaskFailure(502);
       return value as unknown as TaskCommentReview;
     },
-    projects: (w, view, signal, cursor) =>
-      collection(root(w), signal, (v): v is Project => isProject(v) && scoped(v, w), view, cursor),
+    async projects(w, view, signal, cursor) {
+      const query = new URLSearchParams({ view });
+      if (cursor) query.set('cursor', cursor);
+      const value = await request(`${root(w)}?${query}`, signal);
+      if (!isProjectPage(value)) throw new ProjectTaskFailure(502);
+      if (value.items.some((row) => !scoped(row, w))) throw new ProjectTaskFailure(502);
+      return value;
+    },
     async project(w, p, signal) {
       const value = await request(projectPath(w, p), signal);
       if (!isProject(value) || !scoped(value, w, p)) throw new ProjectTaskFailure(502);
@@ -306,43 +295,25 @@ export function createProjectTaskTransport(
         `${projectPath(w, p)}/access${cursor ? `?cursor=${segment(cursor)}` : ''}`,
         signal,
       );
-      if (
-        !isPage(value, isProjectAccessMember) ||
-        !isRecord(value) ||
-        value['workspaceId'] !== w ||
-        value['projectId'] !== p ||
-        !Number.isSafeInteger(value['projectVersion']) ||
-        Number(value['projectVersion']) < 1
-      )
-        throw new ProjectTaskFailure(502);
-      return value as unknown as ProjectAccessPage;
+      if (!isProjectAccessPage(value)) throw new ProjectTaskFailure(502);
+      if (value.workspaceId !== w || value.projectId !== p) throw new ProjectTaskFailure(502);
+      return value;
     },
     async assignees(w, p, signal, cursor) {
       const value = await request(
         `${projectPath(w, p)}/assignees${cursor ? `?cursor=${segment(cursor)}` : ''}`,
         signal,
       );
-      if (
-        !isPage(value, isDomainPerson) ||
-        !isRecord(value) ||
-        value['workspaceId'] !== w ||
-        value['projectId'] !== p ||
-        value.items.some((row) => !row.active)
-      )
-        throw new ProjectTaskFailure(502);
-      return value as unknown as ProjectAssigneePage;
+      if (!isProjectAssigneePage(value)) throw new ProjectTaskFailure(502);
+      if (value.workspaceId !== w || value.projectId !== p) throw new ProjectTaskFailure(502);
+      return value;
     },
     async accessReview(w, p, principalId, signal) {
       const value = await request(`${projectPath(w, p)}/access/${segment(principalId)}`, signal);
-      if (
-        !isRecord(value) ||
-        !isProject(value['project']) ||
-        !scoped(value['project'], w, p) ||
-        !isProjectAccessMember(value['member']) ||
-        value['member'].principalId !== principalId
-      )
+      if (!isProjectAccessReview(value)) throw new ProjectTaskFailure(502);
+      if (!scoped(value.project, w, p) || value.member.principalId !== principalId)
         throw new ProjectTaskFailure(502);
-      return value as unknown as ProjectAccessReview;
+      return value;
     },
     async mutate(command, key, signal) {
       let path = root(command.workspaceId);

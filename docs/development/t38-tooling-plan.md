@@ -1,16 +1,23 @@
 # T38 tool decisions and compatibility pilot
 
-**T38.1/T38.2a ACCEPTED; T38.2b PUBLIC SCHEMAS IN PROGRESS,
-2026-11-23 America/Caracas.**
+**T38.1/T38.2a/T38.2b ACCEPTED; T38.2c LOCAL GATES COMPLETE,
+2026-11-24 America/Caracas.**
+[T38.2b acceptance in PR59](https://github.com/Ljrr3045/rielia/pull/59#issuecomment-7122689772)
+reviewed `d9699cf`, merged `c655f0f0`, identical tree `08a8a7c7`; reviewed-head
+CI45328949033 and exact-merge CI45331394020 passed 24 steps each, with clean
+37-file native Kilo review. Its settled clean checkout was removed through Orca,
+branch/evidence retained and all 93 foreign coordinator entries preserved.
+[Its dated receipt](t38-workspace-schemas.md) is not rebound to later docs.
 [PR58 acceptance](https://github.com/Ljrr3045/rielia/pull/58#issuecomment-7120471111)
-reviewed `5e2671bd`, merged `e1ebe3ac`, identical tree `2e8086cc`, with reviewed
-and exact-merge CI/native Kilo passed. The
-[H01–04/H55–66/G01/X01–02 migration](t38-workspace-schemas.md) now has released
-implementation/focused validation and exact approved numerical adoption. Fresh
-normal 771/771 reproduces the approved reports; infrastructure/artifact checks
-pass. Selected real HTTP47/47, one runtime/deployed-closure/recovery check and
-high audits pass; publication/final acceptance remain gated. Configuration/private receipt formats are assessed deferred
-owners, not accepted exclusions. Historical receipts below keep their dates.
+reviewed `5e2671bd`, merged `e1ebe3ac`, identical tree `2e8086cc`, with reviewed/
+exact-merge CI and native Kilo passed.
+The released [H05–22/G02/bounded X03 migration](t38-project-task-schemas.md)
+now has strict input/shared inferred schemas, explicit scalar/capability/dense
+array decisions, approved numerical adoption and fresh normal786/infra20/
+artifacts17 proof. Selected real PG/HTTP57 and runtime/closure/recovery/high
+audits pass with cleanup. Publication/current-head review/final acceptance remain;
+full T38.2/T38 and configuration/private JSON owners stay open. Next security
+recommendation remains unresolved. Historical receipts below keep their dates.
 [PR57 acceptance](https://github.com/Ljrr3045/rielia/pull/57#issuecomment-7118652391)
 reviewed `b12e3220`, merged `4dab8594`, with identical reviewed/merged tree
 `8573ea3d`; [exact-merge CI](https://github.com/Ljrr3045/rielia/actions/runs/45301675698/job/138135467847)
@@ -34,8 +41,9 @@ Traceability: T05–T11/T35, P01–P11/P33/P38, US01–US08/US11–US12/US24–U
 existing UX/UXR including sprint UX04. [The finite inventory](t38-boundary-inventory.md)
 defines maintained adoption surfaces. Initial research was read-only; the
 coordinator subsequently released the isolated P1 below. P1 changed no production
-manifests, locks, source, tests or coverage. The released T38.2a slice changes only
-its named owners; neither P1 nor this first production slice is full T38 acceptance.
+manifests, locks, source, tests or coverage. Each released schema slice changes
+only its named owners; neither the pilot nor local production evidence is full
+T38 acceptance.
 
 ## Baseline and decision status
 
@@ -262,6 +270,14 @@ authorize changing shared G02 `isDomainPerson`/global consumers or G06 historica
 action checks. If clean schema ownership requires that wider change, present
 the exact affected callers/tests for a coordinated scope decision first.
 
+**Later T38.2c disposition, November 24.** The coordinator explicitly released
+global G02 person-kind hardening after a complete caller census, plus G02-only
+project/task provenance mode/source, known optional private-page boolean and
+non-JSON sparse task-page rejection. The [bounded guide](t38-project-task-schemas.md)
+records source-bound legacy/current witnesses, inferred types and actual affected
+G04/G05/G06 consumer checks. Their other private mode/action checks remain deferred;
+the earlier Sprint-only decision did not itself authorize this later work.
+
 Production validation is scoped to changed behavior: retained contracts/affected
 client/API units, meaningful negative/401/403/409/unknown/SSE cases, applicable
 real PostgreSQL/HTTP and NodeAdapter runtime/closure checks, one full check and
@@ -379,8 +395,10 @@ Query production/RHF/other tools remain separately gated.
 | Phase | Proposed bounded PR scope | Exit evidence |
 | --- | --- | --- |
 | T38.1 | ACCEPTED in PR57, reviewed `b12e3220`, merged `4dab8594`; inventory/decisions/LOCAL P1 only | Native review and exact-merge CI passed; historical P1 limits retained |
-| T38.2a | LOCAL COMPLETE: H30–35/G03 planned-sprint shared schemas, strict inputs, inferred DTOs and transport validation | Exact numerical adoption approved; fresh 747 normal/20 infrastructure/17 artifacts, focused PG/HTTP44 and runtime/closure pass; PR/current-head CI/native review and final coordinator acceptance pending |
-| T38.2b–d | Remaining schema families in measured batches: workspace/identity/context/infrastructure; project/task/access/discovery/SSE; collaboration/scope/start/close/history/receipts/configuration | Account for all H01–66/G01–07/X/C/encoded-input owners; each migrated or explicit coordinator-accepted exclusion/debt owner. No universal policy rewrite |
+| T38.2a | ACCEPTED in PR58: H30–35/G03/X04 Sprint schemas | Reviewed `5e2671bd`, merged `e1ebe3ac`; reviewed/exact-merge CI and native Kilo passed; original local source/run limits retained |
+| T38.2b | ACCEPTED in PR59: H01–04/H55–66/G01/X01–02 | Reviewed `d9699cf`, merged `c655f0f0`; reviewed/exact-merge CI and native Kilo passed; receipts retain source identities |
+| T38.2c | LOCAL GATES COMPLETE: H05–22/G02 and project/task/access/assignee X03 only | [Exact schema receipt](t38-project-task-schemas.md), approved migration, normal786/infra20/artifacts17 and real HTTP57/runtime; publication/current-head CI/native review/acceptance pending |
+| T38.2 remaining | Discovery/SSE, collaboration, scope/start/close/history, encoded/private JSON and configuration | Each remaining H/G/X/C owner needs a separate release or explicit accepted debt/exclusion before T38.6; no universal policy rewrite |
 | T38.3 | Canonical OpenAPI generation/drift first; generated transport adoption only after TS6/generator decision | Reproducible schema/type generation, unsupported-refinement list, unknown-response and same-origin/cancellation/error parity; no second hand-maintained definition |
 | T38.4a | Two sprint resource caches and create mutation, then remaining enumerated server resources in bounded batches | Query becomes sole DTO owner; identity/render/abort/discard/SSE/version/recovery checks and production bundle/request costs |
 | T38.4b | RHF trial then separately agreed F01–12 expansion or explicit exclusions | One field owner, draft/focus/navigation/validation parity, responsive/keyboard/nonideal/persistence evidence; no presentation redesign implied |
