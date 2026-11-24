@@ -83,7 +83,8 @@ project, task, discovery, SSE and sprint routes. `workspace.controller.ts` owns
 the workspace equivalent; `principal.controller.ts` owns its stricter context
 endpoint. Retain duplicate-query rejection at the Next proxy, read-with-body
 rejection, exact Origin/Fetch-Site, JSON content type, forbidden actor headers,
-UUID-v4 business keys, cookie renewal, no-store and safe request IDs. Shared
+UUID-v4 `Idempotency-Key`, current resource identifier admission
+(`^[A-Za-z0-9_-]{1,128}$`), cookie renewal, no-store and safe request IDs. Shared
 Zod shape schemas cannot replace these HTTP/security checks.
 
 The extra raw mount is `application.ts` → `/api/auth/*splat`, before body parsers,
@@ -249,14 +250,14 @@ Cancel/Leave verification or T08/T10/US05 sprint-filter debt.
 | ID | Owner | Boundary / proposed disposition |
 | --- | --- | --- |
 | C01 | `apps/api/src/identity/config.ts` | Eleven keys: IDENTITY_ENABLED, IDENTITY_ALLOW_HTTP_LOOPBACK, IDENTITY_TRUSTED_PROXIES, NODE_ENV, BETTER_AUTH_URL, BETTER_AUTH_SECRET, DATABASE_URL, GOOGLE_CLIENT_ID/SECRET, GITHUB_CLIENT_ID/SECRET. Conditional requirements/canonical origin/CIDRs/provider pairs; later Zod reuse, never echo secrets |
-| C02 | `apps/api/src/runtime/database.ts`, `runtime.service.ts`, `migrate.ts`, `worker.ts` | LOCAL_RUNTIME_ENABLED/DATABASE_URL gating, readiness/schema checks and explicit migration owner; no broad truthy coercion |
+| C02 | `apps/api/src/runtime/database.ts`, `apps/api/src/runtime/runtime.service.ts`, `apps/api/src/migrate.ts`, `apps/api/src/worker.ts` | LOCAL_RUNTIME_ENABLED/DATABASE_URL gating, readiness/schema checks and explicit migration owner; no broad truthy coercion |
 | C03 | `apps/api/src/main.ts` | HOST/PORT, bounded integer port; preserve current string parsing/defaults |
 | C04 | Three web proxies and `apps/web/src/app/page.tsx` | API_BASE_URL is server-only fixed upstream configuration, never a browser selector; consolidate validation only after parity |
 | C05 | `packages/mcp-local/src/config.ts` | RIELIA_API_ORIGIN/RIELIA_MCP_ALLOW_LOOPBACK_HTTP; explicit HTTPS or numeric-loopback exception, no credentials/path/query |
 | C06 | `apps/api/prisma.config.ts` | DATABASE_URL config pass-through; tooling only, no web import or runtime migration |
 | C07 | `apps/api/src/runtime/diagnostic.ts` | CLI action + UUID-v4 arguments and safe diagnostic status/output; runtime-only experiment |
-| C08 | `apps/api/src/runtime/queue.ts`, `worker.ts` | Strict two-field diagnostic job payload; worker result `{diagnostic:'ok'}`; no business worker/catalog |
-| C09 | `apps/api/src/runtime/worker-health.ts`, `worker.ts` | Local heartbeat JSON timestamp/freshness, oldest-pending diagnostic field; private operational file, not a public domain DTO |
+| C08 | `apps/api/src/runtime/queue.ts`, `apps/api/src/worker.ts` | Strict two-field diagnostic job payload; worker result `{diagnostic:'ok'}`; no business worker/catalog |
+| C09 | `apps/api/src/runtime/worker-health.ts`, `apps/api/src/worker.ts` | Local heartbeat JSON timestamp/freshness, oldest-pending diagnostic field; private operational file, not a public domain DTO |
 | C10 | `apps/web/next.config.ts`, root/app/package TS configs, package manifests, `pnpm-workspace.yaml` | Typed/build/dependency configuration, not untrusted JSON schemas. Preserve strict TS, optional-peer/lifecycle policy, patches and NodeAdapter closure; no proposed runtime schema migration |
 | C11 | `compose.local.yml`, `docker/Dockerfile`, `.env.example`, `apps/api/.env.example` | Operator/container packaging: LOCAL_POSTGRES_PASSWORD, LOCAL_WEB_PORT, LOCAL_API_PORT, COMPOSE_PROJECT_NAME; upstream PostgreSQL/Next build/runtime variables and image digests. Templates consume the runtime settings above; excluded from Zod replacement, owned by T04/runtime delivery. Preserve default-disabled identity, safe ports, explicit one-shot and secret handling |
 | C12 | `scripts/quality`, `scripts/unit`, `.github/actions/unit-artifacts`, `.github/workflows/ci.yml`, `.husky`, `scripts/verify-handoff.py`, `scripts/verify-frontend-skills.py` | Maintained tooling input/output/config adapters: Git event/index/commit metadata, formatting/skill manifests, coverage/source maps/baselines, artifact allowlist/upload environment and portable link/hash inventory. Protected non-domain tooling, explicit proposed exclusion from runtime migration, owned by quality/repository delivery; retain existing validation/tests and fail-closed behavior |
