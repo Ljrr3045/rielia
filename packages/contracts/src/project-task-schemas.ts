@@ -84,19 +84,32 @@ export const taskFieldsSchema = z.looseObject({
     .regex(/^\d{4}-\d{2}-\d{2}$/)
     .nullable(),
 });
-export const taskSchema = domainRecordSchema
-  .extend({
-    ...taskFieldsSchema.shape,
-    parentTaskId: z.string().nullable(),
-    projectId: z.string(),
-    projectKey: z.string(),
-    number: versionSchema,
-    key: z.string(),
-    orderVersion: versionSchema,
-    projectArchivedAt: dateSchema.nullable(),
-    assignee: domainPersonSchema.nullable(),
-  })
-  .refine(sameCreator);
+const taskRecordSchema = domainRecordSchema.extend({
+  ...taskFieldsSchema.shape,
+  parentTaskId: z.string().nullable(),
+  projectId: z.string(),
+  projectKey: z.string(),
+  number: versionSchema,
+  key: z.string(),
+  orderVersion: versionSchema,
+  projectArchivedAt: dateSchema.nullable(),
+  assignee: domainPersonSchema.nullable(),
+});
+export const taskSchema = taskRecordSchema.refine(sameCreator);
+// Discovery checks original presence and the enumerable Task projection, while
+// projectName retains its historical direct-property read.
+export const taskDiscoveryItemSchema = z
+  .custom<Record<string, unknown>>(
+    (value) =>
+      !!value && typeof value === 'object' && !Array.isArray(value) && !('description' in value),
+  )
+  .transform((value) => ({ ...value, projectName: value['projectName'] }))
+  .pipe(
+    taskRecordSchema
+      .omit({ description: true })
+      .extend({ projectName: z.string() })
+      .refine(sameCreator),
+  );
 export function domainPageSchema<Item extends z.ZodType>(item: Item) {
   return pageSchema(item).safeExtend({
     capabilities: z.looseObject({

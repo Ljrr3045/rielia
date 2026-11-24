@@ -111,3 +111,80 @@ test('T10 SSE denial stops retries, late aborted connection emits nothing, malfo
     close();
   }
 });
+
+test('schema-backed SSE alternatives survive actual split multibyte UTF8 and stop at wire denial', async () => {
+  const events = [],
+    statuses = [];
+  const payload =
+    ': café 😀\r\nid: resume_1\r\nevent: update\r\ndata: {"type":"heartbeat"}\r\n\r\nevent: update\ndata: {"type":"invalidate","entity":"project","id":"p","projectId":"p","version":9007199254740991}\n\nevent: update\ndata: {"type":"reset"}\n\nevent: update\ndata: {"type":"denied","reason":"forbidden"}\n\nevent: update\ndata: {"type":"heartbeat"}\n\n';
+  const bytes = new TextEncoder().encode(payload);
+  const split = bytes.findIndex((byte) => byte >= 128) + 1;
+  let calls = 0;
+  const close = connectTaskEvents({
+    workspaceId: 'w',
+    retryDelays: [0],
+    onEvent: (event) => events.push(event),
+    onStatus: (status) => statuses.push(status),
+    fetch: async () => {
+      calls++;
+      return new Response(
+        new ReadableStream({
+          start(controller) {
+            controller.enqueue(bytes.slice(0, split));
+            controller.enqueue(bytes.slice(split));
+            controller.close();
+          },
+        }),
+        { headers: { 'content-type': 'text/event-stream' } },
+      );
+    },
+  });
+  await until(() => statuses.includes('forbidden'));
+  close();
+  assert.deepEqual(events, [
+    { type: 'reset' },
+    { type: 'heartbeat' },
+    {
+      type: 'invalidate',
+      entity: 'project',
+      id: 'p',
+      projectId: 'p',
+      version: Number.MAX_SAFE_INTEGER,
+    },
+    { type: 'reset' },
+    { type: 'denied', reason: 'forbidden' },
+  ]);
+  assert.equal(calls, 1);
+});
+
+test('malformed JSON event alternatives become offline without exposing payloads or retrying writes', async () => {
+  const valid = { type: 'invalidate', entity: 'task', id: 't', projectId: 'p', version: 1 };
+  for (const value of [
+    null,
+    [],
+    {},
+    { type: ['heartbeat'] },
+    { type: 'reset', extra: true },
+    { type: 'denied', reason: ['forbidden'] },
+    { ...valid, version: 0 },
+    { ...valid, version: Number.MAX_SAFE_INTEGER + 1 },
+    { ...valid, entity: ['task'] },
+    { ...valid, id: 'bad id' },
+  ]) {
+    const events = [],
+      statuses = [];
+    const close = connectTaskEvents({
+      workspaceId: 'w',
+      retryDelays: [],
+      onEvent: (event) => events.push(event),
+      onStatus: (status) => statuses.push(status),
+      fetch: async () =>
+        new Response(`event: update\ndata: ${JSON.stringify(value)}\n\n`, {
+          headers: { 'content-type': 'text/event-stream' },
+        }),
+    });
+    await until(() => statuses.includes('offline'));
+    close();
+    assert.deepEqual(events, [{ type: 'reset' }]);
+  }
+});

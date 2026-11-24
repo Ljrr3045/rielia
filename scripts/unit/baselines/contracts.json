@@ -110,20 +110,20 @@
     },
     "packages/contracts/src/project-task-schemas.ts": {
       "branches": {
-        "covered": 2,
-        "total": 2
+        "covered": 6,
+        "total": 6
       },
       "functions": {
-        "covered": 9,
-        "total": 9
+        "covered": 11,
+        "total": 11
       },
       "lines": {
-        "covered": 32,
-        "total": 32
+        "covered": 36,
+        "total": 36
       },
       "statements": {
-        "covered": 35,
-        "total": 35
+        "covered": 39,
+        "total": 39
       }
     },
     "packages/contracts/src/project-tasks.ts": {
@@ -218,7 +218,7 @@
     },
     "packages/contracts/src/task-collaboration.ts": {
       "branches": {
-        "covered": 138,
+        "covered": 139,
         "total": 140
       },
       "functions": {
@@ -234,22 +234,40 @@
         "total": 42
       }
     },
-    "packages/contracts/src/task-discovery.ts": {
+    "packages/contracts/src/task-discovery-schemas.ts": {
       "branches": {
-        "covered": 69,
-        "total": 69
+        "covered": 37,
+        "total": 37
       },
       "functions": {
-        "covered": 14,
-        "total": 14
+        "covered": 20,
+        "total": 20
       },
       "lines": {
-        "covered": 23,
-        "total": 23
+        "covered": 32,
+        "total": 32
       },
       "statements": {
-        "covered": 25,
-        "total": 25
+        "covered": 34,
+        "total": 34
+      }
+    },
+    "packages/contracts/src/task-discovery.ts": {
+      "branches": {
+        "covered": 2,
+        "total": 2
+      },
+      "functions": {
+        "covered": 6,
+        "total": 6
+      },
+      "lines": {
+        "covered": 7,
+        "total": 7
+      },
+      "statements": {
+        "covered": 7,
+        "total": 7
       }
     },
     "packages/contracts/src/task-planning.ts": {
@@ -290,7 +308,7 @@
     }
   },
   "floors": {
-    "branches": 9965,
+    "branches": 9981,
     "functions": 10000,
     "lines": 10000,
     "statements": 10000
@@ -320,14 +338,15 @@
       "packages/contracts/src/infrastructure-schemas.ts": "aff3ff3a1d758e691301d233ba7730a9366057d4de20ed2107031b69783d4a40",
       "packages/contracts/src/principal-schemas.ts": "9a1a50bead71b986ff9f51fcad619093b197af08b10223c38879a6978c2a0a46",
       "packages/contracts/src/project-task-input-schemas.ts": "80824460bd3378a25c55ae5d89160f131f79f1c78f155d7e326737cd48284f25",
-      "packages/contracts/src/project-task-schemas.ts": "2a1e5cf02013f5b6fea906c2b26aa6b23cc37f9e04fbfdb4293ba070a12ac53f",
+      "packages/contracts/src/project-task-schemas.ts": "1597cbb4b0e408d2147019698b1cfe629242249a747adaa469953f0d07dc2778",
       "packages/contracts/src/project-tasks.ts": "19eed6bcac1fd767141f9f3e7f75327210677b7527624897526a23e74d88808c",
       "packages/contracts/src/schema-types.ts": "fee5432cdd9715cdb7ff15154aae837ef801f258164c2e3671d649556c242e84",
       "packages/contracts/src/sprint-closure.ts": "64461e9006e83814c88a31df74f8ac103bce48256db5fc10cfbf1ecdff0b89da",
       "packages/contracts/src/sprint-schemas.ts": "9531374270f4e553af08ecfc6cf93326e29ceb3ef1da259c51cac11a735e7eeb",
       "packages/contracts/src/sprints.ts": "ded4f3e7642860472bd588ab5fa18f23a40e72af3acbc457989ceb286dea7525",
       "packages/contracts/src/task-collaboration.ts": "89a888be278672661b5a89cf617b6b0cd0b47c3eee9970373fdafa32935067f4",
-      "packages/contracts/src/task-discovery.ts": "10c0daa197091b9ba183f3d3671ad5c600b40867c2cb574dd393a11e572aa1d0",
+      "packages/contracts/src/task-discovery-schemas.ts": "515479161b10fc02d06baf0c18de60e5048a083201438adfbab37b09b9366a7a",
+      "packages/contracts/src/task-discovery.ts": "3c5493af8eff6b6defb2c052a953b441a27f5f89df98ccad44846a1fb729d087",
       "packages/contracts/src/task-planning.ts": "849bbdadfb4ec628278f7d69021df5d413b377e4ea6cf70aff9e35e3049df7c2",
       "packages/contracts/src/workspace-schemas.ts": "cece3b0cde8fa70c38409b32a2442b3bc9b2627f3b11f4baf0a2f64606062e10"
     },
@@ -344,6 +363,7 @@
       "packages/contracts/test/project-task-schemas.test.mjs": "74d63ba08f6a2824903214082ffce72806d347707d3d1f750a450e7365da9063",
       "packages/contracts/test/sprint-closure.test.mjs": "c146ac14b85bcf55e4b1bc816ec81a1991cb7489349380eb5402a1891a73bab9",
       "packages/contracts/test/sprints.test.mjs": "56a98cc09cf4dc5e66f9c384a19e35d5597b11e316b93a62ede844126589d797",
+      "packages/contracts/test/task-discovery-schemas.test.mjs": "6cfaa2c6af2d9e01ddad742810ea9302ba45205c5b495d73ff2fa306458091fc",
       "packages/contracts/test/task-planning.test.mjs": "6cfff76f2fa05f5aa4d72ad6a1b3371b9369815c185459041f6628765e4db7a8",
       "packages/contracts/test/workspace-schemas.test.mjs": "d1c7264e7971e91ecd91e9d00606e84eca53239caf0d0ce842c2e0d8595b4671",
       "scripts/unit/mirror-loader.mjs": "b3ef9e50e56ee2fa0079c794c044efbc6b953d75890b97889bc635e233d93115"
@@ -353,20 +373,20 @@
   "scope": "contracts",
   "total": {
     "branches": {
-      "covered": 573,
-      "total": 575
+      "covered": 548,
+      "total": 549
     },
     "functions": {
-      "covered": 149,
-      "total": 149
+      "covered": 163,
+      "total": 163
     },
     "lines": {
-      "covered": 296,
-      "total": 296
+      "covered": 316,
+      "total": 316
     },
     "statements": {
-      "covered": 325,
-      "total": 325
+      "covered": 345,
+      "total": 345
     }
   }
 }

@@ -4,6 +4,26 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Record [T38.2c acceptance in PR60](https://github.com/Ljrr3045/rielia/pull/60#issuecomment-7125188276),
+  reviewed `fdd0450b`, merged `8c7e897b`, with reviewed/exact-merge CI, clean native
+  Kilo and settled checkout cleanup. Implement bounded
+  [T38.2d discovery/query/event schemas](docs/development/t38-discovery-event-schemas.md):
+  inferred shared shapes retain G02 creator correlation and description absence,
+  raw-versus-HTTP cursor/default ownership, response extras/scope and existing
+  SSE/authority/recovery behavior. Explicit non-JSON corrections reject sparse
+  discovery arrays, event fields without exact own enumerable ownership and
+  nonrecord raw-parser arguments. Preserve rejected proposal one and all setup/
+  compile/fixture/probe/Next failures; released corrections retain evidence.
+  Exact proposal-two adoption and fresh normal799/799 reproduce all16reports;
+  infrastructure20/artifacts17, selected real PG/HTTP57, runtime/closure/recovery
+  and high audits pass with cleanup. One old G04 checklist branch, low/moderate
+  findings and Next's inherited security recommendation remain. No new package,
+  Query/UI/policy/producer/DB change. Published in
+  [Draft PR61](https://github.com/Ljrr3045/rielia/pull/61), targeting `dev`, at initial
+  implementation head `b704c1e23ed8bc293970f3fb62d801430de94cab` (tree `05a3cee1`).
+  Current-head CI/native review/final acceptance and full T38.2/T38 remain open;
+  this docs-only reference batch does not rebind source-qualified runs.
+
 - Record [T38.2b acceptance in PR59](https://github.com/Ljrr3045/rielia/pull/59#issuecomment-7122689772)
   at reviewed `d9699cf`, merge `c655f0f0`, identical tree, reviewed/exact-merge
   CI and clean native Kilo; retain dated receipts and completed cleanup evidence.
@@ -22,7 +42,8 @@ This records repository changes. No application version has been released.
   findings remain unresolved. Source-qualified evidence is not rebound to later
   docs commits. Published in [Draft PR60](https://github.com/Ljrr3045/rielia/pull/60)
   at initial implementation head `6757bac82e90eae89b21d5461f80a838a8d35572`;
-  current-head CI/native review and final acceptance remain pending. Full
+  subsequent [PR60 acceptance](https://github.com/Ljrr3045/rielia/pull/60#issuecomment-7125188276)
+  governs its final state while dated local receipts remain unchanged. Full
   T38.2/T38 stay open; configuration/private JSON and other families retain
   explicit owners.
 

@@ -118,6 +118,129 @@ test('T10 discovery transport validates requested scope, filters, archive and as
   );
   assert.equal(calls.length, count);
 });
+test('discovery schema migration preserves response identity/extras and all request-query correlations', async (t) => {
+  let value;
+  const calls = [];
+  t.mock.method(globalThis, 'fetch', async (url, init) => {
+    calls.push({ url: String(url), init });
+    return { ok: true, status: 200, json: async () => value };
+  });
+  const api = createProjectTaskTransport();
+  const requested = {
+    scope: 'search',
+    q: ' Title ',
+    view: 'active',
+    projectId: 'p',
+    filters: { status: 'todo', priority: 'high', assignee: 'unassigned' },
+  };
+  const good = {
+    ...sharedDiscovery,
+    extra: undefined,
+    query: {
+      ...requested,
+      q: 'Title',
+      filters: { assignee: 'unassigned', priority: 'high', status: 'todo' },
+    },
+    items: [
+      {
+        ...sharedDiscovery.items[0],
+        status: 'todo',
+        priority: 'high',
+        assigneePrincipalId: null,
+        extra: undefined,
+      },
+    ],
+  };
+  value = good;
+  assert.equal(await api.discover('w', requested, signal(), 'opaque_1'), good);
+  assert.ok('extra' in good.items[0]);
+  const url = new URL(calls[0].url, 'http://local.test');
+  assert.equal(url.searchParams.get('q'), 'Title');
+  assert.equal(url.searchParams.get('cursor'), 'opaque_1');
+  assert.equal(calls[0].init.cache, 'no-store');
+  for (const patch of [
+    { scope: 'mine', filters: {} },
+    { q: 'Other' },
+    { view: 'archived' },
+    { projectId: 'other' },
+    { filters: { status: 'todo' } },
+  ]) {
+    value = { ...good, query: { ...good.query, ...patch } };
+    await assert.rejects(api.discover('w', requested, signal()), (error) => error.status === 502);
+  }
+  for (const patch of [
+    { projectId: 'other' },
+    { status: 'done' },
+    { priority: 'low' },
+    { assigneePrincipalId: 'human' },
+    { projectArchivedAt: '2030-01-01' },
+    { description: undefined },
+  ]) {
+    value = { ...good, items: [{ ...good.items[0], ...patch }] };
+    await assert.rejects(api.discover('w', requested, signal()), (error) => error.status === 502);
+  }
+  const mine = { scope: 'mine', q: '', view: 'archived', filters: {} };
+  value = {
+    ...sharedDiscovery,
+    query: mine,
+    items: [
+      {
+        ...sharedDiscovery.items[0],
+        assigneePrincipalId: 'human',
+        archivedAt: null,
+        projectArchivedAt: '2030-01-01',
+      },
+    ],
+  };
+  assert.equal(await api.discover('w', mine, signal()), value);
+  value = { ...value, principalId: 'different' };
+  await assert.rejects(api.discover('w', mine, signal()), (error) => error.status === 502);
+  value = {
+    ...value,
+    principalId: 'human',
+    items: [{ ...value.items[0], projectArchivedAt: null }],
+  };
+  await assert.rejects(api.discover('w', mine, signal()), (error) => error.status === 502);
+});
+
+test('discovery proxy retains scalar URL admission, duplicate rejection and exact forwarding', async (t) => {
+  const calls = [];
+  t.mock.method(globalThis, 'fetch', async (url) => {
+    calls.push(String(url));
+    return Response.json({ canonical: true });
+  });
+  const root = 'http://local.test/api/v1/workspaces/w/task-discovery';
+  for (const params of [
+    '',
+    '?scope=mine&q=&view=active',
+    `?q=${encodeURIComponent('😀'.repeat(50))}&cursor=${'x'.repeat(2048)}`,
+    '?scope=search&assignee=unassigned&project=p&status=todo&priority=high',
+  ]) {
+    const result = await proxyProjectTask(new Request(root + params));
+    assert.equal(result.status, 200);
+    assert.equal(result.headers.get('cache-control'), 'no-store');
+    assert.equal(new URL(calls.at(-1)).search, new URL(root + params).search);
+  }
+  const before = calls.length;
+  for (const params of [
+    '?scope=mine&assignee=human',
+    '?q=a&q=b',
+    '?cursor=a&cursor=b',
+    '?scope[]=mine',
+    '?view=null',
+    '?project=',
+    '?cursor=',
+    '?cursor=bad%20cursor',
+    `?cursor=${'x'.repeat(2049)}`,
+    `?q=${encodeURIComponent('😀'.repeat(50) + 'a')}`,
+    '?q=%7F',
+    '?q=%00',
+    '?extra=',
+  ])
+    assert.equal((await proxyProjectTask(new Request(root + params))).status, 400);
+  assert.equal(calls.length, before);
+});
+
 test('T08 transport validates scoped revision pages and exact move payload; proxy rejects unsupported/repeated filters', async (t) => {
   const original = globalThis.fetch;
   t.after(() => {

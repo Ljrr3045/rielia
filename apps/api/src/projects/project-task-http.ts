@@ -6,7 +6,7 @@ import {
   projectListQuerySchema,
   projectMemberPageQuerySchema,
   taskListQuerySchema,
-  parseTaskDiscoveryQuery,
+  taskDiscoveryHttpQuerySchema,
   type ArchiveView,
   type TaskFilters,
 } from '@rielia/contracts';
@@ -82,7 +82,9 @@ export class ProjectTaskHttp {
           ? projectMemberPageQuerySchema
           : list === 'tasks'
             ? taskListQuerySchema
-            : null;
+            : list === 'discovery'
+              ? taskDiscoveryHttpQuerySchema
+              : null;
     const invalidQuery =
       querySchema !== null
         ? !querySchema.safeParse(query).success
@@ -117,7 +119,6 @@ export class ProjectTaskHttp {
                   ? /^[A-Za-z0-9_-]{1,2048}$/
                   : /^[A-Za-z0-9_-]{1,128}$/
               ).test(query['cursor']))) ||
-          (list === 'discovery' && !parseTaskDiscoveryQuery(query)) ||
           (query['destination'] !== undefined &&
             (typeof query['destination'] !== 'string' ||
               !/^[A-Za-z0-9_-]{1,128}$/.test(query['destination']))) ||

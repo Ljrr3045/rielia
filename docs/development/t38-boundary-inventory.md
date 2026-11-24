@@ -14,10 +14,18 @@ receipt. [Issue 53](https://github.com/Ljrr3045/rielia/issues/53) remains canoni
 [the decision/pilot plan](t38-tooling-plan.md) retains later gates.
 [T38.2b](t38-workspace-schemas.md) is ACCEPTED in PR59, reviewed `d9699cf`,
 merged `c655f0f0`, with reviewed/exact-merge CI and native review passed.
-[T38.2c](t38-project-task-schemas.md) locally implements H05–22/G02/bounded X03:
+[T38.2c](t38-project-task-schemas.md) is ACCEPTED in
+[PR60](https://github.com/Ljrr3045/rielia/pull/60#issuecomment-7125188276), reviewed
+`fdd0450b`, merged `8c7e897b`, with reviewed/exact-merge CI, native review and
+settled clean-checkout cleanup recorded in its guide. It implements H05–22/G02/bounded X03:
 project/task/access/assignee schemas, inferred DTOs and strict request/query
 adapters. Its approved numerical migration/normal786/infra20/artifacts17 and
-real HTTP57/runtime proof do not accept its eventual PR or full T38.2/T38.
+real HTTP57/runtime proof retain their original source/run identities.
+[T38.2d](t38-discovery-event-schemas.md) locally migrates H49–50/G05/discovery X03,
+X06 shape validation and discovery-only API HTTP/X09 admission. Approved exact
+numerical adoption, normal799/infra20/artifacts17 and real HTTP57/runtime pass;
+its publication/current-head review/final acceptance remain open. Full T38.2/T38
+is not accepted by these bounded deliveries.
 Counts below remain bound to the original inventory snapshot; new schema/guard
 exports are recorded in each slice's guide, not silently added to old counts.
 
@@ -162,7 +170,7 @@ not permission to begin P2. Shared G02/global consumers and G06 historical actio
 tightening remain outside that first slice; wider ownership changes need an
 exact caller/test scope decision. No cast may substitute for sound schema types.
 
-**Current T38.2c disposition, November 24.** The scoped release now migrates
+**T38.2c disposition, November 24, accepted in PR60.** The scoped release migrates
 G02's six original entrypoints and adds typed project/access/assignee/review page
 guards. Global person kind and G02 project/task provenance mode/source are strict
 scalars; the known optional private-page capability is boolean when present, and
@@ -175,6 +183,20 @@ H01–04/H55–66 and H30–35 retain their accepted owners. Comment-review/clos
 discovery/SSE, collaboration, scope/start/close/history, all eight private JSON
 owners and C01–12 remain separately assessed debt. No universal server-output
 parser, private receipt or runtime configuration migration is implied.
+
+**Current T38.2d disposition, November 24.** G05's six original public signatures
+now delegate to canonical inferred schemas, with strict event alternatives and
+separate raw/HTTP query admission. Raw cursor remains admitted and ignored;
+HTTP validation and service decoding remain separate owners. The description-less
+Task projection reuses private G02 fields and the same creator refinement without
+changing Task constraints. Approved non-JSON corrections reject sparse discovery
+arrays, event protocol fields without exact own enumerable ownership and nonrecord
+raw-parser arguments. Other inherited/presence/extras behavior is preserved.
+The [receipt](t38-discovery-event-schemas.md) covers callers, streaming/transport
+preservation, the explicitly adjacent archived-reference test, exact numerical
+proof and remaining one old G04 checklist branch. G04/G06/G07, six opaque cursor
+decoders, all eight private JSON owners and C01–12 remain separately owned;
+no full-family acceptance or universal output/configuration parser is implied.
 
 Inputs must retain strict unknown-key rejection. Existing response guards often
 tolerate additional keys; choose that policy per response rather than silently
