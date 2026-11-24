@@ -310,7 +310,7 @@
     "configs": {
       "apps/api/tsconfig.json": "b0fa28f9606b6c4394aad0a86c71a17b03d13fe0be5488d4bccc5600d93c4b50",
       "apps/web/tsconfig.json": "54e8c2f2b85df307026caea6d88f8c5d8b71d8ce9224a4f652abbad4f2c5f773",
-      "packages/contracts/tsconfig.json": "b95a19f4e24c335474fa4b20b329216a8bfed97eb1429ba2188705f38de6503b",
+      "packages/contracts/tsconfig.json": "a5c8a301bc943db07dcb779578fad79421d869cdf84ae2d7794a1a28f9ab20d6",
       "tsconfig.base.json": "cb1df8b236cca5a668abf94b5657d200094c3b338e66bfc2ea6a19e699ad7dff"
     },
     "inputs": {

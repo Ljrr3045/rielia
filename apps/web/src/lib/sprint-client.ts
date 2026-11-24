@@ -131,12 +131,13 @@ export function createSprintPlanningTransport(
             : { expectedVersion: command.expectedVersion, ...command.fields };
       const s = command.type === 'edit-sprint' ? command.sprintId : undefined;
       const value = await request(path, w, p, signal, body, key, s);
-      if (
-        !(command.type === 'configure-planning' ? isProjectPlanning(value) : isSprint(value)) ||
-        !scoped(value as SprintPlanningResult, w, p, s)
-      )
-        throw new SprintPlanningFailure(502);
-      return value as SprintPlanningResult;
+      if (command.type === 'configure-planning') {
+        if (!isProjectPlanning(value) || !scoped(value, w, p, s))
+          throw new SprintPlanningFailure(502);
+        return value;
+      }
+      if (!isSprint(value) || !scoped(value, w, p, s)) throw new SprintPlanningFailure(502);
+      return value;
     },
   };
 }

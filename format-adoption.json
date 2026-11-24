@@ -216,6 +216,7 @@
     "packages/contracts/src/index.ts",
     "packages/contracts/src/project-tasks.ts",
     "packages/contracts/src/sprint-closure.ts",
+    "packages/contracts/src/sprint-schemas.ts",
     "packages/contracts/src/sprints.ts",
     "packages/contracts/src/task-collaboration.ts",
     "packages/contracts/src/task-discovery.ts",

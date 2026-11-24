@@ -1,9 +1,16 @@
 # T38 maintained-boundary inventory
 
-Planning draft, **2026-11-23 America/Caracas**, base
-`f020a423e43380f908ad876a76ece65faa24a031`. No migration is implemented by this
-inventory. [Issue 53](https://github.com/Ljrr3045/rielia/issues/53) is canonical
-scope; [the proposed decisions and pilot](t38-tooling-plan.md) define the next gate.
+Inventory recorded **2026-11-23 America/Caracas**, base
+`f020a423e43380f908ad876a76ece65faa24a031`, accepted as T38.1 in
+[PR57](https://github.com/Ljrr3045/rielia/pull/57#issuecomment-7118652391), merge
+`4dab8594`. Its counts describe that original snapshot.
+[T38.2a H30–35/G03/X04 implementation](t38-sprint-schemas.md) is now LOCAL COMPLETE,
+pending PR review/acceptance:
+`sprint-schemas.ts` owns migrated shapes/inferred types, `sprints.ts` retains its
+eight compatibility guards, and Sprint input/transport owners consume them.
+Current source/check/numerical/acceptance limits are recorded in that slice's
+receipt. [Issue 53](https://github.com/Ljrr3045/rielia/issues/53) remains canonical;
+[the decision/pilot plan](t38-tooling-plan.md) retains later gates.
 
 Counts describe maintained first-party source at this base, not complete product
 acceptance: **66 declared HTTP operations = 34 GET + 32 POST**, in ten Nest
@@ -17,7 +24,7 @@ not a count of all business commands or rendered instances.
 
 The registries below have different units: a shared guard can serve many HTTP
 operations. Do not add their counts into a fictitious total of unique schemas.
-Every row is initially **unmigrated**, except the two diagnostic MCP Zod schemas
+Every row was initially **unmigrated**, except the two diagnostic MCP Zod schemas
 explicitly identified below. Any exclusion needs coordinator acceptance and a
 named owner before T38.6; this draft does not accept exclusions itself.
 
@@ -96,7 +103,7 @@ H01/H55 are infrastructure. Neither category implies full T02/T04 acceptance.
 
 ## Shared guards and incomplete schema ownership
 
-These are exactly **42 public entrypoints**, including utilities and
+The original registry has exactly **42 public entrypoints**, including utilities and
 discriminator-only checks, not 42 complete DTO validators. Private helper checks
 are part of their owning file and are not independent public boundaries.
 
@@ -110,7 +117,9 @@ are part of their owning file and are not independent public boundaries.
 | G06 `task-planning.ts` | 6 | `isPlanningSnapshot`, `isTaskPlanning`, `isSprintTotals`, `isSprintScopePage`, `isPlanningHistoryPage`, `isSprintTransitionResult` |
 | G07 `sprint-closure.ts` | 5 | `isCloseSprintInput`, `isSprintClosePreview`, `isSprintClosure`, `isSprintClosingOutcomePage`, `isSprintCloseResult` |
 
-Contracts SOL owns shared runtime schemas and inferred types. The file modules
+Contracts SOL owns shared runtime schemas and inferred types. T38.2a's new public
+schema exports are tracked in its receipt rather than added to this historical
+guard-entry count. The file modules
 also export interfaces/unions/constants, including command unions. A command
 type is not a runtime HTTP-body validator: e.g. `isCollaborationCommand` checks
 the action discriminator. `ExecutionContextResponse` and `CreationAttribution`

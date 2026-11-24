@@ -1,9 +1,27 @@
 # T36 first unit and coverage delivery
 
+Current T38.2a status: the [Sprint schema receipt](t38-sprint-schemas.md) records
+the released schema/type/compiler/dependency-mirror boundary and **approved exact
+numerical migration**. Four current baselines adopt only reviewed candidate bytes;
+four historical pre-unit baselines remain byte-exact. Migrated G03 owners are
+fully covered; moving handwritten checks to Zod removes 94 covered branch units.
+The first 688/696 proposal failed the protected 9898 floor. A coordinator-released
+test-only G02 archive/provenance/parent compatibility extension passes 30 cases
+and measures 691/696, adopted floor 9928; no production G02 rule/type/coercion or
+G04/G05 source/test changed. Five old G04/G05 uncovered units remain explicit.
+Prototype metrics/source/tests remain exact; only the approved contracts-config
+fingerprint changes its current manifest. Historical mixed measurement receipts
+remain separate from the fresh normal **747/747** proof, actual digest
+`17812a38338eac6e797c70b2ac902336661aecea943c465e6667c485bdc6884a`.
+All 16 approved report hashes/sizes reproduce exactly; infrastructure now passes
+20/20 and 17 bounded artifact files validate without upload. The prior 19/20
+prerequisite failure remains historical. Current-head PR/review acceptance stays
+separate; no floor/exclusion/provider version is weakened.
+
 Current status: bounded T36 and T37 are accepted, including
 [T37 PR49](https://github.com/Ljrr3045/rielia/pull/49#issuecomment-6819605884)
 at merge `20a257c`. The [PR54 round 1 correction](#pr54-round-1-corrective-coverage)
-below records the current approved web gate, retaining the other accepted gates. Earlier delivery snapshots
+below records its then-approved web gate, retaining the other accepted gates. Earlier delivery snapshots
 and their then-pending acceptance statements remain historical evidence.
 
 This bounded T36.2/T36.3 slice retains `node:test`, adds behavior units and enforces

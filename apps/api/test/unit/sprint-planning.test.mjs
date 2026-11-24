@@ -7,7 +7,7 @@ import { Buffer } from 'node:buffer';
 import { ProjectTaskService } from '../../dist/projects/project-task.service.js';
 import { SprintService } from '../../dist/projects/sprint.service.js';
 import { sprintMidnight } from '../../dist/projects/sprint-policy.js';
-import { planningInput, sprintInterval } from '../../dist/projects/sprint-input.js';
+import { planningInput, sprintInput, sprintInterval } from '../../dist/projects/sprint-input.js';
 import { canonical } from '../../dist/projects/project-task-input.js';
 
 const w = 'w',
@@ -184,6 +184,91 @@ test('planning input captures the scale independently of later caller mutation',
   const captured = planningInput(input);
   input.pointScale.push(999);
   assert.deepEqual(captured.pointScale, settings.pointScale);
+});
+test('shared Sprint input parsing preserves strict admission and exact error precedence', () => {
+  const outer = 'Invalid project/task request.';
+  const version = 'A positive expectedVersion is required.';
+  const planning = 'Invalid planning settings.';
+  const sprint = 'Invalid sprint name, goal or exclusive date interval.';
+  const rejects = (parse, payload, message) =>
+    assert.throws(
+      () => parse(payload),
+      (error) => {
+        assert.equal(error.getStatus(), 400);
+        assert.equal(error.message, message);
+        assert.equal(error.getResponse().message, message);
+        return true;
+      },
+    );
+  for (const parse of [
+    planningInput,
+    (value) => sprintInput(value, true),
+    (value) => sprintInput(value, false),
+  ])
+    for (const value of [null, [], 'request', {}]) rejects(parse, value, outer);
+  for (const [parse, valid, key, fieldsError] of [
+    [planningInput, { expectedVersion: 2, ...settings }, 'expectedVersion', planning],
+    [
+      (value) => sprintInput(value, true),
+      { expectedProjectVersion: 2, ...fields },
+      'expectedProjectVersion',
+      sprint,
+    ],
+    [
+      (value) => sprintInput(value, false),
+      { expectedVersion: 2, ...fields },
+      'expectedVersion',
+      sprint,
+    ],
+  ]) {
+    for (const invalid of [
+      undefined,
+      null,
+      '2',
+      [2],
+      {},
+      0,
+      -1,
+      1.5,
+      NaN,
+      Infinity,
+      Number.MAX_SAFE_INTEGER + 1,
+    ])
+      rejects(parse, { ...valid, [key]: invalid }, version);
+    const invalidFields =
+      key === 'expectedProjectVersion' || 'name' in valid
+        ? { ...valid, name: '' }
+        : { ...valid, mode: 'invalid' };
+    rejects(parse, { ...invalidFields, [key]: 0 }, fieldsError);
+    const missingVersion = { ...invalidFields };
+    delete missingVersion[key];
+    rejects(parse, missingVersion, outer);
+    rejects(parse, { ...invalidFields, [key]: 0, actorPrincipalId: 'forged' }, outer);
+  }
+  assert.deepEqual(planningInput({ ...settings, expectedVersion: 2 }), {
+    expectedVersion: 2,
+    ...settings,
+  });
+  for (const create of [true, false]) {
+    const key = create ? 'expectedProjectVersion' : 'expectedVersion';
+    const value = { ...fields, name: '😀'.repeat(100), goal: '😀'.repeat(1000) };
+    assert.deepEqual(sprintInput({ ...value, [key]: 2 }, create), { version: 2, fields: value });
+    rejects(
+      (payload) => sprintInput(payload, create),
+      { ...value, [key]: 2, name: '😀'.repeat(101) },
+      sprint,
+    );
+    rejects(
+      (payload) => sprintInput(payload, create),
+      { ...value, [key]: 2, goal: '😀'.repeat(1001) },
+      sprint,
+    );
+    rejects(
+      (payload) => sprintInput(payload, create),
+      { ...value, [key]: 2, startDate: '2026-02-30' },
+      sprint,
+    );
+  }
 });
 test('planning settings use one current scoped authority, owner write and awaited atomic journal', async () => {
   const f = fixture();

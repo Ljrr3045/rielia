@@ -150,6 +150,119 @@ test('sprint transport rejects mismatched/invalid output, preserves authorized c
   reply = Response.json(planning);
   await assert.rejects(transport.mutate(command, 'key', signal()), { status: 502 });
 });
+test('Sprint schema consumption rejects malformed scalars and keeps extra keys, scoped conflicts and terminal denials', async (t) => {
+  let value = sprint;
+  let status = 200;
+  let calls = 0;
+  t.mock.method(globalThis, 'fetch', async () => {
+    calls++;
+    return Response.json(value, { status, headers: { 'x-request-id': 'request' } });
+  });
+  const transport = createSprintPlanningTransport();
+  const command = {
+    type: 'edit-sprint',
+    workspaceId: 'w',
+    projectId: 'p',
+    sprintId: 's',
+    expectedVersion: 1,
+    fields,
+  };
+  for (const malformed of [
+    { ...sprint, creator: { ...sprint.creator, kind: ['human'] } },
+    { ...sprint, creator: { ...sprint.creator, kind: { value: 'human' } } },
+    {
+      ...sprint,
+      provenance: {
+        ...sprint.provenance,
+        executionMode: ['delegated'],
+        source: 'mcp',
+        grantId: 'g',
+      },
+    },
+    {
+      ...sprint,
+      provenance: {
+        ...sprint.provenance,
+        executionMode: { value: 'delegated' },
+        source: 'mcp',
+        grantId: 'g',
+      },
+    },
+  ]) {
+    value = malformed;
+    await assert.rejects(transport.sprint('w', 'p', 's', signal()), { status: 502 });
+    await assert.rejects(transport.mutate(command, 'original-key', signal()), { status: 502 });
+    value = { ...page, items: [malformed] };
+    await assert.rejects(transport.sprints('w', 'p', signal()), { status: 502 });
+    status = 409;
+    value = { code: 'version-conflict', current: malformed };
+    await assert.rejects(
+      transport.mutate(command, 'original-key', signal()),
+      (error) =>
+        error.status === 409 &&
+        error.code === 'version-conflict' &&
+        error.current === null &&
+        error.requestId === 'request',
+    );
+    status = 200;
+  }
+  const enriched = {
+    ...sprint,
+    future: { retained: true },
+    creator: { ...sprint.creator, future: true },
+    provenance: { ...sprint.provenance, future: true },
+    capabilities: { ...sprint.capabilities, future: true },
+  };
+  value = enriched;
+  assert.deepEqual(await transport.sprint('w', 'p', 's', signal()), enriched);
+  assert.deepEqual(await transport.mutate(command, 'original-key', signal()), enriched);
+  status = 409;
+  value = { code: 'version-conflict', current: enriched };
+  await assert.rejects(transport.mutate(command, 'original-key', signal()), (error) => {
+    assert.deepEqual(error.current, enriched);
+    return error.status === 409;
+  });
+  for (status of [401, 403]) {
+    value = { code: 'forbidden' };
+    const before = calls;
+    await assert.rejects(
+      transport.mutate(command, 'original-key', signal()),
+      (error) => error.status === status && error.current === null,
+    );
+    assert.equal(calls, before + 1);
+  }
+  status = 200;
+  const configure = {
+    type: 'configure-planning',
+    workspaceId: 'w',
+    projectId: 'p',
+    expectedVersion: 2,
+    settings,
+  };
+  for (const invalid of [sprint, { ...planning, projectId: 'foreign' }]) {
+    value = invalid;
+    await assert.rejects(transport.mutate(configure, 'configure-key', signal()), { status: 502 });
+  }
+  value = { ...planning, future: { retained: true } };
+  assert.deepEqual(await transport.planning('w', 'p', signal()), value);
+  assert.deepEqual(
+    await transport.mutate(
+      {
+        type: 'configure-planning',
+        workspaceId: 'w',
+        projectId: 'p',
+        expectedVersion: 2,
+        settings,
+      },
+      'configure-key',
+      signal(),
+    ),
+    value,
+  );
+  value = { ...page, items: [enriched], future: true };
+  assert.deepEqual(await transport.sprints('w', 'p', signal()), value);
+});
+
 test('proxy allows only implemented sprint paths/scalar cursors and preserves fixed destination/security headers', async (t) => {
   const calls = [];
   t.mock.method(globalThis, 'fetch', async (url, init) => {

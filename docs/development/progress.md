@@ -1,6 +1,52 @@
 # Delivery progress and decisions
 
-## 2026-11-23 T38.1 inventory and standalone compatibility — IN PROGRESS
+## 2026-11-23 T38.2a Sprint shared schemas — LOCAL COMPLETE; REVIEW PENDING
+
+Prepared in [Draft PR58](https://github.com/Ljrr3045/rielia/pull/58), targeting
+`dev`. The coordinator published implementation head
+`f03cb064331cef8439042d5a11bdf5694a394943`; local validation receipts below retain
+that source/run binding. This later documentation-reference batch reruns only
+applicable offline link/whitespace/hooks checks. Current-head hosted CI, native
+Kilo and final coordinator acceptance remain pending.
+
+[T38.1 is accepted in PR57](https://github.com/Ljrr3045/rielia/pull/57#issuecomment-7118652391),
+reviewed `b12e3220`, merged `4dab8594`, identical tree `8573ea3d`.
+[Exact-merge validate138135467847](https://github.com/Ljrr3045/rielia/actions/runs/45301675698/job/138135467847)
+passed all 24 steps; native Kilo round two was clean after five documentation
+findings. That final decision supersedes earlier pending delivery wording;
+dated P1 receipts and frozen T11 evidence retain their original meaning.
+
+The coordinator released [bounded H30–35/G03/X04 schema implementation](t38-sprint-schemas.md):
+one direct contracts Zod4.6.7 edge, canonical inferred schemas/DTOs, strict backend
+inputs and thin web validation. Sprint-only scalar kind/mode correction rejects
+legacy-coercible arrays/objects; valid scalar/extra-key outputs remain compatible.
+G02 production/global coercion and G06 historical-action tightening, G07 migration,
+Query/forms and other tools remain excluded. Stage A passed 139 focused cases and TS6 inference
+proof, including the intentional legacy-red/candidate-green scalar witness.
+The compiler-only DOM library accommodation and scoped unit mirror dependency
+link have explicit ownership. The standard sequence completed with documented
+lint correction and one coordinator-released web-only Next-reminder retry.
+The first numerical proposal was rejected without weakening its branch floor.
+A released test-only G02 archive/provenance/parent compatibility extension covered
+three existing units without changing production rules/types/coercion. The
+coordinator approved exact proposal-two bytes; only four current baselines were
+adopted, with all four historical baselines unchanged and contracts branches
+ratcheted 9898 → 9928. One fresh normal run passes **747/747**, actual digest
+`17812a38338eac6e797c70b2ac902336661aecea943c465e6667c485bdc6884a`, reproducing
+all 16 approved report hashes/sizes. Infrastructure now passes **20/20** and
+17 bounded artifact files validate without upload; the earlier 19/20 failed
+prerequisite remains historical in the receipt.
+
+Focused real PostgreSQL/NodeAdapter HTTP passes **44/44**, including new canonical
+mutation/readback assertions. One Docker runtime/packaging/complete deployed
+closure/recovery run passes and cleans owned resources. Root/tools high audits
+pass with one low/fourteen moderate and two moderate findings respectively;
+Next's upgrade recommendation remains. No source/test/config drift follows
+approval; current-head CI/native Kilo, feedback/ownership/base checks and final
+coordinator acceptance remain. The worker makes no remote changes. Original
+scope, omitted native Cancel/Leave, filters and broader evidence debts persist.
+
+## 2026-11-23 T38.1 inventory and standalone compatibility — ACCEPTED
 
 The user authorized starting [T38/issue53](https://github.com/Ljrr3045/rielia/issues/53)
 after original T11/T11.5 was
@@ -40,19 +86,20 @@ This documentation batch changes no tracked app source/manifests/locks/tests or
 numerical baseline. P1 reused prior full application/T11 proof and ran no
 browser/server/DB/container.
 
-This consolidated documentation/P1 batch is prepared in
-[Draft PR57](https://github.com/Ljrr3045/rielia/pull/57), targeting `dev`. Formal
-T38.1 delivery still needs current-head CI/native Kilo, feedback/ownership/base
-checks and coordinator acceptance. Accepted local P1 is a separate decision. Production
-schemas/cache/forms and numerical proposals require their next explicit gates.
+This consolidated documentation/P1 batch was
+[accepted in PR57](https://github.com/Ljrr3045/rielia/pull/57#issuecomment-7118652391),
+reviewed `b12e3220`, merged `4dab8594`, with current-head/native review and
+exact-merge CI passed. The bounded LOCAL P1 decision remains distinct from
+production migration; T38.2a now proceeds under the released scope above.
+Cache/forms and numerical adoption require their next explicit gates.
 Omitted external Cancel/Leave remains UNVERIFIED with possible draft loss;
 sprint filters remain T08/T10/US05. Adjacent-ticket/full US12/device/accessibility/
 provider/staging/user acceptance remains separate.
 
 | T38 slice | Current state / next evidence |
 | --- | --- |
-| T38.1 inventory/decisions/compatibility | IN PROGRESS; bounded LOCAL P1 accepted, documentation in [Draft PR57](https://github.com/Ljrr3045/rielia/pull/57); current-head CI/native Kilo and formal coordinator acceptance pending |
-| T38.2 shared schemas | NOT STARTED in production; proposed H30–35/G03/X04 slice with selected Sprint-only scalar hardening; shared G02/G06 changes excluded and execution/numerical gates remain |
+| T38.1 inventory/decisions/compatibility | ACCEPTED in PR57 at merge `4dab8594`; exact-merge CI and native review passed; bounded P1 limits retained |
+| T38.2 shared schemas | H30–35/G03/X04 LOCAL COMPLETE; approved numerical adoption, 747 normal cases, 20 infrastructure, 17 artifacts and focused real PG/runtime pass; publication/review/acceptance pending; other families remain gated |
 | T38.3 contract-driven transport | NOT STARTED; canonical OpenAPI and TS6/generator compatibility decision precede a generated client |
 | T38.4 queries/forms | NOT STARTED in production; sole resource-cache ownership, identity/SSE/recovery and separate RHF parity gates |
 | T38.5 testing/diagnostics | NOT STARTED in maintained tooling/runtime; shortlist evaluation does not authorize bulk installs or adjacent observability tickets |
