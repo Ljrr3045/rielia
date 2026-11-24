@@ -12,12 +12,19 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 if (
   process.argv
     .slice(2)
-    .some((arg) => !['--sprints', '--sprint-scope', '--sprint-close', '--workspaces'].includes(arg))
+    .some(
+      (arg) =>
+        !['--sprints', '--sprint-scope', '--sprint-close', '--workspaces', '--projects'].includes(
+          arg,
+        ),
+    )
 )
   throw new Error('Unknown identity test selection.');
 const workspacesOnly = process.argv.includes('--workspaces');
 if (workspacesOnly && process.argv.slice(2).length !== 1)
   throw new Error('Use --workspaces alone.');
+const projectsOnly = process.argv.includes('--projects');
+if (projectsOnly && process.argv.slice(2).length !== 1) throw new Error('Use --projects alone.');
 const closeOnly = process.argv.includes('--sprint-close');
 const scopeOnly = process.argv.includes('--sprint-scope');
 const sprintsOnly = process.argv.includes('--sprints') || scopeOnly || closeOnly;
@@ -168,22 +175,24 @@ try {
   console.log('Disposable PostgreSQL 18.6 ready; identity migration applied twice.');
   const suites = workspacesOnly
     ? ['principals', 'workspaces', 'identity']
-    : closeOnly
-      ? ['sprint-close']
-      : scopeOnly
-        ? ['sprint-scope-start']
-        : sprintsOnly
-          ? ['sprint-planning', 'sprint-scope-start', 'sprint-close']
-          : [
-              'principals',
-              'workspaces',
-              'project-tasks',
-              'task-collaboration',
-              'task-discovery',
-              'sprint-planning',
-              'sprint-scope-start',
-              'sprint-close',
-            ];
+    : projectsOnly
+      ? ['project-tasks', 'task-collaboration', 'task-discovery']
+      : closeOnly
+        ? ['sprint-close']
+        : scopeOnly
+          ? ['sprint-scope-start']
+          : sprintsOnly
+            ? ['sprint-planning', 'sprint-scope-start', 'sprint-close']
+            : [
+                'principals',
+                'workspaces',
+                'project-tasks',
+                'task-collaboration',
+                'task-discovery',
+                'sprint-planning',
+                'sprint-scope-start',
+                'sprint-close',
+              ];
   for (const suite of suites) {
     const result = await command(
       'Identity integration suite',
@@ -195,7 +204,7 @@ try {
     if (suite === 'identity' && result.stderr)
       console.log('Identity tests emitted diagnostics; inspect privately before delivery.');
   }
-  if (!sprintsOnly && !workspacesOnly) {
+  if (!sprintsOnly && !workspacesOnly && !projectsOnly) {
     const witness = join(directory, 'domain-persistence.json');
     await command(
       'Domain persistence snapshot',

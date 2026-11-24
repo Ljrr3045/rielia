@@ -5,6 +5,17 @@ import {
   ProjectTaskFailure,
 } from '../apps/web/src/lib/project-task-client.ts';
 import { proxyProjectTask } from '../apps/web/src/lib/project-task-proxy.ts';
+import { createTaskPlanningTransport } from '../apps/web/src/lib/task-planning-client.ts';
+import {
+  person as sharedPerson,
+  project as sharedProject,
+  task as sharedTask,
+  taskPage as sharedTaskPage,
+  comment as sharedComment,
+  history as sharedHistory,
+  planningHistory as sharedPlanningHistory,
+  discovery as sharedDiscovery,
+} from '../apps/web/test/unit/project-task-fixtures.mjs';
 const creator = { principalId: 'human', name: 'Human', kind: 'human', active: true };
 const project = {
   id: 'p',
@@ -596,4 +607,143 @@ test('T09 collaboration transport scopes pages/reviews, exact payloads and closu
       (await proxyProjectTask(new Request(`${root}/${suffix}`, { method }))).status,
       400,
     );
+});
+
+test('schema transport keeps original response extras, scoped interpretation and independent malformed error fields', async (t) => {
+  let value;
+  let status = 200;
+  t.mock.method(globalThis, 'fetch', async () => ({
+    ok: status === 200,
+    status,
+    headers: new globalThis.Headers({ 'X-Request-Id': 'request' }),
+    json: async () => value,
+  }));
+  const transport = createProjectTaskTransport();
+  const abort = new AbortController().signal;
+  value = {
+    items: [sharedProject],
+    total: 1,
+    nextCursor: null,
+    capabilities: { canCreate: true, canCreatePrivate: false, extra: 1 },
+    extra: 2,
+  };
+  assert.equal(await transport.projects('w', 'active', abort), value);
+  value = { ...value, capabilities: { canCreate: true, canCreatePrivate: null } };
+  await assert.rejects(transport.projects('w', 'active', abort), (e) => e.status === 502);
+  // Loose extra keys still participate in the original Project|Task scope logic.
+  value = { ...sharedProject, projectId: 'foreign' };
+  await assert.rejects(transport.project('w', 'p', abort), (e) => e.status === 502);
+  const member = {
+    ...sharedPerson,
+    role: 'member',
+    explicitAccess: null,
+    implicitAccess: false,
+    effectiveAccess: true,
+    capabilities: { canGrant: true, canRevoke: false },
+  };
+  value = {
+    workspaceId: 'w',
+    projectId: 'p',
+    projectVersion: 1,
+    items: [member],
+    total: 1,
+    nextCursor: null,
+    extra: 3,
+  };
+  assert.equal(await transport.access('w', 'p', abort), value);
+  value = { ...value, projectVersion: 0 };
+  await assert.rejects(transport.access('w', 'p', abort), (e) => e.status === 502);
+  value = {
+    workspaceId: 'foreign',
+    projectId: 'p',
+    items: [sharedPerson],
+    total: 1,
+    nextCursor: null,
+  };
+  await assert.rejects(transport.assignees('w', 'p', abort), (e) => e.status === 502);
+  status = 409;
+  value = {
+    code: '',
+    current: { ...sharedProject, creator: { ...sharedPerson, kind: ['human'] } },
+    accessCurrent: member,
+    closeWarning: { open: 1, archivedOpen: 0, childrenVersion: 1 },
+  };
+  await assert.rejects(
+    transport.mutate(
+      {
+        type: 'change-access',
+        workspaceId: 'w',
+        projectId: 'p',
+        principalId: 'human',
+        expectedVersion: 1,
+        state: 'active',
+      },
+      'same-key',
+      abort,
+    ),
+    (e) => {
+      assert.equal(e.status, 409);
+      assert.equal(e.code, '');
+      assert.equal(e.current, null);
+      assert.equal(e.accessCurrent, member);
+      assert.equal(e.closeWarning, value.closeWarning);
+      assert.equal(e.requestId, 'request');
+      return true;
+    },
+  );
+});
+
+test('actual collaboration, discovery and planning-history transports enforce the approved nested person correction', async (t) => {
+  let value;
+  t.mock.method(globalThis, 'fetch', async () => ({
+    ok: true,
+    status: 200,
+    headers: new globalThis.Headers(),
+    json: async () => value,
+  }));
+  const transport = createProjectTaskTransport();
+  const planning = createTaskPlanningTransport();
+  const abort = new AbortController().signal;
+  const malformed = { ...sharedPerson, kind: ['human'] };
+  const comments = { ...sharedHistory, capabilities: { canCreate: true }, items: [sharedComment] };
+  const paths = [
+    [
+      () => transport.collaboration('w', 'p', 't', 'comments', abort),
+      comments,
+      { ...comments, items: [{ ...sharedComment, author: malformed }] },
+    ],
+    [
+      () => transport.collaboration('w', 'p', 't', 'history', abort),
+      sharedHistory,
+      { ...sharedHistory, items: [{ ...sharedHistory.items[0], actor: malformed }] },
+    ],
+    [
+      () => transport.commentReview('w', 'p', 't', 'comment', abort),
+      { task: sharedTask, comment: sharedComment },
+      { task: sharedTask, comment: { ...sharedComment, author: malformed } },
+    ],
+    [
+      () => transport.discover('w', sharedDiscovery.query, abort),
+      sharedDiscovery,
+      { ...sharedDiscovery, items: [{ ...sharedDiscovery.items[0], creator: malformed }] },
+    ],
+    [
+      () => planning.taskHistory('w', 'p', 't', abort),
+      sharedPlanningHistory,
+      {
+        ...sharedPlanningHistory,
+        items: [{ ...sharedPlanningHistory.items[0], actor: malformed }],
+      },
+    ],
+  ];
+  for (const [request, good, bad] of paths) {
+    value = good;
+    assert.equal(await request(), good);
+    value = bad;
+    await assert.rejects(request(), (e) => e.status === 502);
+  }
+  value = { ...sharedTaskPage, items: Array(1) };
+  await assert.rejects(transport.tasks('w', 'p', 'active', abort), (e) => e.status === 502);
+  value = { ...sharedTask, provenance: { ...sharedTask.provenance, source: ['web'] } };
+  await assert.rejects(transport.task('w', 'p', 't', abort), (e) => e.status === 502);
 });

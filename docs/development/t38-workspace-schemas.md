@@ -1,5 +1,20 @@
 # T38.2b workspace, identity and infrastructure schemas
 
+**ACCEPTED in [PR59](https://github.com/Ljrr3045/rielia/pull/59#issuecomment-7122689772),
+2026-11-24 America/Caracas.** Reviewed `d9699cf23cad09dea336c89ce7f398b3654a0a03`,
+merged `c655f0f04fdc6750a69d63ddcbfb0178d23d88d7`, identical tree `08a8a7c7`.
+Reviewed-head [CI45328949033](https://github.com/Ljrr3045/rielia/actions/runs/45328949033/job/138225165730)
+and exact-merge [CI45331394020](https://github.com/Ljrr3045/rielia/actions/runs/45331394020/job/138233200850)
+passed 24 steps each; native Kilo completed a clean 37-file review with no
+unresolved threads. The settled, clean worktree was removed through Orca, branch
+retained, evidence archived and all 93 foreign coordinator entries preserved.
+This decision supersedes the frozen pending local status below without rebinding
+its runs. The next [project/task/access slice](t38-project-task-schemas.md) has
+separate local evidence; full T38.2/T38 remains open.
+
+## Frozen local delivery receipt before final acceptance
+
+
 **LOCAL GATES PASS; DRAFT PR59, FINAL REVIEW PENDING, 2026-11-24
 America/Caracas.** The coordinator released H01–04/H55–66/G01/X01–02 after
 [T38.2a acceptance in PR58](https://github.com/Ljrr3045/rielia/pull/58#issuecomment-7120471111),

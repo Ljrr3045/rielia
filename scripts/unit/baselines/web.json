@@ -1190,20 +1190,20 @@
     },
     "apps/web/src/lib/project-task-client.ts": {
       "branches": {
-        "covered": 162,
-        "total": 198
+        "covered": 154,
+        "total": 186
       },
       "functions": {
-        "covered": 21,
-        "total": 22
+        "covered": 20,
+        "total": 20
       },
       "lines": {
-        "covered": 109,
-        "total": 130
+        "covered": 112,
+        "total": 129
       },
       "statements": {
-        "covered": 117,
-        "total": 141
+        "covered": 125,
+        "total": 147
       }
     },
     "apps/web/src/lib/project-task-controller.ts": {
@@ -1587,9 +1587,9 @@
   },
   "floors": {
     "branches": 6673,
-    "functions": 6165,
-    "lines": 7250,
-    "statements": 7030
+    "functions": 6166,
+    "lines": 7258,
+    "statements": 7037
   },
   "manifest": {
     "compiler": {
@@ -1676,7 +1676,7 @@
       "apps/web/src/lib/identity-controller.ts": "1a4aea81c25cbcc41c4baad8e29d57bd4d7a62486945992a75703da3bac35163",
       "apps/web/src/lib/identity-proxy.ts": "d3bfab1aea9ab2ba4e9803b58d343361f325e519bbfb9e92ad01b0933cae997c",
       "apps/web/src/lib/project-sprint-location.ts": "bd555135cdf7a9fd25235c00e5771bc1879013bd4bee9aa93146b6e1170d7b01",
-      "apps/web/src/lib/project-task-client.ts": "b6fa3d76ed6912c785197c5ec63eaae9a86d7ab17a190c344c2bb4e9e88eeb61",
+      "apps/web/src/lib/project-task-client.ts": "4da72c05127e13b23383bdbc7a358bcaa3cd9973fd30a9278815058686e04993",
       "apps/web/src/lib/project-task-controller.ts": "08d6c46531529dd5c22725acfc3877eabe1d59385d42d91a398ea5880fb6eb1b",
       "apps/web/src/lib/project-task-proxy.ts": "1df7d0e879279eb68c5d24da1984b936187aca3e88c92f9511e64f680dabf1ee",
       "apps/web/src/lib/safe-markdown.ts": "ec1344cc57dade02d9e351aa78b7f8d85bd4fd2addd0540a552d407196dec244",
@@ -1721,6 +1721,7 @@
       "apps/web/test/unit/project-navigation-focus.test.mjs": "735d3a714873f43c3df6f3515a42c7bd9f4580c193842da078cac2b96ce4192f",
       "apps/web/test/unit/project-recovery.test.mjs": "3a6e278b72f87b3f0bfbee006ddfdc94e18c859b682b248feb7931722640431f",
       "apps/web/test/unit/project-sprint-location.test.mjs": "d1fbc0d52afdc4f2d9327697d0bbdae9404c47ef74fe0b0e4a64ddbe8e989ea9",
+      "apps/web/test/unit/project-task-fixtures.mjs": "27ffdbd9a87ff8077fd3962fefd10914ff36c63166d07b4bd36884add83a5b3b",
       "apps/web/test/unit/sprint-client-fixtures.mjs": "60decd32584c615af3e4d5872bd4400f4eb93219f558f19f0fb14a0970e08f8e",
       "apps/web/test/unit/sprint-close.test.mjs": "0d796c8618cb5cb7e21b0f7fe98887468e82fd3ad942779cb18b618fe816c81c",
       "apps/web/test/unit/sprint-controller.test.mjs": "65e7ecfccf4d9c1d714938d1216105f0cb63d8f5032b9b77e6f671d536657d4e",
@@ -1738,7 +1739,7 @@
       "apps/web/test/unit/workspace-transport.test.mjs": "736fc5df7d4c8186e9a09b5afc3f99d5a1eba4275d4959bddff0bcbdcec12174",
       "scripts/identity-client.test.mjs": "fc1230e800c33efbfbe3327c54e5a2fb996b60dc6744749e71d325e64dd9e3c7",
       "scripts/identity-logic.test.mjs": "82533a455dbb578dde8a090a9d5f5dc56c74863bd0716410236c2f1c4e2f819a",
-      "scripts/project-task-client.test.mjs": "0dbf25bb574d3898935adcc3ecfaf02e31b21323a97a10f5b9d52aed44a5e7bb",
+      "scripts/project-task-client.test.mjs": "58b9bd6840302c694c696bb0ceb4d74a813ae737d5d7230f3dab5a743a6723a7",
       "scripts/project-task-logic.test.mjs": "1260f4d43f80ddc6d225831d563394995b06648b2cdc51c930674c265b3e9848",
       "scripts/task-events-client.test.mjs": "75b9b1caa1e031a58d744f949b11d34c5b88a21ff7d6fa4b152e0f32c1838fd8",
       "scripts/unit/mirror-loader.mjs": "b3ef9e50e56ee2fa0079c794c044efbc6b953d75890b97889bc635e233d93115",
@@ -1749,20 +1750,20 @@
   "scope": "web",
   "total": {
     "branches": {
-      "covered": 4652,
-      "total": 6971
+      "covered": 4644,
+      "total": 6959
     },
     "functions": {
-      "covered": 836,
-      "total": 1356
+      "covered": 835,
+      "total": 1354
     },
     "lines": {
-      "covered": 3579,
-      "total": 4936
+      "covered": 3582,
+      "total": 4935
     },
     "statements": {
-      "covered": 3938,
-      "total": 5601
+      "covered": 3946,
+      "total": 5607
     }
   }
 }

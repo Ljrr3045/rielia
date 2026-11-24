@@ -1,8 +1,6 @@
 import { BadRequestException, ConflictException, ForbiddenException } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 import {
-  taskStatuses,
-  type TaskStatus,
   type ExecutionContextResponse,
   type ProjectTaskResult,
   type Task,
@@ -14,12 +12,14 @@ import type {
   VerifiedExecution,
 } from '../principals/principal.service.js';
 import {
-  identifier,
-  object,
-  text,
   expected,
-  taskFields,
-  taskProperties,
+  createProjectInput,
+  changeProjectInput,
+  createTaskInput,
+  changeTaskInput,
+  moveTaskInput,
+  visibilityInput,
+  accessInput,
 } from './project-task-input.js';
 import { attribution } from './project-task-dto.js';
 import * as reads from './project-task-read.js';
@@ -175,30 +175,13 @@ export function moveTask(
   requestId: string,
   payload: unknown,
 ) {
-  const input = object(
-    payload,
-    [
-      'expectedVersion',
-      'expectedOrderVersion',
-      'status',
-      'beforeTaskId',
-      'acknowledgedChildrenVersion',
-    ],
-    ['expectedVersion', 'expectedOrderVersion', 'status', 'beforeTaskId'],
-  );
-  const version = expected(input['expectedVersion']);
-  const orderVersion = expected(input['expectedOrderVersion']);
-  if (
-    !taskStatuses.includes(input['status'] as TaskStatus) ||
-    (input['beforeTaskId'] !== null && !identifier(input['beforeTaskId']))
-  )
-    throw new BadRequestException('Invalid task move.');
-  const status = input['status'] as TaskStatus;
-  const beforeTaskId = input['beforeTaskId'] as string | null;
-  const acknowledgment =
-    'acknowledgedChildrenVersion' in input
-      ? expected(input['acknowledgedChildrenVersion'])
-      : undefined;
+  const {
+    expectedVersion: version,
+    expectedOrderVersion: orderVersion,
+    status,
+    beforeTaskId,
+    acknowledgedChildrenVersion: acknowledgment,
+  } = moveTaskInput(payload);
   return mutateProjectTask(
     principals,
     context,
@@ -255,18 +238,7 @@ export function changeVisibility(
   requestId: string,
   payload: unknown,
 ) {
-  const input = object(
-    payload,
-    ['expectedVersion', 'visibility'],
-    ['expectedVersion', 'visibility'],
-  );
-  const version = expected(input['expectedVersion']);
-  if (
-    typeof input['visibility'] !== 'string' ||
-    !['workspace', 'private'].includes(input['visibility'])
-  )
-    throw new BadRequestException('Invalid project visibility.');
-  const visibility = input['visibility'] as 'workspace' | 'private';
+  const { expectedVersion: version, visibility } = visibilityInput(payload);
   return mutateProjectTask(
     principals,
     context,
@@ -301,15 +273,7 @@ export function changeAccess(
   requestId: string,
   payload: unknown,
 ) {
-  const input = object(payload, ['expectedVersion', 'state'], ['expectedVersion', 'state']);
-  const version = expected(input['expectedVersion']);
-  if (
-    !identifier(principalId) ||
-    typeof input['state'] !== 'string' ||
-    !['active', 'revoked'].includes(input['state'])
-  )
-    throw new BadRequestException('Invalid project access.');
-  const state = input['state'] as 'active' | 'revoked';
+  const { expectedVersion: version, state } = accessInput(payload, principalId);
   return mutateProjectTask(
     principals,
     context,
@@ -357,21 +321,7 @@ export function createProject(
   requestId: string,
   payload: unknown,
 ) {
-  const input = object(payload, ['name', 'key', 'description', 'visibility'], ['name', 'key']);
-  const name = text(input['name'], 200, true);
-  const description = text(input['description'] ?? '', 20000);
-  if (
-    typeof input['key'] !== 'string' ||
-    !/^[A-Z][A-Z0-9]{1,9}$/.test(input['key']) ||
-    ('visibility' in input &&
-      (typeof input['visibility'] !== 'string' ||
-        !['workspace', 'private'].includes(input['visibility'])))
-  )
-    throw new BadRequestException(
-      'Use a 2–10 character uppercase project key and valid visibility.',
-    );
-  const projectKey = input['key'];
-  const visibility = input['visibility'] === 'private' ? 'private' : 'workspace';
+  const { name, key: projectKey, description, visibility } = createProjectInput(payload);
   return mutateProjectTask(
     principals,
     context,
@@ -409,16 +359,8 @@ export function changeProject(
   action: 'edit-project' | 'archive-project' | 'restore-project',
   payload: unknown,
 ) {
-  const input = object(
-    payload,
-    action === 'edit-project' ? ['expectedVersion', 'name', 'description'] : ['expectedVersion'],
-    ['expectedVersion'],
-  );
-  const version = expected(input['expectedVersion']);
-  const patch =
-    action === 'edit-project'
-      ? { name: text(input['name'], 200, true), description: text(input['description'], 20000) }
-      : { archivedAt: action === 'archive-project' ? new Date() : null };
+  const { version, fields } = changeProjectInput(payload, action === 'edit-project');
+  const patch = fields ?? { archivedAt: action === 'archive-project' ? new Date() : null };
   return mutateProjectTask(
     principals,
     context,
@@ -463,20 +405,7 @@ export function createTask(
   requestId: string,
   payload: unknown,
 ) {
-  const input = object(
-    payload,
-    [...taskProperties, 'parentTaskId', 'expectedParentVersion'],
-    ['title'],
-  );
-  const fields = taskFields(input, true);
-  const parentTaskId = input['parentTaskId'];
-  if (
-    (parentTaskId !== undefined && !identifier(parentTaskId)) ||
-    (parentTaskId === undefined && 'expectedParentVersion' in input)
-  )
-    throw new BadRequestException('Invalid parent task.');
-  const parentVersion =
-    parentTaskId === undefined ? undefined : expected(input['expectedParentVersion']);
+  const { fields, parentTaskId, parentVersion } = createTaskInput(payload);
   return mutateProjectTask(
     principals,
     context,
@@ -495,7 +424,7 @@ export function createTask(
       if (fields.assigneePrincipalId)
         await assertAssignable(principals, tx, project, fields.assigneePrincipalId);
       if (parentTaskId)
-        await assertParent(tx, workspaceId, projectId, parentTaskId as string, parentVersion!);
+        await assertParent(tx, workspaceId, projectId, parentTaskId, parentVersion!);
       const row = await tx.task.create({
         data: {
           id: randomUUID(),
@@ -503,7 +432,7 @@ export function createTask(
           projectId,
           number: 1,
           ...fields,
-          ...(parentTaskId ? { parentTaskId: parentTaskId as string } : {}),
+          ...(parentTaskId ? { parentTaskId: parentTaskId } : {}),
           title: fields.title!,
           ...attribution(actor),
         },
@@ -524,29 +453,12 @@ export function changeTask(
   action: 'edit-task' | 'archive-task' | 'restore-task',
   payload: unknown,
 ) {
-  const input = object(
-    payload,
-    action === 'edit-task'
-      ? ['expectedVersion', 'acknowledgedChildrenVersion', ...taskProperties]
-      : ['expectedVersion'],
-    ['expectedVersion'],
-  );
-  const version = expected(input['expectedVersion']);
-  const acknowledgment =
-    'acknowledgedChildrenVersion' in input
-      ? expected(input['acknowledgedChildrenVersion'])
-      : undefined;
-  const properties = Object.fromEntries(
-    Object.entries(input).filter(
-      ([field]) => !['expectedVersion', 'acknowledgedChildrenVersion'].includes(field),
-    ),
-  );
-  const fields =
-    action === 'edit-task'
-      ? taskFields(properties, false)
-      : { archivedAt: action === 'archive-task' ? new Date() : null };
-  if (action === 'edit-task' && !Object.keys(fields).length)
-    throw new BadRequestException('A task change is required.');
+  const {
+    version,
+    acknowledgment,
+    fields: patch,
+  } = changeTaskInput(payload, action === 'edit-task');
+  const fields = patch ?? { archivedAt: action === 'archive-task' ? new Date() : null };
   return mutateProjectTask(
     principals,
     context,

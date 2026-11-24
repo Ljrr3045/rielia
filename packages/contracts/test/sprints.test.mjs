@@ -243,7 +243,7 @@ test('Sprint response schemas retain unknown keys while enforcing exact presence
   assert.deepEqual(sprintPageSchema.parse(page), page);
 });
 
-test('Sprint scalars reject legacy-coercible person and provenance values without changing G02', () => {
+test('Sprint scalars and the subsequently approved T38.2c G02 person correction reject coercible values', () => {
   for (const state of ['planned', 'active', 'closed']) {
     const value = {
       ...row,
@@ -265,7 +265,11 @@ test('Sprint scalars reject legacy-coercible person and provenance values withou
       assert.ok(isSprint({ ...value, creator: { ...creator, kind } }));
       for (const malformed of [[kind], { toString: () => kind }]) {
         const person = { ...creator, kind: malformed };
-        assert.ok(isDomainPerson(person), 'G02 legacy coercion remains outside this migration');
+        assert.equal(
+          isDomainPerson(person),
+          false,
+          'T38.2c explicitly releases shared kind hardening',
+        );
         assert.equal(isSprint({ ...value, creator: person }), false);
       }
     }

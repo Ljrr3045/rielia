@@ -3,6 +3,9 @@ import type { NodeRequest, NodeResponse } from '@nestjs/platform-node';
 import { randomUUID } from 'node:crypto';
 import {
   isTaskFilters,
+  projectListQuerySchema,
+  projectMemberPageQuerySchema,
+  taskListQuerySchema,
   parseTaskDiscoveryQuery,
   type ArchiveView,
   type TaskFilters,
@@ -72,44 +75,54 @@ export class ProjectTaskHttp {
         .filter((key) => key in query)
         .map((key) => [key, query[key]]),
     );
-    if (
-      Object.keys(query).some(
-        (key) =>
-          !list ||
-          !(
-            list === 'events'
-              ? []
-              : list === 'discovery'
-                ? ['scope', 'q', 'view', 'project', 'status', 'assignee', 'priority', 'cursor']
-                : list === 'close-preview'
-                  ? ['cursor', 'destination']
-                  : list === 'cursor' || list === 'collaboration' || list === 'sprints'
-                    ? ['cursor']
-                    : list === 'tasks'
-                      ? ['view', 'cursor', 'status', 'assignee', 'priority']
-                      : ['view', 'cursor']
-          ).includes(key),
-      ) ||
-      (query['view'] !== undefined && !['active', 'archived'].includes(String(query['view']))) ||
-      (query['view'] !== undefined && typeof query['view'] !== 'string') ||
-      (query['cursor'] !== undefined &&
-        (typeof query['cursor'] !== 'string' ||
-          !(
-            list === 'tasks' ||
-            list === 'collaboration' ||
-            list === 'discovery' ||
-            list === 'sprints' ||
-            list === 'close-preview'
-              ? /^[A-Za-z0-9_-]{1,2048}$/
-              : /^[A-Za-z0-9_-]{1,128}$/
-          ).test(query['cursor']))) ||
-      (list === 'discovery' && !parseTaskDiscoveryQuery(query)) ||
-      (query['destination'] !== undefined &&
-        (typeof query['destination'] !== 'string' ||
-          !/^[A-Za-z0-9_-]{1,128}$/.test(query['destination']))) ||
-      !isTaskFilters(filters)
-    )
-      throw new BadRequestException('Invalid project/task query.');
+    const querySchema =
+      list === true
+        ? projectListQuerySchema
+        : list === 'cursor'
+          ? projectMemberPageQuerySchema
+          : list === 'tasks'
+            ? taskListQuerySchema
+            : null;
+    const invalidQuery =
+      querySchema !== null
+        ? !querySchema.safeParse(query).success
+        : Object.keys(query).some(
+            (key) =>
+              !list ||
+              !(
+                list === 'events'
+                  ? []
+                  : list === 'discovery'
+                    ? ['scope', 'q', 'view', 'project', 'status', 'assignee', 'priority', 'cursor']
+                    : list === 'close-preview'
+                      ? ['cursor', 'destination']
+                      : list === 'cursor' || list === 'collaboration' || list === 'sprints'
+                        ? ['cursor']
+                        : list === 'tasks'
+                          ? ['view', 'cursor', 'status', 'assignee', 'priority']
+                          : ['view', 'cursor']
+              ).includes(key),
+          ) ||
+          (query['view'] !== undefined &&
+            !['active', 'archived'].includes(String(query['view']))) ||
+          (query['view'] !== undefined && typeof query['view'] !== 'string') ||
+          (query['cursor'] !== undefined &&
+            (typeof query['cursor'] !== 'string' ||
+              !(
+                list === 'tasks' ||
+                list === 'collaboration' ||
+                list === 'discovery' ||
+                list === 'sprints' ||
+                list === 'close-preview'
+                  ? /^[A-Za-z0-9_-]{1,2048}$/
+                  : /^[A-Za-z0-9_-]{1,128}$/
+              ).test(query['cursor']))) ||
+          (list === 'discovery' && !parseTaskDiscoveryQuery(query)) ||
+          (query['destination'] !== undefined &&
+            (typeof query['destination'] !== 'string' ||
+              !/^[A-Za-z0-9_-]{1,128}$/.test(query['destination']))) ||
+          !isTaskFilters(filters);
+    if (invalidQuery) throw new BadRequestException('Invalid project/task query.');
     if (req.method === 'GET') {
       if (
         req.headers['transfer-encoding'] !== undefined ||
