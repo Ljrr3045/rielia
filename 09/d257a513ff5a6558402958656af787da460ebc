@@ -1,0 +1,23 @@
+docs/development/t38-discovery-event-schemas.md
+  s_c63619512a0df5::t_e94cbe4d1b4169 3-9,12-14
+docs/development/progress.md
+  s_c63619512a0df5::t_e94cbe4d1b4169 3,61-67,276,3281
+CHANGELOG.md
+  s_c63619512a0df5::t_e94cbe4d1b4169 21-25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "09d257a513ff5a6558402958656af787da460ebc",
+  "prompts": {},
+  "sessions": {
+    "s_c63619512a0df5": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a20c87-9b7a-7e81-a60e-d966ae07ab76",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
