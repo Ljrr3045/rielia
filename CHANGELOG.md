@@ -4,6 +4,25 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Record [T38.1 acceptance in PR57](https://github.com/Ljrr3045/rielia/pull/57#issuecomment-7118652391)
+  and implement the bounded [T38.2a Sprint schema slice](docs/development/t38-sprint-schemas.md).
+  Add exact contracts Zod4.6.7, inferred request/DTO schemas and compatibility
+  guards, strict backend input parsing and thin web validation. Reject malformed
+  Sprint person-kind/provenance-mode arrays/objects while retaining valid scalar
+  wire formats, extra response keys and existing policy/protocol behavior.
+  Preserve historical receipts and record the bounded compiler-library and unit
+  mirror dependency accommodations. Focused cases and the resumed standard
+  sequence pass. A released test-only archive/provenance/parent compatibility
+  extension preserves the existing floor; exact approved numerical adoption raises
+  contracts branches to 9928 basis points and preserves historical baselines.
+  Fresh normal coverage passes 747/747 with all 16 approved reports reproduced;
+  infrastructure 20/20, 17 artifact files, focused real PG/HTTP 44/44 and deployed
+  runtime/closure/recovery pass. High audits retain explicit low/moderate debt.
+  Earlier failed prerequisite/proposal receipts remain historical; no floor is
+  weakened. Current-head PR/CI/native review and coordinator acceptance remain;
+  Next's inherited security-upgrade recommendation remains explicit.
+  No Query/forms/UI/DB or shared G02/G06/G07 migration is included.
+
 - Record the user's 2026-11-23 authorization of [T38](https://github.com/Ljrr3045/rielia/issues/53)
   after [original T11/T11.5 acceptance in PR56](https://github.com/Ljrr3045/rielia/pull/56#issuecomment-7114539999),
   and synchronize current guidance while preserving dated history/frozen evidence.
@@ -15,10 +34,11 @@ This records repository changes. No application version has been released.
   reported/dispositioned bootstrap and pilot age-policy incidents. No tracked app
   dependency/source/test/baseline change, production migration, new tool-stack
   acceptance, full T38 acceptance or adjacent-ticket completion is included.
-  Documentation is prepared in [Draft PR57](https://github.com/Ljrr3045/rielia/pull/57);
-  current-head CI/native Kilo and formal
-  T38.1 acceptance remain required. Record selected next-slice Sprint scalar
-  hardening without authorizing production execution or shared G02/G06 changes.
+  That inventory/P1 delivery is now
+  [accepted in PR57](https://github.com/Ljrr3045/rielia/pull/57#issuecomment-7118652391),
+  reviewed `b12e3220`, merged `4dab8594`, with reviewed/exact-merge CI and native
+  Kilo passed. The later Sprint production release is separately scoped above;
+  P1 alone authorized neither production execution nor shared G02/G06 migration.
 
 - Consolidate [original T11 lifecycle acceptance evidence](docs/development/t11-acceptance.md)
   as **READY FOR REVIEW**, correcting current PR54/55 status while preserving dated

@@ -276,6 +276,49 @@ test(
   },
 );
 
+test('project and task archive projections independently preserve valid non-null dates and reject malformed values', () => {
+  for (const [guard, fixture] of [
+    [isProject, project],
+    [isTask, taskFixture],
+  ]) {
+    assert.ok(guard(fixture));
+    assert.ok(guard({ ...fixture, archivedAt: date }));
+    for (const archivedAt of ['not-a-date', undefined, false, 1, [], {}, new Date(date)])
+      assert.equal(guard({ ...fixture, archivedAt }), false, String(archivedAt));
+    assert.ok(guard({ ...fixture, archivedAt: null }));
+  }
+});
+
+test('project and task delegated provenance independently retains actual grant strings without adding Sprint policy', () => {
+  for (const [guard, fixture] of [
+    [isProject, project],
+    [isTask, taskFixture],
+  ]) {
+    assert.ok(guard(fixture));
+    for (const executionMode of ['delegated', 'autonomous']) {
+      const attribution = { ...provenance, executionMode, source: 'mcp', grantId: 'grant-1' };
+      assert.ok(guard({ ...fixture, provenance: attribution }));
+      for (const grantId of [undefined, false, 1, [], ['grant-1'], {}])
+        assert.equal(
+          guard({ ...fixture, provenance: { ...attribution, grantId } }),
+          false,
+          String(grantId),
+        );
+      // G02's existing projection permits null; Sprint's stronger correlation
+      // does not authorize tightening this separate public boundary.
+      assert.ok(guard({ ...fixture, provenance: { ...attribution, grantId: null } }));
+    }
+  }
+});
+
+test('task parent projection independently accepts a non-null string and rejects non-string values', () => {
+  assert.ok(isTask(taskFixture));
+  assert.ok(isTask({ ...taskFixture, parentTaskId: 'parent-task' }));
+  for (const parentTaskId of [undefined, false, 1, [], ['parent-task'], {}])
+    assert.equal(isTask({ ...taskFixture, parentTaskId }), false, String(parentTaskId));
+  assert.ok(isTask({ ...taskFixture, parentTaskId: null }));
+});
+
 test(
   'collaboration guards retain typed comments, relation/checklist capabilities and close warnings',
   { timeout: 5000 },

@@ -452,20 +452,20 @@
     },
     "apps/api/src/projects/sprint-input.ts": {
       "branches": {
-        "covered": 8,
-        "total": 8
+        "covered": 14,
+        "total": 14
       },
       "functions": {
         "covered": 3,
         "total": 3
       },
       "lines": {
-        "covered": 17,
-        "total": 17
+        "covered": 23,
+        "total": 23
       },
       "statements": {
-        "covered": 18,
-        "total": 18
+        "covered": 25,
+        "total": 25
       }
     },
     "apps/api/src/projects/sprint-mutation.ts": {
@@ -938,10 +938,10 @@
     }
   },
   "floors": {
-    "branches": 6897,
+    "branches": 6907,
     "functions": 6469,
-    "lines": 6729,
-    "statements": 6706
+    "lines": 6739,
+    "statements": 6716
   },
   "manifest": {
     "compiler": {
@@ -958,7 +958,7 @@
     "configs": {
       "apps/api/tsconfig.json": "b0fa28f9606b6c4394aad0a86c71a17b03d13fe0be5488d4bccc5600d93c4b50",
       "apps/web/tsconfig.json": "54e8c2f2b85df307026caea6d88f8c5d8b71d8ce9224a4f652abbad4f2c5f773",
-      "packages/contracts/tsconfig.json": "b95a19f4e24c335474fa4b20b329216a8bfed97eb1429ba2188705f38de6503b",
+      "packages/contracts/tsconfig.json": "a5c8a301bc943db07dcb779578fad79421d869cdf84ae2d7794a1a28f9ab20d6",
       "tsconfig.base.json": "cb1df8b236cca5a668abf94b5657d200094c3b338e66bfc2ea6a19e699ad7dff"
     },
     "inputs": {
@@ -987,7 +987,7 @@
       "apps/api/src/projects/sprint-close-preview.ts": "ee8a328029c813f152910eadd4be8f55c99b936c4c60584877b77ece189074c4",
       "apps/api/src/projects/sprint-close.ts": "8ccd34dedde8cdc69d3285368a2c198478b0f6f8caad3a4ab74a10a94301cd51",
       "apps/api/src/projects/sprint-closure-read.ts": "9375484ed48db66fc4e3eb21f33b732d1fe758c942eb4e5fb7a50f05cb2fdfd7",
-      "apps/api/src/projects/sprint-input.ts": "f03820bd2acca06d45f1d8e3376275356f255a15f6a39c244ace78db34df0f86",
+      "apps/api/src/projects/sprint-input.ts": "0d180788a6e0fb90dac335b6628b7e34f48e1038139aceb2d59a24a2c06274c5",
       "apps/api/src/projects/sprint-mutation.ts": "a29996ad0502d880f1294378a86c976145b1e0fc002f8b25869cae1c0a98f58b",
       "apps/api/src/projects/sprint-participation.ts": "ee20d8ea070fef2f1ea463d01504a7ab0a2d3827ec54a1e28a402aea5f50bdaf",
       "apps/api/src/projects/sprint-policy.ts": "ec545baca7cf9530fdac32fbaaf2930a2b32cd4949c8b5839db1b40157e3c17a",
@@ -1033,7 +1033,7 @@
       "apps/api/test/unit/project-task-values-policy.test.mjs": "a3417f0f8985ae265d7b65576c0caffb213f5f720506cab62c43b4519b4523bd",
       "apps/api/test/unit/sprint-close.test.mjs": "a730e81e3148cb77c93e7a5c1bb6db465966c8cf7241c0f70278baf332a13aec",
       "apps/api/test/unit/sprint-http.test.mjs": "7c805b11132ac8f4a197f646a4f20d27616e0a6e57ffcc152fcabe1bfc49c050",
-      "apps/api/test/unit/sprint-planning.test.mjs": "44ee27d85847c29133945e75432214f69c886c063282ea81d2b27fb89d19929a",
+      "apps/api/test/unit/sprint-planning.test.mjs": "167d806fd4782e973eb24d74d9f78d87f8be886100b39cc30bc95ae8f0f2c492",
       "apps/api/test/unit/sprint-scope-start.test.mjs": "f26eec13ecd2b4574b35354b03c459c913e8903c7758a976c2a1f68b9f025199",
       "apps/api/test/unit/task-collaboration-policy.test.mjs": "489d6a0daa852c1108ecc81d00726089b0651f0f5b6c8eb2eb7bfa21fb6b3331",
       "apps/api/test/unit/task-discovery-policy.test.mjs": "36f59eef992cc398bf035ef525726af0ec0dd300fbc7bf0a4233bd6fac87ec14",
@@ -1046,20 +1046,20 @@
   "scope": "api",
   "total": {
     "branches": {
-      "covered": 1216,
-      "total": 1763
+      "covered": 1222,
+      "total": 1769
     },
     "functions": {
       "covered": 383,
       "total": 592
     },
     "lines": {
-      "covered": 1391,
-      "total": 2067
+      "covered": 1397,
+      "total": 2073
     },
     "statements": {
-      "covered": 1511,
-      "total": 2253
+      "covered": 1518,
+      "total": 2260
     }
   }
 }

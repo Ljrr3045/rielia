@@ -283,7 +283,14 @@ try {
     } else if (scope === 'web' || scope === 'prototype') {
       copy(mirror, 'apps/web/package.json');
       link(mirror, 'apps/web/node_modules', path.join(root, 'apps/web/node_modules'));
-    } else copy(mirror, 'packages/contracts/package.json');
+    } else {
+      copy(mirror, 'packages/contracts/package.json');
+      link(
+        mirror,
+        'packages/contracts/node_modules',
+        path.join(root, 'packages/contracts/node_modules'),
+      );
+    }
 
     let tests;
     if (before) tests = await oldTests(mirror, scope);

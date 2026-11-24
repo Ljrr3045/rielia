@@ -179,6 +179,7 @@ test('T11.1 actual PostgreSQL/NodeAdapter planned sprint and planning settings',
         409,
       );
       const config = await settings(f);
+      assert.ok(isProjectPlanning(config));
       assert.equal(config.projectVersion, 2);
       assert.equal(config.sprintRevision, 1);
       const stream = await openEventStream(url, f.workspace.id, f.owner.cookie);
@@ -209,9 +210,16 @@ test('T11.1 actual PostgreSQL/NodeAdapter planned sprint and planning settings',
           name: 'Renamed',
         });
         assert.equal(edit.version, 2);
+        assert.ok(isPlannedSprint(edit));
         assert.equal(edit.timeZone, 'America/New_York');
         assert.equal(edit.startsAt, sprint.startsAt);
-        assert.equal((await ok(f.owner, `${f.path}/sprints`)).items.length, 1);
+        const reloaded = await ok(f.owner, `${f.path}/sprints/${sprint.id}`);
+        assert.ok(isPlannedSprint(reloaded));
+        assert.deepEqual(reloaded, edit);
+        const page = await ok(f.owner, `${f.path}/sprints`);
+        assert.ok(isSprintPage(page));
+        assert.equal(page.items.length, 1);
+        assert.deepEqual(page.items[0], edit);
         assert.equal(
           (await request(f.owner, `${f.path}/sprints`, { expectedProjectVersion: 3, ...fields }))
             .status,

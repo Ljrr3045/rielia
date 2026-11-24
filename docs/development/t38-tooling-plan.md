@@ -1,7 +1,15 @@
 # T38 tool decisions and compatibility pilot
 
-**T38.1 IN PROGRESS, 2026-11-23 America/Caracas; prepared in
-[Draft PR57](https://github.com/Ljrr3045/rielia/pull/57), targeting `dev`.** The
+**T38.1 ACCEPTED; T38.2a LOCAL COMPLETE, PR REVIEW PENDING,
+2026-11-23 America/Caracas.**
+[PR57 acceptance](https://github.com/Ljrr3045/rielia/pull/57#issuecomment-7118652391)
+reviewed `b12e3220`, merged `4dab8594`, with identical reviewed/merged tree
+`8573ea3d`; [exact-merge CI](https://github.com/Ljrr3045/rielia/actions/runs/45301675698/job/138135467847)
+passed 24 steps and native Kilo round two was clean. The coordinator released
+[H30–35/G03/X04 production schema work](t38-sprint-schemas.md), with numerical
+adoption separately gated. This current disposition supersedes formal-delivery
+pending wording in the historical P1 receipt below, without rebinding its runs.
+The
 user authorized starting T38 that day. Original T11/T11.5 was
 [accepted in PR56](https://github.com/Ljrr3045/rielia/pull/56#issuecomment-7114539999),
 reviewed `a9d159f0115258aee76b2b02fef733ab53fd22ee`, merged
@@ -16,17 +24,18 @@ not rerun T11 proof or accept adjacent tickets.
 Traceability: T05–T11/T35, P01–P11/P33/P38, US01–US08/US11–US12/US24–US25,
 existing UX/UXR including sprint UX04. [The finite inventory](t38-boundary-inventory.md)
 defines maintained adoption surfaces. Initial research was read-only; the
-coordinator subsequently released the isolated P1 below. Production manifests,
-locks, source, tests and coverage remain unchanged. Neither this documentation
-nor P1 is full T38.1–6 acceptance.
+coordinator subsequently released the isolated P1 below. P1 changed no production
+manifests, locks, source, tests or coverage. The released T38.2a slice changes only
+its named owners; neither P1 nor this first production slice is full T38 acceptance.
 
 ## Baseline and decision status
 
 Observed manifests retain Node **24.22.1**, pnpm **12.15.0**, TS **6.0.3**,
 Next **16.4.3**, React/DOM **19.3.1**, React types **19.3.0**, Nest
 common/core/platform-node **12.3.2**, Better Auth **1.7.12**, Prisma/adapter
-**7.10.1**, pg **8.23.1**, pg-boss **12.38.0**, OTel API **1.10.0**. MCP alone
-directly uses Zod **4.6.7**. The separate unit graph already includes DOM Testing
+**7.10.1**, pg **8.23.1**, pg-boss **12.38.0**, OTel API **1.10.0**. MCP already
+used Zod **4.6.7**; T38.2a adds that exact direct contracts runtime edge only.
+The separate unit graph already includes DOM Testing
 Library **10.4.2**, jsdom **31.0.0**, nyc **18.0.0**, tsx **4.23.15**. Keep node:test,
 strict peers, no automatic peer installation, existing patches and build-script
 allowlist. These are observed pins, not a request to upgrade them.
@@ -360,8 +369,8 @@ Query production/RHF/other tools remain separately gated.
 
 | Phase | Proposed bounded PR scope | Exit evidence |
 | --- | --- | --- |
-| T38.1 | Inventory/decisions/current-status synchronization and accepted bounded LOCAL P1 receipt; no production migration | Local P1 accepted; formal delivery still needs current-head CI/native Kilo, feedback/ownership/base checks and coordinator acceptance |
-| T38.2a | H30–35/G03 planned-sprint shared schemas, strict inputs, inferred DTOs and transport validation | Legacy/new parity, explicit malformed/correlation regression witnesses, backend closure, affected real HTTP/PG behavior, comparable coverage |
+| T38.1 | ACCEPTED in PR57, reviewed `b12e3220`, merged `4dab8594`; inventory/decisions/LOCAL P1 only | Native review and exact-merge CI passed; historical P1 limits retained |
+| T38.2a | LOCAL COMPLETE: H30–35/G03 planned-sprint shared schemas, strict inputs, inferred DTOs and transport validation | Exact numerical adoption approved; fresh 747 normal/20 infrastructure/17 artifacts, focused PG/HTTP44 and runtime/closure pass; PR/current-head CI/native review and final coordinator acceptance pending |
 | T38.2b–d | Remaining schema families in measured batches: workspace/identity/context/infrastructure; project/task/access/discovery/SSE; collaboration/scope/start/close/history/receipts/configuration | Account for all H01–66/G01–07/X/C/encoded-input owners; each migrated or explicit coordinator-accepted exclusion/debt owner. No universal policy rewrite |
 | T38.3 | Canonical OpenAPI generation/drift first; generated transport adoption only after TS6/generator decision | Reproducible schema/type generation, unsupported-refinement list, unknown-response and same-origin/cancellation/error parity; no second hand-maintained definition |
 | T38.4a | Two sprint resource caches and create mutation, then remaining enumerated server resources in bounded batches | Query becomes sole DTO owner; identity/render/abort/discard/SSE/version/recovery checks and production bundle/request costs |

@@ -20,7 +20,7 @@
     },
     "packages/contracts/src/project-tasks.ts": {
       "branches": {
-        "covered": 103,
+        "covered": 106,
         "total": 106
       },
       "functions": {
@@ -54,22 +54,40 @@
         "total": 33
       }
     },
-    "packages/contracts/src/sprints.ts": {
+    "packages/contracts/src/sprint-schemas.ts": {
       "branches": {
-        "covered": 133,
-        "total": 133
+        "covered": 39,
+        "total": 39
       },
       "functions": {
-        "covered": 18,
-        "total": 18
+        "covered": 16,
+        "total": 16
       },
       "lines": {
-        "covered": 31,
-        "total": 31
+        "covered": 41,
+        "total": 41
       },
       "statements": {
-        "covered": 34,
-        "total": 34
+        "covered": 44,
+        "total": 44
+      }
+    },
+    "packages/contracts/src/sprints.ts": {
+      "branches": {
+        "covered": 0,
+        "total": 0
+      },
+      "functions": {
+        "covered": 8,
+        "total": 8
+      },
+      "lines": {
+        "covered": 9,
+        "total": 9
+      },
+      "statements": {
+        "covered": 9,
+        "total": 9
       }
     },
     "packages/contracts/src/task-collaboration.ts": {
@@ -128,7 +146,7 @@
     }
   },
   "floors": {
-    "branches": 9898,
+    "branches": 9928,
     "functions": 10000,
     "lines": 10000,
     "statements": 10000
@@ -148,14 +166,15 @@
     "configs": {
       "apps/api/tsconfig.json": "b0fa28f9606b6c4394aad0a86c71a17b03d13fe0be5488d4bccc5600d93c4b50",
       "apps/web/tsconfig.json": "54e8c2f2b85df307026caea6d88f8c5d8b71d8ce9224a4f652abbad4f2c5f773",
-      "packages/contracts/tsconfig.json": "b95a19f4e24c335474fa4b20b329216a8bfed97eb1429ba2188705f38de6503b",
+      "packages/contracts/tsconfig.json": "a5c8a301bc943db07dcb779578fad79421d869cdf84ae2d7794a1a28f9ab20d6",
       "tsconfig.base.json": "cb1df8b236cca5a668abf94b5657d200094c3b338e66bfc2ea6a19e699ad7dff"
     },
     "inputs": {
       "packages/contracts/src/index.ts": "b5f016dcadcbb9d54479c11dcbc8f96696ad5beefe5409668df35d1335f89775",
       "packages/contracts/src/project-tasks.ts": "7975408b8b81e188688d12d7dfc54d5fcab7ce3d7378a2c741ce3800270dd364",
       "packages/contracts/src/sprint-closure.ts": "64461e9006e83814c88a31df74f8ac103bce48256db5fc10cfbf1ecdff0b89da",
-      "packages/contracts/src/sprints.ts": "01275f8fc882c329b722e2dda976acc51598cfc4e3a3e15742accb5a72b12eda",
+      "packages/contracts/src/sprint-schemas.ts": "9531374270f4e553af08ecfc6cf93326e29ceb3ef1da259c51cac11a735e7eeb",
+      "packages/contracts/src/sprints.ts": "ded4f3e7642860472bd588ab5fa18f23a40e72af3acbc457989ceb286dea7525",
       "packages/contracts/src/task-collaboration.ts": "89a888be278672661b5a89cf617b6b0cd0b47c3eee9970373fdafa32935067f4",
       "packages/contracts/src/task-discovery.ts": "10c0daa197091b9ba183f3d3671ad5c600b40867c2cb574dd393a11e572aa1d0",
       "packages/contracts/src/task-planning.ts": "849bbdadfb4ec628278f7d69021df5d413b377e4ea6cf70aff9e35e3049df7c2"
@@ -169,9 +188,9 @@
     },
     "runtime": "24.22.1",
     "tests": {
-      "packages/contracts/test/guards.test.mjs": "9766fbac5823cac987ba6c7eef12b6ba9fda9a7b0870c2be85ef4e3f33cdf2c7",
+      "packages/contracts/test/guards.test.mjs": "82660bc24e5e753f0a2acdf274e60bf6c053f61eb1b5f786ba34f1d1e00d39a0",
       "packages/contracts/test/sprint-closure.test.mjs": "c146ac14b85bcf55e4b1bc816ec81a1991cb7489349380eb5402a1891a73bab9",
-      "packages/contracts/test/sprints.test.mjs": "cc480df9fac7ee0d9c70cff4ea46bf1770703f548d81640aef881051cf4d334e",
+      "packages/contracts/test/sprints.test.mjs": "ea06d50618e46718ca18926a2b5fcd36a524c544fc3de3b6eaa2559fb2ad9baa",
       "packages/contracts/test/task-planning.test.mjs": "6cfff76f2fa05f5aa4d72ad6a1b3371b9369815c185459041f6628765e4db7a8",
       "scripts/unit/mirror-loader.mjs": "b3ef9e50e56ee2fa0079c794c044efbc6b953d75890b97889bc635e233d93115"
     },
@@ -180,20 +199,20 @@
   "scope": "contracts",
   "total": {
     "branches": {
-      "covered": 782,
-      "total": 790
+      "covered": 691,
+      "total": 696
     },
     "functions": {
-      "covered": 118,
-      "total": 118
+      "covered": 124,
+      "total": 124
     },
     "lines": {
-      "covered": 186,
-      "total": 186
+      "covered": 205,
+      "total": 205
     },
     "statements": {
-      "covered": 213,
-      "total": 213
+      "covered": 232,
+      "total": 232
     }
   }
 }

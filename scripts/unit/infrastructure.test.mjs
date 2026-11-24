@@ -540,6 +540,37 @@ test(
     const sharedEscape = await run('import "@rielia/contracts";');
     assert.equal(sharedEscape.code, 1);
     assert.match(sharedEscape.output, /Shared source escaped instrumented mirror/);
+    write(
+      original,
+      'packages/contracts/node_modules/declared-dependency/package.json',
+      '{"type":"module","exports":"./index.js"}\n',
+    );
+    write(
+      original,
+      'packages/contracts/node_modules/declared-dependency/index.js',
+      'export const value = "declared-dependency";\n',
+    );
+    write(
+      mirror,
+      'packages/contracts/dist/index.js',
+      'export {value} from "declared-dependency";\n',
+    );
+    const missingDependency = await run('import "./packages/contracts/dist/index.js";');
+    assert.equal(missingDependency.code, 1);
+    assert.match(missingDependency.output, /ERR_MODULE_NOT_FOUND/);
+    fs.symlinkSync(
+      path.join(original, 'packages/contracts/node_modules'),
+      path.join(mirror, 'packages/contracts/node_modules'),
+      'dir',
+    );
+    const declaredDependency = await run(
+      'import {value} from "./packages/contracts/dist/index.js"; console.log(value);',
+    );
+    assert.equal(declaredDependency.code, 0, declaredDependency.output);
+    assert.match(declaredDependency.output, /declared-dependency/);
+    const stillIsolated = await run('import "@rielia/contracts";');
+    assert.equal(stillIsolated.code, 1);
+    assert.match(stillIsolated.output, /Shared source escaped instrumented mirror/);
   },
 );
 
