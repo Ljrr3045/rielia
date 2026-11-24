@@ -1,9 +1,10 @@
 import {
   isPage,
-  isRecord,
+  createdInvitationSchema,
   isWorkspaceInvitation,
   isWorkspaceMember,
   isWorkspaceSummary,
+  workspaceErrorProjectionSchema,
   type Page,
   type WorkspaceCommand,
   type WorkspaceInvitation,
@@ -62,11 +63,10 @@ export function createWorkspaceTransport(
       },
     );
     const value: unknown = await response.json();
-    if (!response.ok)
-      throw new WorkspaceFailure(
-        response.status,
-        isRecord(value) && typeof value['code'] === 'string' ? value['code'] : null,
-      );
+    if (!response.ok) {
+      const error = workspaceErrorProjectionSchema.safeParse(value);
+      throw new WorkspaceFailure(response.status, error.success ? error.data.code : null);
+    }
     return value;
   }
   async function collection<T>(
@@ -147,14 +147,9 @@ export function createWorkspaceTransport(
       if (command.type === 'create-workspace' || command.type === 'accept-invitation') {
         if (isWorkspaceSummary(value)) return value;
       } else if (command.type === 'invite') {
-        if (
-          isRecord(value) &&
-          isWorkspaceInvitation(value['invitation']) &&
-          value['invitation'].workspaceId === command.workspaceId &&
-          typeof value['token'] === 'string' &&
-          /^[A-Za-z0-9_-]{43}$/.test(value['token'])
-        )
-          return { invitation: value['invitation'], token: value['token'] };
+        const parsed = createdInvitationSchema.safeParse(value);
+        if (parsed.success && parsed.data.invitation.workspaceId === command.workspaceId)
+          return { invitation: parsed.data.invitation, token: parsed.data.token };
       } else if (command.type === 'revoke-invitation') {
         if (
           isWorkspaceInvitation(value) &&

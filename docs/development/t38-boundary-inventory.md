@@ -4,13 +4,17 @@ Inventory recorded **2026-11-23 America/Caracas**, base
 `f020a423e43380f908ad876a76ece65faa24a031`, accepted as T38.1 in
 [PR57](https://github.com/Ljrr3045/rielia/pull/57#issuecomment-7118652391), merge
 `4dab8594`. Its counts describe that original snapshot.
-[T38.2a H30–35/G03/X04 implementation](t38-sprint-schemas.md) is now LOCAL COMPLETE,
-pending PR review/acceptance:
+[T38.2a H30–35/G03/X04 implementation](t38-sprint-schemas.md) is
+[ACCEPTED in PR58](https://github.com/Ljrr3045/rielia/pull/58#issuecomment-7120471111),
+reviewed `5e2671bd`, merged `e1ebe3ac`:
 `sprint-schemas.ts` owns migrated shapes/inferred types, `sprints.ts` retains its
 eight compatibility guards, and Sprint input/transport owners consume them.
 Current source/check/numerical/acceptance limits are recorded in that slice's
 receipt. [Issue 53](https://github.com/Ljrr3045/rielia/issues/53) remains canonical;
 [the decision/pilot plan](t38-tooling-plan.md) retains later gates.
+[T38.2b](t38-workspace-schemas.md) owns released H01–04/H55–66/G01/X01–02 public
+schemas; local evidence does not accept full T38.2. Counts below remain bound
+to the original inventory snapshot.
 
 Counts describe maintained first-party source at this base, not complete product
 acceptance: **66 declared HTTP operations = 34 GET + 32 POST**, in ten Nest
@@ -41,7 +45,7 @@ with the transports rather than counted as extra endpoints.
 | --- | --- | --- |
 | H01 | `health.controller.ts` | GET `/api/v1/health`: no input → `HealthResponse` |
 | H02–03 | `identity/identity.controller.ts` | GET `/api/v1/identity/config` → enabled/providers; GET `/api/v1/identity/session` → identity session/null |
-| H04 | `principals/principal.controller.ts` | GET `W/:workspaceId/execution-context`: validated path, no query/body/forged identity headers → informational `ExecutionContextResponse` |
+| H04 | `principals/principal.controller.ts` | GET `W/:workspaceId/execution-context`: workspace selector reauthorized by service (no standalone controller path-shape check), no query/body/forged identity headers → informational `ExecutionContextResponse` |
 | H05–06 | `projects/project-task.controller.ts` | GET `P`: view/cursor → `DomainPage<Project>`; POST `P`: name/key/optional description/visibility → `Project` |
 | H07–08 | same | GET `R` → `Project`; POST `R`: E/name/description → `Project` |
 | H09–10 | same | POST `R/archive`, `R/restore`: E → `Project` (two operations) |
@@ -78,7 +82,8 @@ with the transports rather than counted as extra endpoints.
 | H65–66 | same | POST `W/:workspaceId/agents`: name/role/custodianPrincipalId → `WorkspaceMember`; POST same + `/:principalId`: V/optional state/custodianPrincipalId → `WorkspaceMember` |
 
 **Ownership.** Backend SOL owners retain controller/protocol gates and application
-policy. Workspace bodies and DTO projection live in `workspaces/workspace.service.ts`.
+policy. Workspace bodies now parse in `workspaces/workspace-input.ts`; DTOs,
+receipts and policy stay in `workspaces/workspace.service.ts`.
 Project/task body validation lives in `projects/project-task-input.ts` and
 `project-task-command.ts`; collaboration adds `task-collaboration.service.ts`.
 Sprint settings/fields use `sprint-input.ts`; start, estimate, participation and
@@ -93,6 +98,10 @@ rejection, exact Origin/Fetch-Site, JSON content type, forbidden actor headers,
 UUID-v4 `Idempotency-Key`, current resource identifier admission
 (`^[A-Za-z0-9_-]{1,128}$`), cookie renewal, no-store and safe request IDs. Shared
 Zod shape schemas cannot replace these HTTP/security checks.
+Workspace proxy forwards queries to Nest rather than implementing the project
+proxy duplicate-query gate; H04 retains its selector behavior described above.
+Workspace UUID-v4 checking stays in receipts after current authority, and
+project-only request-ID middleware is not broadened by T38.2b.
 
 The extra raw mount is `application.ts` → `/api/auth/*splat`, before body parsers,
 delegating to Better Auth. Library-owned OAuth/callback/cookie wire formats are

@@ -21,39 +21,18 @@ import {
   type HumanActor,
   type Transaction,
 } from '../principals/principal.service.js';
+import {
+  acceptWorkspaceInvitationInput,
+  createWorkspaceInput,
+  inviteWorkspaceMemberInput,
+  manageWorkspaceAgentInput,
+  registerWorkspaceAgentInput,
+  revokeWorkspaceInvitationInput,
+  updateWorkspaceMemberInput,
+  workspaceRecipientEmail as email,
+} from './workspace-input.js';
 
 const digest = (value: string) => createHash('sha256').update(value).digest('hex');
-const limitedRoles = ['admin', 'member', 'viewer'];
-const states = ['active', 'suspended', 'revoked'];
-const oneOf = (value: unknown, values: string[]): value is string =>
-  typeof value === 'string' && values.includes(value);
-const id = (value: unknown): value is string =>
-  typeof value === 'string' && /^[a-zA-Z0-9_-]{1,128}$/.test(value);
-function object(value: unknown, allowed: string[], required = allowed): Record<string, unknown> {
-  if (
-    !value ||
-    typeof value !== 'object' ||
-    Array.isArray(value) ||
-    Object.keys(value).some((key) => !allowed.includes(key)) ||
-    required.some((key) => !(key in value))
-  )
-    throw new BadRequestException('Invalid workspace request.');
-  return value as Record<string, unknown>;
-}
-function name(value: unknown): string {
-  if (typeof value !== 'string' || !value.trim() || value.trim().length > 200)
-    throw new BadRequestException('Name must contain 1 to 200 characters.');
-  return value.trim();
-}
-function email(value: unknown): string {
-  if (
-    typeof value !== 'string' ||
-    value.length > 254 ||
-    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())
-  )
-    throw new BadRequestException('A recipient email is required.');
-  return value.trim().toLowerCase();
-}
 function page<T>(items: T[], total: number, cursor: (value: T) => string): Page<T> {
   const visible = items.slice(0, 100);
   return {
@@ -191,8 +170,7 @@ export class WorkspaceService {
   }
 
   create(headers: IncomingHttpHeaders, key: string, payload: unknown) {
-    const input = object(payload, ['name']);
-    const title = name(input['name']);
+    const { name: title } = createWorkspaceInput(payload);
     return this.principals.workspaceOperation(headers, null, 'read', (tx, actor) =>
       this.receipt(tx, actor, key, 'create-workspace', { name: title }, async () => {
         const workspaceId = randomUUID();
@@ -288,11 +266,7 @@ export class WorkspaceService {
   }
 
   invite(headers: IncomingHttpHeaders, workspaceId: string, key: string, payload: unknown) {
-    const input = object(payload, ['recipientEmail', 'role']);
-    const recipientEmail = email(input['recipientEmail']);
-    if (!oneOf(input['role'], limitedRoles))
-      throw new BadRequestException('Invalid invitation role.');
-    const role = input['role'] as LimitedRole;
+    const { recipientEmail, role } = inviteWorkspaceMemberInput(payload);
     return this.principals.workspaceOperation(headers, workspaceId, 'admin', (tx, actor) =>
       this.receipt(
         tx,
@@ -348,7 +322,7 @@ export class WorkspaceService {
     key: string,
     payload: unknown,
   ) {
-    object(payload, []);
+    revokeWorkspaceInvitationInput(payload);
     return this.principals.workspaceOperation(headers, workspaceId, 'admin', (tx, actor) =>
       this.receipt(tx, actor, key, `revoke/${workspaceId}/${invitationId}`, {}, async () => {
         const row = await tx.invitation.findFirst({ where: { id: invitationId, workspaceId } });
@@ -367,10 +341,8 @@ export class WorkspaceService {
   }
 
   accept(headers: IncomingHttpHeaders, key: string, payload: unknown) {
-    const input = object(payload, ['token']);
-    if (typeof input['token'] !== 'string' || !/^[A-Za-z0-9_-]{43}$/.test(input['token']))
-      throw new BadRequestException('Invalid invitation token.');
-    const tokenHash = digest(input['token']);
+    const input = acceptWorkspaceInvitationInput(payload);
+    const tokenHash = digest(input.token);
     return this.principals.workspaceOperation(headers, null, 'read', (tx, actor) =>
       this.receipt(tx, actor, key, 'accept-invitation', { tokenHash }, async () => {
         const row = await tx.invitation.findUnique({ where: { tokenHash } });
@@ -425,22 +397,14 @@ export class WorkspaceService {
     key: string,
     payload: unknown,
   ) {
-    const input = object(payload, ['version', 'role', 'state'], ['version']);
-    if (
-      !Number.isSafeInteger(input['version']) ||
-      Number(input['version']) < 1 ||
-      (!('role' in input) && !('state' in input)) ||
-      ('role' in input && !oneOf(input['role'], limitedRoles)) ||
-      ('state' in input && !oneOf(input['state'], states))
-    )
-      throw new BadRequestException('Invalid member change.');
+    const input = updateWorkspaceMemberInput(payload);
     const patch = {
-      ...('role' in input ? { role: input['role'] as LimitedRole } : {}),
-      ...('state' in input ? { state: input['state'] as MemberState } : {}),
+      ...('role' in input ? { role: input.role } : {}),
+      ...('state' in input ? { state: input.state } : {}),
     };
     return this.principals.workspaceOperation(headers, workspaceId, 'admin', (tx, actor) =>
       this.receipt(tx, actor, key, `member/${workspaceId}/${principalId}`, input, async () => {
-        await this.member(tx, workspaceId, principalId, Number(input['version']));
+        await this.member(tx, workspaceId, principalId, input.version);
         await this.principals.updateMemberInTransaction(tx, actor.context!, principalId, patch);
         return this.member(tx, workspaceId, principalId);
       }),
@@ -448,15 +412,7 @@ export class WorkspaceService {
   }
 
   registerAgent(headers: IncomingHttpHeaders, workspaceId: string, key: string, payload: unknown) {
-    const input = object(payload, ['name', 'role', 'custodianPrincipalId']);
-    const title = name(input['name']);
-    if (!oneOf(input['role'], ['member', 'viewer']) || !id(input['custodianPrincipalId']))
-      throw new BadRequestException('Invalid agent registration.');
-    const data = {
-      name: title,
-      role: input['role'] as 'member' | 'viewer',
-      custodianPrincipalId: input['custodianPrincipalId'],
-    };
+    const data = registerWorkspaceAgentInput(payload);
     return this.principals.workspaceOperation(headers, workspaceId, 'admin', (tx, actor) =>
       this.receipt(tx, actor, key, `agent/${workspaceId}`, data, async () => {
         const principalId = await this.principals.registerAgentInTransaction(
@@ -476,24 +432,16 @@ export class WorkspaceService {
     key: string,
     payload: unknown,
   ) {
-    const input = object(payload, ['version', 'state', 'custodianPrincipalId'], ['version']);
-    if (
-      !Number.isSafeInteger(input['version']) ||
-      Number(input['version']) < 1 ||
-      (!('state' in input) && !('custodianPrincipalId' in input)) ||
-      ('state' in input && !oneOf(input['state'], states)) ||
-      ('custodianPrincipalId' in input && !id(input['custodianPrincipalId']))
-    )
-      throw new BadRequestException('Invalid agent change.');
+    const input = manageWorkspaceAgentInput(payload);
     const patch = {
-      ...('state' in input ? { state: input['state'] as MemberState } : {}),
+      ...('state' in input ? { state: input.state } : {}),
       ...('custodianPrincipalId' in input
-        ? { custodianPrincipalId: input['custodianPrincipalId'] as string }
+        ? { custodianPrincipalId: input.custodianPrincipalId }
         : {}),
     };
     return this.principals.workspaceOperation(headers, workspaceId, 'admin', (tx, actor) =>
       this.receipt(tx, actor, key, `agent/${workspaceId}/${principalId}`, input, async () => {
-        const existing = await this.member(tx, workspaceId, principalId, Number(input['version']));
+        const existing = await this.member(tx, workspaceId, principalId, input.version);
         if (existing.state === 'revoked' || existing.principalState === 'revoked')
           throw new ConflictException('Revoked agent cannot change.');
         await this.principals.manageAgentInTransaction(tx, actor.context!, principalId, patch);

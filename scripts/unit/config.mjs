@@ -18,7 +18,7 @@ export const providerVersions = Object.freeze({
 export const zeroUnits = Object.freeze({
   api: [],
   web: ['apps/web/src/app/projects/task-collaboration-view.ts'],
-  contracts: [],
+  contracts: ['packages/contracts/src/schema-types.ts'],
   prototype: [
     'apps/web/src/lib/task-prototype/index.ts',
     'apps/web/src/lib/task-prototype/types.ts',

@@ -1136,37 +1136,37 @@
     },
     "apps/web/src/lib/identity-controller.ts": {
       "branches": {
-        "covered": 43,
-        "total": 45
+        "covered": 24,
+        "total": 25
       },
       "functions": {
-        "covered": 15,
-        "total": 15
+        "covered": 13,
+        "total": 13
       },
       "lines": {
-        "covered": 54,
-        "total": 55
+        "covered": 48,
+        "total": 48
       },
       "statements": {
-        "covered": 63,
-        "total": 65
+        "covered": 58,
+        "total": 59
       }
     },
     "apps/web/src/lib/identity-proxy.ts": {
       "branches": {
-        "covered": 0,
+        "covered": 8,
         "total": 8
       },
       "functions": {
-        "covered": 0,
+        "covered": 1,
         "total": 1
       },
       "lines": {
-        "covered": 0,
+        "covered": 17,
         "total": 17
       },
       "statements": {
-        "covered": 0,
+        "covered": 19,
         "total": 19
       }
     },
@@ -1514,20 +1514,20 @@
     },
     "apps/web/src/lib/workspace-client.ts": {
       "branches": {
-        "covered": 43,
-        "total": 61
+        "covered": 52,
+        "total": 56
       },
       "functions": {
         "covered": 10,
         "total": 10
       },
       "lines": {
-        "covered": 42,
-        "total": 54
+        "covered": 56,
+        "total": 56
       },
       "statements": {
-        "covered": 44,
-        "total": 58
+        "covered": 60,
+        "total": 60
       }
     },
     "apps/web/src/lib/workspace-controller.ts": {
@@ -1568,28 +1568,28 @@
     },
     "apps/web/src/lib/workspace-proxy.ts": {
       "branches": {
-        "covered": 0,
+        "covered": 11,
         "total": 11
       },
       "functions": {
-        "covered": 0,
+        "covered": 3,
         "total": 3
       },
       "lines": {
-        "covered": 0,
+        "covered": 24,
         "total": 24
       },
       "statements": {
-        "covered": 0,
+        "covered": 25,
         "total": 25
       }
     }
   },
   "floors": {
-    "branches": 6636,
-    "functions": 6141,
-    "lines": 7144,
-    "statements": 6927
+    "branches": 6673,
+    "functions": 6165,
+    "lines": 7250,
+    "statements": 7030
   },
   "manifest": {
     "compiler": {
@@ -1673,7 +1673,7 @@
       "apps/web/src/app/workspaces/workspace-ui.tsx": "abde77c8163904955c076c99d7cff6575ada4a209ca1d0ca82a97906837692a2",
       "apps/web/src/app/workspaces/workspace-view.tsx": "cabc6066662684919b7d573d491ca8d82cb560e1386c0cfab5b155a38c063278",
       "apps/web/src/lib/identity-client.ts": "7271ac3c35ee04af5d42791166dc52fcf3e2e227a0d8ebb1b9d174b342a26b56",
-      "apps/web/src/lib/identity-controller.ts": "75bdfeca7ec1ad50a38c4a560c9e249719aa1a726cfb2a90895984170f480ef7",
+      "apps/web/src/lib/identity-controller.ts": "1a4aea81c25cbcc41c4baad8e29d57bd4d7a62486945992a75703da3bac35163",
       "apps/web/src/lib/identity-proxy.ts": "d3bfab1aea9ab2ba4e9803b58d343361f325e519bbfb9e92ad01b0933cae997c",
       "apps/web/src/lib/project-sprint-location.ts": "bd555135cdf7a9fd25235c00e5771bc1879013bd4bee9aa93146b6e1170d7b01",
       "apps/web/src/lib/project-task-client.ts": "b6fa3d76ed6912c785197c5ec63eaae9a86d7ab17a190c344c2bb4e9e88eeb61",
@@ -1694,7 +1694,7 @@
       "apps/web/src/lib/use-project-sprints.ts": "31c181d840c553427c1461a52f907f1bbfdf0aba22651dd7b3b613a117bf64e7",
       "apps/web/src/lib/use-project-tasks.ts": "71604b8dc675d88440a1a764f1e19fdd56cc2b5997db7323dac58b0c7b8b5857",
       "apps/web/src/lib/use-workspaces.ts": "d5fa3c82053dd8811b9f2e41f6cc30fd5cbb635e3810f10fc7a99d309025fcec",
-      "apps/web/src/lib/workspace-client.ts": "b07137e3ef8433e24e8a4409ebc2447181aee9e36132654d203be5163fb4946c",
+      "apps/web/src/lib/workspace-client.ts": "397460001b0ef7e70c993d1ee880cbb59f4d880503e33d0c637d39029602c668",
       "apps/web/src/lib/workspace-controller.ts": "fddb5ea22ea19adaac2f4c1d538ba457a0a8f0ec1996fbfe70b8c86f804b1615",
       "apps/web/src/lib/workspace-invitation-location.ts": "42e6ef8a2074a3b2064df13b009a22cf0fac22267834209e052f7e85f9d0a85b",
       "apps/web/src/lib/workspace-proxy.ts": "28599000621aa11f815f22886591a404c86cbdc87593cd695f585dbb6e9aea6e"
@@ -1735,6 +1735,7 @@
       "apps/web/test/unit/workspace-hook.test.mjs": "d77c03576e8e3340d40a1a30f79b82cc77b1533cc751be0f9646dc7c9ca5da0b",
       "apps/web/test/unit/workspace-screen-actions.test.mjs": "84c154c347b3283e050e549b2313ee89c037840fdb233cd2971357605294889f",
       "apps/web/test/unit/workspace-screen-fixtures.mjs": "8efe4663a94fbeda0c98895b6b1040333c5e2fa975806f404eb1d8d221a4c0ff",
+      "apps/web/test/unit/workspace-transport.test.mjs": "736fc5df7d4c8186e9a09b5afc3f99d5a1eba4275d4959bddff0bcbdcec12174",
       "scripts/identity-client.test.mjs": "fc1230e800c33efbfbe3327c54e5a2fb996b60dc6744749e71d325e64dd9e3c7",
       "scripts/identity-logic.test.mjs": "82533a455dbb578dde8a090a9d5f5dc56c74863bd0716410236c2f1c4e2f819a",
       "scripts/project-task-client.test.mjs": "0dbf25bb574d3898935adcc3ecfaf02e31b21323a97a10f5b9d52aed44a5e7bb",
@@ -1748,20 +1749,20 @@
   "scope": "web",
   "total": {
     "branches": {
-      "covered": 4643,
-      "total": 6996
+      "covered": 4652,
+      "total": 6971
     },
     "functions": {
-      "covered": 834,
-      "total": 1358
+      "covered": 836,
+      "total": 1356
     },
     "lines": {
-      "covered": 3530,
-      "total": 4941
+      "covered": 3579,
+      "total": 4936
     },
     "statements": {
-      "covered": 3883,
-      "total": 5605
+      "covered": 3938,
+      "total": 5601
     }
   }
 }

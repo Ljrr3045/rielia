@@ -11,6 +11,16 @@ import { configureApplication, createHttpAdapter } from '../dist/application.js'
 import { IdentityService } from '../dist/identity/identity.service.js';
 import { PrincipalService } from '../dist/principals/principal.service.js';
 import { WorkspaceService } from '../dist/workspaces/workspace.service.js';
+import {
+  createdInvitationSchema,
+  executionContextResponseSchema,
+  workspaceInvitationSchema,
+  workspaceInvitationPageSchema,
+  workspaceMemberSchema,
+  workspaceMemberPageSchema,
+  workspaceSummarySchema,
+  workspaceSummaryPageSchema,
+} from '@rielia/contracts';
 
 test('T05.0 PostgreSQL and HTTP workspace workflows', async (t) => {
   const app = await NestFactory.create(AppModule, createHttpAdapter(), {
@@ -60,7 +70,28 @@ test('T05.0 PostgreSQL and HTTP workspace workflows', async (t) => {
       ...(body === undefined ? {} : { body: JSON.stringify(body) }),
     });
     assert.equal(response.headers.get('cache-control'), 'no-store');
-    return { status: response.status, data: await response.json(), headers: response.headers };
+    const data = await response.json();
+    if (response.ok) {
+      const route = path.split('?')[0];
+      let schema;
+      if (route === 'workspaces')
+        schema = body === undefined ? workspaceSummaryPageSchema : workspaceSummarySchema;
+      else if (route === 'workspace-invitations/accept') schema = workspaceSummarySchema;
+      else if (route.endsWith('/execution-context')) schema = executionContextResponseSchema;
+      else if (route.endsWith('/members')) schema = workspaceMemberPageSchema;
+      else if (route.endsWith('/invitations'))
+        schema = body === undefined ? workspaceInvitationPageSchema : createdInvitationSchema;
+      else if (route.endsWith('/revoke')) schema = workspaceInvitationSchema;
+      else if (route.includes('/members/') || route.includes('/agents'))
+        schema = workspaceMemberSchema;
+      else schema = workspaceSummarySchema;
+      assert.equal(
+        schema.safeParse(data).success,
+        true,
+        'Successful serialized workspace projection',
+      );
+    }
+    return { status: response.status, data, headers: response.headers };
   }
   async function ok(user, path, body, key) {
     const result = await request(user, path, body, key);
@@ -94,8 +125,10 @@ test('T05.0 PostgreSQL and HTTP workspace workflows', async (t) => {
     async () => {
       const owner = await human();
       const key = randomUUID();
-      const a = await ok(owner, 'workspaces', { name: 'Personal' }, key);
+      const a = await ok(owner, 'workspaces', { name: ' Personal ' }, key);
+      assert.equal(a.name, 'Personal');
       assert.deepEqual(await ok(owner, 'workspaces', { name: 'Personal' }, key), a);
+      assert.deepEqual(await ok(owner, `workspaces/${a.id}`), a);
       assert.equal((await request(owner, 'workspaces', { name: 'Different' }, key)).status, 409);
       const b = await fixture();
       const list = await ok(owner, 'workspaces');
@@ -188,6 +221,24 @@ test('T05.0 PostgreSQL and HTTP workspace workflows', async (t) => {
         400,
       );
       assert.equal((await request(f.owner, 'workspaces', { name: '' })).status, 400);
+      for (const [path, body, message] of [
+        ['workspaces', { name: '', source: 'forged' }, 'Invalid workspace request.'],
+        ['workspaces', { name: '' }, 'Name must contain 1 to 200 characters.'],
+        [
+          `${f.path}/invitations`,
+          { recipientEmail: 'invalid', role: 'owner' },
+          'A recipient email is required.',
+        ],
+        [
+          `${f.path}/agents`,
+          { name: '', role: 'owner', custodianPrincipalId: null },
+          'Name must contain 1 to 200 characters.',
+        ],
+      ]) {
+        const invalid = await request(null, path, body);
+        assert.equal(invalid.status, 400);
+        assert.equal(invalid.data.message, message);
+      }
       for (const role of [['admin'], { value: 'admin' }, null, 1])
         assert.equal(
           (await request(f.owner, `${f.path}/invitations`, { recipientEmail: f.owner.email, role }))
@@ -208,9 +259,10 @@ test('T05.0 PostgreSQL and HTTP workspace workflows', async (t) => {
       const issued = await ok(
         f.owner,
         `${f.path}/invitations`,
-        { recipientEmail: recipient.email, role: 'viewer' },
+        { recipientEmail: ` ${recipient.email.toUpperCase()} `, role: 'viewer' },
         key,
       );
+      assert.equal(issued.invitation.recipientEmail, recipient.email);
       const stored = await prisma.invitation.findUniqueOrThrow({
         where: { id: issued.invitation.id },
       });
@@ -254,10 +306,12 @@ test('T05.0 PostgreSQL and HTTP workspace workflows', async (t) => {
       );
       const joined = await member(f, recipient);
       assert.equal(joined.role, 'viewer');
-      await ok(f.owner, `${f.path}/members/${recipient.principalId}`, {
+      const revoked = await ok(f.owner, `${f.path}/members/${recipient.principalId}`, {
         version: joined.version,
         state: 'revoked',
       });
+      assert.equal(revoked.state, 'revoked');
+      assert.deepEqual(await member(f, recipient), revoked);
       assert.equal((await request(recipient, f.path)).status, 403);
       assert.equal(
         (

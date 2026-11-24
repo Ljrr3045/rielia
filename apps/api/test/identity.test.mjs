@@ -11,6 +11,11 @@ import { configureApplication, createHttpAdapter } from '../dist/application.js'
 import { IdentityService } from '../dist/identity/identity.service.js';
 import { readIdentityConfig } from '../dist/identity/config.js';
 import { proxyIdentity } from '../../web/src/lib/identity-proxy.ts';
+import {
+  healthResponseSchema,
+  identityConfigurationSchema,
+  identitySessionSchema,
+} from '@rielia/contracts';
 
 const publicOrigin = process.env.BETTER_AUTH_URL;
 const networkFetch = globalThis.fetch;
@@ -287,7 +292,9 @@ test('real Better Auth, Nest NodeAdapter, Prisma and PostgreSQL (simulated provi
     const response = await request('/api/v1/identity/session', { headers: { cookie } });
     assert.equal(response.status, 200);
     assert.equal(response.headers.get('cache-control'), 'no-store');
-    return response.json();
+    const projection = await response.json();
+    assert.equal(identitySessionSchema.safeParse(projection).success, true);
+    return projection;
   }
 
   await t.test(
@@ -300,7 +307,16 @@ test('real Better Auth, Nest NodeAdapter, Prisma and PostgreSQL (simulated provi
         `${publicOrigin}/api/auth/callback/github`,
       );
       assert.ok(flow.target.searchParams.get('scope').includes('user:email'));
-      assert.equal((await request('/api/v1/health')).status, 200);
+      const health = await request('/api/v1/health');
+      assert.equal(health.status, 200);
+      assert.equal(health.headers.get('cache-control'), 'no-store');
+      const liveness = await health.json();
+      assert.equal(healthResponseSchema.safeParse(liveness).success, true);
+      assert.deepEqual(liveness, { status: 'ok', service: 'rielia-api' });
+      const readiness = await request('/api/v1/readiness');
+      assert.equal(readiness.status, 503);
+      assert.equal(readiness.headers.get('cache-control'), 'no-store');
+      assert.equal((await readiness.json()).message, 'Local runtime is unavailable.');
       assert.equal((await request('/api/v1/tasks')).status, 404);
       const parsed = await post('/api/v1/parse', { nested: { value: 42 } });
       assert.deepEqual(await parsed.json(), { nested: { value: 42 } });
@@ -311,10 +327,11 @@ test('real Better Auth, Nest NodeAdapter, Prisma and PostgreSQL (simulated provi
       });
       assert.deepEqual(await form.json(), { value: 'parsed', nested: { title: 'preserved' } });
       assert.equal((await request('/api/auth/ok')).headers.get('cache-control'), 'no-store');
-      assert.equal(
-        (await request('/api/v1/identity/config')).headers.get('cache-control'),
-        'no-store',
-      );
+      const configuration = await request('/api/v1/identity/config');
+      assert.equal(configuration.headers.get('cache-control'), 'no-store');
+      const settings = await configuration.json();
+      assert.equal(identityConfigurationSchema.safeParse(settings).success, true);
+      assert.deepEqual(settings, { enabled: true, providers: ['google', 'github'] });
       assert.equal(
         (await request('/api/auth/sign-up/email', { method: 'POST' })).status >= 400,
         true,
@@ -505,6 +522,8 @@ test('real Better Auth, Nest NodeAdapter, Prisma and PostgreSQL (simulated provi
       const library = await request('/api/auth/get-session', { headers: { cookie } });
       assert.equal((await library.json()).user.id, current.user.id);
       const stored = await context.identity.runtime.prisma.session.findFirstOrThrow();
+      assert.equal(current.session.id, stored.id);
+      assert.equal(current.session.expiresAt, stored.expiresAt.toISOString());
       assert.ok(['127.0.0.1', '::ffff:127.0.0.1'].includes(stored.ipAddress));
       const account = await context.identity.runtime.prisma.account.findFirstOrThrow();
       assert.equal(account.providerId, 'github');
@@ -618,6 +637,10 @@ test('real Better Auth, Nest NodeAdapter, Prisma and PostgreSQL (simulated provi
       assert.ok(refreshed.headers.getSetCookie().some((value) => value.includes('session_token=')));
       const stored = await context.identity.runtime.prisma.session.findFirstOrThrow();
       assert.ok(stored.expiresAt.getTime() > Date.now() + 6 * 86400000);
+      const projection = await refreshed.json();
+      assert.equal(identitySessionSchema.safeParse(projection).success, true);
+      assert.equal(projection.session.id, stored.id);
+      assert.equal(projection.session.expiresAt, stored.expiresAt.toISOString());
     },
   );
 
@@ -631,7 +654,9 @@ test('real Better Auth, Nest NodeAdapter, Prisma and PostgreSQL (simulated provi
         new Request(`${publicOrigin}/api/v1/identity/session`, { headers: { cookie } }),
       );
       assert.equal(current.status, 200);
-      assert.equal((await current.json()).user.email, fixture.email);
+      const projection = await current.json();
+      assert.equal(identitySessionSchema.safeParse(projection).success, true);
+      assert.equal(projection.user.email, fixture.email);
       const logout = await proxyIdentity(
         new Request(`${publicOrigin}/api/auth/sign-out`, {
           method: 'POST',
@@ -746,7 +771,9 @@ test('real Better Auth, Nest NodeAdapter, Prisma and PostgreSQL (simulated provi
       try {
         context = await start();
         assert.equal(context.identity.runtime, undefined);
-        assert.deepEqual(await (await request('/api/v1/identity/config')).json(), {
+        const configuration = await (await request('/api/v1/identity/config')).json();
+        assert.equal(identityConfigurationSchema.safeParse(configuration).success, true);
+        assert.deepEqual(configuration, {
           enabled: false,
           providers: [],
         });

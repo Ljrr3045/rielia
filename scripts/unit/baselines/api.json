@@ -60,15 +60,15 @@
         "total": 0
       },
       "functions": {
-        "covered": 0,
+        "covered": 1,
         "total": 1
       },
       "lines": {
-        "covered": 0,
+        "covered": 3,
         "total": 3
       },
       "statements": {
-        "covered": 0,
+        "covered": 4,
         "total": 4
       }
     },
@@ -114,15 +114,15 @@
         "total": 0
       },
       "functions": {
-        "covered": 0,
+        "covered": 3,
         "total": 3
       },
       "lines": {
-        "covered": 0,
+        "covered": 8,
         "total": 8
       },
       "statements": {
-        "covered": 0,
+        "covered": 10,
         "total": 10
       }
     },
@@ -200,19 +200,19 @@
     },
     "apps/api/src/principals/principal.controller.ts": {
       "branches": {
-        "covered": 0,
+        "covered": 10,
         "total": 12
       },
       "functions": {
-        "covered": 0,
+        "covered": 3,
         "total": 3
       },
       "lines": {
-        "covered": 0,
+        "covered": 13,
         "total": 13
       },
       "statements": {
-        "covered": 0,
+        "covered": 14,
         "total": 15
       }
     },
@@ -780,15 +780,15 @@
         "total": 22
       },
       "functions": {
-        "covered": 0,
+        "covered": 1,
         "total": 12
       },
       "lines": {
-        "covered": 0,
+        "covered": 7,
         "total": 31
       },
       "statements": {
-        "covered": 0,
+        "covered": 7,
         "total": 33
       }
     },
@@ -830,19 +830,19 @@
     },
     "apps/api/src/runtime/readiness.controller.ts": {
       "branches": {
-        "covered": 0,
+        "covered": 1,
         "total": 1
       },
       "functions": {
-        "covered": 0,
+        "covered": 2,
         "total": 2
       },
       "lines": {
-        "covered": 0,
+        "covered": 6,
         "total": 6
       },
       "statements": {
-        "covered": 0,
+        "covered": 7,
         "total": 7
       }
     },
@@ -856,11 +856,11 @@
         "total": 3
       },
       "lines": {
-        "covered": 0,
+        "covered": 1,
         "total": 9
       },
       "statements": {
-        "covered": 0,
+        "covered": 2,
         "total": 12
       }
     },
@@ -900,48 +900,66 @@
         "total": 67
       }
     },
+    "apps/api/src/workspaces/workspace-input.ts": {
+      "branches": {
+        "covered": 12,
+        "total": 12
+      },
+      "functions": {
+        "covered": 12,
+        "total": 12
+      },
+      "lines": {
+        "covered": 38,
+        "total": 38
+      },
+      "statements": {
+        "covered": 45,
+        "total": 45
+      }
+    },
     "apps/api/src/workspaces/workspace.controller.ts": {
       "branches": {
-        "covered": 0,
+        "covered": 24,
         "total": 26
       },
       "functions": {
-        "covered": 0,
+        "covered": 9,
         "total": 18
       },
       "lines": {
-        "covered": 0,
+        "covered": 44,
         "total": 62
       },
       "statements": {
-        "covered": 0,
+        "covered": 46,
         "total": 64
       }
     },
     "apps/api/src/workspaces/workspace.service.ts": {
       "branches": {
-        "covered": 54,
-        "total": 116
+        "covered": 38,
+        "total": 72
       },
       "functions": {
         "covered": 17,
-        "total": 49
+        "total": 42
       },
       "lines": {
-        "covered": 74,
-        "total": 149
+        "covered": 61,
+        "total": 117
       },
       "statements": {
-        "covered": 76,
-        "total": 155
+        "covered": 63,
+        "total": 123
       }
     }
   },
   "floors": {
-    "branches": 6907,
-    "functions": 6469,
-    "lines": 6739,
-    "statements": 6716
+    "branches": 7213,
+    "functions": 6934,
+    "lines": 7234,
+    "statements": 7215
   },
   "manifest": {
     "compiler": {
@@ -1008,12 +1026,13 @@
       "apps/api/src/runtime/database.ts": "9ce00d1c3ba9468746cea760295bbff3e450c1ca95f1c1814693114f12d36b8d",
       "apps/api/src/runtime/diagnostic.ts": "d597f96627f6ba63fac36321ae2c79f9d9187256f87f19c9e694a95a2fe2da89",
       "apps/api/src/runtime/queue.ts": "d2055ebd340e1db0b84df80825b4f142a630f4c0faead8e343ad1200a478f885",
-      "apps/api/src/runtime/readiness.controller.ts": "322771b2ed9dc922d2aa476e0c9ae7dc21661d5b6ece73814c56b097ff38cb31",
+      "apps/api/src/runtime/readiness.controller.ts": "6ad0ab43fb57a8f4ff3f5e22a77e643664488ee7d27863547eb59ef2f7e78e84",
       "apps/api/src/runtime/runtime.service.ts": "513b8cdd9a9832040e4a2eb0572026b37d7dd76101c1e6b44ea45e0a896ca7f1",
       "apps/api/src/runtime/worker-health.ts": "b86d95cea7895a01b7e73ccc9391ee63e84b9b127a8ecddb47106b9befde8db2",
       "apps/api/src/worker.ts": "bcae6a2f016d587b0e803a75ff7dc079b2aa50d2ed5246fa31ac9d15fb0fb2e6",
+      "apps/api/src/workspaces/workspace-input.ts": "caddca25b481177437df324324eeb5f342b4943e848de675ded8fe32977de514",
       "apps/api/src/workspaces/workspace.controller.ts": "ca5ff5113dc068240ee8f8b3699bf44ee5e6fe98231f26b4145b94bf0fa06aa2",
-      "apps/api/src/workspaces/workspace.service.ts": "1266f52642f07d9aa3f04f2d1bb77cfd252e4930e0124154cfe73ffd30fd2361"
+      "apps/api/src/workspaces/workspace.service.ts": "b1975751d0541d31c081a7a7c08074dc78867d5580798ba9e7e042a07633cb8c"
     },
     "pnpm": "12.15.0",
     "provider": {
@@ -1027,7 +1046,7 @@
       "apps/api/test/unit/compiler-metadata.test.mjs": "72c8ec673105459a42fe0830381cc9d2e4e407729cac1b55ab68ec4029b3d599",
       "apps/api/test/unit/identity-config.test.mjs": "ea22ecd243d229ab423cd5dbba35f97d30f44fe60340081cda7820a8a4a06fa3",
       "apps/api/test/unit/principal-errors.test.mjs": "dfd3b88fbff72aa314928fa691bbf1e5964fbe07bc03702c4e3440e081daad18",
-      "apps/api/test/unit/principal-policy.test.mjs": "ff1f49ef39e6610841666ce51b983914f608009462dd59a26e9cb80fb13c6c05",
+      "apps/api/test/unit/principal-policy.test.mjs": "2a3536e6c010192240a372034aad27ce84d2ddd0c74e1b5fa31f23870db3e24c",
       "apps/api/test/unit/project-task-failures.test.mjs": "7819c7377df817552a9b015a66c374761b18b1bd0e9b7e3243ea361bb5b33939",
       "apps/api/test/unit/project-task-flows.test.mjs": "31bebccd1e85fe47a0559267af1ddfc44dc5bf309a6cdfd1e29dac60619147f1",
       "apps/api/test/unit/project-task-values-policy.test.mjs": "a3417f0f8985ae265d7b65576c0caffb213f5f720506cab62c43b4519b4523bd",
@@ -1038,6 +1057,8 @@
       "apps/api/test/unit/task-collaboration-policy.test.mjs": "489d6a0daa852c1108ecc81d00726089b0651f0f5b6c8eb2eb7bfa21fb6b3331",
       "apps/api/test/unit/task-discovery-policy.test.mjs": "36f59eef992cc398bf035ef525726af0ec0dd300fbc7bf0a4233bd6fac87ec14",
       "apps/api/test/unit/task-events-lifecycle.test.mjs": "ad32f2d28bcd651f5fbf729b0b346884d49d500657035cbc3f3874b6e7e724b5",
+      "apps/api/test/unit/workspace-http.test.mjs": "51127f2ccbcd0ddc7fff869eb615df8da16770e504ec63be01fecad921c0eb38",
+      "apps/api/test/unit/workspace-input.test.mjs": "b3e8860f2f5368538ab8e7e0300ede3da0359ea02d42d2d7c93c009c4763e5ce",
       "apps/api/test/unit/workspace-invitation.test.mjs": "ddaea707b6729915df105616b21807502f8310ccce9600d82a8483600efbfecb",
       "scripts/unit/mirror-loader.mjs": "b3ef9e50e56ee2fa0079c794c044efbc6b953d75890b97889bc635e233d93115"
     },
@@ -1046,20 +1067,20 @@
   "scope": "api",
   "total": {
     "branches": {
-      "covered": 1222,
-      "total": 1769
+      "covered": 1253,
+      "total": 1737
     },
     "functions": {
-      "covered": 383,
-      "total": 592
+      "covered": 414,
+      "total": 597
     },
     "lines": {
-      "covered": 1397,
-      "total": 2073
+      "covered": 1504,
+      "total": 2079
     },
     "statements": {
-      "covered": 1518,
-      "total": 2260
+      "covered": 1640,
+      "total": 2273
     }
   }
 }

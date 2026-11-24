@@ -12,6 +12,7 @@ import { configureApplication, createHttpAdapter } from '../dist/application.js'
 import { IdentityService } from '../dist/identity/identity.service.js';
 import { PrincipalService } from '../dist/principals/principal.service.js';
 import { storageConstraintException } from '../dist/principals/principal-errors.js';
+import { executionContextResponseSchema } from '@rielia/contracts';
 
 test('T35.0 PostgreSQL principal, policy and verified execution foundations', async (t) => {
   const app = await NestFactory.create(AppModule, createHttpAdapter(), {
@@ -116,7 +117,9 @@ test('T35.0 PostgreSQL principal, policy and verified execution foundations', as
       const okay = await fetch(url + path, { headers: { cookie: a.owner.cookie } });
       assert.equal(okay.status, 200);
       assert.equal(okay.headers.get('cache-control'), 'no-store');
-      assert.deepEqual(await okay.json(), {
+      const projection = await okay.json();
+      assert.equal(executionContextResponseSchema.safeParse(projection).success, true);
+      assert.deepEqual(projection, {
         actorPrincipalId: a.owner.principalId,
         principalKind: 'human',
         workspaceId: a.workspaceId,

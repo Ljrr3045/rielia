@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { PrincipalService } from '../../dist/principals/principal.service.js';
+import { executionContextResponseSchema } from '@rielia/contracts';
 
 const now = Date.UTC(2026, 9, 1, 12);
 const workspaceId = 'workspace-unit';
@@ -175,6 +176,13 @@ test(
     const transactions = f.calls.transactions;
     await assert.rejects(
       f.service.domainOperation({ ...context }, workspaceId, 'write', f.work),
+      status(401),
+    );
+    const parsed = executionContextResponseSchema.parse(context);
+    assert.deepEqual(parsed, context);
+    assert.equal(Object.isFrozen(parsed), false);
+    await assert.rejects(
+      f.service.domainOperation(parsed, workspaceId, 'write', f.work),
       status(401),
     );
     await assert.rejects(

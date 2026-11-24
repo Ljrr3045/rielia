@@ -1,7 +1,16 @@
 # T38 tool decisions and compatibility pilot
 
-**T38.1 ACCEPTED; T38.2a LOCAL COMPLETE, PR REVIEW PENDING,
+**T38.1/T38.2a ACCEPTED; T38.2b PUBLIC SCHEMAS IN PROGRESS,
 2026-11-23 America/Caracas.**
+[PR58 acceptance](https://github.com/Ljrr3045/rielia/pull/58#issuecomment-7120471111)
+reviewed `5e2671bd`, merged `e1ebe3ac`, identical tree `2e8086cc`, with reviewed
+and exact-merge CI/native Kilo passed. The
+[H01–04/H55–66/G01/X01–02 migration](t38-workspace-schemas.md) now has released
+implementation/focused validation and exact approved numerical adoption. Fresh
+normal 771/771 reproduces the approved reports; infrastructure/artifact checks
+pass. Selected real HTTP47/47, one runtime/deployed-closure/recovery check and
+high audits pass; publication/final acceptance remain gated. Configuration/private receipt formats are assessed deferred
+owners, not accepted exclusions. Historical receipts below keep their dates.
 [PR57 acceptance](https://github.com/Ljrr3045/rielia/pull/57#issuecomment-7118652391)
 reviewed `b12e3220`, merged `4dab8594`, with identical reviewed/merged tree
 `8573ea3d`; [exact-merge CI](https://github.com/Ljrr3045/rielia/actions/runs/45301675698/job/138135467847)

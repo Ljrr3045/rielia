@@ -1,6 +1,7 @@
 import { McpServer } from '@modelcontextprotocol/server';
 import { serveStdio, StdioServerTransport } from '@modelcontextprotocol/server/stdio';
 import { z } from 'zod';
+import { healthResponseSchema } from '@rielia/contracts';
 import { healthEndpoint } from './config.js';
 import { HealthError, readHealth } from './health.js';
 
@@ -18,10 +19,7 @@ try {
             'Reports process liveness only, not authentication, database health, product readiness, or user capabilities. ' +
             'Takes no arguments; returns only validated public status and service literals. No task data or credentials.',
           inputSchema: z.strictObject({}),
-          outputSchema: z.strictObject({
-            status: z.literal('ok'),
-            service: z.literal('rielia-api'),
-          }),
+          outputSchema: healthResponseSchema.strict(),
           annotations: {
             readOnlyHint: true,
             destructiveHint: false,

@@ -283,6 +283,13 @@ HTTP, and removes only its own container. It uses generated private test values;
 no Google/GitHub credentials or system PostgreSQL installation is needed. CI runs
 this separately from `pnpm check`; Docker is a test prerequisite, not a deployment.
 
+After building contracts/API, `node scripts/test-identity.mjs --workspaces` selects
+only principal/workspace/identity HTTP regressions with the same disposable DB,
+migrations and cleanup. This flag must stand alone. It skips unrelated domain/
+sprint suites and their domain-persistence restart witness; the default full
+command and CI coverage remain unchanged. See the bounded
+[T38.2b evidence and limits](docs/development/t38-workspace-schemas.md).
+
 `pnpm test:runtime` builds pinned multi-stage API/web images with frozen installs,
 then runs an isolated Compose project on random loopback ports. It verifies
 migration failure/gating/repeatability, readiness versus liveness, DB recovery,

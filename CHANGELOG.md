@@ -4,6 +4,30 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Record [T38.2a acceptance in PR58](https://github.com/Ljrr3045/rielia/pull/58#issuecomment-7120471111)
+  at reviewed `5e2671bd`, merge `e1ebe3ac`, with reviewed/exact-merge CI and native
+  Kilo passed, superseding its frozen pending status below. Implement the released
+  [T38.2b public workspace/identity/infrastructure schema slice](docs/development/t38-workspace-schemas.md)
+  with inferred types, facades, exact body error/normalization and transport
+  compatibility. Only approved non-JSON decorated-record/sparse-array rejection
+  changes behavior. Strict compilation/type probe and 98 focused cases pass;
+  a resumed equivalent standard sequence passes with original failures and
+  bounded continuations preserved. Next's inherited security-upgrade recommendation
+  remains unresolved. Proposal one was rejected at structural coverage floors;
+  released proxy and generic/discovery cursor compatibility controls pass 20
+  focused cases and coherent 771/771 measurement, retaining/improving all floors.
+  Proposal two receives exact numerical approval for three current baselines,
+  retaining prototype/four historical files. Fresh normal 771/771 reproduces all
+  16 approved reports; infrastructure20/20 and 17 bounded artifact files pass
+  without upload. A released sole `--workspaces` selector passes five invalid-flag
+  controls and real PG/HTTP47/47 with canonical serialized/readback assertions;
+  default CI/sprint behavior remains. One Docker runtime/deployed noExpress/
+  recovery check and both high audits pass with owned cleanup. Low/moderate
+  findings and Next recommendation remain; no upgrades. Normal-hook local handoff
+  precedes coordinator publication/current-head CI/Kilo/final acceptance.
+  Configuration and private workspace receipts retain
+  named follow-up ownership. No new dependency, UI/policy/DB or full T38 acceptance.
+
 - Record [T38.1 acceptance in PR57](https://github.com/Ljrr3045/rielia/pull/57#issuecomment-7118652391)
   and implement the bounded [T38.2a Sprint schema slice](docs/development/t38-sprint-schemas.md),
   prepared in [Draft PR58](https://github.com/Ljrr3045/rielia/pull/58).

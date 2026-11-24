@@ -1,21 +1,93 @@
 {
   "files": {
-    "packages/contracts/src/index.ts": {
+    "packages/contracts/src/dense-array-schema.ts": {
       "branches": {
-        "covered": 48,
-        "total": 48
+        "covered": 2,
+        "total": 2
       },
       "functions": {
-        "covered": 11,
-        "total": 11
+        "covered": 3,
+        "total": 3
       },
       "lines": {
-        "covered": 12,
-        "total": 12
+        "covered": 2,
+        "total": 2
       },
       "statements": {
-        "covered": 16,
-        "total": 16
+        "covered": 3,
+        "total": 3
+      }
+    },
+    "packages/contracts/src/identity-schemas.ts": {
+      "branches": {
+        "covered": 0,
+        "total": 0
+      },
+      "functions": {
+        "covered": 2,
+        "total": 2
+      },
+      "lines": {
+        "covered": 5,
+        "total": 5
+      },
+      "statements": {
+        "covered": 5,
+        "total": 5
+      }
+    },
+    "packages/contracts/src/index.ts": {
+      "branches": {
+        "covered": 3,
+        "total": 3
+      },
+      "functions": {
+        "covered": 7,
+        "total": 7
+      },
+      "lines": {
+        "covered": 6,
+        "total": 6
+      },
+      "statements": {
+        "covered": 7,
+        "total": 7
+      }
+    },
+    "packages/contracts/src/infrastructure-schemas.ts": {
+      "branches": {
+        "covered": 0,
+        "total": 0
+      },
+      "functions": {
+        "covered": 0,
+        "total": 0
+      },
+      "lines": {
+        "covered": 2,
+        "total": 2
+      },
+      "statements": {
+        "covered": 2,
+        "total": 2
+      }
+    },
+    "packages/contracts/src/principal-schemas.ts": {
+      "branches": {
+        "covered": 0,
+        "total": 0
+      },
+      "functions": {
+        "covered": 0,
+        "total": 0
+      },
+      "lines": {
+        "covered": 7,
+        "total": 7
+      },
+      "statements": {
+        "covered": 7,
+        "total": 7
       }
     },
     "packages/contracts/src/project-tasks.ts": {
@@ -34,6 +106,24 @@
       "statements": {
         "covered": 30,
         "total": 30
+      }
+    },
+    "packages/contracts/src/schema-types.ts": {
+      "branches": {
+        "covered": 0,
+        "total": 0
+      },
+      "functions": {
+        "covered": 0,
+        "total": 0
+      },
+      "lines": {
+        "covered": 0,
+        "total": 0
+      },
+      "statements": {
+        "covered": 0,
+        "total": 0
       }
     },
     "packages/contracts/src/sprint-closure.ts": {
@@ -110,7 +200,7 @@
     },
     "packages/contracts/src/task-discovery.ts": {
       "branches": {
-        "covered": 68,
+        "covered": 69,
         "total": 69
       },
       "functions": {
@@ -143,10 +233,28 @@
         "covered": 33,
         "total": 33
       }
+    },
+    "packages/contracts/src/workspace-schemas.ts": {
+      "branches": {
+        "covered": 8,
+        "total": 8
+      },
+      "functions": {
+        "covered": 10,
+        "total": 10
+      },
+      "lines": {
+        "covered": 30,
+        "total": 30
+      },
+      "statements": {
+        "covered": 32,
+        "total": 32
+      }
     }
   },
   "floors": {
-    "branches": 9928,
+    "branches": 9939,
     "functions": 10000,
     "lines": 10000,
     "statements": 10000
@@ -170,14 +278,20 @@
       "tsconfig.base.json": "cb1df8b236cca5a668abf94b5657d200094c3b338e66bfc2ea6a19e699ad7dff"
     },
     "inputs": {
-      "packages/contracts/src/index.ts": "b5f016dcadcbb9d54479c11dcbc8f96696ad5beefe5409668df35d1335f89775",
+      "packages/contracts/src/dense-array-schema.ts": "b63257466ec055213339e1985dbd21404fb7f7b0c558e916572e6733bb116232",
+      "packages/contracts/src/identity-schemas.ts": "29e63c3a715e92ba45adcbe9caa477d5ac7c4ef7a2cb58e4490d6d1a50505f3e",
+      "packages/contracts/src/index.ts": "f2665769c6811465797ae1b60a88a755067ce2084ae0a8f286f1a425f86a3e0e",
+      "packages/contracts/src/infrastructure-schemas.ts": "aff3ff3a1d758e691301d233ba7730a9366057d4de20ed2107031b69783d4a40",
+      "packages/contracts/src/principal-schemas.ts": "9a1a50bead71b986ff9f51fcad619093b197af08b10223c38879a6978c2a0a46",
       "packages/contracts/src/project-tasks.ts": "7975408b8b81e188688d12d7dfc54d5fcab7ce3d7378a2c741ce3800270dd364",
+      "packages/contracts/src/schema-types.ts": "fee5432cdd9715cdb7ff15154aae837ef801f258164c2e3671d649556c242e84",
       "packages/contracts/src/sprint-closure.ts": "64461e9006e83814c88a31df74f8ac103bce48256db5fc10cfbf1ecdff0b89da",
       "packages/contracts/src/sprint-schemas.ts": "9531374270f4e553af08ecfc6cf93326e29ceb3ef1da259c51cac11a735e7eeb",
       "packages/contracts/src/sprints.ts": "ded4f3e7642860472bd588ab5fa18f23a40e72af3acbc457989ceb286dea7525",
       "packages/contracts/src/task-collaboration.ts": "89a888be278672661b5a89cf617b6b0cd0b47c3eee9970373fdafa32935067f4",
       "packages/contracts/src/task-discovery.ts": "10c0daa197091b9ba183f3d3671ad5c600b40867c2cb574dd393a11e572aa1d0",
-      "packages/contracts/src/task-planning.ts": "849bbdadfb4ec628278f7d69021df5d413b377e4ea6cf70aff9e35e3049df7c2"
+      "packages/contracts/src/task-planning.ts": "849bbdadfb4ec628278f7d69021df5d413b377e4ea6cf70aff9e35e3049df7c2",
+      "packages/contracts/src/workspace-schemas.ts": "cece3b0cde8fa70c38409b32a2442b3bc9b2627f3b11f4baf0a2f64606062e10"
     },
     "pnpm": "12.15.0",
     "provider": {
@@ -188,10 +302,11 @@
     },
     "runtime": "24.22.1",
     "tests": {
-      "packages/contracts/test/guards.test.mjs": "82660bc24e5e753f0a2acdf274e60bf6c053f61eb1b5f786ba34f1d1e00d39a0",
+      "packages/contracts/test/guards.test.mjs": "647efd493eac3dc6d0fcda7656978b92051f0767b2af36b7940cb04e03d3100c",
       "packages/contracts/test/sprint-closure.test.mjs": "c146ac14b85bcf55e4b1bc816ec81a1991cb7489349380eb5402a1891a73bab9",
       "packages/contracts/test/sprints.test.mjs": "ea06d50618e46718ca18926a2b5fcd36a524c544fc3de3b6eaa2559fb2ad9baa",
       "packages/contracts/test/task-planning.test.mjs": "6cfff76f2fa05f5aa4d72ad6a1b3371b9369815c185459041f6628765e4db7a8",
+      "packages/contracts/test/workspace-schemas.test.mjs": "d1c7264e7971e91ecd91e9d00606e84eca53239caf0d0ce842c2e0d8595b4671",
       "scripts/unit/mirror-loader.mjs": "b3ef9e50e56ee2fa0079c794c044efbc6b953d75890b97889bc635e233d93115"
     },
     "toolsLock": "8c4e6232dbeb14b7067dd5a6a8be95256893dc915a8972f759e46b06deee7634"
@@ -199,20 +314,20 @@
   "scope": "contracts",
   "total": {
     "branches": {
-      "covered": 691,
-      "total": 696
+      "covered": 657,
+      "total": 661
     },
     "functions": {
-      "covered": 124,
-      "total": 124
+      "covered": 135,
+      "total": 135
     },
     "lines": {
-      "covered": 205,
-      "total": 205
+      "covered": 245,
+      "total": 245
     },
     "statements": {
-      "covered": 232,
-      "total": 232
+      "covered": 272,
+      "total": 272
     }
   }
 }
