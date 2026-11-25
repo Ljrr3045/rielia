@@ -1,0 +1,23 @@
+CHANGELOG.md
+  s_06c9bb773b9903::t_8b0b13cd9879be 7-13
+docs/development/t38-planning-schemas.md
+  s_06c9bb773b9903::t_8b0b13cd9879be 3-12
+docs/development/progress.md
+  s_06c9bb773b9903::t_8b0b13cd9879be 3-11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e320bf7a956471daafae4eea38aebf31eba4f28a",
+  "prompts": {},
+  "sessions": {
+    "s_06c9bb773b9903": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21078-0924-7ac1-9628-dc965252cf4d",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
