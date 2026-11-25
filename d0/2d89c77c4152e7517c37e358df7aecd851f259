@@ -1,0 +1,19 @@
+docs/development/t38-closure-schemas.md
+  s_529a9050f47aa4::t_8bbf34a6d16afa 3,6-8,17-22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d02d89c77c4152e7517c37e358df7aecd851f259",
+  "prompts": {},
+  "sessions": {
+    "s_529a9050f47aa4": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a210dc-a1d5-7ed2-a3df-c562429a1dad",
+        "model": "gpt-6-luna"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
