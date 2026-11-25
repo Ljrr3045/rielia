@@ -1,5 +1,12 @@
 # T09.0/B1b task collaboration logic
 
+Current schema follow-up: [T38.2e collaboration schemas](t38-collaboration-schemas.md)
+records the bounded H36–48/G04/client/proxy migration, exact normalization/error
+parity, intentional malformed-mode/array corrections and source-qualified local
+checks. Backend authority, immutable human/Agent authorship, transactions,
+original response objects and the opaque decoder remain with their existing
+owners. This does not accept full T09/T38 or new presentation.
+
 > Review policy update (2026-11-02): Kody triggers and Kody review requirements
 > below are obsolete. [Current review policy](kilo-review.md) governs new changes.
 > Historical review evidence and runtime guidance are preserved.

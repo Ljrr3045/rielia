@@ -732,6 +732,125 @@ test('T09 collaboration transport scopes pages/reviews, exact payloads and closu
     );
 });
 
+test('collaboration transport preserves every command body and original comment review while rejecting malformed modes', async (t) => {
+  const original = globalThis.fetch;
+  t.after(() => {
+    globalThis.fetch = original;
+  });
+  const calls = [];
+  let value = task;
+  globalThis.fetch = async (url, init) => {
+    calls.push({ url: String(url), init });
+    return { ok: true, status: 200, headers: new globalThis.Headers(), json: async () => value };
+  };
+  const api = createProjectTaskTransport();
+  const target = { workspaceId: 'w', projectId: 'p', taskId: 't', expectedVersion: 7 };
+  for (const [type, fields, suffix, body] of [
+    [
+      'set-task-parent',
+      { parentTaskId: 'parent', expectedParentVersion: 2 },
+      'parent',
+      { parentTaskId: 'parent', expectedParentVersion: 2 },
+    ],
+    [
+      'add-checklist-item',
+      { text: '  Draft  ', beforeItemId: null },
+      'checklist',
+      { text: '  Draft  ', beforeItemId: null },
+    ],
+    [
+      'edit-checklist-item',
+      { itemId: 'i', completed: false, text: '' },
+      'checklist/i',
+      { completed: false, text: '' },
+    ],
+    [
+      'move-checklist-item',
+      { itemId: 'i', beforeItemId: null },
+      'checklist/i/move',
+      { beforeItemId: null },
+    ],
+    ['remove-checklist-item', { itemId: 'i' }, 'checklist/i/remove', {}],
+    ['add-comment', { body: ' \nDraft\n ' }, 'comments', { body: ' \nDraft\n ' }],
+    [
+      'edit-comment',
+      { commentId: 'c', expectedCommentVersion: 3, body: 'Edit' },
+      'comments/c',
+      { expectedCommentVersion: 3, body: 'Edit' },
+    ],
+  ]) {
+    assert.equal(await api.mutate({ ...target, type, ...fields }, 'retained-key', signal()), task);
+    const call = calls.at(-1);
+    assert.ok(call.url.endsWith(`/tasks/t/${suffix}`));
+    assert.deepEqual(JSON.parse(call.init.body), { expectedVersion: 7, ...body });
+    assert.equal(call.init.headers['Idempotency-Key'], 'retained-key');
+    assert.equal(call.init.credentials, 'same-origin');
+    assert.equal(call.init.cache, 'no-store');
+    assert.equal(call.init.redirect, 'error');
+  }
+  const comment = { ...sharedComment, id: 'c', extra: { preserved: true } };
+  value = { task, comment, extra: 'review' };
+  const review = value;
+  assert.equal(await api.commentReview('w', 'p', 't', 'c', signal()), review);
+  assert.equal(review.comment, comment);
+  value = Object.defineProperty({ task: { ...task, projectId: 'foreign' } }, 'comment', {
+    get: () => assert.fail('Foreign task scope must reject before reading comment content'),
+  });
+  await assert.rejects(
+    api.commentReview('w', 'p', 't', 'c', signal()),
+    (error) => error.status === 502,
+  );
+  value = {
+    ...review,
+    task: { ...task, provenance: { ...task.provenance, actorPrincipalId: 'foreign' } },
+  };
+  await assert.rejects(
+    api.commentReview('w', 'p', 't', 'c', signal()),
+    (error) => error.status === 502,
+  );
+  value = {
+    ...review,
+    comment: {
+      ...comment,
+      author: { ...comment.author, kind: 'agent' },
+      provenance: {
+        ...comment.provenance,
+        executionMode: 'autonomous',
+        source: 'mcp',
+        grantId: 'grant',
+      },
+    },
+  };
+  assert.equal(await api.commentReview('w', 'p', 't', 'c', signal()), value);
+  for (const executionMode of [['delegated'], ['autonomous'], new String('delegated')]) {
+    value = {
+      ...review,
+      comment: {
+        ...comment,
+        provenance: { ...comment.provenance, executionMode, source: 'mcp', grantId: 'grant' },
+      },
+    };
+    await assert.rejects(
+      api.commentReview('w', 'p', 't', 'c', signal()),
+      (error) => error.status === 502,
+    );
+    value = {
+      workspaceId: 'w',
+      projectId: 'p',
+      taskId: 't',
+      revision: 1,
+      items: [value.comment],
+      total: 1,
+      nextCursor: null,
+      capabilities: { canCreate: true },
+    };
+    await assert.rejects(
+      api.collaboration('w', 'p', 't', 'comments', signal()),
+      (error) => error.status === 502,
+    );
+  }
+});
+
 test('schema transport keeps original response extras, scoped interpretation and independent malformed error fields', async (t) => {
   let value;
   let status = 200;

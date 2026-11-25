@@ -8,7 +8,6 @@ import {
 import { randomUUID } from 'node:crypto';
 import {
   isActivityChange,
-  isCollaborationCommand,
   taskActivityActions,
   taskActivityFields,
   taskURL,
@@ -22,7 +21,8 @@ import {
 import type { Task as TaskRow, TaskComment as CommentRow } from '../generated/prisma/client.js';
 import type { Transaction, VerifiedExecution } from '../principals/principal.service.js';
 import { ProjectTaskService } from './project-task.service.js';
-import { object, expected, text } from './project-task-input.js';
+import { object } from './project-task-input.js';
+import { collaborationInput } from './task-collaboration-input.js';
 
 const identifier = (v: unknown): v is string =>
   typeof v === 'string' && /^[A-Za-z0-9_-]{1,128}$/.test(v);
@@ -365,59 +365,7 @@ export class TaskCollaborationService {
     payload: unknown,
     itemId?: string,
   ) {
-    if (
-      !isCollaborationCommand({ type: action }) ||
-      ([
-        'edit-checklist-item',
-        'move-checklist-item',
-        'remove-checklist-item',
-        'edit-comment',
-      ].includes(action) &&
-        !identifier(itemId))
-    )
-      throw new BadRequestException('Invalid collaboration operation.');
-    const allowed =
-      action === 'set-task-parent'
-        ? ['parentTaskId', 'expectedParentVersion']
-        : action === 'add-checklist-item'
-          ? ['text', 'beforeItemId']
-          : action === 'edit-checklist-item'
-            ? ['text', 'completed']
-            : action === 'move-checklist-item'
-              ? ['beforeItemId']
-              : action === 'remove-checklist-item'
-                ? []
-                : action === 'edit-comment'
-                  ? ['body', 'expectedCommentVersion']
-                  : ['body'];
-    const input = object(payload, ['expectedVersion', ...allowed], ['expectedVersion']);
-    expected(input['expectedVersion']);
-    if (itemId) input['itemId'] = itemId;
-    if ('text' in input) input['text'] = text(input['text'], 500, true);
-    if (action.endsWith('comment')) {
-      const body = text(input['body'], 10000);
-      if (!body.trim()) throw new BadRequestException('A comment is required.');
-      input['body'] = body;
-      if (action === 'edit-comment') expected(input['expectedCommentVersion']);
-    }
-    if (
-      (action === 'add-checklist-item' && !('text' in input)) ||
-      (action === 'edit-checklist-item' && !('text' in input || 'completed' in input)) ||
-      ('completed' in input && typeof input['completed'] !== 'boolean')
-    )
-      throw new BadRequestException('Invalid checklist change.');
-    if (action === 'add-checklist-item' || action === 'move-checklist-item') {
-      if (input['beforeItemId'] !== null && !identifier(input['beforeItemId']))
-        throw new BadRequestException('Invalid checklist destination.');
-    }
-    if (action === 'set-task-parent') {
-      if (
-        (input['parentTaskId'] !== null && !identifier(input['parentTaskId'])) ||
-        (input['parentTaskId'] === null && 'expectedParentVersion' in input)
-      )
-        throw new BadRequestException('Invalid parent task.');
-      if (input['parentTaskId']) expected(input['expectedParentVersion']);
-    }
+    const input = collaborationInput(action, payload, itemId);
     return this.tasks.collaborationMutation(
       context,
       w,

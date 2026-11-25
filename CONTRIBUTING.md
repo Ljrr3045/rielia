@@ -200,6 +200,11 @@ private-access removal and abort cleanup. The [T10.1 presentation guide](docs/de
 records the separately owned My tasks/search UI on that merged surface; presentation
 adds no hook/controller/proxy/session or functional-test source.
 
+The [T38.2e schema receipt](docs/development/t38-collaboration-schemas.md) records
+the collaboration shared-body/output migration and exact guard/transport parity.
+G04 schemas strip unknown keys from validation copies; transports retain original
+response objects. Its numerical, real-PG and runtime gates remain source-qualified.
+
 The [T09.0 task-collaboration guide](docs/development/task-collaboration.md)
 records hierarchy, checklist, own-author comments, safe history and the shared
 frontend recovery contract. Its focused checks run in `pnpm test:projects:logic`

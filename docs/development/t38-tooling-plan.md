@@ -1,6 +1,6 @@
 # T38 tool decisions and compatibility pilot
 
-**T38.1/T38.2a/T38.2b/T38.2c ACCEPTED; T38.2d LOCAL GATES COMPLETE,
+**T38.1/T38.2a/T38.2b/T38.2c/T38.2d ACCEPTED; T38.2e LOCAL GATES COMPLETE,
 2026-11-24 America/Caracas.**
 [T38.2c acceptance in PR60](https://github.com/Ljrr3045/rielia/pull/60#issuecomment-7125188276)
 reviewed `fdd0450b`, merged `8c7e897b`, identical tree `adcd0147`; reviewed-head
@@ -12,9 +12,25 @@ The released [T38.2d H49–50/G05/discovery X03/X06 slice](t38-discovery-event-s
 has inferred shared schemas, separate raw/HTTP admission and explicitly approved
 non-JSON corrections. Exact numerical adoption, fresh normal799/infra20/
 artifacts17, selected real PG/HTTP57 and one runtime/closure/recovery check pass
-with cleanup and high audits. Publication/current-head review/final acceptance
-remain open for T38.2d; full T38.2/T38, configuration/private JSON and remaining
-families stay open. No new package, Query, UI, producer or policy rewrite.
+with cleanup and high audits. [PR61 acceptance](https://github.com/Ljrr3045/rielia/pull/61#issuecomment-7147377623)
+reviewed `09d257a5`, merged `0a2cb115`, identical tree `cbc738b9`; reviewed-head
+CI45360527713 and exact-merge CI45509817901 passed24steps. Native Kilo's completed
+retry reviewed20files with zero critical/warnings and one owned maintenance
+suggestion; its earlier insufficient-credit check is not a review. The settled
+clean checkout was removed through Orca, retaining evidence/branch and all93
+foreign coordinator entries. Original dated receipts retain their own identities.
+
+The [T38.2e collaboration slice](t38-collaboration-schemas.md) now has shared
+inferred schemas, exact staged inputs and the required PR61 fallback cleanup.
+Approved primitive-mode/dense-array corrections and ignored-getter preservation
+retain original transport objects; G04 parse copies strip unknown keys only.
+Exact numerical adoption and fresh normal811/infra20/artifacts17 pass. The
+standard sequence completes through preserved loopback/Next continuations and
+selected real PostgreSQL/HTTP57, runtime/deployed closure/recovery and high audits
+pass with exact owned cleanup. Application one low/fourteen moderate and tools
+two moderate findings remain.
+Current-head review/acceptance for T38.2e and full T38.2/T38 remain open. No new
+package, Query, UI, producer or policy rewrite.
 Next's security recommendation remains unresolved.
 [T38.2b acceptance in PR59](https://github.com/Ljrr3045/rielia/pull/59#issuecomment-7122689772)
 reviewed `d9699cf`, merged `c655f0f0`, identical tree `08a8a7c7`; reviewed-head
@@ -412,8 +428,9 @@ Query production/RHF/other tools remain separately gated.
 | T38.2a | ACCEPTED in PR58: H30–35/G03/X04 Sprint schemas | Reviewed `5e2671bd`, merged `e1ebe3ac`; reviewed/exact-merge CI and native Kilo passed; original local source/run limits retained |
 | T38.2b | ACCEPTED in PR59: H01–04/H55–66/G01/X01–02 | Reviewed `d9699cf`, merged `c655f0f0`; reviewed/exact-merge CI and native Kilo passed; receipts retain source identities |
 | T38.2c | ACCEPTED in PR60: H05–22/G02 and project/task/access/assignee X03 only | Reviewed `fdd0450b`, merged `8c7e897b`; reviewed/exact-merge CI and native Kilo passed; original [source-bound receipt](t38-project-task-schemas.md) retained |
-| T38.2d | LOCAL GATES COMPLETE: H49–50/G05/discovery X03/X06 and discovery-only API HTTP/X09 | [Exact receipt](t38-discovery-event-schemas.md), approved migration, normal799/infra20/artifacts17, real HTTP57/runtime/audits and cleanup; publication/current-head review/final acceptance pending |
-| T38.2 remaining | Collaboration, scope/start/close/history, encoded/private JSON and configuration | Each remaining H/G/X/C owner needs a separate release or explicit accepted debt/exclusion before T38.6; no universal policy rewrite |
+| T38.2d | ACCEPTED in PR61: H49–50/G05/discovery X03/X06 and discovery-only API HTTP/X09 | Reviewed `09d257a5`, merged `0a2cb115`; reviewed/exact-merge CI and native Kilo retry passed; [dated receipt](t38-discovery-event-schemas.md) retains failures/cleanup limits |
+| T38.2e | LOCAL GATES COMPLETE: H36–48/G04/collaboration X03 and bounded HTTP/X09 | [Receipt](t38-collaboration-schemas.md), exact approved numerical migration, fresh normal811/infra20/artifacts17, resumed standard, selected real HTTP57/runtime/audits and cleanup; current-head review/acceptance pending |
+| T38.2 remaining | T38.2e acceptance; G06/G07 scope/start/close/history, encoded/private JSON and configuration | Each owner needs a separate release or explicit accepted debt/exclusion before T38.6, including retained collaboration decoding; no universal policy rewrite |
 | T38.3 | Canonical OpenAPI generation/drift first; generated transport adoption only after TS6/generator decision | Reproducible schema/type generation, unsupported-refinement list, unknown-response and same-origin/cancellation/error parity; no second hand-maintained definition |
 | T38.4a | Two sprint resource caches and create mutation, then remaining enumerated server resources in bounded batches | Query becomes sole DTO owner; identity/render/abort/discard/SSE/version/recovery checks and production bundle/request costs |
 | T38.4b | RHF trial then separately agreed F01–12 expansion or explicit exclusions | One field owner, draft/focus/navigation/validation parity, responsive/keyboard/nonideal/persistence evidence; no presentation redesign implied |

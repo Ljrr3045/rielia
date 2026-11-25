@@ -21,11 +21,18 @@ settled clean-checkout cleanup recorded in its guide. It implements H05–22/G02
 project/task/access/assignee schemas, inferred DTOs and strict request/query
 adapters. Its approved numerical migration/normal786/infra20/artifacts17 and
 real HTTP57/runtime proof retain their original source/run identities.
-[T38.2d](t38-discovery-event-schemas.md) locally migrates H49–50/G05/discovery X03,
-X06 shape validation and discovery-only API HTTP/X09 admission. Approved exact
-numerical adoption, normal799/infra20/artifacts17 and real HTTP57/runtime pass;
-its publication/current-head review/final acceptance remain open. Full T38.2/T38
-is not accepted by these bounded deliveries.
+[T38.2d](t38-discovery-event-schemas.md) is [ACCEPTED in PR61](https://github.com/Ljrr3045/rielia/pull/61#issuecomment-7147377623),
+reviewed `09d257a5`, merged `0a2cb115`, identical tree `cbc738b9`; reviewed/exact-
+merge CI and native Kilo retry passed. Its settled clean checkout was removed
+through Orca with branch/evidence retained and all93foreign entries preserved.
+The prior insufficient-credit attempt is not a completed review. Original
+normal799/integration/runtime receipts retain their source/failure limits.
+[T38.2e](t38-collaboration-schemas.md) locally migrates H36–48/G04/collaboration
+X03 and its bounded HTTP/X09 admission, including PR61's owned fallback cleanup.
+Fresh normal811/infra20/artifacts17, resumed standard and selected real HTTP57
+pass, together with runtime/deployed closure/recovery, high audits and exact owned
+cleanup. Current-head review/acceptance remains separate.
+Full T38.2/T38 is not accepted by these bounded deliveries.
 Counts below remain bound to the original inventory snapshot; new schema/guard
 exports are recorded in each slice's guide, not silently added to old counts.
 
@@ -184,7 +191,7 @@ discovery/SSE, collaboration, scope/start/close/history, all eight private JSON
 owners and C01–12 remain separately assessed debt. No universal server-output
 parser, private receipt or runtime configuration migration is implied.
 
-**Current T38.2d disposition, November 24.** G05's six original public signatures
+**T38.2d disposition at its November24 scope.** G05's six original public signatures
 now delegate to canonical inferred schemas, with strict event alternatives and
 separate raw/HTTP query admission. Raw cursor remains admitted and ignored;
 HTTP validation and service decoding remain separate owners. The description-less
@@ -197,6 +204,22 @@ preservation, the explicitly adjacent archived-reference test, exact numerical
 proof and remaining one old G04 checklist branch. G04/G06/G07, six opaque cursor
 decoders, all eight private JSON owners and C01–12 remain separately owned;
 no full-family acceptance or universal output/configuration parser is implied.
+
+**Current T38.2e disposition, November24.** The five original G04 signatures
+now consume canonical inferred schemas; the added comment-review guard owns its
+previous inline envelope. The discriminator selector still accepts partial
+`{type}` staging values, separately from full command/body schemas. Primitive
+provenance modes intentionally reject malformed JSON arrays and non-JSON boxed/
+stringifiable substitutes; public items/history fields/changes reject sparse
+holes. Valid scalar history, human/Agent comments, duplicate acceptance and
+existing correlations remain. G04 validation copies strip unknown keys to avoid
+reading ignored getters; original guard/transport objects retain extras,
+inherited/hidden reads, descriptors and identity. Shared G02 behavior is unchanged.
+Only the existing persisted per-element activity filter is reused; public max4
+is not imposed on stored arrays. The complete collaboration opaque decoder stays
+service-owned and unmigrated alongside the other five decoders, seven other
+persisted JSON owners, G06/G07 and C01–12. Its cursor regression evidence does
+not accept a decoder migration or blanket private-data exclusion.
 
 Inputs must retain strict unknown-key rejection. Existing response guards often
 tolerate additional keys; choose that policy per response rather than silently

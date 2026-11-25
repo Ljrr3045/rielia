@@ -1,5 +1,30 @@
 # T38.2d discovery, query and invalidation schemas
 
+**T38.2d ACCEPTED AND DELIVERED, 2026-11-24 America/Caracas.**
+[PR61's final acceptance](https://github.com/Ljrr3045/rielia/pull/61#issuecomment-7147377623) governs the dated receipt below:
+reviewed `09d257a513ff5a6558402958656af787da460ebc`, merged
+`0a2cb1156d7895340e19b33808fda7aca0ac3dad`, identical tree
+`cbc738b9dd24c16f1fca271f67f9d9ed17b40506`. Reviewed-head
+[CI45360527713](https://github.com/Ljrr3045/rielia/actions/runs/45360527713/job/138329274200)
+and exact-merge
+[CI45509817901](https://github.com/Ljrr3045/rielia/actions/runs/45509817901/job/138854326459)
+passed 24 steps each. Native Kilo retry138846538938/App2193792 reviewed 20 files,
+zero critical/warnings and one maintenance suggestion; insufficient-credit
+check138335809998 remains failed-to-start evidence, not a review. The worker
+settled successfully; 878 worker evidence files plus coordinator receipts were
+verified and archived. Its clean worktree was removed through Orca, retaining
+branch/evidence and all 93 foreign coordinator entries.
+
+The [unreachable fallback disposition](https://github.com/Ljrr3045/rielia/pull/61#discussion_r4687914989)
+was valid nonblocking maintenance, [owned under issue53](https://github.com/Ljrr3045/rielia/issues/53#issuecomment-7147342867).
+It was not fixed by PR61. The subsequent [T38.2e collaboration slice](t38-collaboration-schemas.md)
+implements that cleanup locally while preserving canonical discovery selection
+and rejection order; its own current-head review/acceptance remain separate.
+Full T38.2/T38 is open. Original source/run/failure identities below remain
+unchanged and are not rebound to this later documentation batch.
+
+## Preserved preacceptance receipt — November24
+
 **DRAFT PR61; LOCAL GATES COMPLETE; CURRENT-HEAD CI/NATIVE REVIEW PENDING,
 2026-11-24 America/Caracas.** The coordinator published
 [Draft PR61](https://github.com/Ljrr3045/rielia/pull/61), targeting `dev`, at initial

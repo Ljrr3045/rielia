@@ -1,5 +1,91 @@
 # Delivery progress and decisions
 
+## 2026-11-24 T38.2d ACCEPTED; T38.2e collaboration schemas in Draft PR62
+
+The coordinator published [Draft PR62](https://github.com/Ljrr3045/rielia/pull/62),
+targeting `dev`, at initial implementation head
+`15e56e383acf03917acdac606faa9b7e4208384e`, tree
+`84a6b3cc4930b1746d1355a1b1b411a8e04b3ade`. Local gates and initial publication
+are complete; final-head CI/native Kilo/final acceptance remain pending. This
+docs-only PR-reference batch preserves the source-qualified runs and original
+failures below without rerunning or rebinding application evidence.
+
+[T38.2d is accepted and delivered in PR61](https://github.com/Ljrr3045/rielia/pull/61#issuecomment-7147377623),
+reviewed `09d257a513ff5a6558402958656af787da460ebc`, merged
+`0a2cb1156d7895340e19b33808fda7aca0ac3dad`, identical tree
+`cbc738b9dd24c16f1fca271f67f9d9ed17b40506`. Reviewed-head
+[CI45360527713](https://github.com/Ljrr3045/rielia/actions/runs/45360527713/job/138329274200)
+and exact-merge
+[CI45509817901](https://github.com/Ljrr3045/rielia/actions/runs/45509817901/job/138854326459)
+passed 24 steps each. Native Kilo retry138846538938/App2193792 reviewed 20 files,
+zero critical/warnings and one accepted maintenance suggestion; insufficient-
+credit check138335809998 is failed-to-start evidence, not a review. The settled
+clean worktree was removed through Orca, preserving branch/evidence and all 93
+foreign coordinator entries. Original worker 878 files plus coordinator receipts
+were verified and archived. Dated pending entries below retain their identities.
+
+The released [T38.2e H36–48/G04/collaboration X03/HTTP/X09 slice](t38-collaboration-schemas.md)
+now has schema-derived DTOs, exact seven-body adapters, original facades and
+canonical comment review/query admission. It reuses G02 Task/person fields and
+refinements, preserving backend authority, normalization/error order, historical
+human/Agent/System distinctions, duplicate acceptance, original response objects
+and conflict/retry/draft recovery. Primitive modes intentionally reject malformed
+JSON arrays and non-JSON boxed/stringifiable values; public sparse arrays reject.
+G04 validation copies strip unknown keys to avoid reading ignored getters, while
+existing guards/transports retain original extras/descriptors/identity. No global
+G02 repair, UI/DB/policy/cache/SSE producer or package change is included.
+
+The required [PR61 fallback cleanup](https://github.com/Ljrr3045/rielia/pull/61#discussion_r4687914989),
+[owned under issue53](https://github.com/Ljrr3045/rielia/issues/53#issuecomment-7147342867),
+is implemented locally with canonical discovery/rejection-before-authority parity.
+The old nonblocking disposition remains historical, not a claim of a PR61 fix.
+Only existing persisted activity per-element filtering reuses the canonical guard;
+the complete opaque decoder and other private/configuration/G06/G07 owners remain
+separately accounted, not blanket exclusions.
+
+24 strict bidirectional comparisons, finite guard 1042 (1023 same/19 approved
+corrections), 404 input and 1026 HTTP parity pass. The original ignored-getter
+witness reproduced four throws and then passed with zero reads after the
+coordinator-approved stripping repair. Proposal1's808measurement and partial
+candidate2 failed protected numerical/per-file gates; both remain preserved.
+Root approved exact proposal 3 bytes only after 244 physical fingerprints,15 working
+files,32 report hashes and696 retained file-metric comparisons. Original removed
+covered text units and the unused default are structural deletions, not coverage
+gains; all 17 production calls already provide defined required-key arrays.
+
+Fresh coherent normal **811/811** (API310/web424/contracts58/prototype19) reproduces
+all 16 approved report hashes/sizes. Actual digest is
+`7771e2357ad8fdcec402da68f32b3884dcd6b0c7fedfcd4d1fa2fe15700e3a9e`;
+normal identity is `2a5a5660560173ac34e06ba5e260bda5039a2372155c5c8d14b331b0dd043c3e`.
+Infrastructure 20/20 and 17 artifact files/2940066 bytes pass without upload.
+Prototype/four historical baseline bytes remain unchanged; current floors retain/
+raise all gates. Type-only/unexecuted/nullable-mapping and defensive API branch
+debt remain explicit, with no dependency-internal coverage credit.
+
+Standard verification completes as a resumed equivalent sequence: initial three
+sandbox listen-EPERM failures are supplied by canonical real HTTP6 after loopback
+permission. Earlier formatting/quality 24/lint/closure 286/cleanup/identity/workspace
+logic and projects 161/prototype 19/all consumer typechecks pass. Web compilation/
+TS/static generation precede inherited Next16.4.3 SecurityFatalError; one explicit
+identical web-only retry passes, followed by missing MCP build/MCP17/final smoke.
+Next's security recommendation remains unresolved; no upgrade or suppression.
+Selected real PostgreSQL/NodeAdapter HTTP **57/57** (33 project/task,12 collaboration,
+12 discovery) passes. Exact labelled container/volume cleanup and preservation of
+pre-existing Docker identities are verified. This selector omits unrelated
+identity/sprint/default DB-restart tails and does not replay full original T11.
+
+One runtime/deployed closure/recovery run passes in 161321ms with default-disabled
+identity. Exact project containers/networks/volume/three unique image tags are
+absent, private probes are removed and pre-existing Docker identities remain.
+High audits pass, retaining application 1 low/14 moderate and tools 2 moderate findings.
+All 244 physical unit inputs/15 original working source files/eight baselines/16 normal
+reports remain exact after integration; later docs do not rebind those runs.
+Local delivery records offline docs/links/normal hooks separately. Current-head
+CI/native Kilo/final acceptance remain coordinator gates. Root alone publishes/
+reviews/merges after the complete bounded batch. Full T38.2/T38, native Cancel/Leave/
+possible draft loss, sprint-filter and provider/staging/real-user/device/
+accessibility debts remain open.
+
 ## 2026-11-24 T38.2c ACCEPTED; T38.2d in Draft PR61
 
 [T38.2c is accepted in PR60](https://github.com/Ljrr3045/rielia/pull/60#issuecomment-7125188276),

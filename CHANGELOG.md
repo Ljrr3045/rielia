@@ -4,6 +4,28 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Record [T38.2d acceptance/delivery in PR61](https://github.com/Ljrr3045/rielia/pull/61#issuecomment-7147377623),
+  reviewed `09d257a5`, merged `0a2cb115`, with reviewed/exact-merge CI, native Kilo
+  retry and settled clean-worktree cleanup; retain insufficient-credit and dated
+  source receipts. Implement bounded [T38.2e collaboration schemas](docs/development/t38-collaboration-schemas.md):
+  inferred G04 shapes/types, exact seven-body/error adapters and comment-review/
+  HTTP query consumers retain original objects, backend authority and recovery.
+  Explicit malformed JSON mode/non-JSON mode/array corrections preserve valid
+  historical scalar behavior; G04 parse copies strip unknown keys without reading
+  ignored extra getters. Complete the owned PR61 unreachable fallback cleanup
+  locally. Preserve rejected numerical/getter/setup/compiler/lint/Next attempts
+  and structural-deletion accounting. Exact numerical adoption and fresh
+  normal811/811 reproduce all 16 approved reports; infrastructure 20/artifacts 17,
+  resumed standard checks and selected real PostgreSQL/HTTP57 pass with owned
+  identity cleanup. Runtime/deployed closure/recovery and high audits pass with
+  exact owned cleanup. Published in [Draft PR62](https://github.com/Ljrr3045/rielia/pull/62),
+  targeting `dev`, at initial implementation head
+  `15e56e383acf03917acdac606faa9b7e4208384e` (tree `84a6b3cc4930b1746d1355a1b1b411a8e04b3ade`).
+  Final-head CI/native Kilo/final acceptance remain pending; this docs-only
+  reference batch does not rebind source-qualified runs. No new
+  package, UI/policy/DB/cache/producer or Query/RHF/OpenAPI change;
+  inherited Next/pnpm warning/audit and native/external limits remain explicit.
+
 - Record [T38.2c acceptance in PR60](https://github.com/Ljrr3045/rielia/pull/60#issuecomment-7125188276),
   reviewed `fdd0450b`, merged `8c7e897b`, with reviewed/exact-merge CI, clean native
   Kilo and settled checkout cleanup. Implement bounded
@@ -21,8 +43,9 @@ This records repository changes. No application version has been released.
   Query/UI/policy/producer/DB change. Published in
   [Draft PR61](https://github.com/Ljrr3045/rielia/pull/61), targeting `dev`, at initial
   implementation head `b704c1e23ed8bc293970f3fb62d801430de94cab` (tree `05a3cee1`).
-  Current-head CI/native review/final acceptance and full T38.2/T38 remain open;
-  this docs-only reference batch does not rebind source-qualified runs.
+  Subsequent [PR61 acceptance](https://github.com/Ljrr3045/rielia/pull/61#issuecomment-7147377623)
+  governs final delivery at reviewed `09d257a5`, merge `0a2cb115`; full T38.2/T38
+  stays open. The dated reference batch does not rebind source-qualified runs.
 
 - Record [T38.2b acceptance in PR59](https://github.com/Ljrr3045/rielia/pull/59#issuecomment-7122689772)
   at reviewed `d9699cf`, merge `c655f0f0`, identical tree, reviewed/exact-merge
