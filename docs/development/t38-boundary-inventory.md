@@ -14,6 +14,14 @@ records delivery. Dated source/run/failure receipts below retain their actual
 identities; acceptance, merge, cleanup and later documents do not rebind them.
 Full T38.2/T38 remains open.
 
+Closure schemas are published in [Draft PR64](https://github.com/Ljrr3045/rielia/pull/64)
+at implementation head `a112682dc8e254563fad4f5a46b048b0e7c6a7f2` (tree
+`0980d799ba51ebb81303e05a642a9f6042708cc3`). Initial exact-head CI
+`45550717155` / validate `138990956650` (App15368) passed all 20 steps. Its sole
+annotation is the Node20-to-24 action deprecation warning; no failed-step logs
+exist. Review and acceptance remain pending. This does not assert checks for the
+later docs-only reference commit or alter source-bound receipts.
+
 [T38.2g closure schemas](t38-closure-schemas.md) implement released H23–26/G07
 and closure-only X05/HTTP/X09. Independent types and finite parity retain explicit
 dense-array/accessor/method dispositions and the recorded null-snapshot correction.

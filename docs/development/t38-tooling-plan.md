@@ -14,6 +14,14 @@ records delivery. Dated source/run/failure receipts below retain their actual
 identities; acceptance, merge, cleanup and later documents do not rebind them.
 Full T38.2/T38 remains open.
 
+T38.2g is published in [Draft PR64](https://github.com/Ljrr3045/rielia/pull/64)
+at implementation head `a112682dc8e254563fad4f5a46b048b0e7c6a7f2`, tree
+`0980d799ba51ebb81303e05a642a9f6042708cc3`; initial exact-head CI
+`45550717155` / validate `138990956650` (App15368) passed all 20 steps. Its sole
+annotation is the Node20-to-24 action deprecation warning; no failed-step logs
+exist. Review and acceptance remain pending; no check is claimed for the later
+docs-only reference commit, and source-bound local receipts remain unchanged.
+
 [T38.2g closure schemas](t38-closure-schemas.md) implement released H23–26/G07
 and closure-only X05/HTTP/X09. Independent types and finite parity retain explicit
 dense-array/accessor/method dispositions and the recorded null-snapshot correction.
@@ -475,7 +483,7 @@ Query production/RHF/other tools remain separately gated.
 | T38.2d | ACCEPTED in PR61: H49–50/G05/discovery X03/X06 and discovery-only API HTTP/X09 | Reviewed `09d257a5`, merged `0a2cb115`; reviewed/exact-merge CI and native Kilo retry passed; [dated receipt](t38-discovery-event-schemas.md) retains failures/cleanup limits |
 | T38.2e | ACCEPTED in PR62: H36–48/G04/collaboration X03 and bounded HTTP/X09 | Reviewed `6cc1e4ac`, merged `f3195081`; current-head/exact-merge CI and native Kilo passed; [dated receipt](t38-collaboration-schemas.md) retained |
 | T38.2f | ACCEPTED and delivered in PR63: H27–29/H51–54/G06 and planning X05/HTTP/X09 | Reviewed `e320bf7a`, merged `5536162d`; reviewed/exact-merge CI and native Kilo passed; [dated receipt](t38-planning-schemas.md) preserves original source/run/failure identities |
-| T38.2g | Closure H23–26/G07 and closure-only X05/HTTP/X09 implemented | [Receipt](t38-closure-schemas.md); exact adoption, normal837/infra20/artifacts17 and real HTTP17 pass; runtime/deployed closure/recovery/high audits and owned cleanup pass; publication/current-head acceptance pending |
+| T38.2g | Closure H23–26/G07 and closure-only X05/HTTP/X09 implemented | [Published in Draft PR64](https://github.com/Ljrr3045/rielia/pull/64); initial-head CI45550717155/check138990956650 passed all 20 steps; [receipt](t38-closure-schemas.md) preserves source-bound evidence; later docs-head CI, native review and acceptance pending |
 | T38.2 remaining | T38.2g acceptance; encoded/private JSON and configuration | Each owner needs a separate release or explicit accepted debt/exclusion before T38.6, including retained collaboration decoding; no universal policy rewrite |
 | T38.3 | Canonical OpenAPI generation/drift first; generated transport adoption only after TS6/generator decision | Reproducible schema/type generation, unsupported-refinement list, unknown-response and same-origin/cancellation/error parity; no second hand-maintained definition |
 | T38.4a | Two sprint resource caches and create mutation, then remaining enumerated server resources in bounded batches | Query becomes sole DTO owner; identity/render/abort/discard/SSE/version/recovery checks and production bundle/request costs |

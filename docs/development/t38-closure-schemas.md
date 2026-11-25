@@ -7,6 +7,17 @@ H23–26/G07, closure X05 and closure-only HTTP/X09 work from accepted PR63 merg
 review and acceptance remain coordinator gates.
 Full T38.2/T38 remains open under [issue53](https://github.com/Ljrr3045/rielia/issues/53).
 
+**Initial publication:** [Draft PR64](https://github.com/Ljrr3045/rielia/pull/64),
+targeting `dev`, was opened at implementation head
+`a112682dc8e254563fad4f5a46b048b0e7c6a7f2`, tree
+`0980d799ba51ebb81303e05a642a9f6042708cc3`. Initial exact-head CI run
+`45550717155` / validate check `138990956650` (App15368) passed all 20 steps in
+9m42s. Its sole annotation is the Node20-to-24 `pnpm/action-setup` deprecation
+warning; there were no failed steps or failed-step logs. Native review or
+acceptance is not recorded. A later docs-only reference commit does not inherit
+this initial-head result. This does not rebind the frozen local delivery manifest
+or any source/run receipt.
+
 This supports accepted T11/B1c, P09/US06 and affected P05/P06/P08/P10/P38,
 US05/US12/US24–25 while preserving T35 authority. UX04/UXR01 describe existing
 interaction context; no presentation or renewed native/device/accessibility
@@ -233,8 +244,8 @@ automatic retry was used to make these pass.
 
 All required local application gates are complete for the bounded slice.
 Final portable-link/handoff/whitespace checks and actual command-local hook
-execution accompany the local commit; publication/current-head CI/native review
-and coordinator acceptance remain pending. PR63's source-bound normal823/digest/
+execution accompany the local commit; PR64's initial exact-head CI passed, while
+later docs-head CI, native review and coordinator acceptance remain pending. PR63's source-bound normal823/digest/
 identity is the predecessor baseline; it was reused without replay for counts.
 The new normal837 receipt retains its actual source/run identity independently
 of later documentation commits, PR references or merge.
