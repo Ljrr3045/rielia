@@ -1,7 +1,7 @@
 import { ConflictException } from '@nestjs/common';
 import type { VerifiedExecution } from '../principals/principal.service.js';
 import type { ProjectTaskService } from './project-task.service.js';
-import { expected, object } from './project-task-input.js';
+import { startSprintInput } from './task-planning-input.js';
 import { sprintRow } from './sprint-read.js';
 import { lockSprints, scopeEvent } from './sprint-participation.js';
 import { lockPlanningTasks, planningTasks, planningSnapshot } from './task-planning.js';
@@ -17,16 +17,7 @@ export function startSprint(
   requestId: string,
   payload: unknown,
 ) {
-  const raw = object(
-    payload,
-    ['expectedVersion', 'expectedProjectVersion', 'expectedTaskRevision'],
-    ['expectedVersion', 'expectedProjectVersion', 'expectedTaskRevision'],
-  );
-  const input = {
-    expectedVersion: expected(raw['expectedVersion']),
-    expectedProjectVersion: expected(raw['expectedProjectVersion']),
-    expectedTaskRevision: expected(raw['expectedTaskRevision']),
-  };
+  const input = startSprintInput(payload);
   return mutateSprintScope(
     projects,
     context,

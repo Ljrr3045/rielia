@@ -1226,20 +1226,20 @@
     },
     "apps/web/src/lib/project-task-proxy.ts": {
       "branches": {
-        "covered": 68,
-        "total": 87
+        "covered": 74,
+        "total": 93
       },
       "functions": {
         "covered": 6,
         "total": 7
       },
       "lines": {
-        "covered": 58,
-        "total": 64
+        "covered": 61,
+        "total": 67
       },
       "statements": {
-        "covered": 61,
-        "total": 68
+        "covered": 64,
+        "total": 71
       }
     },
     "apps/web/src/lib/safe-markdown.ts": {
@@ -1586,10 +1586,10 @@
     }
   },
   "floors": {
-    "branches": 6700,
+    "branches": 6703,
     "functions": 6166,
-    "lines": 7288,
-    "statements": 7067
+    "lines": 7290,
+    "statements": 7069
   },
   "manifest": {
     "compiler": {
@@ -1678,7 +1678,7 @@
       "apps/web/src/lib/project-sprint-location.ts": "bd555135cdf7a9fd25235c00e5771bc1879013bd4bee9aa93146b6e1170d7b01",
       "apps/web/src/lib/project-task-client.ts": "a1e12efa690100a079949dd35852de2dcf608f58a6d23adb83a7cd1cf1dfece5",
       "apps/web/src/lib/project-task-controller.ts": "08d6c46531529dd5c22725acfc3877eabe1d59385d42d91a398ea5880fb6eb1b",
-      "apps/web/src/lib/project-task-proxy.ts": "b6a2a0bedb7202c8737e8926415b8e93c90daf23b64b90bc6044826babc1adae",
+      "apps/web/src/lib/project-task-proxy.ts": "85da20eabec477c93de02d3877e0da2ea2eb0a91691363ee0c04cde972cad134",
       "apps/web/src/lib/safe-markdown.ts": "ec1344cc57dade02d9e351aa78b7f8d85bd4fd2addd0540a552d407196dec244",
       "apps/web/src/lib/sprint-client-state.ts": "bb926105fd2c9fb2228d061caa51fd5ff23ae508b7b98a674f12fb884cf86b88",
       "apps/web/src/lib/sprint-client.ts": "141b2fd1b71cdde544910677ede389bb669064be637533d54ae66e1cd0fccbcc",
@@ -1688,7 +1688,7 @@
       "apps/web/src/lib/sprint-screen-model.ts": "05e997ad51ca44d6e38db2242b740b6a46432204ea6b856b55499b52404fa8de",
       "apps/web/src/lib/task-collaboration-state.ts": "e9d4b011349e9f35fb0ae64fcafb1c7c8a1ed1cb94cdbf1373b4f6da21177723",
       "apps/web/src/lib/task-events-client.ts": "fa19799acddb06cbd979bf3562916fa4dcaa4bc3963fb48c8da0e9cf775c8490",
-      "apps/web/src/lib/task-planning-client.ts": "540598c225ae636da525a769a91e1199ab9d66e15b36cded5df80fdaae49b6a1",
+      "apps/web/src/lib/task-planning-client.ts": "1ccb3d078244c96cf2608d6bc9161c1a3672b0a74c04384abc6a128b6418c834",
       "apps/web/src/lib/use-identity.ts": "390c04926405c545257cd3f13555dd54281e9908230b1127447da05161adb4d9",
       "apps/web/src/lib/use-project-sprint-integration.ts": "f00d1fce6a3e5e1e4c5a9840f322fe00bfcb0417e9b48631dd3e6bda1e35aca0",
       "apps/web/src/lib/use-project-sprints.ts": "31c181d840c553427c1461a52f907f1bbfdf0aba22651dd7b3b613a117bf64e7",
@@ -1730,7 +1730,7 @@
       "apps/web/test/unit/sprint-integration.test.mjs": "1172f79e704a0c6cc35ef2e51456d7cf67bed5a11525a605a1af29df7dea806f",
       "apps/web/test/unit/sprint-planning.test.mjs": "238f9d60fedc24dbe6270b3764ce5f736b9a1b588807279d74556467454eb87e",
       "apps/web/test/unit/sprint-screen-model.test.mjs": "c88bb693a0b830257283ef4ab57746feec9ef5c5c7e5e5a22cc80d5775cd3325",
-      "apps/web/test/unit/task-planning.test.mjs": "665c1bf84e86f2d88d8ad3ae8f34c13816b517de0e360a0fcce6c86c9f9af4eb",
+      "apps/web/test/unit/task-planning.test.mjs": "67d4e8c41b8df9cea22950ecf5dc2fca20b26be0a6ce0f2da666a006b8bba74f",
       "apps/web/test/unit/task-result-focus.test.mjs": "28c4019099eb4d5bea66b3fd430a87b027d31154a34c8af8383f9cf0766018e8",
       "apps/web/test/unit/workspace-feedback.test.mjs": "6338d7ffd30291fef3082e994311898aff3a6fc5068da1259b883b0986ac7239",
       "apps/web/test/unit/workspace-hook.test.mjs": "d77c03576e8e3340d40a1a30f79b82cc77b1533cc751be0f9646dc7c9ca5da0b",
@@ -1750,20 +1750,20 @@
   "scope": "web",
   "total": {
     "branches": {
-      "covered": 4664,
-      "total": 6961
+      "covered": 4670,
+      "total": 6967
     },
     "functions": {
       "covered": 835,
       "total": 1354
     },
     "lines": {
-      "covered": 3597,
-      "total": 4935
+      "covered": 3600,
+      "total": 4938
     },
     "statements": {
-      "covered": 3963,
-      "total": 5607
+      "covered": 3966,
+      "total": 5610
     }
   }
 }

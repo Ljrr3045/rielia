@@ -111,6 +111,44 @@ test('planning transport preserves exact explicit null/zero payload and original
   );
   assert.ok(calls.at(-1).url.endsWith('/sprints/s/start'));
 });
+test('planning transport retains original objects and conflict identity while shared schemas ignore unrelated fields', async (t) => {
+  const original = { ...planning, currentParticipation: null };
+  Object.defineProperty(original, 'ignored', {
+    enumerable: true,
+    get() {
+      throw new Error('ignored response getter');
+    },
+  });
+  let value = original;
+  let status = 200;
+  t.mock.method(globalThis, 'fetch', async () => ({
+    ok: status === 200,
+    status,
+    headers: new globalThis.Headers({ 'x-request-id': 'request' }),
+    json: async () => value,
+  }));
+  const transport = createTaskPlanningTransport();
+  assert.equal(await transport.planning('w', 'p', 't', signal()), original);
+  status = 409;
+  value = { code: 'version-conflict', current: original };
+  await assert.rejects(
+    transport.estimate(
+      'w',
+      'p',
+      't',
+      { expectedVersion: 1, estimatePoints: null },
+      'key',
+      signal(),
+    ),
+    (error) =>
+      error.current === original &&
+      error.requestId === 'request' &&
+      error.code === 'version-conflict',
+  );
+  status = 200;
+  value = { operation: { ...op, type: ['start-sprint'] }, current: original };
+  await assert.rejects(transport.setSprint('w', 'p', 't', input, 'key', signal()), { status: 502 });
+});
 test('setSprint rejects operations that do not match the requested transition or current scope', async (t) => {
   const transfer = {
       ...input,

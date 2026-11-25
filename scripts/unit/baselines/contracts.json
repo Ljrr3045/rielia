@@ -306,22 +306,58 @@
         "total": 7
       }
     },
-    "packages/contracts/src/task-planning.ts": {
+    "packages/contracts/src/task-planning-input-schemas.ts": {
       "branches": {
-        "covered": 167,
-        "total": 167
+        "covered": 21,
+        "total": 21
       },
       "functions": {
+        "covered": 8,
+        "total": 8
+      },
+      "lines": {
         "covered": 18,
         "total": 18
       },
+      "statements": {
+        "covered": 19,
+        "total": 19
+      }
+    },
+    "packages/contracts/src/task-planning-schemas.ts": {
+      "branches": {
+        "covered": 46,
+        "total": 46
+      },
+      "functions": {
+        "covered": 16,
+        "total": 16
+      },
       "lines": {
-        "covered": 28,
-        "total": 28
+        "covered": 38,
+        "total": 38
       },
       "statements": {
-        "covered": 33,
-        "total": 33
+        "covered": 39,
+        "total": 39
+      }
+    },
+    "packages/contracts/src/task-planning.ts": {
+      "branches": {
+        "covered": 0,
+        "total": 0
+      },
+      "functions": {
+        "covered": 6,
+        "total": 6
+      },
+      "lines": {
+        "covered": 6,
+        "total": 6
+      },
+      "statements": {
+        "covered": 6,
+        "total": 6
       }
     },
     "packages/contracts/src/workspace-schemas.ts": {
@@ -385,7 +421,9 @@
       "packages/contracts/src/task-collaboration.ts": "b326e00a2100878d29e1de4f84691b7f4f7cdb46933a2b91b17f8a35c7b3ae44",
       "packages/contracts/src/task-discovery-schemas.ts": "515479161b10fc02d06baf0c18de60e5048a083201438adfbab37b09b9366a7a",
       "packages/contracts/src/task-discovery.ts": "3c5493af8eff6b6defb2c052a953b441a27f5f89df98ccad44846a1fb729d087",
-      "packages/contracts/src/task-planning.ts": "849bbdadfb4ec628278f7d69021df5d413b377e4ea6cf70aff9e35e3049df7c2",
+      "packages/contracts/src/task-planning-input-schemas.ts": "9bb8b6eb712ba9494733a060dea6baa56d4eb62da2c6846ca03ccbab80891ead",
+      "packages/contracts/src/task-planning-schemas.ts": "3de9641ca227fd5a90cb4c9d40e6f3c2523c1e4dd7c5688b27caef54b8e5b665",
+      "packages/contracts/src/task-planning.ts": "5c9ba4f9824ec752c9f3c865925d854e591e20cf916c79e0d48dd2118cd3d04a",
       "packages/contracts/src/workspace-schemas.ts": "cece3b0cde8fa70c38409b32a2442b3bc9b2627f3b11f4baf0a2f64606062e10"
     },
     "pnpm": "12.15.0",
@@ -398,12 +436,12 @@
     "runtime": "24.22.1",
     "tests": {
       "packages/contracts/test/guards.test.mjs": "647efd493eac3dc6d0fcda7656978b92051f0767b2af36b7940cb04e03d3100c",
-      "packages/contracts/test/project-task-schemas.test.mjs": "5938a35daff4889b94a22e2d24049e526885b9abd53d3f7217726216aa5f5000",
+      "packages/contracts/test/project-task-schemas.test.mjs": "1986c18a8a6ae02575cac63047602c9e15a74c68bd4422270e589592acef0876",
       "packages/contracts/test/sprint-closure.test.mjs": "c146ac14b85bcf55e4b1bc816ec81a1991cb7489349380eb5402a1891a73bab9",
       "packages/contracts/test/sprints.test.mjs": "56a98cc09cf4dc5e66f9c384a19e35d5597b11e316b93a62ede844126589d797",
       "packages/contracts/test/task-collaboration-schemas.test.mjs": "12032da5ed94ccc3aa68ba2c643cee6b93e4049ab721d4eed06332d1652e2ba6",
       "packages/contracts/test/task-discovery-schemas.test.mjs": "6cfaa2c6af2d9e01ddad742810ea9302ba45205c5b495d73ff2fa306458091fc",
-      "packages/contracts/test/task-planning.test.mjs": "6cfff76f2fa05f5aa4d72ad6a1b3371b9369815c185459041f6628765e4db7a8",
+      "packages/contracts/test/task-planning.test.mjs": "82a430be1193a00105707fbf34fbd091dcb01f61cc0fd1072d243ede1e7c04b2",
       "packages/contracts/test/workspace-schemas.test.mjs": "d1c7264e7971e91ecd91e9d00606e84eca53239caf0d0ce842c2e0d8595b4671",
       "scripts/unit/mirror-loader.mjs": "b3ef9e50e56ee2fa0079c794c044efbc6b953d75890b97889bc635e233d93115"
     },
@@ -412,20 +450,20 @@
   "scope": "contracts",
   "total": {
     "branches": {
-      "covered": 468,
-      "total": 468
+      "covered": 368,
+      "total": 368
     },
     "functions": {
-      "covered": 178,
-      "total": 178
+      "covered": 190,
+      "total": 190
     },
     "lines": {
-      "covered": 360,
-      "total": 360
+      "covered": 394,
+      "total": 394
     },
     "statements": {
-      "covered": 387,
-      "total": 387
+      "covered": 418,
+      "total": 418
     }
   }
 }

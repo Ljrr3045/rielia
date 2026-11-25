@@ -236,7 +236,7 @@ test('approved scalar correction reaches G02 and actual G04/G05/G06 nested perso
     ['isTaskDiscoveryPage', discovery],
   ])
     assert.equal(contracts[name](value, collection), true, name);
-  // T38.2e explicitly hardens G04; the separately owned G06 coercion stays deferred.
+  // T38.2f explicitly approves primitive G06 modes, retaining the original witness.
   const delegated = {
     ...comment.provenance,
     executionMode: ['delegated'],
@@ -249,7 +249,7 @@ test('approved scalar correction reaches G02 and actual G04/G05/G06 nested perso
       ...planningHistory,
       items: [{ ...planningHistory.items[0], provenance: delegated }],
     }),
-    true,
+    false,
   );
 });
 

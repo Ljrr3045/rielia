@@ -8,6 +8,8 @@ import {
   taskListQuerySchema,
   taskDiscoveryHttpQuerySchema,
   collaborationHttpQuerySchema,
+  planningEmptyHttpQuerySchema,
+  planningPageHttpQuerySchema,
   type ArchiveView,
   type TaskFilters,
 } from '@rielia/contracts';
@@ -32,7 +34,9 @@ export class ProjectTaskHttp {
       | 'discovery'
       | 'events'
       | 'sprints'
-      | 'close-preview',
+      | 'close-preview'
+      | 'planning-empty'
+      | 'planning-page',
     work: (
       context: VerifiedExecution,
       requestId: string,
@@ -87,7 +91,11 @@ export class ProjectTaskHttp {
               ? taskDiscoveryHttpQuerySchema
               : list === 'collaboration'
                 ? collaborationHttpQuerySchema
-                : null;
+                : list === 'planning-empty'
+                  ? planningEmptyHttpQuerySchema
+                  : list === 'planning-page'
+                    ? planningPageHttpQuerySchema
+                    : null;
     const invalidQuery =
       querySchema !== null
         ? !querySchema.safeParse(query).success

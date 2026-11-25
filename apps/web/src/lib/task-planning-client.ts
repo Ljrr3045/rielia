@@ -6,6 +6,7 @@ import {
   isPlanningHistoryPage,
   isSprintTransitionResult,
   type TaskPlanning,
+  type EstimateTaskInput,
   type Sprint,
   type SprintScopePage,
   type PlanningHistoryPage,
@@ -208,7 +209,7 @@ export function createTaskPlanningTransport(options: { baseURL?: string; timeout
       w: string,
       p: string,
       t: string,
-      input: { expectedVersion: number; estimatePoints: number | null },
+      input: EstimateTaskInput,
       key: string,
       signal: AbortSignal,
     ) {

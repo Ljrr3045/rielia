@@ -304,6 +304,14 @@ readback and focused planning-history proof, cleanup and source bindings are in
 [T38.2c evidence](docs/development/t38-project-task-schemas.md). It does not rerun
 or accept the full original T11 lifecycle.
 
+After contracts/API builds, `node scripts/test-identity.mjs --planning-schemas`
+selects only scope/start and closure HTTP/real PostgreSQL suites in one disposable
+fixture with twice-applied migrations. The flag must stand alone; mixed, repeated
+or unknown arguments reject before temporary files/resources. It skips the
+unrelated planning-settings, identity and default DB-restart tails. G07 remains
+an unmigrated dependency protected by these checks, not a migrated closure family.
+See [T38.2f scope and limits](docs/development/t38-planning-schemas.md).
+
 `pnpm test:runtime` builds pinned multi-stage API/web images with frozen installs,
 then runs an isolated Compose project on random loopback ports. It verifies
 migration failure/gating/repeatability, readiness versus liveness, DB recovery,

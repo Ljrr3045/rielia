@@ -17,7 +17,7 @@ export class TaskPlanningController {
     @Req() req: NodeRequest,
     @Res() res: NodeResponse,
   ) {
-    return this.http.respond(req, res, w, false, (c) => this.planning.get(c, w, p, t));
+    return this.http.respond(req, res, w, 'planning-empty', (c) => this.planning.get(c, w, p, t));
   }
   @Get('sprint-history')
   history(
@@ -27,7 +27,7 @@ export class TaskPlanningController {
     @Req() req: NodeRequest,
     @Res() res: NodeResponse,
   ) {
-    return this.http.respond(req, res, w, 'sprints', (c, _id, _v, cursor) =>
+    return this.http.respond(req, res, w, 'planning-page', (c, _id, _v, cursor) =>
       this.planning.history(c, w, p, t, cursor),
     );
   }
@@ -39,7 +39,7 @@ export class TaskPlanningController {
     @Req() req: NodeRequest,
     @Res() res: NodeResponse,
   ) {
-    return this.http.respond(req, res, w, false, (c, id) =>
+    return this.http.respond(req, res, w, 'planning-empty', (c, id) =>
       this.planning.estimate(c, w, p, t, req.headers['idempotency-key'] as string, id, req.body),
     );
   }
@@ -51,7 +51,7 @@ export class TaskPlanningController {
     @Req() req: NodeRequest,
     @Res() res: NodeResponse,
   ) {
-    return this.http.respond(req, res, w, false, (c, id) =>
+    return this.http.respond(req, res, w, 'planning-empty', (c, id) =>
       this.planning.setSprint(c, w, p, t, req.headers['idempotency-key'] as string, id, req.body),
     );
   }

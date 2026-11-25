@@ -272,8 +272,8 @@
     },
     "apps/api/src/projects/project-task-http.ts": {
       "branches": {
-        "covered": 65,
-        "total": 71
+        "covered": 69,
+        "total": 75
       },
       "functions": {
         "covered": 7,
@@ -542,7 +542,7 @@
     },
     "apps/api/src/projects/sprint-scope-mutation.ts": {
       "branches": {
-        "covered": 53,
+        "covered": 56,
         "total": 57
       },
       "functions": {
@@ -550,11 +550,11 @@
         "total": 3
       },
       "lines": {
-        "covered": 30,
+        "covered": 31,
         "total": 31
       },
       "statements": {
-        "covered": 30,
+        "covered": 31,
         "total": 31
       }
     },
@@ -586,12 +586,12 @@
         "total": 7
       },
       "lines": {
-        "covered": 27,
-        "total": 27
+        "covered": 26,
+        "total": 26
       },
       "statements": {
-        "covered": 28,
-        "total": 28
+        "covered": 27,
+        "total": 27
       }
     },
     "apps/api/src/projects/sprint.controller.ts": {
@@ -738,6 +738,24 @@
         "total": 110
       }
     },
+    "apps/api/src/projects/task-planning-input.ts": {
+      "branches": {
+        "covered": 7,
+        "total": 7
+      },
+      "functions": {
+        "covered": 3,
+        "total": 3
+      },
+      "lines": {
+        "covered": 23,
+        "total": 23
+      },
+      "statements": {
+        "covered": 25,
+        "total": 25
+      }
+    },
     "apps/api/src/projects/task-planning.controller.ts": {
       "branches": {
         "covered": 0,
@@ -758,20 +776,20 @@
     },
     "apps/api/src/projects/task-planning.service.ts": {
       "branches": {
-        "covered": 47,
-        "total": 47
+        "covered": 27,
+        "total": 27
       },
       "functions": {
         "covered": 11,
         "total": 11
       },
       "lines": {
-        "covered": 47,
-        "total": 47
+        "covered": 37,
+        "total": 37
       },
       "statements": {
-        "covered": 48,
-        "total": 48
+        "covered": 38,
+        "total": 38
       }
     },
     "apps/api/src/projects/task-planning.ts": {
@@ -974,10 +992,10 @@
     }
   },
   "floors": {
-    "branches": 7510,
-    "functions": 7128,
-    "lines": 7462,
-    "statements": 7446
+    "branches": 7514,
+    "functions": 7142,
+    "lines": 7482,
+    "statements": 7466
   },
   "manifest": {
     "compiler": {
@@ -1013,7 +1031,7 @@
       "apps/api/src/principals/principal.service.ts": "1c5992e97938420aacdfa6ba6586981b345e668954b73bf7c2c1f260778c20b0",
       "apps/api/src/projects/project-task-command.ts": "c6d1fe57a4483a745fc642eb8fdfec13c7030a042f40870b05544d0d70849b3e",
       "apps/api/src/projects/project-task-dto.ts": "8cbd40a35fbefdf4151ff4480d6252b6b58112c2f730df951aa683f6e0c05eb8",
-      "apps/api/src/projects/project-task-http.ts": "37e4fe89fd26261086bf27564009d6661d38808db465ae1988c0413c40a1e4c3",
+      "apps/api/src/projects/project-task-http.ts": "1271866726ca40b8cdf407ac7ba4105a05432f2dd0b09e1eff8008eb433d5d67",
       "apps/api/src/projects/project-task-input.ts": "d8fefe2603668ecdf7bc2f281a9c62bfdcd7e723522fd8154cae4dfd3532844a",
       "apps/api/src/projects/project-task-mutation.ts": "5da469c050e6decfb04bf8eabf94d26f28d4354d80eb1cb7e8d7507457a4f77f",
       "apps/api/src/projects/project-task-policy.ts": "a1a98daa4e3d494e42324a011455a76109057b64f40df939539960000eac32f1",
@@ -1030,8 +1048,8 @@
       "apps/api/src/projects/sprint-read.ts": "fa5d3efd1191ad0aca7dea1ae05ae19a13e9925488ed8536a7dac9aa15bc22a4",
       "apps/api/src/projects/sprint-scope-mutation.ts": "0e30805793367f1cadda65d51040cccf404fc2e5c7308d59868279463287a387",
       "apps/api/src/projects/sprint-scope-read.ts": "67befd98c540d0b4ba6626ca71adc13b9f0bfc5daed32940571a3e0b7bd33b92",
-      "apps/api/src/projects/sprint-start.ts": "31d4a20f38c0f36bc2dee97a6cd2a8d66c7ba00ee183a30177af2329bfc4db9d",
-      "apps/api/src/projects/sprint.controller.ts": "9143dbd510551a3c79ed675bdda85fb0f6b7106c8e9719cfb290003766eb2a90",
+      "apps/api/src/projects/sprint-start.ts": "202c1b4fb01672e38ef926bce2249f695a34ffaed13b42a8001f2bfe542e3e79",
+      "apps/api/src/projects/sprint.controller.ts": "b96a477eb3bcfcf43d0432a6d3e0dd1e0b4e0728a23b559e665f9fe3e4c45494",
       "apps/api/src/projects/sprint.service.ts": "ec6ca52a320b47f90f8cf603b3d0e97383a52169c30d61e590444a03324d0221",
       "apps/api/src/projects/task-collaboration-input.ts": "027cb24fec9494e7dde6a1b83ec655c87e9af0edd6dd3c91dd85ffbbff38a15a",
       "apps/api/src/projects/task-collaboration.controller.ts": "c045032d97a3b8649c3313c0e083697b97216b3ec22ed180c4e778da457794f7",
@@ -1039,8 +1057,9 @@
       "apps/api/src/projects/task-discovery.controller.ts": "25105d0f0c93e5f85c1a7b94b299fd937fc07a25b8dfdf269fb5f1e722887d7b",
       "apps/api/src/projects/task-discovery.service.ts": "4e23cc067d517fc07e370b86af040221b0e0c31619c2cd5d9353ee1a73797cff",
       "apps/api/src/projects/task-events.service.ts": "3cf5a46673b07107a67eea90842ba43845652384a225358775043be50c803919",
-      "apps/api/src/projects/task-planning.controller.ts": "500472a0245f28da904e1fc202cdf40c8fb0e354c3ab9eb3ef15073ec1fb2ed0",
-      "apps/api/src/projects/task-planning.service.ts": "23126e0e757e5c340f041853100bff77a18006f7fb087064bd7b720c81a978f4",
+      "apps/api/src/projects/task-planning-input.ts": "a54da8d7e0dbe7ff14ecb10f28fa3d9bb3edce9b14b1899398b3f508cb120bcf",
+      "apps/api/src/projects/task-planning.controller.ts": "dde3e16280787ff50794ab29e8475bbf8c3029e3f22b3bd58e4801c47fabb133",
+      "apps/api/src/projects/task-planning.service.ts": "84bb04d50ec1a7a595679abb0e20832b0cd34872c96d9208c4ac25024f0a9f63",
       "apps/api/src/projects/task-planning.ts": "08d01e54f24eab86fdc40d87476b9bd748a92d4bc6cd96f95aa63d33bcf1d6c2",
       "apps/api/src/runtime/database.ts": "9ce00d1c3ba9468746cea760295bbff3e450c1ca95f1c1814693114f12d36b8d",
       "apps/api/src/runtime/diagnostic.ts": "d597f96627f6ba63fac36321ae2c79f9d9187256f87f19c9e694a95a2fe2da89",
@@ -1071,9 +1090,9 @@
       "apps/api/test/unit/project-task-schemas.test.mjs": "68e91eb10607fd131ceb4dabeccacbb4000564156043a16012b39348b8346d29",
       "apps/api/test/unit/project-task-values-policy.test.mjs": "48c3e894d7b95615962c055a40bb5fb433e76a83451c6f21cf6b354365a5934a",
       "apps/api/test/unit/sprint-close.test.mjs": "a730e81e3148cb77c93e7a5c1bb6db465966c8cf7241c0f70278baf332a13aec",
-      "apps/api/test/unit/sprint-http.test.mjs": "7c805b11132ac8f4a197f646a4f20d27616e0a6e57ffcc152fcabe1bfc49c050",
+      "apps/api/test/unit/sprint-http.test.mjs": "77b8ad80f08ec174ab36aabacbee6e88a28ea5f19c385756c954201a3df4b5e2",
       "apps/api/test/unit/sprint-planning.test.mjs": "167d806fd4782e973eb24d74d9f78d87f8be886100b39cc30bc95ae8f0f2c492",
-      "apps/api/test/unit/sprint-scope-start.test.mjs": "f26eec13ecd2b4574b35354b03c459c913e8903c7758a976c2a1f68b9f025199",
+      "apps/api/test/unit/sprint-scope-start.test.mjs": "815a679ab7fdeaab4ce38c6a5ac09538489e77bf0c17950a1f4cc5196b57c21f",
       "apps/api/test/unit/task-collaboration-policy.test.mjs": "c52d21121e81f8cb1760e6956824acdbfa1229f294c998840c4a18115538ade3",
       "apps/api/test/unit/task-discovery-http.test.mjs": "8caca1e0d1f5fea1adda13325c0180ac4d5d9d0ebc831005594227af9e66560b",
       "apps/api/test/unit/task-discovery-policy.test.mjs": "36f59eef992cc398bf035ef525726af0ec0dd300fbc7bf0a4233bd6fac87ec14",
@@ -1088,20 +1107,20 @@
   "scope": "api",
   "total": {
     "branches": {
-      "covered": 1261,
-      "total": 1679
+      "covered": 1255,
+      "total": 1670
     },
     "functions": {
-      "covered": 432,
-      "total": 606
+      "covered": 435,
+      "total": 609
     },
     "lines": {
-      "covered": 1559,
-      "total": 2089
+      "covered": 1572,
+      "total": 2101
     },
     "statements": {
-      "covered": 1700,
-      "total": 2283
+      "covered": 1715,
+      "total": 2297
     }
   }
 }

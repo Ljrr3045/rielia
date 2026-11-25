@@ -147,6 +147,42 @@ test('HTTP planning boundary rejects spoofed/unknown/repeated/non-scalar input b
   );
   assert.equal(f.calls[0].args[3].length, 2048);
 });
+test('planning sidecar query schemas reject before authority and retain inherited cursor admission', async () => {
+  for (const mode of ['planning-empty', 'planning-page']) {
+    for (const query of [
+      { view: 'active' },
+      { cursor: ['one'] },
+      { cursor: '!' },
+      { actor: 'forged' },
+    ]) {
+      const f = fixture();
+      await assert.rejects(
+        f.http.respond(f.request('GET', { query }), f.response, 'w', mode, async () => {
+          throw new Error('domain must not run');
+        }),
+        (error) => error.getStatus() === 400 && error.message === 'Invalid project/task query.',
+      );
+      assert.equal(f.authorities(), 0);
+    }
+    const f = fixture();
+    const cursor = 'a'.repeat(mode === 'planning-empty' ? 128 : 2048);
+    const query = Object.create({ cursor, view: 'active', destination: 'target', status: 'todo' });
+    await f.http.respond(
+      f.request('GET', { query }),
+      f.response,
+      'w',
+      mode,
+      async (c, _id, view, received) => {
+        assert.equal(c, context);
+        assert.equal(view, 'active');
+        assert.equal(received, cursor);
+        return 'ok';
+      },
+    );
+    assert.equal(f.authorities(), 1);
+    assert.equal(f.response.payload, 'ok');
+  }
+});
 test('mutation origin/JSON/key and current session denial cannot invoke planning service', async () => {
   for (const [headers, status] of [
     [{ origin: 'https://hostile.example' }, 403],

@@ -1,7 +1,7 @@
-import { BadRequestException, ConflictException, Inject, Injectable } from '@nestjs/common';
+import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import type { VerifiedExecution } from '../principals/principal.service.js';
 import { ProjectTaskService } from './project-task.service.js';
-import { expected, identifier, object } from './project-task-input.js';
+import { estimateTaskInput, setTaskSprintInput } from './task-planning-input.js';
 import { taskRow } from './project-task-read.js';
 import { sprintRow } from './sprint-read.js';
 import { mutateSprintScope } from './sprint-scope-mutation.js';
@@ -42,21 +42,7 @@ export class TaskPlanningService {
     requestId: string,
     payload: unknown,
   ) {
-    const raw = object(
-      payload,
-      ['expectedVersion', 'estimatePoints'],
-      ['expectedVersion', 'estimatePoints'],
-    );
-    const points = raw['estimatePoints'];
-    if (
-      points !== null &&
-      !(Number.isInteger(points) && Number(points) >= 0 && Number(points) <= 1000)
-    )
-      throw new BadRequestException('Invalid estimate.');
-    const input = {
-      expectedVersion: expected(raw['expectedVersion']),
-      estimatePoints: points as number | null,
-    };
+    const input = estimateTaskInput(payload);
     return mutateSprintScope(
       this.projects,
       c,
@@ -101,38 +87,7 @@ export class TaskPlanningService {
     requestId: string,
     payload: unknown,
   ) {
-    const fields = [
-      'expectedTaskVersion',
-      'expectedCurrentParticipationId',
-      'expectedSourceVersion',
-      'targetSprintId',
-      'expectedTargetVersion',
-    ];
-    const raw = object(payload, fields, fields);
-    if (
-      !(
-        raw['expectedCurrentParticipationId'] === null ||
-        identifier(raw['expectedCurrentParticipationId'])
-      ) ||
-      !(raw['targetSprintId'] === null || identifier(raw['targetSprintId']))
-    )
-      throw new BadRequestException('Invalid sprint participation.');
-    const input = {
-      expectedTaskVersion: expected(raw['expectedTaskVersion']),
-      expectedCurrentParticipationId: raw['expectedCurrentParticipationId'] as string | null,
-      expectedSourceVersion:
-        raw['expectedSourceVersion'] === null ? null : expected(raw['expectedSourceVersion']),
-      targetSprintId: raw['targetSprintId'] as string | null,
-      expectedTargetVersion:
-        raw['expectedTargetVersion'] === null ? null : expected(raw['expectedTargetVersion']),
-    };
-    if (
-      (input.expectedCurrentParticipationId === null) !== (input.expectedSourceVersion === null) ||
-      (input.targetSprintId === null) !== (input.expectedTargetVersion === null)
-    )
-      throw new BadRequestException(
-        'Sprint versions must match the explicit source and destination.',
-      );
+    const input = setTaskSprintInput(payload);
     return mutateSprintScope(
       this.projects,
       c,
