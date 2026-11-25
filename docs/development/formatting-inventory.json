@@ -1314,5 +1314,18 @@
     "eligibleCountAfter": 301,
     "guide": "docs/development/t38-project-task-schemas.md",
     "scope": "H05\u201322/G02/bounded X03; no provider/config/exclusion change; numerical migration separately approved"
+  },
+  "t38ClosureSchemas": {
+    "ticket": "T38.2g",
+    "base": "5536162dca58c81139cd2732712b8760185af44c",
+    "adopted": [
+      "apps/api/src/projects/sprint-closure-input.ts",
+      "apps/api/test/unit/sprint-closure-input.test.mjs",
+      "packages/contracts/src/sprint-closure-input-schemas.ts",
+      "packages/contracts/src/sprint-closure-schemas.ts"
+    ],
+    "eligibleCountAfter": 312,
+    "guide": "docs/development/t38-closure-schemas.md",
+    "scope": "H23–26/G07 and closure-only HTTP/X09; no exclusion or provider change; exact numerical adoption approved separately"
   }
 }

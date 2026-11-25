@@ -1,5 +1,30 @@
 # T36 first unit and coverage delivery
 
+[T38.2f is ACCEPTED and delivered in PR63](https://github.com/Ljrr3045/rielia/pull/63#issuecomment-7152173975):
+reviewed `e320bf7a956471daafae4eea38aebf31eba4f28a`, merged
+`5536162dca58c81139cd2732712b8760185af44c`, identical tree
+`9d17d489776758e8f462e441268cfcd031669dc6`. Reviewed-head CI45538688207 /
+check138951614747 and exact-merge CI45541878816 / check138962099425 passed all
+24 steps (App15368). Native Kilo138957705387/App2193792 reviewed all 29 files
+without findings in one round. After two owned terminal PTYs were stopped,
+the clean completed checkout was removed through Orca; branch/evidence and all
+93 foreign coordinator entries were preserved.
+[Issue53 closeout](https://github.com/Ljrr3045/rielia/issues/53#issuecomment-7152421376)
+records delivery. Dated source/run/failure receipts below retain their actual
+identities; acceptance, merge, cleanup and later documents do not rebind them.
+Full T38.2/T38 remains open.
+
+[T38.2g closure schemas](t38-closure-schemas.md) implement released H23–26/G07
+and closure-only X05/HTTP/X09. Independent types and finite parity retain explicit
+dense-array/accessor/method dispositions and the recorded null-snapshot correction.
+Exact numerical adoption and fresh normal837/infra20/artifacts17 pass, reproducing
+all16 approved reports. Selected real PostgreSQL/HTTP17 passes with owned cleanup;
+runtime/deployed closure/recovery and high audits pass with exact owned cleanup.
+Publication and current-head review/acceptance remain coordinator gates.
+Candidate1 rejection and mixed-origin candidate2 are preserved. All eight private
+JSON owners, six opaque decoders and C01–12 remain separately assessed; G06 optional
+compatibility and the shared dense-helper method caveat stay unchanged debt.
+
 [T38.2e is ACCEPTED and delivered in PR62](https://github.com/Ljrr3045/rielia/pull/62#issuecomment-7150139496):
 reviewed `6cc1e4ac4ed413f88d52a9fefe24e7b839a85bbc`, merged
 `f319508181524d340e810faf55b1e1cc625abac9`, identical tree

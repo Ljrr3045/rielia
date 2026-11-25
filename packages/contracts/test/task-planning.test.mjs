@@ -9,6 +9,7 @@ import {
   isSprintScopePage,
   isPlanningHistoryPage,
   isSprintTransitionResult,
+  isSprintTotals,
   planningSnapshotSchema,
   planningHistoryItemSchema,
   sprintScopePageSchema,
@@ -70,6 +71,26 @@ const totals = {
   children: 0,
   archived: 0,
 };
+
+test('public Sprint totals retain safe counts and tolerant original-object fields', () => {
+  const zero = Object.fromEntries(Object.keys(totals).map((key) => [key, 0]));
+  assert.ok(isSprintTotals(zero));
+  assert.ok(isSprintTotals({ ...totals, pendingPoints: Number.MAX_SAFE_INTEGER }));
+  for (const pendingPoints of [-1, 0.5, NaN, Infinity, Number.MAX_SAFE_INTEGER + 1])
+    assert.equal(isSprintTotals({ ...totals, pendingPoints }), false);
+  const missing = { ...totals };
+  delete missing.archived;
+  assert.equal(isSprintTotals(missing), false);
+  assert.ok(isSprintTotals(Object.create(totals)));
+  const original = Object.defineProperty({ ...totals }, 'ignored', {
+    enumerable: true,
+    get() {
+      throw new Error('ignored totals getter');
+    },
+  });
+  assert.ok(isSprintTotals(original));
+  assert.equal(typeof Object.getOwnPropertyDescriptor(original, 'ignored').get, 'function');
+});
 const visit = {
   id: 'visit',
   taskId: 't',

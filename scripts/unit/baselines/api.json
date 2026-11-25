@@ -272,8 +272,8 @@
     },
     "apps/api/src/projects/project-task-http.ts": {
       "branches": {
-        "covered": 69,
-        "total": 75
+        "covered": 71,
+        "total": 77
       },
       "functions": {
         "covered": 7,
@@ -406,30 +406,48 @@
         "total": 10
       },
       "lines": {
-        "covered": 45,
-        "total": 45
+        "covered": 46,
+        "total": 46
       },
       "statements": {
-        "covered": 49,
-        "total": 49
+        "covered": 50,
+        "total": 50
       }
     },
     "apps/api/src/projects/sprint-close.ts": {
       "branches": {
         "covered": 29,
-        "total": 30
+        "total": 29
       },
       "functions": {
         "covered": 5,
         "total": 5
       },
       "lines": {
-        "covered": 47,
-        "total": 47
+        "covered": 45,
+        "total": 45
       },
       "statements": {
-        "covered": 48,
-        "total": 48
+        "covered": 45,
+        "total": 45
+      }
+    },
+    "apps/api/src/projects/sprint-closure-input.ts": {
+      "branches": {
+        "covered": 1,
+        "total": 1
+      },
+      "functions": {
+        "covered": 1,
+        "total": 1
+      },
+      "lines": {
+        "covered": 5,
+        "total": 5
+      },
+      "statements": {
+        "covered": 6,
+        "total": 6
       }
     },
     "apps/api/src/projects/sprint-closure-read.ts": {
@@ -992,10 +1010,10 @@
     }
   },
   "floors": {
-    "branches": 7514,
-    "functions": 7142,
-    "lines": 7482,
-    "statements": 7466
+    "branches": 7523,
+    "functions": 7147,
+    "lines": 7486,
+    "statements": 7470
   },
   "manifest": {
     "compiler": {
@@ -1031,15 +1049,16 @@
       "apps/api/src/principals/principal.service.ts": "1c5992e97938420aacdfa6ba6586981b345e668954b73bf7c2c1f260778c20b0",
       "apps/api/src/projects/project-task-command.ts": "c6d1fe57a4483a745fc642eb8fdfec13c7030a042f40870b05544d0d70849b3e",
       "apps/api/src/projects/project-task-dto.ts": "8cbd40a35fbefdf4151ff4480d6252b6b58112c2f730df951aa683f6e0c05eb8",
-      "apps/api/src/projects/project-task-http.ts": "1271866726ca40b8cdf407ac7ba4105a05432f2dd0b09e1eff8008eb433d5d67",
+      "apps/api/src/projects/project-task-http.ts": "5fe3c3ea41b80a5ae26d0a6ba542c17fa20434109ac03d14ada0806ebe6d23f6",
       "apps/api/src/projects/project-task-input.ts": "d8fefe2603668ecdf7bc2f281a9c62bfdcd7e723522fd8154cae4dfd3532844a",
       "apps/api/src/projects/project-task-mutation.ts": "5da469c050e6decfb04bf8eabf94d26f28d4354d80eb1cb7e8d7507457a4f77f",
       "apps/api/src/projects/project-task-policy.ts": "a1a98daa4e3d494e42324a011455a76109057b64f40df939539960000eac32f1",
       "apps/api/src/projects/project-task-read.ts": "f9c854a835b634c16e2887dd4cda322fa21a897175b0ad3f8feeb0b26a4d3732",
       "apps/api/src/projects/project-task.controller.ts": "66b7d6fbffe43094af10c9200cadce90b50d54141908b704bd54bf3da6f29487",
       "apps/api/src/projects/project-task.service.ts": "8fae2e5b58abf4afd9b24232185001f24e99eaaa32814d80c1aa3c0a7c083028",
-      "apps/api/src/projects/sprint-close-preview.ts": "ee8a328029c813f152910eadd4be8f55c99b936c4c60584877b77ece189074c4",
-      "apps/api/src/projects/sprint-close.ts": "8ccd34dedde8cdc69d3285368a2c198478b0f6f8caad3a4ab74a10a94301cd51",
+      "apps/api/src/projects/sprint-close-preview.ts": "678d44df033c18da7c13907794f9b45702446baa9c614d1a4af9b1d8995f9ca8",
+      "apps/api/src/projects/sprint-close.ts": "11ec0ec16e61f0d98a38acccd1e234029beeb961d898ecae4bdcfe980c807c90",
+      "apps/api/src/projects/sprint-closure-input.ts": "9308bb1029432deb5932cb2875313e3842bf81b57b1861b14e2d93c0c0d465fe",
       "apps/api/src/projects/sprint-closure-read.ts": "9375484ed48db66fc4e3eb21f33b732d1fe758c942eb4e5fb7a50f05cb2fdfd7",
       "apps/api/src/projects/sprint-input.ts": "0d180788a6e0fb90dac335b6628b7e34f48e1038139aceb2d59a24a2c06274c5",
       "apps/api/src/projects/sprint-mutation.ts": "a29996ad0502d880f1294378a86c976145b1e0fc002f8b25869cae1c0a98f58b",
@@ -1049,7 +1068,7 @@
       "apps/api/src/projects/sprint-scope-mutation.ts": "0e30805793367f1cadda65d51040cccf404fc2e5c7308d59868279463287a387",
       "apps/api/src/projects/sprint-scope-read.ts": "67befd98c540d0b4ba6626ca71adc13b9f0bfc5daed32940571a3e0b7bd33b92",
       "apps/api/src/projects/sprint-start.ts": "202c1b4fb01672e38ef926bce2249f695a34ffaed13b42a8001f2bfe542e3e79",
-      "apps/api/src/projects/sprint.controller.ts": "b96a477eb3bcfcf43d0432a6d3e0dd1e0b4e0728a23b559e665f9fe3e4c45494",
+      "apps/api/src/projects/sprint.controller.ts": "1cc8c55cf9d9112693aedb8da66961df6834ae82b68d1865eb6559d3c397614a",
       "apps/api/src/projects/sprint.service.ts": "ec6ca52a320b47f90f8cf603b3d0e97383a52169c30d61e590444a03324d0221",
       "apps/api/src/projects/task-collaboration-input.ts": "027cb24fec9494e7dde6a1b83ec655c87e9af0edd6dd3c91dd85ffbbff38a15a",
       "apps/api/src/projects/task-collaboration.controller.ts": "c045032d97a3b8649c3313c0e083697b97216b3ec22ed180c4e778da457794f7",
@@ -1089,8 +1108,9 @@
       "apps/api/test/unit/project-task-flows.test.mjs": "31bebccd1e85fe47a0559267af1ddfc44dc5bf309a6cdfd1e29dac60619147f1",
       "apps/api/test/unit/project-task-schemas.test.mjs": "68e91eb10607fd131ceb4dabeccacbb4000564156043a16012b39348b8346d29",
       "apps/api/test/unit/project-task-values-policy.test.mjs": "48c3e894d7b95615962c055a40bb5fb433e76a83451c6f21cf6b354365a5934a",
-      "apps/api/test/unit/sprint-close.test.mjs": "a730e81e3148cb77c93e7a5c1bb6db465966c8cf7241c0f70278baf332a13aec",
-      "apps/api/test/unit/sprint-http.test.mjs": "77b8ad80f08ec174ab36aabacbee6e88a28ea5f19c385756c954201a3df4b5e2",
+      "apps/api/test/unit/sprint-close.test.mjs": "f55ef0f82544ba09283bc9b3c13e02d6ab6e101324c8e2550c7997a765d1141d",
+      "apps/api/test/unit/sprint-closure-input.test.mjs": "9ee82bddbcc1414f8635779663b641facea1df1de08ecbfe9348f5bba610d2dc",
+      "apps/api/test/unit/sprint-http.test.mjs": "d8f430cd117bb9f4301624fd0ad3c9b40164c953056d384371ce39beeb08fef6",
       "apps/api/test/unit/sprint-planning.test.mjs": "167d806fd4782e973eb24d74d9f78d87f8be886100b39cc30bc95ae8f0f2c492",
       "apps/api/test/unit/sprint-scope-start.test.mjs": "815a679ab7fdeaab4ce38c6a5ac09538489e77bf0c17950a1f4cc5196b57c21f",
       "apps/api/test/unit/task-collaboration-policy.test.mjs": "c52d21121e81f8cb1760e6956824acdbfa1229f294c998840c4a18115538ade3",
@@ -1107,20 +1127,20 @@
   "scope": "api",
   "total": {
     "branches": {
-      "covered": 1255,
-      "total": 1670
+      "covered": 1258,
+      "total": 1672
     },
     "functions": {
-      "covered": 435,
-      "total": 609
+      "covered": 436,
+      "total": 610
     },
     "lines": {
-      "covered": 1572,
-      "total": 2101
+      "covered": 1576,
+      "total": 2105
     },
     "statements": {
-      "covered": 1715,
-      "total": 2297
+      "covered": 1719,
+      "total": 2301
     }
   }
 }

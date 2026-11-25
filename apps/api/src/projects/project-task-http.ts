@@ -10,6 +10,7 @@ import {
   collaborationHttpQuerySchema,
   planningEmptyHttpQuerySchema,
   planningPageHttpQuerySchema,
+  sprintClosePreviewHttpQuerySchema,
   type ArchiveView,
   type TaskFilters,
 } from '@rielia/contracts';
@@ -35,6 +36,8 @@ export class ProjectTaskHttp {
       | 'events'
       | 'sprints'
       | 'close-preview'
+      | 'closure-empty'
+      | 'closure-page'
       | 'planning-empty'
       | 'planning-page',
     work: (
@@ -91,37 +94,29 @@ export class ProjectTaskHttp {
               ? taskDiscoveryHttpQuerySchema
               : list === 'collaboration'
                 ? collaborationHttpQuerySchema
-                : list === 'planning-empty'
-                  ? planningEmptyHttpQuerySchema
-                  : list === 'planning-page'
-                    ? planningPageHttpQuerySchema
-                    : null;
+                : list === 'close-preview'
+                  ? sprintClosePreviewHttpQuerySchema
+                  : list === 'planning-empty' || list === 'closure-empty'
+                    ? planningEmptyHttpQuerySchema
+                    : list === 'planning-page' || list === 'closure-page'
+                      ? planningPageHttpQuerySchema
+                      : null;
     const invalidQuery =
       querySchema !== null
         ? !querySchema.safeParse(query).success
         : Object.keys(query).some(
             (key) =>
               !list ||
-              !(
-                list === 'events'
-                  ? []
-                  : list === 'close-preview'
-                    ? ['cursor', 'destination']
-                    : list === 'sprints'
-                      ? ['cursor']
-                      : []
-              ).includes(key),
+              !(list === 'events' ? [] : list === 'sprints' ? ['cursor'] : []).includes(key),
           ) ||
           (query['view'] !== undefined &&
             !['active', 'archived'].includes(String(query['view']))) ||
           (query['view'] !== undefined && typeof query['view'] !== 'string') ||
           (query['cursor'] !== undefined &&
             (typeof query['cursor'] !== 'string' ||
-              !(
-                list === 'sprints' || list === 'close-preview'
-                  ? /^[A-Za-z0-9_-]{1,2048}$/
-                  : /^[A-Za-z0-9_-]{1,128}$/
-              ).test(query['cursor']))) ||
+              !(list === 'sprints' ? /^[A-Za-z0-9_-]{1,2048}$/ : /^[A-Za-z0-9_-]{1,128}$/).test(
+                query['cursor'],
+              ))) ||
           (query['destination'] !== undefined &&
             (typeof query['destination'] !== 'string' ||
               !/^[A-Za-z0-9_-]{1,128}$/.test(query['destination']))) ||

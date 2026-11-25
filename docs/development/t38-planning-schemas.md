@@ -1,5 +1,21 @@
 # T38.2f planning, scope, start and history schemas
 
+[T38.2f is ACCEPTED and delivered in PR63](https://github.com/Ljrr3045/rielia/pull/63#issuecomment-7152173975):
+reviewed `e320bf7a956471daafae4eea38aebf31eba4f28a`, merged
+`5536162dca58c81139cd2732712b8760185af44c`, identical tree
+`9d17d489776758e8f462e441268cfcd031669dc6`. Reviewed-head CI45538688207 /
+check138951614747 and exact-merge CI45541878816 / check138962099425 passed all
+24 steps (App15368). Native Kilo138957705387/App2193792 reviewed all 29 files
+without findings in one round. After two owned terminal PTYs were stopped,
+the clean completed checkout was removed through Orca; branch/evidence and all
+93 foreign coordinator entries were preserved.
+[Issue53 closeout](https://github.com/Ljrr3045/rielia/issues/53#issuecomment-7152421376)
+records delivery. Dated source/run/failure receipts below retain their actual
+identities; acceptance, merge, cleanup and later documents do not rebind them.
+Full T38.2/T38 remains open.
+
+The dated Draft/local snapshot below is preserved as historical evidence.
+
 **DRAFT PR63; LOCAL GATES COMPLETE; FINAL-HEAD CI/NATIVE REVIEW/ACCEPTANCE PENDING,
 2026-11-24 America/Caracas.** The coordinator published
 [Draft PR63](https://github.com/Ljrr3045/rielia/pull/63), targeting `dev`, at initial

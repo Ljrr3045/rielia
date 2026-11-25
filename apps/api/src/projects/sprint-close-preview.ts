@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 import { Buffer } from 'node:buffer';
 import {
   isRecord,
+  sprintCloseDestinationSchema,
   type ClosingConsequence,
   type ExecutionContextResponse,
   type SprintClosePreview,
@@ -16,8 +17,9 @@ import { summarizeSnapshots } from './sprint-scope-read.js';
 
 export function closeDestination(value: unknown): string | null {
   if (value === undefined || value === null) return null;
-  if (!identifier(value)) throw new BadRequestException('Invalid closing destination.');
-  return value;
+  const result = sprintCloseDestinationSchema.safeParse(value);
+  if (!result.success) throw new BadRequestException('Invalid closing destination.');
+  return result.data;
 }
 /** Continuation binds the entire consequence set and authority scope, never just visible rows. */
 export function closingPage(binding: unknown, ids: string[], cursor?: string) {

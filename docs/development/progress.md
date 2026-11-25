@@ -1,5 +1,32 @@
 # Delivery progress and decisions
 
+## 2026-11-25 T38.2f ACCEPTED; T38.2g closure schemas in progress
+
+[T38.2f is ACCEPTED and delivered in PR63](https://github.com/Ljrr3045/rielia/pull/63#issuecomment-7152173975):
+reviewed `e320bf7a956471daafae4eea38aebf31eba4f28a`, merged
+`5536162dca58c81139cd2732712b8760185af44c`, identical tree
+`9d17d489776758e8f462e441268cfcd031669dc6`. Reviewed-head CI45538688207 /
+check138951614747 and exact-merge CI45541878816 / check138962099425 passed all
+24 steps (App15368). Native Kilo138957705387/App2193792 reviewed all 29 files
+without findings in one round. After two owned terminal PTYs were stopped,
+the clean completed checkout was removed through Orca; branch/evidence and all
+93 foreign coordinator entries were preserved.
+[Issue53 closeout](https://github.com/Ljrr3045/rielia/issues/53#issuecomment-7152421376)
+records delivery. Dated source/run/failure receipts below retain their actual
+identities; acceptance, merge, cleanup and later documents do not rebind them.
+Full T38.2/T38 remains open.
+
+[T38.2g closure schemas](t38-closure-schemas.md) implement released H23–26/G07
+and closure-only X05/HTTP/X09. Independent types and finite parity retain explicit
+dense-array/accessor/method dispositions and the recorded null-snapshot correction.
+Exact numerical adoption and fresh normal837/infra20/artifacts17 pass, reproducing
+all16 approved reports. Selected real PostgreSQL/HTTP17 passes with owned cleanup;
+runtime/deployed closure/recovery and high audits pass with exact owned cleanup.
+Publication and current-head review/acceptance remain coordinator gates.
+Candidate1 rejection and mixed-origin candidate2 are preserved. All eight private
+JSON owners, six opaque decoders and C01–12 remain separately assessed; G06 optional
+compatibility and the shared dense-helper method caveat stay unchanged debt.
+
 ## 2026-11-24 T38.2e ACCEPTED; T38.2f in Draft PR63
 
 The coordinator published [Draft PR63](https://github.com/Ljrr3045/rielia/pull/63),
@@ -398,8 +425,9 @@ provider/staging/user acceptance remains separate.
 | T38.2c project/task/access schemas | [ACCEPTED in PR60](https://github.com/Ljrr3045/rielia/pull/60#issuecomment-7125188276), reviewed `fdd0450b`, merged `8c7e897b`; reviewed/exact-merge CI and native Kilo passed; [dated source receipts](t38-project-task-schemas.md) retained |
 | T38.2d discovery/query/event schemas | ACCEPTED in PR61, reviewed `09d257a5`, merged `0a2cb115`; original source-bound receipt retained |
 | T38.2e collaboration schemas | ACCEPTED in PR62, reviewed `6cc1e4ac`, merged `f3195081`; current-head/exact-merge CI and native Kilo passed; original receipt identities retained |
-| T38.2f planning/scope/start/history | [Local gates complete](t38-planning-schemas.md): exact numerical adoption, normal823/infra20/artifacts17, real HTTP34/runtime/audits; current-head review/acceptance pending |
-| T38.2 remaining families | G07 closure, encoded/private JSON and C01–12 remain separately owned/gated; no blanket exclusions |
+| T38.2f planning/scope/start/history | [ACCEPTED and delivered in PR63](https://github.com/Ljrr3045/rielia/pull/63#issuecomment-7152173975): reviewed `e320bf7a`, merged `5536162d`; original [receipt](t38-planning-schemas.md) retained |
+| T38.2g closure | [Implemented](t38-closure-schemas.md): exact adoption, normal837/infra20/artifacts17 and real HTTP17 pass; runtime/deployed closure/recovery/high audits and owned cleanup pass; publication/current-head acceptance pending |
+| T38.2 remaining families | T38.2g acceptance, encoded/private JSON and C01–12 remain separately owned/gated; no blanket exclusions |
 | T38.3 contract-driven transport | NOT STARTED; canonical OpenAPI and TS6/generator compatibility decision precede a generated client |
 | T38.4 queries/forms | NOT STARTED in production; sole resource-cache ownership, identity/SSE/recovery and separate RHF parity gates |
 | T38.5 testing/diagnostics | NOT STARTED in maintained tooling/runtime; shortlist evaluation does not authorize bulk installs or adjacent observability tickets |
@@ -3403,7 +3431,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T35 | B1 foundations | Principal model, immutable authorship, autonomous memberships | T04; precedes T05/T06/T12 | T35.0 bounded storage/policy/context implemented; full authorship/domain/export/credential integration incomplete |
 | T36 | Quality prerequisite 1 | Engineering standards, compatible tool enforcement and behavior-preserving frontend/backend structure | Existing bounded foundations/contracts; approved NodeAdapter | ACCEPTED bounded T36.1–T36.6 in [PR #44](https://github.com/Ljrr3045/rielia/pull/44), merged `92d480d` from reviewed `37f2a8c`; retained owned debt and [stable contract](t36-stable-ui-contract.md) remain binding |
 | T37 | Quality prerequisite 2 | Coherent redesign of existing UI using stable contracts, brand/UX and reviewed frontend-local skills | Coordinator acceptance of T36 | ACCEPTED bounded T37.1–6 through [PR49](https://github.com/Ljrr3045/rielia/pull/49#issuecomment-6819605884), reviewed `5d3637b`, merged `20a257c`; retained evidence and limits in the [acceptance guide](t37-ui-acceptance.md); T11 authorized on 2026-11-19 |
-| T38 | Engineering tooling | Shared runtime schemas, contract transport, client queries and evaluated supporting tools | Accepted T36 → T37 → full original T11; user start authorization 2026-11-23 | IN PROGRESS; [issue53](https://github.com/Ljrr3045/rielia/issues/53), [inventory](t38-boundary-inventory.md), [decisions](t38-tooling-plan.md). T38.1/2a–2e ACCEPTED through PR62, merge `f3195081`; [T38.2f](t38-planning-schemas.md) has local gates complete with exact numerical adoption, normal823/infra20/artifacts17 and real HTTP34/runtime/audits; current-head review/acceptance remains open. G07/private/configuration and T38.3–6 retain separate gates; full T38.2/T38 open |
+| T38 | Engineering tooling | Shared runtime schemas, contract transport, client queries and evaluated supporting tools | Accepted T36 → T37 → full original T11; user start authorization 2026-11-23 | IN PROGRESS; [issue53](https://github.com/Ljrr3045/rielia/issues/53), [inventory](t38-boundary-inventory.md), [decisions](t38-tooling-plan.md). T38.1/2a–2f ACCEPTED through PR63, merge `5536162d`; [T38.2g](t38-closure-schemas.md) has exact adoption, normal837/infra20/artifacts17 and real HTTP17 passed, with runtime/deployed closure/recovery/high audits and owned cleanup pass; publication/current-head acceptance pending. Private/encoded/configuration and T38.3–6 retain separate gates; full T38.2/T38 open |
 
 Public release is one launch followed by continuous updates. Internal B1 readiness,
 private T15 deployment, and marketing T34 do not substitute for T24. B3 follows

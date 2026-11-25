@@ -461,6 +461,56 @@ test('original close receipt reauthorizes before replay and ignores later archiv
       .digest('hex'),
   );
 });
+
+test('granted close and replay preserve receipt namespace and recheck current authority first', async () => {
+  const granted = {
+    ...actor,
+    executionMode: 'delegated',
+    source: 'mcp',
+    role: 'member',
+    grantId: 'grant',
+  };
+  const f = fixture({ actor: granted });
+  const reviewed = await f.service.closePreview(f.context, 'w', 'p', 's', 'backlog');
+  const input = body(reviewed);
+  const closed = await run(f, input);
+  const lookup = f.calls.find(([name]) => name === 'receipt.read')[1].where
+    .workspaceId_actorPrincipalId_executionScope_key;
+  const receipt = f.calls.find(([name]) => name === 'receipt')[1].data;
+  assert.deepEqual(lookup, {
+    workspaceId: 'w',
+    actorPrincipalId: 'h',
+    executionScope: 'grant:grant',
+    key,
+  });
+  assert.equal(receipt.executionScope, 'grant:grant');
+  assert.equal(receipt.response.closureId, closed.operation.closureId);
+  const replay = fixture({
+    actor: granted,
+    receipt,
+    source: f.state.source,
+    closure: f.state.closure,
+    outcomes: f.state.outcomes,
+  });
+  const result = await run(replay, input);
+  assert.deepEqual(result.operation, closed.operation);
+  assert.equal(
+    replay.calls.find(([name]) => name === 'receipt.read')[1].where
+      .workspaceId_actorPrincipalId_executionScope_key.executionScope,
+    'grant:grant',
+  );
+  assert.equal(
+    replay.calls.some(([name]) =>
+      ['sprint.write', 'closure.write', 'outcomes.write', 'activity', 'outbox', 'receipt'].includes(
+        name,
+      ),
+    ),
+    false,
+  );
+  const denied = fixture({ actor: granted, receipt, denied: true });
+  await assert.rejects(run(denied, input), (error) => error.getStatus() === 403);
+  assert.deepEqual(denied.calls, [['authority', 'write']]);
+});
 test('each durable collaborator failure prevents subsequent receipt and result; real SQL rollback is separately tested', async () => {
   for (const stage of [
     'sprint.write',
