@@ -1,0 +1,23 @@
+docs/development/progress.md
+  s_fddead0c12100d::t_7b834492c1d05f 3-11
+docs/development/t38-collaboration-schemas.md
+  s_fddead0c12100d::t_7b834492c1d05f 3-12,14
+CHANGELOG.md
+  s_fddead0c12100d::t_7b834492c1d05f 21-25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "6cc1e4ac4ed413f88d52a9fefe24e7b839a85bbc",
+  "prompts": {},
+  "sessions": {
+    "s_fddead0c12100d": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a20fed-40d9-7a52-9d65-15ca3f89f722",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
