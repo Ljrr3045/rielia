@@ -1,7 +1,15 @@
 # T38.2f planning, scope, start and history schemas
 
-**LOCAL GATES COMPLETE; CURRENT-HEAD CI/NATIVE REVIEW/ACCEPTANCE PENDING,
-2026-11-24 America/Caracas.** Base is accepted PR62 merge
+**DRAFT PR63; LOCAL GATES COMPLETE; FINAL-HEAD CI/NATIVE REVIEW/ACCEPTANCE PENDING,
+2026-11-24 America/Caracas.** The coordinator published
+[Draft PR63](https://github.com/Ljrr3045/rielia/pull/63), targeting `dev`, at initial
+implementation head `480263aa5b0b9214e8b045e8a313c47e4908b55d`, tree
+`a329cbef9a8a6fe1e766b5a44dc76141e36f7f5d`. Initial publication is complete;
+this docs-only PR-reference batch does not rebind local source/run receipts or
+original failures. Final-head CI, native Kilo and coordinator acceptance remain
+pending.
+
+Base is accepted PR62 merge
 `f319508181524d340e810faf55b1e1cc625abac9`. Full T38.2/T38 remains open under
 [issue53](https://github.com/Ljrr3045/rielia/issues/53).
 

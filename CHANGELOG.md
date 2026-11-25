@@ -4,6 +4,13 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Publish bounded T38.2f planning schemas in [Draft PR63](https://github.com/Ljrr3045/rielia/pull/63),
+  targeting `dev`, at initial implementation head
+  `480263aa5b0b9214e8b045e8a313c47e4908b55d` (tree `a329cbef9a8a6fe1e766b5a44dc76141e36f7f5d`).
+  Local gates are complete; final-head CI/native Kilo/coordinator acceptance remain
+  pending. This docs-only reference batch preserves original source/run/failure
+  identities and does not imply broader T38.2/T38 acceptance.
+
 - Record [T38.2e acceptance/delivery in PR62](https://github.com/Ljrr3045/rielia/pull/62#issuecomment-7150139496),
   reviewed `6cc1e4ac`, merged `f3195081`, with reviewed/exact-merge CI, clean
   native review and settled checkout cleanup; preserve original local receipts.

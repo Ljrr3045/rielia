@@ -1,6 +1,14 @@
 # Delivery progress and decisions
 
-## 2026-11-24 T38.2e ACCEPTED; T38.2f local gates complete
+## 2026-11-24 T38.2e ACCEPTED; T38.2f in Draft PR63
+
+The coordinator published [Draft PR63](https://github.com/Ljrr3045/rielia/pull/63),
+targeting `dev`, at initial implementation head
+`480263aa5b0b9214e8b045e8a313c47e4908b55d`, tree
+`a329cbef9a8a6fe1e766b5a44dc76141e36f7f5d`. Local gates and initial publication
+are complete; final-head CI/native Kilo/coordinator acceptance remain pending.
+This docs-only reference batch preserves original local source/run/failure
+identities without replaying or rebinding application evidence.
 
 [T38.2e is ACCEPTED and delivered in PR62](https://github.com/Ljrr3045/rielia/pull/62#issuecomment-7150139496):
 reviewed `6cc1e4ac4ed413f88d52a9fefe24e7b839a85bbc`, merged
