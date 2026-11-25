@@ -24,7 +24,7 @@ import {
 } from '@rielia/contracts';
 import {
   isCollaborationPage,
-  isTaskComment,
+  isTaskCommentReview,
   isCloseWarning,
   isCollaborationCommand,
   type CloseWarning,
@@ -245,11 +245,11 @@ export function createProjectTaskTransport(
         !isRecord(value) ||
         !isTask(value['task']) ||
         !scoped(value['task'], w, p, t) ||
-        !isTaskComment(value['comment']) ||
-        value['comment'].id !== commentId
+        !isTaskCommentReview(value) ||
+        value.comment.id !== commentId
       )
         throw new ProjectTaskFailure(502);
-      return value as unknown as TaskCommentReview;
+      return value;
     },
     async projects(w, view, signal, cursor) {
       const query = new URLSearchParams({ view });

@@ -23,7 +23,7 @@ export const identifier = (value: unknown): value is string =>
 export function object(
   value: unknown,
   allowed: string[],
-  required: string[] = [],
+  required: string[],
 ): Record<string, unknown> {
   if (
     !value ||
@@ -34,16 +34,6 @@ export function object(
   )
     throw new BadRequestException('Invalid project/task request.');
   return { ...(value as Record<string, unknown>) };
-}
-export function text(value: unknown, limit: number, required = false): string {
-  if (
-    typeof value !== 'string' ||
-    value.includes('\0') ||
-    value.length > limit ||
-    (required && (!value.trim() || /[\r\n\t]/.test(value)))
-  )
-    throw new BadRequestException('Invalid text.');
-  return required ? value.trim() : value;
 }
 export function expected(value: unknown): number {
   if (!Number.isSafeInteger(value) || Number(value) < 1)

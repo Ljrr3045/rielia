@@ -60,6 +60,167 @@ test('retained collaboration text admission rejects malformed checklist/comments
   assert.equal(mutations, 0);
 });
 
+test('collaboration input preserves staged errors, exact optional presence and normalized mutation payloads', () => {
+  const calls = [];
+  const service = new TaskCollaborationService({
+    collaborationMutation: (...args) => {
+      calls.push(args);
+      return args[7];
+    },
+  });
+  const context = Object.freeze({ boundary: 'admission only' });
+  const invoke = (action, body, itemId) =>
+    service.mutate(context, 'w', 'p', 'task', key, 'request', action, body, itemId);
+  for (const [action, body, itemId, message] of [
+    ['unknown', null, undefined, 'Invalid collaboration operation.'],
+    ['edit-comment', null, 'bad id', 'Invalid collaboration operation.'],
+    [
+      'add-comment',
+      { expectedVersion: 0, body: null, authorPrincipalId: 'forged' },
+      undefined,
+      'Invalid project/task request.',
+    ],
+    ['add-comment', { body: 'x' }, undefined, 'Invalid project/task request.'],
+    [
+      'edit-comment',
+      { expectedVersion: 1, expectedCommentVersion: 0, body: '\0' },
+      'comment',
+      'Invalid text.',
+    ],
+    [
+      'edit-comment',
+      { expectedVersion: 1, expectedCommentVersion: 0, body: ' ' },
+      'comment',
+      'A comment is required.',
+    ],
+    [
+      'edit-comment',
+      { expectedVersion: 1, expectedCommentVersion: 0, body: 'x' },
+      'comment',
+      'A positive expectedVersion is required.',
+    ],
+    [
+      'edit-checklist-item',
+      { expectedVersion: 1, text: '\n', completed: 'yes' },
+      'item',
+      'Invalid text.',
+    ],
+    ['edit-checklist-item', { expectedVersion: 1 }, 'item', 'Invalid checklist change.'],
+    [
+      'edit-checklist-item',
+      { expectedVersion: 1, completed: undefined },
+      'item',
+      'Invalid checklist change.',
+    ],
+    [
+      'add-checklist-item',
+      { expectedVersion: 1, beforeItemId: 'bad id' },
+      undefined,
+      'Invalid checklist change.',
+    ],
+    [
+      'add-checklist-item',
+      { expectedVersion: 1, text: 'x' },
+      undefined,
+      'Invalid checklist destination.',
+    ],
+    [
+      'move-checklist-item',
+      { expectedVersion: 1, beforeItemId: undefined },
+      'item',
+      'Invalid checklist destination.',
+    ],
+    [
+      'set-task-parent',
+      { expectedVersion: 1, parentTaskId: null, expectedParentVersion: undefined },
+      undefined,
+      'Invalid parent task.',
+    ],
+    [
+      'set-task-parent',
+      { expectedVersion: 1, parentTaskId: 'bad id', expectedParentVersion: 0 },
+      undefined,
+      'Invalid parent task.',
+    ],
+    [
+      'set-task-parent',
+      { expectedVersion: 1, parentTaskId: 'parent' },
+      undefined,
+      'A positive expectedVersion is required.',
+    ],
+    [
+      'remove-checklist-item',
+      Object.create({ expectedVersion: 1 }),
+      'item',
+      'A positive expectedVersion is required.',
+    ],
+  ])
+    assert.throws(
+      () => invoke(action, body, itemId),
+      (error) => error.getStatus() === 400 && error.message === message,
+      action,
+    );
+  assert.equal(calls.length, 0);
+  for (const [action, input, itemId, expected] of [
+    [
+      'set-task-parent',
+      { expectedVersion: 1, parentTaskId: null },
+      undefined,
+      { expectedVersion: 1, parentTaskId: null },
+    ],
+    [
+      'add-checklist-item',
+      { expectedVersion: 1, text: '  Work  ', beforeItemId: null },
+      undefined,
+      { expectedVersion: 1, text: 'Work', beforeItemId: null },
+    ],
+    [
+      'edit-checklist-item',
+      { expectedVersion: 1, completed: false },
+      'item',
+      { expectedVersion: 1, completed: false, itemId: 'item' },
+    ],
+    [
+      'move-checklist-item',
+      { expectedVersion: 1, beforeItemId: 'next' },
+      'item',
+      { expectedVersion: 1, beforeItemId: 'next', itemId: 'item' },
+    ],
+    [
+      'remove-checklist-item',
+      { expectedVersion: 1 },
+      'item',
+      { expectedVersion: 1, itemId: 'item' },
+    ],
+    [
+      'add-comment',
+      { expectedVersion: 1, body: ' \nWork\n ' },
+      undefined,
+      { expectedVersion: 1, body: ' \nWork\n ' },
+    ],
+    [
+      'edit-comment',
+      { expectedVersion: 1, expectedCommentVersion: 2, body: 'Edited' },
+      'comment',
+      { expectedVersion: 1, expectedCommentVersion: 2, body: 'Edited', itemId: 'comment' },
+    ],
+  ]) {
+    const original = globalThis.structuredClone(input);
+    assert.deepEqual(invoke(action, input, itemId), expected);
+    assert.deepEqual(input, original, 'caller payload is not normalized in place');
+    assert.equal(calls.at(-1)[0], context);
+    assert.equal(calls.at(-1)[6], action);
+  }
+  const decorated = Object.assign(Object.create({ authorPrincipalId: 'ignored inherited extra' }), {
+    expectedVersion: 1,
+  });
+  Object.defineProperty(decorated, 'body', { value: 'ignored hidden extra' });
+  assert.deepEqual(invoke('remove-checklist-item', decorated, 'item'), {
+    expectedVersion: 1,
+    itemId: 'item',
+  });
+});
+
 // Real project composition supplies archive/version/parent policy and DTOs.
 // Repository methods return named records, not an in-memory ORM or SQL engine.
 function fixture(t) {
@@ -145,6 +306,8 @@ function fixture(t) {
   };
   const effects = {
     comments: [],
+    commentAnchors: [],
+    commentPages: [],
     tasks: [],
     checklist: [],
     activity: [],
@@ -185,7 +348,21 @@ function fixture(t) {
       ],
     },
     taskComment: {
-      findFirst: async () => state.comment,
+      findFirst: async ({ where }) => {
+        assert.equal(where.workspaceId, 'w');
+        assert.equal(where.projectId, 'p');
+        assert.equal(where.taskId, 'task');
+        effects.commentAnchors.push(where);
+        return where.id === state.comment?.id ? state.comment : null;
+      },
+      findMany: async (query) => {
+        effects.commentPages.push(query);
+        return [];
+      },
+      count: async ({ where }) => {
+        assert.deepEqual(where, { workspaceId: 'w', projectId: 'p', taskId: 'task' });
+        return 1;
+      },
       create: async ({ data }) => {
         effects.comments.push(data);
         if (state.commentError) throw state.commentError;
@@ -456,4 +633,60 @@ test('checklist page exposes canonical movement anchors and read-only capabiliti
     page.items.every((item) => Object.values(item.capabilities).every((value) => value === false)),
     true,
   );
+});
+
+test('collaboration cursors reject malformed context before stale revision and use only authorized anchors', async (t) => {
+  const f = fixture(t);
+  const envelope = { v: 1, w: 'w', p: 'p', t: 'task', k: 'comments', r: 4, a: 'comment' };
+  const encoded = (patch = {}) =>
+    globalThis.Buffer.from(JSON.stringify({ ...envelope, ...patch })).toString('base64url');
+  const page = (cursor, collection = 'comments') =>
+    f.service.page(f.context, 'w', 'p', 'task', collection, cursor);
+  for (const cursor of [
+    'bad cursor',
+    'x'.repeat(2049),
+    globalThis.Buffer.from('{').toString('base64url'),
+    encoded({ extra: 'forbidden' }),
+    encoded({ v: 2 }),
+    encoded({ w: 'foreign', r: 3 }),
+    encoded({ p: 'foreign', r: 3 }),
+    encoded({ t: 'foreign', r: 3 }),
+    encoded({ k: 'history', r: 3 }),
+    encoded({ a: 'bad id', r: 3 }),
+    encoded({ r: 0 }),
+  ])
+    await assert.rejects(page(cursor), status(400));
+  await assert.rejects(page(encoded({ r: 3 })), status(409, 'page-changed'));
+  assert.deepEqual(
+    f.effects.commentAnchors,
+    [],
+    'Malformed or stale cursors cannot look up anchors',
+  );
+  await assert.rejects(page(encoded({ a: 'missing' })), status(400));
+  assert.deepEqual(f.effects.commentAnchors, [
+    { workspaceId: 'w', projectId: 'p', taskId: 'task', id: 'missing' },
+  ]);
+  assert.deepEqual(f.effects.commentPages, []);
+  const result = await page(encoded());
+  assert.equal(result.revision, 4);
+  assert.equal(result.taskId, 'task');
+  assert.equal(result.total, 1);
+  assert.equal(result.nextCursor, null);
+  assert.deepEqual(result.items, []);
+  assert.deepEqual(f.effects.commentPages, [
+    {
+      where: {
+        workspaceId: 'w',
+        projectId: 'p',
+        taskId: 'task',
+        OR: [
+          { updatedAt: { lt: f.state.comment.updatedAt } },
+          { updatedAt: f.state.comment.updatedAt, id: { lt: 'comment' } },
+        ],
+      },
+      orderBy: [{ updatedAt: 'desc' }, { id: 'desc' }],
+      take: 101,
+    },
+  ]);
+  await assert.rejects(page(encoded({ k: 'checklist', a: 'item' }), 'checklist'), status(400));
 });

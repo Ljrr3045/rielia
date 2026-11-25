@@ -7,6 +7,7 @@ import {
   projectMemberPageQuerySchema,
   taskListQuerySchema,
   taskDiscoveryHttpQuerySchema,
+  collaborationHttpQuerySchema,
   type ArchiveView,
   type TaskFilters,
 } from '@rielia/contracts';
@@ -84,7 +85,9 @@ export class ProjectTaskHttp {
             ? taskListQuerySchema
             : list === 'discovery'
               ? taskDiscoveryHttpQuerySchema
-              : null;
+              : list === 'collaboration'
+                ? collaborationHttpQuerySchema
+                : null;
     const invalidQuery =
       querySchema !== null
         ? !querySchema.safeParse(query).success
@@ -94,15 +97,11 @@ export class ProjectTaskHttp {
               !(
                 list === 'events'
                   ? []
-                  : list === 'discovery'
-                    ? ['scope', 'q', 'view', 'project', 'status', 'assignee', 'priority', 'cursor']
-                    : list === 'close-preview'
-                      ? ['cursor', 'destination']
-                      : list === 'cursor' || list === 'collaboration' || list === 'sprints'
-                        ? ['cursor']
-                        : list === 'tasks'
-                          ? ['view', 'cursor', 'status', 'assignee', 'priority']
-                          : ['view', 'cursor']
+                  : list === 'close-preview'
+                    ? ['cursor', 'destination']
+                    : list === 'sprints'
+                      ? ['cursor']
+                      : []
               ).includes(key),
           ) ||
           (query['view'] !== undefined &&
@@ -111,11 +110,7 @@ export class ProjectTaskHttp {
           (query['cursor'] !== undefined &&
             (typeof query['cursor'] !== 'string' ||
               !(
-                list === 'tasks' ||
-                list === 'collaboration' ||
-                list === 'discovery' ||
-                list === 'sprints' ||
-                list === 'close-preview'
+                list === 'sprints' || list === 'close-preview'
                   ? /^[A-Za-z0-9_-]{1,2048}$/
                   : /^[A-Za-z0-9_-]{1,128}$/
               ).test(query['cursor']))) ||

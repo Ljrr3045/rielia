@@ -1190,7 +1190,7 @@
     },
     "apps/web/src/lib/project-task-client.ts": {
       "branches": {
-        "covered": 162,
+        "covered": 169,
         "total": 186
       },
       "functions": {
@@ -1198,11 +1198,11 @@
         "total": 20
       },
       "lines": {
-        "covered": 112,
+        "covered": 127,
         "total": 129
       },
       "statements": {
-        "covered": 127,
+        "covered": 142,
         "total": 147
       }
     },
@@ -1226,8 +1226,8 @@
     },
     "apps/web/src/lib/project-task-proxy.ts": {
       "branches": {
-        "covered": 66,
-        "total": 85
+        "covered": 68,
+        "total": 87
       },
       "functions": {
         "covered": 6,
@@ -1586,10 +1586,10 @@
     }
   },
   "floors": {
-    "branches": 6689,
+    "branches": 6700,
     "functions": 6166,
-    "lines": 7258,
-    "statements": 7041
+    "lines": 7288,
+    "statements": 7067
   },
   "manifest": {
     "compiler": {
@@ -1676,9 +1676,9 @@
       "apps/web/src/lib/identity-controller.ts": "1a4aea81c25cbcc41c4baad8e29d57bd4d7a62486945992a75703da3bac35163",
       "apps/web/src/lib/identity-proxy.ts": "d3bfab1aea9ab2ba4e9803b58d343361f325e519bbfb9e92ad01b0933cae997c",
       "apps/web/src/lib/project-sprint-location.ts": "bd555135cdf7a9fd25235c00e5771bc1879013bd4bee9aa93146b6e1170d7b01",
-      "apps/web/src/lib/project-task-client.ts": "4da72c05127e13b23383bdbc7a358bcaa3cd9973fd30a9278815058686e04993",
+      "apps/web/src/lib/project-task-client.ts": "a1e12efa690100a079949dd35852de2dcf608f58a6d23adb83a7cd1cf1dfece5",
       "apps/web/src/lib/project-task-controller.ts": "08d6c46531529dd5c22725acfc3877eabe1d59385d42d91a398ea5880fb6eb1b",
-      "apps/web/src/lib/project-task-proxy.ts": "8fa74829b91265b6824a1266073e22cead4cdc06d64b8ee78d51986a62a8bc70",
+      "apps/web/src/lib/project-task-proxy.ts": "b6a2a0bedb7202c8737e8926415b8e93c90daf23b64b90bc6044826babc1adae",
       "apps/web/src/lib/safe-markdown.ts": "ec1344cc57dade02d9e351aa78b7f8d85bd4fd2addd0540a552d407196dec244",
       "apps/web/src/lib/sprint-client-state.ts": "bb926105fd2c9fb2228d061caa51fd5ff23ae508b7b98a674f12fb884cf86b88",
       "apps/web/src/lib/sprint-client.ts": "141b2fd1b71cdde544910677ede389bb669064be637533d54ae66e1cd0fccbcc",
@@ -1739,7 +1739,7 @@
       "apps/web/test/unit/workspace-transport.test.mjs": "736fc5df7d4c8186e9a09b5afc3f99d5a1eba4275d4959bddff0bcbdcec12174",
       "scripts/identity-client.test.mjs": "fc1230e800c33efbfbe3327c54e5a2fb996b60dc6744749e71d325e64dd9e3c7",
       "scripts/identity-logic.test.mjs": "82533a455dbb578dde8a090a9d5f5dc56c74863bd0716410236c2f1c4e2f819a",
-      "scripts/project-task-client.test.mjs": "37ddf62b0906b17733ebb01080ed1d27841a9a7fbb12ce5d01789072d658fcc3",
+      "scripts/project-task-client.test.mjs": "9716faed5948796f8b41f5a77e2ff354d21328821ac0f1c82ae5365ed4992bff",
       "scripts/project-task-logic.test.mjs": "1260f4d43f80ddc6d225831d563394995b06648b2cdc51c930674c265b3e9848",
       "scripts/task-events-client.test.mjs": "35e2074b58ebc2dd71b1651f16098eaa9bc01c8f858f4911a6b8281a7b6e3ee8",
       "scripts/unit/mirror-loader.mjs": "b3ef9e50e56ee2fa0079c794c044efbc6b953d75890b97889bc635e233d93115",
@@ -1750,19 +1750,19 @@
   "scope": "web",
   "total": {
     "branches": {
-      "covered": 4655,
-      "total": 6959
+      "covered": 4664,
+      "total": 6961
     },
     "functions": {
       "covered": 835,
       "total": 1354
     },
     "lines": {
-      "covered": 3582,
+      "covered": 3597,
       "total": 4935
     },
     "statements": {
-      "covered": 3948,
+      "covered": 3963,
       "total": 5607
     }
   }

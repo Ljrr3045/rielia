@@ -1,5 +1,39 @@
 # T36 first unit and coverage delivery
 
+Current [T38.2e collaboration schema migration](t38-collaboration-schemas.md) has
+exact coordinator-approved adoption of API/web/contracts current baselines;
+prototype/four historical files remain byte-exact. Fresh coherent **811/811**
+(API310/web424/contracts58/prototype19) reproduces all 16 approved report hashes,
+with actual digest `7771e2357ad8fdcec402da68f32b3884dcd6b0c7fedfcd4d1fa2fe15700e3a9e`
+and normal identity `2a5a5660560173ac34e06ba5e260bda5039a2372155c5c8d14b331b0dd043c3e`.
+Infrastructure20/20 and17bounded artifact files/2940066 bytes pass without upload.
+Floors L/S/F/B are API7462/7446/7128/7510, web7288/7067/6166/6700,
+contracts10000/10000/10000/10000 and prototype2790/2733/2364/2033.
+All696 retained metric ratios/uncovered counts preserve or improve. Inventories
+54/88/19/16 retain type-only N/A and unexecuted owners.
+
+Rejected proposal1 and partial candidate2 retain their actual failures. The
+approved structural removal of the unused text helper/default argument is not
+reported as new coverage; all 17 production calls already supply explicit required
+lists. Original G04 B139/140 becomes first-party schema/facade B59/59 with no
+library-internal credit. The new defensive final-schema admission branch remains
+API debt. Unchanged mapped units retain API2884/web8996/contracts855/prototype550,
+with zero losses/maps differences; nullable endpoints remain separately recorded.
+Proposal3's separate API/contracts/web runs and independently bound prototype
+reuse are mixed-origin evidence; the later811run alone supplies the fresh coherent
+digest. Standard/real HTTP proof and later docs do not rebind its source identities.
+Selected real HTTP57/runtime/high audits and owned cleanup pass; formal
+current-head review/acceptance remains pending for this slice.
+
+[T38.2d is accepted and delivered in PR61](https://github.com/Ljrr3045/rielia/pull/61#issuecomment-7147377623),
+reviewed `09d257a5`, merged `0a2cb115`, identical tree `cbc738b9`, with reviewed/
+exact-merge CI and native Kilo retry passed. Its clean settled checkout was removed
+through Orca with evidence/branch and all 93 foreign entries retained. The earlier
+insufficient-credit check is not a review. Dated pending statements below retain
+their original source/run context; full T38.2/T38 remains open.
+
+## Preserved T38.2d local snapshot — November24
+
 Current [T38.2d discovery/event schema migration](t38-discovery-event-schemas.md)
 has exact coordinator-approved adoption of API/web/contracts current baselines,
 retaining prototype/four historical bytes. Rejected proposal one passed 798

@@ -174,3 +174,62 @@ test('discovery and event protocol failures preserve header/path/query/body/orig
   );
   assert.deepEqual(f.calls, ['authority', { stream: [f.context, 'w', f.response, resume] }]);
 });
+
+test('collaboration query schema preserves inherited selector admission and rejects before authority', async () => {
+  for (const query of [
+    {},
+    { cursor: undefined },
+    { cursor: 'x'.repeat(2048) },
+    Object.create({ cursor: 'anchor', view: 'archived', status: 'todo', destination: 'backlog' }),
+  ]) {
+    const f = fixture();
+    let received;
+    await f.http.respond(f.request(query), f.response, 'w', 'collaboration', async (...args) => {
+      received = args;
+      return { page: true };
+    });
+    assert.equal(received[0], f.context);
+    assert.equal(received[2], query.view ?? 'active');
+    assert.equal(received[3], query.cursor);
+    assert.equal(received[5], query.destination);
+    assert.equal(f.calls[0], 'authority');
+    assert.equal(f.response.headers.get('Set-Cookie'), 'fictional=renewed');
+  }
+  for (const query of [
+    { cursor: null },
+    { cursor: 'x'.repeat(2049) },
+    { view: 'active' },
+    { status: 'todo' },
+    Object.create({ view: ['active'] }),
+    Object.create({ destination: 'bad id' }),
+    Object.create({ priority: undefined }),
+  ]) {
+    const f = fixture();
+    await assert.rejects(
+      f.http.respond(
+        f.request(query, { headers: { 'content-length': '1' } }),
+        f.response,
+        'w',
+        'collaboration',
+        async () => assert.fail('work'),
+      ),
+      failure(400, 'Invalid project/task query.'),
+    );
+    assert.deepEqual(f.calls, []);
+  }
+  for (const [mode, query, accepted] of [
+    ['sprints', { cursor: 'x'.repeat(2048) }, true],
+    ['sprints', { view: 'active' }, false],
+    ['close-preview', { destination: 'backlog', cursor: 'x'.repeat(2048) }, true],
+    ['close-preview', { destination: null }, false],
+    [false, {}, true],
+    [false, { cursor: 'x' }, false],
+    ['events', { cursor: 'x' }, false],
+  ]) {
+    const f = fixture();
+    const operation = f.http.respond(f.request(query), f.response, 'w', mode, async () => 'ok');
+    if (accepted) await operation;
+    else await assert.rejects(operation, failure(400, 'Invalid project/task query.'));
+    assert.equal(f.calls.includes('authority'), accepted);
+  }
+});

@@ -236,14 +236,14 @@ test('approved scalar correction reaches G02 and actual G04/G05/G06 nested perso
     ['isTaskDiscoveryPage', discovery],
   ])
     assert.equal(contracts[name](value, collection), true, name);
-  // G04/G06 private provenance coercion is explicitly deferred, not accidentally tightened.
+  // T38.2e explicitly hardens G04; the separately owned G06 coercion stays deferred.
   const delegated = {
     ...comment.provenance,
     executionMode: ['delegated'],
     source: 'mcp',
     grantId: 'grant',
   };
-  assert.equal(contracts.isTaskComment({ ...comment, provenance: delegated }), true);
+  assert.equal(contracts.isTaskComment({ ...comment, provenance: delegated }), false);
   assert.equal(
     contracts.isPlanningHistoryPage({
       ...planningHistory,

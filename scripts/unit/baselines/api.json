@@ -272,8 +272,8 @@
     },
     "apps/api/src/projects/project-task-http.ts": {
       "branches": {
-        "covered": 70,
-        "total": 79
+        "covered": 65,
+        "total": 71
       },
       "functions": {
         "covered": 7,
@@ -290,20 +290,20 @@
     },
     "apps/api/src/projects/project-task-input.ts": {
       "branches": {
-        "covered": 74,
-        "total": 75
+        "covered": 64,
+        "total": 64
       },
       "functions": {
-        "covered": 19,
-        "total": 19
+        "covered": 18,
+        "total": 18
       },
       "lines": {
-        "covered": 83,
-        "total": 83
+        "covered": 80,
+        "total": 80
       },
       "statements": {
-        "covered": 88,
-        "total": 88
+        "covered": 85,
+        "total": 85
       }
     },
     "apps/api/src/projects/project-task-mutation.ts": {
@@ -630,6 +630,24 @@
         "total": 52
       }
     },
+    "apps/api/src/projects/task-collaboration-input.ts": {
+      "branches": {
+        "covered": 28,
+        "total": 29
+      },
+      "functions": {
+        "covered": 2,
+        "total": 2
+      },
+      "lines": {
+        "covered": 26,
+        "total": 27
+      },
+      "statements": {
+        "covered": 30,
+        "total": 31
+      }
+    },
     "apps/api/src/projects/task-collaboration.controller.ts": {
       "branches": {
         "covered": 0,
@@ -650,20 +668,20 @@
     },
     "apps/api/src/projects/task-collaboration.service.ts": {
       "branches": {
-        "covered": 76,
-        "total": 184
+        "covered": 65,
+        "total": 141
       },
       "functions": {
         "covered": 17,
         "total": 26
       },
       "lines": {
-        "covered": 78,
-        "total": 133
+        "covered": 77,
+        "total": 113
       },
       "statements": {
-        "covered": 90,
-        "total": 155
+        "covered": 87,
+        "total": 130
       }
     },
     "apps/api/src/projects/task-discovery.controller.ts": {
@@ -956,10 +974,10 @@
     }
   },
   "floors": {
-    "branches": 7353,
-    "functions": 7123,
-    "lines": 7371,
-    "statements": 7350
+    "branches": 7510,
+    "functions": 7128,
+    "lines": 7462,
+    "statements": 7446
   },
   "manifest": {
     "compiler": {
@@ -995,8 +1013,8 @@
       "apps/api/src/principals/principal.service.ts": "1c5992e97938420aacdfa6ba6586981b345e668954b73bf7c2c1f260778c20b0",
       "apps/api/src/projects/project-task-command.ts": "c6d1fe57a4483a745fc642eb8fdfec13c7030a042f40870b05544d0d70849b3e",
       "apps/api/src/projects/project-task-dto.ts": "8cbd40a35fbefdf4151ff4480d6252b6b58112c2f730df951aa683f6e0c05eb8",
-      "apps/api/src/projects/project-task-http.ts": "2f91f9b41232afd75b09b4551e8fd98acded2ff51d6a07885457cbb7cbee6c21",
-      "apps/api/src/projects/project-task-input.ts": "8f2a850497399e9721b6a854c8b0b95c83ae8ee21481dba7c2734e13d42af142",
+      "apps/api/src/projects/project-task-http.ts": "37e4fe89fd26261086bf27564009d6661d38808db465ae1988c0413c40a1e4c3",
+      "apps/api/src/projects/project-task-input.ts": "d8fefe2603668ecdf7bc2f281a9c62bfdcd7e723522fd8154cae4dfd3532844a",
       "apps/api/src/projects/project-task-mutation.ts": "5da469c050e6decfb04bf8eabf94d26f28d4354d80eb1cb7e8d7507457a4f77f",
       "apps/api/src/projects/project-task-policy.ts": "a1a98daa4e3d494e42324a011455a76109057b64f40df939539960000eac32f1",
       "apps/api/src/projects/project-task-read.ts": "f9c854a835b634c16e2887dd4cda322fa21a897175b0ad3f8feeb0b26a4d3732",
@@ -1015,8 +1033,9 @@
       "apps/api/src/projects/sprint-start.ts": "31d4a20f38c0f36bc2dee97a6cd2a8d66c7ba00ee183a30177af2329bfc4db9d",
       "apps/api/src/projects/sprint.controller.ts": "9143dbd510551a3c79ed675bdda85fb0f6b7106c8e9719cfb290003766eb2a90",
       "apps/api/src/projects/sprint.service.ts": "ec6ca52a320b47f90f8cf603b3d0e97383a52169c30d61e590444a03324d0221",
+      "apps/api/src/projects/task-collaboration-input.ts": "027cb24fec9494e7dde6a1b83ec655c87e9af0edd6dd3c91dd85ffbbff38a15a",
       "apps/api/src/projects/task-collaboration.controller.ts": "c045032d97a3b8649c3313c0e083697b97216b3ec22ed180c4e778da457794f7",
-      "apps/api/src/projects/task-collaboration.service.ts": "3e4a39fe6aff044605c17e11a3bfb7027501c4745df3ca09ad55e611405533eb",
+      "apps/api/src/projects/task-collaboration.service.ts": "e1873718d3e22e0338ba40feefa071858d6d458f1f9335881c499a292cb2f0e3",
       "apps/api/src/projects/task-discovery.controller.ts": "25105d0f0c93e5f85c1a7b94b299fd937fc07a25b8dfdf269fb5f1e722887d7b",
       "apps/api/src/projects/task-discovery.service.ts": "4e23cc067d517fc07e370b86af040221b0e0c31619c2cd5d9353ee1a73797cff",
       "apps/api/src/projects/task-events.service.ts": "3cf5a46673b07107a67eea90842ba43845652384a225358775043be50c803919",
@@ -1055,8 +1074,8 @@
       "apps/api/test/unit/sprint-http.test.mjs": "7c805b11132ac8f4a197f646a4f20d27616e0a6e57ffcc152fcabe1bfc49c050",
       "apps/api/test/unit/sprint-planning.test.mjs": "167d806fd4782e973eb24d74d9f78d87f8be886100b39cc30bc95ae8f0f2c492",
       "apps/api/test/unit/sprint-scope-start.test.mjs": "f26eec13ecd2b4574b35354b03c459c913e8903c7758a976c2a1f68b9f025199",
-      "apps/api/test/unit/task-collaboration-policy.test.mjs": "9181928905deb661851ad6a77642dd6bfe8ee0d8c70013228626f95d16fa461d",
-      "apps/api/test/unit/task-discovery-http.test.mjs": "86b05687ee582546ddb5c22a81727901a25b68553e741ab32f457b1c68945356",
+      "apps/api/test/unit/task-collaboration-policy.test.mjs": "c52d21121e81f8cb1760e6956824acdbfa1229f294c998840c4a18115538ade3",
+      "apps/api/test/unit/task-discovery-http.test.mjs": "8caca1e0d1f5fea1adda13325c0180ac4d5d9d0ebc831005594227af9e66560b",
       "apps/api/test/unit/task-discovery-policy.test.mjs": "36f59eef992cc398bf035ef525726af0ec0dd300fbc7bf0a4233bd6fac87ec14",
       "apps/api/test/unit/task-events-lifecycle.test.mjs": "ad32f2d28bcd651f5fbf729b0b346884d49d500657035cbc3f3874b6e7e724b5",
       "apps/api/test/unit/workspace-http.test.mjs": "51127f2ccbcd0ddc7fff869eb615df8da16770e504ec63be01fecad921c0eb38",
@@ -1069,20 +1088,20 @@
   "scope": "api",
   "total": {
     "branches": {
-      "covered": 1259,
-      "total": 1712
+      "covered": 1261,
+      "total": 1679
     },
     "functions": {
-      "covered": 431,
-      "total": 605
+      "covered": 432,
+      "total": 606
     },
     "lines": {
-      "covered": 1537,
-      "total": 2085
+      "covered": 1559,
+      "total": 2089
     },
     "statements": {
-      "covered": 1676,
-      "total": 2280
+      "covered": 1700,
+      "total": 2283
     }
   }
 }
