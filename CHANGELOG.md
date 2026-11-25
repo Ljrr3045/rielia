@@ -4,6 +4,20 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Record [T38.2e acceptance/delivery in PR62](https://github.com/Ljrr3045/rielia/pull/62#issuecomment-7150139496),
+  reviewed `6cc1e4ac`, merged `f3195081`, with reviewed/exact-merge CI, clean
+  native review and settled checkout cleanup; preserve original local receipts.
+  Implement bounded [T38.2f planning schemas](docs/development/t38-planning-schemas.md)
+  for H27–29/H51–54/G06 and planning X05/HTTP/X09. Explicit primitive/dense-array
+  corrections preserve valid wire shapes, snapshot cardinality, ignored getters,
+  optional-field compatibility debt and original transport identity. Backend
+  policy, transactions and exact-key recovery remain canonical. Add a bounded
+  two-suite real-HTTP selector. Exact numerical adoption, fresh normal823,
+  infrastructure20/artifacts17, selected real HTTP34/runtime/high audits and exact
+  owned cleanup pass. Original failures and resumed-sequence/MCP correction remain;
+  current-head review/acceptance and inherited limits stay open.
+
+
 - Record [T38.2d acceptance/delivery in PR61](https://github.com/Ljrr3045/rielia/pull/61#issuecomment-7147377623),
   reviewed `09d257a5`, merged `0a2cb115`, with reviewed/exact-merge CI, native Kilo
   retry and settled clean-worktree cleanup; retain insufficient-credit and dated

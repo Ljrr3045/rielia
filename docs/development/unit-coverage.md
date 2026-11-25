@@ -1,5 +1,41 @@
 # T36 first unit and coverage delivery
 
+[T38.2e is ACCEPTED and delivered in PR62](https://github.com/Ljrr3045/rielia/pull/62#issuecomment-7150139496):
+reviewed `6cc1e4ac4ed413f88d52a9fefe24e7b839a85bbc`, merged
+`f319508181524d340e810faf55b1e1cc625abac9`, identical tree
+`f4c71c47cf39670918117450c54f3250719bba6b`. Reviewed-head CI45525396980 /
+check138907464647 and exact-merge CI45529401624 / check138920664764 passed all
+24 steps (App15368). Native Kilo138913186695/App2193792 reviewed all 27 files
+without findings in one final round. The settled clean worktree was removed
+through Orca; branch/evidence and all 93 foreign coordinator entries were retained.
+[Issue53 closeout](https://github.com/Ljrr3045/rielia/issues/53#issuecomment-7150381370)
+records delivery. Original source/run/failure identities below remain unchanged;
+these acceptance and cleanup facts do not rebind local receipts.
+
+[T38.2f planning/scope/start/history](t38-planning-schemas.md) now has exact
+coordinator-approved API/web/contracts adoption, retaining prototype/four historical
+bytes. Candidate1's820 execution failed protected API branch7497 <7510 after nine
+covered parser branches were removed, with418 uncovered unchanged. Three released
+retry/receipt tests pass, then API-only315 and independently verified candidate1
+web425/contracts64/prototype19 reuse form mixed candidate2, not a coherent run.
+
+Fresh actual **823/823** normal reproduces all16 approved reports, digest
+`c63d59240de533d4b657b45e1ac5eb838e4c2aa328ab2369b32554e849736698`,
+normal identity `d07f80354805cc1b3b4bbec20b0323851ddfd5aeff5e354af80f535ac2108483`.
+Infrastructure20/20 and17bounded artifact files/2940112bytes pass without upload.
+Floors L/S/F/B are API7482/7466/7142/7514, web7290/7069/6166/6703,
+contracts10000all and unchanged prototype2790/2733/2364/2033.
+All708 retained metric ratios/uncovered counts preserve/improve; inventories
+55/88/21/16 retain N/A and unexecuted owners. New schema/input owners are fully
+covered. Raw unchanged maps retain API3034→3038 with exactly one statement/three
+branch gains in the unchanged receipt owner; web9139/contracts815/prototype550
+remain exact, with zero losses/map differences and no dependency-internal credit.
+Changed-owner structural deletion and nullable mapping limits remain explicit.
+Selected real HTTP34/runtime/audits and later docs do not rebind unit identities.
+Current-head review/acceptance and full T38.2/T38 remain open.
+
+## Preserved PR62 local numerical receipt
+
 Current [T38.2e collaboration schema migration](t38-collaboration-schemas.md) has
 exact coordinator-approved adoption of API/web/contracts current baselines;
 prototype/four historical files remain byte-exact. Fresh coherent **811/811**

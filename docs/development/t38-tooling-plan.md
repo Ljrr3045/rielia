@@ -1,5 +1,24 @@
 # T38 tool decisions and compatibility pilot
 
+[T38.2e is ACCEPTED and delivered in PR62](https://github.com/Ljrr3045/rielia/pull/62#issuecomment-7150139496):
+reviewed `6cc1e4ac4ed413f88d52a9fefe24e7b839a85bbc`, merged
+`f319508181524d340e810faf55b1e1cc625abac9`, identical tree
+`f4c71c47cf39670918117450c54f3250719bba6b`. Reviewed-head CI45525396980 /
+check138907464647 and exact-merge CI45529401624 / check138920664764 passed all
+24 steps (App15368). Native Kilo138913186695/App2193792 reviewed all 27 files
+without findings in one final round. The settled clean worktree was removed
+through Orca; branch/evidence and all 93 foreign coordinator entries were retained.
+[Issue53 closeout](https://github.com/Ljrr3045/rielia/issues/53#issuecomment-7150381370)
+records delivery. Original source/run/failure identities below remain unchanged;
+these acceptance and cleanup facts do not rebind local receipts.
+
+[T38.2f planning/scope/start/history](t38-planning-schemas.md) is coordinator-released
+for H27–29/H51–54/G06 and planning X05/HTTP/X09. Local implementation, exact numerical adoption, normal823/infra20/artifacts17,
+selected real HTTP34/runtime/audits and cleanup are complete; current-head review
+and full T38.2/T38 acceptance remain separate gates.
+
+## Preserved earlier local decision snapshot
+
 **T38.1/T38.2a/T38.2b/T38.2c/T38.2d ACCEPTED; T38.2e LOCAL GATES COMPLETE,
 2026-11-24 America/Caracas.**
 [T38.2c acceptance in PR60](https://github.com/Ljrr3045/rielia/pull/60#issuecomment-7125188276)
@@ -429,8 +448,9 @@ Query production/RHF/other tools remain separately gated.
 | T38.2b | ACCEPTED in PR59: H01–04/H55–66/G01/X01–02 | Reviewed `d9699cf`, merged `c655f0f0`; reviewed/exact-merge CI and native Kilo passed; receipts retain source identities |
 | T38.2c | ACCEPTED in PR60: H05–22/G02 and project/task/access/assignee X03 only | Reviewed `fdd0450b`, merged `8c7e897b`; reviewed/exact-merge CI and native Kilo passed; original [source-bound receipt](t38-project-task-schemas.md) retained |
 | T38.2d | ACCEPTED in PR61: H49–50/G05/discovery X03/X06 and discovery-only API HTTP/X09 | Reviewed `09d257a5`, merged `0a2cb115`; reviewed/exact-merge CI and native Kilo retry passed; [dated receipt](t38-discovery-event-schemas.md) retains failures/cleanup limits |
-| T38.2e | LOCAL GATES COMPLETE: H36–48/G04/collaboration X03 and bounded HTTP/X09 | [Receipt](t38-collaboration-schemas.md), exact approved numerical migration, fresh normal811/infra20/artifacts17, resumed standard, selected real HTTP57/runtime/audits and cleanup; current-head review/acceptance pending |
-| T38.2 remaining | T38.2e acceptance; G06/G07 scope/start/close/history, encoded/private JSON and configuration | Each owner needs a separate release or explicit accepted debt/exclusion before T38.6, including retained collaboration decoding; no universal policy rewrite |
+| T38.2e | ACCEPTED in PR62: H36–48/G04/collaboration X03 and bounded HTTP/X09 | Reviewed `6cc1e4ac`, merged `f3195081`; current-head/exact-merge CI and native Kilo passed; [dated receipt](t38-collaboration-schemas.md) retained |
+| T38.2f | LOCAL GATES COMPLETE: H27–29/H51–54/G06 and planning X05/HTTP/X09 | [Receipt](t38-planning-schemas.md); exact numerical adoption, normal823/infra20/artifacts17, real HTTP34/runtime/audits; current-head review/acceptance open |
+| T38.2 remaining | T38.2f acceptance; G07 closure, encoded/private JSON and configuration | Each owner needs a separate release or explicit accepted debt/exclusion before T38.6, including retained collaboration decoding; no universal policy rewrite |
 | T38.3 | Canonical OpenAPI generation/drift first; generated transport adoption only after TS6/generator decision | Reproducible schema/type generation, unsupported-refinement list, unknown-response and same-origin/cancellation/error parity; no second hand-maintained definition |
 | T38.4a | Two sprint resource caches and create mutation, then remaining enumerated server resources in bounded batches | Query becomes sole DTO owner; identity/render/abort/discard/SSE/version/recovery checks and production bundle/request costs |
 | T38.4b | RHF trial then separately agreed F01–12 expansion or explicit exclusions | One field owner, draft/focus/navigation/validation parity, responsive/keyboard/nonideal/persistence evidence; no presentation redesign implied |

@@ -1,5 +1,25 @@
 # T38 maintained-boundary inventory
 
+[T38.2e is ACCEPTED and delivered in PR62](https://github.com/Ljrr3045/rielia/pull/62#issuecomment-7150139496):
+reviewed `6cc1e4ac4ed413f88d52a9fefe24e7b839a85bbc`, merged
+`f319508181524d340e810faf55b1e1cc625abac9`, identical tree
+`f4c71c47cf39670918117450c54f3250719bba6b`. Reviewed-head CI45525396980 /
+check138907464647 and exact-merge CI45529401624 / check138920664764 passed all
+24 steps (App15368). Native Kilo138913186695/App2193792 reviewed all 27 files
+without findings in one final round. The settled clean worktree was removed
+through Orca; branch/evidence and all 93 foreign coordinator entries were retained.
+[Issue53 closeout](https://github.com/Ljrr3045/rielia/issues/53#issuecomment-7150381370)
+records delivery. Original source/run/failure identities below remain unchanged;
+these acceptance and cleanup facts do not rebind local receipts.
+
+[T38.2f](t38-planning-schemas.md) now owns the released H27–29/H51–54/G06 and
+planning X05/HTTP/X09 migration, with local normal823/infra20/artifacts17, real
+HTTP34/runtime/audits and exact cleanup complete; current-head acceptance is open.
+X03 has no planning path. G07 remains an
+unmigrated direct consumer; the source-qualified registry counts below stay frozen.
+
+## Preserved inventory and prior local dispositions
+
 Inventory recorded **2026-11-23 America/Caracas**, base
 `f020a423e43380f908ad876a76ece65faa24a031`, accepted as T38.1 in
 [PR57](https://github.com/Ljrr3045/rielia/pull/57#issuecomment-7118652391), merge

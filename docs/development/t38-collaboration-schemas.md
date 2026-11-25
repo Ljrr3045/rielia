@@ -1,5 +1,19 @@
 # T38.2e collaboration boundary schemas
 
+[T38.2e is ACCEPTED and delivered in PR62](https://github.com/Ljrr3045/rielia/pull/62#issuecomment-7150139496):
+reviewed `6cc1e4ac4ed413f88d52a9fefe24e7b839a85bbc`, merged
+`f319508181524d340e810faf55b1e1cc625abac9`, identical tree
+`f4c71c47cf39670918117450c54f3250719bba6b`. Reviewed-head CI45525396980 /
+check138907464647 and exact-merge CI45529401624 / check138920664764 passed all
+24 steps (App15368). Native Kilo138913186695/App2193792 reviewed all 27 files
+without findings in one final round. The settled clean worktree was removed
+through Orca; branch/evidence and all 93 foreign coordinator entries were retained.
+[Issue53 closeout](https://github.com/Ljrr3045/rielia/issues/53#issuecomment-7150381370)
+records delivery. Original source/run/failure identities below remain unchanged;
+these acceptance and cleanup facts do not rebind local receipts.
+
+## Preserved pre-acceptance local receipt
+
 **DRAFT PR62; LOCAL GATES COMPLETE; FINAL-HEAD CI/NATIVE REVIEW/ACCEPTANCE PENDING,
 2026-11-24 America/Caracas.** The coordinator published
 [Draft PR62](https://github.com/Ljrr3045/rielia/pull/62), targeting `dev`, at initial

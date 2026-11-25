@@ -68,7 +68,7 @@ export class SprintController {
     @Req() req: NodeRequest,
     @Res() res: NodeResponse,
   ) {
-    return this.http.respond(req, res, w, false, (c, id) =>
+    return this.http.respond(req, res, w, 'planning-empty', (c, id) =>
       this.sprints.start(c, w, p, s, req.headers['idempotency-key'] as string, id, req.body),
     );
   }
@@ -80,7 +80,7 @@ export class SprintController {
     @Req() req: NodeRequest,
     @Res() res: NodeResponse,
   ) {
-    return this.http.respond(req, res, w, 'sprints', (c, _id, _v, cursor) =>
+    return this.http.respond(req, res, w, 'planning-page', (c, _id, _v, cursor) =>
       this.sprints.scope(c, w, p, s, cursor),
     );
   }
@@ -92,7 +92,7 @@ export class SprintController {
     @Req() req: NodeRequest,
     @Res() res: NodeResponse,
   ) {
-    return this.http.respond(req, res, w, 'sprints', (c, _id, _v, cursor) =>
+    return this.http.respond(req, res, w, 'planning-page', (c, _id, _v, cursor) =>
       this.sprints.history(c, w, p, s, cursor),
     );
   }

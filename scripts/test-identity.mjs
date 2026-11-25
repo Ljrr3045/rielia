@@ -14,9 +14,14 @@ if (
     .slice(2)
     .some(
       (arg) =>
-        !['--sprints', '--sprint-scope', '--sprint-close', '--workspaces', '--projects'].includes(
-          arg,
-        ),
+        ![
+          '--sprints',
+          '--sprint-scope',
+          '--sprint-close',
+          '--workspaces',
+          '--projects',
+          '--planning-schemas',
+        ].includes(arg),
     )
 )
   throw new Error('Unknown identity test selection.');
@@ -25,9 +30,13 @@ if (workspacesOnly && process.argv.slice(2).length !== 1)
   throw new Error('Use --workspaces alone.');
 const projectsOnly = process.argv.includes('--projects');
 if (projectsOnly && process.argv.slice(2).length !== 1) throw new Error('Use --projects alone.');
+const planningSchemasOnly = process.argv.includes('--planning-schemas');
+if (planningSchemasOnly && process.argv.slice(2).length !== 1)
+  throw new Error('Use --planning-schemas alone.');
 const closeOnly = process.argv.includes('--sprint-close');
 const scopeOnly = process.argv.includes('--sprint-scope');
-const sprintsOnly = process.argv.includes('--sprints') || scopeOnly || closeOnly;
+const sprintsOnly =
+  process.argv.includes('--sprints') || scopeOnly || closeOnly || planningSchemasOnly;
 const image =
   'postgres:18.6@sha256:edb0c08dc33befd0262ab3b5cf1c4f3f8cfd8b09e88c05b45adee29d6761ddb6';
 const owner = randomBytes(12).toString('hex');
@@ -177,22 +186,24 @@ try {
     ? ['principals', 'workspaces', 'identity']
     : projectsOnly
       ? ['project-tasks', 'task-collaboration', 'task-discovery']
-      : closeOnly
-        ? ['sprint-close']
-        : scopeOnly
-          ? ['sprint-scope-start']
-          : sprintsOnly
-            ? ['sprint-planning', 'sprint-scope-start', 'sprint-close']
-            : [
-                'principals',
-                'workspaces',
-                'project-tasks',
-                'task-collaboration',
-                'task-discovery',
-                'sprint-planning',
-                'sprint-scope-start',
-                'sprint-close',
-              ];
+      : planningSchemasOnly
+        ? ['sprint-scope-start', 'sprint-close']
+        : closeOnly
+          ? ['sprint-close']
+          : scopeOnly
+            ? ['sprint-scope-start']
+            : sprintsOnly
+              ? ['sprint-planning', 'sprint-scope-start', 'sprint-close']
+              : [
+                  'principals',
+                  'workspaces',
+                  'project-tasks',
+                  'task-collaboration',
+                  'task-discovery',
+                  'sprint-planning',
+                  'sprint-scope-start',
+                  'sprint-close',
+                ];
   for (const suite of suites) {
     const result = await command(
       'Identity integration suite',

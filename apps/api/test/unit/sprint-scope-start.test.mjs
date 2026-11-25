@@ -1,3 +1,8 @@
+import {
+  estimateTaskInput,
+  startSprintInput,
+  setTaskSprintInput,
+} from '../../dist/projects/task-planning-input.js';
 import 'reflect-metadata';
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
@@ -496,6 +501,72 @@ test('different hashes and corrupt receipts never append history/outbox or bypas
   assert.equal((await runEstimate(f)).taskId, 't');
   assert.deepEqual(writes(f), []);
 });
+test('start rejects an invalid UUID key before authority, receipt lookup or effects', () => {
+  const f = fixture();
+  assert.throws(
+    () => startSprint(f.projects, f.context, 'w', 'p', 's', 'invalid-key', 'request', startInput),
+    denied(400),
+  );
+  assert.deepEqual(f.calls, []);
+  assert.deepEqual(f.effects, []);
+});
+test('original start receipt returns its operation and authorized later closed Sprint without new writes', async () => {
+  const operation = {
+    activityId: 'original-activity',
+    type: 'start-sprint',
+    sprintId: 's',
+    enteredVisitId: null,
+    exitedVisitId: null,
+  };
+  const requestHash = createHash('sha256')
+    .update(JSON.stringify(canonical(['start-sprint', ['p', 's'], startInput])))
+    .digest('hex');
+  const closedAt = new Date('2026-11-20T00:00:00.000Z');
+  const f = fixture({
+    project: { ...project, mode: 'kanban', archivedAt: at },
+    sprint: { state: 'closed', version: 9, startedAt: at, closedAt },
+    receipt: {
+      requestHash,
+      response: { kind: 'sprint-transition', entity: 'sprint', id: 's', operation },
+    },
+  });
+  const value = await runStart(f);
+  assert.deepEqual(value.operation, operation);
+  assert.equal(value.current.id, 's');
+  assert.equal(value.current.state, 'closed');
+  assert.equal(value.current.version, 9);
+  assert.equal(value.current.closedAt, closedAt.toISOString());
+  assert.equal(value.current.capabilities.canStart, false);
+  assert.equal(f.calls[0][0], 'authority');
+  for (const name of ['receipt.read', 'project.current', 'sprint.current'])
+    assert.ok(f.calls.some(([call]) => call === name));
+  assert.deepEqual(writes(f), []);
+  assert.deepEqual(f.effects, []);
+});
+test('malformed stored exit identity rejects after current-authority read without transition effects', async () => {
+  const operation = {
+    activityId: 'original-activity',
+    type: 'start-sprint',
+    sprintId: 's',
+    enteredVisitId: null,
+    exitedVisitId: 42,
+  };
+  const requestHash = createHash('sha256')
+    .update(JSON.stringify(canonical(['start-sprint', ['p', 's'], startInput])))
+    .digest('hex');
+  const f = fixture({
+    receipt: {
+      requestHash,
+      response: { kind: 'sprint-transition', entity: 'sprint', id: 's', operation },
+    },
+  });
+  await assert.rejects(runStart(f), denied(503));
+  assert.equal(f.calls[0][0], 'authority');
+  for (const name of ['receipt.read', 'project.current', 'sprint.current'])
+    assert.ok(f.calls.some(([call]) => call === name));
+  assert.deepEqual(writes(f), []);
+  assert.deepEqual(f.effects, []);
+});
 test('journal failure stops every later collaborator rather than returning successful current state', async (t) => {
   for (const fail of ['sprint.update', 'activity', 'event', 'references', 'outbox', 'receipt'])
     await t.test(fail, async () => {
@@ -782,7 +853,15 @@ test('thin scope/start/task-planning controllers preserve selected target, exact
   ]);
   assert.deepEqual(
     calls.filter((x) => 'list' in x).map((x) => x.list),
-    [false, 'sprints', 'sprints', false, 'sprints', false, false],
+    [
+      'planning-empty',
+      'planning-page',
+      'planning-page',
+      'planning-empty',
+      'planning-page',
+      'planning-empty',
+      'planning-empty',
+    ],
   );
 });
 test('legacy Task mutation awaits the final Task observation after Activity and before outbox/receipt on the original transaction', async () => {
@@ -889,4 +968,56 @@ test('Sprint and Task service sidecars compose their authorized transaction-taki
   assert.equal((await read.scope(g.context, 'w', 'p', 's')).total, 0);
   assert.equal((await read.history(g.context, 'w', 'p', 's')).total, 0);
   assert.equal((await g.service.history(g.context, 'w', 'p', 't')).total, 0);
+});
+
+test('planning input adapters retain field error precedence and normalized explicit null/zero', () => {
+  const invalid = (parse, body, message) =>
+    assert.throws(
+      () => parse(body),
+      (error) => error.getStatus() === 400 && error.message === message,
+    );
+  invalid(estimateTaskInput, {}, 'Invalid project/task request.');
+  invalid(estimateTaskInput, { expectedVersion: 0, estimatePoints: -1 }, 'Invalid estimate.');
+  invalid(
+    estimateTaskInput,
+    { expectedVersion: 0, estimatePoints: 0 },
+    'A positive expectedVersion is required.',
+  );
+  invalid(
+    startSprintInput,
+    { expectedVersion: 1, expectedProjectVersion: 0, expectedTaskRevision: 0 },
+    'A positive expectedVersion is required.',
+  );
+  const set = {
+    expectedTaskVersion: 1,
+    expectedCurrentParticipationId: null,
+    expectedSourceVersion: null,
+    targetSprintId: 's',
+    expectedTargetVersion: 2,
+  };
+  invalid(
+    setTaskSprintInput,
+    { ...set, expectedTaskVersion: 0, targetSprintId: '../bad' },
+    'Invalid sprint participation.',
+  );
+  invalid(
+    setTaskSprintInput,
+    { ...set, expectedTaskVersion: 0 },
+    'A positive expectedVersion is required.',
+  );
+  invalid(
+    setTaskSprintInput,
+    { ...set, expectedSourceVersion: 2 },
+    'Sprint versions must match the explicit source and destination.',
+  );
+  assert.deepEqual(setTaskSprintInput(set), set);
+  assert.deepEqual(
+    startSprintInput({ expectedVersion: 1, expectedProjectVersion: 2, expectedTaskRevision: 3 }),
+    { expectedVersion: 1, expectedProjectVersion: 2, expectedTaskRevision: 3 },
+  );
+  for (const estimatePoints of [null, 0])
+    assert.deepEqual(estimateTaskInput({ expectedVersion: 1, estimatePoints }), {
+      expectedVersion: 1,
+      estimatePoints,
+    });
 });

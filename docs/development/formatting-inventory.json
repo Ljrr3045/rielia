@@ -1,6 +1,6 @@
 {
   "baseline": "1c33560f2fca954cbac6d35a87881a41dd72b017",
-  "policy": "All 256 currently eligible maintained source/config/tooling inputs are adopted, including T11.1 planning inputs; changed/new supported inputs remain prospectively enforced. Historical T36/T37 counts remain source-qualified. Legacy Markdown and unsupported formats retain explicit owners and checks.",
+  "policy": "All 259 currently eligible maintained source/config/tooling inputs are adopted, including T11.1 planning inputs; changed/new supported inputs remain prospectively enforced. Historical T36/T37 counts remain source-qualified. Legacy Markdown and unsupported formats retain explicit owners and checks.",
   "adopted": [
     ".github/actions/unit-artifacts/action.yml",
     ".github/actions/unit-artifacts/index.mjs",
@@ -41,6 +41,7 @@
     "apps/api/src/projects/task-discovery.controller.ts",
     "apps/api/src/projects/task-discovery.service.ts",
     "apps/api/src/projects/task-events.service.ts",
+    "apps/api/src/projects/task-planning-input.ts",
     "apps/api/src/runtime/database.ts",
     "apps/api/src/runtime/diagnostic.ts",
     "apps/api/src/runtime/queue.ts",
@@ -196,6 +197,8 @@
     "packages/contracts/src/sprints.ts",
     "packages/contracts/src/task-collaboration.ts",
     "packages/contracts/src/task-discovery.ts",
+    "packages/contracts/src/task-planning-input-schemas.ts",
+    "packages/contracts/src/task-planning-schemas.ts",
     "packages/contracts/test/guards.test.mjs",
     "packages/contracts/test/sprints.test.mjs",
     "packages/contracts/tsconfig.json",
@@ -1310,6 +1313,6 @@
     ],
     "eligibleCountAfter": 301,
     "guide": "docs/development/t38-project-task-schemas.md",
-    "scope": "H05–22/G02/bounded X03; no provider/config/exclusion change; numerical migration separately approved"
+    "scope": "H05\u201322/G02/bounded X03; no provider/config/exclusion change; numerical migration separately approved"
   }
 }
