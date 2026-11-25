@@ -4,7 +4,7 @@ import {
   ServiceUnavailableException,
 } from '@nestjs/common';
 import { createHash, randomUUID } from 'node:crypto';
-import { isRecord, type SprintCloseResult } from '@rielia/contracts';
+import type { SprintCloseResult } from '@rielia/contracts';
 import type { VerifiedExecution } from '../principals/principal.service.js';
 import type { ProjectTaskService } from './project-task.service.js';
 import { canonical } from './project-task-input.js';
@@ -19,6 +19,7 @@ import {
 import { lockPlanningTasks } from './task-planning.js';
 import { sprintRow, sprintView } from './sprint-read.js';
 import { closureView } from './sprint-closure-read.js';
+import { sprintCloseReceiptSchema } from './sprint-receipt-schemas.js';
 
 /** A distinct receipt owner: close replays never enter the task-targeted transition journal. */
 export function closeSprint(
@@ -71,16 +72,10 @@ export function closeSprint(
             code: 'idempotency-conflict',
             message: 'Idempotency key belongs to another request.',
           });
-        const saved = previous.response;
-        if (
-          !isRecord(saved) ||
-          saved['kind'] !== 'sprint-close' ||
-          saved['sprintId'] !== s ||
-          typeof saved['closureId'] !== 'string' ||
-          typeof saved['activityId'] !== 'string'
-        )
+        const saved = sprintCloseReceiptSchema(s).safeParse(previous.response);
+        if (!saved.success)
           throw new ServiceUnavailableException('Closing receipt is unavailable.');
-        return result(saved['closureId'], saved['activityId']);
+        return result(saved.data.closureId, saved.data.activityId);
       }
       await lockSprints(tx, project, [
         s,

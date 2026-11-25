@@ -1,5 +1,16 @@
 # T38 maintained-boundary inventory
 
+[T38.2g is ACCEPTED in PR64](https://github.com/Ljrr3045/rielia/pull/64#issuecomment-7175578830),
+reviewed `9886fb2a`, merged `541ac5de`, tree `bbff57ea`, with reviewed-head CI,
+native Kilo and exact-merge CI passed. [T38.2h private receipts](t38-private-schemas.md)
+now migrates only the three released sprint receipt owners, with an explicit
+API Zod4.6.7 dependency. Its exact user-approved structural API rebase and fresh
+normal844/infra20/artifact validation pass; review/acceptance remain separate.
+Workspace/task receipts, activity/snapshots, all six
+opaque decoders and C01–12 retain separate ownership/releases. Full T38 remains
+open. The following PR64 publication/local snapshots preserve their dated
+pre-acceptance state and source identities; they do not supersede its acceptance.
+
 [T38.2f is ACCEPTED and delivered in PR63](https://github.com/Ljrr3045/rielia/pull/63#issuecomment-7152173975):
 reviewed `e320bf7a956471daafae4eea38aebf31eba4f28a`, merged
 `5536162dca58c81139cd2732712b8760185af44c`, identical tree

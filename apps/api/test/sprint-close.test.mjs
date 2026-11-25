@@ -867,6 +867,64 @@ test('T11.3 real PostgreSQL/HTTP immutable close and carryover', async (t) => {
     },
   );
   await t.test(
+    'private close receipt fixtures preserve canonical replay, corruption503 and authority/hash precedence',
+    async () => {
+      const f = await fixture(),
+        foreign = await fixture(),
+        s = await sprint(f);
+      await start(f, s.id);
+      const input = closeBody(await preview(f, s.id)),
+        originalKey = randomUUID(),
+        closed = await ok(f.owner, `${f.path}/sprints/${s.id}/close`, input, originalKey);
+      const stored = await db.projectTaskOperation.findFirstOrThrow({
+        where: { workspaceId: f.workspace.id, key: originalKey },
+      });
+      const retained = { ...stored.response, ignored: { historical: true } };
+      for (const response of [
+        retained,
+        { ...stored.response, kind: 'sprint-transition' },
+        { ...stored.response, sprintId: randomUUID() },
+        { ...stored.response, closureId: 'ordinary/non-identifier', activityId: '' },
+      ]) {
+        const fixtureKey = randomUUID();
+        await db.projectTaskOperation.create({
+          data: {
+            workspaceId: stored.workspaceId,
+            actorPrincipalId: stored.actorPrincipalId,
+            executionScope: stored.executionScope,
+            requestHash: stored.requestHash,
+            key: fixtureKey,
+            response,
+          },
+        });
+        const before = await digest(f);
+        const replay = await req(f.owner, `${f.path}/sprints/${s.id}/close`, input, fixtureKey);
+        if (response === retained) {
+          assert.ok(replay.status >= 200 && replay.status < 300);
+          assert.deepEqual(replay.data.operation, closed.operation);
+          assert.deepEqual(replay.data.closure, closed.closure);
+          assert.equal(replay.data.current.state, 'closed');
+        } else {
+          assert.equal(replay.status, 503);
+          assert.equal(replay.data.message, 'Closing receipt is unavailable.');
+        }
+        const conflict = await req(
+          f.owner,
+          `${f.path}/sprints/${s.id}/close`,
+          { ...input, previewHash: 'f'.repeat(64) },
+          fixtureKey,
+        );
+        assert.equal(conflict.status, 409);
+        assert.equal(conflict.data.code, 'idempotency-conflict');
+        assert.equal(
+          (await req(foreign.owner, `${f.path}/sprints/${s.id}/close`, input, fixtureKey)).status,
+          403,
+        );
+        assert.equal(await digest(f), before);
+      }
+    },
+  );
+  await t.test(
     'same-key and different-key concurrent closes commit one closure and one Activity/outbox/receipt',
     async () => {
       for (const same of [true, false]) {

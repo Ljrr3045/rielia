@@ -80,7 +80,9 @@ function fixture(options = {}) {
     assert.equal(next.name, name);
     next.inspect?.(args);
     if (next.error) throw next.error;
-    return globalThis.structuredClone(next.value);
+    return typeof next.value === 'function'
+      ? next.value(args)
+      : globalThis.structuredClone(next.value);
   };
   const tx = {
     $queryRaw: (...args) =>
@@ -329,6 +331,77 @@ test('create captures project zone, UTC interval, actual actor and planned-only 
   });
   f.done();
 });
+test('granted metadata writes and exact replay keep their receipt namespace separate from web and other grants', async () => {
+  const granted = {
+    ...actor,
+    executionMode: 'delegated',
+    source: 'mcp',
+    grantId: 'planning-grant',
+  };
+  const expectedScope = {
+    workspaceId: w,
+    actorPrincipalId: granted.actorPrincipalId,
+    executionScope: 'grant:planning-grant',
+    key,
+  };
+  const receipts = new Map([
+    ['web', { requestHash: 'wrong web binding', response: null }],
+    ['grant:other', { requestHash: 'wrong grant binding', response: null }],
+  ]);
+  const lookup = (args) => {
+    const scope = args[0].where.workspaceId_actorPrincipalId_executionScope_key;
+    assert.deepEqual(scope, expectedScope);
+    return receipts.get(scope.executionScope) ?? null;
+  };
+  const grantRow = row({
+    creationMode: 'delegated',
+    creationSource: 'mcp',
+    creationGrantId: granted.grantId,
+  });
+  const input = { expectedProjectVersion: 2, ...fields };
+  const f = fixture({ actor: granted });
+  let stored;
+  f.script(
+    ...begin(project(), lookup),
+    step('sprint.create', grantRow, (args) => {
+      assert.equal(args[0].data.createdByPrincipalId, granted.actorPrincipalId);
+      assert.equal(args[0].data.creationGrantId, granted.grantId);
+    }),
+    hydrate(),
+    step('activityEvent.create', undefined, (args) => {
+      assert.equal(args[0].data.grantId, granted.grantId);
+      assert.equal(args[0].data.executionMode, 'delegated');
+    }),
+    step('outboxEvent.create'),
+    step('projectTaskOperation.create', undefined, (args) => {
+      stored = args[0].data;
+      for (const [field, value] of Object.entries(expectedScope))
+        assert.equal(stored[field], value);
+      receipts.set(stored.executionScope, stored);
+    }),
+  );
+  const created = await f.service.save(f.context, w, p, key, 'request', input);
+  assert.deepEqual(stored.response, { kind: 'planned-sprint', id: created.id });
+  assert.equal(stored.requestHash, hash('create-sprint', null, { version: 2, fields }));
+  f.done();
+
+  const replay = fixture({ actor: granted });
+  replay.script(
+    ...begin(project({ archivedAt: new Date('2026-11-19T00:00:00Z') }), lookup),
+    step('sprint.findUnique', { ...grantRow, name: 'Canonical later name', version: 7 }),
+    hydrate(),
+  );
+  const current = await replay.service.save(replay.context, w, p, key, 'retry', input);
+  assert.equal(current.id, created.id);
+  assert.equal(current.version, 7);
+  assert.equal(current.name, 'Canonical later name');
+  assert.equal(current.capabilities.canEdit, false);
+  assert.equal(replay.calls.includes('activityEvent.create'), false);
+  assert.equal(replay.calls.includes('outboxEvent.create'), false);
+  assert.equal(replay.calls.includes('projectTaskOperation.create'), false);
+  assert.equal(receipts.size, 3);
+  replay.done();
+});
 test('edit keeps captured zone even after project changes and while project is Kanban', async () => {
   const f = fixture();
   f.script(
@@ -405,6 +478,53 @@ test('same-key replay precedes stale versions/archive and rehydrates current con
     8,
   );
   g.done();
+});
+test('metadata receipts ignore unrelated values and retain the configure-to-sprint replay fallback', async () => {
+  const input = { expectedVersion: 2, ...settings };
+  const ignored = () => {
+    throw new Error('ignored receipt value was read');
+  };
+  const response = Object.defineProperties(
+    { kind: 'project-planning' },
+    { id: { get: ignored }, operation: { get: ignored }, extra: { get: ignored } },
+  );
+  const f = fixture();
+  f.script(
+    ...begin(project({ version: 8 }), () => ({
+      requestHash: hash('configure-planning', null, input),
+      response,
+    })),
+  );
+  assert.equal((await f.service.configure(f.context, w, p, key, 'retry', input)).projectVersion, 8);
+  f.done();
+
+  const g = fixture();
+  g.script(
+    ...begin(project(), () => ({
+      requestHash: hash('configure-planning', null, input),
+      response: Object.defineProperties(
+        { kind: 'planned-sprint', id: s },
+        { operation: { get: ignored }, extra: { get: ignored } },
+      ),
+    })),
+    step('sprint.findUnique', row({ version: 9, name: 'Current metadata' })),
+    hydrate(),
+  );
+  const current = await g.service.configure(g.context, w, p, key, 'retry', input);
+  assert.equal(current.id, s);
+  assert.equal(current.version, 9);
+  assert.equal(current.name, 'Current metadata');
+  g.done();
+
+  const bad = fixture();
+  bad.script(
+    ...begin(project(), () => ({
+      requestHash: hash('configure-planning', null, input),
+      response: Object.defineProperty({ kind: 'unknown' }, 'id', { get: ignored }),
+    })),
+  );
+  await assert.rejects(bad.service.configure(bad.context, w, p, key, 'retry', input), denied(503));
+  bad.done();
 });
 test('denial, invalid input, version/archive/mode conflicts and missing scope cause no journal', async (t) => {
   for (const [name, proj, body, status, code] of [
@@ -496,6 +616,10 @@ test('different hash and corrupt tagged receipt fail without work', async () => 
       },
       503,
     ],
+    ...[null, [], 'receipt', { kind: 'planned-sprint', id: null }].map((response) => [
+      { requestHash: hash('create-sprint', null, { version: 2, fields }), response },
+      503,
+    ]),
   ]) {
     const f = fixture();
     f.script(...begin(project(), receipt));

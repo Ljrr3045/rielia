@@ -4,6 +4,24 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Record [T38.2g acceptance/delivery in PR64](https://github.com/Ljrr3045/rielia/pull/64#issuecomment-7175578830),
+  reviewed `9886fb2a`, merged `541ac5de`, with reviewed/exact-merge CI, native
+  Kilo and settled checkout cleanup. Implement the released
+  [T38.2h private sprint receipt slice](docs/development/t38-private-schemas.md):
+  three owners, one private schema module, explicit API Zod4.6.7 and importer-only
+  lock change. Preserve original replay/current authority, staged error behavior,
+  ordinary close strings, hashes and atomic writes. Focused owner79/builds,
+  resumed standard, real PG47/runtime/high audits pass with exact owned cleanup.
+  Preserve rejected numerical candidates1/2 and the passing unit supplement69.
+  Record the user's one-time structural API branch-floor rebase75.23→75.19:
+  aggregate1258/1672→1243/1653 decreases despite uncovered414→410 and all migrated
+  owners fully covered; retained per-file safeguards remain, without a general
+  waiver or aggregate nonregression claim. Adopt only exact approved API bytes;
+  other seven baselines remain unchanged. Fresh coherent normal844/infra20 and
+  artifact validation pass. Publication/review/acceptance remain pending. Other private,
+  cursor/configuration owners and full T38 stay open. Publication entries below
+  retain their dated pre-acceptance state and original evidence identities.
+
 - Publish bounded T38.2g closure schemas in [Draft PR64](https://github.com/Ljrr3045/rielia/pull/64),
   targeting `dev`, at implementation head `a112682dc8e254563fad4f5a46b048b0e7c6a7f2`
   (tree `0980d799ba51ebb81303e05a642a9f6042708cc3`). Initial exact-head CI run

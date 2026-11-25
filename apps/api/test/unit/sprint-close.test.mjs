@@ -462,6 +462,61 @@ test('original close receipt reauthorizes before replay and ignores later archiv
   );
 });
 
+test('close receipts retain ordinary strings, ignored extras and canonical closure error precedence', async () => {
+  const original = fixture();
+  const input = body(await preview(original));
+  await run(original, input);
+  const receipt = original.calls.find(([name]) => name === 'receipt')[1].data;
+  for (const id of ['', 'ordinary/non-identifier']) {
+    const response = Object.defineProperty(
+      { kind: 'sprint-close', sprintId: 's', closureId: id, activityId: id },
+      'extra',
+      { get: () => assert.fail('ignored close receipt extra was read') },
+    );
+    const f = fixture({
+      receipt: { ...receipt, response },
+      source: original.state.source,
+      closure: { ...original.state.closure, id, activityId: id },
+      outcomes: original.state.outcomes,
+    });
+    const replay = await run(f, input);
+    assert.equal(replay.operation.closureId, id);
+    assert.equal(replay.operation.activityId, id);
+    assert.equal(
+      f.calls.some(([name]) => name === 'receipt'),
+      false,
+    );
+  }
+  const missing = fixture({ receipt });
+  await assert.rejects(run(missing, input), (e) => e.getStatus() === 403);
+  assert.equal(
+    missing.calls.some(([name]) => name === 'project'),
+    false,
+  );
+  const mismatch = fixture({
+    receipt,
+    closure: { ...original.state.closure, activityId: 'different' },
+    outcomes: original.state.outcomes,
+  });
+  await assert.rejects(run(mismatch, input), (e) => e.getStatus() === 503);
+  assert.equal(
+    mismatch.calls.some(([name]) => name === 'project'),
+    false,
+  );
+  const wrongSource = fixture({
+    receipt: {
+      ...receipt,
+      response: Object.defineProperty({ kind: 'sprint-close', sprintId: 'other' }, 'closureId', {
+        get: () => assert.fail('foreign-source receipt read closure ID'),
+      }),
+    },
+  });
+  await assert.rejects(run(wrongSource, input), (e) => e.getStatus() === 503);
+  assert.equal(
+    wrongSource.calls.some(([name]) => name === 'closure'),
+    false,
+  );
+});
 test('granted close and replay preserve receipt namespace and recheck current authority first', async () => {
   const granted = {
     ...actor,

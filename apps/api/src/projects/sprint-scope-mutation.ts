@@ -5,7 +5,6 @@ import {
 } from '@nestjs/common';
 import { createHash, randomUUID } from 'node:crypto';
 import {
-  isRecord,
   type ExecutionContextResponse,
   type Sprint,
   type TaskPlanning,
@@ -14,9 +13,14 @@ import {
 import type { Prisma, Project } from '../generated/prisma/client.js';
 import type { Transaction, VerifiedExecution } from '../principals/principal.service.js';
 import type { ProjectTaskService } from './project-task.service.js';
-import { canonical, identifier } from './project-task-input.js';
+import { canonical } from './project-task-input.js';
 import { sprintRow, sprintView } from './sprint-read.js';
 import { taskPlanningView } from './task-planning.js';
+import {
+  sprintScopeReceiptIdentitySchema,
+  sprintTransitionReceiptSchema,
+  taskPlanningReceiptSchema,
+} from './sprint-receipt-schemas.js';
 
 type Action = 'start-sprint' | 'set-task-sprint' | 'estimate-task';
 interface PreparedMutation {
@@ -83,27 +87,23 @@ export function mutateSprintScope(
             message: 'Idempotency key belongs to another request.',
           });
         const saved = previous.response;
-        if (
-          !isRecord(saved) ||
-          saved['id'] !== target ||
-          saved['entity'] !== (action === 'start-sprint' ? 'sprint' : 'task')
-        )
+        const entity = action === 'start-sprint' ? 'sprint' : 'task';
+        if (!sprintScopeReceiptIdentitySchema(target, entity).safeParse(saved).success)
           throw new ServiceUnavailableException('Planning receipt is unavailable.');
-        const value = await current(saved['entity'] as 'task' | 'sprint', saved['id']);
-        if (action === 'estimate-task' && saved['kind'] === 'task-planning' && 'taskId' in value)
+        const value = await current(entity, target);
+        if (
+          action === 'estimate-task' &&
+          taskPlanningReceiptSchema.safeParse(saved).success &&
+          'taskId' in value
+        )
           return value;
-        const op = saved['operation'];
-        if (
-          saved['kind'] !== 'sprint-transition' ||
-          !isRecord(op) ||
-          op['type'] !== action ||
-          !identifier(op['activityId']) ||
-          !(op['sprintId'] === null || identifier(op['sprintId'])) ||
-          !(op['enteredVisitId'] === null || identifier(op['enteredVisitId'])) ||
-          !(op['exitedVisitId'] === null || identifier(op['exitedVisitId']))
-        )
+        const operation = sprintTransitionReceiptSchema(action).safeParse(saved);
+        if (!operation.success)
           throw new ServiceUnavailableException('Planning receipt is unavailable.');
-        return { operation: op as unknown as SprintTransitionResult['operation'], current: value };
+        return {
+          operation: operation.data as unknown as SprintTransitionResult['operation'],
+          current: value,
+        };
       }
       const prepared = await work(tx, actor, project);
       const activityId = randomUUID();
