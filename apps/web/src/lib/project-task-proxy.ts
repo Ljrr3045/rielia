@@ -5,6 +5,7 @@ import {
   collaborationHttpQuerySchema,
   planningEmptyHttpQuerySchema,
   planningPageHttpQuerySchema,
+  sprintClosePreviewHttpQuerySchema,
 } from '@rielia/contracts';
 export async function proxyProjectTask(request: Request): Promise<Response> {
   const fail = (status: number) =>
@@ -64,11 +65,19 @@ export async function proxyProjectTask(request: Request): Promise<Response> {
     const planningEmpty = new RegExp(
       `^${root}/${id}/(?:tasks/${id}/(?:planning|sprint)|sprints/${id}/start)$`,
     ).test(incoming.pathname);
-    const planningQuerySchema = planningCursorPage
-      ? planningPageHttpQuerySchema
-      : planningEmpty
-        ? planningEmptyHttpQuerySchema
-        : null;
+    const closurePage = new RegExp(`^${root}/${id}/sprints/${id}/closure/outcomes$`).test(
+      incoming.pathname,
+    );
+    const closureEmpty = new RegExp(`^${root}/${id}/sprints/${id}/(?:close|closure)$`).test(
+      incoming.pathname,
+    );
+    const planningQuerySchema = closePreview
+      ? sprintClosePreviewHttpQuerySchema
+      : planningCursorPage || closurePage
+        ? planningPageHttpQuerySchema
+        : planningEmpty || closureEmpty
+          ? planningEmptyHttpQuerySchema
+          : null;
     const allowed =
       request.method !== 'GET'
         ? []
@@ -100,8 +109,6 @@ export async function proxyProjectTask(request: Request): Promise<Response> {
       (planningQuerySchema !== null &&
         !planningQuerySchema.safeParse(Object.fromEntries(incoming.searchParams)).success) ||
       !isTaskFilters(filters) ||
-      (incoming.searchParams.has('destination') &&
-        !/^[A-Za-z0-9_-]{1,128}$/.test(incoming.searchParams.get('destination')!)) ||
       (discovery &&
         !taskDiscoveryHttpQuerySchema.safeParse(Object.fromEntries(incoming.searchParams))
           .success) ||

@@ -337,3 +337,29 @@ test('proxy allows only exact close routes/scalar bounded queries and retains Or
     400,
   );
 });
+
+test('closure transport retains original response extras and never reads ignored getters', async (t) => {
+  for (const [method, body, args] of [
+    ['closePreview', preview, ['w', 'p', 's', 'backlog', signal()]],
+    ['closure', closure, ['w', 'p', 's', signal()]],
+    ['outcomes', page, ['w', 'p', 's', signal()]],
+    ['close', result, ['w', 'p', 's', input, 'key', signal()]],
+  ]) {
+    const original = Object.defineProperty({ ...body, future: { preserved: true } }, 'ignored', {
+      enumerable: true,
+      get() {
+        throw new Error('ignored response getter');
+      },
+    });
+    t.mock.method(globalThis, 'fetch', async () => ({
+      ok: true,
+      status: 200,
+      headers: new globalThis.Headers(),
+      json: async () => original,
+    }));
+    const received = await createTaskPlanningTransport()[method](...args);
+    assert.equal(received, original);
+    assert.equal(received.future, original.future);
+    assert.equal(typeof Object.getOwnPropertyDescriptor(received, 'ignored').get, 'function');
+  }
+});

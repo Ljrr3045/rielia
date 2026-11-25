@@ -14,7 +14,17 @@ function fixture(options = {}) {
   const calls = [];
   const result = { implemented: 'planning result' };
   const service = Object.fromEntries(
-    ['planning', 'configure', 'list', 'get', 'save'].map((name) => [
+    [
+      'planning',
+      'configure',
+      'list',
+      'get',
+      'save',
+      'closePreview',
+      'close',
+      'closure',
+      'outcomes',
+    ].map((name) => [
       name,
       async (...args) => {
         calls.push({ name, args });
@@ -238,5 +248,113 @@ test('close preview permits only scalar destination/cursor and forwards them aft
       (e) => e.getStatus() === 400,
     );
     assert.equal(x.authorities(), 0);
+  }
+});
+
+test('closure controllers preserve query admission before authority and original body forwarding', async () => {
+  for (const [route, method, query] of [
+    ['closePreview', 'GET', { destination: 'backlog', cursor: 'a'.repeat(2048) }],
+    ['close', 'POST', {}],
+    ['closure', 'GET', {}],
+    ['outcomes', 'GET', { cursor: 'a'.repeat(2048) }],
+  ]) {
+    const f = fixture();
+    const request = f.request(method, { query });
+    await f.controller[route]('w', 'p', 's', request, f.response);
+    assert.equal(f.calls[0].name, route);
+    assert.equal(f.calls[0].args[0], context);
+    assert.deepEqual(f.calls[0].args.slice(1, 4), ['w', 'p', 's']);
+    assert.equal(f.authorities(), 1);
+    assert.equal(f.response.payload, f.result);
+    if (route === 'close') {
+      assert.equal(f.calls[0].args[4], 'original-key');
+      assert.equal(f.calls[0].args[6], request.body);
+    }
+    for (const badQuery of [{ view: 'active' }, { cursor: ['a'] }, { author: 'forged' }]) {
+      const denied = fixture();
+      await assert.rejects(
+        denied.controller[route](
+          'w',
+          'p',
+          's',
+          denied.request(method, { query: badQuery }),
+          denied.response,
+        ),
+        (error) => error.getStatus() === 400 && error.message === 'Invalid project/task query.',
+      );
+      assert.equal(denied.authorities(), 0);
+    }
+  }
+  for (const mode of ['closure-empty', 'closure-page', 'close-preview']) {
+    const f = fixture();
+    const query = Object.create({
+      cursor: 'inherited',
+      destination: 'target',
+      view: 'active',
+      status: 'todo',
+    });
+    let forwarded;
+    await f.http.respond(f.request('GET', { query }), f.response, 'w', mode, async (...args) => {
+      forwarded = args;
+      return f.result;
+    });
+    assert.equal(forwarded[3], 'inherited');
+    assert.equal(forwarded[5], 'target');
+    assert.equal(f.authorities(), 1);
+  }
+});
+
+test('remaining HTTP fallback validates inherited destination before authority and body checks', async () => {
+  for (const mode of [false, 'sprints', 'events']) {
+    const valid = fixture();
+    let received;
+    await valid.http.respond(
+      valid.request('GET', { query: Object.create({ destination: 'target' }) }),
+      valid.response,
+      'w',
+      mode,
+      async (...args) => {
+        received = args;
+        return valid.result;
+      },
+    );
+    assert.equal(valid.authorities(), 1);
+    assert.equal(received[5], 'target');
+    for (const destination of ['../bad', ['target'], null]) {
+      const f = fixture();
+      await assert.rejects(
+        f.http.respond(
+          f.request('GET', {
+            query: Object.create({ destination }),
+            headers: { 'content-length': '1' },
+          }),
+          f.response,
+          'w',
+          mode,
+          async () => {
+            throw new Error('handler must not run');
+          },
+        ),
+        (error) => error.getStatus() === 400 && error.message === 'Invalid project/task query.',
+      );
+      assert.equal(f.authorities(), 0);
+    }
+    const spoofed = fixture();
+    await assert.rejects(
+      spoofed.http.respond(
+        spoofed.request('GET', {
+          query: Object.create({ destination: '../bad' }),
+          headers: { 'x-actor-principal-id': 'forged' },
+        }),
+        spoofed.response,
+        'w',
+        mode,
+        async () => {},
+      ),
+      (error) =>
+        error.getStatus() === 400 &&
+        error.message === 'Execution identity is resolved by the server.',
+    );
+    assert.equal(spoofed.authorities(), 0);
   }
 });

@@ -4,6 +4,30 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Publish bounded T38.2g closure schemas in [Draft PR64](https://github.com/Ljrr3045/rielia/pull/64),
+  targeting `dev`, at implementation head `a112682dc8e254563fad4f5a46b048b0e7c6a7f2`
+  (tree `0980d799ba51ebb81303e05a642a9f6042708cc3`). Initial exact-head CI run
+  `45550717155` / validate check `138990956650` (App15368) passed all 20 steps;
+  its only annotation is the Node20-to-24 action deprecation warning. Native
+  review and coordinator acceptance remain pending. Preserve the frozen
+  local delivery manifest and original source/run identities; this publication
+  does not imply acceptance of T38.2g or broader T38 scope.
+
+- Record [T38.2f acceptance/delivery in PR63](https://github.com/Ljrr3045/rielia/pull/63#issuecomment-7152173975),
+  reviewed `e320bf7a`, merged `5536162d`, with reviewed/exact-merge CI,
+  clean native Kilo and settled checkout cleanup; preserve original receipts.
+  Implement bounded [T38.2g closure schemas](docs/development/t38-closure-schemas.md)
+  for H23–26/G07 and closure X05/HTTP/X09. Preserve canonical Sprint/snapshot/totals,
+  strict body versus tolerant binding, original transport objects and backend
+  authority/hash/replay/transactions. Record approved dense-array, invalid
+  known-accessor and intrinsic array-method dispositions, with the corrected
+  null-snapshot failure and rejected candidate1 preserved.
+  Independent types/parity, resumed standard checks, exact numerical adoption
+  and fresh normal837/infra20/artifacts17 pass. Selected real HTTP17,
+  runtime/deployed closure/recovery, high audits and exact owned cleanup pass.
+  Current-head publication/review/acceptance and full T38.2/T38 remain open;
+  private receipt/snapshot/opaque/configuration owners and inherited limits remain.
+
 - Publish bounded T38.2f planning schemas in [Draft PR63](https://github.com/Ljrr3045/rielia/pull/63),
   targeting `dev`, at initial implementation head
   `480263aa5b0b9214e8b045e8a313c47e4908b55d` (tree `a329cbef9a8a6fe1e766b5a44dc76141e36f7f5d`).

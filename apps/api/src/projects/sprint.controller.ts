@@ -34,7 +34,7 @@ export class SprintController {
     @Req() req: NodeRequest,
     @Res() res: NodeResponse,
   ) {
-    return this.http.respond(req, res, w, false, (c, id) =>
+    return this.http.respond(req, res, w, 'closure-empty', (c, id) =>
       this.sprints.close(c, w, p, s, req.headers['idempotency-key'] as string, id, req.body),
     );
   }
@@ -46,7 +46,7 @@ export class SprintController {
     @Req() req: NodeRequest,
     @Res() res: NodeResponse,
   ) {
-    return this.http.respond(req, res, w, false, (c) => this.sprints.closure(c, w, p, s));
+    return this.http.respond(req, res, w, 'closure-empty', (c) => this.sprints.closure(c, w, p, s));
   }
   @Get('sprints/:sprintId/closure/outcomes')
   outcomes(
@@ -56,7 +56,7 @@ export class SprintController {
     @Req() req: NodeRequest,
     @Res() res: NodeResponse,
   ) {
-    return this.http.respond(req, res, w, 'sprints', (c, _id, _v, cursor) =>
+    return this.http.respond(req, res, w, 'closure-page', (c, _id, _v, cursor) =>
       this.sprints.outcomes(c, w, p, s, cursor),
     );
   }

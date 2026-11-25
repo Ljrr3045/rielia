@@ -4,10 +4,11 @@ import {
   ServiceUnavailableException,
 } from '@nestjs/common';
 import { createHash, randomUUID } from 'node:crypto';
-import { isCloseSprintInput, isRecord, type SprintCloseResult } from '@rielia/contracts';
+import { isRecord, type SprintCloseResult } from '@rielia/contracts';
 import type { VerifiedExecution } from '../principals/principal.service.js';
 import type { ProjectTaskService } from './project-task.service.js';
-import { canonical, object } from './project-task-input.js';
+import { canonical } from './project-task-input.js';
+import { closeSprintInput } from './sprint-closure-input.js';
 import { closePreview } from './sprint-close-preview.js';
 import {
   lockSprints,
@@ -30,18 +31,7 @@ export function closeSprint(
   requestId: string,
   payload: unknown,
 ): Promise<SprintCloseResult> {
-  const fields = [
-    'expectedVersion',
-    'expectedProjectVersion',
-    'expectedTaskRevision',
-    'expectedSprintRevision',
-    'expectedTargetVersion',
-    'destination',
-    'previewSchema',
-    'previewHash',
-  ];
-  const input = object(payload, fields, fields);
-  if (!isCloseSprintInput(input)) throw new BadRequestException('Invalid sprint closing request.');
+  const input = closeSprintInput(payload);
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(key))
     throw new BadRequestException('A UUID v4 Idempotency-Key is required.');
   const requestHash = createHash('sha256')

@@ -162,22 +162,58 @@
         "total": 0
       }
     },
-    "packages/contracts/src/sprint-closure.ts": {
+    "packages/contracts/src/sprint-closure-input-schemas.ts": {
       "branches": {
-        "covered": 127,
-        "total": 127
+        "covered": 19,
+        "total": 19
       },
       "functions": {
-        "covered": 18,
-        "total": 18
+        "covered": 5,
+        "total": 5
       },
       "lines": {
-        "covered": 28,
-        "total": 28
+        "covered": 10,
+        "total": 10
       },
       "statements": {
-        "covered": 33,
-        "total": 33
+        "covered": 11,
+        "total": 11
+      }
+    },
+    "packages/contracts/src/sprint-closure-schemas.ts": {
+      "branches": {
+        "covered": 57,
+        "total": 57
+      },
+      "functions": {
+        "covered": 14,
+        "total": 14
+      },
+      "lines": {
+        "covered": 32,
+        "total": 32
+      },
+      "statements": {
+        "covered": 36,
+        "total": 36
+      }
+    },
+    "packages/contracts/src/sprint-closure.ts": {
+      "branches": {
+        "covered": 0,
+        "total": 0
+      },
+      "functions": {
+        "covered": 5,
+        "total": 5
+      },
+      "lines": {
+        "covered": 5,
+        "total": 5
+      },
+      "statements": {
+        "covered": 5,
+        "total": 5
       }
     },
     "packages/contracts/src/sprint-schemas.ts": {
@@ -413,7 +449,9 @@
       "packages/contracts/src/project-task-schemas.ts": "1597cbb4b0e408d2147019698b1cfe629242249a747adaa469953f0d07dc2778",
       "packages/contracts/src/project-tasks.ts": "19eed6bcac1fd767141f9f3e7f75327210677b7527624897526a23e74d88808c",
       "packages/contracts/src/schema-types.ts": "fee5432cdd9715cdb7ff15154aae837ef801f258164c2e3671d649556c242e84",
-      "packages/contracts/src/sprint-closure.ts": "64461e9006e83814c88a31df74f8ac103bce48256db5fc10cfbf1ecdff0b89da",
+      "packages/contracts/src/sprint-closure-input-schemas.ts": "9534386c6d0cebc25e4e61c0912d799873a3cf71e6ff67c952237536da8006a4",
+      "packages/contracts/src/sprint-closure-schemas.ts": "4bfe9830f4806cc282866547c1efeeaa8f57e31c339ddb015c76f8570d055054",
+      "packages/contracts/src/sprint-closure.ts": "d39d43011cbd488afe39192b7efe6506567d1e6a774c4500c73e12b445d1eb67",
       "packages/contracts/src/sprint-schemas.ts": "9531374270f4e553af08ecfc6cf93326e29ceb3ef1da259c51cac11a735e7eeb",
       "packages/contracts/src/sprints.ts": "ded4f3e7642860472bd588ab5fa18f23a40e72af3acbc457989ceb286dea7525",
       "packages/contracts/src/task-collaboration-input-schemas.ts": "5a39ca593d7720d9475d9f70634079ff18e88cb3396ed7ad546420970878f6a3",
@@ -437,11 +475,11 @@
     "tests": {
       "packages/contracts/test/guards.test.mjs": "647efd493eac3dc6d0fcda7656978b92051f0767b2af36b7940cb04e03d3100c",
       "packages/contracts/test/project-task-schemas.test.mjs": "1986c18a8a6ae02575cac63047602c9e15a74c68bd4422270e589592acef0876",
-      "packages/contracts/test/sprint-closure.test.mjs": "c146ac14b85bcf55e4b1bc816ec81a1991cb7489349380eb5402a1891a73bab9",
+      "packages/contracts/test/sprint-closure.test.mjs": "bc738150ec626444ccf89f3e5cacb733453328493e6ef3c823722e4c66b50aa1",
       "packages/contracts/test/sprints.test.mjs": "56a98cc09cf4dc5e66f9c384a19e35d5597b11e316b93a62ede844126589d797",
       "packages/contracts/test/task-collaboration-schemas.test.mjs": "12032da5ed94ccc3aa68ba2c643cee6b93e4049ab721d4eed06332d1652e2ba6",
       "packages/contracts/test/task-discovery-schemas.test.mjs": "6cfaa2c6af2d9e01ddad742810ea9302ba45205c5b495d73ff2fa306458091fc",
-      "packages/contracts/test/task-planning.test.mjs": "82a430be1193a00105707fbf34fbd091dcb01f61cc0fd1072d243ede1e7c04b2",
+      "packages/contracts/test/task-planning.test.mjs": "d56c22ce6abfdc64ce58df6661a404f881c6e6a060f78d4586184134f26dc860",
       "packages/contracts/test/workspace-schemas.test.mjs": "d1c7264e7971e91ecd91e9d00606e84eca53239caf0d0ce842c2e0d8595b4671",
       "scripts/unit/mirror-loader.mjs": "b3ef9e50e56ee2fa0079c794c044efbc6b953d75890b97889bc635e233d93115"
     },
@@ -450,20 +488,20 @@
   "scope": "contracts",
   "total": {
     "branches": {
-      "covered": 368,
-      "total": 368
+      "covered": 317,
+      "total": 317
     },
     "functions": {
-      "covered": 190,
-      "total": 190
+      "covered": 196,
+      "total": 196
     },
     "lines": {
-      "covered": 394,
-      "total": 394
+      "covered": 413,
+      "total": 413
     },
     "statements": {
-      "covered": 418,
-      "total": 418
+      "covered": 437,
+      "total": 437
     }
   }
 }

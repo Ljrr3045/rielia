@@ -11,6 +11,13 @@ import {
   isSprintCloseResult,
   isSprintScopePage,
   isPlanningHistoryPage,
+  closeSprintInputSchema,
+  closeSprintBindingSchema,
+  sprintClosePreviewSchema,
+  sprintClosureSchema,
+  sprintClosingOutcomePageSchema,
+  sprintCloseResultSchema,
+  sprintClosePreviewHttpQuerySchema,
 } from '../dist/index.js';
 const at = '2026-11-19T00:00:00.000Z';
 const snapshot = {
@@ -479,4 +486,172 @@ test('history preserves valid historical shapes and enforces scalar outcome kind
     Object.create(null),
   ])
     assert.equal(isPlanningHistoryPage(history({ ...event, disposition: value })), false);
+});
+
+test('close binding remains tolerant while the HTTP body requires exactly eight explicit fields', () => {
+  const extra = { ...input, ignored: true };
+  assert.ok(isCloseSprintInput(extra));
+  assert.equal(closeSprintInputSchema.safeParse(extra).success, false);
+  assert.deepEqual(closeSprintBindingSchema.parse(extra), input);
+  assert.deepEqual(closeSprintInputSchema.parse(input), input);
+  for (const field of Object.keys(input)) {
+    const missing = { ...input };
+    delete missing[field];
+    assert.equal(closeSprintInputSchema.safeParse(missing).success, false, field);
+  }
+  for (const value of [NaN, Infinity, -Infinity, 1.5, Number.MAX_SAFE_INTEGER + 1, '1', [1]])
+    assert.equal(isCloseSprintInput({ ...input, expectedVersion: value }), false);
+  assert.ok(isCloseSprintInput({ ...input, expectedVersion: Number.MAX_SAFE_INTEGER }));
+});
+
+test('closure arrays reject holes and explicit missing items while retaining inherited populated indices', () => {
+  for (const [guard, value, row] of [
+    [isSprintClosePreview, preview, item],
+    [isSprintClosingOutcomePage, page, outcome],
+  ]) {
+    const mixed = Array(2);
+    mixed[1] = row;
+    for (const items of [Array(1), [undefined], [null], mixed])
+      assert.equal(guard({ ...value, total: 2, items }), false);
+    const items = Array(1);
+    Object.setPrototypeOf(items, Object.assign(Object.create(Array.prototype), { 0: row }));
+    assert.ok(guard({ ...value, items }));
+  }
+});
+
+test('validation copies ignore extra getters and guards retain original descriptors and nested snapshot admission', () => {
+  const closeResult = {
+    operation: {
+      type: 'close-sprint',
+      activityId: 'activity',
+      closureId: 'closure',
+      sprintId: 's',
+    },
+    closure,
+    current: sprint,
+  };
+  for (const [guard, schema, original] of [
+    [isCloseSprintInput, closeSprintBindingSchema, input],
+    [isSprintClosePreview, sprintClosePreviewSchema, preview],
+    [isSprintClosure, sprintClosureSchema, closure],
+    [isSprintClosingOutcomePage, sprintClosingOutcomePageSchema, page],
+    [isSprintCloseResult, sprintCloseResultSchema, closeResult],
+  ]) {
+    const value = Object.defineProperty({ ...original }, 'ignored', {
+      enumerable: true,
+      get() {
+        throw new Error('ignored getter was read');
+      },
+    });
+    assert.ok(guard(value));
+    const parsed = schema.parse(value);
+    assert.equal('ignored' in parsed, false);
+    assert.notEqual(parsed, value);
+    assert.equal(typeof Object.getOwnPropertyDescriptor(value, 'ignored').get, 'function');
+    assert.ok(guard(Object.create(original)));
+  }
+  const inheritedSnapshot = Object.create({ status: 'todo' });
+  Object.assign(inheritedSnapshot, { ...snapshot, unrelated: true });
+  delete inheritedSnapshot.status;
+  assert.equal(Object.keys(inheritedSnapshot).length, 5);
+  assert.ok(
+    isSprintClosePreview({ ...preview, items: [{ ...item, snapshot: inheritedSnapshot }] }),
+  );
+  assert.equal(
+    isSprintClosePreview({ ...preview, items: [{ ...item, snapshot: { ...snapshot, extra: 1 } }] }),
+    false,
+  );
+});
+
+test('close preview HTTP admission preserves scalar bounds and inherited known query reads', () => {
+  for (const value of [null, undefined, false, 42, 'cursor'])
+    assert.equal(sprintClosePreviewHttpQuerySchema.safeParse(value).success, false);
+  // The existing raw HTTP query admission permits an empty callable object.
+  assert.ok(sprintClosePreviewHttpQuerySchema.safeParse(() => {}).success);
+  for (const value of [
+    {},
+    { destination: 'backlog' },
+    { destination: 'null', cursor: 'a'.repeat(2048) },
+  ])
+    assert.ok(sprintClosePreviewHttpQuerySchema.safeParse(value).success);
+  for (const query of [
+    { view: 'active' },
+    { destination: null },
+    { destination: '' },
+    { destination: ['backlog'] },
+    { cursor: ['a'] },
+    { cursor: 'a'.repeat(2049) },
+    { actor: 'forged' },
+  ])
+    assert.equal(sprintClosePreviewHttpQuerySchema.safeParse(query).success, false);
+  const query = Object.create({
+    cursor: 'cursor',
+    destination: 'target',
+    view: 'active',
+    status: 'todo',
+  });
+  assert.deepEqual(sprintClosePreviewHttpQuerySchema.parse(query), {
+    cursor: 'cursor',
+    destination: 'target',
+  });
+  assert.throws(
+    () => sprintClosePreviewHttpQuerySchema.safeParse(Object.create({ view: Object.create(null) })),
+    TypeError,
+  );
+});
+
+test('invalid executable objects may throw while ignored extra getters remain unread', () => {
+  const reads = [];
+  const value = Object.defineProperty({ ...input, expectedVersion: 0 }, 'previewHash', {
+    enumerable: true,
+    get() {
+      reads.push('previewHash');
+      throw new Error('known previewHash');
+    },
+  });
+  assert.throws(() => isCloseSprintInput(value), /known previewHash/);
+  assert.deepEqual(reads, ['previewHash']);
+});
+
+test('malformed null snapshots reject without throwing through the shared consequence schema', () => {
+  assert.equal(isSprintClosePreview({ ...preview, items: [{ ...item, snapshot: null }] }), false);
+  assert.equal(
+    isSprintClosingOutcomePage({ ...page, items: [{ ...outcome, snapshot: null }] }),
+    false,
+  );
+});
+
+test('closure arrays validate actual elements and ignore executable traversal methods', () => {
+  for (const [guard, value, row] of [
+    [isSprintClosePreview, preview, item],
+    [isSprintClosingOutcomePage, page, outcome],
+  ]) {
+    const items = [row];
+    for (const key of ['keys', 'every', 'map', Symbol.iterator])
+      Object.defineProperty(items, key, {
+        enumerable: true,
+        get() {
+          throw new Error('ignored array traversal getter');
+        },
+      });
+    assert.ok(guard({ ...value, items }));
+    assert.ok(
+      guard({ ...value, items: Object.assign([row], { every: () => false, map: () => [] }) }),
+    );
+    assert.equal(
+      guard({ ...value, items: Object.assign([null], { every: () => true, map: () => ['fake'] }) }),
+      false,
+    );
+    assert.equal(
+      guard({
+        ...value,
+        total: 2,
+        items: Object.assign([row, row], {
+          every: () => true,
+          map: () => ['manufactured-one', 'manufactured-two'],
+        }),
+      }),
+      false,
+    );
+  }
 });
