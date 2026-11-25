@@ -18,7 +18,11 @@ This records repository changes. No application version has been released.
   normal811/811 reproduce all 16 approved reports; infrastructure 20/artifacts 17,
   resumed standard checks and selected real PostgreSQL/HTTP57 pass with owned
   identity cleanup. Runtime/deployed closure/recovery and high audits pass with
-  exact owned cleanup; current-head review/acceptance remains pending. No new
+  exact owned cleanup. Published in [Draft PR62](https://github.com/Ljrr3045/rielia/pull/62),
+  targeting `dev`, at initial implementation head
+  `15e56e383acf03917acdac606faa9b7e4208384e` (tree `84a6b3cc4930b1746d1355a1b1b411a8e04b3ade`).
+  Final-head CI/native Kilo/final acceptance remain pending; this docs-only
+  reference batch does not rebind source-qualified runs. No new
   package, UI/policy/DB/cache/producer or Query/RHF/OpenAPI change;
   inherited Next/pnpm warning/audit and native/external limits remain explicit.
 

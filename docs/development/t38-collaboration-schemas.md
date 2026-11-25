@@ -1,10 +1,17 @@
 # T38.2e collaboration boundary schemas
 
-**LOCAL GATES COMPLETE; CURRENT-HEAD REVIEW/ACCEPTANCE PENDING,
-2026-11-24 America/Caracas.** This coordinator-released
+**DRAFT PR62; LOCAL GATES COMPLETE; FINAL-HEAD CI/NATIVE REVIEW/ACCEPTANCE PENDING,
+2026-11-24 America/Caracas.** The coordinator published
+[Draft PR62](https://github.com/Ljrr3045/rielia/pull/62), targeting `dev`, at initial
+implementation head `15e56e383acf03917acdac606faa9b7e4208384e`, tree
+`84a6b3cc4930b1746d1355a1b1b411a8e04b3ade`. Initial publication is complete;
+this docs-only PR-reference batch does not rebind source-qualified runs or their
+original failures. Final-head CI, native Kilo and final acceptance remain
+coordinator gates.
+
+This coordinator-released
 [T38/issue 53](https://github.com/Ljrr3045/rielia/issues/53) slice covers
-H36–48/G04, collaboration X03 and its bounded API HTTP/X09 admission. Current-head
-CI, native Kilo, publication and final acceptance remain coordinator gates.
+H36–48/G04, collaboration X03 and its bounded API HTTP/X09 admission.
 Full T38.2/T38 remains open.
 
 The base is accepted and delivered [PR61](https://github.com/Ljrr3045/rielia/pull/61#issuecomment-7147377623):

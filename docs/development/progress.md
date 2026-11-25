@@ -1,6 +1,14 @@
 # Delivery progress and decisions
 
-## 2026-11-24 T38.2d ACCEPTED; T38.2e collaboration schemas — LOCAL GATES COMPLETE
+## 2026-11-24 T38.2d ACCEPTED; T38.2e collaboration schemas in Draft PR62
+
+The coordinator published [Draft PR62](https://github.com/Ljrr3045/rielia/pull/62),
+targeting `dev`, at initial implementation head
+`15e56e383acf03917acdac606faa9b7e4208384e`, tree
+`84a6b3cc4930b1746d1355a1b1b411a8e04b3ade`. Local gates and initial publication
+are complete; final-head CI/native Kilo/final acceptance remain pending. This
+docs-only PR-reference batch preserves the source-qualified runs and original
+failures below without rerunning or rebinding application evidence.
 
 [T38.2d is accepted and delivered in PR61](https://github.com/Ljrr3045/rielia/pull/61#issuecomment-7147377623),
 reviewed `09d257a513ff5a6558402958656af787da460ebc`, merged
