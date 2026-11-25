@@ -1,0 +1,104 @@
+apps/api/src/projects/task-planning.controller.ts
+  s_06c9bb773b9903::t_00dcd3522daafc 20,30,42,54
+apps/api/src/projects/task-planning.service.ts
+  s_06c9bb773b9903::t_45a0bc425147a8 4,45,90
+  s_06c9bb773b9903::t_00dcd3522daafc 1
+apps/api/src/projects/sprint-start.ts
+  s_06c9bb773b9903::t_45a0bc425147a8 4,20
+packages/contracts/src/task-planning-input-schemas.ts
+  s_06c9bb773b9903::t_513f99a3ea9b86 36,39-43,45-54,58,60,62-65
+  s_06c9bb773b9903::t_78c17202181621 1-4,6-8,67-69
+  s_06c9bb773b9903::t_d19bf8b2b07388 5,31-35,37-38,44,55-57,59,61,66
+  s_06c9bb773b9903::t_f5678892cb0fa8 9-30
+apps/api/test/unit/sprint-scope-start.test.mjs
+  s_06c9bb773b9903::t_d97dc3610050d9 504-514,520,524-527,532-540,543-547,553,563-564,567-569,1023
+  s_06c9bb773b9903::t_513f99a3ea9b86 856-864
+  s_06c9bb773b9903::t_5f58d340e6fbd4 515-519,521-523,528-531,541-542,548-552,554-562,565-566
+  s_06c9bb773b9903::t_f5678892cb0fa8 1-5,974-978,980-1012,1014-1022
+  s_06c9bb773b9903::t_14da31f82c60a7 972-973,979,1013
+apps/api/src/projects/sprint.controller.ts
+  s_06c9bb773b9903::t_00dcd3522daafc 71,83,95
+CHANGELOG.md
+  s_06c9bb773b9903::t_f745c5b564885a 7-14,19-20
+  s_06c9bb773b9903::t_ceb7d17d4fce48 15-18
+docs/development/t38-boundary-inventory.md
+  s_06c9bb773b9903::t_9a97801d04f64f 3-15,19-22
+  s_06c9bb773b9903::t_ceb7d17d4fce48 16-18
+docs/development/progress.md
+  s_06c9bb773b9903::t_66ae1c72a8032e 3
+  s_06c9bb773b9903::t_ceb7d17d4fce48 23-28,393,3398
+  s_06c9bb773b9903::t_9a97801d04f64f 4-22,29-31,391-392,394
+scripts/unit/baselines/contracts.json
+  s_06c9bb773b9903::t_e44355d9e58ced 309,311-312,315-318,322-335,337-338,341-360,424-426,439,444,453-454,457-458,461-462,465-466
+apps/api/test/unit/sprint-http.test.mjs
+  s_06c9bb773b9903::t_4f95de124e305b 150-151,158,165-168,182-185
+  s_06c9bb773b9903::t_513f99a3ea9b86 152-157,159-164,169-181
+docs/development/formatting-inventory.json
+  s_06c9bb773b9903::t_14da31f82c60a7 3,44,200-201,1316
+docs/development/t38-collaboration-schemas.md
+  s_06c9bb773b9903::t_9a97801d04f64f 3-16
+apps/web/src/lib/task-planning-client.ts
+  s_06c9bb773b9903::t_00dcd3522daafc 9,212
+scripts/unit/baselines/api.json
+  s_06c9bb773b9903::t_e44355d9e58ced 275-276,545,553,557,589-590,593-594,741-758,779-780,787-788,791-792,995-998,1034,1051-1052,1060-1062,1093,1095,1110-1111,1114-1115,1118-1119,1122-1123
+apps/api/src/projects/project-task-http.ts
+  s_06c9bb773b9903::t_00dcd3522daafc 11-12,37-39,94-98
+CONTRIBUTING.md
+  s_06c9bb773b9903::t_f745c5b564885a 307-314
+scripts/unit/baselines/web.json
+  s_06c9bb773b9903::t_e44355d9e58ced 1229-1230,1237-1238,1241-1242,1589,1591-1592,1681,1691,1733,1753-1754,1761-1762,1765-1766
+packages/contracts/src/task-planning-schemas.ts
+  s_06c9bb773b9903::t_78c17202181621 1-5,10-15,25-27,144,150,157,171,225-231,238-239,252
+  s_06c9bb773b9903::t_f5678892cb0fa8 6-9,16-24,28-143,145-149,151-156,158-170,172-224,232-237,240-251
+docs/development/t38-tooling-plan.md
+  s_06c9bb773b9903::t_9a97801d04f64f 3-15,19-21,453
+  s_06c9bb773b9903::t_ceb7d17d4fce48 16-18,451-452
+apps/web/src/lib/project-task-proxy.ts
+  s_06c9bb773b9903::t_f5678892cb0fa8 61-71,100-101
+  s_06c9bb773b9903::t_00dcd3522daafc 6-7
+packages/contracts/test/task-planning.test.mjs
+  s_06c9bb773b9903::t_1211c43614ac9a 483-490
+  s_06c9bb773b9903::t_7abdf71c1fa71d 12-17,94,107,117-121,125-126,134-140,147-149,157-161,174-175,178-180,183-185,213,241-243,248-250,257-262,277-278,284,324
+  s_06c9bb773b9903::t_513f99a3ea9b86 296-308,310,312-323
+  s_06c9bb773b9903::t_d049a1c7015fcc 18-19,291-295,309,311
+  s_06c9bb773b9903::t_af63f6280cb93e 112-114
+  s_06c9bb773b9903::t_f5678892cb0fa8 95-106,108-111,115-116,122-124,127-133,141-146,150-156,162-173,176-177,181-182,186-212,214-240,244-247,251-256,263-276,279-283,285-290
+apps/api/src/projects/task-planning-input.ts
+  s_06c9bb773b9903::t_78c17202181621 1,9-13,16-29,36-39,44-45
+  s_06c9bb773b9903::t_f5678892cb0fa8 2-8,14-15,30-35,40-43
+scripts/test-identity.mjs
+  s_06c9bb773b9903::t_00dcd3522daafc 33,189-190
+  s_06c9bb773b9903::t_f5678892cb0fa8 17-24,34-35,38-39,191-206
+packages/contracts/test/project-task-schemas.test.mjs
+  s_06c9bb773b9903::t_00dcd3522daafc 239,252
+packages/contracts/src/task-planning.ts
+  s_06c9bb773b9903::t_45a0bc425147a8 14-16,18-20,22-23,25-26,28-29,31-32,34-35
+  s_06c9bb773b9903::t_f5678892cb0fa8 2-13
+docs/development/t38-planning-schemas.md
+  s_06c9bb773b9903::t_ceb7d17d4fce48 3-4,137-147,150,153-156,158-162,165,167-172,174,176-186,188,190-195,197-200,205,207-210,212-234,237-240
+  s_06c9bb773b9903::t_66ae1c72a8032e 56,148-149,151-152,157,163-164,166,173,175,187,189,196,201-204,206,211
+  s_06c9bb773b9903::t_ad24d189947fd2 1-2,5-55,57-136,235-236
+docs/development/unit-coverage.md
+  s_06c9bb773b9903::t_9a97801d04f64f 3-14,36-38
+  s_06c9bb773b9903::t_ceb7d17d4fce48 15-35
+apps/web/test/unit/task-planning.test.mjs
+  s_06c9bb773b9903::t_7f452dd8562460 114-115,122-123,130-133,148,151
+  s_06c9bb773b9903::t_f5678892cb0fa8 116-121,124-126,128-129,134-147,149-150
+  s_06c9bb773b9903::t_d4919207ba7d7b 127
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "7813905f13c1fc78137c94eb971fc3d00b18e8e3",
+  "prompts": {},
+  "sessions": {
+    "s_06c9bb773b9903": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21078-0924-7ac1-9628-dc965252cf4d",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
