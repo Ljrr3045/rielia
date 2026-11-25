@@ -1,0 +1,29 @@
+docs/development/progress.md
+  s_529a9050f47aa4::t_593395857e366c 5-12
+docs/development/t38-tooling-plan.md
+  s_529a9050f47aa4::t_593395857e366c 17-22
+docs/development/t38-closure-schemas.md
+  s_529a9050f47aa4::t_593395857e366c 10-17,244
+CHANGELOG.md
+  s_529a9050f47aa4::t_593395857e366c 7-14
+docs/development/unit-coverage.md
+  s_529a9050f47aa4::t_593395857e366c 17-23
+docs/development/t38-boundary-inventory.md
+  s_529a9050f47aa4::t_593395857e366c 17-22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4d7f8f036ba46fb9967df58a5f34ad63fab9ed1c",
+  "prompts": {},
+  "sessions": {
+    "s_529a9050f47aa4": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a210dc-a1d5-7ed2-a3df-c562429a1dad",
+        "model": "gpt-6-luna"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
