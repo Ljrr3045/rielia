@@ -1,10 +1,11 @@
 # T38.2g sprint closure schemas
 
-**LOCAL GATES COMPLETE; PUBLICATION/FINAL-HEAD CI/NATIVE REVIEW/ACCEPTANCE PENDING,
+**PUBLISHED IN DRAFT PR64; CURRENT-HEAD CI/NATIVE REVIEW/ACCEPTANCE PENDING,
 2026-11-25 America/Caracas.** The coordinator released bounded
 H23–26/G07, closure X05 and closure-only HTTP/X09 work from accepted PR63 merge
-`5536162dca58c81139cd2732712b8760185af44c`. Exact numerical adoption and local gates are complete; publication, current-head
-review and acceptance remain coordinator gates.
+`5536162dca58c81139cd2732712b8760185af44c`. Exact numerical adoption and local
+gates are complete; current-head CI, native review and acceptance remain
+coordinator gates.
 Full T38.2/T38 remains open under [issue53](https://github.com/Ljrr3045/rielia/issues/53).
 
 **Initial publication:** [Draft PR64](https://github.com/Ljrr3045/rielia/pull/64),
@@ -13,10 +14,12 @@ targeting `dev`, was opened at implementation head
 `0980d799ba51ebb81303e05a642a9f6042708cc3`. Initial exact-head CI run
 `45550717155` / validate check `138990956650` (App15368) passed all 20 steps in
 9m42s. Its sole annotation is the Node20-to-24 `pnpm/action-setup` deprecation
-warning; there were no failed steps or failed-step logs. Native review or
-acceptance is not recorded. A later docs-only reference commit does not inherit
-this initial-head result. This does not rebind the frozen local delivery manifest
-or any source/run receipt.
+warning; there were no failed steps or failed-step logs. Kilo reviewed reference
+commit `d00d934a575551322bdafcb1957f11d7fdc351e7` successfully (27 files, one
+suggestion): it identified the stale publication banner corrected in this
+follow-up. This correction has no current-head CI or native review yet, and
+coordinator acceptance remains pending. The initial-head result and prior review
+do not rebind the frozen local delivery manifest or any source/run receipt.
 
 This supports accepted T11/B1c, P09/US06 and affected P05/P06/P08/P10/P38,
 US05/US12/US24–25 while preserving T35 authority. UX04/UXR01 describe existing
