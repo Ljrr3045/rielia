@@ -1,5 +1,30 @@
 # T36 first unit and coverage delivery
 
+## 2026-11-27 PR67 W01 — standalone HTTP witness dependency repair
+
+The first native review's [valid W01](https://github.com/Ljrr3045/rielia/pull/67#discussion_r4715751704) found that the explicit scratch
+copy list lacked the newly imported server helper. On pinned Node24.22.1, the
+original maintained witness was run once and failed its baseline with
+ERR_MODULE_NOT_FOUND; that is a failed reproduction, not a successful proof.
+Adding only `apps/web/src/lib/server/api-upstream.ts` to the list makes the actual
+witness pass once: baseline exit0 and missing-body-deadline mutant exit1 with
+`Missing expected rejection`. All original guards,10s deadlines, mutation needle,
+replacement and critical assertions remain byte-identical. Logs/copied inputs
+were archived before removal of each ownership-verified scratch tree.
+
+The DOM mutation witness recursively copies all web source, and the normal mirror
+emits all inventory source; neither has the same missing dependency. No sibling
+repair was required. This standalone witness is outside the normal report inputs;
+production/unit source, provider/config inputs and all eight baselines remain
+byte-exact. No coverage/build/PG/runtime/audit rerun or numerical adoption was
+needed or performed for this harness/doc repair.
+
+Round1 explicitly reviewed23 code/test files, with eight doc consistency skims and
+two baselines not line-reviewed. Separate coordinator artifact/raw-map/normal
+verification covers those artifacts without claiming full33-file Kilo line review
+or waiving current-head CI/native feedback, finding resolution or protection.
+Corrected-head CI/native review and root thread reply/resolution remain pending.
+
 ## Current publication — Draft PR67
 
 [Draft PR67](https://github.com/Ljrr3045/rielia/pull/67) targets `dev` at initial

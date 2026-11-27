@@ -1,5 +1,25 @@
 # Delivery progress and decisions
 
+## 2026-11-27 PR67 round1 W01 — local witness correction; new-head gates pending
+
+The completed first native Kilo round on `ae95a9c6` reported one warning;
+[W01](https://github.com/Ljrr3045/rielia/pull/67#discussion_r4715751704) is valid. The coordinator returned
+[PR67](https://github.com/Ljrr3045/rielia/pull/67) to Draft after completion and released the isolated
+witness dependency repair. Original reproduction failed with ERR_MODULE_NOT_FOUND;
+the one-entry correction passes the real witness with baseline exit0 and the
+intended missing-body-deadline mutant exit1. Assertions/isolation/deadlines are
+unchanged; owned scratch logs/inputs were archived before cleanup. Sibling source
+assessment found no other affected maintained witness.
+
+Kilo explicitly reviewed23 code/test files, skimmed eight docs for consistency,
+and did not line-review two baselines. The coordinator separately inspected those
+artifacts and verified exact numerical/raw-map/source/provider/normal evidence;
+this is not full33-file Kilo line review or a waiver of any gate. Production/unit
+source, dependencies, locks and all eight baselines remain unchanged. Only affected
+witness/doc checks run; prior local/CI/review receipts keep their original SHA.
+Root finding reply/resolution and corrected-head CI/native review remain pending;
+no old green check approves the correction and full T38 remains open.
+
 ## 2026-11-27 T38.2j published in Draft PR67; CI/review pending
 
 [Draft PR67](https://github.com/Ljrr3045/rielia/pull/67) targets `dev` at initial
@@ -3582,7 +3602,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T35 | B1 foundations | Principal model, immutable authorship, autonomous memberships | T04; precedes T05/T06/T12 | T35.0 bounded storage/policy/context implemented; full authorship/domain/export/credential integration incomplete |
 | T36 | Quality prerequisite 1 | Engineering standards, compatible tool enforcement and behavior-preserving frontend/backend structure | Existing bounded foundations/contracts; approved NodeAdapter | ACCEPTED bounded T36.1–T36.6 in [PR #44](https://github.com/Ljrr3045/rielia/pull/44), merged `92d480d` from reviewed `37f2a8c`; retained owned debt and [stable contract](t36-stable-ui-contract.md) remain binding |
 | T37 | Quality prerequisite 2 | Coherent redesign of existing UI using stable contracts, brand/UX and reviewed frontend-local skills | Coordinator acceptance of T36 | ACCEPTED bounded T37.1–6 through [PR49](https://github.com/Ljrr3045/rielia/pull/49#issuecomment-6819605884), reviewed `5d3637b`, merged `20a257c`; retained evidence and limits in the [acceptance guide](t37-ui-acceptance.md); T11 authorized on 2026-11-19 |
-| T38 | Engineering tooling | Shared runtime schemas, contract transport, client queries and evaluated supporting tools | Accepted T36 → T37 → full original T11; user start authorization 2026-11-23 | IN PROGRESS under [issue53](https://github.com/Ljrr3045/rielia/issues/53). T38.1/2a–2i ACCEPTED through [PR66](https://github.com/Ljrr3045/rielia/pull/66#issuecomment-7208579762), reviewed `e9b9c4d0`, merged `a9fa0047`, reviewed/exact-merge CI and full35-file native Kilo passed. [T38.2j runtime/configuration](t38-runtime-schemas.md), published in [Draft PR67](https://github.com/Ljrr3045/rielia/pull/67) at initial implementation `19e7daf4`, has source-qualified local standard continuations/MCP20, coherent measure904, selected realPG48/runtime/audits and exact owned cleanup; exact API/web adoption and normal904/infra20/artifacts pass, with other six baselines unchanged; current-head CI/native review, Ready/merge and acceptance remain gates. T38.3–6 and full T38.2/T38 remain open |
+| T38 | Engineering tooling | Shared runtime schemas, contract transport, client queries and evaluated supporting tools | Accepted T36 → T37 → full original T11; user start authorization 2026-11-23 | IN PROGRESS under [issue53](https://github.com/Ljrr3045/rielia/issues/53). T38.1/2a–2i ACCEPTED through [PR66](https://github.com/Ljrr3045/rielia/pull/66#issuecomment-7208579762), reviewed `e9b9c4d0`, merged `a9fa0047`, reviewed/exact-merge CI and full35-file native Kilo passed. [T38.2j runtime/configuration](t38-runtime-schemas.md), published in [Draft PR67](https://github.com/Ljrr3045/rielia/pull/67) at initial implementation `19e7daf4`, has source-qualified local standard continuations/MCP20, coherent measure904, selected realPG48/runtime/audits and exact owned cleanup; exact API/web adoption and normal904/infra20/artifacts pass, with other six baselines unchanged; round1 W01 is valid and its isolated witness dependency is locally repaired/proved; reviewer scope23 full code/test plus10 partial artifacts is preserved with separate coordinator artifact review; corrected-head CI/native review, finding resolution and acceptance remain gates. T38.3–6 and full T38.2/T38 remain open |
 
 Public release is one launch followed by continuous updates. Internal B1 readiness,
 private T15 deployment, and marketing T34 do not substitute for T24. B3 follows

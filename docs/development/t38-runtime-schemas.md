@@ -1,5 +1,24 @@
 # T38.2j configuration and diagnostic schemas
 
+## PR67 round1 correction — isolated HTTP deadline witness
+
+The completed first native round on `ae95a9c6` reports0critical/1warning/0suggestion.
+The coordinator validated [W01](https://github.com/Ljrr3045/rielia/pull/67#discussion_r4715751704) and returned [PR67](https://github.com/Ljrr3045/rielia/pull/67)
+to Draft. The maintained scratch witness omitted the new server helper; one run
+reproduced ERR_MODULE_NOT_FOUND. Its explicit copy list now includes that exact
+dependency. One corrected real run proves baseline exit0 and the intended
+missing-body-deadline mutant exit1, preserving all original assertions, deadlines,
+isolation and mutation text. Both owned scratch receipts/inputs were archived
+before cleanup. Other maintained witness source has no identical defect.
+
+Kilo lists23 reviewed code/test files, eight documentation consistency skims and
+two baselines not line-reviewed. The coordinator separately reviewed the docs and
+verified exact baseline/raw-map/source/provider/all16-normal evidence; no full33-file
+Kilo line review or gate waiver is claimed. Production/unit source, dependencies,
+locks and all eight baselines are unchanged. Only affected witness/doc checks are
+needed here; original receipts retain their source SHA. Root reply/resolution and
+corrected-head CI/native review remain pending, with no final acceptance implied.
+
 ## Current publication — Draft PR67
 
 [Draft PR67](https://github.com/Ljrr3045/rielia/pull/67) targets `dev` at initial

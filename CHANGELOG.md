@@ -4,6 +4,14 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Repair [PR67 W01](https://github.com/Ljrr3045/rielia/pull/67#discussion_r4715751704) by adding the missing server helper to the
+  isolated HTTP deadline witness copy list. Preserve all assertions/deadlines and
+  archive the expected import failure plus real corrected baseline0/mutant1 proof.
+  No sibling repair, production/unit source, dependency, lock or baseline change.
+  Preserve Kilo's23 reviewed code/test files and10 partial artifacts with explicit
+  coordinator artifact review; corrected-head CI/native review and root finding
+  resolution remain pending. No full T38 acceptance or gate waiver.
+
 - Publish T38.2j in [Draft PR67](https://github.com/Ljrr3045/rielia/pull/67), targeting
   `dev` at initial implementation head `19e7daf4`. Current-head CI/native review,
   Ready/merge and acceptance remain pending. This reference-only update preserves

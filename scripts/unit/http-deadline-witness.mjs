@@ -15,6 +15,7 @@ fs.symlinkSync(path.join(root, 'node_modules'), path.join(scratch, 'node_modules
 for (const file of [
   'scripts/task-events-proxy.integration.test.mjs',
   'apps/web/src/lib/project-task-proxy.ts',
+  'apps/web/src/lib/server/api-upstream.ts',
 ]) {
   write(scratch, file, fs.readFileSync(regular(root, file)));
 }
