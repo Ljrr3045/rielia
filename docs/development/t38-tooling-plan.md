@@ -1,17 +1,18 @@
 # T38 tool decisions and compatibility pilot
 
-## T38.3a local numerical adoption and distribution debt
+## T38.3a Draft publication and distribution debt
 
+[Draft PR68](https://github.com/Ljrr3045/rielia/pull/68) targets `dev` at initial
+implementation head `dcf9428`; initial CI run 45966884416 was in progress at
+publication. Current-head CI, native review and acceptance remain coordinator gates.
 [Canonical generation](t38-openapi-contracts.md) has exact coordinator-approved
-contracts adoption, fresh normal911/all16-byte reproduction, infrastructure20 and
-artifact validation. Local C01 source-literal drift is corrected with15 focused
-checks; runtime contracts/unit candidate inputs are unchanged. Local commits require final
-integrity/staged/real-hook checks; remote publication/current-head review/acceptance
-remain gated. Generated
-transport/T38.4–6 and full T38.2/T38 are not accepted. Retain the accepted1621219byte
-four-group package cost plus the new test as explicit **T38.6 distribution cleanup
-debt**. No Docker/package-files policy change or zero runtime allocation/bundle-size
-claim. Historical proposal/publication snapshots below preserve their own status.
+contracts adoption, normal 911 with all 16 reports reproduced byte for byte,
+infrastructure 20 and artifact validation. Local C01 is corrected with 15 focused
+checks; runtime contracts and unit candidate inputs are unchanged. Generated
+transport, T38.4–6 and full T38.2/T38 remain open. Retain the accepted cost of 1,621,219 bytes across four
+package groups, plus the new test, as **T38.6 distribution cleanup debt**.
+No Docker/package-files policy change or zero allocation/bundle-size claim.
+Historical snapshots below preserve their own status and source/run identities.
 
 ## Current decision — T38.2j accepted; T38.3a released locally
 

@@ -4,6 +4,15 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Publish T38.3a in [Draft PR68](https://github.com/Ljrr3045/rielia/pull/68), targeting
+  `dev` at initial implementation head `dcf942802a0d545b8372ebd3baa6c1cf254fc50c`.
+  Initial [CI run 45966884416](https://github.com/Ljrr3045/rielia/actions/runs/45966884416)
+  was in progress at publication; current-head CI, native review and acceptance
+  remain pending. This documentation reference batch preserves source-qualified
+  local evidence and dated failed/pre-adoption receipts without re-execution or
+  rebinding. All exclusions, distribution cleanup debt and the Next security
+  recommendation remain; no generated transport or full T38 acceptance is claimed.
+
 - Correct local coordinator C01 in the [T38.3a source census](docs/development/t38-openapi-contracts.md):
   compare emitted syntax while preserving literal/regexp/template whitespace and
   operator tokens; retain real initial/corrected witnesses and15 focused checks.

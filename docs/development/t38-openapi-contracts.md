@@ -1,11 +1,12 @@
 # T38.3a canonical OpenAPI contracts
 
-Coordinator-released local implementation on 2026-11-27 America/Caracas, based on
-accepted PR67 merge `f4cba904`. Exact numerical adoption and local checks are
-complete. Local commits require final integrity/staged/real-hook checks.
-Publication, current-head CI/native review and acceptance remain separate
-coordinator gates.
-No T38.3 transport or full T38.2/T38 acceptance is implied.
+Published in [Draft PR68](https://github.com/Ljrr3045/rielia/pull/68), targeting
+`dev` at initial implementation head `dcf942802a0d545b8372ebd3baa6c1cf254fc50c`,
+based on accepted PR67 merge `f4cba904`. Exact numerical adoption and local checks
+are complete. Initial CI run 45966884416 was in progress at publication; the
+[progress record](progress.md#2026-11-27-t383a-published-in-draft-pr68) preserves
+that snapshot. Current-head CI, native review and acceptance remain coordinator
+gates. No T38.3 transport or full T38.2/T38 acceptance is implied.
 
 Traceability: additive T38.3 and architecture §§1.4/1.5/4.1; bounded existing
 T02/T04/T05–T11/T35 interfaces, P01–P11/P38 and US01–US07/US11–US12/US24–US25.
