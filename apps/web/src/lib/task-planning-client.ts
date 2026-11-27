@@ -12,7 +12,6 @@ import {
   type PlanningHistoryPage,
   type SprintTransitionResult,
   type StartSprintInput,
-  type SetTaskSprintInput,
   isSprintClosePreview,
   isSprintClosure,
   isSprintClosingOutcomePage,
@@ -21,13 +20,16 @@ import {
   type SprintClosure,
   type SprintClosingOutcomePage,
   type SprintCloseResult,
-  type CloseSprintInput,
 } from '@rielia/contracts';
-import { createContractRequest } from './api-contract-client.ts';
+import { createContractRequest, type RequestInput } from './api-contract-client.ts';
 
 const projectPath = '/api/v1/workspaces/{workspaceId}/projects/{projectId}';
 const taskPath = `${projectPath}/tasks/{taskId}`;
 const sprintPath = `${projectPath}/sprints/{sprintId}`;
+type CloseSprintInput = RequestInput<'post', `${typeof sprintPath}/close`>['body'];
+type SetTaskSprintInput = RequestInput<'post', `${typeof taskPath}/sprint`>['body'];
+// G07's unchanged binding refinement checks this relation on the original wire value.
+type AdmittedClosePreview = SprintClosePreview & CloseSprintInput;
 
 export class TaskPlanningFailure extends Error {
   readonly status: number;
@@ -50,34 +52,8 @@ export class TaskPlanningFailure extends Error {
 /** Transport only. The caller retains the exact key/body for explicit retry. No automatic mutation retry. */
 export function createTaskPlanningTransport(options: { baseURL?: string; timeout?: number } = {}) {
   const send = createContractRequest(options);
-  const root = (w: string, p: string) =>
-    `workspaces/${encodeURIComponent(w)}/projects/${encodeURIComponent(p)}`;
-  const task = (t: string) => `tasks/${encodeURIComponent(t)}`;
-  const sprint = (s: string) => `sprints/${encodeURIComponent(s)}`;
   const scoped = (v: { workspaceId: string; projectId: string }, w: string, p: string) =>
     v.workspaceId === w && v.projectId === p;
-  async function request<T>(
-    w: string,
-    p: string,
-    path: string,
-    signal: AbortSignal,
-    valid: (v: unknown) => v is T,
-    body: CloseSprintInput | SetTaskSprintInput,
-    key: string,
-    entity?: { taskId?: string; sprintId?: string },
-  ): Promise<T> {
-    const url = `/api/v1/${root(w, p)}/${path}`;
-    const response = await fetch(options.baseURL ? new URL(url, options.baseURL) : url, {
-      method: 'POST',
-      credentials: 'same-origin',
-      cache: 'no-store',
-      redirect: 'error',
-      signal: AbortSignal.any([signal, AbortSignal.timeout(options.timeout ?? 15000)]),
-      headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key },
-      body: JSON.stringify(body),
-    });
-    return read(response, w, p, valid, entity);
-  }
   async function read<T>(
     response: Response,
     w: string,
@@ -150,14 +126,14 @@ export function createTaskPlanningTransport(options: { baseURL?: string; timeout
         }),
         w,
         p,
-        (v): v is SprintClosePreview =>
+        (v): v is AdmittedClosePreview =>
           isSprintClosePreview(v) &&
           scoped(v, w, p) &&
           v.sprintId === s &&
           v.destination === destination,
       );
     },
-    close(
+    async close(
       w: string,
       p: string,
       s: string,
@@ -165,11 +141,15 @@ export function createTaskPlanningTransport(options: { baseURL?: string; timeout
       key: string,
       signal: AbortSignal,
     ) {
-      return request(
+      return read(
+        await send('post', `${sprintPath}/close`, {
+          path: { workspaceId: w, projectId: p, sprintId: s },
+          signal,
+          body: input,
+          key,
+        }),
         w,
         p,
-        `${sprint(s)}/close`,
-        signal,
         (v): v is SprintCloseResult =>
           isSprintCloseResult(v) &&
           scoped(v.current, w, p) &&
@@ -180,8 +160,6 @@ export function createTaskPlanningTransport(options: { baseURL?: string; timeout
           v.closure.sourceOrdinal === input.expectedVersion + 1 &&
           v.closure.targetOrdinal ===
             (input.expectedTargetVersion === null ? null : input.expectedTargetVersion + 1),
-        input,
-        key,
         { sprintId: s },
       );
     },
@@ -242,7 +220,7 @@ export function createTaskPlanningTransport(options: { baseURL?: string; timeout
         { taskId: t },
       );
     },
-    setSprint(
+    async setSprint(
       w: string,
       p: string,
       t: string,
@@ -250,19 +228,21 @@ export function createTaskPlanningTransport(options: { baseURL?: string; timeout
       key: string,
       signal: AbortSignal,
     ) {
-      return request(
+      return read(
+        await send('post', `${taskPath}/sprint`, {
+          path: { workspaceId: w, projectId: p, taskId: t },
+          signal,
+          body: input,
+          key,
+        }),
         w,
         p,
-        `${task(t)}/sprint`,
-        signal,
         (v): v is SprintTransitionResult =>
           transition(w, p, { taskId: t }, 'set-task-sprint')(v) &&
           v.operation.exitedVisitId === input.expectedCurrentParticipationId &&
           (input.targetSprintId === null
             ? input.expectedCurrentParticipationId !== null && v.operation.enteredVisitId === null
             : v.operation.sprintId === input.targetSprintId && v.operation.enteredVisitId !== null),
-        input,
-        key,
         { taskId: t },
       );
     },

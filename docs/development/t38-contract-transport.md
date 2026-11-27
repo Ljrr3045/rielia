@@ -1,5 +1,88 @@
 # T38.3 contract-derived browser requests
 
+## T38.3d published in Draft PR71
+
+The coordinator published [Draft PR71](https://github.com/Ljrr3045/rielia/pull/71)
+targeting `dev` from initial implementation head
+`c201ab2bc62e853c71d1cac9d791f96c0278c10d`, based on
+`73f87d0c77724aaabba13aa00eb797b451c6c577`. Root's immediate publication-time
+readback verified OPEN/Draft, author Ljrr3045, and no checks/comments/Kilo checks
+in that snapshot. This does not establish later event exclusion or billing;
+final-head CI/native review and coordinator acceptance remain pending. This
+reference-only batch neither requests Ready/paid review nor rebinds historical
+source-qualified local checks to a later documentation head.
+
+[PR70's final coordinator decision in its body](https://github.com/Ljrr3045/rielia/pull/70)
+accepts T38.3c at reviewed `3bb267ba`, merged `73f87d0c`. It supersedes the
+frozen pending source labels below without rebinding earlier runs. This bounded
+T38.3d implementation migrates H24 POST Sprint close and H54 POST task participation
+through createContractRequest across four existing web logic owners. It supports
+T38.3/architecture §4.1 and existing T11/P09/US06/US12 compatibility. Accounting is
+**60 accepted + 2 local candidate + 4 browser JSON exclusions = 66**; current-head
+CI/native review, delivery and coordinator acceptance remain pending. Full
+T38.3/T38 stays open.
+
+Command input aliases retain the generated alternatives. H54 captures source
+participation ID/version and target ID/version as pairs; target edits preserve
+the original command/input spread, extra properties, source/task versions and
+insertion order. H24 copies all eight server-issued binding fields in their
+original read/insertion order for both submission and preview page binding.
+The unchanged closePreview runtime predicate supports a stronger local admitted
+view through resources and closeInput. This is an explicit annotation justified
+by G07's existing refinement, not inferred Zod correlation or generated-success
+validation. Original admitted objects, scoped response/current/operation checks,
+status/code/request-ID mappings, raw Response and unknown JSON remain owned.
+Native caller/deadline cancellation continues through body consumption; explicit
+retry reuses the immutable command/body/key and existing lifetime fences.
+
+No public schema/type, backend/proxy, canonical artifact, dependency/compiler/
+configuration, presentation or cache/form ownership changes. Generated string
+cannot exclude reserved backlog from its numeric-target arm; runtime G07 still
+rejects that pair. Scalars/provenance, dynamic scope/current authority and
+getter/mutation universality are not proved by generated declarations. Actual
+command/transport owners are checked in the application compiler mode; strict
+standalone NodeNext/Bundler probes cover shared command views and closeInput,
+retaining the explicitly qualified existing `.ts` runtime-import limitation.
+
+Final local evidence:
+
+- Complete standard check passes in 121.002s with one native Next 16.4.6 build,
+  application types, canonical drift, strict transport modes, web HTTP 14,
+  production Next HTTP 1, MCP 20 and smoke. Stripped negative control has 69 expected
+  errors. These source-qualified checks were not repeated for later test-only
+  correction, numerical adoption or documentation.
+- Focused transport/controller 109 and corrected controller/real-DOM 130 pass.
+  Rendered destination paging and explicit Retry preserve cursor/selection,
+  captured concurrency, exact body/key and request count after an unknown result
+  and later canonical state. Status-only transport conflict retains draft/review
+  and null optional projections. These controlled React/HTTP fixtures do not
+  replace native browser/backend/security/real-product evidence.
+- Corrected measure 940 (384/458/79/19), all 197 inputs and all 804 exact comparisons
+  preserve/improve ratios and uncovered counts. Root approved only the exact web
+  baseline 48,308 bytes/SHA256
+  `8671848776ea49a7502b3ade4c3cbbb3d47c72daf59e90f925a597861d5d8151`.
+  Seven other baselines remain byte-identical. One normal built-input replay
+  passes 940 in 44.643s and reproduces all 16 reports and complete status byte for
+  byte, digest `873362a7c48ae63c7dab26e2f2b738c139f9c31ce674d48ccbf73f2a4913c2b2`.
+  Infrastructure 20 and bounded artifacts 17 pass, without upload. No weaker floor,
+  source/test omission, arbitrary extraction or PR65 exception is used.
+
+Prior receipts remain distinct: two offline availability failures preceded
+successful frozen provisioning; initial standalone imports failed TS5097; an
+unqualified test Headers lint reference stopped the first standard attempt before
+build; a root-JSX focused invocation failed existing rendered tests until the
+existing web tsconfig was selected. Initial939 passed units but its ratio-decreasing
+candidate was rejected. Only the released real-screen/status-only witnesses
+corrected it, with production fixed. No native security stop or automatic upgrade,
+skill approval, local PG/Docker or duplicate build followed these local changes.
+Absolute static JS observation remains30 files/1,670,923 raw/477,095 gzip9 bytes;
+no before/after or deployed-image cost comparison is claimed.
+
+Retain security/action warnings, packaging/S01, G06/dense/T04, generated-type/
+provenance limits and user-omitted UNVERIFIED Cancel/Leave with possible draft loss,
+filters/provider/staging/device/a11y/real-product debt. Query/forms/later tools/
+diagnostics/T38.6 and full acceptance remain separate root gates.
+
 ## T38.3c published in Draft PR70
 
 [Draft PR70](https://github.com/Ljrr3045/rielia/pull/70) targets `dev` at initial

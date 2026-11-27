@@ -1,5 +1,44 @@
 # Delivery progress and decisions
 
+## 2026-11-27 T38.3d published in Draft PR71
+
+Root published [Draft PR71](https://github.com/Ljrr3045/rielia/pull/71) toward `dev`
+from initial implementation head `c201ab2bc62e853c71d1cac9d791f96c0278c10d`, based
+on `73f87d0c77724aaabba13aa00eb797b451c6c577`. Its immediate publication readback
+verified OPEN/Draft and own author Ljrr3045, with zero checks/comments/Kilo checks
+in that snapshot. Later events/provider billing are not inferred. Final-head
+CI/native review and coordinator acceptance remain pending; this reference-only
+batch requests no Ready/paid review and does not rebind prior check receipts.
+
+[PR70's final acceptance in its body](https://github.com/Ljrr3045/rielia/pull/70)
+accepts T38.3c at reviewed `3bb267ba669ab104447cb0e443268788de9b4b43`, merged
+`73f87d0c77724aaabba13aa00eb797b451c6c577`; frozen pending snapshots below are
+historical. The [bounded H24/H54 follow-up](t38-contract-transport.md) is locally
+implemented across four existing web owners. Generated command pairs, original
+preview/page projection, captured source concurrency, input extras/order and
+immutable exact-body/key retry remain preserved. Public schema/backend/proxy/
+generated/dependency/compiler/configuration and presentation ownership is unchanged.
+
+Complete standard/one native Next 16.4.6 build, application/strict probes and
+HTTP evidence pass and remain bound to frozen production. Focused 109 plus the
+corrected real-controller/DOM 130 pass. One corrected all-scope measure 940/197
+passes all 804 exact comparisons after root rejected the initial 939 candidate;
+production stayed fixed while only released paging/retry/status-only witnesses
+were added. Initial offline, TS5097, test lint and root-JSX harness failures remain
+separately qualified. No new native security stop or automatic upgrade/skill
+approval occurred; no local PG/Docker/build/probe repeat followed the correction.
+
+Root approves and copies only exact web baseline 48,308 bytes/SHA256
+`8671848776ea49a7502b3ade4c3cbbb3d47c72daf59e90f925a597861d5d8151`;
+seven others remain byte-identical. Normal 940 (384/458/79/19) reproduces all 16
+reports and complete status, digest
+`873362a7c48ae63c7dab26e2f2b738c139f9c31ce674d48ccbf73f2a4913c2b2`.
+Infrastructure 20 and bounded artifacts 17 pass, without upload, omission, lower
+floor or PR65 exception. The implementation is committed and published Draft;
+final-head CI/native review, acceptance and cleanup remain root gates. Accounting
+stays 60 accepted +2 local candidate +4 browser JSON exclusions =66; full T38.3/T38, later phases and
+security/action/packaging/S01/product/UX debts remain open.
+
 ## 2026-11-27 T38.3c published in Draft PR70
 
 The coordinator published [Draft PR70](https://github.com/Ljrr3045/rielia/pull/70)

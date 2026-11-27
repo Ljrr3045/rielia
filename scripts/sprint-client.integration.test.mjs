@@ -180,3 +180,69 @@ test(
     assert.deepEqual(f.bodies, ['{"expectedVersion":2,"estimatePoints":0}']);
   },
 );
+
+for (const [method, entity, suffix, input] of [
+  [
+    'close',
+    'sprints/s',
+    'close',
+    {
+      expectedVersion: 2,
+      expectedProjectVersion: 3,
+      expectedTaskRevision: 4,
+      expectedSprintRevision: 5,
+      expectedTargetVersion: null,
+      destination: 'backlog',
+      previewSchema: 1,
+      previewHash: 'a'.repeat(64),
+    },
+  ],
+  [
+    'setSprint',
+    'tasks/t',
+    'sprint',
+    {
+      expectedTaskVersion: 2,
+      expectedCurrentParticipationId: 'visit',
+      expectedSourceVersion: 3,
+      targetSprintId: 'target',
+      expectedTargetVersion: 4,
+    },
+  ],
+])
+  test(
+    `correlated ${method} keeps exact bytes/key while a native successful body deadline retains the feature request ID`,
+    { timeout: 8000 },
+    async (t) => {
+      const f = await fixture(t, (response) => {
+        response.writeHead(202, { 'content-type': 'text/plain', 'x-request-id': `${method}-body` });
+        response.flushHeaders();
+        response.write('{');
+      });
+      const transport = createTaskPlanningTransport({ baseURL: f.baseURL, timeout: 1000 });
+      const pending = transport[method](
+        'w',
+        'p',
+        method === 'close' ? 's' : 't',
+        input,
+        key,
+        new AbortController().signal,
+      );
+      const rejected = assert.rejects(
+        pending,
+        (error) =>
+          error instanceof TaskPlanningFailure &&
+          error.status === 502 &&
+          error.requestId === `${method}-body` &&
+          error.current === null &&
+          error.code === null,
+      );
+      await f.seen;
+      await rejected;
+      await f.disconnected;
+      assert.deepEqual(f.calls, [
+        { path: `/api/v1/workspaces/w/projects/p/${entity}/${suffix}`, key },
+      ]);
+      assert.deepEqual(f.bodies, [JSON.stringify(input)]);
+    },
+  );

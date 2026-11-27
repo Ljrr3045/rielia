@@ -6,6 +6,7 @@ import {
 } from '../../src/lib/task-planning-client.ts';
 import { createSprintPlanningTransport } from '../../src/lib/sprint-client.ts';
 import { proxyProjectTask } from '../../src/lib/project-task-proxy.ts';
+import { closeInput, sprintPageBinding } from '../../src/lib/sprint-client-state.ts';
 const at = '2026-11-19T00:00:00.000Z';
 const snapshot = {
   version: 1,
@@ -361,5 +362,150 @@ test('closure transport retains original response extras and never reads ignored
     assert.equal(received, original);
     assert.equal(received.future, original.future);
     assert.equal(typeof Object.getOwnPropertyDescriptor(received, 'ignored').get, 'function');
+  }
+});
+
+test('close projection keeps each admitted destination pair and the exact eight-field read/insertion order for submission and paging', () => {
+  const keys = Object.keys(input);
+  for (const [destination, expectedTargetVersion] of [
+    [null, null],
+    ['backlog', null],
+    ['target', 2],
+  ]) {
+    const values = { ...preview, destination, expectedTargetVersion };
+    const reads = [];
+    const issued = { ...values };
+    for (const key of keys)
+      Object.defineProperty(issued, key, {
+        enumerable: true,
+        get() {
+          reads.push(key);
+          return values[key];
+        },
+      });
+    const body = closeInput(issued);
+    assert.deepEqual(reads, keys);
+    assert.deepEqual(Object.keys(body), keys);
+    assert.equal(
+      JSON.stringify(body),
+      JSON.stringify(Object.fromEntries(keys.map((key) => [key, values[key]]))),
+    );
+    assert.equal(body.destination, destination);
+    assert.equal(body.expectedTargetVersion, expectedTargetVersion);
+    assert.notEqual(
+      sprintPageBinding(values),
+      sprintPageBinding({ ...values, previewHash: 'b'.repeat(64) }),
+    );
+    if (expectedTargetVersion !== null)
+      assert.notEqual(
+        sprintPageBinding(values),
+        sprintPageBinding({ ...values, expectedTargetVersion: 3 }),
+      );
+  }
+});
+
+test('close preview retains the original guarded objects for all destination pairs and rejects every mismatched pair without changing the reader', async (t) => {
+  let value;
+  t.mock.method(globalThis, 'fetch', async () => ({
+    ok: true,
+    status: 202,
+    headers: new globalThis.Headers({ 'x-request-id': 'preview-pair' }),
+    json: async () => value,
+  }));
+  const transport = createTaskPlanningTransport();
+  for (const [destination, expectedTargetVersion, disposition] of [
+    [null, null, 'pending'],
+    ['backlog', null, 'backlog'],
+    ['target', 2, 'carried'],
+  ]) {
+    value = {
+      ...preview,
+      destination,
+      expectedTargetVersion,
+      canClose: destination !== null,
+      items: [{ ...item, disposition }],
+      future: { preserved: true },
+    };
+    assert.equal(await transport.closePreview('w', 'p', 's', destination, signal()), value);
+  }
+  for (const [destination, expectedTargetVersion] of [
+    [null, 2],
+    ['backlog', 2],
+    ['target', null],
+  ]) {
+    value = {
+      ...preview,
+      destination,
+      expectedTargetVersion,
+      items: [],
+      pendingParticipants: 0,
+      canClose: true,
+    };
+    await assert.rejects(
+      transport.closePreview('w', 'p', 's', destination, signal()),
+      (error) =>
+        error instanceof TaskPlanningFailure &&
+        error.status === 502 &&
+        error.requestId === 'preview-pair',
+    );
+  }
+});
+
+test('close sends the original predeclared body including extras/order, encodes selectors once and retains scoped error semantics', async (t) => {
+  const body = { future: 'retained', ...input };
+  const calls = [];
+  t.mock.method(globalThis, 'fetch', async (url, init) => {
+    calls.push({ url: String(url), init });
+    return Response.json(
+      { code: 'version-conflict', current: sprint },
+      { status: 409, headers: { 'x-request-id': 'close-error' } },
+    );
+  });
+  const transport = createTaskPlanningTransport({ baseURL: 'https://app.example.test/discarded' });
+  await assert.rejects(
+    transport.close('w/%', 'p ?', 's/#', body, 'original-key', signal()),
+    (error) =>
+      error.status === 409 &&
+      error.current === null &&
+      error.code === 'version-conflict' &&
+      error.requestId === 'close-error',
+  );
+  assert.equal(
+    calls[0].url,
+    'https://app.example.test/api/v1/workspaces/w%2F%25/projects/p%20%3F/sprints/s%2F%23/close',
+  );
+  assert.equal(calls[0].init.body, JSON.stringify(body));
+  assert.equal(calls[0].init.headers['Idempotency-Key'], 'original-key');
+  assert.equal(calls[0].init.method, 'POST');
+  assert.equal(calls[0].init.redirect, 'error');
+  assert.equal(calls[0].init.cache, 'no-store');
+  assert.equal(calls[0].init.credentials, 'same-origin');
+});
+
+test('close reads any successful JSON status while malformed successful and error bodies keep feature request IDs', async (t) => {
+  let response;
+  t.mock.method(globalThis, 'fetch', async () => response);
+  const transport = createTaskPlanningTransport();
+  response = new Response(JSON.stringify(result), {
+    status: 202,
+    headers: { 'content-type': 'text/plain' },
+  });
+  assert.deepEqual(await transport.close('w', 'p', 's', input, 'key', signal()), result);
+  for (const [status, body, expected] of [
+    [200, '', 502],
+    [202, 'null', 502],
+    [200, '{}', 502],
+    [503, 'invalid', 503],
+  ]) {
+    response = new Response(body, { status, headers: { 'x-request-id': 'close-read' } });
+    await assert.rejects(
+      transport.close('w', 'p', 's', input, 'key', signal()),
+      (error) =>
+        error instanceof TaskPlanningFailure &&
+        error.status === expected &&
+        error.requestId === 'close-read' &&
+        error.current === null &&
+        error.code === null,
+    );
   }
 });

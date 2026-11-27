@@ -1,5 +1,41 @@
 # T36 first unit and coverage delivery
 
+## T38.3d exact adoption and normal reproduction
+
+Root independently verified the [correlated-command implementation](t38-contract-transport.md),
+raw maps and all 804 exact per-file/global comparisons, then approved copying only
+web baseline 48,308 bytes/SHA256
+`8671848776ea49a7502b3ade4c3cbbb3d47c72daf59e90f925a597861d5d8151`.
+Previous web is 48,307 bytes/`9b370321b72984332c594e61f7d8f8a12e473d2c2924198636b3e7d1713cf438`.
+Seven other baselines remain byte-identical; no regeneration occurs.
+
+Web L/S/F/B 3619/4943,3982/5607,836/1350,4704/6975 replaces
+3617/4943,3982/5609,838/1354,4699/6977. Floors rise to 7321/7101/6192/6744
+from 7317/7099/6189/6734. Uncovered decreases 1326/1627/516/2278→1324/1625/514/2271;
+all retained exact ratios preserve/improve. Global cross-product deltas are
++9886/+7964/+644/+44283. TaskPlanning branches become95/95 from 98/99.
+
+One normal built-input replay passes 940/940 (API384/web458/contracts79/prototype19),
+all 197 maintained inputs (62/90/29/16), and reproduces all 16 sealed correction
+summary/manifest/raw-counter-map/LCOV files plus complete status byte for byte.
+Digest remains `873362a7c48ae63c7dab26e2f2b738c139f9c31ce674d48ccbf73f2a4913c2b2`.
+Infrastructure 20/20 and bounded artifacts 17 pass, without upload. Existing provider,
+compiler/config/runtime/tool identities and source/test inventories stay fixed;
+only the four production owners/four existing unit fingerprints differ from the
+accepted base. All197 source fingerprints remain exact across correction/adoption.
+The existing generated Nest metadata qualification remains.
+
+Initial939 and its ratio-decreasing candidate remain preserved and rejected.
+Removing covered native sender/path closures changed denominators while leaving
+uncovered debt unchanged. Root released only real rendered destination paging/
+explicit Retry and status-only transport-conflict witnesses in two existing tests;
+these execute the two relevant callbacks and retained default-code branch without
+production changes. Corrected measure 940 supplies all 16 adopted reports. No floor
+weakening, source omission, denominator exception or PR65 exception. The passing
+standard/native build, strict/application probes and HTTP evidence retain their
+actual source/run identities; no repeat followed this correction or exact copy.
+Current-head CI/review/delivery and coordinator acceptance remain pending.
+
 ## T38.3c exact web adoption and normal reproduction
 
 The coordinator reviewed the [54-operation transport](t38-contract-transport.md),

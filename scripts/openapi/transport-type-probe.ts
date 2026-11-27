@@ -841,15 +841,189 @@ void request('get', '/api/v1/workspaces/{workspaceId}/events', {
 });
 // @ts-expect-error N57 H55 is infrastructure-only
 void request('get', '/api/v1/readiness', { signal });
-void request(
-  'post',
-  // @ts-expect-error N58 H24 requires the deferred command correlation bridge
-  '/api/v1/workspaces/{workspaceId}/projects/{projectId}/sprints/{sprintId}/close',
-  revoke,
-);
-void request(
-  'post',
-  // @ts-expect-error N59 H54 requires the deferred command correlation bridge
-  '/api/v1/workspaces/{workspaceId}/projects/{projectId}/tasks/{taskId}/sprint',
-  revoke,
-);
+// T38.3d: request unions retain both captured command pairs.
+const closePath = '/api/v1/workspaces/{workspaceId}/projects/{projectId}/sprints/{sprintId}/close';
+const participationPath =
+  '/api/v1/workspaces/{workspaceId}/projects/{projectId}/tasks/{taskId}/sprint';
+type CloseBody = RequestInput<'post', typeof closePath>['body'];
+type ParticipationBody = RequestInput<'post', typeof participationPath>['body'];
+const binding = {
+  expectedVersion: 1,
+  expectedProjectVersion: 2,
+  expectedTaskRevision: 3,
+  expectedSprintRevision: 4,
+  previewSchema: 1,
+  previewHash: 'a'.repeat(64),
+} satisfies Omit<CloseBody, 'destination' | 'expectedTargetVersion'>;
+void request('post', closePath, {
+  path: itemPath,
+  body: { ...binding, destination: null, expectedTargetVersion: null },
+  key: 'key',
+  signal,
+});
+void request('post', closePath, {
+  path: itemPath,
+  body: { ...binding, destination: 'backlog', expectedTargetVersion: null },
+  key: 'key',
+  signal,
+});
+void request('post', closePath, {
+  path: itemPath,
+  body: { ...binding, destination: 'target', expectedTargetVersion: 2 },
+  key: 'key',
+  signal,
+});
+const invalidClose = {
+  path: itemPath,
+  body: { ...binding, destination: 'target', expectedTargetVersion: null },
+  key: 'key',
+  signal,
+};
+// @ts-expect-error N58 target identifier with null target version
+void request('post', closePath, invalidClose);
+const invalidSource = {
+  path: taskSelectors,
+  body: {
+    expectedTaskVersion: 1,
+    expectedCurrentParticipationId: 'visit',
+    expectedSourceVersion: null,
+    targetSprintId: null,
+    expectedTargetVersion: null,
+  },
+  key: 'key',
+  signal,
+};
+// @ts-expect-error N59 participation identifier with null source version
+void request('post', participationPath, invalidSource);
+for (const body of [
+  {
+    expectedTaskVersion: 1,
+    expectedCurrentParticipationId: null,
+    expectedSourceVersion: null,
+    targetSprintId: null,
+    expectedTargetVersion: null,
+  },
+  {
+    expectedTaskVersion: 1,
+    expectedCurrentParticipationId: null,
+    expectedSourceVersion: null,
+    targetSprintId: 'target',
+    expectedTargetVersion: 2,
+  },
+  {
+    expectedTaskVersion: 1,
+    expectedCurrentParticipationId: 'visit',
+    expectedSourceVersion: 2,
+    targetSprintId: null,
+    expectedTargetVersion: null,
+  },
+  {
+    expectedTaskVersion: 1,
+    expectedCurrentParticipationId: 'visit',
+    expectedSourceVersion: 2,
+    targetSprintId: 'target',
+    expectedTargetVersion: 3,
+  },
+] satisfies ParticipationBody[]) {
+  void request('post', participationPath, { path: taskSelectors, body, key: 'key', signal });
+}
+import type { CloseSprintInput, SetTaskSprintInput } from '@rielia/contracts';
+import {
+  closeInput,
+  type SprintClientCommand,
+  type SprintClientState,
+} from '../../apps/web/src/lib/sprint-client-state.js';
+declare const broadClose: CloseSprintInput;
+// @ts-expect-error N60 independent nullable close fields are not a correlated command
+void request('post', closePath, { path: itemPath, body: broadClose, key: 'key', signal });
+declare const broadParticipation: SetTaskSprintInput;
+// @ts-expect-error N61 independent nullable source/target fields are not a correlated command
+void request('post', participationPath, {
+  path: taskSelectors,
+  body: broadParticipation,
+  key: 'key',
+  signal,
+});
+const nullSourceVersion = {
+  ...invalidSource,
+  body: { ...invalidSource.body, expectedCurrentParticipationId: null, expectedSourceVersion: 2 },
+};
+// @ts-expect-error N62 null participation with a source version
+void request('post', participationPath, nullSourceVersion);
+const nullTargetVersion = {
+  ...invalidSource,
+  body: { ...invalidSource.body, expectedSourceVersion: 1, targetSprintId: 'target' },
+};
+// @ts-expect-error N63 target identifier with null target version
+void request('post', participationPath, nullTargetVersion);
+const orphanTargetVersion = {
+  ...nullTargetVersion,
+  body: { ...nullTargetVersion.body, targetSprintId: null, expectedTargetVersion: 1 },
+};
+// @ts-expect-error N64 null target with a target version
+void request('post', participationPath, orphanTargetVersion);
+const extraClose = {
+  ...invalidClose,
+  body: { ...binding, destination: null, expectedTargetVersion: null, actor: 'forged' },
+};
+// @ts-expect-error N65 exact predeclared correlated close body
+void request('post', closePath, extraClose);
+const extraParticipation = {
+  ...invalidSource,
+  body: { ...invalidSource.body, expectedSourceVersion: 1, actor: 'forged' },
+};
+// @ts-expect-error N66 exact predeclared correlated participation body
+void request('post', participationPath, extraParticipation);
+const orphanClose = {
+  ...invalidClose,
+  body: { ...binding, destination: null, expectedTargetVersion: 1 },
+};
+// @ts-expect-error N67 null close destination with target version
+void request('post', closePath, orphanClose);
+declare const immutableClose: CloseBody;
+declare const immutableParticipation: ParticipationBody;
+// @ts-expect-error N68 command binding remains readonly
+immutableClose.previewHash = 'changed';
+// @ts-expect-error N69 captured source concurrency remains readonly
+immutableParticipation.expectedSourceVersion = 10;
+// Static limitation: generated string cannot exclude reserved backlog. Runtime G07 rejects this pair.
+void request('post', closePath, {
+  path: itemPath,
+  body: { ...binding, destination: 'backlog', expectedTargetVersion: 1 },
+  key: 'key',
+  signal,
+});
+export type ExactCloseInput = Check<
+  Equal<Extract<SprintClientCommand, { type: 'close-sprint' }>['input'], CloseBody>
+>;
+export type ExactParticipationInput = Check<
+  Equal<Extract<SprintClientCommand, { type: 'set-task-sprint' }>['input'], ParticipationBody>
+>;
+export function sendCorrelatedCommand(command: SprintClientCommand): Promise<Response> | null {
+  const selectors = { workspaceId: command.workspaceId, projectId: command.projectId };
+  if (command.type === 'close-sprint')
+    return request('post', closePath, {
+      path: { ...selectors, sprintId: command.sprintId },
+      body: command.input,
+      key: 'key',
+      signal,
+    });
+  if (command.type === 'set-task-sprint')
+    return request('post', participationPath, {
+      path: { ...selectors, taskId: command.taskId },
+      body: command.input,
+      key: 'key',
+      signal,
+    });
+  return null;
+}
+export function admittedPreviewProjection(state: SprintClientState) {
+  const preview = state.resources.preview.data;
+  if (preview)
+    void request('post', closePath, {
+      path: itemPath,
+      body: closeInput(preview),
+      key: 'key',
+      signal,
+    });
+}
