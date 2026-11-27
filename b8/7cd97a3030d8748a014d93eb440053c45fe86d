@@ -1,0 +1,27 @@
+scripts/unit/http-deadline-witness.mjs
+  s_5c87b39cdac16f::t_904d33f6d2e4e6 18
+CHANGELOG.md
+  s_5c87b39cdac16f::t_f5ed01d18c1c1b 7-14
+docs/development/progress.md
+  s_5c87b39cdac16f::t_f5ed01d18c1c1b 3-22,3605
+docs/development/t38-runtime-schemas.md
+  s_5c87b39cdac16f::t_f5ed01d18c1c1b 3-21
+docs/development/unit-coverage.md
+  s_5c87b39cdac16f::t_f5ed01d18c1c1b 3-27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b87cd97a3030d8748a014d93eb440053c45fe86d",
+  "prompts": {},
+  "sessions": {
+    "s_5c87b39cdac16f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21af2-609a-75a0-9e28-4969dd9afa62",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
