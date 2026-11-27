@@ -312,6 +312,13 @@ unrelated planning-settings, identity and default DB-restart tails. G07 remains
 an unmigrated dependency protected by these checks, not a migrated closure family.
 See [T38.2f scope and limits](docs/development/t38-planning-schemas.md).
 
+After contracts/API builds, `node scripts/test-identity.mjs --private-boundaries`
+selects workspace, project/task, collaboration, discovery and all three sprint
+suites once in one owned disposable database. This flag must stand alone; mixed,
+repeated or unknown arguments reject before setup. It skips the unrelated default
+identity/domain-restart tails; existing selectors and default CI coverage remain.
+See [T38.2i policy and evidence](docs/development/t38-private-schemas.md#t382i-persisted-data-and-opaque-cursors).
+
 `pnpm test:runtime` builds pinned multi-stage API/web images with frozen installs,
 then runs an isolated Compose project on random loopback ports. It verifies
 migration failure/gating/repeatability, readiness versus liveness, DB recovery,

@@ -3,7 +3,7 @@ import { Buffer } from 'node:buffer';
 import type { Sprint as SprintDTO, ProjectPlanning, SprintPage } from '@rielia/contracts';
 import type { Project, Sprint } from '../generated/prisma/client.js';
 import type { Transaction } from '../principals/principal.service.js';
-import { identifier } from './project-task-input.js';
+import { sprintPageCursorSchema } from './project-cursor-schemas.js';
 import { loadPeople } from './project-task-read.js';
 
 export function planningView(project: Project, canWrite: boolean): ProjectPlanning {
@@ -110,23 +110,12 @@ export async function sprintPage(
   if (cursor !== undefined) {
     try {
       if (!/^[A-Za-z0-9_-]{1,2048}$/.test(cursor)) throw new Error();
-      const value = JSON.parse(Buffer.from(cursor, 'base64url').toString('utf8')) as Record<
-        string,
-        unknown
-      >;
-      if (
-        !value ||
-        Object.keys(value).length !== 6 ||
-        value['v'] !== 1 ||
-        value['w'] !== project.workspaceId ||
-        value['p'] !== project.id ||
-        !identifier(value['anchor']) ||
-        !Number.isSafeInteger(value['revision']) ||
-        Number(value['revision']) < 1 ||
-        !Number.isSafeInteger(value['projectVersion']) ||
-        Number(value['projectVersion']) < 1
-      )
-        throw new Error();
+      const result = sprintPageCursorSchema.safeParse(
+        JSON.parse(Buffer.from(cursor, 'base64url').toString('utf8')),
+      );
+      if (!result.success) throw new Error();
+      const value = result.data;
+      if (value['w'] !== project.workspaceId || value['p'] !== project.id) throw new Error();
       if (
         value['revision'] !== project.sprintRevision ||
         value['projectVersion'] !== project.version

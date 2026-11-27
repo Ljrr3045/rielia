@@ -4,16 +4,19 @@ import {
   ForbiddenException,
   Inject,
   Injectable,
+  ServiceUnavailableException,
 } from '@nestjs/common';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import type { IncomingHttpHeaders } from 'node:http';
-import type {
-  LimitedRole,
-  MemberState,
-  Page,
-  WorkspaceInvitation,
-  WorkspaceMember,
-  WorkspaceSummary,
+import {
+  workspaceMemberSchema,
+  workspaceInvitationSchema,
+  type LimitedRole,
+  type MemberState,
+  type Page,
+  type WorkspaceInvitation,
+  type WorkspaceMember,
+  type WorkspaceSummary,
 } from '@rielia/contracts';
 import type { Invitation, Prisma } from '../generated/prisma/client.js';
 import {
@@ -31,6 +34,7 @@ import {
   updateWorkspaceMemberInput,
   workspaceRecipientEmail as email,
 } from './workspace-input.js';
+import { workspaceReceiptReferenceSchema } from './workspace-receipt-schemas.js';
 
 const digest = (value: string) => createHash('sha256').update(value).digest('hex');
 function page<T>(items: T[], total: number, cursor: (value: T) => string): Page<T> {
@@ -113,10 +117,17 @@ export class WorkspaceService {
           if (!accepted || !actor.emailVerified || email(actor.email) !== accepted.recipientEmail)
             throw new ForbiddenException('Invitation acceptance is denied.');
         }
-        const saved = previous.response as { id?: string };
-        if (!saved.id) throw new ConflictException('Workspace receipt is unavailable.');
-        return (await this.summary(tx, actor, saved.id)) as T;
+        const saved = workspaceReceiptReferenceSchema.safeParse(previous.response);
+        if (!saved.success) throw new ConflictException('Workspace receipt is unavailable.');
+        return (await this.summary(tx, actor, saved.data.id)) as T;
       }
+      const valid =
+        route.startsWith('member/') || route.startsWith('agent/')
+          ? workspaceMemberSchema.safeParse(previous.response).success
+          : route.startsWith('revoke/') &&
+            workspaceInvitationSchema.safeParse(previous.response).success;
+      if (!valid) throw new ServiceUnavailableException('Workspace receipt is unavailable.');
+      // Validation must not refresh history or replace the original receipt/extras.
       return previous.response as T;
     }
     const result = await work();

@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import assert from 'node:assert/strict';
+import { Buffer } from 'node:buffer';
 import { test } from 'node:test';
 import { randomUUID, createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
@@ -529,6 +530,21 @@ test('T11.3 real PostgreSQL/HTTP immutable close and carryover', async (t) => {
       const outcomes = await ok(f.owner, `${path(f, s.id)}/closure/outcomes`);
       assert.ok(isSprintClosingOutcomePage(outcomes));
       assert.equal(outcomes.items.length, 100);
+      const savedCursor = JSON.parse(Buffer.from(outcomes.nextCursor, 'base64url'));
+      for (const [patch, expected] of [
+        [{ binding: null }, 400],
+        [{ binding: '' }, 409],
+        [{ anchor: randomUUID() }, 400],
+        [{ extra: true }, 400],
+      ]) {
+        const cursor = Buffer.from(JSON.stringify({ ...savedCursor, ...patch })).toString(
+          'base64url',
+        );
+        assert.equal(
+          (await req(f.owner, `${path(f, s.id)}/closure/outcomes?cursor=${cursor}`)).status,
+          expected,
+        );
+      }
       assert.equal(
         (await ok(f.owner, `${path(f, s.id)}/closure/outcomes?cursor=${outcomes.nextCursor}`)).items
           .length,

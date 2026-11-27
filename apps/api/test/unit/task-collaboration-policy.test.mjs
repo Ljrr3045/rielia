@@ -424,7 +424,7 @@ function fixture(t) {
       input,
       item ?? (action === 'edit-comment' ? 'comment' : undefined),
     );
-  return { service, context, actor, state, effects, mutate };
+  return { service, context, actor, state, effects, mutate, tx };
 }
 
 test('own-author comment edit changes only body and journals the current actor', async (t) => {
@@ -654,6 +654,10 @@ test('collaboration cursors reject malformed context before stale revision and u
     encoded({ k: 'history', r: 3 }),
     encoded({ a: 'bad id', r: 3 }),
     encoded({ r: 0 }),
+    encoded({ r: '4' }),
+    encoded({ r: Number.MAX_SAFE_INTEGER + 1 }),
+    encoded({ a: null, r: 3 }),
+    globalThis.Buffer.from('null').toString('base64url'),
   ])
     await assert.rejects(page(cursor), status(400));
   await assert.rejects(page(encoded({ r: 3 })), status(409, 'page-changed'));
@@ -689,4 +693,42 @@ test('collaboration cursors reject malformed context before stale revision and u
     },
   ]);
   await assert.rejects(page(encoded({ k: 'checklist', a: 'item' }), 'checklist'), status(400));
+});
+
+test('stored activity changes keep independent filtering, original objects and more than four valid entries', async (t) => {
+  const f = fixture(t);
+  const valid = Array.from({ length: 5 }, (_, i) =>
+    Object.defineProperty({ field: 'status', before: 'todo', after: 'done' }, 'extra', {
+      value: i,
+    }),
+  );
+  const activity = {
+    id: 'history',
+    action: 'edit-task',
+    changedFields: ['status'],
+    actorPrincipalId: 'author',
+    executionMode: 'human',
+    source: 'web',
+    grantId: null,
+    entityVersion: 4,
+    createdAt: new Date(now),
+  };
+  f.tx.activityEvent.findMany = async () => [
+    {
+      ...activity,
+      changes: [
+        valid[0],
+        null,
+        { ...valid[0], extra: 'unknown enumerable key' },
+        { field: 'status', before: 'unknown', after: 'done' },
+        ...valid.slice(1),
+      ],
+    },
+    { ...activity, id: 'other', changes: { field: 'status' } },
+  ];
+  f.tx.activityEvent.count = async () => 2;
+  const result = await f.service.page(f.context, 'w', 'p', 'task', 'history');
+  assert.equal(result.items[0].changes.length, 5);
+  valid.forEach((value, index) => assert.equal(result.items[0].changes[index], value));
+  assert.deepEqual(result.items[1].changes, []);
 });

@@ -2571,4 +2571,88 @@ test('T06 real PostgreSQL and HTTP project/task vertical', async (t) => {
       );
     },
   );
+
+  await t.test(
+    'T38.2i copied Project/Task receipts use minimal selectors and reject malformed references before canonical queries',
+    async () => {
+      const f = await fixture(),
+        foreign = await fixture();
+      for (const taskResult of [false, true]) {
+        const input = taskResult
+          ? { title: 'Receipt task' }
+          : { name: 'Receipt project', key: 'REF' };
+        const endpoint = taskResult ? f.tasks : f.path;
+        const originalKey = randomUUID();
+        const created = await ok(f.owner, endpoint, input, originalKey);
+        const stored = await prisma.projectTaskOperation.findFirstOrThrow({
+          where: { workspaceId: f.workspace.id, key: originalKey },
+        });
+        const minimal = taskResult
+          ? { id: created.id, projectId: f.project.id, title: null }
+          : { id: created.id, name: null };
+        for (const [response, expected] of [
+          [minimal, 201],
+          [null, 503],
+          [{}, 503],
+          [{ id: 3 }, 503],
+          [taskResult ? { id: created.id, projectId: null } : { id: '' }, taskResult ? 503 : 403],
+        ]) {
+          const copyKey = randomUUID();
+          await pool.query(
+            'INSERT INTO project_task_operation("workspaceId","actorPrincipalId","executionScope",key,"requestHash",response) VALUES($1,$2,$3,$4,$5,$6::jsonb)',
+            [
+              stored.workspaceId,
+              stored.actorPrincipalId,
+              stored.executionScope,
+              copyKey,
+              stored.requestHash,
+              JSON.stringify(response),
+            ],
+          );
+          const snapshot = () =>
+            Promise.all([
+              prisma.project.findMany({
+                where: { workspaceId: f.workspace.id },
+                orderBy: { id: 'asc' },
+              }),
+              prisma.task.findMany({
+                where: { workspaceId: f.workspace.id },
+                orderBy: { id: 'asc' },
+              }),
+              prisma.activityEvent.findMany({
+                where: { workspaceId: f.workspace.id },
+                orderBy: { id: 'asc' },
+              }),
+              prisma.outboxEvent.findMany({
+                where: { workspaceId: f.workspace.id },
+                orderBy: { id: 'asc' },
+              }),
+              prisma.projectTaskOperation.findMany({
+                where: { workspaceId: f.workspace.id },
+                orderBy: { key: 'asc' },
+              }),
+            ]);
+          const before = await snapshot();
+          const replay = await request(f.owner, endpoint, input, copyKey);
+          assert.equal(replay.status, expected);
+          if (expected === 201) assert.equal(replay.data.id, created.id);
+          if (expected === 503)
+            assert.equal(replay.data.message, 'Project/task receipt is unavailable.');
+          assert.equal(
+            (
+              await request(
+                f.owner,
+                endpoint,
+                taskResult ? { title: 'Different' } : { name: 'Different', key: 'REF' },
+                copyKey,
+              )
+            ).status,
+            409,
+          );
+          assert.equal((await request(foreign.owner, endpoint, input, copyKey)).status, 403);
+          assert.deepEqual(await snapshot(), before);
+        }
+      }
+    },
+  );
 });

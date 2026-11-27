@@ -746,4 +746,80 @@ test('T05.0 PostgreSQL and HTTP workspace workflows', async (t) => {
       assert.equal(current.version, revoked.version);
     },
   );
+
+  await t.test(
+    'T38.2i copied workspace receipts keep controlled reference409, typed503 and secret409 without writes',
+    async () => {
+      const owner = await human(),
+        createInput = { name: 'Receipt tenant' },
+        originalKey = randomUUID();
+      const workspace = await ok(owner, 'workspaces', createInput, originalKey);
+      const root = `workspaces/${workspace.id}`;
+      const foreign = await human();
+      const recipient = await human();
+      const inviteInput = { recipientEmail: recipient.email, role: 'viewer' };
+      const inviteKey = randomUUID();
+      const issued = await ok(owner, `${root}/invitations`, inviteInput, inviteKey);
+      const revokeKey = randomUUID();
+      await ok(owner, `${root}/invitations/${issued.invitation.id}/revoke`, {}, revokeKey);
+      const registerInput = {
+        name: 'Receipt Agent',
+        role: 'viewer',
+        custodianPrincipalId: owner.principalId,
+      };
+      const agentKey = randomUUID();
+      await ok(owner, `${root}/agents`, registerInput, agentKey);
+      const snapshot = () =>
+        Promise.all([
+          prisma.workspace.findUnique({ where: { id: workspace.id } }),
+          prisma.membership.findMany({
+            where: { workspaceId: workspace.id },
+            orderBy: { principalId: 'asc' },
+          }),
+          prisma.invitation.findMany({
+            where: { workspaceId: workspace.id },
+            orderBy: { id: 'asc' },
+          }),
+          prisma.workspaceOperation.findMany({
+            where: { actorPrincipalId: owner.principalId },
+            orderBy: { key: 'asc' },
+          }),
+        ]);
+      for (const [sourceKey, path, input, response, expected] of [
+        [originalKey, 'workspaces', createInput, { id: workspace.id, ignored: 'stale' }, 201],
+        [originalKey, 'workspaces', createInput, null, 409],
+        [originalKey, 'workspaces', createInput, { id: 4 }, 409],
+        [agentKey, `${root}/agents`, registerInput, {}, 503],
+        [
+          revokeKey,
+          `${root}/invitations/${issued.invitation.id}/revoke`,
+          {},
+          { state: 'broken' },
+          503,
+        ],
+        [inviteKey, `${root}/invitations`, inviteInput, null, 409],
+      ]) {
+        const source = await prisma.workspaceOperation.findUniqueOrThrow({
+          where: { actorPrincipalId_key: { actorPrincipalId: owner.principalId, key: sourceKey } },
+        });
+        const copyKey = randomUUID();
+        await pool.query(
+          'INSERT INTO workspace_operation("actorPrincipalId",key,"requestHash",response) VALUES($1,$2,$3,$4::jsonb)',
+          [source.actorPrincipalId, copyKey, source.requestHash, JSON.stringify(response)],
+        );
+        const before = await snapshot();
+        const replay = await request(owner, path, input, copyKey);
+        assert.equal(replay.status, expected);
+        if (expected === 201) assert.equal(replay.data.id, workspace.id);
+        if (expected === 503)
+          assert.equal(replay.data.message, 'Workspace receipt is unavailable.');
+        if (sourceKey === inviteKey) assert.equal(replay.data.code, 'invitation-link-unavailable');
+        if (sourceKey !== originalKey)
+          assert.equal((await request(foreign, path, input, copyKey)).status, 403);
+        if (sourceKey === originalKey)
+          assert.equal((await request(owner, path, { name: 'Different' }, copyKey)).status, 409);
+        assert.deepEqual(await snapshot(), before);
+      }
+    },
+  );
 });

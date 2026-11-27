@@ -5,6 +5,7 @@ import { Buffer } from 'node:buffer';
 import { syncBuiltinESMExports } from 'node:module';
 import { test } from 'node:test';
 import { ProjectTaskService } from '../../dist/projects/project-task.service.js';
+import { mutateProjectTask } from '../../dist/projects/project-task-mutation.js';
 
 const workspaceId = 'workspace-flow';
 const projectId = 'project-flow';
@@ -168,6 +169,7 @@ function fixture(t, options = {}) {
   };
   return {
     service: new ProjectTaskService(principals),
+    principals,
     actor,
     context,
     calls,
@@ -222,6 +224,95 @@ const move = (f, patch = {}) =>
     beforeTaskId: null,
     ...patch,
   });
+
+test('receipt references reject malformed selectors before queries and retain canonical Project/Task replay order', async (t) => {
+  const hash = crypto
+    .createHash('sha256')
+    .update(JSON.stringify(['replay-test', [projectId], {}]))
+    .digest('hex');
+  const run = (f) =>
+    mutateProjectTask(
+      f.principals,
+      f.context,
+      workspaceId,
+      key,
+      requestId,
+      'replay-test',
+      [projectId],
+      {},
+      async () => assert.fail('Replay must not execute a write'),
+    );
+  for (const response of [
+    null,
+    [],
+    1,
+    'saved',
+    {},
+    { id: null },
+    { id: taskId, projectId: null },
+    { projectId },
+  ]) {
+    await t.test(JSON.stringify(response), async (child) => {
+      const f = fixture(child);
+      f.script(
+        answer('project.findFirst', projectRow()),
+        answer('projectTaskOperation.findUnique', { requestHash: hash, response }),
+      );
+      await assert.rejects(run(f), denial(503));
+      noEffects(f);
+      f.done();
+    });
+  }
+  for (const taskResult of [false, true])
+    await t.test(taskResult ? 'Task' : 'Project', async (child) => {
+      const f = fixture(child);
+      const response = taskResult
+        ? { id: taskId, projectId, title: null }
+        : { id: projectId, name: null };
+      f.script(
+        answer('project.findFirst', projectRow()),
+        answer('projectTaskOperation.findUnique', { requestHash: hash, response }),
+      );
+      if (taskResult)
+        f.script(answer('task.findUnique', taskRow({ title: 'Current canonical task' })));
+      f.script(answer('project.findFirst', projectRow({ name: 'Current canonical project' })));
+      if (taskResult) f.script(answer('project.findUniqueOrThrow', projectRow()));
+      f.script(answer('membership.findMany', creator()));
+      const result = await run(f);
+      assert.equal(
+        taskResult ? result.title : result.name,
+        taskResult ? 'Current canonical task' : 'Current canonical project',
+      );
+      noEffects(f);
+      f.done();
+    });
+  for (const response of [{ id: '' }, { id: 'non/id' }, { id: '', projectId: 'non/id' }])
+    await t.test('ordinary ' + JSON.stringify(response), async (child) => {
+      const f = fixture(child);
+      f.script(
+        answer('project.findFirst', projectRow()),
+        answer('projectTaskOperation.findUnique', { requestHash: hash, response }),
+        answer('projectId' in response ? 'task.findUnique' : 'project.findFirst', null, (args) => {
+          assert.equal(
+            'projectId' in response ? args.where.workspaceId_projectId_id.id : args.where.id,
+            response.id,
+          );
+        }),
+      );
+      await assert.rejects(run(f), denial(403));
+      f.done();
+    });
+  await t.test('hash conflict precedes corruption', async (child) => {
+    const f = fixture(child);
+    f.script(
+      answer('project.findFirst', projectRow()),
+      answer('projectTaskOperation.findUnique', { requestHash: 'wrong', response: null }),
+    );
+    await assert.rejects(run(f), denial(409));
+    noEffects(f);
+    f.done();
+  });
+});
 
 test(
   'projects resolves only a current visible ID anchor and returns a bounded page without global sequence',
@@ -410,6 +501,12 @@ test(
       ['filters', cursor({ filters: { status: 'done' } })],
       ['anchor', cursor({ anchor: '!bad' })],
       ['revision', cursor({ revision: 0 })],
+      ['unknown key', cursor({ extra: true })],
+      ['missing revision', cursor({ revision: undefined })],
+      ['string revision', cursor({ revision: '7' })],
+      ['unsafe revision', cursor({ revision: Number.MAX_SAFE_INTEGER + 1 })],
+      ['invalid shape before stale', cursor({ revision: 6, anchor: null })],
+      ['primitive', Buffer.from('null').toString('base64url')],
       ['encoding', '!bad'],
       ['json', Buffer.from('{broken').toString('base64url')],
     ])

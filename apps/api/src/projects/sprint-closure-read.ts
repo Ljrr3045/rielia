@@ -1,9 +1,10 @@
 import { ForbiddenException } from '@nestjs/common';
-import type { PlanningSnapshot, SprintClosure, SprintClosingOutcomePage } from '@rielia/contracts';
+import type { SprintClosure, SprintClosingOutcomePage } from '@rielia/contracts';
 import type { Project, SprintClosingOutcome } from '../generated/prisma/client.js';
 import type { Transaction } from '../principals/principal.service.js';
 import { closingPage } from './sprint-close-preview.js';
 import { summarizeSnapshots } from './sprint-scope-read.js';
+import { storedPlanningSnapshot } from './planning-snapshot-read.js';
 export async function closureRows(tx: Transaction, project: Project, s: string) {
   const where = { workspaceId: project.workspaceId, projectId: project.id, sprintId: s };
   const row = await tx.sprintClosure.findUnique({
@@ -19,7 +20,7 @@ export async function closureView(
   s: string,
 ): Promise<SprintClosure> {
   const { row, outcomes } = await closureRows(tx, project, s);
-  const snapshots = outcomes.map((o) => o.snapshot as unknown as PlanningSnapshot);
+  const snapshots = outcomes.map((o) => storedPlanningSnapshot(o.snapshot));
   return {
     id: row.id,
     workspaceId: row.workspaceId,
@@ -45,7 +46,7 @@ export function outcomeView(row: SprintClosingOutcome) {
     closureId: row.closureId,
     participationId: row.participationId,
     taskId: row.taskId,
-    snapshot: row.snapshot as unknown as PlanningSnapshot,
+    snapshot: storedPlanningSnapshot(row.snapshot),
     disposition: row.disposition as 'done' | 'canceled' | 'backlog' | 'carried',
     targetSprintId: row.targetSprintId,
     targetParticipationId: row.targetParticipationId,

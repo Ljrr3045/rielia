@@ -2,7 +2,6 @@ import { BadRequestException, ConflictException, ForbiddenException } from '@nes
 import { createHash } from 'node:crypto';
 import { Buffer } from 'node:buffer';
 import {
-  isRecord,
   sprintCloseDestinationSchema,
   type ClosingConsequence,
   type ExecutionContextResponse,
@@ -10,7 +9,8 @@ import {
 } from '@rielia/contracts';
 import type { Project } from '../generated/prisma/client.js';
 import type { Transaction } from '../principals/principal.service.js';
-import { canonical, identifier } from './project-task-input.js';
+import { canonical } from './project-task-input.js';
+import { closingPageCursorSchema } from './project-cursor-schemas.js';
 import { sprintRow } from './sprint-read.js';
 import { planningTasks, planningSnapshot } from './task-planning.js';
 import { summarizeSnapshots } from './sprint-scope-read.js';
@@ -34,21 +34,15 @@ export function closingPage(binding: unknown, ids: string[], cursor?: string) {
     } catch {
       throw new BadRequestException('Invalid closing cursor.');
     }
-    if (
-      !/^[A-Za-z0-9_-]{1,2048}$/.test(cursor) ||
-      !isRecord(saved) ||
-      Object.keys(saved).length !== 3 ||
-      saved['v'] !== 1 ||
-      typeof saved['binding'] !== 'string' ||
-      !identifier(saved['anchor'])
-    )
+    const result = closingPageCursorSchema.safeParse(saved);
+    if (!/^[A-Za-z0-9_-]{1,2048}$/.test(cursor) || !result.success)
       throw new BadRequestException('Invalid closing cursor.');
-    if (saved['binding'] !== hash)
+    if (result.data.binding !== hash)
       throw new ConflictException({
         code: 'page-changed',
         message: 'Closing data changed. Refresh before continuing.',
       });
-    offset = ids.indexOf(saved['anchor']) + 1;
+    offset = ids.indexOf(result.data.anchor) + 1;
     if (!offset) throw new BadRequestException('Invalid closing anchor.');
   }
   const end = offset + 100;

@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import assert from 'node:assert/strict';
+import { Buffer } from 'node:buffer';
 import { test } from 'node:test';
 import { randomUUID } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
@@ -245,6 +246,24 @@ test('T10 real PostgreSQL search, current policy and committed session SSE', asy
       const first = await page(f, member);
       assert.equal(first.items.length, 100);
       assert.ok(first.nextCursor);
+      const savedCursor = JSON.parse(Buffer.from(first.nextCursor, 'base64url'));
+      for (const [patch, expected] of [
+        [
+          { query: Object.fromEntries(Object.entries(savedCursor.query).reverse()), revision: '' },
+          400,
+        ],
+        [{ revision: 1 }, 400],
+        [{ revision: '', anchor: 'ordinary/non-id' }, 409],
+        [{ anchor: '' }, 400],
+      ]) {
+        const cursor = Buffer.from(JSON.stringify({ ...savedCursor, ...patch })).toString(
+          'base64url',
+        );
+        assert.equal(
+          (await request(member, `${f.root}/task-discovery?cursor=${cursor}`)).status,
+          expected,
+        );
+      }
       await ok(f.owner, privateTasks, { title: 'More hidden content' });
       const unchanged = await page(f, member);
       assert.equal(unchanged.revision, first.revision);

@@ -682,6 +682,11 @@ test('bounded lists bind cursor to project/revision and validate scoped anchor',
     [encode({ ...original, extra: true }), 400],
     [encode({ ...original, revision: 0 }), 400],
     [encode({ ...original, projectVersion: -1 }), 400],
+    [encode({ ...original, revision: 2, projectVersion: '2' }), 400],
+    [encode({ ...original, revision: '3' }), 400],
+    [encode({ ...original, revision: Number.MAX_SAFE_INTEGER + 1 }), 400],
+    [encode({ ...original, revision: 2, anchor: 'bad/id' }), 400],
+    [encode(null), 400],
   ]) {
     const h = fixture();
     h.script(step('project.findFirst', project()));

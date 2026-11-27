@@ -18,7 +18,8 @@ import {
 } from '@rielia/contracts';
 import type { Prisma, Project as ProjectRow, Task as TaskRow } from '../generated/prisma/client.js';
 import type { Transaction } from '../principals/principal.service.js';
-import { identifier, object, canonical } from './project-task-input.js';
+import { identifier, canonical } from './project-task-input.js';
+import { taskPageCursorSchema } from './project-cursor-schemas.js';
 import { administrator, canManage } from './project-task-policy.js';
 import { projectDto, taskDto, accessDto, type ReadableTaskProject } from './project-task-dto.js';
 
@@ -404,23 +405,19 @@ export async function tasks(
   };
   let anchor: TaskRow | null = null;
   if (cursor !== undefined) {
-    let decoded: Record<string, unknown>;
+    let decoded;
     try {
       if (!/^[A-Za-z0-9_-]{1,2048}$/.test(cursor)) throw new Error();
-      decoded = object(
+      const result = taskPageCursorSchema.safeParse(
         JSON.parse(Buffer.from(cursor, 'base64url').toString('utf8')),
-        ['v', 'w', 'p', 'view', 'filters', 'revision', 'anchor'],
-        ['v', 'w', 'p', 'view', 'filters', 'revision', 'anchor'],
       );
+      if (!result.success) throw new Error();
+      decoded = result.data;
       if (
-        decoded['v'] !== 1 ||
         decoded['w'] !== workspaceId ||
         decoded['p'] !== projectId ||
         decoded['view'] !== view ||
-        JSON.stringify(canonical(decoded['filters'])) !== JSON.stringify(normalized) ||
-        !identifier(decoded['anchor']) ||
-        !Number.isSafeInteger(decoded['revision']) ||
-        Number(decoded['revision']) < 1
+        JSON.stringify(canonical(decoded['filters'])) !== JSON.stringify(normalized)
       )
         throw new Error();
     } catch {
@@ -432,7 +429,7 @@ export async function tasks(
         message: 'Task order changed. Refresh the collection.',
       });
     anchor = await tx.task.findFirst({
-      where: { ...where, id: decoded['anchor'] as string },
+      where: { ...where, id: decoded['anchor'] },
     });
     if (!anchor) throw new BadRequestException('Invalid page cursor.');
   }
