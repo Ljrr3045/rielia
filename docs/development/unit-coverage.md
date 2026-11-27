@@ -1,5 +1,13 @@
 # T36 first unit and coverage delivery
 
+## Current publication — Draft PR67
+
+[Draft PR67](https://github.com/Ljrr3045/rielia/pull/67) targets `dev` at initial
+implementation head `19e7daf4`. Current-head CI, native review, Ready/merge and
+acceptance remain pending; no current-head success or billing evidence is claimed.
+This reference-only update preserves earlier local/pending checkpoints and their
+source/run identities without re-execution or rebinding. Full T38 remains open.
+
 ## 2026-11-27 T38.2j exact adoption and normal proof
 
 The coordinator approved ONLY the exact API33092byte/web47723byte candidates

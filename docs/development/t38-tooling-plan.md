@@ -1,5 +1,13 @@
 # T38 tool decisions and compatibility pilot
 
+## Current publication — Draft PR67
+
+[Draft PR67](https://github.com/Ljrr3045/rielia/pull/67) targets `dev` at initial
+implementation head `19e7daf4`. Current-head CI, native review, Ready/merge and
+acceptance remain pending; no current-head success or billing evidence is claimed.
+This reference-only update preserves earlier local/pending checkpoints and their
+source/run identities without re-execution or rebinding. Full T38 remains open.
+
 [T38.2i is ACCEPTED in PR66](https://github.com/Ljrr3045/rielia/pull/66#issuecomment-7208579762),
 reviewed `e9b9c4d0`, merged `a9fa0047`, with reviewed-head CI, full35-file native
 Kilo (zero findings) and exact-merge CI passed. This final decision supersedes

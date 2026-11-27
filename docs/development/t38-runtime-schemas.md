@@ -1,5 +1,13 @@
 # T38.2j configuration and diagnostic schemas
 
+## Current publication — Draft PR67
+
+[Draft PR67](https://github.com/Ljrr3045/rielia/pull/67) targets `dev` at initial
+implementation head `19e7daf4`. Current-head CI, native review, Ready/merge and
+acceptance remain pending; no current-head success or billing evidence is claimed.
+This reference-only update preserves earlier local/pending checkpoints and their
+source/run identities without re-execution or rebinding. Full T38 remains open.
+
 Coordinator-released implementation from accepted T38.2i merge `a9fa0047` on
 2026-11-26 America/Caracas. Exact API/web numerical adoption is coordinator-approved;
 fresh normal904/infra20/artifact validation passes, reproducing all16 measured

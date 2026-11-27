@@ -4,6 +4,12 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Publish T38.2j in [Draft PR67](https://github.com/Ljrr3045/rielia/pull/67), targeting
+  `dev` at initial implementation head `19e7daf4`. Current-head CI/native review,
+  Ready/merge and acceptance remain pending. This reference-only update preserves
+  local source/run identities and earlier pending checkpoints without re-execution;
+  full T38 and all recorded debt remain open.
+
 - Approve exact [T38.2j API/web numerical adoption](docs/development/t38-runtime-schemas.md),
   retaining other six baselines and explicit T04/runtime CLI unit debt. Fresh
   normal904/infra20/artifacts pass and reproduce all16 frozen reports, without
