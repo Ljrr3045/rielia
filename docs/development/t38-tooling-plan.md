@@ -1,5 +1,30 @@
 # T38 tool decisions and compatibility pilot
 
+## T38.3d final local correlated-command delivery
+
+[PR70's final PR-body acceptance](https://github.com/Ljrr3045/rielia/pull/70)
+accepts T38.3c, reviewed `3bb267ba`, merged `73f87d0c`. Its frozen pending source
+snapshots below retain their dates/run identities. The
+[H24/H54 follow-up](t38-contract-transport.md) migrates only the final two browser
+JSON POSTs and necessary local command precision across four existing web owners.
+Runtime guard/response/authority, exact body/key/order, preview/page binding and
+captured-source/explicit-retry ownership remain. Public/backend/generated/
+dependency/compiler/config/UI/cache/form changes are excluded. Generated reserved
+string, scalar/provenance and universal-equivalence limitations stay explicit.
+
+Root rejects the initial 939 ratio-decreasing candidate, then releases only relevant
+real-screen paging/Retry and status-only conflict witnesses. Production stays
+fixed. Corrected measure 940/197 passes all 804 comparisons; root approves copying
+only the exact web candidate, and normal 940 reproduces all 16 reports/status.
+Infrastructure 20 and bounded artifacts 17 pass without upload; seven other baselines
+stay exact. No weaker floor, omission or PR65 exception. Prior standard/one native
+build/strict/application/HTTP checks are reused with exact bindings, without
+installs/build/PG/Docker/probe repetition after correction or adoption.
+
+Accounting stays 60 accepted +2 local candidate +4 exclusions =66. Current-head
+CI/native review, delivery and coordinator acceptance remain gates; full
+T38.3/T38, Query/forms/later tools/diagnostics/T38.6 and retained debts stay open.
+
 ## T38.3c consolidated transport implementation
 
 The coordinator released [54 additional generated-request consumers](t38-contract-transport.md)

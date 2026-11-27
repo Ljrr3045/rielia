@@ -1,14 +1,11 @@
 import type { paths } from '@rielia/contracts/openapi';
 
-type Root = '/api/v1/workspaces/{workspaceId}/projects/{projectId}';
 type BrowserPath = Exclude<
   keyof paths,
   | '/api/v1/health'
   | '/api/v1/readiness'
   | '/api/v1/workspaces/{workspaceId}/execution-context'
   | '/api/v1/workspaces/{workspaceId}/events'
-  | `${Root}/sprints/{sprintId}/close`
-  | `${Root}/tasks/{taskId}/sprint`
 >;
 type IdentityPath = Extract<BrowserPath, `/api/v1/identity/${string}`>;
 type Method = 'get' | 'post';

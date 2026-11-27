@@ -1,5 +1,25 @@
 # T38 maintained-boundary inventory
 
+## T38.3d final local transport accounting
+
+[PR70's final PR-body decision](https://github.com/Ljrr3045/rielia/pull/70) accepts
+T38.3c, merged `73f87d0c`, over frozen pending labels below. The
+[H24/H54 follow-up](t38-contract-transport.md) locally migrates POST S/close and
+POST T/sprint through the generated native-fetch helper. Command/state owners
+retain correlated source/target versions, exact preview page binding and original
+body/key explicit retry; X05 retains unknown/original-object admission, feature
+errors and current/operation checks. Public schemas/backend authority stay unchanged.
+A precise local preview annotation is supported by its unchanged runtime guard;
+generated string/scalar/provenance and dynamic-authority limits remain.
+
+Accounting is 60 accepted +2 local candidate +4 bounded browser JSON exclusions
+(H01 server/MCP liveness, H04 no browser caller, H50 SSE, H55 readiness) =66.
+No consumer is invented. Root-approved exact web adoption and normal 940/197
+reproduce all 16 measured reports; infrastructure 20/artifacts 17 pass. Seven other
+baselines remain exact and all 804 ratio/uncovered comparisons preserve/improve.
+The initial numerical rejection and test-only correction retain distinct receipts.
+Review/delivery/coordinator acceptance, full T38.3/T38 and later phases remain open.
+
 ## T38.3c consolidated candidate; exact local numerical adoption
 
 [Contract-derived requests](t38-contract-transport.md) cover H02–03/H05–23/

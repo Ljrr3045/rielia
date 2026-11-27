@@ -75,16 +75,26 @@ export function prepareSprintCommand(
       const target = intent.targetSprintId === null ? null : fresh(r.target);
       if (intent.targetSprintId !== null && target?.id !== intent.targetSprintId) return 'stale';
       if (target && !target.capabilities.canChangeScope) return 'forbidden';
+      const source = task.currentParticipation;
+      const sourceInput =
+        source === null
+          ? { expectedCurrentParticipationId: source, expectedSourceVersion: source }
+          : {
+              expectedCurrentParticipationId: source.id,
+              expectedSourceVersion: source.sprint.version,
+            };
+      const targetInput =
+        target === null
+          ? { targetSprintId: target, expectedTargetVersion: target }
+          : { targetSprintId: target.id, expectedTargetVersion: target.version };
       return {
         ...scope,
         type: intent.type,
         taskId: task.taskId,
         input: {
           expectedTaskVersion: task.snapshot.version,
-          expectedCurrentParticipationId: task.currentParticipation?.id ?? null,
-          expectedSourceVersion: task.currentParticipation?.sprint.version ?? null,
-          targetSprintId: intent.targetSprintId,
-          expectedTargetVersion: target?.version ?? null,
+          ...sourceInput,
+          ...targetInput,
         },
       };
     }
@@ -154,12 +164,23 @@ export function changeSprintCommand(
   if (command.type === 'set-task-sprint' && intent.type === command.type) {
     const proposed = prepareSprintCommand(state, intent);
     if (typeof proposed === 'string' || proposed.type !== command.type) return null;
+    const input = proposed.input;
+    // Override a correlated target pair while retaining the original source and extra fields.
+    const target =
+      input.targetSprintId === null
+        ? {
+            targetSprintId: input.targetSprintId,
+            expectedTargetVersion: input.expectedTargetVersion,
+          }
+        : {
+            targetSprintId: input.targetSprintId,
+            expectedTargetVersion: input.expectedTargetVersion,
+          };
     return {
       ...command,
       input: {
         ...command.input,
-        targetSprintId: proposed.input.targetSprintId,
-        expectedTargetVersion: proposed.input.expectedTargetVersion,
+        ...target,
       },
     };
   }

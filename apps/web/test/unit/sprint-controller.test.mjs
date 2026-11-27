@@ -1,5 +1,12 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
+import { changeSprintCommand } from '../../src/lib/sprint-commands.ts';
+import { createSprintController } from '../../src/lib/sprint-controller.ts';
+import { createSprintPlanningTransport } from '../../src/lib/sprint-client.ts';
+import {
+  createTaskPlanningTransport,
+  TaskPlanningFailure,
+} from '../../src/lib/task-planning-client.ts';
 import {
   context,
   fields,
@@ -965,4 +972,140 @@ test('editable intents cannot replace the authenticated project context or captu
     );
     b.controller.discardDraft();
   }
+});
+
+test('target edits retain captured source/task concurrency and input extras/order even after canonical source resources advance', async (t) => {
+  const b = await mountedSprint(t);
+  await b.controller.selectTarget('target');
+  assert.equal(b.controller.stage({ type: 'set-task-sprint', targetSprintId: null }), 'ready');
+  const command = {
+    futureCommand: 'retained',
+    ...b.state().draft,
+    input: { futureInput: 'retained', ...b.state().draft.input },
+  };
+  b.server.task.snapshot.version = 10;
+  b.server.task.currentParticipation = { id: 'later-visit', sprint: { ...sprint, version: 8 } };
+  await b.controller.reload('task');
+  assert.equal(b.state().needsReview, true);
+  const changed = changeSprintCommand(
+    command,
+    { type: 'set-task-sprint', targetSprintId: 'target' },
+    b.state(),
+  );
+  assert.deepEqual(changed.input, {
+    ...command.input,
+    targetSprintId: 'target',
+    expectedTargetVersion: 1,
+  });
+  assert.deepEqual(Object.keys(changed), Object.keys(command));
+  assert.deepEqual(Object.keys(changed.input), Object.keys(command.input));
+  assert.equal(changed.futureCommand, command.futureCommand);
+  assert.equal(changed.input.expectedTaskVersion, 3);
+  assert.equal(changed.input.expectedCurrentParticipationId, 'visit');
+  assert.equal(changed.input.expectedSourceVersion, 2);
+  assert.equal(
+    b.controller.changeDraft({ type: 'set-task-sprint', targetSprintId: 'target' }),
+    'ready',
+  );
+  assert.equal(b.state().draft.input.expectedSourceVersion, 2);
+  assert.equal(await b.controller.submit(), 'review-required');
+  assert.equal(b.controller.rebaseDraft(), 'ready');
+  assert.equal(b.state().draft.input.expectedTaskVersion, 10);
+  assert.equal(b.state().draft.input.expectedCurrentParticipationId, 'later-visit');
+  assert.equal(b.state().draft.input.expectedSourceVersion, 8);
+});
+
+test('unknown participation retry retains its immutable original command/body/key after later canonical source and destination reads', async (t) => {
+  const b = await mountedSprint(t);
+  await b.controller.selectTarget('target');
+  assert.equal(b.controller.stage({ type: 'set-task-sprint', targetSprintId: 'target' }), 'ready');
+  b.server.post = () => {
+    throw new Error('committed response lost');
+  };
+  await b.controller.submit();
+  const recovery = b.state().recovery;
+  assert.equal(b.state().mutation.status, 'unknown');
+  assert.ok(Object.isFrozen(recovery.command.input));
+  b.server.task.currentParticipation = null;
+  b.server.task.snapshot.version = 12;
+  b.server.target.version = 9;
+  await b.controller.refresh();
+  assert.equal(b.state().recovery, recovery);
+  b.server.post = () =>
+    Response.json({
+      operation: {
+        type: 'set-task-sprint',
+        activityId: 'a',
+        sprintId: 'target',
+        exitedVisitId: 'visit',
+        enteredVisitId: 'new-visit',
+      },
+      current: b.server.task,
+    });
+  await b.controller.retrySave();
+  assert.equal(b.state().mutation.status, 'confirmed');
+  assert.equal(b.posts().length, 2);
+  assert.equal(b.posts()[0].init.body, b.posts()[1].init.body);
+  assert.equal(
+    b.posts()[0].init.headers['Idempotency-Key'],
+    b.posts()[1].init.headers['Idempotency-Key'],
+  );
+  assert.equal(JSON.parse(b.posts()[1].init.body).expectedSourceVersion, 2);
+  assert.equal(JSON.parse(b.posts()[1].init.body).expectedTargetVersion, 1);
+});
+
+test('close preview continuation rejects a changed target version even when the hash and destination stay unchanged', async (t) => {
+  const b = await mountedSprint(t);
+  b.server.get = ({ path, query }) =>
+    path.endsWith('/close-preview')
+      ? Response.json({
+          ...preview('target'),
+          total: 2,
+          expectedTargetVersion: query.has('cursor') ? 2 : 1,
+          nextCursor: query.has('cursor') ? null : 'next',
+          items: [
+            {
+              ...preview('target').items[0],
+              participationId: query.has('cursor') ? 'tail' : 'first',
+            },
+          ],
+        })
+      : undefined;
+  await b.controller.preview('target');
+  const before = b.state().resources.preview.data;
+  await b.controller.loadMore('preview');
+  assert.equal(b.state().resources.preview.status, 'changed');
+  assert.equal(b.state().resources.preview.data, before);
+  assert.equal(b.state().resources.preview.failure.code, 'page-changed');
+  assert.equal(b.controller.stage({ type: 'close-sprint' }), 'preview-required');
+  assert.equal(b.posts().length, 0);
+});
+
+test('a status-only planning transport conflict retains the participation draft and requires review without automatic write or retry', async (t) => {
+  const server = sprintServer();
+  t.mock.method(globalThis, 'fetch', server.fetch);
+  const tasks = createTaskPlanningTransport();
+  const send = t.mock.method(tasks, 'setSprint', async () => {
+    throw new TaskPlanningFailure(409);
+  });
+  const controller = createSprintController({ planning: createSprintPlanningTransport(), tasks });
+  t.after(() => controller.dispose());
+  await controller.setContext(context);
+  await controller.select('s', 't');
+  await controller.selectTarget('target');
+  assert.equal(controller.stage({ type: 'set-task-sprint', targetSprintId: 'target' }), 'ready');
+  const draft = controller.getState().draft;
+  await controller.submit();
+  const state = controller.getState();
+  assert.equal(state.draft, draft);
+  assert.equal(state.mutation.status, 'conflict');
+  assert.deepEqual(state.mutation.failure, { status: 409, code: null, requestId: null });
+  assert.equal(state.mutation.current, null);
+  assert.equal(state.recovery, null);
+  assert.equal(state.needsReview, true);
+  assert.equal(send.mock.callCount(), 1);
+  assert.equal(await controller.submit(), 'review-required');
+  assert.equal(await controller.retrySave(), 'unavailable');
+  assert.equal(send.mock.callCount(), 1);
+  assert.equal(server.requests.filter(({ init }) => init.method === 'POST').length, 0);
 });

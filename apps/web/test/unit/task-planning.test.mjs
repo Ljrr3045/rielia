@@ -447,3 +447,68 @@ test('proxy exposes only implemented planning routes and retains scalar cursors/
   );
   assert.equal(calls.at(-1).init.headers.get('origin'), 'https://hostile.test');
 });
+
+test('participation forwards every source/target pair and original body order; a structural no-op keeps the existing server error', async (t) => {
+  const calls = [];
+  let value, status;
+  t.mock.method(globalThis, 'fetch', async (url, init) => {
+    calls.push({ url: String(url), init });
+    return Response.json(value, { status, headers: { 'x-request-id': 'pair-request' } });
+  });
+  const transport = createTaskPlanningTransport({ baseURL: 'https://app.example.test/discarded' });
+  for (const source of [null, { id: 'old-visit', version: 2 }])
+    for (const target of [null, { id: 's', version: 3 }]) {
+      const body = {
+        future: 'retained',
+        expectedTaskVersion: 2,
+        expectedCurrentParticipationId: source?.id ?? null,
+        expectedSourceVersion: source?.version ?? null,
+        targetSprintId: target?.id ?? null,
+        expectedTargetVersion: target?.version ?? null,
+      };
+      const noop = source === null && target === null;
+      status = noop ? 409 : 202;
+      value = noop
+        ? { code: 'invalid-transition', current: planning }
+        : {
+            operation: {
+              ...op,
+              sprintId: target?.id ?? 'source',
+              enteredVisitId: target === null ? null : 'new-visit',
+              exitedVisitId: source?.id ?? null,
+            },
+            current: { ...planning, currentParticipation: null },
+          };
+      if (noop)
+        await assert.rejects(
+          transport.setSprint('w', 'p', 't', body, 'pair-key', signal()),
+          (error) =>
+            error.status === 409 &&
+            error.code === 'invalid-transition' &&
+            error.requestId === 'pair-request' &&
+            error.current.taskId === 't',
+        );
+      else
+        assert.deepEqual(
+          await transport.setSprint('w', 'p', 't', body, 'pair-key', signal()),
+          value,
+        );
+      assert.equal(calls.at(-1).init.body, JSON.stringify(body));
+      assert.equal(calls.at(-1).init.headers['Idempotency-Key'], 'pair-key');
+      assert.equal(
+        calls.at(-1).url,
+        'https://app.example.test/api/v1/workspaces/w/projects/p/tasks/t/sprint',
+      );
+    }
+  status = 409;
+  value = { code: 'current-sprint-conflict', current: planning };
+  await assert.rejects(
+    transport.setSprint('w/%', 'p ?', 't/#', input, 'pair-key', signal()),
+    (error) => error.status === 409 && error.current === null,
+  );
+  assert.equal(
+    calls.at(-1).url,
+    'https://app.example.test/api/v1/workspaces/w%2F%25/projects/p%20%3F/tasks/t%2F%23/sprint',
+  );
+  assert.equal(calls.length, 5);
+});

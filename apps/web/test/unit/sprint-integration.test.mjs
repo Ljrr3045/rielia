@@ -882,25 +882,82 @@ test(
 );
 
 test(
-  'participation saves only after an explicit destination read/submit, and Escape cancels inline editing',
+  'participation loads a paged destination before explicit save and retries an unknown result only through the rendered control',
   { timeout: 10000 },
   async (t) => {
-    const b = await openScreen(t, { search: '?workspace=a&project=p&task=t1' });
-    let section = getByRole(b.container, 'heading', { name: 'Task planning', exact: true }).closest(
-      'section',
+    const b = await openScreen(t, {
+      search: '?workspace=a&project=p&task=t1',
+      configure(_browser, server) {
+        server.list.items = [server.sprint];
+        server.list.nextCursor = 'destination-tail';
+        const get = server.get;
+        server.get = (request) =>
+          request.path.endsWith('/sprints') && request.query.get('cursor') === 'destination-tail'
+            ? Response.json({ ...server.list, items: [server.target], nextCursor: null })
+            : get(request);
+      },
+    });
+    const section = () =>
+      getByRole(b.container, 'heading', { name: 'Task planning', exact: true }).closest('section');
+    const participation = () => getByRole(section(), 'combobox', { name: 'Sprint participation' });
+    await b.click('Change participation', section());
+    assert.equal(
+      [...participation().options].some((option) => option.value === 'target'),
+      false,
     );
-    await b.click('Change participation', section);
-    await b.select('Sprint participation', 'target', section);
+    assert.equal(participation().value, 's');
     assert.equal(posts(b).length, 0);
+    const beforePage = b.sprintServer.requests.length;
+    await b.click('Load more', section());
+    assert.deepEqual(
+      b.sprintServer.requests
+        .slice(beforePage)
+        .map(({ path, query, init }) => [init.method, path, query.toString()]),
+      [['GET', '/api/v1/workspaces/a/projects/p/sprints', 'cursor=destination-tail']],
+    );
+    assert.equal(
+      [...participation().options].some((option) => option.value === 'target'),
+      true,
+    );
+    assert.equal(queryByRole(section(), 'button', { name: 'Load more' }), null);
+    const beforeTarget = b.sprintServer.requests.length;
+    await b.select('Sprint participation', 'target', section());
+    assert.deepEqual(
+      b.sprintServer.requests
+        .slice(beforeTarget)
+        .map(({ path, query, init }) => [init.method, path, query.toString()]),
+      [['GET', '/api/v1/workspaces/a/projects/p/sprints/target', '']],
+    );
+    assert.equal(participation().value, 'target');
+    assert.equal(posts(b).length, 0);
+    const expectedInput = {
+      expectedTaskVersion: 3,
+      expectedCurrentParticipationId: 'visit',
+      expectedSourceVersion: 2,
+      targetSprintId: 'target',
+      expectedTargetVersion: 1,
+    };
     b.sprintServer.post = ({ init }) => {
-      assert.deepEqual(JSON.parse(init.body), {
-        expectedTaskVersion: 3,
-        expectedCurrentParticipationId: 'visit',
-        expectedSourceVersion: 2,
-        targetSprintId: 'target',
-        expectedTargetVersion: 1,
-      });
-      b.sprintServer.task.currentParticipation = { id: 'new', sprint: b.sprintServer.target };
+      assert.deepEqual(JSON.parse(init.body), expectedInput);
+      throw new Error('Committed response lost');
+    };
+    await b.click('Save participation', section());
+    assert.equal(posts(b).length, 1);
+    assert.equal(
+      getByRole(section(), 'button', { name: 'Retry the same operation' }).disabled,
+      false,
+    );
+    const original = posts(b)[0].init;
+    b.sprintServer.task.snapshot.version = 12;
+    b.sprintServer.task.currentParticipation = null;
+    b.sprintServer.target.version = 9;
+    await act(async () => b.server.streams.at(-1).emit({ type: 'reset' }));
+    await b.clock.advance(500);
+    await b.flush();
+    assert.equal(posts(b).length, 1, 'new server reads never retry an unknown write');
+    b.sprintServer.post = ({ init }) => {
+      assert.equal(init.body, original.body);
+      assert.equal(init.headers['Idempotency-Key'], original.headers['Idempotency-Key']);
       return Response.json({
         operation: {
           type: 'set-task-sprint',
@@ -912,22 +969,23 @@ test(
         current: b.sprintServer.task,
       });
     };
-    await b.click('Save participation', section);
+    await b.click('Retry the same operation', section());
     await b.clock.advance(500);
     await b.flush();
-    assert.equal(posts(b).length, 1);
-    section = getByRole(b.container, 'heading', { name: 'Task planning', exact: true }).closest(
-      'section',
-    );
-    await b.click('Edit estimate', section);
+    assert.equal(posts(b).length, 2);
+    assert.deepEqual(JSON.parse(posts(b)[1].init.body), expectedInput);
+    assert.equal(queryByRole(section(), 'button', { name: 'Retry the same operation' }), null);
+    assert.match(section().textContent, /Change confirmed by the server/);
+    assert.equal(section().querySelectorAll('form').length, 0);
+    await b.click('Edit estimate', section());
     await act(async () =>
       b.document.activeElement.dispatchEvent(
         new b.window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }),
       ),
     );
     await b.flush();
-    assert.equal(section.querySelectorAll('form').length, 0);
-    assert.equal(posts(b).length, 1);
+    assert.equal(section().querySelectorAll('form').length, 0);
+    assert.equal(posts(b).length, 2);
   },
 );
 

@@ -1,9 +1,7 @@
 import type {
-  CloseSprintInput,
   PlanningHistoryPage,
   PlanningSettings,
   ProjectPlanning,
-  SetTaskSprintInput,
   Sprint,
   SprintClosePreview,
   SprintCloseResult,
@@ -18,6 +16,13 @@ import type {
   StartSprintInput,
   TaskPlanning,
 } from '@rielia/contracts';
+import type { RequestInput } from './api-contract-client.ts';
+
+type ProjectPath = '/api/v1/workspaces/{workspaceId}/projects/{projectId}';
+type CloseSprintInput = RequestInput<'post', `${ProjectPath}/sprints/{sprintId}/close`>['body'];
+type SetTaskSprintInput = RequestInput<'post', `${ProjectPath}/tasks/{taskId}/sprint`>['body'];
+// The transport retains G07's checked correlation without changing the public DTO.
+type AdmittedClosePreview = SprintClosePreview & CloseSprintInput;
 
 /** An execution lifetime, supplied by the existing authenticated project owner. */
 export interface SprintClientContext {
@@ -48,7 +53,7 @@ export interface SprintResources {
   scope: SprintResource<SprintScopePage>;
   sprintHistory: SprintResource<PlanningHistoryPage>;
   taskHistory: SprintResource<PlanningHistoryPage>;
-  preview: SprintResource<SprintClosePreview>;
+  preview: SprintResource<AdmittedClosePreview>;
   closure: SprintResource<SprintClosure>;
   outcomes: SprintResource<SprintClosingOutcomePage>;
 }
@@ -162,16 +167,30 @@ export function sprintPageBinding(page: SprintResources[SprintCollection]['data'
   ]);
 }
 /** Project only the server-issued binding; never recompute totals or freshness policy. */
-export function closeInput(preview: SprintClosePreview): CloseSprintInput {
+export function closeInput(preview: AdmittedClosePreview): CloseSprintInput {
+  const {
+    expectedVersion,
+    expectedProjectVersion,
+    expectedTaskRevision,
+    expectedSprintRevision,
+    expectedTargetVersion,
+    destination,
+    previewSchema,
+    previewHash,
+  } = preview;
+  // Branch construction keeps the checked pair correlated after projection.
+  const target =
+    expectedTargetVersion === null
+      ? { expectedTargetVersion, destination }
+      : { expectedTargetVersion, destination };
   return {
-    expectedVersion: preview.expectedVersion,
-    expectedProjectVersion: preview.expectedProjectVersion,
-    expectedTaskRevision: preview.expectedTaskRevision,
-    expectedSprintRevision: preview.expectedSprintRevision,
-    expectedTargetVersion: preview.expectedTargetVersion,
-    destination: preview.destination,
-    previewSchema: preview.previewSchema,
-    previewHash: preview.previewHash,
+    expectedVersion,
+    expectedProjectVersion,
+    expectedTaskRevision,
+    expectedSprintRevision,
+    ...target,
+    previewSchema,
+    previewHash,
   };
 }
 /** Immutable snapshots prevent a caller from changing the body retained for retry. */
