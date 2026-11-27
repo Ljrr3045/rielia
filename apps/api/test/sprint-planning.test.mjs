@@ -416,6 +416,75 @@ test('T11.1 actual PostgreSQL/NodeAdapter planned sprint and planning settings',
     },
   );
   await t.test(
+    'private metadata receipt fixtures preserve fallback replay, corruption errors and current tenant authority',
+    async () => {
+      const f = await fixture(),
+        foreign = await fixture(),
+        originalKey = randomUUID(),
+        input = { expectedVersion: 1, mode: 'scrum', timeZone: 'UTC', pointScale: [0, 1, 3] };
+      await ok(f.owner, `${f.path}/planning`, input, originalKey);
+      const s = await create(f);
+      await ok(f.owner, `${f.path}/sprints/${s.id}`, {
+        expectedVersion: 1,
+        ...fields,
+        name: 'Current receipt target',
+      });
+      const stored = await db.projectTaskOperation.findFirstOrThrow({
+        where: { workspaceId: f.workspace.id, key: originalKey },
+      });
+      const state = async () =>
+        (
+          await pool.query(
+            `SELECT jsonb_build_object('project',(SELECT to_jsonb(p) FROM project p WHERE id=$1),'sprints',(SELECT jsonb_agg(to_jsonb(s) ORDER BY id) FROM sprint s WHERE "projectId"=$1),'activity',(SELECT jsonb_agg(to_jsonb(a) ORDER BY id) FROM activity_event a WHERE "projectId"=$1),'outbox',(SELECT jsonb_agg(to_jsonb(o) ORDER BY o.id) FROM outbox_event o JOIN activity_event a ON a.id=o."activityId" WHERE a."projectId"=$1),'receipts',(SELECT jsonb_agg(to_jsonb(r) ORDER BY key) FROM project_task_operation r WHERE "workspaceId"=$2)) AS data`,
+            [f.project.id, f.workspace.id],
+          )
+        ).rows[0].data;
+      for (const response of [
+        { kind: 'project-planning', id: [], operation: null },
+        { kind: 'planned-sprint', id: s.id, extra: { retained: true } },
+        { kind: 'planned-sprint', id: [] },
+      ]) {
+        const fixtureKey = randomUUID();
+        await db.projectTaskOperation.create({
+          data: {
+            workspaceId: stored.workspaceId,
+            actorPrincipalId: stored.actorPrincipalId,
+            executionScope: stored.executionScope,
+            requestHash: stored.requestHash,
+            key: fixtureKey,
+            response,
+          },
+        });
+        const before = await state();
+        const replay = await request(f.owner, `${f.path}/planning`, input, fixtureKey);
+        if (response.kind === 'project-planning') {
+          assert.ok(replay.status >= 200 && replay.status < 300);
+          assert.equal(replay.data.projectVersion, 2);
+        } else if (typeof response.id === 'string') {
+          assert.ok(replay.status >= 200 && replay.status < 300);
+          assert.equal(replay.data.id, s.id);
+          assert.equal(replay.data.version, 2);
+        } else {
+          assert.equal(replay.status, 503);
+          assert.equal(replay.data.message, 'Planning receipt is unavailable.');
+        }
+        const different = await request(
+          f.owner,
+          `${f.path}/planning`,
+          { ...input, pointScale: [0] },
+          fixtureKey,
+        );
+        assert.equal(different.status, 409);
+        assert.equal(different.data.code, 'idempotency-conflict');
+        assert.equal(
+          (await request(foreign.owner, `${f.path}/planning`, input, fixtureKey)).status,
+          403,
+        );
+        assert.deepEqual(await state(), before);
+      }
+    },
+  );
+  await t.test(
     'tenant/private/viewer/current revocation and actual grant subjects intersect every replay',
     async () => {
       const f = await fixture(),

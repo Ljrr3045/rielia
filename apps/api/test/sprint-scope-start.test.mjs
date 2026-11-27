@@ -565,6 +565,68 @@ test('T11.2 real PostgreSQL/HTTP scope, observations and explicit start', async 
     },
   );
   await t.test(
+    'stored scope receipt fixtures retain original transitions and reject corruption before any durable effects',
+    async () => {
+      const f = await fixture(),
+        foreign = await fixture(),
+        s = await sprint(f),
+        item = await task(f),
+        originalKey = randomUUID(),
+        input = await scopeBody(f, item.id, s.id),
+        entered = await ok(f.owner, `${f.path}/tasks/${item.id}/sprint`, input, originalKey);
+      const stored = await db.projectTaskOperation.findFirstOrThrow({
+        where: { workspaceId: f.workspace.id, key: originalKey },
+      });
+      const retained = {
+        ...stored.response,
+        operation: { ...entered.operation, sprintId: randomUUID(), retained: true },
+        extra: { historical: true },
+      };
+      const incomplete = { ...entered.operation };
+      delete incomplete.exitedVisitId;
+      for (const response of [
+        retained,
+        { ...stored.response, id: randomUUID() },
+        { ...stored.response, operation: incomplete },
+      ]) {
+        const fixtureKey = randomUUID();
+        await db.projectTaskOperation.create({
+          data: {
+            workspaceId: stored.workspaceId,
+            actorPrincipalId: stored.actorPrincipalId,
+            executionScope: stored.executionScope,
+            requestHash: stored.requestHash,
+            key: fixtureKey,
+            response,
+          },
+        });
+        const before = await digest(f);
+        const replay = await req(f.owner, `${f.path}/tasks/${item.id}/sprint`, input, fixtureKey);
+        if (response === retained) {
+          assert.ok(replay.status >= 200 && replay.status < 300);
+          assert.deepEqual(replay.data.operation, retained.operation);
+          assert.equal(replay.data.current.currentParticipation.sprint.id, s.id);
+        } else {
+          assert.equal(replay.status, 503);
+          assert.equal(replay.data.message, 'Planning receipt is unavailable.');
+        }
+        const conflict = await req(
+          f.owner,
+          `${f.path}/tasks/${item.id}/sprint`,
+          { ...input, targetSprintId: null, expectedTargetVersion: null },
+          fixtureKey,
+        );
+        assert.equal(conflict.status, 409);
+        assert.equal(conflict.data.code, 'idempotency-conflict');
+        assert.equal(
+          (await req(foreign.owner, `${f.path}/tasks/${item.id}/sprint`, input, fixtureKey)).status,
+          403,
+        );
+        assert.equal(await digest(f), before);
+      }
+    },
+  );
+  await t.test(
     'actual tenant/private/viewer/delegated/autonomous current authority gates commands and replays',
     async () => {
       const f = await fixture(),

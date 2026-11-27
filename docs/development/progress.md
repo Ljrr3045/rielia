@@ -1,6 +1,56 @@
 # Delivery progress and decisions
 
-## 2026-11-25 T38.2f ACCEPTED; T38.2g closure schemas in progress
+## 2026-11-26 T38.2h published in Draft PR65; review/acceptance pending
+
+The coordinator published [Draft PR65](https://github.com/Ljrr3045/rielia/pull/65),
+targeting `dev`, at implementation head `7addcee895a232f702a882b8658f4870b99e98e4`,
+tree `c7817b3a255a1613ef09833bfb34691f69149f45`, from accepted PR64 base `541ac5de`.
+Initial exact-head validate45914066436/check140228977063 (App15368) was in progress
+at the reference-batch release; no completion or later-head CI is claimed.
+[T38.2h's receipt](t38-private-schemas.md) preserves source-qualified local gates,
+the user-approved exact structural exception, rejected candidates and original
+Next failure/retry. This batch adds only publication references, with no new
+application execution or receipt rebinding. Current-head CI, native review and
+coordinator acceptance remain pending; full T38 remains open.
+
+## Preserved 2026-11-25 T38.2h local delivery snapshot
+
+[PR64 acceptance](https://github.com/Ljrr3045/rielia/pull/64#issuecomment-7175578830)
+reviewed `9886fb2adf33f71dc8f3c5291d787c0d5fc86c69`, merged
+`541ac5de1625722fc2f1faf7ca56f103a267d4ef`, tree `bbff57ea`. Reviewed-head
+CI45676135795/check139424057741, native Kilo139475936300 and exact-merge
+CI45705881930/check139527608640 passed. Full27-file review plus one-file incremental
+documentation correction leave zero findings, with the user-resolved thread.
+Settled terminal/worktree cleanup retained branch/evidence and all93foreign
+coordinator entries; [issue53 closeout](https://github.com/Ljrr3045/rielia/issues/53#issuecomment-7175600441)
+records delivery. Dated pending/source/failure receipts below remain historical.
+
+The coordinator released [T38.2h](t38-private-schemas.md): three coupled private
+sprint metadata/scope/close receipt owners, one API-private schema module and
+explicit API Zod4.6.7 with only three importer lock lines. Workspace/task receipts,
+activity/snapshots, six opaque decoders and C01–12 retain explicit next slices.
+Contracts/API builds and initial focused owner79/79 pass. Resumed equivalent standard
+checks complete after one explicitly authorized unchanged web-only retry of the
+preserved Next SecurityFatalError, actual MCP compilation/MCP17 and final smoke.
+Selected real PG/NodeAdapter47 passes with immutable copied-receipt fixtures,
+unchanged replay/rejection state and exact container/volume cleanup. Baselines are
+preserved through the rejected numerical gates; runtime/deployed closure/recovery and high audits pass with exact owned
+cleanup and foreign objects preserved. App1low/14moderate and tools2moderate debt
+remain, together with the Next recommendation. Candidate1 and candidate2 were
+rejected under the original branch floor; the coordinator-approved unit-only
+supplement69/69 covers grant-scoped receipt namespaces and canonical Task403.
+The user then explicitly approved the one-time structural API branch rebase
+75.23→75.19 for this exact migration: aggregate1258/1672→1243/1653 decreases despite
+uncovered414→410 and all migrated source owners fully covered, with no retained
+per-file regression. This is not aggregate nonregression or a general waiver.
+Only approved API baseline bytes30403/SHA256
+`9431f43934fe4a591b7da1966405454f2f66cef953885d6849a4e60a349a9361` are adopted;
+other seven baselines and both rejected receipts remain exact. Fresh coherent
+normal844/844 (API327/web426/contracts72/prototype19), infrastructure20/artifact
+validation pass. Publication, current-head review and acceptance remain open.
+No policy/data/wire/UI change or broader T38 acceptance is implied.
+
+## Historical 2026-11-25 pre-acceptance T38.2g publication snapshot
 
 The coordinator published [Draft PR64](https://github.com/Ljrr3045/rielia/pull/64),
 targeting `dev`, at implementation head
@@ -3442,7 +3492,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T35 | B1 foundations | Principal model, immutable authorship, autonomous memberships | T04; precedes T05/T06/T12 | T35.0 bounded storage/policy/context implemented; full authorship/domain/export/credential integration incomplete |
 | T36 | Quality prerequisite 1 | Engineering standards, compatible tool enforcement and behavior-preserving frontend/backend structure | Existing bounded foundations/contracts; approved NodeAdapter | ACCEPTED bounded T36.1–T36.6 in [PR #44](https://github.com/Ljrr3045/rielia/pull/44), merged `92d480d` from reviewed `37f2a8c`; retained owned debt and [stable contract](t36-stable-ui-contract.md) remain binding |
 | T37 | Quality prerequisite 2 | Coherent redesign of existing UI using stable contracts, brand/UX and reviewed frontend-local skills | Coordinator acceptance of T36 | ACCEPTED bounded T37.1–6 through [PR49](https://github.com/Ljrr3045/rielia/pull/49#issuecomment-6819605884), reviewed `5d3637b`, merged `20a257c`; retained evidence and limits in the [acceptance guide](t37-ui-acceptance.md); T11 authorized on 2026-11-19 |
-| T38 | Engineering tooling | Shared runtime schemas, contract transport, client queries and evaluated supporting tools | Accepted T36 → T37 → full original T11; user start authorization 2026-11-23 | IN PROGRESS; [issue53](https://github.com/Ljrr3045/rielia/issues/53), [inventory](t38-boundary-inventory.md), [decisions](t38-tooling-plan.md). T38.1/2a–2f ACCEPTED through PR63, merge `5536162d`; [T38.2g](t38-closure-schemas.md) is published in Draft PR64 and initial-head CI45550717155/check138990956650 passed all 20 steps; exact adoption, normal837/infra20/artifacts17 and real HTTP17 passed, with runtime/deployed closure/recovery/high audits and owned cleanup pass. Later docs-head CI/native review/acceptance remain pending. Private/encoded/configuration and T38.3–6 retain separate gates; full T38.2/T38 open |
+| T38 | Engineering tooling | Shared runtime schemas, contract transport, client queries and evaluated supporting tools | Accepted T36 → T37 → full original T11; user start authorization 2026-11-23 | IN PROGRESS; [issue53](https://github.com/Ljrr3045/rielia/issues/53), [inventory](t38-boundary-inventory.md), [decisions](t38-tooling-plan.md). T38.1/2a–2g ACCEPTED through PR64, reviewed `9886fb2a`, merged `541ac5de`; reviewed/exact-merge CI and native Kilo passed. [T38.2h private sprint receipts](t38-private-schemas.md) is published in [Draft PR65](https://github.com/Ljrr3045/rielia/pull/65), initial head `7addcee`, with user-approved exact structural API rebase, normal844/infra20/artifact validation and source-qualified standard/PG47/runtime/high audits passed; current-head CI/review/acceptance pending. Other private/encoded/configuration and T38.3–6 retain separate gates; full T38.2/T38 open |
 
 Public release is one launch followed by continuous updates. Internal B1 readiness,
 private T15 deployment, and marketing T34 do not substitute for T24. B3 follows

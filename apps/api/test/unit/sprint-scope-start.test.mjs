@@ -100,7 +100,7 @@ function fixture(options = {}) {
     project: { findUniqueOrThrow: record('project.current', options.project ?? project) },
     task: {
       findFirst: record('task.before', options.task ?? task),
-      findUnique: record('task.current', options.task ?? task),
+      findUnique: record('task.current', options.task === undefined ? task : options.task),
       findUniqueOrThrow: record('task.version', options.task ?? task),
       findMany: record('task.rows', options.tasks ?? [task]),
       update: record('task.update', options.final ?? { ...task, version: 3, estimatePoints: 0 }),
@@ -150,7 +150,12 @@ function fixture(options = {}) {
       calls.push(['authority', operation]);
       if (options.denied) throw new ForbiddenException();
       if (operation === 'write') await tx.$queryRaw(['Project FOR UPDATE']);
-      return work(tx, actor, true, options.project ?? project);
+      return work(
+        tx,
+        options.actor ? { ...actor, ...options.actor } : actor,
+        true,
+        options.project ?? project,
+      );
     },
   };
   return { tx, projects, context, calls, effects, service: new TaskPlanningService(projects) };
@@ -263,6 +268,67 @@ test('explicit empty start journals once in the same transaction and stores the 
   assert.ok(names.indexOf('event') < names.indexOf('outbox'));
   assert.ok(names.indexOf('outbox') < names.indexOf('receipt'));
   assert.equal(names.includes('references'), false);
+});
+test('granted start writes and exact replay preserve namespace, original operation and authorized current state', async () => {
+  const granted = {
+    ...actor,
+    principalKind: 'human',
+    workspaceId: 'w',
+    role: 'member',
+    executionMode: 'delegated',
+    source: 'mcp',
+    grantId: 'scope-grant',
+  };
+  const scope = {
+    workspaceId: 'w',
+    actorPrincipalId: 'h',
+    executionScope: 'grant:scope-grant',
+    key,
+  };
+  const receipts = new Map([
+    ['web', { requestHash: 'wrong web binding', response: null }],
+    ['grant:other', { requestHash: 'wrong grant binding', response: null }],
+  ]);
+  const lookup = (args) => {
+    const selected = args.where.workspaceId_actorPrincipalId_executionScope_key;
+    assert.deepEqual(selected, scope);
+    return receipts.get(selected.executionScope) ?? null;
+  };
+  const f = fixture({
+    actor: granted,
+    receipt: lookup,
+    sprintReads: [row, { ...row, state: 'active', startedAt: at, version: 3 }],
+  });
+  const started = await runStart(f);
+  const stored = f.calls.find(([name]) => name === 'receipt')[1].data;
+  for (const [field, value] of Object.entries(scope)) assert.equal(stored[field], value);
+  assert.equal(
+    stored.requestHash,
+    createHash('sha256')
+      .update(JSON.stringify(canonical(['start-sprint', ['p', 's'], startInput])))
+      .digest('hex'),
+  );
+  assert.equal(stored.response.operation, started.operation);
+  assert.equal(f.calls.find(([name]) => name === 'activity')[1].data.grantId, granted.grantId);
+  receipts.set(stored.executionScope, stored);
+  stored.response.operation.extra = { retained: true };
+  Object.defineProperty(stored.response.operation, 'ignored', {
+    get: () => assert.fail('ignored stored operation value was read'),
+  });
+
+  const replay = fixture({
+    actor: granted,
+    receipt: lookup,
+    project: { ...project, mode: 'kanban', archivedAt: at },
+    sprint: { state: 'active', startedAt: at, version: 9 },
+  });
+  const result = await runStart(replay);
+  assert.equal(result.operation, stored.response.operation);
+  assert.deepEqual(result.operation.extra, { retained: true });
+  assert.equal(result.current.version, 9);
+  assert.equal(result.current.capabilities.canEdit, false);
+  assert.deepEqual(writes(replay), []);
+  assert.equal(receipts.size, 3);
 });
 test('start captures every canonical Task including children and archived rows after locks', async () => {
   const f = fixture({
@@ -500,6 +566,142 @@ test('different hashes and corrupt receipts never append history/outbox or bypas
   });
   assert.equal((await runEstimate(f)).taskId, 't');
   assert.deepEqual(writes(f), []);
+});
+test('scope receipt identity and current-state failures precede later stored operation reads', async () => {
+  const requestHash = createHash('sha256')
+    .update(JSON.stringify(canonical(['set-task-sprint', ['p', 't'], assignInput])))
+    .digest('hex');
+  const ignored = () => {
+    throw new Error('later receipt value was read');
+  };
+  const wrongTarget = fixture({
+    receipt: () => ({
+      requestHash,
+      response: Object.defineProperty({ id: 'other' }, 'entity', { get: ignored }),
+    }),
+  });
+  await assert.rejects(runAssign(wrongTarget), denied(503));
+  assert.deepEqual(
+    wrongTarget.calls.map(([name]) => name),
+    ['authority', 'lock', 'receipt.read'],
+  );
+
+  const unavailable = fixture({
+    fail: 'project.current',
+    receipt: () => ({
+      requestHash,
+      response: Object.defineProperties(
+        { id: 't', entity: 'task' },
+        { kind: { get: ignored }, operation: { get: ignored } },
+      ),
+    }),
+  });
+  await assert.rejects(runAssign(unavailable), /injected project.current/);
+  assert.deepEqual(writes(unavailable), []);
+
+  const reads = [];
+  const badTag = fixture({
+    receipt: () => ({
+      requestHash,
+      response: Object.defineProperties(
+        { id: 't', entity: 'task' },
+        {
+          operation: { get: () => (reads.push('operation'), null) },
+          kind: { get: () => (reads.push('kind'), 'unknown') },
+        },
+      ),
+    }),
+  });
+  await assert.rejects(runAssign(badTag), denied(503));
+  assert.deepEqual(reads, ['operation', 'kind']);
+  assert.ok(badTag.calls.some(([name]) => name === 'task.current'));
+  assert.deepEqual(writes(badTag), []);
+});
+test('missing canonical Task on identity-valid replay retains taskRow403 before reading stored operation or tag', async () => {
+  const requestHash = createHash('sha256')
+    .update(JSON.stringify(canonical(['set-task-sprint', ['p', 't'], assignInput])))
+    .digest('hex');
+  const later = () => assert.fail('later receipt value was read before the missing Task denial');
+  const f = fixture({
+    task: null,
+    receipt: () => ({
+      requestHash,
+      response: Object.defineProperties(
+        { id: 't', entity: 'task' },
+        {
+          kind: { get: later },
+          operation: { get: later },
+        },
+      ),
+    }),
+  });
+  await assert.rejects(runAssign(f), (error) => {
+    assert.equal(error.getStatus(), 403);
+    assert.equal(error.message, 'Project/task access is denied.');
+    return true;
+  });
+  assert.deepEqual(
+    f.calls.map(([name]) => name),
+    ['authority', 'lock', 'receipt.read', 'project.current', 'task.current'],
+  );
+  assert.deepEqual(writes(f), []);
+});
+test('scope replay returns the original operation and retained estimate fallback without tightening historical IDs', async () => {
+  const operation = Object.defineProperty(
+    {
+      type: 'set-task-sprint',
+      activityId: 'activity',
+      sprintId: 'historical-source',
+      enteredVisitId: null,
+      exitedVisitId: 'prior-visit',
+    },
+    'extra',
+    { get: () => assert.fail('ignored operation extra was read') },
+  );
+  const f = fixture({
+    task: { ...task, version: 20 },
+    receipt: () => ({
+      requestHash: createHash('sha256')
+        .update(JSON.stringify(canonical(['set-task-sprint', ['p', 't'], assignInput])))
+        .digest('hex'),
+      response: { kind: 'sprint-transition', id: 't', entity: 'task', operation },
+    }),
+  });
+  const replay = await runAssign(f);
+  assert.equal(replay.operation, operation);
+  assert.equal(replay.current.snapshot.version, 20);
+  assert.deepEqual(writes(f), []);
+
+  const estimateHash = createHash('sha256')
+    .update(
+      JSON.stringify(
+        canonical(['estimate-task', ['p', 't'], { expectedVersion: 2, estimatePoints: 0 }]),
+      ),
+    )
+    .digest('hex');
+  const fast = fixture({
+    receipt: () => ({
+      requestHash: estimateHash,
+      response: Object.defineProperty(
+        { kind: 'task-planning', id: 't', entity: 'task' },
+        'operation',
+        {
+          get: () => assert.fail('estimate fast path read operation'),
+        },
+      ),
+    }),
+  });
+  assert.equal((await runEstimate(fast)).taskId, 't');
+  assert.deepEqual(writes(fast), []);
+  const retained = { ...operation, type: 'estimate-task' };
+  const g = fixture({
+    receipt: () => ({
+      requestHash: estimateHash,
+      response: { kind: 'sprint-transition', id: 't', entity: 'task', operation: retained },
+    }),
+  });
+  assert.equal((await runEstimate(g)).operation, retained);
+  assert.deepEqual(writes(g), []);
 });
 test('start rejects an invalid UUID key before authority, receipt lookup or effects', () => {
   const f = fixture();

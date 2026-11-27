@@ -4,17 +4,17 @@ import {
   ServiceUnavailableException,
 } from '@nestjs/common';
 import { createHash, randomUUID } from 'node:crypto';
-import {
-  isRecord,
-  type ExecutionContextResponse,
-  type SprintPlanningResult,
-} from '@rielia/contracts';
+import type { ExecutionContextResponse, SprintPlanningResult } from '@rielia/contracts';
 import type { Project } from '../generated/prisma/client.js';
 import type { Transaction, VerifiedExecution } from '../principals/principal.service.js';
 import type { ProjectTaskService } from './project-task.service.js';
-import { canonical, identifier } from './project-task-input.js';
+import { canonical } from './project-task-input.js';
 import { planningView, sprintRow, sprintView } from './sprint-read.js';
 import { scopeEvent } from './sprint-participation.js';
+import {
+  plannedSprintReceiptSchema,
+  projectPlanningReceiptSchema,
+} from './sprint-receipt-schemas.js';
 
 export function mutateSprint(
   projects: ProjectTaskService,
@@ -58,12 +58,16 @@ export function mutateSprint(
             code: 'idempotency-conflict',
             message: 'Idempotency key belongs to another request.',
           });
-        const saved = isRecord(previous.response) ? previous.response : {};
-        if (action === 'configure-planning' && saved['kind'] === 'project-planning')
+        const saved = previous.response;
+        if (
+          action === 'configure-planning' &&
+          projectPlanningReceiptSchema.safeParse(saved).success
+        )
           return planningView(project, true);
-        if (saved['kind'] !== 'planned-sprint' || !identifier(saved['id']))
+        const reference = plannedSprintReceiptSchema.safeParse(saved);
+        if (!reference.success)
           throw new ServiceUnavailableException('Planning receipt is unavailable.');
-        return sprintView(tx, project, await sprintRow(tx, project, saved['id']), true);
+        return sprintView(tx, project, await sprintRow(tx, project, reference.data.id), true);
       }
       const { result, changedFields } = await work(tx, actor, project);
       const sprintId = 'id' in result ? result.id : null;

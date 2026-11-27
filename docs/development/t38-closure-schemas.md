@@ -1,5 +1,19 @@
 # T38.2g sprint closure schemas
 
+[T38.2g is ACCEPTED and delivered in PR64](https://github.com/Ljrr3045/rielia/pull/64#issuecomment-7175578830):
+reviewed `9886fb2adf33f71dc8f3c5291d787c0d5fc86c69`, merged
+`541ac5de1625722fc2f1faf7ca56f103a267d4ef`, tree
+`bbff57eaeec629ba2ca9e31f262ba96fde8438f6`. Reviewed-head CI45676135795 /
+check139424057741 and exact-merge CI45705881930 / check139527608640 passed
+(App15368), with native Kilo139475936300/App2193792 passed. Full27-file review
+then one-file incremental documentation correction leave zero findings; the user
+resolved the thread. Settled checkout/terminal cleanup and retained evidence/branch
+are recorded in [issue53 closeout](https://github.com/Ljrr3045/rielia/issues/53#issuecomment-7175600441).
+All93foreign coordinator entries were preserved. [T38.2h](t38-private-schemas.md)
+now owns the separately released private sprint receipt schemas. Full T38 remains
+open. **The following dated publication and local receipts retain their original
+pre-acceptance state and source identities.**
+
 **PUBLISHED IN DRAFT PR64; CURRENT-HEAD CI/NATIVE REVIEW/ACCEPTANCE PENDING,
 2026-11-25 America/Caracas.** The coordinator released bounded
 H23–26/G07, closure X05 and closure-only HTTP/X09 work from accepted PR63 merge

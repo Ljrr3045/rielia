@@ -1,5 +1,31 @@
 # T36 first unit and coverage delivery
 
+[T38.2g is ACCEPTED in PR64](https://github.com/Ljrr3045/rielia/pull/64#issuecomment-7175578830),
+reviewed `9886fb2a`, merged `541ac5de`, tree `bbff57ea`, with reviewed-head CI,
+native Kilo and exact-merge CI passed. Its normal837 and source-bound numerical
+receipts below retain their original identities. [T38.2h private receipt slice](t38-private-schemas.md)
+is published in [Draft PR65](https://github.com/Ljrr3045/rielia/pull/65), initial
+head `7addcee`; current-head CI/native review/acceptance remain pending.
+Initial focused owner79/79, the affected unit-only supplement69/69, resumed
+standard, real PG47, runtime/closure and high audits passed. Fresh coherent normal
+**844/844** (API327/web426/contracts72/prototype19), infrastructure20 and artifact
+validation pass after the exact user-approved adoption below. Dated rejected
+candidate1/2 and pre-acceptance publication/local receipts retain their identities;
+no dependency-internal credit or general floor reduction is authorized.
+
+**2026-11-25 narrowly scoped user exception, T38.2h only.** The user explicitly
+approved `ok procede` after reviewing branches1258/1672→1243/1653, uncovered414→410,
+all four migrated source owners fully covered and all224retained per-file metrics
+preserved. Covered handwritten guard AST deletion changed weighting, lowering the
+aggregate ratio to75.196612%. Only API's branch floor is rebased75.23→75.19; this
+is not aggregate nonregression. Approved API bytes30403/SHA256
+`9431f43934fe4a591b7da1966405454f2f66cef953885d6849a4e60a349a9361` are copied
+exactly, with L/S/F/B floors7516/7502/7229/7519. Other seven baseline files stay
+byte-identical; original eight bytes and both rejected candidates are preserved.
+Generic no-lowered-floor/per-file safeguards remain unchanged for other work.
+The [private receipt guide](t38-private-schemas.md) records exact origins,
+accepted-exception receipt, fresh normal digest/identity and owned debt.
+
 [T38.2f is ACCEPTED and delivered in PR63](https://github.com/Ljrr3045/rielia/pull/63#issuecomment-7152173975):
 reviewed `e320bf7a956471daafae4eea38aebf31eba4f28a`, merged
 `5536162dca58c81139cd2732712b8760185af44c`, identical tree
