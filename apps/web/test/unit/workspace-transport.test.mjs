@@ -216,6 +216,50 @@ test('HTTP status/string-code and JSON parse precedence survive failed and unkno
   );
   assert.equal(f.replies.length, 0);
 });
+
+test('workspace reads preserve truthy cursor omission, any-ok JSON and raw body cancellation', async (t) => {
+  const f = fixture(t);
+  for (const cursor of [undefined, '']) {
+    f.replies.push(
+      Response.json(
+        { items: [summary], total: 1, nextCursor: null },
+        { status: 202, headers: { 'content-type': 'text/plain' } },
+      ),
+    );
+    await f.transport.workspaces(signal, cursor);
+    assert.equal(f.calls.at(-1).url, '/api/v1/workspaces');
+  }
+  f.replies.push(new Response(null, { status: 204 }));
+  await assert.rejects(f.transport.detail('workspace', signal), SyntaxError);
+  const caller = new AbortController();
+  const bodyError = new Error('cancelled body');
+  let admitted;
+  const headersSeen = new Promise((resolve) => {
+    admitted = resolve;
+  });
+  t.mock.method(
+    globalThis,
+    'fetch',
+    async (_url, init) =>
+      new Response(
+        new globalThis.ReadableStream({
+          start(controller) {
+            const abort = () => {
+              init.signal.removeEventListener('abort', abort);
+              controller.error(bodyError);
+            };
+            init.signal.addEventListener('abort', abort, { once: true });
+            admitted();
+          },
+        }),
+        { status: 201, headers: { 'x-request-id': 'not-a-workspace-field' } },
+      ),
+  );
+  const pending = f.transport.detail('workspace', caller.signal);
+  await headersSeen;
+  caller.abort();
+  await assert.rejects(pending, (error) => error === bodyError);
+});
 test('identity parser facades retain exact errors, projections, provider order and nullable session', () => {
   assert.deepEqual(
     parseIdentityConfiguration({

@@ -22,6 +22,8 @@ import {
   type ProjectAccessMember,
   type ProjectAccessReview,
 } from '@rielia/contracts';
+
+import { createContractRequest } from './api-contract-client.ts';
 import {
   isCollaborationPage,
   isTaskCommentReview,
@@ -121,32 +123,14 @@ export interface ProjectTaskTransport {
     signal: AbortSignal,
   ): Promise<TaskCommentReview>;
 }
-const segment = encodeURIComponent;
+const projectsPath = '/api/v1/workspaces/{workspaceId}/projects';
+const projectPath = `${projectsPath}/{projectId}`;
+const taskPath = `${projectPath}/tasks/{taskId}`;
 export function createProjectTaskTransport(
   options: { baseURL?: string; timeout?: number } = {},
 ): ProjectTaskTransport {
-  async function request(
-    path: string,
-    signal: AbortSignal,
-    body?: unknown,
-    key?: string,
-  ): Promise<unknown> {
-    const response = await fetch(
-      options.baseURL ? new URL(`/api/v1/${path}`, options.baseURL) : `/api/v1/${path}`,
-      {
-        method: body === undefined ? 'GET' : 'POST',
-        credentials: 'same-origin',
-        cache: 'no-store',
-        redirect: 'error',
-        signal: AbortSignal.any([signal, AbortSignal.timeout(options.timeout ?? 15000)]),
-        ...(body === undefined
-          ? {}
-          : {
-              headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key! },
-              body: JSON.stringify(body),
-            }),
-      },
-    );
+  const send = createContractRequest(options);
+  async function read(response: Response): Promise<unknown> {
     let value: unknown;
     try {
       value = await response.json();
@@ -173,8 +157,6 @@ export function createProjectTaskTransport(
       );
     return value;
   }
-  const root = (w: string) => `workspaces/${segment(w)}/projects`;
-  const projectPath = (w: string, p: string) => `${root(w)}/${segment(p)}`;
   function scoped(value: ProjectTaskResult, w: string, p?: string, t?: string) {
     return (
       value.workspaceId === w &&
@@ -185,15 +167,21 @@ export function createProjectTaskTransport(
   return {
     async discover(w, query, signal, cursor) {
       if (!isTaskDiscoveryQuery(query)) throw new ProjectTaskFailure(400);
-      const params = new URLSearchParams({
+      const params = {
         scope: query.scope,
         q: query.q.trim(),
         view: query.view,
         ...query.filters,
-      });
-      if (query.projectId) params.set('project', query.projectId);
-      if (cursor) params.set('cursor', cursor);
-      const value = await request(`workspaces/${segment(w)}/task-discovery?${params}`, signal);
+        ...(query.projectId ? { project: query.projectId } : {}),
+        ...(cursor ? { cursor } : {}),
+      };
+      const value = await read(
+        await send('get', '/api/v1/workspaces/{workspaceId}/task-discovery', {
+          path: { workspaceId: w },
+          query: params,
+          signal,
+        }),
+      );
       if (
         !isTaskDiscoveryPage(value) ||
         value.workspaceId !== w ||
@@ -223,10 +211,30 @@ export function createProjectTaskTransport(
       return value;
     },
     async collaboration(w, p, t, collection, signal, cursor) {
-      const value = await request(
-        `${projectPath(w, p)}/tasks/${segment(t)}/${collection}${cursor ? `?cursor=${segment(cursor)}` : ''}`,
+      const input = {
+        path: { workspaceId: w, projectId: p, taskId: t },
         signal,
-      );
+        ...(cursor ? { query: { cursor } } : {}),
+      };
+      let response: Response;
+      switch (collection) {
+        case 'relations':
+          response = await send('get', `${taskPath}/relations`, input);
+          break;
+        case 'parent-candidates':
+          response = await send('get', `${taskPath}/parent-candidates`, input);
+          break;
+        case 'checklist':
+          response = await send('get', `${taskPath}/checklist`, input);
+          break;
+        case 'comments':
+          response = await send('get', `${taskPath}/comments`, input);
+          break;
+        case 'history':
+          response = await send('get', `${taskPath}/history`, input);
+          break;
+      }
+      const value = await read(response);
       if (
         !isCollaborationPage(value, collection) ||
         value.workspaceId !== w ||
@@ -237,9 +245,11 @@ export function createProjectTaskTransport(
       return value;
     },
     async commentReview(w, p, t, commentId, signal) {
-      const value = await request(
-        `${projectPath(w, p)}/tasks/${segment(t)}/comments/${segment(commentId)}`,
-        signal,
+      const value = await read(
+        await send('get', `${taskPath}/comments/{commentId}`, {
+          path: { workspaceId: w, projectId: p, taskId: t, commentId },
+          signal,
+        }),
       );
       if (
         !isRecord(value) ||
@@ -252,23 +262,33 @@ export function createProjectTaskTransport(
       return value;
     },
     async projects(w, view, signal, cursor) {
-      const query = new URLSearchParams({ view });
-      if (cursor) query.set('cursor', cursor);
-      const value = await request(`${root(w)}?${query}`, signal);
+      const value = await read(
+        await send('get', projectsPath, {
+          path: { workspaceId: w },
+          query: { view, ...(cursor ? { cursor } : {}) },
+          signal,
+        }),
+      );
       if (!isProjectPage(value)) throw new ProjectTaskFailure(502);
       if (value.items.some((row) => !scoped(row, w))) throw new ProjectTaskFailure(502);
       return value;
     },
     async project(w, p, signal) {
-      const value = await request(projectPath(w, p), signal);
+      const value = await read(
+        await send('get', projectPath, { path: { workspaceId: w, projectId: p }, signal }),
+      );
       if (!isProject(value) || !scoped(value, w, p)) throw new ProjectTaskFailure(502);
       return value;
     },
     async tasks(w, p, view, signal, cursor, filters = {}) {
       if (!isTaskFilters(filters)) throw new ProjectTaskFailure(400);
-      const query = new URLSearchParams({ view, ...filters });
-      if (cursor) query.set('cursor', cursor);
-      const value = await request(`${projectPath(w, p)}/tasks?${query}`, signal);
+      const value = await read(
+        await send('get', `${projectPath}/tasks`, {
+          path: { workspaceId: w, projectId: p },
+          query: { view, ...filters, ...(cursor ? { cursor } : {}) },
+          signal,
+        }),
+      );
       if (
         !isTaskPage(value) ||
         value.items.some(
@@ -286,149 +306,301 @@ export function createProjectTaskTransport(
       return value;
     },
     async task(w, p, t, signal) {
-      const value = await request(`${projectPath(w, p)}/tasks/${segment(t)}`, signal);
+      const value = await read(
+        await send('get', taskPath, { path: { workspaceId: w, projectId: p, taskId: t }, signal }),
+      );
       if (!isTask(value) || !scoped(value, w, p, t)) throw new ProjectTaskFailure(502);
       return value;
     },
     async access(w, p, signal, cursor) {
-      const value = await request(
-        `${projectPath(w, p)}/access${cursor ? `?cursor=${segment(cursor)}` : ''}`,
-        signal,
+      const value = await read(
+        await send('get', `${projectPath}/access`, {
+          path: { workspaceId: w, projectId: p },
+          signal,
+          ...(cursor ? { query: { cursor } } : {}),
+        }),
       );
       if (!isProjectAccessPage(value)) throw new ProjectTaskFailure(502);
       if (value.workspaceId !== w || value.projectId !== p) throw new ProjectTaskFailure(502);
       return value;
     },
     async assignees(w, p, signal, cursor) {
-      const value = await request(
-        `${projectPath(w, p)}/assignees${cursor ? `?cursor=${segment(cursor)}` : ''}`,
-        signal,
+      const value = await read(
+        await send('get', `${projectPath}/assignees`, {
+          path: { workspaceId: w, projectId: p },
+          signal,
+          ...(cursor ? { query: { cursor } } : {}),
+        }),
       );
       if (!isProjectAssigneePage(value)) throw new ProjectTaskFailure(502);
       if (value.workspaceId !== w || value.projectId !== p) throw new ProjectTaskFailure(502);
       return value;
     },
     async accessReview(w, p, principalId, signal) {
-      const value = await request(`${projectPath(w, p)}/access/${segment(principalId)}`, signal);
+      const value = await read(
+        await send('get', `${projectPath}/access/{principalId}`, {
+          path: { workspaceId: w, projectId: p, principalId },
+          signal,
+        }),
+      );
       if (!isProjectAccessReview(value)) throw new ProjectTaskFailure(502);
       if (!scoped(value.project, w, p) || value.member.principalId !== principalId)
         throw new ProjectTaskFailure(502);
       return value;
     },
     async mutate(command, key, signal) {
-      let path = root(command.workspaceId);
-      let body: unknown;
+      let response: Response;
       switch (command.type) {
         case 'create-project':
-          body = {
-            name: command.name,
-            key: command.key,
-            description: command.description ?? '',
-            visibility: command.visibility ?? 'workspace',
-          };
+          response = await send('post', projectsPath, {
+            path: { workspaceId: command.workspaceId },
+            body: {
+              name: command.name,
+              key: command.key,
+              description: command.description ?? '',
+              visibility: command.visibility ?? 'workspace',
+            },
+            key,
+            signal,
+          });
           break;
         case 'change-visibility':
-          path += `/${segment(command.projectId)}/visibility`;
-          body = { expectedVersion: command.expectedVersion, visibility: command.visibility };
+          response = await send('post', `${projectPath}/visibility`, {
+            path: { workspaceId: command.workspaceId, projectId: command.projectId },
+            body: { expectedVersion: command.expectedVersion, visibility: command.visibility },
+            key,
+            signal,
+          });
           break;
         case 'change-access':
-          path += `/${segment(command.projectId)}/access/${segment(command.principalId)}`;
-          body = { expectedVersion: command.expectedVersion, state: command.state };
+          response = await send('post', `${projectPath}/access/{principalId}`, {
+            path: {
+              workspaceId: command.workspaceId,
+              projectId: command.projectId,
+              principalId: command.principalId,
+            },
+            body: { expectedVersion: command.expectedVersion, state: command.state },
+            key,
+            signal,
+          });
           break;
         case 'edit-project':
-          path += `/${segment(command.projectId)}`;
-          body = {
-            expectedVersion: command.expectedVersion,
-            name: command.name,
-            description: command.description,
-          };
+          response = await send('post', projectPath, {
+            path: { workspaceId: command.workspaceId, projectId: command.projectId },
+            body: {
+              expectedVersion: command.expectedVersion,
+              name: command.name,
+              description: command.description,
+            },
+            key,
+            signal,
+          });
           break;
         case 'archive-project':
+          response = await send('post', `${projectPath}/archive`, {
+            path: { workspaceId: command.workspaceId, projectId: command.projectId },
+            body: { expectedVersion: command.expectedVersion },
+            key,
+            signal,
+          });
+          break;
         case 'restore-project':
-          path += `/${segment(command.projectId)}/${command.type === 'archive-project' ? 'archive' : 'restore'}`;
-          body = { expectedVersion: command.expectedVersion };
+          response = await send('post', `${projectPath}/restore`, {
+            path: { workspaceId: command.workspaceId, projectId: command.projectId },
+            body: { expectedVersion: command.expectedVersion },
+            key,
+            signal,
+          });
           break;
         case 'create-task':
-          path += `/${segment(command.projectId)}/tasks`;
-          body = command.fields;
+          response = await send('post', `${projectPath}/tasks`, {
+            path: { workspaceId: command.workspaceId, projectId: command.projectId },
+            body: command.fields,
+            key,
+            signal,
+          });
           break;
         case 'edit-task':
-          path += `/${segment(command.projectId)}/tasks/${segment(command.taskId)}`;
-          body = {
-            ...command.fields,
-            expectedVersion: command.expectedVersion,
-            ...(command.acknowledgedChildrenVersion
-              ? { acknowledgedChildrenVersion: command.acknowledgedChildrenVersion }
-              : {}),
-          };
+          response = await send('post', taskPath, {
+            path: {
+              workspaceId: command.workspaceId,
+              projectId: command.projectId,
+              taskId: command.taskId,
+            },
+            body: {
+              ...command.fields,
+              expectedVersion: command.expectedVersion,
+              ...(command.acknowledgedChildrenVersion
+                ? { acknowledgedChildrenVersion: command.acknowledgedChildrenVersion }
+                : {}),
+            },
+            key,
+            signal,
+          });
           break;
         case 'move-task':
-          path += `/${segment(command.projectId)}/tasks/${segment(command.taskId)}/move`;
-          body = {
-            expectedVersion: command.expectedVersion,
-            expectedOrderVersion: command.expectedOrderVersion,
-            status: command.status,
-            beforeTaskId: command.beforeTaskId,
-            ...(command.acknowledgedChildrenVersion
-              ? { acknowledgedChildrenVersion: command.acknowledgedChildrenVersion }
-              : {}),
-          };
+          response = await send('post', `${taskPath}/move`, {
+            path: {
+              workspaceId: command.workspaceId,
+              projectId: command.projectId,
+              taskId: command.taskId,
+            },
+            body: {
+              expectedVersion: command.expectedVersion,
+              expectedOrderVersion: command.expectedOrderVersion,
+              status: command.status,
+              beforeTaskId: command.beforeTaskId,
+              ...(command.acknowledgedChildrenVersion
+                ? { acknowledgedChildrenVersion: command.acknowledgedChildrenVersion }
+                : {}),
+            },
+            key,
+            signal,
+          });
           break;
         case 'set-task-parent':
-          path += `/${segment(command.projectId)}/tasks/${segment(command.taskId)}/parent`;
-          body = {
-            expectedVersion: command.expectedVersion,
-            parentTaskId: command.parentTaskId,
-            ...(command.expectedParentVersion
-              ? { expectedParentVersion: command.expectedParentVersion }
-              : {}),
-          };
+          response = await send('post', `${taskPath}/parent`, {
+            path: {
+              workspaceId: command.workspaceId,
+              projectId: command.projectId,
+              taskId: command.taskId,
+            },
+            body:
+              command.parentTaskId === null
+                ? {
+                    expectedVersion: command.expectedVersion,
+                    parentTaskId: null,
+                    ...(command.expectedParentVersion
+                      ? { expectedParentVersion: command.expectedParentVersion }
+                      : {}),
+                  }
+                : {
+                    expectedVersion: command.expectedVersion,
+                    parentTaskId: command.parentTaskId,
+                    ...(command.expectedParentVersion
+                      ? { expectedParentVersion: command.expectedParentVersion }
+                      : {}),
+                  },
+            key,
+            signal,
+          });
           break;
         case 'add-checklist-item':
-          path += `/${segment(command.projectId)}/tasks/${segment(command.taskId)}/checklist`;
-          body = {
-            expectedVersion: command.expectedVersion,
-            text: command.text,
-            beforeItemId: command.beforeItemId,
-          };
+          response = await send('post', `${taskPath}/checklist`, {
+            path: {
+              workspaceId: command.workspaceId,
+              projectId: command.projectId,
+              taskId: command.taskId,
+            },
+            body: {
+              expectedVersion: command.expectedVersion,
+              text: command.text,
+              beforeItemId: command.beforeItemId,
+            },
+            key,
+            signal,
+          });
           break;
         case 'edit-checklist-item':
-          path += `/${segment(command.projectId)}/tasks/${segment(command.taskId)}/checklist/${segment(command.itemId)}`;
-          body = {
-            expectedVersion: command.expectedVersion,
-            ...('text' in command ? { text: command.text } : {}),
-            ...('completed' in command ? { completed: command.completed } : {}),
-          };
+          response = await send('post', `${taskPath}/checklist/{itemId}`, {
+            path: {
+              workspaceId: command.workspaceId,
+              projectId: command.projectId,
+              taskId: command.taskId,
+              itemId: command.itemId,
+            },
+            body: {
+              expectedVersion: command.expectedVersion,
+              ...('text' in command ? { text: command.text } : {}),
+              ...('completed' in command ? { completed: command.completed } : {}),
+            },
+            key,
+            signal,
+          });
           break;
         case 'move-checklist-item':
-          path += `/${segment(command.projectId)}/tasks/${segment(command.taskId)}/checklist/${segment(command.itemId)}/move`;
-          body = { expectedVersion: command.expectedVersion, beforeItemId: command.beforeItemId };
+          response = await send('post', `${taskPath}/checklist/{itemId}/move`, {
+            path: {
+              workspaceId: command.workspaceId,
+              projectId: command.projectId,
+              taskId: command.taskId,
+              itemId: command.itemId,
+            },
+            body: { expectedVersion: command.expectedVersion, beforeItemId: command.beforeItemId },
+            key,
+            signal,
+          });
           break;
         case 'remove-checklist-item':
-          path += `/${segment(command.projectId)}/tasks/${segment(command.taskId)}/checklist/${segment(command.itemId)}/remove`;
-          body = { expectedVersion: command.expectedVersion };
+          response = await send('post', `${taskPath}/checklist/{itemId}/remove`, {
+            path: {
+              workspaceId: command.workspaceId,
+              projectId: command.projectId,
+              taskId: command.taskId,
+              itemId: command.itemId,
+            },
+            body: { expectedVersion: command.expectedVersion },
+            key,
+            signal,
+          });
           break;
         case 'add-comment':
-          path += `/${segment(command.projectId)}/tasks/${segment(command.taskId)}/comments`;
-          body = { expectedVersion: command.expectedVersion, body: command.body };
+          response = await send('post', `${taskPath}/comments`, {
+            path: {
+              workspaceId: command.workspaceId,
+              projectId: command.projectId,
+              taskId: command.taskId,
+            },
+            body: { expectedVersion: command.expectedVersion, body: command.body },
+            key,
+            signal,
+          });
           break;
         case 'edit-comment':
-          path += `/${segment(command.projectId)}/tasks/${segment(command.taskId)}/comments/${segment(command.commentId)}`;
-          body = {
-            expectedVersion: command.expectedVersion,
-            expectedCommentVersion: command.expectedCommentVersion,
-            body: command.body,
-          };
+          response = await send('post', `${taskPath}/comments/{commentId}`, {
+            path: {
+              workspaceId: command.workspaceId,
+              projectId: command.projectId,
+              taskId: command.taskId,
+              commentId: command.commentId,
+            },
+            body: {
+              expectedVersion: command.expectedVersion,
+              expectedCommentVersion: command.expectedCommentVersion,
+              body: command.body,
+            },
+            key,
+            signal,
+          });
           break;
         case 'archive-task':
+          response = await send('post', `${taskPath}/archive`, {
+            path: {
+              workspaceId: command.workspaceId,
+              projectId: command.projectId,
+              taskId: command.taskId,
+            },
+            body: { expectedVersion: command.expectedVersion },
+            key,
+            signal,
+          });
+          break;
         case 'restore-task':
-          path += `/${segment(command.projectId)}/tasks/${segment(command.taskId)}/${command.type === 'archive-task' ? 'archive' : 'restore'}`;
-          body = { expectedVersion: command.expectedVersion };
+          response = await send('post', `${taskPath}/restore`, {
+            path: {
+              workspaceId: command.workspaceId,
+              projectId: command.projectId,
+              taskId: command.taskId,
+            },
+            body: { expectedVersion: command.expectedVersion },
+            key,
+            signal,
+          });
           break;
       }
       let value: unknown;
       try {
-        value = await request(path, signal, body, key);
+        value = await read(response);
       } catch (error) {
         if (
           error instanceof ProjectTaskFailure &&

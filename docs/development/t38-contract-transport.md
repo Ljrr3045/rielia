@@ -1,4 +1,155 @@
-# T38.3b contract-derived Sprint planning requests
+# T38.3 contract-derived browser requests
+
+## T38.3c published in Draft PR70
+
+[Draft PR70](https://github.com/Ljrr3045/rielia/pull/70) targets `dev` at initial
+implementation head `776b4eafa2eb04f3df02c4b252ae786636995d01`, based on
+`6c58396a47070334489230cfdc3a7a49583aa4e5`. The coordinator pushed and immediately
+created the Draft on 2026-11-27 at 21:16:56Z; the worker's read-only check verifies
+OPEN/Draft at that implementation head before this reference batch. At publication,
+[initial CI46069268273](https://github.com/Ljrr3045/rielia/actions/runs/46069268273)
+was in progress (`validate` 140742021909, App 15368). The initial observation saw no
+Kilo check or comments; this is bounded evidence, not a permanent event-exclusion
+claim. Final-head CI/native review/coordinator acceptance remain pending.
+
+The accounting stays 66 = 6 accepted + 54 candidate + 4 bounded exclusions
+(H01/H04/H50/H55) + 2 pending H24/H54; no full T38.3/T38 acceptance. The local
+standard/normal/infra/artifact and cost evidence below retains its actual source/
+run binding. This documentation-only PR reference does not rebind those receipts
+to a later documentation commit or repeat application checks/builds.
+
+## T38.3c exact local adoption and normal replay
+
+The coordinator released one batch of **54 additional operations**: H02–03,
+H05–23, H25–29, H36–49, H51–53 and H56–66 (27 GET/27 POST). Five existing web
+owners change: `api-contract-client.ts`, `identity-client.ts`, `workspace-client.ts`,
+`project-task-client.ts` and `task-planning-client.ts`. The six accepted H30–35
+calls remain, giving 60 generated-request consumers. Static source census matches
+each method/path uniquely to the canonical operation ledger; this is source
+inspection, not 60 runtime tests or full T38.3 acceptance.
+
+[PR68 acceptance](https://github.com/Ljrr3045/rielia/pull/68#issuecomment-7215920026)
+and [PR69 acceptance](https://github.com/Ljrr3045/rielia/pull/69#issuecomment-7226805575)
+govern the earlier slices over their frozen pending labels below. The new batch
+supports the existing P01–P11/P38 and US01–US07/US11–US12/US24–US25 boundaries;
+P33/US08 and UX01/04/05/06/09/11 compatibility remain, without a UI redesign or
+new original-ticket/device/accessibility acceptance.
+
+| Owner           | New requests      | Retained responsibility                                                          |
+| --------------- | ----------------- | -------------------------------------------------------------------------------- |
+| X01/G01         | H02–03            | Identity projections only; raw Better Auth sign-in/out/OAuth stays library-owned |
+| X02/G01         | H56–66            | Existing 11 workspace/member/invitation/agent operations                          |
+| X03/G02/G04/G05 | H05–22/H36–49     | Existing 32 project/task/access/assignee/collaboration/discovery operations       |
+| X05/G06/G07     | H23/H25–29/H51–53 | Nine preview/closure/outcome/start/scope/history/planning/estimate calls         |
+
+Four coordinator-accepted exclusions apply to this browser JSON tranche: H01 is
+server/MCP liveness, H04 has no production browser caller despite X08 forwarding,
+H50 retains its own SSE framing/watchdog/reconnect owner, and H55 is infrastructure
+readiness. No consumer/proxy is invented. H24 close and H54 participation are
+**pending**, with their existing native POSTs and shared feature reader retained.
+Generated correlated body alternatives are narrower than current independent
+nullable command fields. Their next bounded follow-up needs explicit command/
+input ownership; no cast, flattened union or new local rejection bridges them.
+The complete accounting is **66 = 6 accepted + 54 local candidate + 4 excluded + 2
+pending**. T38.4–6 and full T38.3/T38 acceptance remain separate.
+
+The existing helper derives path/method/query/body/key inputs from the types-only
+generated export. Invalid method/path pairs, extra keys in literals and variables,
+required empty bodies, omitted selectors, readonly values and union widening have
+strict compiler witnesses. Its implementation input is a finite generated union;
+the public exact signature is separate, avoiding generic expansion inside HTTP
+construction. Native AbortSignal is a transport leaf. No app compiler, dependency,
+generated artifact, public DTO or runtime schema changes. TypeScript still cannot
+express every runtime relation; the probe retains a concrete parent/version
+counterexample rather than claiming universal static validation.
+
+Finite template policies preserve form encoding for H05/H16/H23/H49 and component
+encoding for other cursor queries. They retain filter/property insertion order,
+once-only path encoding and native form replacement of unpaired surrogates.
+Callers retain truthy versus undefined/empty cursor omission and preview-null
+destination omission. H02/H03 alone preserve native omitted GET/follow options,
+absolute-base string targets and timeout-only reads. Domain operations retain
+mandatory caller cancellation, redirect:error, same-origin credentials and no-store.
+The timeout remains active through feature body consumption. Missing-key rejection
+is the accepted helper's typed-programmer-misuse guard, not arbitrary-JavaScript
+parity or automatic key generation.
+
+Feature readers still parse unknown JSON, return their original admitted objects
+and own their guards/correlations. Workspace parses JSON before HTTP error status;
+identity rejects non-ok before parsing. X03/X05 keep their distinct current,
+accessCurrent/closeWarning/request-ID and malformed-success/body-failure mappings.
+Any response.ok status and JSON independent of content-type remain. Error
+`content?:never` remains unmodeled content, not an empty-body assertion. Exact body
+bytes/key, explicit retry and controller/hook identity/tenant/render/discard fences
+stay owned. No proxy, route, API policy, cache, retry, session or stream is added.
+
+Focused offline 135, strict NodeNext/Bundler and real application typechecks pass;
+the stripped-negative control produces all 59 expected errors. One complete
+`pnpm check` passes in 123.731s, including the native Next 16.4.6 build, production
+Next HTTP 1, web integration 12, MCP 20 and final smoke. Loopback HTTP 7 passes
+after a separately retained sandbox listen EPERM. It covers native identity
+redirect/body deadline and migrated estimate body/key/request ID alongside all
+four accepted Sprint witnesses. These are local Node fixtures, not browser
+cookies, Nest/PG or new provider/security acceptance. Initial sandbox install DNS,
+ordinary type/import-isolation/lint failures and corrections retain separate
+receipts; frozen setup succeeds with scoped access and unchanged locks.
+
+The first coherent measure passes 927 tests but exposes exact-ratio regressions
+from removed covered transport counters and one lost unchanged-controller
+secondary-cycle counter. Its complete 16-report packet remains separately bound.
+Additional protocol tests cover malformed response/error precedence, denied
+preflight/foreign scope, lazy raw-auth SSR rejection and actual-library sign-out
+failure/explicit retry. A controlled secondary-read race proves no duplicate
+closure tail; deleting only that fence in a disposable copy fails the assertion.
+These are bounded mocked boundary/controller witnesses, not provider acceptance.
+An initial new race fixture expected closure content from an active Sprint;
+the corrected fixture uses a closed Sprint. Preserve that failed receipt.
+
+After those test-only additions, affected 48 tests and lint pass; production bytes
+still match the complete successful standard/build. No second native build or
+full standard rerun is claimed. Final coherent measurement passes **931/931**
+(API 384/web 449/contracts 79/prototype 19), retaining 197 inputs. All per-file
+exact ratios and uncovered counts retain/improve their accepted values. The
+helper is 100% at L/S/F/B 19/22/3/29; removing duplicated request/path/cursor
+construction explains changed denominators without omitted source.
+
+The coordinator approved copying only the exact web candidate, 48,307 bytes/SHA256
+`9b370321b72984332c594e61f7d8f8a12e473d2c2924198636b3e7d1713cf438`, to the tracked
+baseline, replacing prior 48,306-byte/`ec0402f9`. Adopted L/S/F/B is 3617/4943,
+3982/5609, 838/1354, 4699/6977, with floors 7317/7099/6189/6734 above prior
+7304/7083/6172/6709. The other seven current/historical baseline files remain
+byte-exact; no regeneration, lowered floor, omission or PR65 exception is used.
+
+Fresh **normal 931/931** (API 384/web 449/contracts 79/prototype 19) passes using
+the existing build, retaining all 197 inputs and reproducing all 16 approved
+reports/maps/LCOV/summaries byte for byte. Its count digest is
+`188e707f932b7752eaf66444020ecc4892488c26a8ef62b5daff02cce4eda717`.
+Infrastructure 20/20 and bounded artifact validation pass; all 17 packaged files
+are complete and no upload runs. Current source/config and web-test fingerprints
+match; the sole generated Nest metadata test projection remains qualified.
+This is exact local numerical adoption/replay, not PR/full T38.3/T38 acceptance.
+Implementation is committed and published in Draft PR70; final-head CI/review/
+acceptance/merge remain coordinator gates. No successful standard, native build,
+install, strict probe, loopback, audit, local PG or Docker is repeated for this
+baseline/documentation phase.
+
+Single-build absolute artifacts: 30 browser JS files/1,671,075 raw bytes/477,745
+gzip9 bytes; 34 static files/1,818,582 bytes; 2,161 standalone regular files/
+48,558,292 bytes. The 13 NFT manifests have 4,076 entries. Bounded path/package/
+marker inspection finds no canonical OAS JSON, generator or TS5 in inspected web
+artifacts; Next/@next/env stay 16.4.6. Actual TS6 ES2023 single-module helper JS is
+2,225 bytes with no runtime import. This is not native chunk attribution,
+declaration emission, an accepted-base bundle delta or deployed-image inspection.
+The complete check's aggregate child max RSS is 1,308,475,392 bytes, not an isolated
+Next peak. No accepted-base, local PG or Docker rebuild ran for this browser-only
+batch; required CI checks remain. Failed type formulations retain their own
+resource receipts; no compiler/dependency change resolves them.
+
+Retain the earlier Next16.4.3 stops and qualified 16.4.6 sequence, lower advisories,
+action warning, G06/dense/T04 and S01 debt, backend 1,621,219-byte packaging/test cost,
+UNVERIFIED Cancel/Leave with possible draft loss, filters/provider/staging/device/
+a11y/real-product limits. Final cost observations must come from the single new
+build, with absolute bytes distinguished from a comparable delta.
 
 ## Draft publication and remaining gates
 

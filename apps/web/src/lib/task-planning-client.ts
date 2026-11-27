@@ -23,6 +23,11 @@ import {
   type SprintCloseResult,
   type CloseSprintInput,
 } from '@rielia/contracts';
+import { createContractRequest } from './api-contract-client.ts';
+
+const projectPath = '/api/v1/workspaces/{workspaceId}/projects/{projectId}';
+const taskPath = `${projectPath}/tasks/{taskId}`;
+const sprintPath = `${projectPath}/sprints/{sprintId}`;
 
 export class TaskPlanningFailure extends Error {
   readonly status: number;
@@ -44,6 +49,7 @@ export class TaskPlanningFailure extends Error {
 }
 /** Transport only. The caller retains the exact key/body for explicit retry. No automatic mutation retry. */
 export function createTaskPlanningTransport(options: { baseURL?: string; timeout?: number } = {}) {
+  const send = createContractRequest(options);
   const root = (w: string, p: string) =>
     `workspaces/${encodeURIComponent(w)}/projects/${encodeURIComponent(p)}`;
   const task = (t: string) => `tasks/${encodeURIComponent(t)}`;
@@ -56,24 +62,29 @@ export function createTaskPlanningTransport(options: { baseURL?: string; timeout
     path: string,
     signal: AbortSignal,
     valid: (v: unknown) => v is T,
-    body?: unknown,
-    key?: string,
+    body: CloseSprintInput | SetTaskSprintInput,
+    key: string,
     entity?: { taskId?: string; sprintId?: string },
   ): Promise<T> {
     const url = `/api/v1/${root(w, p)}/${path}`;
     const response = await fetch(options.baseURL ? new URL(url, options.baseURL) : url, {
-      method: body === undefined ? 'GET' : 'POST',
+      method: 'POST',
       credentials: 'same-origin',
       cache: 'no-store',
       redirect: 'error',
       signal: AbortSignal.any([signal, AbortSignal.timeout(options.timeout ?? 15000)]),
-      ...(body === undefined
-        ? {}
-        : {
-            headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key! },
-            body: JSON.stringify(body),
-          }),
+      headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key },
+      body: JSON.stringify(body),
     });
+    return read(response, w, p, valid, entity);
+  }
+  async function read<T>(
+    response: Response,
+    w: string,
+    p: string,
+    valid: (v: unknown) => v is T,
+    entity?: { taskId?: string; sprintId?: string },
+  ): Promise<T> {
     const requestId = response.headers.get('x-request-id');
     let value: unknown;
     try {
@@ -102,8 +113,6 @@ export function createTaskPlanningTransport(options: { baseURL?: string; timeout
     if (!valid(value)) throw new TaskPlanningFailure(502, null, null, requestId);
     return value;
   }
-  const query = (cursor?: string) =>
-    cursor === undefined ? '' : `?cursor=${encodeURIComponent(cursor)}`;
   const transition =
     (
       w: string,
@@ -122,7 +131,7 @@ export function createTaskPlanningTransport(options: { baseURL?: string; timeout
           v.current.id === entity.sprintId &&
           v.operation.sprintId === entity.sprintId));
   return {
-    closePreview(
+    async closePreview(
       w: string,
       p: string,
       s: string,
@@ -130,15 +139,17 @@ export function createTaskPlanningTransport(options: { baseURL?: string; timeout
       signal: AbortSignal,
       cursor?: string,
     ) {
-      const params = new URLSearchParams();
-      if (destination !== null) params.set('destination', destination);
-      if (cursor !== undefined) params.set('cursor', cursor);
-      const suffix = params.size ? `?${params}` : '';
-      return request(
+      return read(
+        await send('get', `${sprintPath}/close-preview`, {
+          path: { workspaceId: w, projectId: p, sprintId: s },
+          query: {
+            ...(destination !== null ? { destination } : {}),
+            ...(cursor !== undefined ? { cursor } : {}),
+          },
+          signal,
+        }),
         w,
         p,
-        `${sprint(s)}/close-preview${suffix}`,
-        signal,
         (v): v is SprintClosePreview =>
           isSprintClosePreview(v) &&
           scoped(v, w, p) &&
@@ -174,38 +185,43 @@ export function createTaskPlanningTransport(options: { baseURL?: string; timeout
         { sprintId: s },
       );
     },
-    closure(w: string, p: string, s: string, signal: AbortSignal) {
-      return request(
+    async closure(w: string, p: string, s: string, signal: AbortSignal) {
+      return read(
+        await send('get', `${sprintPath}/closure`, {
+          path: { workspaceId: w, projectId: p, sprintId: s },
+          signal,
+        }),
         w,
         p,
-        `${sprint(s)}/closure`,
-        signal,
         (v): v is SprintClosure => isSprintClosure(v) && scoped(v, w, p) && v.sprintId === s,
       );
     },
-    outcomes(w: string, p: string, s: string, signal: AbortSignal, cursor?: string) {
-      return request(
+    async outcomes(w: string, p: string, s: string, signal: AbortSignal, cursor?: string) {
+      return read(
+        await send('get', `${sprintPath}/closure/outcomes`, {
+          path: { workspaceId: w, projectId: p, sprintId: s },
+          signal,
+          ...(cursor === undefined ? {} : { query: { cursor } }),
+        }),
         w,
         p,
-        `${sprint(s)}/closure/outcomes${query(cursor)}`,
-        signal,
         (v): v is SprintClosingOutcomePage =>
           isSprintClosingOutcomePage(v) && scoped(v, w, p) && v.sprintId === s,
       );
     },
-    planning(w: string, p: string, t: string, signal: AbortSignal) {
-      return request(
+    async planning(w: string, p: string, t: string, signal: AbortSignal) {
+      return read(
+        await send('get', `${taskPath}/planning`, {
+          path: { workspaceId: w, projectId: p, taskId: t },
+          signal,
+        }),
         w,
         p,
-        `${task(t)}/planning`,
-        signal,
         (v): v is TaskPlanning => isTaskPlanning(v) && scoped(v, w, p) && v.taskId === t,
-        undefined,
-        undefined,
         { taskId: t },
       );
     },
-    estimate(
+    async estimate(
       w: string,
       p: string,
       t: string,
@@ -213,14 +229,16 @@ export function createTaskPlanningTransport(options: { baseURL?: string; timeout
       key: string,
       signal: AbortSignal,
     ) {
-      return request(
+      return read(
+        await send('post', `${taskPath}/planning`, {
+          path: { workspaceId: w, projectId: p, taskId: t },
+          signal,
+          body: input,
+          key,
+        }),
         w,
         p,
-        `${task(t)}/planning`,
-        signal,
         (v): v is TaskPlanning => isTaskPlanning(v) && scoped(v, w, p) && v.taskId === t,
-        input,
-        key,
         { taskId: t },
       );
     },
@@ -248,7 +266,7 @@ export function createTaskPlanningTransport(options: { baseURL?: string; timeout
         { taskId: t },
       );
     },
-    start(
+    async start(
       w: string,
       p: string,
       s: string,
@@ -256,42 +274,53 @@ export function createTaskPlanningTransport(options: { baseURL?: string; timeout
       key: string,
       signal: AbortSignal,
     ) {
-      return request(
+      return read(
+        await send('post', `${sprintPath}/start`, {
+          path: { workspaceId: w, projectId: p, sprintId: s },
+          signal,
+          body: input,
+          key,
+        }),
         w,
         p,
-        `${sprint(s)}/start`,
-        signal,
         transition(w, p, { sprintId: s }, 'start-sprint'),
-        input,
-        key,
         { sprintId: s },
       );
     },
-    scope(w: string, p: string, s: string, signal: AbortSignal, cursor?: string) {
-      return request(
+    async scope(w: string, p: string, s: string, signal: AbortSignal, cursor?: string) {
+      return read(
+        await send('get', `${sprintPath}/scope`, {
+          path: { workspaceId: w, projectId: p, sprintId: s },
+          signal,
+          ...(cursor === undefined ? {} : { query: { cursor } }),
+        }),
         w,
         p,
-        `${sprint(s)}/scope${query(cursor)}`,
-        signal,
         (v): v is SprintScopePage => isSprintScopePage(v) && scoped(v, w, p) && v.sprintId === s,
       );
     },
-    sprintHistory(w: string, p: string, s: string, signal: AbortSignal, cursor?: string) {
-      return request(
+    async sprintHistory(w: string, p: string, s: string, signal: AbortSignal, cursor?: string) {
+      return read(
+        await send('get', `${sprintPath}/history`, {
+          path: { workspaceId: w, projectId: p, sprintId: s },
+          signal,
+          ...(cursor === undefined ? {} : { query: { cursor } }),
+        }),
         w,
         p,
-        `${sprint(s)}/history${query(cursor)}`,
-        signal,
         (v): v is PlanningHistoryPage =>
           isPlanningHistoryPage(v) && scoped(v, w, p) && v.sprintId === s && v.taskId === null,
       );
     },
-    taskHistory(w: string, p: string, t: string, signal: AbortSignal, cursor?: string) {
-      return request(
+    async taskHistory(w: string, p: string, t: string, signal: AbortSignal, cursor?: string) {
+      return read(
+        await send('get', `${taskPath}/sprint-history`, {
+          path: { workspaceId: w, projectId: p, taskId: t },
+          signal,
+          ...(cursor === undefined ? {} : { query: { cursor } }),
+        }),
         w,
         p,
-        `${task(t)}/sprint-history${query(cursor)}`,
-        signal,
         (v): v is PlanningHistoryPage =>
           isPlanningHistoryPage(v) && scoped(v, w, p) && v.taskId === t && v.sprintId === null,
       );

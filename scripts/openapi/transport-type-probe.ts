@@ -163,30 +163,30 @@ void request('post', planning, {
 const extraBody = { expectedVersion: 1, ...settings, actor: 'h' };
 // @ts-expect-error N21 predeclared unsupported body field
 void request('post', planning, { path, body: extraBody, key: 'key', signal });
+// @ts-expect-error N22 version scalar
 void request('post', planning, {
   path,
-  // @ts-expect-error N22 version scalar
   body: { expectedVersion: '1', ...settings },
   key: 'key',
   signal,
 });
+// @ts-expect-error N23 wrong version family
 void request('post', collection, {
   path,
-  // @ts-expect-error N23 wrong version family
   body: { expectedVersion: 1, ...fields },
   key: 'key',
   signal,
 });
+// @ts-expect-error N24 Date object is not a wire date
 void request('post', detail, {
   path: itemPath,
-  // @ts-expect-error N24 Date object is not a wire date
   body: { expectedVersion: 1, ...fields, startDate: new Date() },
   key: 'key',
   signal,
 });
+// @ts-expect-error N25 array item scalar
 void request('post', planning, {
   path,
-  // @ts-expect-error N25 array item scalar
   body: { expectedVersion: 1, ...settings, pointScale: ['1'] },
   key: 'key',
   signal,
@@ -219,20 +219,20 @@ void request(uncertainMethod, planning, { path, signal });
 declare const uncertainPath: typeof collection | typeof detail;
 // @ts-expect-error N31 no uncorrelated path union inference
 void request('get', uncertainPath, { path, signal });
-// @ts-expect-error N32 explicit generic union cannot escape the relation
 void request<'get' | 'post', typeof planning, RequestInput<'get', typeof planning>>(
+  // @ts-expect-error N32 explicit generic union cannot escape the relation
   'get',
   planning,
   { path, signal },
 );
 // @ts-expect-error N33 signal is mandatory
 void request('get', planning, { path });
+// @ts-expect-error N34 write query not supported
 void request('post', collection, {
   path,
   body: { expectedProjectVersion: 1, ...fields },
   key: 'key',
   signal,
-  // @ts-expect-error N34 write query not supported
   query: { cursor: 'x' },
 });
 const createInput = {
@@ -315,3 +315,541 @@ export function currentCommandInput(
     signal: commandSignal,
   });
 }
+
+// T38.3c: every released operation has a generated input witness.
+// H02
+void request('get', '/api/v1/identity/config', {});
+// H03
+void request('get', '/api/v1/identity/session', {});
+// H05
+void request('get', '/api/v1/workspaces/{workspaceId}/projects', {
+  path: { workspaceId: 'workspaceId' },
+  signal,
+  query: { cursor: 'cursor' },
+});
+// H06
+void request('post', '/api/v1/workspaces/{workspaceId}/projects', {
+  path: { workspaceId: 'workspaceId' },
+  body: { name: 'P', key: 'P' },
+  key: 'key',
+  signal,
+});
+// H07
+void request('get', '/api/v1/workspaces/{workspaceId}/projects/{projectId}', {
+  path: { workspaceId: 'workspaceId', projectId: 'projectId' },
+  signal,
+});
+// H08
+void request('post', '/api/v1/workspaces/{workspaceId}/projects/{projectId}', {
+  path: { workspaceId: 'workspaceId', projectId: 'projectId' },
+  body: { expectedVersion: 1, name: 'P', description: '' },
+  key: 'key',
+  signal,
+});
+// H09
+void request('post', '/api/v1/workspaces/{workspaceId}/projects/{projectId}/archive', {
+  path: { workspaceId: 'workspaceId', projectId: 'projectId' },
+  body: { expectedVersion: 1 },
+  key: 'key',
+  signal,
+});
+// H10
+void request('post', '/api/v1/workspaces/{workspaceId}/projects/{projectId}/restore', {
+  path: { workspaceId: 'workspaceId', projectId: 'projectId' },
+  body: { expectedVersion: 1 },
+  key: 'key',
+  signal,
+});
+// H11
+void request('post', '/api/v1/workspaces/{workspaceId}/projects/{projectId}/visibility', {
+  path: { workspaceId: 'workspaceId', projectId: 'projectId' },
+  body: { expectedVersion: 1, visibility: 'private' },
+  key: 'key',
+  signal,
+});
+// H12
+void request('get', '/api/v1/workspaces/{workspaceId}/projects/{projectId}/access', {
+  path: { workspaceId: 'workspaceId', projectId: 'projectId' },
+  signal,
+  query: { cursor: 'cursor' },
+});
+// H13
+void request('post', '/api/v1/workspaces/{workspaceId}/projects/{projectId}/access/{principalId}', {
+  path: { workspaceId: 'workspaceId', projectId: 'projectId', principalId: 'principalId' },
+  body: { expectedVersion: 1, state: 'active' },
+  key: 'key',
+  signal,
+});
+// H14
+void request('get', '/api/v1/workspaces/{workspaceId}/projects/{projectId}/access/{principalId}', {
+  path: { workspaceId: 'workspaceId', projectId: 'projectId', principalId: 'principalId' },
+  signal,
+});
+// H15
+void request('get', '/api/v1/workspaces/{workspaceId}/projects/{projectId}/assignees', {
+  path: { workspaceId: 'workspaceId', projectId: 'projectId' },
+  signal,
+  query: { cursor: 'cursor' },
+});
+// H16
+void request('get', '/api/v1/workspaces/{workspaceId}/projects/{projectId}/tasks', {
+  path: { workspaceId: 'workspaceId', projectId: 'projectId' },
+  signal,
+  query: { cursor: 'cursor' },
+});
+// H17
+void request('post', '/api/v1/workspaces/{workspaceId}/projects/{projectId}/tasks', {
+  path: { workspaceId: 'workspaceId', projectId: 'projectId' },
+  body: { title: 'T' },
+  key: 'key',
+  signal,
+});
+// H18
+void request('get', '/api/v1/workspaces/{workspaceId}/projects/{projectId}/tasks/{taskId}', {
+  path: { workspaceId: 'workspaceId', projectId: 'projectId', taskId: 'taskId' },
+  signal,
+});
+// H19
+void request('post', '/api/v1/workspaces/{workspaceId}/projects/{projectId}/tasks/{taskId}', {
+  path: { workspaceId: 'workspaceId', projectId: 'projectId', taskId: 'taskId' },
+  body: { expectedVersion: 1, title: 'T' },
+  key: 'key',
+  signal,
+});
+// H20
+void request('post', '/api/v1/workspaces/{workspaceId}/projects/{projectId}/tasks/{taskId}/move', {
+  path: { workspaceId: 'workspaceId', projectId: 'projectId', taskId: 'taskId' },
+  body: { expectedVersion: 1, expectedOrderVersion: 1, status: 'todo', beforeTaskId: null },
+  key: 'key',
+  signal,
+});
+// H21
+void request(
+  'post',
+  '/api/v1/workspaces/{workspaceId}/projects/{projectId}/tasks/{taskId}/archive',
+  {
+    path: { workspaceId: 'workspaceId', projectId: 'projectId', taskId: 'taskId' },
+    body: { expectedVersion: 1 },
+    key: 'key',
+    signal,
+  },
+);
+// H22
+void request(
+  'post',
+  '/api/v1/workspaces/{workspaceId}/projects/{projectId}/tasks/{taskId}/restore',
+  {
+    path: { workspaceId: 'workspaceId', projectId: 'projectId', taskId: 'taskId' },
+    body: { expectedVersion: 1 },
+    key: 'key',
+    signal,
+  },
+);
+// H23
+void request(
+  'get',
+  '/api/v1/workspaces/{workspaceId}/projects/{projectId}/sprints/{sprintId}/close-preview',
+  {
+    path: { workspaceId: 'workspaceId', projectId: 'projectId', sprintId: 'sprintId' },
+    signal,
+    query: { cursor: 'cursor' },
+  },
+);
+// H25
+void request(
+  'get',
+  '/api/v1/workspaces/{workspaceId}/projects/{projectId}/sprints/{sprintId}/closure',
+  { path: { workspaceId: 'workspaceId', projectId: 'projectId', sprintId: 'sprintId' }, signal },
+);
+// H26
+void request(
+  'get',
+  '/api/v1/workspaces/{workspaceId}/projects/{projectId}/sprints/{sprintId}/closure/outcomes',
+  {
+    path: { workspaceId: 'workspaceId', projectId: 'projectId', sprintId: 'sprintId' },
+    signal,
+    query: { cursor: 'cursor' },
+  },
+);
+// H27
+void request(
+  'post',
+  '/api/v1/workspaces/{workspaceId}/projects/{projectId}/sprints/{sprintId}/start',
+  {
+    path: { workspaceId: 'workspaceId', projectId: 'projectId', sprintId: 'sprintId' },
+    body: { expectedVersion: 1, expectedProjectVersion: 1, expectedTaskRevision: 1 },
+    key: 'key',
+    signal,
+  },
+);
+// H28
+void request(
+  'get',
+  '/api/v1/workspaces/{workspaceId}/projects/{projectId}/sprints/{sprintId}/scope',
+  {
+    path: { workspaceId: 'workspaceId', projectId: 'projectId', sprintId: 'sprintId' },
+    signal,
+    query: { cursor: 'cursor' },
+  },
+);
+// H29
+void request(
+  'get',
+  '/api/v1/workspaces/{workspaceId}/projects/{projectId}/sprints/{sprintId}/history',
+  {
+    path: { workspaceId: 'workspaceId', projectId: 'projectId', sprintId: 'sprintId' },
+    signal,
+    query: { cursor: 'cursor' },
+  },
+);
+// H36
+void request(
+  'get',
+  '/api/v1/workspaces/{workspaceId}/projects/{projectId}/tasks/{taskId}/relations',
+  {
+    path: { workspaceId: 'workspaceId', projectId: 'projectId', taskId: 'taskId' },
+    signal,
+    query: { cursor: 'cursor' },
+  },
+);
+// H37
+void request(
+  'get',
+  '/api/v1/workspaces/{workspaceId}/projects/{projectId}/tasks/{taskId}/parent-candidates',
+  {
+    path: { workspaceId: 'workspaceId', projectId: 'projectId', taskId: 'taskId' },
+    signal,
+    query: { cursor: 'cursor' },
+  },
+);
+// H38
+void request(
+  'get',
+  '/api/v1/workspaces/{workspaceId}/projects/{projectId}/tasks/{taskId}/checklist',
+  {
+    path: { workspaceId: 'workspaceId', projectId: 'projectId', taskId: 'taskId' },
+    signal,
+    query: { cursor: 'cursor' },
+  },
+);
+// H39
+void request(
+  'get',
+  '/api/v1/workspaces/{workspaceId}/projects/{projectId}/tasks/{taskId}/comments',
+  {
+    path: { workspaceId: 'workspaceId', projectId: 'projectId', taskId: 'taskId' },
+    signal,
+    query: { cursor: 'cursor' },
+  },
+);
+// H40
+void request(
+  'get',
+  '/api/v1/workspaces/{workspaceId}/projects/{projectId}/tasks/{taskId}/history',
+  {
+    path: { workspaceId: 'workspaceId', projectId: 'projectId', taskId: 'taskId' },
+    signal,
+    query: { cursor: 'cursor' },
+  },
+);
+// H41
+void request(
+  'get',
+  '/api/v1/workspaces/{workspaceId}/projects/{projectId}/tasks/{taskId}/comments/{commentId}',
+  {
+    path: {
+      workspaceId: 'workspaceId',
+      projectId: 'projectId',
+      taskId: 'taskId',
+      commentId: 'commentId',
+    },
+    signal,
+  },
+);
+// H42
+void request(
+  'post',
+  '/api/v1/workspaces/{workspaceId}/projects/{projectId}/tasks/{taskId}/parent',
+  {
+    path: { workspaceId: 'workspaceId', projectId: 'projectId', taskId: 'taskId' },
+    body: { expectedVersion: 1, parentTaskId: null },
+    key: 'key',
+    signal,
+  },
+);
+// H43
+void request(
+  'post',
+  '/api/v1/workspaces/{workspaceId}/projects/{projectId}/tasks/{taskId}/checklist',
+  {
+    path: { workspaceId: 'workspaceId', projectId: 'projectId', taskId: 'taskId' },
+    body: { expectedVersion: 1, text: 'Item', beforeItemId: null },
+    key: 'key',
+    signal,
+  },
+);
+// H44
+void request(
+  'post',
+  '/api/v1/workspaces/{workspaceId}/projects/{projectId}/tasks/{taskId}/checklist/{itemId}',
+  {
+    path: {
+      workspaceId: 'workspaceId',
+      projectId: 'projectId',
+      taskId: 'taskId',
+      itemId: 'itemId',
+    },
+    body: { expectedVersion: 1, completed: false },
+    key: 'key',
+    signal,
+  },
+);
+// H45
+void request(
+  'post',
+  '/api/v1/workspaces/{workspaceId}/projects/{projectId}/tasks/{taskId}/checklist/{itemId}/move',
+  {
+    path: {
+      workspaceId: 'workspaceId',
+      projectId: 'projectId',
+      taskId: 'taskId',
+      itemId: 'itemId',
+    },
+    body: { expectedVersion: 1, beforeItemId: null },
+    key: 'key',
+    signal,
+  },
+);
+// H46
+void request(
+  'post',
+  '/api/v1/workspaces/{workspaceId}/projects/{projectId}/tasks/{taskId}/checklist/{itemId}/remove',
+  {
+    path: {
+      workspaceId: 'workspaceId',
+      projectId: 'projectId',
+      taskId: 'taskId',
+      itemId: 'itemId',
+    },
+    body: { expectedVersion: 1 },
+    key: 'key',
+    signal,
+  },
+);
+// H47
+void request(
+  'post',
+  '/api/v1/workspaces/{workspaceId}/projects/{projectId}/tasks/{taskId}/comments',
+  {
+    path: { workspaceId: 'workspaceId', projectId: 'projectId', taskId: 'taskId' },
+    body: { expectedVersion: 1, body: 'Comment' },
+    key: 'key',
+    signal,
+  },
+);
+// H48
+void request(
+  'post',
+  '/api/v1/workspaces/{workspaceId}/projects/{projectId}/tasks/{taskId}/comments/{commentId}',
+  {
+    path: {
+      workspaceId: 'workspaceId',
+      projectId: 'projectId',
+      taskId: 'taskId',
+      commentId: 'commentId',
+    },
+    body: { expectedVersion: 1, expectedCommentVersion: 1, body: 'Comment' },
+    key: 'key',
+    signal,
+  },
+);
+// H49
+void request('get', '/api/v1/workspaces/{workspaceId}/task-discovery', {
+  path: { workspaceId: 'workspaceId' },
+  signal,
+  query: { scope: 'search', q: 'x', view: 'active', project: 'p' },
+});
+// H51
+void request(
+  'get',
+  '/api/v1/workspaces/{workspaceId}/projects/{projectId}/tasks/{taskId}/planning',
+  { path: { workspaceId: 'workspaceId', projectId: 'projectId', taskId: 'taskId' }, signal },
+);
+// H52
+void request(
+  'get',
+  '/api/v1/workspaces/{workspaceId}/projects/{projectId}/tasks/{taskId}/sprint-history',
+  {
+    path: { workspaceId: 'workspaceId', projectId: 'projectId', taskId: 'taskId' },
+    signal,
+    query: { cursor: 'cursor' },
+  },
+);
+// H53
+void request(
+  'post',
+  '/api/v1/workspaces/{workspaceId}/projects/{projectId}/tasks/{taskId}/planning',
+  {
+    path: { workspaceId: 'workspaceId', projectId: 'projectId', taskId: 'taskId' },
+    body: { expectedVersion: 1, estimatePoints: null },
+    key: 'key',
+    signal,
+  },
+);
+// H56
+void request('get', '/api/v1/workspaces', { signal, query: { cursor: 'cursor' } });
+// H57
+void request('post', '/api/v1/workspaces', { body: { name: 'W' }, key: 'key', signal });
+// H58
+void request('get', '/api/v1/workspaces/{workspaceId}', {
+  path: { workspaceId: 'workspaceId' },
+  signal,
+});
+// H59
+void request('get', '/api/v1/workspaces/{workspaceId}/members', {
+  path: { workspaceId: 'workspaceId' },
+  signal,
+  query: { cursor: 'cursor' },
+});
+// H60
+void request('post', '/api/v1/workspaces/{workspaceId}/members/{principalId}', {
+  path: { workspaceId: 'workspaceId', principalId: 'principalId' },
+  body: { version: 1, role: 'viewer' },
+  key: 'key',
+  signal,
+});
+// H61
+void request('get', '/api/v1/workspaces/{workspaceId}/invitations', {
+  path: { workspaceId: 'workspaceId' },
+  signal,
+  query: { cursor: 'cursor' },
+});
+// H62
+void request('post', '/api/v1/workspaces/{workspaceId}/invitations', {
+  path: { workspaceId: 'workspaceId' },
+  body: { recipientEmail: 'a@b.test', role: 'member' },
+  key: 'key',
+  signal,
+});
+// H63
+void request('post', '/api/v1/workspaces/{workspaceId}/invitations/{invitationId}/revoke', {
+  path: { workspaceId: 'workspaceId', invitationId: 'invitationId' },
+  body: {},
+  key: 'key',
+  signal,
+});
+// H64
+void request('post', '/api/v1/workspace-invitations/accept', {
+  body: { token: 'token' },
+  key: 'key',
+  signal,
+});
+// H65
+void request('post', '/api/v1/workspaces/{workspaceId}/agents', {
+  path: { workspaceId: 'workspaceId' },
+  body: { name: 'Agent', role: 'viewer', custodianPrincipalId: 'h' },
+  key: 'key',
+  signal,
+});
+// H66
+void request('post', '/api/v1/workspaces/{workspaceId}/agents/{principalId}', {
+  path: { workspaceId: 'workspaceId', principalId: 'principalId' },
+  body: { version: 1, state: 'suspended' },
+  key: 'key',
+  signal,
+});
+
+const identityPath = '/api/v1/identity/config';
+const membersPath = '/api/v1/workspaces/{workspaceId}/members';
+const revokePath = '/api/v1/workspaces/{workspaceId}/invitations/{invitationId}/revoke';
+const parentPath = '/api/v1/workspaces/{workspaceId}/projects/{projectId}/tasks/{taskId}/parent';
+const noPathExtra = { path: { workspaceId: 'w' }, signal };
+// @ts-expect-error N40 no generated path on a no-path operation, including variables
+void request('get', '/api/v1/workspaces', noPathExtra);
+// @ts-expect-error N41 no invented empty path object
+void request('get', identityPath, { path: {} });
+const identitySignal = { signal };
+// @ts-expect-error N42 identity retains its timeout-only profile
+void request('get', identityPath, identitySignal);
+const missingSignal = { path: { workspaceId: 'w' } };
+// @ts-expect-error N43 domain reads still require caller cancellation
+void request('get', membersPath, missingSignal);
+// @ts-expect-error N44 GET-only route cannot accept POST with a read-shaped input
+void request('post', membersPath, { path: { workspaceId: 'w' }, signal });
+const revoke = { path: { workspaceId: 'w', invitationId: 'i' }, body: {}, key: 'key', signal };
+void request('post', revokePath, revoke);
+// @ts-expect-error N45 POST-only route cannot accept GET with a write-shaped variable
+void request('get', revokePath, revoke);
+const revokeExtra = { ...revoke, body: { actor: 'h' } };
+// @ts-expect-error N46 even predeclared strict empty bodies reject fields
+void request('post', revokePath, revokeExtra);
+const revokeMissing = { path: revoke.path, key: 'key', signal };
+// @ts-expect-error N47 strict empty body is required, not omitted
+void request('post', revokePath, revokeMissing);
+const emptyPathExtra = { ...revoke, path: { ...revoke.path, projectId: 'p' } };
+// @ts-expect-error N48 exact variable selectors
+void request('post', revokePath, emptyPathExtra);
+const badQuery = { path: { workspaceId: 'w' }, query: { cursor: 'c', q: 'extra' }, signal };
+// @ts-expect-error N49 exact variable query keys
+void request('get', membersPath, badQuery);
+const nullQuery = { path: { workspaceId: 'w' }, query: { cursor: null }, signal };
+// @ts-expect-error N50 null is not an omitted cursor
+void request('get', membersPath, nullQuery);
+const acceptExtra = { body: { token: 'token', authorPrincipalId: 'h' }, key: 'key', signal };
+// @ts-expect-error N51 exact variable no-path write bodies
+void request('post', '/api/v1/workspace-invitations/accept', acceptExtra);
+const taskSelectors = { workspaceId: 'w', projectId: 'p', taskId: 't' };
+declare const parentBody:
+  | { expectedVersion: number; parentTaskId: null }
+  | { expectedVersion: number; parentTaskId: string; expectedParentVersion: number };
+void request('post', parentPath, { path: taskSelectors, body: parentBody, key: 'key', signal });
+const wrongParent = {
+  path: taskSelectors,
+  body: { expectedVersion: 1, parentTaskId: 3 },
+  key: 'key',
+  signal,
+};
+// @ts-expect-error N52 scalar admission inside generated body alternatives
+void request('post', parentPath, wrongParent);
+const extraParent = {
+  path: taskSelectors,
+  body: { expectedVersion: 1, parentTaskId: null, actor: 'h' },
+  key: 'key',
+  signal,
+};
+// @ts-expect-error N53 extra fields in a predeclared union body alternative
+void request('post', parentPath, extraParent);
+// Generated TS does not encode expectedParentVersion absence here; runtime still rejects this combination.
+void request('post', parentPath, {
+  path: taskSelectors,
+  body: { expectedVersion: 1, parentTaskId: null, expectedParentVersion: 1 },
+  key: 'key',
+  signal,
+});
+const unknownWire = { ...revoke, headers: { Origin: 'https://evil.test' } };
+// @ts-expect-error N54 no variable header-map escape on expanded paths
+void request('post', revokePath, unknownWire);
+// @ts-expect-error N55 H04 has no production browser consumer
+void request('get', '/api/v1/workspaces/{workspaceId}/execution-context', {
+  path: { workspaceId: 'w' },
+  signal,
+});
+// @ts-expect-error N56 H50 retains its distinct stream adapter
+void request('get', '/api/v1/workspaces/{workspaceId}/events', {
+  path: { workspaceId: 'w' },
+  signal,
+});
+// @ts-expect-error N57 H55 is infrastructure-only
+void request('get', '/api/v1/readiness', { signal });
+void request(
+  'post',
+  // @ts-expect-error N58 H24 requires the deferred command correlation bridge
+  '/api/v1/workspaces/{workspaceId}/projects/{projectId}/sprints/{sprintId}/close',
+  revoke,
+);
+void request(
+  'post',
+  // @ts-expect-error N59 H54 requires the deferred command correlation bridge
+  '/api/v1/workspaces/{workspaceId}/projects/{projectId}/tasks/{taskId}/sprint',
+  revoke,
+);

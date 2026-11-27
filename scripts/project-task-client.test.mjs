@@ -989,3 +989,167 @@ test('actual collaboration, discovery and planning-history transports enforce th
   value = { ...sharedTask, provenance: { ...sharedTask.provenance, source: ['web'] } };
   await assert.rejects(transport.task('w', 'p', 't', abort), (e) => e.status === 502);
 });
+
+test('all collaboration collections keep literal routes, component cursors and original scoped pages', async (t) => {
+  const calls = [];
+  let value;
+  t.mock.method(globalThis, 'fetch', async (url, init) => {
+    calls.push({ url: String(url), init });
+    return {
+      ok: true,
+      status: 202,
+      headers: new globalThis.Headers({ 'content-type': 'text/plain' }),
+      json: async () => value,
+    };
+  });
+  const api = createProjectTaskTransport();
+  const common = {
+    workspaceId: 'w',
+    projectId: 'p',
+    taskId: 't',
+    revision: 1,
+    items: [],
+    total: 0,
+    nextCursor: null,
+    extra: true,
+  };
+  for (const [collection, extra] of [
+    [
+      'relations',
+      {
+        parent: null,
+        open: 0,
+        archivedOpen: 0,
+        capabilities: { canCreate: true, canLink: true, canUnlink: false },
+      },
+    ],
+    ['parent-candidates', { capabilities: { canSelect: true } }],
+    ['checklist', { capabilities: { canCreate: true, canEdit: true } }],
+    ['comments', { capabilities: { canCreate: true } }],
+    ['history', {}],
+  ]) {
+    value = { ...common, ...extra };
+    assert.equal(await api.collaboration('w', 'p', 't', collection, signal(), 'a/% +'), value);
+    assert.equal(
+      calls.at(-1).url,
+      `/api/v1/workspaces/w/projects/p/tasks/t/${collection}?cursor=a%2F%25%20%2B`,
+    );
+    value = { ...value, taskId: 'foreign' };
+    await assert.rejects(
+      api.collaboration('w', 'p', 't', collection, signal(), ''),
+      (error) => error.status === 502,
+    );
+    assert.equal(calls.at(-1).url.endsWith('?'), false);
+  }
+});
+
+test('project/task requests retain form query/filter order and exact unlink/edit/archive retry bytes', async (t) => {
+  const calls = [];
+  let value = page([project]);
+  t.mock.method(globalThis, 'fetch', async (url, init) => {
+    calls.push({ url: String(url), init });
+    return { ok: true, status: 202, headers: new globalThis.Headers(), json: async () => value };
+  });
+  const api = createProjectTaskTransport();
+  await api.projects('w', 'active', signal(), 'a/% +~');
+  assert.equal(calls.at(-1).url, '/api/v1/workspaces/w/projects?view=active&cursor=a%2F%25+%2B%7E');
+  value = {
+    ...sharedDiscovery,
+    items: [],
+    total: 0,
+    nextCursor: null,
+    query: {
+      scope: 'search',
+      q: 'x +/% 😀',
+      view: 'active',
+      projectId: 'p',
+      filters: { priority: 'high', status: 'todo' },
+    },
+  };
+  await api.discover('w', { ...value.query, q: '  x +/% 😀  ' }, signal(), '');
+  assert.equal(
+    calls.at(-1).url,
+    '/api/v1/workspaces/w/task-discovery?scope=search&q=x+%2B%2F%25+%F0%9F%98%80&view=active&priority=high&status=todo&project=p',
+  );
+  value = task;
+  const target = { workspaceId: 'w', projectId: 'p', taskId: 't', expectedVersion: 7 };
+  const cases = [
+    [
+      { ...target, type: 'set-task-parent', parentTaskId: null },
+      '/parent',
+      '{"expectedVersion":7,"parentTaskId":null}',
+    ],
+    [
+      {
+        ...target,
+        type: 'edit-task',
+        fields: { title: 'Draft', dueDate: null, priority: 'none' },
+        acknowledgedChildrenVersion: 0,
+      },
+      '',
+      '{"title":"Draft","dueDate":null,"priority":"none","expectedVersion":7}',
+    ],
+    [{ ...target, type: 'archive-task' }, '/archive', '{"expectedVersion":7}'],
+    [{ ...target, type: 'restore-task' }, '/restore', '{"expectedVersion":7}'],
+  ];
+  for (const [command, suffix, body] of cases) {
+    for (let attempt = 0; attempt < 2; attempt++) {
+      assert.equal(await api.mutate(command, 'same-original-key', signal()), task);
+      const call = calls.at(-1);
+      assert.equal(call.url, '/api/v1/workspaces/w/projects/p/tasks/t' + suffix);
+      assert.equal(call.init.body, body);
+      assert.equal(call.init.headers['Idempotency-Key'], 'same-original-key');
+    }
+  }
+});
+
+test('migrated project reads retain malformed-body status/request ID and validate filters before sending', async (t) => {
+  let calls = 0;
+  let response;
+  t.mock.method(globalThis, 'fetch', async () => {
+    calls++;
+    return response;
+  });
+  const api = createProjectTaskTransport();
+  for (const status of [200, 202, 403]) {
+    response = new Response('malformed', { status, headers: { 'x-request-id': 'parse-id' } });
+    await assert.rejects(
+      api.project('w', 'p', signal()),
+      (error) =>
+        error instanceof ProjectTaskFailure &&
+        error.status === (status < 300 ? 502 : status) &&
+        error.requestId === 'parse-id' &&
+        error.current === null,
+    );
+  }
+  const before = calls;
+  await assert.rejects(
+    api.tasks('w', 'p', 'active', signal(), undefined, { status: 'invented' }),
+    (error) => error instanceof ProjectTaskFailure && error.status === 400,
+  );
+  assert.equal(calls, before);
+  response = Response.json(
+    page([{ ...project, workspaceId: 'foreign', url: '/projects?workspace=foreign&project=p' }]),
+  );
+  await assert.rejects(api.projects('w', 'active', signal()), (error) => error.status === 502);
+  response = Response.json({
+    ...task,
+    projectId: 'foreign',
+    url: '/projects?workspace=w&project=foreign&task=t',
+  });
+  await assert.rejects(
+    api.mutate(
+      {
+        type: 'edit-task',
+        workspaceId: 'w',
+        projectId: 'p',
+        taskId: 't',
+        expectedVersion: 1,
+        fields: { title: 'Draft' },
+      },
+      'captured-key',
+      signal(),
+    ),
+    (error) => error.status === 502,
+  );
+});

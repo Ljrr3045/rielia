@@ -192,3 +192,107 @@ test('contract HTTP retains caller/default or configured deadline signals throug
     assert.equal(cleanup, 1);
   }
 });
+
+test('expanded form queries retain native replacement/escaping and insertion order without changing component cursors', async () => {
+  const calls = [];
+  const request = createContractRequest({
+    fetch: async (url) => {
+      calls.push(String(url));
+      return new Response('{}');
+    },
+  });
+  const raw = 'a/% +~!\uD800';
+  const cases = [
+    [
+      '/api/v1/workspaces/{workspaceId}/projects',
+      { workspaceId: 'w' },
+      { view: 'active', cursor: raw },
+    ],
+    [
+      '/api/v1/workspaces/{workspaceId}/projects/{projectId}/tasks',
+      path,
+      { view: 'active', priority: 'high', status: 'todo', cursor: raw },
+    ],
+    [
+      '/api/v1/workspaces/{workspaceId}/task-discovery',
+      { workspaceId: 'w' },
+      { scope: 'search', q: raw, view: 'active', project: 'p' },
+    ],
+    [
+      '/api/v1/workspaces/{workspaceId}/projects/{projectId}/sprints/{sprintId}/close-preview',
+      { ...path, sprintId: 's' },
+      { destination: raw, cursor: '' },
+    ],
+  ];
+  for (const [template, selectors, query] of cases) {
+    await request('get', template, { path: selectors, query, signal: signal() });
+    const expected = new URLSearchParams(query).toString();
+    assert.equal(calls.at(-1).split('?')[1], expected);
+    assert.ok(expected.includes('%EF%BF%BD'));
+  }
+  await request('get', '/api/v1/workspaces/{workspaceId}/members', {
+    path: { workspaceId: 'w' },
+    query: { cursor: 'a/% +~!' },
+    signal: signal(),
+  });
+  assert.equal(calls.at(-1), '/api/v1/workspaces/w/members?cursor=a%2F%25%20%2B~!');
+  await assert.rejects(
+    request('get', sprints, { path, query: { cursor: raw }, signal: signal() }),
+    URIError,
+  );
+  assert.equal(calls.length, 5);
+});
+
+test('identity projection profile alone preserves omitted native GET/follow options and absolute string targets', async () => {
+  const calls = [];
+  const response = new Response('unread');
+  const request = createContractRequest({
+    baseURL: 'https://app.example.test/ignored',
+    fetch: async (url, init) => {
+      calls.push({ url, init });
+      return response;
+    },
+  });
+  for (const template of ['/api/v1/identity/config', '/api/v1/identity/session']) {
+    assert.equal(await request('get', template, {}), response);
+    const call = calls.at(-1);
+    assert.equal(typeof call.url, 'string');
+    assert.equal(call.url, 'https://app.example.test' + template);
+    assert.equal('method' in call.init, false);
+    assert.equal('redirect' in call.init, false);
+    assert.equal('headers' in call.init, false);
+    assert.equal('body' in call.init, false);
+    assert.equal(call.init.credentials, 'same-origin');
+    assert.equal(call.init.cache, 'no-store');
+    assert.ok(call.init.signal instanceof AbortSignal);
+  }
+  assert.equal(response.bodyUsed, false);
+});
+
+test('no-path commands and empty revocation bodies retain their exact captured bytes and key', async () => {
+  const calls = [];
+  const request = createContractRequest({
+    fetch: async (url, init) => {
+      calls.push({ url, init });
+      return new Response('{}');
+    },
+  });
+  await request('post', '/api/v1/workspace-invitations/accept', {
+    body: { token: 'original-token' },
+    key: 'captured-key',
+    signal: signal(),
+  });
+  await request('post', '/api/v1/workspaces/{workspaceId}/invitations/{invitationId}/revoke', {
+    path: { workspaceId: 'w', invitationId: 'i' },
+    body: {},
+    key: 'captured-key',
+    signal: signal(),
+  });
+  assert.deepEqual(
+    calls.map(({ url, init }) => [url, init.body, init.headers['Idempotency-Key']]),
+    [
+      ['/api/v1/workspace-invitations/accept', '{"token":"original-token"}', 'captured-key'],
+      ['/api/v1/workspaces/w/invitations/i/revoke', '{}', 'captured-key'],
+    ],
+  );
+});

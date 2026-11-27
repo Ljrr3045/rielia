@@ -1,11 +1,13 @@
 import { createAuthClient } from 'better-auth/client';
 import type { IdentityTransport } from './identity-controller';
+import { createContractRequest } from './api-contract-client.ts';
 
 /** Overrides allow local HTTP transport tests; product requests use same origin. */
 export function createIdentityTransport(
   options: { baseURL?: string; timeout?: number } = {},
 ): IdentityTransport {
   const timeout = options.timeout ?? 15000;
+  const send = createContractRequest(options);
   let auth: ReturnType<typeof createAuthClient> | undefined;
   function client() {
     if (!auth) {
@@ -16,19 +18,13 @@ export function createIdentityTransport(
     }
     return auth;
   }
-  async function read(path: string): Promise<unknown> {
-    const target = options.baseURL ? new URL(path, options.baseURL).href : path;
-    const response = await fetch(target, {
-      cache: 'no-store',
-      credentials: 'same-origin',
-      signal: AbortSignal.timeout(timeout),
-    });
+  async function read(response: Response): Promise<unknown> {
     if (!response.ok) throw new Error('Identity response unavailable.');
     return response.json() as Promise<unknown>;
   }
   return {
-    configuration: () => read('/api/v1/identity/config'),
-    session: () => read('/api/v1/identity/session'),
+    configuration: async () => read(await send('get', '/api/v1/identity/config', {})),
+    session: async () => read(await send('get', '/api/v1/identity/session', {})),
     async signIn(provider) {
       const result = await client().signIn.social({
         provider,

@@ -2,11 +2,16 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { createServer } from 'node:http';
 import { once } from 'node:events';
+import { Buffer } from 'node:buffer';
 import {
   createSprintPlanningTransport,
   SprintPlanningFailure,
 } from '../apps/web/src/lib/sprint-client.ts';
 import { settings } from '../apps/web/test/unit/sprint-client-fixtures.mjs';
+import {
+  createTaskPlanningTransport,
+  TaskPlanningFailure,
+} from '../apps/web/src/lib/task-planning-client.ts';
 
 const command = {
   type: 'configure-planning',
@@ -27,8 +32,12 @@ async function fixture(t, handler) {
   const seen = deferred();
   const disconnected = deferred();
   const calls = [];
+  const bodies = [];
   const server = createServer((request, response) => {
     calls.push({ path: request.url, key: request.headers['idempotency-key'] });
+    const chunks = [];
+    request.on('data', (chunk) => chunks.push(chunk));
+    request.once('end', () => bodies.push(Buffer.concat(chunks).toString('utf8')));
     request.resume();
     response.once('close', disconnected.resolve);
     handler(response);
@@ -47,6 +56,7 @@ async function fixture(t, handler) {
     seen: seen.promise,
     disconnected: disconnected.promise,
     calls,
+    bodies,
     baseURL: `http://127.0.0.1:${server.address().port}`,
   };
 }
@@ -141,5 +151,32 @@ test(
     await f.seen;
     await f.disconnected;
     assert.deepEqual(f.calls, [{ path: '/api/v1/workspaces/w/projects/p/planning', key }]);
+  },
+);
+
+test(
+  'expanded task estimate keeps captured bytes/key and request ID when its real successful body times out',
+  { timeout: 8000 },
+  async (t) => {
+    const f = await fixture(t, (response) => {
+      response.writeHead(202, { 'content-type': 'text/plain', 'x-request-id': 'estimate-body-id' });
+      response.flushHeaders();
+      response.write('{"taskId":');
+    });
+    const transport = createTaskPlanningTransport({ baseURL: f.baseURL, timeout: 1000 });
+    const input = { expectedVersion: 2, estimatePoints: 0 };
+    const pending = transport.estimate('w', 'p', 't', input, key, new AbortController().signal);
+    const rejected = assert.rejects(
+      pending,
+      (error) =>
+        error instanceof TaskPlanningFailure &&
+        error.status === 502 &&
+        error.requestId === 'estimate-body-id',
+    );
+    await f.seen;
+    await rejected;
+    await f.disconnected;
+    assert.deepEqual(f.calls, [{ path: '/api/v1/workspaces/w/projects/p/tasks/t/planning', key }]);
+    assert.deepEqual(f.bodies, ['{"expectedVersion":2,"estimatePoints":0}']);
   },
 );

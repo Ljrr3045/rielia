@@ -12,6 +12,7 @@ import {
   type WorkspaceResult,
   type WorkspaceSummary,
 } from '@rielia/contracts';
+import { createContractRequest } from './api-contract-client.ts';
 export class WorkspaceFailure extends Error {
   readonly status: number;
   readonly code: string | null;
@@ -39,29 +40,8 @@ export interface WorkspaceTransport {
 export function createWorkspaceTransport(
   options: { baseURL?: string; timeout?: number } = {},
 ): WorkspaceTransport {
-  const segment = (value: string) => encodeURIComponent(value);
-  async function request(
-    path: string,
-    signal: AbortSignal,
-    body?: unknown,
-    key?: string,
-  ): Promise<unknown> {
-    const response = await fetch(
-      options.baseURL ? new URL(`/api/v1/${path}`, options.baseURL) : `/api/v1/${path}`,
-      {
-        method: body === undefined ? 'GET' : 'POST',
-        credentials: 'same-origin',
-        cache: 'no-store',
-        redirect: 'error',
-        signal: AbortSignal.any([signal, AbortSignal.timeout(options.timeout ?? 15000)]),
-        ...(body === undefined
-          ? {}
-          : {
-              headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key! },
-              body: JSON.stringify(body),
-            }),
-      },
-    );
+  const send = createContractRequest(options);
+  async function read(response: Response): Promise<unknown> {
     const value: unknown = await response.json();
     if (!response.ok) {
       const error = workspaceErrorProjectionSchema.safeParse(value);
@@ -69,81 +49,125 @@ export function createWorkspaceTransport(
     }
     return value;
   }
-  async function collection<T>(
-    path: string,
-    signal: AbortSignal,
-    check: (value: unknown) => value is T,
-    cursor?: string,
-  ) {
-    const value = await request(`${path}${cursor ? `?cursor=${segment(cursor)}` : ''}`, signal);
+  async function collection<T>(response: Response, check: (value: unknown) => value is T) {
+    const value = await read(response);
     if (!isPage(value, check)) throw new WorkspaceFailure(502);
     return value;
   }
   return {
-    workspaces: (signal, cursor) => collection('workspaces', signal, isWorkspaceSummary, cursor),
+    workspaces: async (signal, cursor) =>
+      collection(
+        await send('get', '/api/v1/workspaces', {
+          signal,
+          ...(cursor ? { query: { cursor } } : {}),
+        }),
+        isWorkspaceSummary,
+      ),
     async detail(workspaceId, signal) {
-      const value = await request(`workspaces/${segment(workspaceId)}`, signal);
+      const value = await read(
+        await send('get', '/api/v1/workspaces/{workspaceId}', {
+          path: { workspaceId },
+          signal,
+        }),
+      );
       if (!isWorkspaceSummary(value) || value.id !== workspaceId) throw new WorkspaceFailure(502);
       return value;
     },
-    members: (workspaceId, signal, cursor) =>
-      collection(`workspaces/${segment(workspaceId)}/members`, signal, isWorkspaceMember, cursor),
-    invitations: (workspaceId, signal, cursor) =>
+    members: async (workspaceId, signal, cursor) =>
       collection(
-        `workspaces/${segment(workspaceId)}/invitations`,
-        signal,
+        await send('get', '/api/v1/workspaces/{workspaceId}/members', {
+          path: { workspaceId },
+          signal,
+          ...(cursor ? { query: { cursor } } : {}),
+        }),
+        isWorkspaceMember,
+      ),
+    invitations: async (workspaceId, signal, cursor) =>
+      collection(
+        await send('get', '/api/v1/workspaces/{workspaceId}/invitations', {
+          path: { workspaceId },
+          signal,
+          ...(cursor ? { query: { cursor } } : {}),
+        }),
         isWorkspaceInvitation,
-        cursor,
       ),
     async mutate(command, key, signal) {
-      const scope = 'workspaceId' in command ? `workspaces/${segment(command.workspaceId)}` : '';
-      let path: string;
-      let body: unknown;
+      let response: Response;
       switch (command.type) {
         case 'create-workspace':
-          path = 'workspaces';
-          body = { name: command.name };
+          response = await send('post', '/api/v1/workspaces', {
+            body: { name: command.name },
+            key,
+            signal,
+          });
           break;
         case 'invite':
-          path = `${scope}/invitations`;
-          body = { recipientEmail: command.recipientEmail, role: command.role };
+          response = await send('post', '/api/v1/workspaces/{workspaceId}/invitations', {
+            path: { workspaceId: command.workspaceId },
+            body: { recipientEmail: command.recipientEmail, role: command.role },
+            key,
+            signal,
+          });
           break;
         case 'accept-invitation':
-          path = 'workspace-invitations/accept';
-          body = { token: command.token };
+          response = await send('post', '/api/v1/workspace-invitations/accept', {
+            body: { token: command.token },
+            key,
+            signal,
+          });
           break;
         case 'revoke-invitation':
-          path = `${scope}/invitations/${segment(command.invitationId)}/revoke`;
-          body = {};
+          response = await send(
+            'post',
+            '/api/v1/workspaces/{workspaceId}/invitations/{invitationId}/revoke',
+            {
+              path: { workspaceId: command.workspaceId, invitationId: command.invitationId },
+              body: {},
+              key,
+              signal,
+            },
+          );
           break;
         case 'register-agent':
-          path = `${scope}/agents`;
-          body = {
-            name: command.name,
-            role: command.role,
-            custodianPrincipalId: command.custodianPrincipalId,
-          };
+          response = await send('post', '/api/v1/workspaces/{workspaceId}/agents', {
+            path: { workspaceId: command.workspaceId },
+            body: {
+              name: command.name,
+              role: command.role,
+              custodianPrincipalId: command.custodianPrincipalId,
+            },
+            key,
+            signal,
+          });
           break;
         case 'manage-agent':
-          path = `${scope}/agents/${segment(command.principalId)}`;
-          body = {
-            version: command.version,
-            ...(command.state !== undefined ? { state: command.state } : {}),
-            ...(command.custodianPrincipalId !== undefined
-              ? { custodianPrincipalId: command.custodianPrincipalId }
-              : {}),
-          };
+          response = await send('post', '/api/v1/workspaces/{workspaceId}/agents/{principalId}', {
+            path: { workspaceId: command.workspaceId, principalId: command.principalId },
+            body: {
+              version: command.version,
+              ...(command.state !== undefined ? { state: command.state } : {}),
+              ...(command.custodianPrincipalId !== undefined
+                ? { custodianPrincipalId: command.custodianPrincipalId }
+                : {}),
+            },
+            key,
+            signal,
+          });
           break;
         case 'update-member':
-          path = `${scope}/members/${segment(command.principalId)}`;
-          body = {
-            version: command.version,
-            ...(command.state !== undefined ? { state: command.state } : {}),
-            ...(command.role !== undefined ? { role: command.role } : {}),
-          };
+          response = await send('post', '/api/v1/workspaces/{workspaceId}/members/{principalId}', {
+            path: { workspaceId: command.workspaceId, principalId: command.principalId },
+            body: {
+              version: command.version,
+              ...(command.state !== undefined ? { state: command.state } : {}),
+              ...(command.role !== undefined ? { role: command.role } : {}),
+            },
+            key,
+            signal,
+          });
           break;
       }
-      const value = await request(path, signal, body, key);
+      const value = await read(response);
       if (command.type === 'create-workspace' || command.type === 'accept-invitation') {
         if (isWorkspaceSummary(value)) return value;
       } else if (command.type === 'invite') {
