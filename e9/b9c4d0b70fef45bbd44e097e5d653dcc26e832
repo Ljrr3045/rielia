@@ -1,0 +1,29 @@
+CHANGELOG.md
+  s_82d7c6e8177af6::t_c36d78e2073a2a 7-11,27
+docs/development/t38-private-schemas.md
+  s_82d7c6e8177af6::t_c36d78e2073a2a 10-14,18
+docs/development/unit-coverage.md
+  s_82d7c6e8177af6::t_c36d78e2073a2a 5-9
+docs/development/t38-tooling-plan.md
+  s_82d7c6e8177af6::t_c36d78e2073a2a 3-7,19
+docs/development/t38-boundary-inventory.md
+  s_82d7c6e8177af6::t_c36d78e2073a2a 3-7,19
+docs/development/progress.md
+  s_82d7c6e8177af6::t_c36d78e2073a2a 3-8,27,3529
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e9b9c4d0b70fef45bbd44e097e5d653dcc26e832",
+  "prompts": {},
+  "sessions": {
+    "s_82d7c6e8177af6": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21a7a-676c-7830-bcdb-1c0ccef59765",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
