@@ -1,0 +1,24 @@
+docs/development/t38-contract-transport.md
+  s_5105aeb5e13a07::t_0eee925d0e77eb 3-13
+CHANGELOG.md
+  s_5105aeb5e13a07::t_0eee925d0e77eb 7-12,23
+docs/development/progress.md
+  s_5105aeb5e13a07::t_0eee925d0e77eb 3-11,37
+  s_5105aeb5e13a07::t_cd848dd5150f66 38-39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2908c4cc51ffea3bd27e0c9c84a23a0e02927cd7",
+  "prompts": {},
+  "sessions": {
+    "s_5105aeb5e13a07": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21f15-2db5-76b0-bb30-f233515a0fe3",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
