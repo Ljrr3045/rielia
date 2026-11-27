@@ -4,6 +4,14 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Correct [PR68 W01](https://github.com/Ljrr3045/rielia/pull/68#discussion_r4717593270)
+  in CONTRIBUTING: require the isolated frozen generator install before every
+  standard `pnpm check`, add it to the setup sequence and align the overview.
+  The correction matches the existing CI prerequisite without a fresh install or
+  clone execution. Preserve graph/pin/script policy, unchanged application evidence
+  and dated review receipts. New-head CI/native review and coordinator thread
+  disposition remain pending; no code, test, dependency, baseline or policy change.
+
 - Publish T38.3a in [Draft PR68](https://github.com/Ljrr3045/rielia/pull/68), targeting
   `dev` at initial implementation head `dcf942802a0d545b8372ebd3baa6c1cf254fc50c`.
   Initial [CI run 45966884416](https://github.com/Ljrr3045/rielia/actions/runs/45966884416)

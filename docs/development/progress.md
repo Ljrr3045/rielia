@@ -1,5 +1,22 @@
 # Delivery progress and decisions
 
+## 2026-11-27 PR68 round1 W01 — local setup documentation corrected
+
+The completed native round on `9dea35c` (check 140411394536, App 2193792) reported
+one warning. The coordinator validated [W01](https://github.com/Ljrr3045/rielia/pull/68#discussion_r4717593270)
+and returned [PR68](https://github.com/Ljrr3045/rielia/pull/68) to Draft before this
+correction. CONTRIBUTING now makes the isolated frozen generator install a
+prerequisite for every standard `pnpm check`, adds it after the root install and
+aligns the check overview. The sequence matches the existing CI prerequisite;
+this is source-traced documentation work, with no fresh install or clone execution.
+
+The service lists 43 reviewed paths, including three marked generated; this is
+reported scope, not independent all-line review proof. Review 6085934058 is
+COMMENTED, not APPROVED. Earlier CI, review and local receipts retain their own
+head/run identities. New-head CI/native review and coordinator thread disposition
+remain pending; no code, test, dependency, baseline or policy change and no full
+T38 acceptance is implied. All existing warnings, exclusions and debt remain.
+
 ## 2026-11-27 T38.3a published in Draft PR68
 
 [Draft PR68](https://github.com/Ljrr3045/rielia/pull/68) targets `dev` at initial
