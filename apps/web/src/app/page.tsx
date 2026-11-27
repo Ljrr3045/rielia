@@ -1,12 +1,12 @@
 import Link from 'next/link';
 import { isHealthResponse } from '@rielia/contracts';
+import { apiUpstream } from '../lib/server/api-upstream.ts';
 
 export const dynamic = 'force-dynamic';
 
 async function checkApi(): Promise<boolean> {
   try {
-    const baseUrl = process.env['API_BASE_URL'] ?? 'http://127.0.0.1:3001';
-    const response = await fetch(new URL('/api/v1/health', baseUrl), {
+    const response = await fetch(apiUpstream('/api/v1/health'), {
       cache: 'no-store',
       signal: AbortSignal.timeout(2000),
     });

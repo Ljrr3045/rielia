@@ -1,12 +1,10 @@
 // Backend destination is operator configuration, never a request parameter.
 // Production edge routing should send /api/auth and /api/v1 directly to Nest.
+import { apiUpstream } from './server/api-upstream.ts';
 export async function proxyIdentity(request: Request): Promise<Response> {
   try {
     const incoming = new URL(request.url);
-    const target = new URL(
-      incoming.pathname + incoming.search,
-      process.env['API_BASE_URL'] ?? 'http://127.0.0.1:3001',
-    );
+    const target = apiUpstream(incoming.pathname + incoming.search);
     const headers = new Headers();
     for (const name of [
       'cookie',

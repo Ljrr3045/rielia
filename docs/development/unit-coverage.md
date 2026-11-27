@@ -1,5 +1,92 @@
 # T36 first unit and coverage delivery
 
+## 2026-11-27 PR67 W01 — standalone HTTP witness dependency repair
+
+The first native review's [valid W01](https://github.com/Ljrr3045/rielia/pull/67#discussion_r4715751704) found that the explicit scratch
+copy list lacked the newly imported server helper. On pinned Node24.22.1, the
+original maintained witness was run once and failed its baseline with
+ERR_MODULE_NOT_FOUND; that is a failed reproduction, not a successful proof.
+Adding only `apps/web/src/lib/server/api-upstream.ts` to the list makes the actual
+witness pass once: baseline exit0 and missing-body-deadline mutant exit1 with
+`Missing expected rejection`. All original guards,10s deadlines, mutation needle,
+replacement and critical assertions remain byte-identical. Logs/copied inputs
+were archived before removal of each ownership-verified scratch tree.
+
+The DOM mutation witness recursively copies all web source, and the normal mirror
+emits all inventory source; neither has the same missing dependency. No sibling
+repair was required. This standalone witness is outside the normal report inputs;
+production/unit source, provider/config inputs and all eight baselines remain
+byte-exact. No coverage/build/PG/runtime/audit rerun or numerical adoption was
+needed or performed for this harness/doc repair.
+
+Round1 explicitly reviewed23 code/test files, with eight doc consistency skims and
+two baselines not line-reviewed. Separate coordinator artifact/raw-map/normal
+verification covers those artifacts without claiming full33-file Kilo line review
+or waiving current-head CI/native feedback, finding resolution or protection.
+Corrected-head CI/native review and root thread reply/resolution remain pending.
+
+## Current publication — Draft PR67
+
+[Draft PR67](https://github.com/Ljrr3045/rielia/pull/67) targets `dev` at initial
+implementation head `19e7daf4`. Current-head CI, native review, Ready/merge and
+acceptance remain pending; no current-head success or billing evidence is claimed.
+This reference-only update preserves earlier local/pending checkpoints and their
+source/run identities without re-execution or rebinding. Full T38 remains open.
+
+## 2026-11-27 T38.2j exact adoption and normal proof
+
+The coordinator approved ONLY the exact API33092byte/web47723byte candidates
+recorded in the [runtime schema receipt](t38-runtime-schemas.md). Their SHA256
+values remain `49408578441f802c856a6a5c1ddf33e0513103dd9155fdd01e429670cb837d8e`
+and `482fe5bf87242c344629c78420e0f69c77afc785d30c47668514c11b55fad407`.
+Other six current/historical baselines stay byte-identical. L/S/F/B floors are
+API7718/7702/7433/7709 and web7295/7074/6169/6709, with no floor reduction,
+exclusion, comparator/provider change or inherited2h/2i exception.
+
+Fresh normal coverage passes **904/904**, no skips, across190 maintained inputs
+(API384/web429/contracts72/prototype19). All16 summary/manifest/map/LCOV files
+match frozen measure2 byte for byte; count digest is
+`72e3147ba61818b7753734b112b382b69d61a14a96d0e2d338ed2541978b7636`.
+The unchanged infrastructure suite now passes20/20, including the pre-adoption
+manifest guard; final artifact validation passes without upload. No successful
+build/PG/runtime/audit sequence was repeated for baseline/prose updates.
+
+The coordinator explicitly approved diagnostic.ts's exact unit gap0/39→0/41
+lines and0/42→0/45 statements as owned T04/runtime test debt: the schema owner is
+fully unit-covered and real runtime proves status/wait corruption/redaction and
+recovered readback. Integration is not unit coverage or a general waiver. All
+new/retained/unexecuted owners and type-only N/A remain. Original partial standard,
+native continuation, first runtime assertion failure, both measurements and
+pre-adoption infra19/20 retain their own source/run identities. Current-head CI,
+native review/publication/acceptance and full T38 remain gates.
+
+## T38.2j implementation checkpoint
+
+[T38.2i is ACCEPTED in PR66](https://github.com/Ljrr3045/rielia/pull/66#issuecomment-7208579762),
+reviewed `e9b9c4d0`, merged `a9fa0047`, with reviewed-head CI, full35-file native
+Kilo (zero findings) and exact-merge CI passed. This final decision supersedes
+pending labels in the preserved dated receipts; it does not rebind their runs.
+
+[T38.2j configuration/diagnostics](t38-runtime-schemas.md) proposes exact API/web
+adoption after coherent measure904 (API384/web429/contracts72/prototype19), with
+all190 maintained inputs and all16 raw reports retained. API candidates33092bytes/
+SHA256 `49408578441f802c856a6a5c1ddf33e0513103dd9155fdd01e429670cb837d8e` and
+web47723bytes/SHA256 `482fe5bf87242c344629c78420e0f69c77afc785d30c47668514c11b55fad407`
+raise aggregate L/S/F/B floors to7718/7702/7433/7709 and7295/7074/6169/6709.
+No retained file ratio decreases; all unchanged-source covered/total counts and
+provider/compiler/config/tool-lock inputs remain exact. The guide reports every
+structural absolute decrease and the CLI bridge's added2line/3statement uncovered
+units, tested separately in the real runtime. New helpers are fully covered and
+all inherited unexecuted/type-only inputs stay included.
+
+All eight tracked baselines remain unchanged. Contracts/prototype candidates and
+four historical files are byte-exact. Initial measure901 and its supplemental
+malformed-DB/process-default/clock regressions remain distinct evidence. The
+unchanged infrastructure guard currently rejects measured versus accepted test
+manifests (19/20); artifact packaging passes without upload. Exact root adoption,
+fresh normal/infra/artifact and current-head acceptance remain gates. No exception,
+floor reduction, omission, comparator change or inherited2h/2i disposition.
+
 ## Current T38.2i numerical receipt
 
 [Draft PR66](https://github.com/Ljrr3045/rielia/pull/66) targets `dev` at initial

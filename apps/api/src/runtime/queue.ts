@@ -1,19 +1,15 @@
 import { PgBoss } from 'pg-boss';
 import type pg from 'pg';
 import { DIAGNOSTIC_QUEUE, QUEUE_SCHEMA } from './database.js';
+import { diagnosticPayloadSchema, type DiagnosticPayload } from './diagnostic-schemas.js';
 
-export const diagnosticPayload = { kind: 'runtime-probe', version: 1 } as const;
+export const diagnosticPayload = {
+  kind: 'runtime-probe',
+  version: 1,
+} as const satisfies DiagnosticPayload;
 
 export function isDiagnosticPayload(data: unknown): boolean {
-  return (
-    typeof data === 'object' &&
-    data !== null &&
-    Object.keys(data).length === 2 &&
-    'kind' in data &&
-    data.kind === diagnosticPayload.kind &&
-    'version' in data &&
-    data.version === diagnosticPayload.version
-  );
+  return diagnosticPayloadSchema.safeParse(data).success;
 }
 
 export function diagnosticBoss(pool: pg.Pool, migrate = false, worker = false): PgBoss {

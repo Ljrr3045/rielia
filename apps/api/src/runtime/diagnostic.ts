@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { setTimeout as delay } from 'node:timers/promises';
 import { DIAGNOSTIC_QUEUE, assertRuntimeReady, databasePool } from './database.js';
 import { diagnosticBoss, diagnosticPayload, isDiagnosticPayload } from './queue.js';
+import { diagnosticCommandSchema, diagnosticResultSchema } from './diagnostic-schemas.js';
 
 const [action, argument, ...extra] = process.argv.slice(2);
 const id = (argument ?? (action === 'enqueue' ? randomUUID() : '')).toLowerCase();
@@ -17,11 +18,7 @@ const deadlineTimer = setTimeout(() => {
 }, 45000);
 
 try {
-  if (
-    !['enqueue', 'status', 'wait'].includes(action ?? '') ||
-    extra.length ||
-    !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)
-  ) {
+  if (!diagnosticCommandSchema.safeParse([action, id, ...extra]).success) {
     throw new Error('Invalid diagnostic command.');
   }
   await assertRuntimeReady(pool);
@@ -38,11 +35,14 @@ try {
       const job = await boss.getJobById(DIAGNOSTIC_QUEUE, id);
       if (!job || !isDiagnosticPayload(job.data)) throw new Error('Diagnostic job is unavailable.');
       if (action === 'status' || job.state === 'completed') {
+        const output =
+          job.state === 'completed' ? diagnosticResultSchema.safeParse(job.output) : null;
+        if (output && !output.success) throw new Error('Invalid diagnostic result.');
         console.log(
           JSON.stringify({
             id,
             state: job.state,
-            output: job.state === 'completed' ? job.output : null,
+            output: output?.data ?? null,
           }),
         );
         break;

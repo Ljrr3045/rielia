@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import type { OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { assertRuntimeReady, databasePool } from './database.js';
+import { localRuntimeEnabled } from './config.js';
 
 @Injectable()
 export class RuntimeService implements OnModuleInit, OnModuleDestroy {
-  private readonly pool = process.env['LOCAL_RUNTIME_ENABLED'] === 'true' ? databasePool() : null;
+  private readonly pool = localRuntimeEnabled() ? databasePool() : null;
 
   async onModuleInit(): Promise<void> {
     if (this.pool) await assertRuntimeReady(this.pool);

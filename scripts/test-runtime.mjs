@@ -116,6 +116,36 @@ const diagnostic = async (action, id) =>
     ]),
   );
 
+async function diagnosticFailure(args) {
+  // Compose writes launcher progress on its own stderr. Assert the application's
+  // exact streams/exit inside the disposable container, separately from that UI.
+  const probe = `
+    import assert from 'node:assert/strict';
+    import {spawnSync} from 'node:child_process';
+    const result=spawnSync(process.execPath,['dist/runtime/diagnostic.js',...process.argv.slice(1)],{encoding:'utf8',timeout:15000});
+    assert.equal(result.status,1);
+    assert.equal(result.stdout,'');
+    assert.equal(result.stderr,'Diagnostic command failed. Usage: enqueue [UUIDv4] | status UUIDv4 | wait UUIDv4; check local migrations and database.\\n');
+    console.log('Diagnostic failure remained redacted.');
+  `;
+  assert.equal(
+    await compose('Exact diagnostic failure streams', [
+      'run',
+      '--rm',
+      '--no-deps',
+      '-T',
+      'worker',
+      'node',
+      '--input-type=module',
+      '-e',
+      probe,
+      '--',
+      ...args,
+    ]),
+    'Diagnostic failure remained redacted.',
+  );
+}
+
 async function container(service) {
   const id = await compose('Container discovery', ['ps', '--all', '--quiet', service]);
   if (!id) return null;
@@ -486,8 +516,21 @@ try {
 
   const id = randomUUID();
   await compose('Ensure worker is stopped', ['stop', '-t', '10', 'worker']);
-  assert.deepEqual(await diagnostic('enqueue', id), { id, state: 'created' });
-  assert.equal((await diagnostic('status', id)).state, 'created');
+  assert.deepEqual(await diagnostic('enqueue', id.toUpperCase()), { id, state: 'created' });
+  await sql(
+    `UPDATE rielia_diagnostics.job SET output = '{"private":"fictional-private-result"}'::jsonb WHERE id = '${id}'`,
+  );
+  assert.deepEqual(await diagnostic('status', id), { id, state: 'created', output: null });
+  await sql(`UPDATE rielia_diagnostics.job SET output = NULL WHERE id = '${id}'`);
+  for (const args of [
+    ['unknown', id],
+    ['status'],
+    ['status', 'fictional-private-id'],
+    ['enqueue', ''],
+    ['wait', id, 'extra'],
+  ]) {
+    await diagnosticFailure(args);
+  }
   const volume = (await container('postgres')).Mounts.find((mount) => mount.Type === 'volume').Name;
   await compose('Stop/remove stack while preserving volume', ['down', '--timeout', '15']);
   await compose('Stack recreation with persistent database', [
@@ -545,6 +588,62 @@ try {
   });
   console.log(
     'Job remained created with worker stopped across stack/DB recreation; restarted worker completed it and retained result across graceful restart.',
+  );
+  for (const output of [
+    null,
+    {},
+    { diagnostic: 'bad' },
+    { diagnostic: 'ok', private: 'fictional-private-result' },
+  ]) {
+    await sql(
+      `UPDATE rielia_diagnostics.job SET output = '${JSON.stringify(output)}'::jsonb WHERE id = '${id}'`,
+    );
+    for (const action of ['status', 'wait']) {
+      await diagnosticFailure([action, id]);
+    }
+  }
+  await sql(
+    `UPDATE rielia_diagnostics.job SET output = '{"diagnostic":"ok"}'::jsonb, data = '{"kind":"runtime-probe","version":1,"private":"fictional-private-payload"}'::jsonb WHERE id = '${id}'`,
+  );
+  await diagnosticFailure(['status', id]);
+  await sql(
+    `UPDATE rielia_diagnostics.job SET data = '{"kind":"runtime-probe","version":1}'::jsonb WHERE id = '${id}'`,
+  );
+  assert.deepEqual(await diagnostic('status', id), {
+    id,
+    state: 'completed',
+    output: { diagnostic: 'ok' },
+  });
+  // A separate ephemeral container owns this absolute /tmp heartbeat fixture;
+  // never replace the running worker's operational heartbeat or a host file.
+  const heartbeatProbe = `
+    import assert from 'node:assert/strict';
+    import {writeFileSync,rmSync} from 'node:fs';
+    import {spawnSync} from 'node:child_process';
+    const file='/tmp/rielia-worker-heartbeat.json';
+    const check=(status)=>{const result=spawnSync(process.execPath,['dist/runtime/worker-health.js'],{encoding:'utf8'});assert.equal(result.status,status);assert.equal(result.stdout,'');assert.equal(result.stderr,'');};
+    try {
+      rmSync(file,{force:true});check(1);
+      for(const value of ['{bad', 'null', '{}', JSON.stringify({at:'bad'}), JSON.stringify({at:Date.now()-60000}), JSON.stringify({at:Date.now()+60000})]) {writeFileSync(file,value);check(1);}
+      writeFileSync(file,JSON.stringify({at:Date.now(),oldestPendingSeconds:{private:'ignored'}}));check(0);
+      console.log('Actual heartbeat wrapper rejects missing/corrupt/stale/future files without output; age metadata stays ignored.');
+    } finally {rmSync(file,{force:true});}
+  `;
+  console.log(
+    await compose('Private heartbeat file admission', [
+      'run',
+      '--rm',
+      '--no-deps',
+      '-T',
+      'worker',
+      'node',
+      '--input-type=module',
+      '-e',
+      heartbeatProbe,
+    ]),
+  );
+  console.log(
+    'Diagnostic command/payload/result corruption stayed redacted; valid completed readback recovered.',
   );
   console.log(
     'Local runtime smoke passed; identity stays disabled and no external provider was used.',

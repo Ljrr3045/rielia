@@ -147,7 +147,7 @@
     "apps/web/src/app/page.tsx": {
       "branches": {
         "covered": 0,
-        "total": 9
+        "total": 7
       },
       "functions": {
         "covered": 0,
@@ -155,11 +155,11 @@
       },
       "lines": {
         "covered": 0,
-        "total": 10
+        "total": 9
       },
       "statements": {
         "covered": 0,
-        "total": 11
+        "total": 10
       }
     },
     "apps/web/src/app/projects/feedback.tsx": {
@@ -1154,8 +1154,8 @@
     },
     "apps/web/src/lib/identity-proxy.ts": {
       "branches": {
-        "covered": 8,
-        "total": 8
+        "covered": 6,
+        "total": 6
       },
       "functions": {
         "covered": 1,
@@ -1226,19 +1226,19 @@
     },
     "apps/web/src/lib/project-task-proxy.ts": {
       "branches": {
-        "covered": 78,
-        "total": 97
+        "covered": 79,
+        "total": 95
       },
       "functions": {
         "covered": 6,
         "total": 7
       },
       "lines": {
-        "covered": 63,
+        "covered": 64,
         "total": 69
       },
       "statements": {
-        "covered": 66,
+        "covered": 67,
         "total": 73
       }
     },
@@ -1258,6 +1258,24 @@
       "statements": {
         "covered": 65,
         "total": 68
+      }
+    },
+    "apps/web/src/lib/server/api-upstream.ts": {
+      "branches": {
+        "covered": 2,
+        "total": 2
+      },
+      "functions": {
+        "covered": 1,
+        "total": 1
+      },
+      "lines": {
+        "covered": 1,
+        "total": 1
+      },
+      "statements": {
+        "covered": 1,
+        "total": 1
       }
     },
     "apps/web/src/lib/sprint-client-state.ts": {
@@ -1568,8 +1586,8 @@
     },
     "apps/web/src/lib/workspace-proxy.ts": {
       "branches": {
-        "covered": 11,
-        "total": 11
+        "covered": 9,
+        "total": 9
       },
       "functions": {
         "covered": 3,
@@ -1586,10 +1604,10 @@
     }
   },
   "floors": {
-    "branches": 6704,
-    "functions": 6166,
-    "lines": 7291,
-    "statements": 7070
+    "branches": 6709,
+    "functions": 6169,
+    "lines": 7295,
+    "statements": 7074
   },
   "manifest": {
     "compiler": {
@@ -1618,7 +1636,7 @@
       "apps/web/src/app/identity/identity-view.tsx": "bc48d9337fd3332fb99976539b5076ffc6b926ba36cb9f0de99bb9da7d385a3a",
       "apps/web/src/app/identity/page.tsx": "d0e90fe28b992c5e125015baebd3566584468767d11edb485d4a417a933c91b9",
       "apps/web/src/app/layout.tsx": "0f7814a531672925cb10bd7eb7f581fd2006698a7d7a675dc5675c920fd59eb4",
-      "apps/web/src/app/page.tsx": "4d8ab92c2a11a121debb485fbd3386d932f9da23df11547c32e50c48c1d7c8df",
+      "apps/web/src/app/page.tsx": "b9e2b3950fcc33dd910ad2faeb207aa1c3e21be3c0c2928e9af64eeea6461e05",
       "apps/web/src/app/projects/feedback.tsx": "6b7d62e9dfbe1aa1431e6f08d5f6e273a3e0f791c05746b18ff222609d72332a",
       "apps/web/src/app/projects/page.tsx": "91a38ea3d2bda72bbdfdd0fd4dc2965764b854eb7d08c985dbf938472ae8bcea",
       "apps/web/src/app/projects/project-access.tsx": "19615611600e046d98b47588fbbbc221be78fa792642764513727c1a87d3ed26",
@@ -1674,12 +1692,13 @@
       "apps/web/src/app/workspaces/workspace-view.tsx": "cabc6066662684919b7d573d491ca8d82cb560e1386c0cfab5b155a38c063278",
       "apps/web/src/lib/identity-client.ts": "7271ac3c35ee04af5d42791166dc52fcf3e2e227a0d8ebb1b9d174b342a26b56",
       "apps/web/src/lib/identity-controller.ts": "1a4aea81c25cbcc41c4baad8e29d57bd4d7a62486945992a75703da3bac35163",
-      "apps/web/src/lib/identity-proxy.ts": "d3bfab1aea9ab2ba4e9803b58d343361f325e519bbfb9e92ad01b0933cae997c",
+      "apps/web/src/lib/identity-proxy.ts": "6007586e00094a33704729198b2aa077195a1c63c426b83244baeb4d8ece6fd4",
       "apps/web/src/lib/project-sprint-location.ts": "bd555135cdf7a9fd25235c00e5771bc1879013bd4bee9aa93146b6e1170d7b01",
       "apps/web/src/lib/project-task-client.ts": "a1e12efa690100a079949dd35852de2dcf608f58a6d23adb83a7cd1cf1dfece5",
       "apps/web/src/lib/project-task-controller.ts": "08d6c46531529dd5c22725acfc3877eabe1d59385d42d91a398ea5880fb6eb1b",
-      "apps/web/src/lib/project-task-proxy.ts": "86541723b179208ad66e0587ec2efd34d6ceed5593462af894406763bcdc4f98",
+      "apps/web/src/lib/project-task-proxy.ts": "7c318dd26a3667aa97762d787986804bdd216c39d69c65a24529c86195441ccb",
       "apps/web/src/lib/safe-markdown.ts": "ec1344cc57dade02d9e351aa78b7f8d85bd4fd2addd0540a552d407196dec244",
+      "apps/web/src/lib/server/api-upstream.ts": "0258cb7244613def8464ddcadd936fcd009a71df42177330c3f5e10cbb05823f",
       "apps/web/src/lib/sprint-client-state.ts": "bb926105fd2c9fb2228d061caa51fd5ff23ae508b7b98a674f12fb884cf86b88",
       "apps/web/src/lib/sprint-client.ts": "141b2fd1b71cdde544910677ede389bb669064be637533d54ae66e1cd0fccbcc",
       "apps/web/src/lib/sprint-commands.ts": "a01805a35d3bc3a6367d05237ebb98d909363c6e8626a7c6d7c20c3e7c70e3ca",
@@ -1697,7 +1716,7 @@
       "apps/web/src/lib/workspace-client.ts": "397460001b0ef7e70c993d1ee880cbb59f4d880503e33d0c637d39029602c668",
       "apps/web/src/lib/workspace-controller.ts": "fddb5ea22ea19adaac2f4c1d538ba457a0a8f0ec1996fbfe70b8c86f804b1615",
       "apps/web/src/lib/workspace-invitation-location.ts": "42e6ef8a2074a3b2064df13b009a22cf0fac22267834209e052f7e85f9d0a85b",
-      "apps/web/src/lib/workspace-proxy.ts": "28599000621aa11f815f22886591a404c86cbdc87593cd695f585dbb6e9aea6e"
+      "apps/web/src/lib/workspace-proxy.ts": "656c0dd0445df897643a9db064a69669a14bfb0a2e75e7e74bbb889f08790c55"
     },
     "pnpm": "12.15.0",
     "provider": {
@@ -1708,6 +1727,7 @@
     },
     "runtime": "24.22.1",
     "tests": {
+      "apps/web/test/unit/api-upstream.test.mjs": "952ea976917844b6273117c3a346e1cc327d4f271913f1dbf2934a1199884474",
       "apps/web/test/unit/dom-harness.mjs": "b2d1333d126484b0fd327298cf5a7d7539800ce6265cc9b03d863895fae219af",
       "apps/web/test/unit/identity-hook.test.mjs": "c9b0ae7bd603ab0e6cb375bb65106ff466bbfa46ebafa3803fdec0db6266ff2a",
       "apps/web/test/unit/identity-view.test.mjs": "5906ae34ba9b93abc070879303bebc326bc51853c6fb31366d4a03d8417d620a",
@@ -1750,19 +1770,19 @@
   "scope": "web",
   "total": {
     "branches": {
-      "covered": 4674,
-      "total": 6971
+      "covered": 4673,
+      "total": 6965
     },
     "functions": {
-      "covered": 835,
-      "total": 1354
+      "covered": 836,
+      "total": 1355
     },
     "lines": {
-      "covered": 3602,
+      "covered": 3604,
       "total": 4940
     },
     "statements": {
-      "covered": 3968,
+      "covered": 3970,
       "total": 5612
     }
   }
