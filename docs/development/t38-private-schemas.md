@@ -7,10 +7,15 @@ remain dated evidence; that final decision governs current acceptance.
 
 ## T38.2i persisted data and opaque cursors
 
+[Draft PR66](https://github.com/Ljrr3045/rielia/pull/66) targets `dev` at initial
+implementation head `844d6d6`; current-head CI/native review/acceptance remain
+pending. This reference-only update preserves prior source/run identities;
+full T38 remains open.
+
 The coordinator released the remaining five persisted owners and six opaque
 owners as one API batch from `cdb39361`. Local implementation and substantive
 regression fixtures are complete. Source-qualified checks, exact numerical
-adoption and normal/infra/artifact validation pass; publication/current-head
+adoption and normal/infra/artifact validation pass; current-head
 CI/native review/acceptance remain gates.
 No new package, public type, stored format, SQL, permission, hash or transaction.
 

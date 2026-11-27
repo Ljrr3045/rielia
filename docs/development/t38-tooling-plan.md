@@ -1,5 +1,10 @@
 # T38 tool decisions and compatibility pilot
 
+[Draft PR66](https://github.com/Ljrr3045/rielia/pull/66) targets `dev` at initial
+implementation head `844d6d6`; current-head CI/native review/acceptance remain
+pending. This reference-only update preserves prior source/run identities;
+full T38 remains open.
+
 [T38.2h is ACCEPTED in PR65](https://github.com/Ljrr3045/rielia/pull/65#issuecomment-7206762092),
 reviewed `7a13cba3`, merged `cdb39361` (tree `cbee2ec5`), with reviewed-head
 CI/native Kilo and exact-merge CI passed. Earlier pending/source/run receipts
@@ -11,7 +16,7 @@ decoders. Source-qualified local implementation, resumed standard, real PG118,
 runtime/deployed closure/recovery and high audits pass. Exact API numerical
 adoption and fresh normal885/infra20/artifact validation pass, retaining the one
 explicit discovery structural disposition and seven unchanged baselines.
-Publication/current-head review/acceptance remain gates. Its explicit corruption policy
+Current-head CI/native review/acceptance remain gates. Its explicit corruption policy
 preserves current authority, successful formats and staged cursor errors.
 C01–12 and T38.3–6 remain separate gates; full T38 is open.
 

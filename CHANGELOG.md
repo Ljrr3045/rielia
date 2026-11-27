@@ -4,6 +4,11 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Publish T38.2i in [Draft PR66](https://github.com/Ljrr3045/rielia/pull/66), targeting
+  `dev` at initial implementation head `844d6d6`. Current-head CI/native review/
+  acceptance remain pending. This reference-only batch preserves original local
+  source/run identities without re-execution or rebinding; full T38 remains open.
+
 - Record [T38.2h acceptance in PR65](https://github.com/Ljrr3045/rielia/pull/65#issuecomment-7206762092),
   reviewed `7a13cba3`, merged `cdb39361`, with reviewed/exact-merge CI and native
   Kilo passed; preserve dated receipts. Implement coordinator-released
@@ -19,7 +24,7 @@ This records repository changes. No application version has been released.
   raising all aggregate floors and explicitly dispositioning discovery's structural
   40/43→38/41 branch ratio with three retained zero-hit locations. Other seven
   baselines stay byte-exact; fresh normal885/infra20/artifact validation pass and
-  reproduce all16 approved reports. Publication/current-head review remain gates.
+  reproduce all16 approved reports. Current-head CI/native review/acceptance remain gates.
   Configuration and later T38 tools
   remain separately scoped; full T38 is open.
 

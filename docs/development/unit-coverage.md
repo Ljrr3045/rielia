@@ -2,6 +2,11 @@
 
 ## Current T38.2i numerical receipt
 
+[Draft PR66](https://github.com/Ljrr3045/rielia/pull/66) targets `dev` at initial
+implementation head `844d6d6`; current-head CI/native review/acceptance remain
+pending. This reference-only update preserves prior source/run identities;
+full T38 remains open.
+
 [T38.2h is ACCEPTED in PR65](https://github.com/Ljrr3045/rielia/pull/65#issuecomment-7206762092),
 reviewed `7a13cba3`, merged `cdb39361`. Its dated receipts below remain frozen.
 The [T38.2i private-boundary guide](t38-private-schemas.md) records the remaining
