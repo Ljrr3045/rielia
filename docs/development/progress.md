@@ -1,6 +1,14 @@
 # Delivery progress and decisions
 
-## 2026-11-27 T38.3d final local verification — review pending
+## 2026-11-27 T38.3d published in Draft PR71
+
+Root published [Draft PR71](https://github.com/Ljrr3045/rielia/pull/71) toward `dev`
+from initial implementation head `c201ab2bc62e853c71d1cac9d791f96c0278c10d`, based
+on `73f87d0c77724aaabba13aa00eb797b451c6c577`. Its immediate publication readback
+verified OPEN/Draft and own author Ljrr3045, with zero checks/comments/Kilo checks
+in that snapshot. Later events/provider billing are not inferred. Final-head
+CI/native review and coordinator acceptance remain pending; this reference-only
+batch requests no Ready/paid review and does not rebind prior check receipts.
 
 [PR70's final acceptance in its body](https://github.com/Ljrr3045/rielia/pull/70)
 accepts T38.3c at reviewed `3bb267ba669ab104447cb0e443268788de9b4b43`, merged
@@ -26,9 +34,9 @@ seven others remain byte-identical. Normal 940 (384/458/79/19) reproduces all 16
 reports and complete status, digest
 `873362a7c48ae63c7dab26e2f2b738c139f9c31ce674d48ccbf73f2a4913c2b2`.
 Infrastructure 20 and bounded artifacts 17 pass, without upload, omission, lower
-floor or PR65 exception. Commits, Draft publication/current-head CI/native review,
-acceptance and cleanup remain root gates. Accounting stays 60 accepted +2 local
-candidate +4 browser JSON exclusions =66; full T38.3/T38, later phases and
+floor or PR65 exception. The implementation is committed and published Draft;
+final-head CI/native review, acceptance and cleanup remain root gates. Accounting
+stays 60 accepted +2 local candidate +4 browser JSON exclusions =66; full T38.3/T38, later phases and
 security/action/packaging/S01/product/UX debts remain open.
 
 ## 2026-11-27 T38.3c published in Draft PR70

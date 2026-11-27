@@ -4,8 +4,12 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
-- Complete bounded [T38.3d local H24/H54 transport](docs/development/t38-contract-transport.md)
-  and correlated command inputs across four existing web owners, preserving
+- Publish bounded [T38.3d H24/H54 transport](docs/development/t38-contract-transport.md)
+  in [Draft PR71](https://github.com/Ljrr3045/rielia/pull/71), targeting `dev` from
+  initial implementation head `c201ab2bc62e853c71d1cac9d791f96c0278c10d`, based on
+  `73f87d0c77724aaabba13aa00eb797b451c6c577`. Root verified OPEN/Draft and zero
+  checks/comments/Kilo checks immediately after publication; later events or
+  billing are not inferred. Correlated command inputs across four web owners preserve
   original inputs/guards, page binding, captured source concurrency and exact
   body/key retry. Root adopts only exact web baseline 48,308 bytes/SHA256
   `8671848776ea49a7502b3ade4c3cbbb3d47c72daf59e90f925a597861d5d8151`;
@@ -16,7 +20,7 @@ This records repository changes. No application version has been released.
   qualified; production and passing standard/one-build/probe/HTTP evidence stay
   fixed. PR70's final body accepts T38.3c over historical pending labels below.
   Current accounting is 60 accepted +2 local candidate +4 exclusions =66;
-  publication/current-head CI/native review/coordinator acceptance, full
+  final-head CI/native review/coordinator acceptance, full
   T38.3/T38 and all retained security/action/S01/packaging/product debts remain open.
 
 - Publish T38.3c in [Draft PR70](https://github.com/Ljrr3045/rielia/pull/70), targeting

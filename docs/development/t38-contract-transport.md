@@ -1,6 +1,16 @@
 # T38.3 contract-derived browser requests
 
-## T38.3d exact local adoption and normal replay
+## T38.3d published in Draft PR71
+
+The coordinator published [Draft PR71](https://github.com/Ljrr3045/rielia/pull/71)
+targeting `dev` from initial implementation head
+`c201ab2bc62e853c71d1cac9d791f96c0278c10d`, based on
+`73f87d0c77724aaabba13aa00eb797b451c6c577`. Root's immediate publication-time
+readback verified OPEN/Draft, author Ljrr3045, and no checks/comments/Kilo checks
+in that snapshot. This does not establish later event exclusion or billing;
+final-head CI/native review and coordinator acceptance remain pending. This
+reference-only batch neither requests Ready/paid review nor rebinds historical
+source-qualified local checks to a later documentation head.
 
 [PR70's final coordinator decision in its body](https://github.com/Ljrr3045/rielia/pull/70)
 accepts T38.3c at reviewed `3bb267ba`, merged `73f87d0c`. It supersedes the
