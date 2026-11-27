@@ -1223,3 +1223,223 @@ test('planning input adapters retain field error precedence and normalized expli
       estimatePoints,
     });
 });
+
+test('scope snapshots reject corrupt required history, preserve nullable sides and keep SQL totals independent', async () => {
+  const setup = (options = {}) => {
+    const f = fixture({ sprint: options.closed ? { state: 'closed' } : {} });
+    f.tx.sprintParticipation.findMany = async () => [{ ...visit, ...options.visit }];
+    f.tx.sprintParticipation.count = async () => 1;
+    f.tx.sprintStartReference.findMany = async () => options.references ?? [];
+    f.tx.sprintClosingOutcome = { findMany: async () => options.outcomes ?? [] };
+    f.tx.$queryRaw = async () => [{ done: 19, pendingPoints: 57 }];
+    return f;
+  };
+  const historical = { ...snap, estimatePoints: 7 };
+  const f = setup({
+    visit: { entrySnapshot: historical },
+    references: [{ participationId: 'visit', snapshot: historical }],
+  });
+  const page = await sprintScope(f.tx, project, 's');
+  assert.equal(page.items[0].entry, historical);
+  assert.equal(page.items[0].start, historical);
+  assert.equal(page.items[0].exit, null);
+  assert.equal(page.items[0].current.estimatePoints, null);
+  assert.deepEqual(page.currentTotals, { done: 19, pendingPoints: 57 });
+  for (const invalid of [
+    null,
+    [],
+    {},
+    { ...snap, extra: true },
+    { ...snap, estimatePoints: '3' },
+    { ...snap, version: Number.MAX_SAFE_INTEGER + 1 },
+    { ...snap, archivedAt: '0000-01-01T00:00:00.000Z' },
+    { ...snap, archivedAt: '2026-02-30T00:00:00.000Z' },
+  ]) {
+    for (const options of [
+      { visit: { entrySnapshot: invalid } },
+      { references: [{ participationId: 'visit', snapshot: invalid }] },
+      { closed: true, outcomes: [{ snapshot: invalid }] },
+      ...(invalid === null ? [] : [{ visit: { exitSnapshot: invalid } }]),
+    ]) {
+      const broken = setup(options);
+      await assert.rejects(sprintScope(broken.tx, project, 's'), (error) => {
+        assert.equal(error.getStatus(), 503);
+        assert.equal(error.message, 'Planning snapshot is unavailable.');
+        return true;
+      });
+    }
+  }
+  const missing = setup({ visit: { entrySnapshot: null } });
+  missing.tx.sprint.findUnique = async () => null;
+  await assert.rejects(sprintScope(missing.tx, project, 's'), denied(403));
+});
+
+test('planning history validates selected event/outcome snapshots but keeps first legacy nullable fallback', async () => {
+  const activity = {
+    id: 'activity',
+    actorPrincipalId: 'h',
+    executionMode: 'human',
+    source: 'web',
+    grantId: null,
+    entityVersion: 2,
+    action: 'estimate-task',
+    createdAt: at,
+    sprintId: 's',
+    taskId: 't',
+  };
+  const event = {
+    id: 'event',
+    activityId: 'activity',
+    sprintId: 's',
+    taskId: 't',
+    participationId: 'visit',
+    ordinal: 2,
+    kind: 'task-change',
+    occurredAt: at,
+    beforeSnapshot: null,
+    afterSnapshot: null,
+  };
+  const setup = ({ events = [], outcomes = [], changes = [] } = {}) => {
+    const f = fixture();
+    const id = outcomes.length ? 'outcome' : events.length ? 'event' : 'activity';
+    const source = outcomes.length ? 'outcome' : events.length ? 'event' : 'activity';
+    f.tx.$queryRaw = async (q) =>
+      q.sql.includes('count(*)') ? [{ total: 1 }] : [{ id, source, ordering: 1n }];
+    f.tx.sprintScopeEvent.findMany = async () => events;
+    f.tx.sprintClosingOutcome = { findMany: async () => outcomes };
+    f.tx.sprintClosure = { findMany: async () => [{ id: 'closure', activityId: 'activity' }] };
+    f.tx.activityEvent.findMany = async () => [{ ...activity, changes }];
+    return f;
+  };
+  const after = { ...snap, estimatePoints: 7 };
+  const legacy = { planningBefore: snap, planningAfter: after };
+  const f = setup({ changes: [legacy] });
+  const item = (await planningHistory(f.tx, project, { taskId: 't' })).items[0];
+  assert.equal(item.before, snap);
+  assert.equal(item.after, after);
+  const first = setup({ changes: [{ planningBefore: {}, planningAfter: null }, legacy] });
+  const absent = (await planningHistory(first.tx, project, { taskId: 't' })).items[0];
+  assert.equal(absent.before, null);
+  assert.equal(absent.after, null);
+  const partial = setup({ events: [{ ...event, beforeSnapshot: snap }], changes: [legacy] });
+  const mixed = (await planningHistory(partial.tx, project, { taskId: 't' })).items[0];
+  assert.equal(mixed.before, snap);
+  assert.equal(mixed.after, after);
+  const unread = {
+    get planningBefore() {
+      throw new Error('unused legacy before');
+    },
+    get planningAfter() {
+      throw new Error('unused legacy after');
+    },
+  };
+  const selected = setup({
+    events: [{ ...event, beforeSnapshot: snap, afterSnapshot: after }],
+    changes: [unread],
+  });
+  assert.equal(
+    (await planningHistory(selected.tx, project, { taskId: 't' })).items[0].after,
+    after,
+  );
+  for (const field of ['beforeSnapshot', 'afterSnapshot']) {
+    const broken = setup({ events: [{ ...event, [field]: {} }], changes: [legacy] });
+    await assert.rejects(planningHistory(broken.tx, project, { taskId: 't' }), denied(503));
+  }
+  const outcome = {
+    id: 'outcome',
+    closureId: 'closure',
+    sprintId: 's',
+    taskId: 't',
+    participationId: 'visit',
+    snapshot: snap,
+    disposition: 'backlog',
+    targetSprintId: null,
+    targetParticipationId: null,
+  };
+  const frozen = setup({ outcomes: [outcome], changes: [unread] });
+  const result = (await planningHistory(frozen.tx, project, { taskId: 't' })).items[0];
+  assert.equal(result.before, snap);
+  assert.equal(result.after, snap);
+  for (const snapshot of [null, {}, { ...snap, status: 'unknown' }]) {
+    const broken = setup({ outcomes: [{ ...outcome, snapshot }], changes: [legacy] });
+    await assert.rejects(planningHistory(broken.tx, project, { taskId: 't' }), denied(503));
+  }
+});
+
+test('planning cursors retain interleaved version precedence and bounded BigInt ordinals without eager exact-key rejection', async () => {
+  const binding = {
+    v: 1,
+    kind: 'sprint-scope',
+    w: 'w',
+    p: 'p',
+    scope: 's',
+    projectVersion: 2,
+    taskRevision: 8,
+    sprintRevision: 4,
+    entityVersion: 2,
+    a: 'visit',
+    o: '0',
+  };
+  const encode = (value) => Buffer.from(JSON.stringify(value)).toString('base64url');
+  const versions = ['projectVersion', 'taskRevision', 'sprintRevision', 'entityVersion'];
+  for (let i = 0; i < versions.length; i++) {
+    const invalid = { ...binding, [versions[i]]: '2' };
+    await assert.rejects(sprintScope(fixture().tx, project, 's', encode(invalid)), denied(400));
+    for (let j = i + 1; j < versions.length; j++) {
+      const stale = {
+        ...binding,
+        [versions[i]]: binding[versions[i]] + 1,
+        [versions[j]]: 'invalid',
+      };
+      await assert.rejects(
+        sprintScope(fixture().tx, project, 's', encode(stale)),
+        denied(409, 'page-changed'),
+      );
+      delete stale[versions[j]];
+      stale.extra = true;
+      await assert.rejects(
+        sprintScope(fixture().tx, project, 's', encode(stale)),
+        denied(409, 'page-changed'),
+      );
+    }
+  }
+  for (const value of [
+    null,
+    { ...binding, extra: true },
+    { ...binding, o: 0 },
+    { ...binding, w: 'other', projectVersion: 1 },
+    { ...binding, o: '9223372036854775808', projectVersion: 1 },
+  ])
+    await assert.rejects(sprintScope(fixture().tx, project, 's', encode(value)), denied(400));
+  const f = fixture();
+  let lookedUp = false;
+  f.tx.sprintParticipation.findFirst = async () => {
+    lookedUp = true;
+    return visit;
+  };
+  await assert.rejects(
+    sprintScope(f.tx, project, 's', encode({ ...binding, o: '00' })),
+    denied(400),
+  );
+  assert.equal(lookedUp, true, 'scope ordinal text check remains after anchor lookup');
+  const h = fixture();
+  const queries = [];
+  h.tx.$queryRaw = async (q) => {
+    queries.push(q);
+    return q.sql.includes('count(*)')
+      ? [{ total: 0 }]
+      : q.sql.includes('SELECT id FROM items')
+        ? [{ id: 'visit' }]
+        : [];
+  };
+  h.tx.sprintScopeEvent.findMany = async () => [];
+  h.tx.activityEvent.findMany = async () => [];
+  for (const o of ['0', '9223372036854775807', '09223372036854775807'])
+    await planningHistory(
+      h.tx,
+      project,
+      { taskId: 't' },
+      encode({ ...binding, kind: 'task-sprint-history', scope: 't', o }),
+    );
+  assert.ok(queries.some((q) => q.values.includes(9223372036854775807n)));
+});

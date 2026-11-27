@@ -21,6 +21,7 @@ if (
           '--workspaces',
           '--projects',
           '--planning-schemas',
+          '--private-boundaries',
         ].includes(arg),
     )
 )
@@ -33,6 +34,9 @@ if (projectsOnly && process.argv.slice(2).length !== 1) throw new Error('Use --p
 const planningSchemasOnly = process.argv.includes('--planning-schemas');
 if (planningSchemasOnly && process.argv.slice(2).length !== 1)
   throw new Error('Use --planning-schemas alone.');
+const privateBoundariesOnly = process.argv.includes('--private-boundaries');
+if (privateBoundariesOnly && process.argv.slice(2).length !== 1)
+  throw new Error('Use --private-boundaries alone.');
 const closeOnly = process.argv.includes('--sprint-close');
 const scopeOnly = process.argv.includes('--sprint-scope');
 const sprintsOnly =
@@ -182,28 +186,38 @@ try {
     { env, signal: abort.signal },
   );
   console.log('Disposable PostgreSQL 18.6 ready; identity migration applied twice.');
-  const suites = workspacesOnly
-    ? ['principals', 'workspaces', 'identity']
-    : projectsOnly
-      ? ['project-tasks', 'task-collaboration', 'task-discovery']
-      : planningSchemasOnly
-        ? ['sprint-scope-start', 'sprint-close']
-        : closeOnly
-          ? ['sprint-close']
-          : scopeOnly
-            ? ['sprint-scope-start']
-            : sprintsOnly
-              ? ['sprint-planning', 'sprint-scope-start', 'sprint-close']
-              : [
-                  'principals',
-                  'workspaces',
-                  'project-tasks',
-                  'task-collaboration',
-                  'task-discovery',
-                  'sprint-planning',
-                  'sprint-scope-start',
-                  'sprint-close',
-                ];
+  const suites = privateBoundariesOnly
+    ? [
+        'workspaces',
+        'project-tasks',
+        'task-collaboration',
+        'task-discovery',
+        'sprint-planning',
+        'sprint-scope-start',
+        'sprint-close',
+      ]
+    : workspacesOnly
+      ? ['principals', 'workspaces', 'identity']
+      : projectsOnly
+        ? ['project-tasks', 'task-collaboration', 'task-discovery']
+        : planningSchemasOnly
+          ? ['sprint-scope-start', 'sprint-close']
+          : closeOnly
+            ? ['sprint-close']
+            : scopeOnly
+              ? ['sprint-scope-start']
+              : sprintsOnly
+                ? ['sprint-planning', 'sprint-scope-start', 'sprint-close']
+                : [
+                    'principals',
+                    'workspaces',
+                    'project-tasks',
+                    'task-collaboration',
+                    'task-discovery',
+                    'sprint-planning',
+                    'sprint-scope-start',
+                    'sprint-close',
+                  ];
   for (const suite of suites) {
     const result = await command(
       'Identity integration suite',
@@ -215,7 +229,7 @@ try {
     if (suite === 'identity' && result.stderr)
       console.log('Identity tests emitted diagnostics; inspect privately before delivery.');
   }
-  if (!sprintsOnly && !workspacesOnly && !projectsOnly) {
+  if (!sprintsOnly && !workspacesOnly && !projectsOnly && !privateBoundariesOnly) {
     const witness = join(directory, 'domain-persistence.json');
     await command(
       'Domain persistence snapshot',

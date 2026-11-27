@@ -4,6 +4,31 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Publish T38.2i in [Draft PR66](https://github.com/Ljrr3045/rielia/pull/66), targeting
+  `dev` at initial implementation head `844d6d6`. Current-head CI/native review/
+  acceptance remain pending. This reference-only batch preserves original local
+  source/run identities without re-execution or rebinding; full T38 remains open.
+
+- Record [T38.2h acceptance in PR65](https://github.com/Ljrr3045/rielia/pull/65#issuecomment-7206762092),
+  reviewed `7a13cba3`, merged `cdb39361`, with reviewed/exact-merge CI and native
+  Kilo passed; preserve dated receipts. Implement coordinator-released
+  [T38.2i private boundaries](docs/development/t38-private-schemas.md#t382i-persisted-data-and-opaque-cursors):
+  minimal current-authority receipt references, typed historical workspace replay,
+  explicit malformed-snapshot rejection and six staged opaque decoders. Preserve
+  original stored values/formats, per-element activity filtering, SQL-owned totals,
+  hashes, transactions and successful behavior; document deliberate corruption
+  error changes. Source-qualified resumed standard, PG118, runtime/deployed closure
+  and high audits pass with exact owned cleanup. Preserve failed fixture/import/
+  Next receipts and the unresolved security recommendation; no uninterrupted
+  standard pass or remediation claim. Adopt only the exact approved API baseline,
+  raising all aggregate floors and explicitly dispositioning discovery's structural
+  40/43→38/41 branch ratio with three retained zero-hit locations. Other seven
+  baselines stay byte-exact; fresh normal885/infra20/artifact validation pass and
+  reproduce all16 approved reports. Current-head CI/native review/acceptance remain gates.
+  Configuration and later T38 tools
+  remain separately scoped; full T38 is open.
+
+
 - Record [T38.2g acceptance/delivery in PR64](https://github.com/Ljrr3045/rielia/pull/64#issuecomment-7175578830),
   reviewed `9886fb2a`, merged `541ac5de`, with reviewed/exact-merge CI, native
   Kilo and settled checkout cleanup. Implement the released

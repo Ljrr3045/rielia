@@ -341,6 +341,23 @@ test('inviting a terminal historic member cannot issue another link', async (t) 
   );
 });
 
+test('secret replay never reads even corrupt or unreadable stored JSON', async (t) => {
+  const f = fixture(t);
+  await f.invite();
+  f.state.receipt.response = null;
+  await assert.rejects(f.invite(), status(409));
+  Object.defineProperty(f.state.receipt, 'response', {
+    get() {
+      throw new Error('secret receipt JSON must remain unread');
+    },
+  });
+  await assert.rejects(f.invite(), (error) => {
+    assert.equal(error.getResponse().code, 'invitation-link-unavailable');
+    return true;
+  });
+  assert.equal(f.effects.invitations.length, 1);
+});
+
 test('receipt collaborator failure rejects acceptance instead of reporting success', async (t) => {
   const f = fixture(t);
   const failure = new Error('receipt unavailable');

@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import assert from 'node:assert/strict';
+import { Buffer } from 'node:buffer';
 import { test } from 'node:test';
 import { randomUUID } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
@@ -714,6 +715,21 @@ test('T09 real PostgreSQL/NodeAdapter collaboration, security and atomic recover
       assert.equal(comments.items.length, 100);
       const tail = await page(f, 'comments', f.owner, `?cursor=${comments.nextCursor}`);
       assert.equal(tail.items.length, 2);
+      const savedCursor = JSON.parse(Buffer.from(comments.nextCursor, 'base64url'));
+      for (const [patch, expected] of [
+        [{ r: '1' }, 400],
+        [{ r: savedCursor.r - 1, a: 'bad/id' }, 400],
+        [{ r: savedCursor.r + 1 }, 409],
+        [{ extra: true }, 400],
+      ]) {
+        const cursor = Buffer.from(JSON.stringify({ ...savedCursor, ...patch })).toString(
+          'base64url',
+        );
+        assert.equal(
+          (await request(f.owner, `${f.detail}/comments?cursor=${cursor}`)).status,
+          expected,
+        );
+      }
       assert.equal(new Set([...comments.items, ...tail.items].map((row) => row.id)).size, 102);
       const legacyId = randomUUID();
       await db.activityEvent.create({

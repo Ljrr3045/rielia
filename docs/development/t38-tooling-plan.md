@@ -1,5 +1,27 @@
 # T38 tool decisions and compatibility pilot
 
+[Draft PR66](https://github.com/Ljrr3045/rielia/pull/66) targets `dev` at initial
+implementation head `844d6d6`; current-head CI/native review/acceptance remain
+pending. This reference-only update preserves prior source/run identities;
+full T38 remains open.
+
+[T38.2h is ACCEPTED in PR65](https://github.com/Ljrr3045/rielia/pull/65#issuecomment-7206762092),
+reviewed `7a13cba3`, merged `cdb39361` (tree `cbee2ec5`), with reviewed-head
+CI/native Kilo and exact-merge CI passed. Earlier pending/source/run receipts
+remain dated evidence; that final decision governs current acceptance.
+
+[T38.2i private boundaries](t38-private-schemas.md#t382i-persisted-data-and-opaque-cursors)
+is coordinator-released for the five remaining persisted owners and all six opaque
+decoders. Source-qualified local implementation, resumed standard, real PG118,
+runtime/deployed closure/recovery and high audits pass. Exact API numerical
+adoption and fresh normal885/infra20/artifact validation pass, retaining the one
+explicit discovery structural disposition and seven unchanged baselines.
+Current-head CI/native review/acceptance remain gates. Its explicit corruption policy
+preserves current authority, successful formats and staged cursor errors.
+C01–12 and T38.3–6 remain separate gates; full T38 is open.
+
+## Preserved earlier publication and local snapshots
+
 [T38.2g is ACCEPTED in PR64](https://github.com/Ljrr3045/rielia/pull/64#issuecomment-7175578830),
 reviewed `9886fb2a`, merged `541ac5de`, tree `bbff57ea`, with reviewed-head CI,
 native Kilo and exact-merge CI passed. [T38.2h](t38-private-schemas.md) is published

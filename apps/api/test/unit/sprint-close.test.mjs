@@ -673,3 +673,92 @@ test('grant policy content is included in the freshness binding and outcomes pag
   assert.equal(page.items.length, 100);
   assert.equal((await closureOutcomes(many.tx, project, 's', page.nextCursor)).items.length, 1);
 });
+
+test('immutable closure snapshots fail closed without replacing totals or eagerly parsing unselected outcomes', async () => {
+  const snapshot = {
+    version: 3,
+    status: 'done',
+    estimatePoints: 0,
+    parentTaskId: null,
+    archivedAt: null,
+  };
+  const closure = {
+    id: 'closure',
+    workspaceId: 'w',
+    projectId: 'p',
+    destination: 'backlog',
+    sourceOrdinal: 5,
+    targetOrdinal: null,
+    closedAt: at,
+    previewHash: 'hash',
+    activityId: 'activity',
+  };
+  const outcomes = Array.from({ length: 101 }, (_, i) => ({
+    id: `outcome${String(i).padStart(3, '0')}`,
+    closureId: 'closure',
+    participationId: `visit${i}`,
+    taskId: `t${i}`,
+    snapshot,
+    disposition: 'done',
+    targetSprintId: null,
+    targetParticipationId: null,
+  }));
+  const f = fixture({ closure, outcomes });
+  const totals = await closureView(f.tx, project, 's');
+  assert.equal(totals.totals.done, 101);
+  assert.equal(totals.totals.donePoints, 0);
+  outcomes[100].snapshot = null;
+  const first = await closureOutcomes(f.tx, project, 's');
+  assert.equal(first.items.length, 100);
+  assert.equal(first.items[0].snapshot, snapshot);
+  await assert.rejects(closureView(f.tx, project, 's'), (error) => error.getStatus() === 503);
+  await assert.rejects(closureOutcomes(f.tx, project, 's', first.nextCursor), (error) => {
+    assert.equal(error.getStatus(), 503);
+    assert.equal(error.message, 'Planning snapshot is unavailable.');
+    return true;
+  });
+  const decoded = JSON.parse(Buffer.from(first.nextCursor, 'base64url'));
+  const encode = (v) => Buffer.from(JSON.stringify(v)).toString('base64url');
+  await assert.rejects(
+    closureOutcomes(f.tx, project, 's', encode({ ...decoded, binding: '' })),
+    (e) => e.getStatus() === 409,
+  );
+  await assert.rejects(
+    closureOutcomes(f.tx, project, 's', encode({ ...decoded, anchor: 'missing' })),
+    (e) => e.getStatus() === 400,
+  );
+  f.state.closure = null;
+  await assert.rejects(closureView(f.tx, project, 's'), (e) => e.getStatus() === 403);
+});
+
+test('closing envelopes distinguish malformed400, ordinary binding409 and scoped anchor400', () => {
+  const value = closingPage(
+    { kind: 'preview', id: 's' },
+    Array.from({ length: 101 }, (_, i) => `v${i}`),
+  );
+  const saved = JSON.parse(Buffer.from(value.nextCursor, 'base64url'));
+  const encode = (v) => Buffer.from(JSON.stringify(v)).toString('base64url');
+  for (const v of [
+    null,
+    [],
+    { ...saved, extra: 1 },
+    { ...saved, binding: null },
+    { ...saved, binding: '', anchor: 'bad/id' },
+  ])
+    assert.throws(
+      () => closingPage({ kind: 'preview', id: 's' }, [], encode(v)),
+      (e) => e.getStatus() === 400,
+    );
+  assert.throws(
+    () => closingPage({ kind: 'preview', id: 's' }, [], encode({ ...saved, binding: '' })),
+    (e) => e.getStatus() === 409,
+  );
+  assert.throws(
+    () => closingPage({ kind: 'outcomes', id: 's' }, [], value.nextCursor),
+    (e) => e.getStatus() === 409,
+  );
+  assert.throws(
+    () => closingPage({ kind: 'preview', id: 's' }, [], value.nextCursor),
+    (e) => e.getStatus() === 400,
+  );
+});

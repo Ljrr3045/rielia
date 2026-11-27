@@ -234,6 +234,42 @@
         "total": 178
       }
     },
+    "apps/api/src/projects/planning-snapshot-read.ts": {
+      "branches": {
+        "covered": 1,
+        "total": 1
+      },
+      "functions": {
+        "covered": 1,
+        "total": 1
+      },
+      "lines": {
+        "covered": 3,
+        "total": 3
+      },
+      "statements": {
+        "covered": 3,
+        "total": 3
+      }
+    },
+    "apps/api/src/projects/project-cursor-schemas.ts": {
+      "branches": {
+        "covered": 0,
+        "total": 0
+      },
+      "functions": {
+        "covered": 1,
+        "total": 1
+      },
+      "lines": {
+        "covered": 11,
+        "total": 11
+      },
+      "statements": {
+        "covered": 11,
+        "total": 11
+      }
+    },
     "apps/api/src/projects/project-task-command.ts": {
       "branches": {
         "covered": 63,
@@ -308,20 +344,20 @@
     },
     "apps/api/src/projects/project-task-mutation.ts": {
       "branches": {
-        "covered": 47,
-        "total": 47
+        "covered": 50,
+        "total": 50
       },
       "functions": {
         "covered": 4,
         "total": 4
       },
       "lines": {
-        "covered": 32,
-        "total": 33
+        "covered": 43,
+        "total": 43
       },
       "statements": {
-        "covered": 33,
-        "total": 34
+        "covered": 44,
+        "total": 44
       }
     },
     "apps/api/src/projects/project-task-policy.ts": {
@@ -344,20 +380,20 @@
     },
     "apps/api/src/projects/project-task-read.ts": {
       "branches": {
-        "covered": 97,
-        "total": 97
+        "covered": 94,
+        "total": 94
       },
       "functions": {
         "covered": 43,
         "total": 43
       },
       "lines": {
-        "covered": 125,
-        "total": 125
+        "covered": 127,
+        "total": 127
       },
       "statements": {
-        "covered": 145,
-        "total": 145
+        "covered": 148,
+        "total": 148
       }
     },
     "apps/api/src/projects/project-task.controller.ts": {
@@ -398,20 +434,20 @@
     },
     "apps/api/src/projects/sprint-close-preview.ts": {
       "branches": {
-        "covered": 49,
-        "total": 49
+        "covered": 45,
+        "total": 45
       },
       "functions": {
         "covered": 10,
         "total": 10
       },
       "lines": {
-        "covered": 46,
-        "total": 46
+        "covered": 47,
+        "total": 47
       },
       "statements": {
-        "covered": 50,
-        "total": 50
+        "covered": 51,
+        "total": 51
       }
     },
     "apps/api/src/projects/sprint-close.ts": {
@@ -542,20 +578,20 @@
     },
     "apps/api/src/projects/sprint-read.ts": {
       "branches": {
-        "covered": 49,
-        "total": 49
+        "covered": 42,
+        "total": 42
       },
       "functions": {
         "covered": 7,
         "total": 7
       },
       "lines": {
-        "covered": 27,
-        "total": 27
+        "covered": 28,
+        "total": 28
       },
       "statements": {
-        "covered": 31,
-        "total": 31
+        "covered": 34,
+        "total": 34
       }
     },
     "apps/api/src/projects/sprint-receipt-schemas.ts": {
@@ -604,12 +640,12 @@
         "total": 27
       },
       "lines": {
-        "covered": 96,
-        "total": 96
+        "covered": 97,
+        "total": 97
       },
       "statements": {
-        "covered": 107,
-        "total": 107
+        "covered": 109,
+        "total": 109
       }
     },
     "apps/api/src/projects/sprint-start.ts": {
@@ -704,20 +740,20 @@
     },
     "apps/api/src/projects/task-collaboration.service.ts": {
       "branches": {
-        "covered": 65,
-        "total": 141
+        "covered": 66,
+        "total": 136
       },
       "functions": {
-        "covered": 17,
-        "total": 26
+        "covered": 19,
+        "total": 25
       },
       "lines": {
-        "covered": 77,
+        "covered": 86,
         "total": 113
       },
       "statements": {
-        "covered": 87,
-        "total": 130
+        "covered": 98,
+        "total": 131
       }
     },
     "apps/api/src/projects/task-discovery.controller.ts": {
@@ -740,20 +776,20 @@
     },
     "apps/api/src/projects/task-discovery.service.ts": {
       "branches": {
-        "covered": 40,
-        "total": 43
+        "covered": 38,
+        "total": 41
       },
       "functions": {
         "covered": 11,
         "total": 14
       },
       "lines": {
-        "covered": 37,
-        "total": 38
+        "covered": 39,
+        "total": 40
       },
       "statements": {
-        "covered": 42,
-        "total": 45
+        "covered": 45,
+        "total": 48
       }
     },
     "apps/api/src/projects/task-events.service.ts": {
@@ -990,6 +1026,24 @@
         "total": 45
       }
     },
+    "apps/api/src/workspaces/workspace-receipt-schemas.ts": {
+      "branches": {
+        "covered": 0,
+        "total": 0
+      },
+      "functions": {
+        "covered": 0,
+        "total": 0
+      },
+      "lines": {
+        "covered": 1,
+        "total": 1
+      },
+      "statements": {
+        "covered": 1,
+        "total": 1
+      }
+    },
     "apps/api/src/workspaces/workspace.controller.ts": {
       "branches": {
         "covered": 24,
@@ -1010,28 +1064,28 @@
     },
     "apps/api/src/workspaces/workspace.service.ts": {
       "branches": {
-        "covered": 38,
-        "total": 72
+        "covered": 51,
+        "total": 79
       },
       "functions": {
-        "covered": 17,
+        "covered": 22,
         "total": 42
       },
       "lines": {
-        "covered": 61,
-        "total": 117
+        "covered": 76,
+        "total": 119
       },
       "statements": {
-        "covered": 63,
-        "total": 123
+        "covered": 80,
+        "total": 126
       }
     }
   },
   "floors": {
-    "branches": 7519,
-    "functions": 7229,
-    "lines": 7516,
-    "statements": 7502
+    "branches": 7577,
+    "functions": 7360,
+    "lines": 7661,
+    "statements": 7651
   },
   "manifest": {
     "compiler": {
@@ -1065,35 +1119,37 @@
       "apps/api/src/principals/principal-errors.ts": "605d0ea5cde062a6b865ce1e7e23bba3e9d26705afeba5d99dd66fbbcca4253f",
       "apps/api/src/principals/principal.controller.ts": "9a16129583c07875d4b20aecf0e1e87862c29d232e0f3ac3b70be686e6d8796d",
       "apps/api/src/principals/principal.service.ts": "1c5992e97938420aacdfa6ba6586981b345e668954b73bf7c2c1f260778c20b0",
+      "apps/api/src/projects/planning-snapshot-read.ts": "e1f61e33bd63e8036e673a9b39e2853cb9d583ca2b6d9145b050c14a19e24240",
+      "apps/api/src/projects/project-cursor-schemas.ts": "3e4efb3e9e114bba78bd5f4c23df248e424909f23fee0236698a37fc618d385a",
       "apps/api/src/projects/project-task-command.ts": "c6d1fe57a4483a745fc642eb8fdfec13c7030a042f40870b05544d0d70849b3e",
       "apps/api/src/projects/project-task-dto.ts": "8cbd40a35fbefdf4151ff4480d6252b6b58112c2f730df951aa683f6e0c05eb8",
       "apps/api/src/projects/project-task-http.ts": "5fe3c3ea41b80a5ae26d0a6ba542c17fa20434109ac03d14ada0806ebe6d23f6",
       "apps/api/src/projects/project-task-input.ts": "d8fefe2603668ecdf7bc2f281a9c62bfdcd7e723522fd8154cae4dfd3532844a",
-      "apps/api/src/projects/project-task-mutation.ts": "5da469c050e6decfb04bf8eabf94d26f28d4354d80eb1cb7e8d7507457a4f77f",
+      "apps/api/src/projects/project-task-mutation.ts": "8674d2f8f25bd1336433d233ffc86238b02a1efad2477387f41bb34a0ef6a20c",
       "apps/api/src/projects/project-task-policy.ts": "a1a98daa4e3d494e42324a011455a76109057b64f40df939539960000eac32f1",
-      "apps/api/src/projects/project-task-read.ts": "f9c854a835b634c16e2887dd4cda322fa21a897175b0ad3f8feeb0b26a4d3732",
+      "apps/api/src/projects/project-task-read.ts": "c13cf234cae01fa13a81fafb62fbef417e142bd182b00b810f042327a2cd68c4",
       "apps/api/src/projects/project-task.controller.ts": "66b7d6fbffe43094af10c9200cadce90b50d54141908b704bd54bf3da6f29487",
       "apps/api/src/projects/project-task.service.ts": "8fae2e5b58abf4afd9b24232185001f24e99eaaa32814d80c1aa3c0a7c083028",
-      "apps/api/src/projects/sprint-close-preview.ts": "678d44df033c18da7c13907794f9b45702446baa9c614d1a4af9b1d8995f9ca8",
+      "apps/api/src/projects/sprint-close-preview.ts": "9356c0ace564d7b92b7227efcb83c99560e6ca6adcce36c502e489efdbf1a413",
       "apps/api/src/projects/sprint-close.ts": "824ee9e09c9b151fe62319ec33f884670640e11c8f60a41369f1419ca0ef49fb",
       "apps/api/src/projects/sprint-closure-input.ts": "9308bb1029432deb5932cb2875313e3842bf81b57b1861b14e2d93c0c0d465fe",
-      "apps/api/src/projects/sprint-closure-read.ts": "9375484ed48db66fc4e3eb21f33b732d1fe758c942eb4e5fb7a50f05cb2fdfd7",
+      "apps/api/src/projects/sprint-closure-read.ts": "7e5c8f7060d60fe646c767d5d84b1552f69ccd123b4e8a2c9e86dd61621e4d4c",
       "apps/api/src/projects/sprint-input.ts": "0d180788a6e0fb90dac335b6628b7e34f48e1038139aceb2d59a24a2c06274c5",
       "apps/api/src/projects/sprint-mutation.ts": "bab6409e8088344a95a348999f552664d760bafdd0280158be7be585e537be34",
       "apps/api/src/projects/sprint-participation.ts": "ee20d8ea070fef2f1ea463d01504a7ab0a2d3827ec54a1e28a402aea5f50bdaf",
       "apps/api/src/projects/sprint-policy.ts": "ec545baca7cf9530fdac32fbaaf2930a2b32cd4949c8b5839db1b40157e3c17a",
-      "apps/api/src/projects/sprint-read.ts": "fa5d3efd1191ad0aca7dea1ae05ae19a13e9925488ed8536a7dac9aa15bc22a4",
+      "apps/api/src/projects/sprint-read.ts": "00fef6a456a3ec56de1f17852be1431dfa73a5f3109b682faecdb8700d98997e",
       "apps/api/src/projects/sprint-receipt-schemas.ts": "afd3dcf911d8f6f00dda8ed4039ea3a2fb6735a515bab40117d9c1cd93e03058",
       "apps/api/src/projects/sprint-scope-mutation.ts": "63d0e0b013bfd80ca7e6a05a82ed9acedfb9930ea9334cb41698c8f293cb04be",
-      "apps/api/src/projects/sprint-scope-read.ts": "67befd98c540d0b4ba6626ca71adc13b9f0bfc5daed32940571a3e0b7bd33b92",
+      "apps/api/src/projects/sprint-scope-read.ts": "49dc8d504e82d4e05808120b10155839b4d3e59dc4d9ba32296b8ed183e2ad3d",
       "apps/api/src/projects/sprint-start.ts": "202c1b4fb01672e38ef926bce2249f695a34ffaed13b42a8001f2bfe542e3e79",
       "apps/api/src/projects/sprint.controller.ts": "1cc8c55cf9d9112693aedb8da66961df6834ae82b68d1865eb6559d3c397614a",
       "apps/api/src/projects/sprint.service.ts": "ec6ca52a320b47f90f8cf603b3d0e97383a52169c30d61e590444a03324d0221",
       "apps/api/src/projects/task-collaboration-input.ts": "027cb24fec9494e7dde6a1b83ec655c87e9af0edd6dd3c91dd85ffbbff38a15a",
       "apps/api/src/projects/task-collaboration.controller.ts": "c045032d97a3b8649c3313c0e083697b97216b3ec22ed180c4e778da457794f7",
-      "apps/api/src/projects/task-collaboration.service.ts": "e1873718d3e22e0338ba40feefa071858d6d458f1f9335881c499a292cb2f0e3",
+      "apps/api/src/projects/task-collaboration.service.ts": "586e950d6aafdf9922265c22d715e168ac3acfafda1ba31f6bacc09e934954da",
       "apps/api/src/projects/task-discovery.controller.ts": "25105d0f0c93e5f85c1a7b94b299fd937fc07a25b8dfdf269fb5f1e722887d7b",
-      "apps/api/src/projects/task-discovery.service.ts": "4e23cc067d517fc07e370b86af040221b0e0c31619c2cd5d9353ee1a73797cff",
+      "apps/api/src/projects/task-discovery.service.ts": "9c5c595a67861ead2137bf2e6ed9b2fce1c244129f0c1beaf863b240f53d53a6",
       "apps/api/src/projects/task-events.service.ts": "3cf5a46673b07107a67eea90842ba43845652384a225358775043be50c803919",
       "apps/api/src/projects/task-planning-input.ts": "a54da8d7e0dbe7ff14ecb10f28fa3d9bb3edce9b14b1899398b3f508cb120bcf",
       "apps/api/src/projects/task-planning.controller.ts": "dde3e16280787ff50794ab29e8475bbf8c3029e3f22b3bd58e4801c47fabb133",
@@ -1107,8 +1163,9 @@
       "apps/api/src/runtime/worker-health.ts": "b86d95cea7895a01b7e73ccc9391ee63e84b9b127a8ecddb47106b9befde8db2",
       "apps/api/src/worker.ts": "bcae6a2f016d587b0e803a75ff7dc079b2aa50d2ed5246fa31ac9d15fb0fb2e6",
       "apps/api/src/workspaces/workspace-input.ts": "caddca25b481177437df324324eeb5f342b4943e848de675ded8fe32977de514",
+      "apps/api/src/workspaces/workspace-receipt-schemas.ts": "7c2afbdb9f39f1b3f7dfc96f4a0bf348254eececb13f7d31a3be469380a89ceb",
       "apps/api/src/workspaces/workspace.controller.ts": "ca5ff5113dc068240ee8f8b3699bf44ee5e6fe98231f26b4145b94bf0fa06aa2",
-      "apps/api/src/workspaces/workspace.service.ts": "b1975751d0541d31c081a7a7c08074dc78867d5580798ba9e7e042a07633cb8c"
+      "apps/api/src/workspaces/workspace.service.ts": "10deabb1b44c428546f4066d8d9c8b9d5025e7bc77e930c9ce5e842dfff223eb"
     },
     "pnpm": "12.15.0",
     "provider": {
@@ -1124,21 +1181,22 @@
       "apps/api/test/unit/principal-errors.test.mjs": "dfd3b88fbff72aa314928fa691bbf1e5964fbe07bc03702c4e3440e081daad18",
       "apps/api/test/unit/principal-policy.test.mjs": "2a3536e6c010192240a372034aad27ce84d2ddd0c74e1b5fa31f23870db3e24c",
       "apps/api/test/unit/project-task-failures.test.mjs": "7819c7377df817552a9b015a66c374761b18b1bd0e9b7e3243ea361bb5b33939",
-      "apps/api/test/unit/project-task-flows.test.mjs": "31bebccd1e85fe47a0559267af1ddfc44dc5bf309a6cdfd1e29dac60619147f1",
+      "apps/api/test/unit/project-task-flows.test.mjs": "0e584b599c02768827a0a763c937cfe09dd7024533677acfff499ed0903749dd",
       "apps/api/test/unit/project-task-schemas.test.mjs": "68e91eb10607fd131ceb4dabeccacbb4000564156043a16012b39348b8346d29",
       "apps/api/test/unit/project-task-values-policy.test.mjs": "48c3e894d7b95615962c055a40bb5fb433e76a83451c6f21cf6b354365a5934a",
-      "apps/api/test/unit/sprint-close.test.mjs": "79febb679ebf47a839929e2b5bfd0b3d96aec455eff1eb907ed501e246f7b071",
+      "apps/api/test/unit/sprint-close.test.mjs": "db871e28facfbde9570931888214b0e845f35db4abca633ee3fd4aefede7a51f",
       "apps/api/test/unit/sprint-closure-input.test.mjs": "9ee82bddbcc1414f8635779663b641facea1df1de08ecbfe9348f5bba610d2dc",
       "apps/api/test/unit/sprint-http.test.mjs": "d8f430cd117bb9f4301624fd0ad3c9b40164c953056d384371ce39beeb08fef6",
-      "apps/api/test/unit/sprint-planning.test.mjs": "0946c02be6837e18c14eac2fc87b53abff5642560060333cd0a4800bc99cfd18",
-      "apps/api/test/unit/sprint-scope-start.test.mjs": "a1b6eb54cd0af3331ad35fcd4882b572a84d6cb547c1bdb3e82029bc9a6e42a8",
-      "apps/api/test/unit/task-collaboration-policy.test.mjs": "c52d21121e81f8cb1760e6956824acdbfa1229f294c998840c4a18115538ade3",
+      "apps/api/test/unit/sprint-planning.test.mjs": "7d73b5be21622abe4027c14707aa62ff3a5fc9f305f886a1e2c2f7f309ff0dc3",
+      "apps/api/test/unit/sprint-scope-start.test.mjs": "4a392eb36f8115156dddbf9e0598ba65cc052793dccca0cc9e09a04b4bea05be",
+      "apps/api/test/unit/task-collaboration-policy.test.mjs": "dcbb61e562bfcd239c1c206298729b940772e194c38465aedee0835c9c247d3c",
       "apps/api/test/unit/task-discovery-http.test.mjs": "8caca1e0d1f5fea1adda13325c0180ac4d5d9d0ebc831005594227af9e66560b",
-      "apps/api/test/unit/task-discovery-policy.test.mjs": "36f59eef992cc398bf035ef525726af0ec0dd300fbc7bf0a4233bd6fac87ec14",
+      "apps/api/test/unit/task-discovery-policy.test.mjs": "d0eeb3f624a736994189203dcd1f8affcbfbc990a7d8aec874ad0bc1b13496d4",
       "apps/api/test/unit/task-events-lifecycle.test.mjs": "ad32f2d28bcd651f5fbf729b0b346884d49d500657035cbc3f3874b6e7e724b5",
       "apps/api/test/unit/workspace-http.test.mjs": "51127f2ccbcd0ddc7fff869eb615df8da16770e504ec63be01fecad921c0eb38",
       "apps/api/test/unit/workspace-input.test.mjs": "b3e8860f2f5368538ab8e7e0300ede3da0359ea02d42d2d7c93c009c4763e5ce",
-      "apps/api/test/unit/workspace-invitation.test.mjs": "ddaea707b6729915df105616b21807502f8310ccce9600d82a8483600efbfecb",
+      "apps/api/test/unit/workspace-invitation.test.mjs": "8b19daa8bfd8a0e09985cc2fb9a15cc9a4f5edcf6536beedaa5c6e38a0197fdc",
+      "apps/api/test/unit/workspace-receipts.test.mjs": "23561c4ceb6ac46fe6319d109a1b7054d35875021e81946eaf24bd76375c56e0",
       "scripts/unit/mirror-loader.mjs": "b3ef9e50e56ee2fa0079c794c044efbc6b953d75890b97889bc635e233d93115"
     },
     "toolsLock": "8c4e6232dbeb14b7067dd5a6a8be95256893dc915a8972f759e46b06deee7634"
@@ -1146,20 +1204,20 @@
   "scope": "api",
   "total": {
     "branches": {
-      "covered": 1243,
-      "total": 1653
+      "covered": 1245,
+      "total": 1643
     },
     "functions": {
-      "covered": 454,
-      "total": 628
+      "covered": 463,
+      "total": 629
     },
     "lines": {
-      "covered": 1601,
-      "total": 2130
+      "covered": 1658,
+      "total": 2164
     },
     "statements": {
-      "covered": 1745,
-      "total": 2326
+      "covered": 1811,
+      "total": 2367
     }
   }
 }

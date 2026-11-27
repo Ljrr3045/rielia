@@ -21,11 +21,9 @@ import {
 import type { Task as TaskRow, TaskComment as CommentRow } from '../generated/prisma/client.js';
 import type { Transaction, VerifiedExecution } from '../principals/principal.service.js';
 import { ProjectTaskService } from './project-task.service.js';
-import { object } from './project-task-input.js';
 import { collaborationInput } from './task-collaboration-input.js';
+import { collaborationPageCursorSchema } from './project-cursor-schemas.js';
 
-const identifier = (v: unknown): v is string =>
-  typeof v === 'string' && /^[A-Za-z0-9_-]{1,128}$/.test(v);
 const scope = (workspaceId: string, projectId: string, taskId: string) => ({
   workspaceId,
   projectId,
@@ -54,24 +52,15 @@ export class TaskCollaborationService {
     revision: number,
   ) {
     if (!cursor) return null;
-    let value: Record<string, unknown>;
+    let value;
     try {
       if (!/^[A-Za-z0-9_-]{1,2048}$/.test(cursor)) throw new Error();
-      value = object(
+      const result = collaborationPageCursorSchema.safeParse(
         JSON.parse(Buffer.from(cursor, 'base64url').toString('utf8')),
-        ['v', 'w', 'p', 't', 'k', 'r', 'a'],
-        ['v', 'w', 'p', 't', 'k', 'r', 'a'],
       );
-      if (
-        value['v'] !== 1 ||
-        value['w'] !== w ||
-        value['p'] !== p ||
-        value['t'] !== t ||
-        value['k'] !== collection ||
-        !identifier(value['a']) ||
-        !Number.isSafeInteger(value['r']) ||
-        Number(value['r']) < 1
-      )
+      if (!result.success) throw new Error();
+      value = result.data;
+      if (value['w'] !== w || value['p'] !== p || value['t'] !== t || value['k'] !== collection)
         throw new Error();
     } catch {
       throw new BadRequestException('Invalid collaboration cursor.');
@@ -81,7 +70,7 @@ export class TaskCollaborationService {
         code: 'page-changed',
         message: 'Collaboration changed. Refresh the collection.',
       });
-    return value['a'] as string;
+    return value['a'];
   }
   private async people(tx: Transaction, workspaceId: string, ids: string[]) {
     const rows = await tx.membership.findMany({

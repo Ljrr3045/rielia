@@ -14,7 +14,7 @@ import {
 import type { Prisma } from '../generated/prisma/client.js';
 import type { VerifiedExecution } from '../principals/principal.service.js';
 import { ProjectTaskService } from './project-task.service.js';
-import { object } from './project-task-input.js';
+import { discoveryPageCursorSchema } from './project-cursor-schemas.js';
 
 export function normalizedDiscovery(query: TaskDiscoveryQuery): TaskDiscoveryQuery {
   return {
@@ -101,21 +101,18 @@ export class TaskDiscoveryService {
       };
       let after: Prisma.TaskWhereInput = {};
       if (cursor !== undefined) {
-        let value: Record<string, unknown>;
+        let value;
         try {
           if (!/^[A-Za-z0-9_-]{1,2048}$/.test(cursor)) throw new Error();
-          value = object(
+          const result = discoveryPageCursorSchema.safeParse(
             JSON.parse(Buffer.from(cursor, 'base64url').toString('utf8')),
-            ['v', 'w', 'actor', 'query', 'revision', 'anchor'],
-            ['v', 'w', 'actor', 'query', 'revision', 'anchor'],
           );
+          if (!result.success) throw new Error();
+          value = result.data;
           if (
-            value['v'] !== 1 ||
             value['w'] !== workspaceId ||
             value['actor'] !== actor.actorPrincipalId ||
-            JSON.stringify(value['query']) !== JSON.stringify(normalized) ||
-            typeof value['anchor'] !== 'string' ||
-            typeof value['revision'] !== 'string'
+            JSON.stringify(value['query']) !== JSON.stringify(normalized)
           )
             throw new Error();
         } catch {
@@ -127,7 +124,7 @@ export class TaskDiscoveryService {
             message: 'Tasks changed. Refresh the collection.',
           });
         const anchor = await tx.task.findFirst({
-          where: { ...where, id: value['anchor'] as string },
+          where: { ...where, id: value['anchor'] },
           select: { projectId: true, number: true },
         });
         if (!anchor) throw new BadRequestException('Invalid page cursor.');

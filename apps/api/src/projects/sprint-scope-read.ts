@@ -11,7 +11,11 @@ import {
 } from '@rielia/contracts';
 import { Prisma, type Project } from '../generated/prisma/client.js';
 import type { Transaction } from '../principals/principal.service.js';
-import { identifier } from './project-task-input.js';
+import {
+  planningCursorAdmissionSchema,
+  planningCursorVersionSchema,
+} from './project-cursor-schemas.js';
+import { storedPlanningSnapshot } from './planning-snapshot-read.js';
 import { loadPeople } from './project-task-read.js';
 import { sprintRow } from './sprint-read.js';
 import { planningTasks, planningSnapshot } from './task-planning.js';
@@ -40,24 +44,17 @@ function paging(
   };
   let anchor: Anchor | null = null;
   if (cursor !== undefined) {
-    let saved: Record<string, unknown>;
+    let saved;
     try {
       const v: unknown = JSON.parse(Buffer.from(cursor, 'base64url').toString('utf8'));
-      if (
-        !/^[A-Za-z0-9_-]{1,2048}$/.test(cursor) ||
-        !isRecord(v) ||
-        Object.keys(v).length !== 11 ||
-        !identifier(v['a']) ||
-        typeof v['o'] !== 'string' ||
-        !/^[0-9]{1,20}$/.test(v['o'])
-      )
-        throw new Error();
-      saved = v;
+      const result = planningCursorAdmissionSchema.safeParse(v);
+      if (!/^[A-Za-z0-9_-]{1,2048}$/.test(cursor) || !result.success) throw new Error();
+      saved = result.data;
     } catch {
       throw new BadRequestException('Invalid planning cursor.');
     }
     if (
-      BigInt(saved['o'] as string) > 9223372036854775807n ||
+      BigInt(saved.o) > 9223372036854775807n ||
       saved['v'] !== 1 ||
       saved['kind'] !== kind ||
       saved['w'] !== project.workspaceId ||
@@ -71,7 +68,7 @@ function paging(
       'sprintRevision',
       'entityVersion',
     ] as const) {
-      if (!Number.isSafeInteger(saved[k]) || Number(saved[k]) < 1)
+      if (!planningCursorVersionSchema.safeParse(saved[k]).success)
         throw new BadRequestException('Invalid planning cursor version.');
       if (saved[k] !== binding[k])
         throw new ConflictException({
@@ -79,7 +76,7 @@ function paging(
           message: 'Planning changed. Refresh before continuing.',
         });
     }
-    anchor = { a: saved['a'] as string, o: saved['o'] as string };
+    anchor = { a: saved.a, o: saved.o };
   }
   return {
     anchor,
@@ -172,7 +169,7 @@ export async function sprintScope(
       await tx.sprintStartReference.findMany({
         where: { ...where, participationId: { in: visible.map((v) => v.id) } },
       })
-    ).map((r) => [r.participationId, r.snapshot as unknown as PlanningSnapshot]),
+    ).map((r) => [r.participationId, storedPlanningSnapshot(r.snapshot)]),
   );
   return {
     ...where,
@@ -184,11 +181,11 @@ export async function sprintScope(
       taskId: v.taskId,
       enteredAt: v.enteredAt.toISOString(),
       enteredOrdinal: v.enteredOrdinal,
-      entry: v.entrySnapshot as unknown as PlanningSnapshot,
+      entry: storedPlanningSnapshot(v.entrySnapshot),
       exitedAt: v.exitedAt?.toISOString() ?? null,
       exitedOrdinal: v.exitedOrdinal,
       exitReason: v.exitReason as 'removed' | 'transferred' | 'closed' | null,
-      exit: v.exitSnapshot as unknown as PlanningSnapshot | null,
+      exit: v.exitSnapshot === null ? null : storedPlanningSnapshot(v.exitSnapshot),
       current: tasks.get(v.taskId)!,
       start: references.get(v.id) ?? null,
     })),
@@ -201,7 +198,7 @@ export async function sprintScope(
       sprint.state === 'closed'
         ? summarizeSnapshots(
             (await tx.sprintClosingOutcome.findMany({ where, select: { snapshot: true } })).map(
-              (o) => o.snapshot as unknown as PlanningSnapshot,
+              (o) => storedPlanningSnapshot(o.snapshot),
             ),
           )
         : null,
@@ -307,6 +304,7 @@ export async function planningHistory(
       a = activityMap.get(event?.activityId ?? closure?.activityId ?? row.id)!;
     const change = Array.isArray(a.changes) ? a.changes[0] : null;
     const changes = isRecord(change) ? change : {};
+    const frozen = outcome ? storedPlanningSnapshot(outcome.snapshot) : null;
     return {
       id: row.id,
       sprintId: event?.sprintId ?? outcome?.sprintId ?? a.sprintId,
@@ -327,13 +325,19 @@ export async function planningHistory(
       action: a.action,
       occurredAt: (event?.occurredAt ?? a.createdAt).toISOString(),
       before:
-        (outcome?.snapshot as unknown as PlanningSnapshot | null) ??
-        (event?.beforeSnapshot as unknown as PlanningSnapshot | null) ??
-        (isPlanningSnapshot(changes['planningBefore']) ? changes['planningBefore'] : null),
+        frozen ??
+        (event?.beforeSnapshot != null
+          ? storedPlanningSnapshot(event.beforeSnapshot)
+          : isPlanningSnapshot(changes['planningBefore'])
+            ? changes['planningBefore']
+            : null),
       after:
-        (outcome?.snapshot as unknown as PlanningSnapshot | null) ??
-        (event?.afterSnapshot as unknown as PlanningSnapshot | null) ??
-        (isPlanningSnapshot(changes['planningAfter']) ? changes['planningAfter'] : null),
+        frozen ??
+        (event?.afterSnapshot != null
+          ? storedPlanningSnapshot(event.afterSnapshot)
+          : isPlanningSnapshot(changes['planningAfter'])
+            ? changes['planningAfter']
+            : null),
       actor: people.get(a.actorPrincipalId)!,
       provenance: {
         actorPrincipalId: a.actorPrincipalId,

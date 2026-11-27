@@ -1,6 +1,11 @@
-import { BadRequestException, ConflictException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  ServiceUnavailableException,
+} from '@nestjs/common';
+import { z } from 'zod';
 import { createHash, randomUUID } from 'node:crypto';
-import type { ExecutionContextResponse, ProjectTaskResult } from '@rielia/contracts';
+import { isRecord, type ExecutionContextResponse, type ProjectTaskResult } from '@rielia/contracts';
 import type { Prisma } from '../generated/prisma/client.js';
 import type {
   PrincipalService,
@@ -10,6 +15,9 @@ import type {
 import { canonical } from './project-task-input.js';
 import * as reads from './project-task-read.js';
 import { prepareTaskObservation, observeTask } from './sprint-participation.js';
+
+const projectReferenceSchema = z.object({ id: z.string() });
+const taskReferenceSchema = z.object({ projectId: z.string(), id: z.string() });
 
 export function mutateProjectTask(
   principals: PrincipalService,
@@ -45,17 +53,26 @@ export function mutateProjectTask(
     if (previous) {
       if (previous.requestHash !== requestHash)
         throw new ConflictException('Idempotency key belongs to another request.');
-      const saved = previous.response as unknown as ProjectTaskResult;
-      if ('projectId' in saved)
+      const saved = previous.response;
+      if (!isRecord(saved))
+        throw new ServiceUnavailableException('Project/task receipt is unavailable.');
+      if ('projectId' in saved) {
+        const reference = taskReferenceSchema.safeParse(saved);
+        if (!reference.success)
+          throw new ServiceUnavailableException('Project/task receipt is unavailable.');
         return reads.taskView(
           tx,
-          await reads.taskRow(tx, workspaceId, saved.projectId, saved.id),
-          await reads.projectRow(tx, workspaceId, saved.projectId, actor),
+          await reads.taskRow(tx, workspaceId, reference.data.projectId, reference.data.id),
+          await reads.projectRow(tx, workspaceId, reference.data.projectId, actor),
           true,
         );
+      }
+      const reference = projectReferenceSchema.safeParse(saved);
+      if (!reference.success)
+        throw new ServiceUnavailableException('Project/task receipt is unavailable.');
       return reads.projectView(
         tx,
-        await reads.projectRow(tx, workspaceId, saved.id, actor),
+        await reads.projectRow(tx, workspaceId, reference.data.id, actor),
         true,
         actor,
       );

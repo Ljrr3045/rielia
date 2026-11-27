@@ -277,6 +277,35 @@ test('cursor rejects malformed/oversized encoding and an anchor no longer in its
   assert.equal(f.calls.pages.length, 1);
 });
 
+test('discovery keeps raw query order and ordinary string cursor fields with shape before revision', async () => {
+  const f = fixture();
+  const saved = JSON.parse(Buffer.from(await f.firstCursor(), 'base64url'));
+  const encode = (value) => Buffer.from(JSON.stringify(value)).toString('base64url');
+  const reordered = Object.fromEntries(Object.entries(saved.query).reverse());
+  await assert.rejects(
+    f.page(query, encode({ ...saved, query: reordered, revision: '' })),
+    status(400),
+  );
+  for (const value of [
+    null,
+    [],
+    { ...saved, revision: 1 },
+    { ...saved, anchor: null, revision: '' },
+  ])
+    await assert.rejects(f.page(query, encode(value)), status(400));
+  assert.equal(f.calls.anchors.length, 0);
+  await assert.rejects(
+    f.page(query, encode({ ...saved, revision: '', anchor: 'not/an/id' })),
+    status(409, 'page-changed'),
+  );
+  assert.equal(f.calls.anchors.length, 0);
+  f.state.anchor = null;
+  for (const anchor of ['', 'not/an/id']) {
+    await assert.rejects(f.page(query, encode({ ...saved, anchor })), status(400));
+    assert.equal(f.calls.anchors.at(-1).where.id, anchor);
+  }
+});
+
 test('authorized revision changes invalidate a cursor before another task page is read', async () => {
   const f = fixture();
   const cursor = await f.firstCursor();

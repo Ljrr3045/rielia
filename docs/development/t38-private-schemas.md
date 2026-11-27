@@ -1,4 +1,81 @@
-# T38.2h backend-private sprint receipts
+# T38 backend-private boundaries
+
+[T38.2h is ACCEPTED in PR65](https://github.com/Ljrr3045/rielia/pull/65#issuecomment-7206762092),
+reviewed `7a13cba3`, merged `cdb39361` (tree `cbee2ec5`), with reviewed-head
+CI/native Kilo and exact-merge CI passed. Earlier pending/source/run receipts
+remain dated evidence; that final decision governs current acceptance.
+
+## T38.2i persisted data and opaque cursors
+
+[Draft PR66](https://github.com/Ljrr3045/rielia/pull/66) targets `dev` at initial
+implementation head `844d6d6`; current-head CI/native review/acceptance remain
+pending. This reference-only update preserves prior source/run identities;
+full T38 remains open.
+
+The coordinator released the remaining five persisted owners and six opaque
+owners as one API batch from `cdb39361`. Local implementation and substantive
+regression fixtures are complete. Source-qualified checks, exact numerical
+adoption and normal/infra/artifact validation pass; current-head
+CI/native review/acceptance remain gates.
+No new package, public type, stored format, SQL, permission, hash or transaction.
+
+| Boundary | Approved behavior and deliberate corruption change |
+| --- | --- |
+| Workspace receipts | Create/accept validate only a record/nonempty ordinary-string ID, then current summary. Unusable references use existing409, including prior accidental outer503 cases. Accept recipient403 and hash409 retain precedence. Member/agent/revoke families validate existing public shapes, return original stored objects/extras/history, and reject corruption503. Secret invitation replay remains409 without reading JSON. |
+| Project/task receipts | Only record/string ID and present string projectId are needed before current scoped reads. Missing/non-string selectors503 prevent omitted-ID queries; ordinary empty/non-ID strings retain canonical403. No stale DTO or target-equality check. |
+| Activity changes | Assessed canonical G04 reuse: non-array becomes empty, invalid elements drop, original valid elements/order and hidden/inherited extras remain. G04 rejects unknown own enumerable keys; no new stored-array max4. |
+| Historical snapshots | Canonical snapshot guard rejects required entry/start/outcome or non-null exit/event corruption503 and returns original values. Legal null/missing references and invalid FIRST legacy-change fallback remain null. Required outcomes never fall through. Immutable totals use frozen data; outcome pages validate selected snapshots after cursor decisions. |
+| Six opaque owners | Named private envelopes/stages preserve2048/base64url bounds, exact successful keys, scope/revision/hash/anchor ordering and existing400/409 messages. Discovery compares raw query JSON order; revision/anchor/binding retain ordinary strings. Planning keeps each version's invalid400/stale409 interleaved, decimal BigInt bounds/leading zeros and exact scope ordinal zero; Sprint lists check both version types first. |
+
+SQL `aggregateTotals` remains its constraint-backed SQL boundary, without whole-table
+fetch/revalidation or totals substitution. SQL's snapshot date regex and positive
+version check do not establish every canonical JS refinement. The approved read
+policy deliberately rejects SQL-admissible noncanonical dates/unsafe versions;
+no historical repair, row rewrite, backfill or constraint change is included.
+`PrincipalService` already sanitizes accidental exceptions to generic503; explicit
+snapshot/receipt503 also rejects malformed values formerly returned successfully.
+This is a reviewed corruption-policy change, not universal behavior preservation.
+
+Local evidence: contracts/API builds pass. The first owner run passes250/251,
+with one incorrect enumerable-extra fixture; its corrected affected suite passes22/22.
+That is not a fresh251-case run. Original failed receipts remain preserved.
+The standard sequence completes as a resumed equivalent: formatting/quality24,
+corrected fixture imports, lint/installed closure286, logic/HTTP/typechecks,
+production builds, actual MCP compilation/MCP17 and final smoke. Original Next
+SecurityFatalError and the expired-window retry remain failures; the coordinator
+verified the native300-second receipt window and authorized the successful
+unchanged14.265s continuation. The security-upgrade recommendation remains unresolved.
+No uninterrupted `pnpm check` pass, security clearance or remediation is claimed.
+
+The combined real PostgreSQL/NodeAdapter selector passes118/118 in102.109s;
+three invalid-selection probes reject before setup. Runtime/deployed closure and
+recovery pass in170.768s with identity disabled. Both phases retain all four Docker
+ID sets exactly and preserve foreign resources. Current high audits pass with
+app1low/14moderate and tools2moderate; these are current reported totals, not proof
+that advisory identities match historical snapshots. Nine successful phase
+receipts independently retain all49 bound inputs. One coherent measurement passes
+885/885 (API368/web426/contracts72/prototype19) across187 maintained inputs in43.782s.
+API L1658/2164, S1811/2367, F463/629 and B1245/1643 improve all aggregate floors
+and reduce uncovered counts. Other three candidate baselines are byte-identical.
+The coordinator explicitly approved only discovery's structural branch change
+40/43→38/41 with uncovered3→3 after comparing the actual prior/current raw maps:
+all three zero-hit locations/types/source match (selected project, archived view,
+explicit assignee), retaining that debt. Deleted covered guards change weighting;
+no universal per-file nonregression or whole-map/hit-vector identity is claimed.
+Exact approved API baseline31945bytes/SHA256
+`65aa20f78c1c6dfc9093bb0a594b4f3088af9ce00961d659762bc9ef65de91f2`
+is adopted with floors7661/7651/7360/7577; other seven baselines remain byte-exact.
+No lower aggregate floor or reuse of T38.2h's one-time exception. Fresh normal
+885/885 passes in42.850s and reproduces all16 approved reports/digest
+`b2d123d07530c293da2ef3608c99971da8c5edb2fe5b88c00ebeb21591f97bb0`;
+infrastructure20/20 and artifact validation pass. Original proposal/eight baseline
+bytes, raw maps and failures remain separate. Publication/current-head CI/native
+review/acceptance remain coordinator gates; full T38 stays open.
+
+C01–12 and later tools remain separate gates. Detailed source-bound receipts stay
+outside tracked documentation. Root owns publication, review and acceptance.
+
+## Preserved T38.2h publication and local receipts
 
 **PUBLISHED IN [DRAFT PR65](https://github.com/Ljrr3045/rielia/pull/65);
 CURRENT-HEAD CI/NATIVE REVIEW/ACCEPTANCE PENDING, 2026-11-26 America/Caracas.** The coordinator released the three

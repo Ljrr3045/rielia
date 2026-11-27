@@ -1,5 +1,39 @@
 # T36 first unit and coverage delivery
 
+## Current T38.2i numerical receipt
+
+[Draft PR66](https://github.com/Ljrr3045/rielia/pull/66) targets `dev` at initial
+implementation head `844d6d6`; current-head CI/native review/acceptance remain
+pending. This reference-only update preserves prior source/run identities;
+full T38 remains open.
+
+[T38.2h is ACCEPTED in PR65](https://github.com/Ljrr3045/rielia/pull/65#issuecomment-7206762092),
+reviewed `7a13cba3`, merged `cdb39361`. Its dated receipts below remain frozen.
+The [T38.2i private-boundary guide](t38-private-schemas.md) records the remaining
+persisted/opaque owners, original failures and source-qualified checks.
+
+The coordinator approved exact API baseline31945bytes/SHA256
+`65aa20f78c1c6dfc9093bb0a594b4f3088af9ce00961d659762bc9ef65de91f2`:
+L1658/2164, S1811/2367, F463/629, B1245/1643; floors7661/7651/7360/7577.
+Only this baseline changes; the other seven remain byte-exact. All aggregate
+ratios improve and uncovered counts decrease. The precise reviewed structural
+disposition is discovery branches40/43→38/41 with uncovered3→3: root compared the
+actual prior/current maps and verified identical zero-hit locations/types/source
+for selected project, archived view and explicit assignee. Those branches remain
+owned debt. Deleted covered guards change weighting; no whole-map/hit-vector
+identity, universal per-file nonregression, lower global floor or reuse of the
+T38.2h-only user exception is claimed. Generic safeguards remain unchanged.
+
+Fresh normal coverage passes885/885 across187 maintained inputs in42.850s,
+reproducing all16 approved reports and count digest
+`b2d123d07530c293da2ef3608c99971da8c5edb2fe5b88c00ebeb21591f97bb0`.
+Infrastructure20/20 and local artifact validation pass without upload. Original
+proposal/raw maps/eight baseline bytes and separate normal receipts are retained.
+Current-head CI/native review/acceptance and full T38 remain open; Next's security
+recommendation, current low/moderate audits and resumed-standard limits remain.
+
+## Preserved earlier receipts and decisions
+
 [T38.2g is ACCEPTED in PR64](https://github.com/Ljrr3045/rielia/pull/64#issuecomment-7175578830),
 reviewed `9886fb2a`, merged `541ac5de`, tree `bbff57ea`, with reviewed-head CI,
 native Kilo and exact-merge CI passed. Its normal837 and source-bound numerical

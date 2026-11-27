@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import assert from 'node:assert/strict';
+import { Buffer } from 'node:buffer';
 import { test } from 'node:test';
 import { randomUUID, createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
@@ -351,10 +352,34 @@ test('T11.2 real PostgreSQL/HTTP scope, observations and explicit start', async 
       assert.equal(page.startTotals.unestimated, 100);
       const next = await ok(f.owner, `${f.path}/sprints/${s.id}/scope?cursor=${page.nextCursor}`);
       assert.equal(next.items.length, 2);
+      const savedCursor = JSON.parse(Buffer.from(page.nextCursor, 'base64url'));
+      const missingLater = {
+        ...savedCursor,
+        projectVersion: savedCursor.projectVersion + 1,
+        extra: true,
+      };
+      delete missingLater.entityVersion;
+      for (const [value, expected] of [
+        [missingLater, 409],
+        [{ ...savedCursor, taskRevision: 'invalid' }, 400],
+        [{ ...savedCursor, o: '00' }, 400],
+        [{ ...savedCursor, o: '9223372036854775808' }, 400],
+      ]) {
+        const cursor = Buffer.from(JSON.stringify(value)).toString('base64url');
+        assert.equal(
+          (await req(f.owner, `${f.path}/sprints/${s.id}/scope?cursor=${cursor}`)).status,
+          expected,
+        );
+      }
       const history = await ok(f.owner, `${f.path}/sprints/${s.id}/history`);
       assert.ok(isPlanningHistoryPage(history));
       assert.equal(history.items.length, 100);
       assert.equal(history.total, 105); // metadata +102 entries +archive +start
+      assert.equal(
+        (await ok(f.owner, `${f.path}/sprints/${s.id}/history?cursor=${history.nextCursor}`)).items
+          .length,
+        5,
+      );
       await estimate(f, parent.id, 3);
       assert.equal(
         (await req(f.owner, `${f.path}/sprints/${s.id}/scope?cursor=${page.nextCursor}`)).data.code,
