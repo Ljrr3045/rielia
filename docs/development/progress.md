@@ -1,5 +1,25 @@
 # Delivery progress and decisions
 
+## 2026-11-27 T38.3b published in Draft PR69
+
+[Draft PR69](https://github.com/Ljrr3045/rielia/pull/69) targets `dev` from initial
+implementation head `835a9dbbd7880d4a51aa3d148967f3185e426c00`, based on
+`8f4fb854b4b2ab058a2e3311009db971fc5c3e58`. The coordinator published after expanded
+local review and C01 correction; the worker verified OPEN/Draft at that head before
+this reference batch. Initial [CI46001126144](https://github.com/Ljrr3045/rielia/actions/runs/46001126144)
+was in progress at publication. No Kilo check/job was observed in that snapshot;
+this does not prove every external event or paid configuration. Final-head CI,
+native Kilo review and coordinator acceptance remain pending. Root alone handles
+pushes, Draft/Ready, review and merge; this is no PR/full-T38 acceptance.
+
+The [transport guide](t38-contract-transport.md) retains exact numerical adoption,
+source-qualified resumed local checks/C01, Next patch and one-way guarded DTO
+limits, selectedPG/runtime/cleanup and absolute costs. All measured inputs,
+16 report bindings and8 baselines stay byte-exact; no check suite or numerical
+run follows this reference-only batch. The dated local checkpoint below remains
+historical evidence, superseded only for publication status. Remaining60
+operations, T38.4–6, S01/packaging and deferred debts remain open.
+
 ## 2026-11-27 T38.3b exact adoption and bounded Next16.4.6 patch
 
 The coordinator reviewed the [six-operation transport](t38-contract-transport.md)

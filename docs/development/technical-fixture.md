@@ -30,8 +30,11 @@ The separately coordinator-released [T38.3b security patch](t38-contract-transpo
 changes only that family and its required peer snapshot references; Node/pnpm,
 React, TS6, strict peers and lifecycle policy remain unchanged. Native build and
 resumed standard/selected PostgreSQL checks and one runtime/deployed attempt pass
-with owned cleanup. Expanded local review is complete; publication/CI/review and
-acceptance remain coordinator gates. Original16.4.3 pins, recommendations and run receipts below are dated
+with owned cleanup. Expanded local review precedes
+[Draft PR69](https://github.com/Ljrr3045/rielia/pull/69); the
+[transport guide](t38-contract-transport.md#draft-publication-and-remaining-gates)
+records its initial head/base. Final-head CI/native Kilo review and coordinator
+acceptance remain pending. Original16.4.3 pins, recommendations and run receipts below are dated
 fixture history, not current upgrade guidance or a new retry authorization.
 
 ## Delivered scope and boundaries

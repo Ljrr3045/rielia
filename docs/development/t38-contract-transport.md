@@ -1,5 +1,20 @@
 # T38.3b contract-derived Sprint planning requests
 
+## Draft publication and remaining gates
+
+Published in [Draft PR69](https://github.com/Ljrr3045/rielia/pull/69), targeting
+`dev` at initial implementation head
+`835a9dbbd7880d4a51aa3d148967f3185e426c00`, based on
+`8f4fb854b4b2ab058a2e3311009db971fc5c3e58`. Expanded local review and C01 correction
+preceded publication. PR69 was verified OPEN/Draft at that head before this
+reference-only batch. Initial [CI46001126144](https://github.com/Ljrr3045/rielia/actions/runs/46001126144)
+was in progress at publication; final-head CI, native Kilo review and coordinator
+acceptance remain pending. No initial CI pass, formal approval, PR/full-T38
+acceptance or universal external-event claim is implied. The local source/run
+checkpoints below retain their dated limits; this update supersedes their
+publication status only. No application, test, dependency or numerical changes
+or validation-suite rerun accompanies these references.
+
 ## Local scope and status
 
 This bounded implementation adopts generated request types for **H30–35/G03/X04**:
