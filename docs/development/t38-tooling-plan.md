@@ -1,6 +1,42 @@
 # T38 tool decisions and compatibility pilot
 
-## Current publication — Draft PR67
+## T38.3a Draft publication and distribution debt
+
+[Draft PR68](https://github.com/Ljrr3045/rielia/pull/68) targets `dev` at initial
+implementation head `dcf9428`; initial CI run 45966884416 was in progress at
+publication. Current-head CI, native review and acceptance remain coordinator gates.
+[Canonical generation](t38-openapi-contracts.md) has exact coordinator-approved
+contracts adoption, normal 911 with all 16 reports reproduced byte for byte,
+infrastructure 20 and artifact validation. Local C01 is corrected with 15 focused
+checks; runtime contracts and unit candidate inputs are unchanged. Generated
+transport, T38.4–6 and full T38.2/T38 remain open. Retain the accepted cost of 1,621,219 bytes across four
+package groups, plus the new test, as **T38.6 distribution cleanup debt**.
+No Docker/package-files policy change or zero allocation/bundle-size claim.
+Historical snapshots below preserve their own status and source/run identities.
+
+## Current decision — T38.2j accepted; T38.3a released locally
+
+[T38.2j is ACCEPTED in PR67](https://github.com/Ljrr3045/rielia/pull/67#issuecomment-7210974600),
+reviewed `b87cd97a3030d8748a014d93eb440053c45fe86d`, merged
+`f4cba904d1a924eb4e7885de7f4867f4f505ea0a`, identical tree
+`2ee07b45a45b6db451e3b69030acc7ae2034d2f7`.
+Corrected-head CI45944049089/validate140324584828 and exact-merge
+CI45946132624/validate140331158310 each passed24 steps; final native
+Kilo140328692123 (App2193792) completed and W01 is resolved. Review is qualified
+incremental28-path evidence across rounds; earlier documentation skims and two
+generated baselines received separate coordinator inspection. This is neither a
+34-file Kilo line-review claim nor a new formal approval.
+[Issue53 closeout](https://github.com/Ljrr3045/rielia/issues/53#issuecomment-7210975355)
+and that final decision supersede the pending labels in the preserved snapshots
+below without changing any original source/run/failure identity.
+
+[T38.3a canonical contracts](t38-openapi-contracts.md) are coordinator-released
+for local implementation: OpenAPI3.1.2, drift checks and nonconsumed declarations
+from an isolated TS5 generator. Transport adoption and full T38.2/T38 acceptance
+remain separate gates. Local numerical adoption, commits and all remote delivery
+remain coordinator-owned.
+
+## Preserved PR67 publication snapshot
 
 [Draft PR67](https://github.com/Ljrr3045/rielia/pull/67) targets `dev` at initial
 implementation head `19e7daf4`. Current-head CI, native review, Ready/merge and
@@ -258,8 +294,10 @@ Keep exact Gregorian/UTC formats; retain backend IANA/DST, permission, version,
 idempotency hash, transaction, activity/outbox and current-authority logic.
 Never parse a public execution projection into trusted backend context.
 
-**A38.2 — contract generation, proposed.** No canonical OpenAPI or generated
-client exists today. Evaluate an OpenAPI **3.1.2** document assembled from named
+**A38.2 — preserved pilot proposal.** At this pilot snapshot no canonical OpenAPI
+or generated client existed. The later [T38.3a release](t38-openapi-contracts.md)
+selects canonical generation/drift and isolated nonconsumed declarations; active
+transport remains separately gated. Evaluate an OpenAPI **3.1.2** document assembled from named
 shared wire schemas plus explicit route/status/header/security metadata. The
 [specification](https://spec.openapis.org/oas/v3.1.2.html) and
 [generator](https://openapi-ts.dev/introduction) support that family; newest 3.2

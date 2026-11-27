@@ -136,6 +136,17 @@ existing checks. This separate install prevents test tooling from entering deplo
 optional-peer graphs. [The unit guide](docs/development/unit-coverage.md) documents
 scope commands, source accounting, numerical gates, retained advisories and artifacts.
 
+The standard `pnpm check` requires the isolated OpenAPI generator graph. Before
+running that check, every contributor must install it explicitly with
+`pnpm --dir scripts/openapi/tools install --frozen-lockfile --ignore-scripts`.
+`pnpm openapi:generate` explicitly rebuilds contracts and writes the two generated
+artifacts; `pnpm openapi:check` rebuilds and checks exact bytes without writing.
+`pnpm test:openapi` also checks source route coverage, unsupported exports,
+structural relations and the application TS6 declaration probe. These commands
+need no running API or network after installation. The [contract guide](docs/development/t38-openapi-contracts.md)
+records the66-operation scope, runtime-only semantics, compiler isolation and
+error/raw-auth/private exclusions. Generated types are not response validation.
+
 The user retired OpenCode PR review, including the inherited workflow and the
 abandoned replacement integration. Do not restore, repair, or invoke either.
 Native Kilo Code Reviews replaces Kody as the selected external reviewer; its
@@ -254,6 +265,7 @@ Use Python 3.9+, Node 24.22.1, and pnpm 12.15.0. From the repository root:
 ```sh
 python3 scripts/verify-handoff.py
 pnpm install --frozen-lockfile
+pnpm --dir scripts/openapi/tools install --frozen-lockfile --ignore-scripts
 pnpm format:check
 pnpm test:quality
 pnpm check
@@ -271,9 +283,12 @@ comparison. Review the actual diff for unintended changes and credentials. Link
 new files with portable relative paths; keep English/Spanish filenames intact.
 The verifier checks local file targets, not remote sites or heading fragments.
 
-`pnpm check` runs adopted formatting, quality-tooling regressions, lint, the backend dependency-closure guard, the focused smoke-process cleanup regression, identity
-logic/client and task-prototype tests, strict typechecks, production builds, and
-the local MCP subprocess/official Inspector suite plus HTTP smoke. `pnpm test:mcp`
+`pnpm check` runs adopted formatting, quality-tooling regressions, lint, the
+backend dependency-closure guard, OpenAPI source/schema checks, generated-byte
+drift and the application TypeScript declaration probe. It also runs the focused
+smoke-process cleanup regression, identity logic/client and task-prototype tests,
+strict typechecks, production builds, and the local MCP subprocess/official
+Inspector suite plus HTTP smoke. `pnpm test:mcp`
 builds its prerequisites and runs that suite alone (about 10 seconds after build,
 60-second per-test deadline); it requires loopback permission and `openssl` for
 an ephemeral TLS rejection fixture, without credentials or a database.

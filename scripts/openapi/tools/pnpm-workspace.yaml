@@ -1,0 +1,7 @@
+packages: []
+saveExact: true
+strictPeerDependencies: true
+autoInstallPeers: false
+minimumReleaseAge: 1440
+minimumReleaseAgeStrict: true
+allowBuilds: {}

@@ -1,0 +1,14 @@
+{
+  "name": "@rielia/openapi-tools",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.15.0",
+  "engines": {
+    "node": "24.22.1",
+    "pnpm": "12.15.0"
+  },
+  "devDependencies": {
+    "openapi-typescript": "7.13.0",
+    "typescript": "5.9.3"
+  }
+}

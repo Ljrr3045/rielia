@@ -4,6 +4,49 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Correct [PR68 W01](https://github.com/Ljrr3045/rielia/pull/68#discussion_r4717593270)
+  in CONTRIBUTING: require the isolated frozen generator install before every
+  standard `pnpm check`, add it to the setup sequence and align the overview.
+  The correction matches the existing CI prerequisite without a fresh install or
+  clone execution. Preserve graph/pin/script policy, unchanged application evidence
+  and dated review receipts. New-head CI/native review and coordinator thread
+  disposition remain pending; no code, test, dependency, baseline or policy change.
+
+- Publish T38.3a in [Draft PR68](https://github.com/Ljrr3045/rielia/pull/68), targeting
+  `dev` at initial implementation head `dcf942802a0d545b8372ebd3baa6c1cf254fc50c`.
+  Initial [CI run 45966884416](https://github.com/Ljrr3045/rielia/actions/runs/45966884416)
+  was in progress at publication; current-head CI, native review and acceptance
+  remain pending. This documentation reference batch preserves source-qualified
+  local evidence and dated failed/pre-adoption receipts without re-execution or
+  rebinding. All exclusions, distribution cleanup debt and the Next security
+  recommendation remain; no generated transport or full T38 acceptance is claimed.
+
+- Correct local coordinator C01 in the [T38.3a source census](docs/development/t38-openapi-contracts.md):
+  compare emitted syntax while preserving literal/regexp/template whitespace and
+  operator tokens; retain real initial/corrected witnesses and15 focused checks.
+  Adopt only the exact coordinator-approved contracts baseline, preserving all
+  10000 floors and other seven bytes. Fresh normal911/infra20/artifacts pass and
+  reproduce all16 frozen reports; no new measure or unrelated expensive rerun.
+  Keep accepted packaging/distribution debt, original failed receipts, native
+  Next recommendation and all existing limits. Local commits require real hooks;
+  root-owned remote delivery/review/acceptance remain separate gates.
+
+- Record [T38.2j acceptance in PR67](https://github.com/Ljrr3045/rielia/pull/67#issuecomment-7210974600),
+  reviewed `b87cd97a`, merged `f4cba904`, with corrected-head/exact-merge CI and
+  final native review passed and W01 resolved. Preserve qualified incremental
+  review scope, separate coordinator artifact inspection and dated snapshots.
+  Implement released [T38.3a canonical contracts](docs/development/t38-openapi-contracts.md):
+  OpenAPI3.1.2 for66 existing Nest operations, deterministic byte drift checks,
+  fail-closed source/schema accounting and nonconsumed generated declarations.
+  Keep app TS6.0.3; isolate openapi-typescript7.13.0/TS5.9.3 with a frozen graph.
+  Source-qualified resumed standard, coherent911 (contracts all100%), selected
+  realPG/runtime/deployed closure/recovery and high audits pass, retaining failures,
+  the newly authorized native Next continuation, lower advisories and packaging
+  cost. Correct nested contract unit-emission paths without changing gates.
+  Exact numerical adoption/normal replay/infra and coordinator delivery remain
+  pending; all eight baselines are unchanged, with no generated transport or full
+  T38 acceptance claimed.
+
 - Repair [PR67 W01](https://github.com/Ljrr3045/rielia/pull/67#discussion_r4715751704) by adding the missing server helper to the
   isolated HTTP deadline witness copy list. Preserve all assertions/deadlines and
   archive the expected import failure plus real corrected baseline0/mutant1 proof.

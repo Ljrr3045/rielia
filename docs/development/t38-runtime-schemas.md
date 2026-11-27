@@ -1,5 +1,27 @@
 # T38.2j configuration and diagnostic schemas
 
+## Current decision — T38.2j accepted; T38.3a released locally
+
+[T38.2j is ACCEPTED in PR67](https://github.com/Ljrr3045/rielia/pull/67#issuecomment-7210974600),
+reviewed `b87cd97a3030d8748a014d93eb440053c45fe86d`, merged
+`f4cba904d1a924eb4e7885de7f4867f4f505ea0a`, identical tree
+`2ee07b45a45b6db451e3b69030acc7ae2034d2f7`.
+Corrected-head CI45944049089/validate140324584828 and exact-merge
+CI45946132624/validate140331158310 each passed24 steps; final native
+Kilo140328692123 (App2193792) completed and W01 is resolved. Review is qualified
+incremental28-path evidence across rounds; earlier documentation skims and two
+generated baselines received separate coordinator inspection. This is neither a
+34-file Kilo line-review claim nor a new formal approval.
+[Issue53 closeout](https://github.com/Ljrr3045/rielia/issues/53#issuecomment-7210975355)
+and that final decision supersede the pending labels in the preserved snapshots
+below without changing any original source/run/failure identity.
+
+[T38.3a canonical contracts](t38-openapi-contracts.md) are coordinator-released
+for local implementation: OpenAPI3.1.2, drift checks and nonconsumed declarations
+from an isolated TS5 generator. Transport adoption and full T38.2/T38 acceptance
+remain separate gates. Local numerical adoption, commits and all remote delivery
+remain coordinator-owned.
+
 ## PR67 round1 correction — isolated HTTP deadline witness
 
 The completed first native round on `ae95a9c6` reports0critical/1warning/0suggestion.
@@ -19,7 +41,7 @@ locks and all eight baselines are unchanged. Only affected witness/doc checks ar
 needed here; original receipts retain their source SHA. Root reply/resolution and
 corrected-head CI/native review remain pending, with no final acceptance implied.
 
-## Current publication — Draft PR67
+## Preserved PR67 publication snapshot
 
 [Draft PR67](https://github.com/Ljrr3045/rielia/pull/67) targets `dev` at initial
 implementation head `19e7daf4`. Current-head CI, native review, Ready/merge and

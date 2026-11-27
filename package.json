@@ -29,7 +29,7 @@
     "test:mcp": "pnpm --filter @rielia/contracts build && pnpm --filter @rielia/api build && pnpm --filter @rielia/mcp-local build && pnpm --filter @rielia/mcp-local test",
     "test:runtime": "node scripts/test-runtime.mjs",
     "check:backend-closure": "node scripts/assert-backend-closure.mjs apps/api",
-    "check": "pnpm format:check && pnpm test:quality && pnpm lint && pnpm check:backend-closure && pnpm test:smoke && pnpm test:identity:logic && pnpm test:workspaces:logic && pnpm test:projects:logic && pnpm test:prototype && pnpm test:web:integration && pnpm typecheck && pnpm build && pnpm --filter @rielia/mcp-local test && pnpm smoke",
+    "check": "pnpm format:check && pnpm test:quality && pnpm lint && pnpm check:backend-closure && pnpm test:openapi && pnpm test:smoke && pnpm test:identity:logic && pnpm test:workspaces:logic && pnpm test:projects:logic && pnpm test:prototype && pnpm test:web:integration && pnpm typecheck && pnpm build && pnpm --filter @rielia/mcp-local test && pnpm smoke",
     "dev:web": "pnpm --filter @rielia/contracts build && pnpm --filter @rielia/web dev",
     "dev:api": "pnpm --filter @rielia/contracts build && pnpm --filter @rielia/api dev",
     "prepare": "node .husky/install.mjs",
@@ -46,7 +46,10 @@
     "unit:coverage": "node scripts/unit/run.mjs",
     "test:unit-infrastructure": "node --test --test-timeout=60000 scripts/unit/infrastructure.test.mjs scripts/unit/upload.test.mjs",
     "unit:artifacts": "node scripts/unit/artifacts.mjs",
-    "test:web:integration": "pnpm --filter @rielia/contracts build && node --test scripts/identity-proxy.integration.test.mjs scripts/identity-client.integration.test.mjs scripts/workspace-client.test.mjs scripts/task-events-proxy.integration.test.mjs"
+    "test:web:integration": "pnpm --filter @rielia/contracts build && node --test scripts/identity-proxy.integration.test.mjs scripts/identity-client.integration.test.mjs scripts/workspace-client.test.mjs scripts/task-events-proxy.integration.test.mjs",
+    "openapi:generate": "pnpm --filter @rielia/contracts build && node scripts/openapi/generate.mjs --write",
+    "openapi:check": "pnpm --filter @rielia/contracts build && node scripts/openapi/generate.mjs --check",
+    "test:openapi": "pnpm --filter @rielia/contracts build && node --test --test-concurrency=1 packages/contracts/test/openapi.test.mjs scripts/openapi/openapi.test.mjs && node scripts/openapi/generate.mjs --check && tsc -p scripts/openapi/tsconfig.probe.json"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

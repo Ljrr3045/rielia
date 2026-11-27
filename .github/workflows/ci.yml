@@ -44,6 +44,8 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: Install isolated unit tooling (outside runtime workspace)
         run: pnpm --dir scripts/unit/tools install --frozen-lockfile
+      - name: Install isolated OpenAPI type generator (no runtime adoption)
+        run: pnpm --dir scripts/openapi/tools install --frozen-lockfile --ignore-scripts
       - name: Formatting and prospective commit policy
         run: pnpm quality:ci
       - run: pnpm check
@@ -58,6 +60,8 @@ jobs:
       - run: pnpm audit --audit-level=high
       - name: Audit isolated development tooling
         run: pnpm --dir scripts/unit/tools audit --audit-level=high
+      - name: Audit isolated OpenAPI type generator
+        run: pnpm --dir scripts/openapi/tools audit --audit-level=high
       - name: Package bounded unit reports and failure status
         id: unit_artifacts
         if: ${{ always() }}

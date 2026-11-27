@@ -72,6 +72,114 @@
         "total": 2
       }
     },
+    "packages/contracts/src/openapi/document.ts": {
+      "branches": {
+        "covered": 86,
+        "total": 86
+      },
+      "functions": {
+        "covered": 12,
+        "total": 12
+      },
+      "lines": {
+        "covered": 83,
+        "total": 83
+      },
+      "statements": {
+        "covered": 90,
+        "total": 90
+      }
+    },
+    "packages/contracts/src/openapi/operations.ts": {
+      "branches": {
+        "covered": 0,
+        "total": 0
+      },
+      "functions": {
+        "covered": 0,
+        "total": 0
+      },
+      "lines": {
+        "covered": 1,
+        "total": 1
+      },
+      "statements": {
+        "covered": 1,
+        "total": 1
+      }
+    },
+    "packages/contracts/src/openapi/schema-bindings.ts": {
+      "branches": {
+        "covered": 0,
+        "total": 0
+      },
+      "functions": {
+        "covered": 0,
+        "total": 0
+      },
+      "lines": {
+        "covered": 4,
+        "total": 4
+      },
+      "statements": {
+        "covered": 4,
+        "total": 4
+      }
+    },
+    "packages/contracts/src/openapi/schema-export.ts": {
+      "branches": {
+        "covered": 54,
+        "total": 54
+      },
+      "functions": {
+        "covered": 16,
+        "total": 16
+      },
+      "lines": {
+        "covered": 78,
+        "total": 78
+      },
+      "statements": {
+        "covered": 93,
+        "total": 93
+      }
+    },
+    "packages/contracts/src/openapi/structural-relations.ts": {
+      "branches": {
+        "covered": 91,
+        "total": 91
+      },
+      "functions": {
+        "covered": 26,
+        "total": 26
+      },
+      "lines": {
+        "covered": 121,
+        "total": 121
+      },
+      "statements": {
+        "covered": 145,
+        "total": 145
+      }
+    },
+    "packages/contracts/src/openapi/wire-schemas.ts": {
+      "branches": {
+        "covered": 0,
+        "total": 0
+      },
+      "functions": {
+        "covered": 0,
+        "total": 0
+      },
+      "lines": {
+        "covered": 1,
+        "total": 1
+      },
+      "statements": {
+        "covered": 1,
+        "total": 1
+      }
+    },
     "packages/contracts/src/principal-schemas.ts": {
       "branches": {
         "covered": 0,
@@ -218,20 +326,20 @@
     },
     "packages/contracts/src/sprint-schemas.ts": {
       "branches": {
-        "covered": 39,
-        "total": 39
+        "covered": 36,
+        "total": 36
       },
       "functions": {
         "covered": 16,
         "total": 16
       },
       "lines": {
-        "covered": 41,
-        "total": 41
+        "covered": 42,
+        "total": 42
       },
       "statements": {
-        "covered": 44,
-        "total": 44
+        "covered": 45,
+        "total": 45
       }
     },
     "packages/contracts/src/sprints.ts": {
@@ -272,20 +380,20 @@
     },
     "packages/contracts/src/task-collaboration-schemas.ts": {
       "branches": {
-        "covered": 26,
-        "total": 26
+        "covered": 20,
+        "total": 20
       },
       "functions": {
         "covered": 18,
         "total": 18
       },
       "lines": {
-        "covered": 45,
-        "total": 45
-      },
-      "statements": {
         "covered": 46,
         "total": 46
+      },
+      "statements": {
+        "covered": 47,
+        "total": 47
       }
     },
     "packages/contracts/src/task-collaboration.ts": {
@@ -362,20 +470,20 @@
     },
     "packages/contracts/src/task-planning-schemas.ts": {
       "branches": {
-        "covered": 46,
-        "total": 46
+        "covered": 41,
+        "total": 41
       },
       "functions": {
         "covered": 16,
         "total": 16
       },
       "lines": {
-        "covered": 38,
-        "total": 38
+        "covered": 44,
+        "total": 44
       },
       "statements": {
-        "covered": 39,
-        "total": 39
+        "covered": 45,
+        "total": 45
       }
     },
     "packages/contracts/src/task-planning.ts": {
@@ -444,6 +552,12 @@
       "packages/contracts/src/identity-schemas.ts": "29e63c3a715e92ba45adcbe9caa477d5ac7c4ef7a2cb58e4490d6d1a50505f3e",
       "packages/contracts/src/index.ts": "f2665769c6811465797ae1b60a88a755067ce2084ae0a8f286f1a425f86a3e0e",
       "packages/contracts/src/infrastructure-schemas.ts": "aff3ff3a1d758e691301d233ba7730a9366057d4de20ed2107031b69783d4a40",
+      "packages/contracts/src/openapi/document.ts": "c224e4df4f82b4aebc3f673738b9c0fc4df4f53a45cfb442713514ad4e549c9a",
+      "packages/contracts/src/openapi/operations.ts": "dc493595e80468a64f0247c7e04f668111cd81199c0aaed940ca1e1c3330a292",
+      "packages/contracts/src/openapi/schema-bindings.ts": "12208d2d9b66de773381d216f3c091870ecd85924a9735964bf144dc6e4ea637",
+      "packages/contracts/src/openapi/schema-export.ts": "a0c8f05fb636ce647a47231a4075e27b6970c08ab7bf8642652205cd437cb8b4",
+      "packages/contracts/src/openapi/structural-relations.ts": "9d96e1b5b76ae4b48104ca5d39f5cf4320d531b77c52b52ed5c4a46538b28ef5",
+      "packages/contracts/src/openapi/wire-schemas.ts": "29ad3a5c605be82b4a41472da3cbf2fb1bf6e156aff3b9c2b8d3bb66328ab986",
       "packages/contracts/src/principal-schemas.ts": "9a1a50bead71b986ff9f51fcad619093b197af08b10223c38879a6978c2a0a46",
       "packages/contracts/src/project-task-input-schemas.ts": "80824460bd3378a25c55ae5d89160f131f79f1c78f155d7e326737cd48284f25",
       "packages/contracts/src/project-task-schemas.ts": "1597cbb4b0e408d2147019698b1cfe629242249a747adaa469953f0d07dc2778",
@@ -452,16 +566,16 @@
       "packages/contracts/src/sprint-closure-input-schemas.ts": "9534386c6d0cebc25e4e61c0912d799873a3cf71e6ff67c952237536da8006a4",
       "packages/contracts/src/sprint-closure-schemas.ts": "4bfe9830f4806cc282866547c1efeeaa8f57e31c339ddb015c76f8570d055054",
       "packages/contracts/src/sprint-closure.ts": "d39d43011cbd488afe39192b7efe6506567d1e6a774c4500c73e12b445d1eb67",
-      "packages/contracts/src/sprint-schemas.ts": "9531374270f4e553af08ecfc6cf93326e29ceb3ef1da259c51cac11a735e7eeb",
-      "packages/contracts/src/sprints.ts": "ded4f3e7642860472bd588ab5fa18f23a40e72af3acbc457989ceb286dea7525",
+      "packages/contracts/src/sprint-schemas.ts": "182075b9ec1c918df93689bf4ba615ae1f506afa700b7e62d61157601b684ef6",
+      "packages/contracts/src/sprints.ts": "e94c0f95d5b2fc2821be9cdb6c750bb6f525d4223a332b7b560e6ecfdc1a81ce",
       "packages/contracts/src/task-collaboration-input-schemas.ts": "5a39ca593d7720d9475d9f70634079ff18e88cb3396ed7ad546420970878f6a3",
-      "packages/contracts/src/task-collaboration-schemas.ts": "fab8c48af910b0c9e57904a6f0e0b9fe6f4ef4310494a5795e2daf7c55e6092f",
-      "packages/contracts/src/task-collaboration.ts": "b326e00a2100878d29e1de4f84691b7f4f7cdb46933a2b91b17f8a35c7b3ae44",
+      "packages/contracts/src/task-collaboration-schemas.ts": "4bbc1e06d186649c00815d4771c77c8b8f22036aacba76020f7ce22d37dfd16e",
+      "packages/contracts/src/task-collaboration.ts": "4acbb0ad1e5ece689a7615f5d61ebe9ec401f5978d8cda8c7f6a6d08c0cb2aaa",
       "packages/contracts/src/task-discovery-schemas.ts": "515479161b10fc02d06baf0c18de60e5048a083201438adfbab37b09b9366a7a",
       "packages/contracts/src/task-discovery.ts": "3c5493af8eff6b6defb2c052a953b441a27f5f89df98ccad44846a1fb729d087",
       "packages/contracts/src/task-planning-input-schemas.ts": "9bb8b6eb712ba9494733a060dea6baa56d4eb62da2c6846ca03ccbab80891ead",
-      "packages/contracts/src/task-planning-schemas.ts": "3de9641ca227fd5a90cb4c9d40e6f3c2523c1e4dd7c5688b27caef54b8e5b665",
-      "packages/contracts/src/task-planning.ts": "5c9ba4f9824ec752c9f3c865925d854e591e20cf916c79e0d48dd2118cd3d04a",
+      "packages/contracts/src/task-planning-schemas.ts": "25109cfaed79576ddb7f5e5b74caa78ce2b79b02d344703ef02436bfcc825daf",
+      "packages/contracts/src/task-planning.ts": "ff6d0938c666c1b4a78607a911ad6f204bba766b479754f8f8a8af91934b52c1",
       "packages/contracts/src/workspace-schemas.ts": "cece3b0cde8fa70c38409b32a2442b3bc9b2627f3b11f4baf0a2f64606062e10"
     },
     "pnpm": "12.15.0",
@@ -474,6 +588,7 @@
     "runtime": "24.22.1",
     "tests": {
       "packages/contracts/test/guards.test.mjs": "647efd493eac3dc6d0fcda7656978b92051f0767b2af36b7940cb04e03d3100c",
+      "packages/contracts/test/openapi.test.mjs": "2e34951e2fe2f528bbfca863ad601fbe176ed16038c3b986203a77246b6d82be",
       "packages/contracts/test/project-task-schemas.test.mjs": "1986c18a8a6ae02575cac63047602c9e15a74c68bd4422270e589592acef0876",
       "packages/contracts/test/sprint-closure.test.mjs": "bc738150ec626444ccf89f3e5cacb733453328493e6ef3c823722e4c66b50aa1",
       "packages/contracts/test/sprints.test.mjs": "56a98cc09cf4dc5e66f9c384a19e35d5597b11e316b93a62ede844126589d797",
@@ -488,20 +603,20 @@
   "scope": "contracts",
   "total": {
     "branches": {
-      "covered": 317,
-      "total": 317
+      "covered": 534,
+      "total": 534
     },
     "functions": {
-      "covered": 196,
-      "total": 196
+      "covered": 250,
+      "total": 250
     },
     "lines": {
-      "covered": 413,
-      "total": 413
+      "covered": 709,
+      "total": 709
     },
     "statements": {
-      "covered": 437,
-      "total": 437
+      "covered": 779,
+      "total": 779
     }
   }
 }

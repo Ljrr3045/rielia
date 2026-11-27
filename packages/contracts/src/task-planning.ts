@@ -12,7 +12,25 @@ import {
   type PlanningHistoryPage,
   type SprintTransitionResult,
 } from './task-planning-schemas.js';
-export * from './task-planning-schemas.js';
+export {
+  estimatePointsSchema,
+  planningSnapshotSchema,
+  taskPlanningSchema,
+  sprintVisitSchema,
+  sprintTotalsSchema,
+  sprintScopePageSchema,
+  planningHistoryItemSchema,
+  planningHistoryPageSchema,
+  sprintTransitionResultSchema,
+  type PlanningSnapshot,
+  type TaskPlanning,
+  type SprintVisit,
+  type SprintTotals,
+  type SprintScopePage,
+  type PlanningHistoryItem,
+  type PlanningHistoryPage,
+  type SprintTransitionResult,
+} from './task-planning-schemas.js';
 export * from './task-planning-input-schemas.js';
 
 // Predicates narrow originals, never stripped copies; optional-field debt stays.

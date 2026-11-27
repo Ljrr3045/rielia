@@ -56,6 +56,10 @@ export function excluded(file) {
     file === 'docs/development/handoff-files.sha256' ||
     file === 'pnpm-lock.yaml' ||
     file === 'scripts/unit/tools/pnpm-lock.yaml' ||
+    // Exact generated-only OpenAPI outputs and isolated lock; maintained generator code stays checked.
+    file === 'scripts/openapi/tools/pnpm-lock.yaml' ||
+    file === 'packages/contracts/openapi/rielia.openapi.json' ||
+    file === 'packages/contracts/generated/openapi.d.ts' ||
     /(^|\/)next-env\.d\.ts$|\.tsbuildinfo$/.test(file)
   );
 }

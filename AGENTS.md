@@ -157,8 +157,10 @@ or an Orca installation.
 `packages/mcp-local` exist in the fixture. T02.1's
 identity runtime and T35.0's additive principal/minimal workspace/membership schema
 live inside `apps/api`. The shared database package, remaining domain schema,
-business worker, generated API client, and
-product MCP catalog/authorization remain future work.
+business worker, generated API client transport, and
+product MCP catalog/authorization remain future work. T38.3a adds bounded
+[canonical OpenAPI generation](docs/development/t38-openapi-contracts.md) and
+nonconsumed declarations; it does not adopt a production transport.
 The local diagnostic worker stays inside `apps/api`, shares its backend image,
 opens no listener and cannot migrate storage; only the explicit one-shot does so.
 Keep these boundaries in both current and future code.

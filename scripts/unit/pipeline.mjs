@@ -261,7 +261,7 @@ try {
         emitted(mirror, source, destination, code, map);
       } else if (scope === 'contracts') {
         destination = source.replace('/src/', '/dist/').replace(/\.ts$/, '.js');
-        const file = path.join(contractEmit, path.basename(destination));
+        const file = path.join(contractEmit, path.relative('packages/contracts/dist', destination));
         emitted(
           mirror,
           source,

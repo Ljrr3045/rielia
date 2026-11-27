@@ -373,6 +373,20 @@ test('protected/generated files are skipped and staged symlinks are rejected', a
   assert.equal(excluded('apps/web/.agents/skill-installation.json'), false);
   assert.equal(excluded('apps/web/src/app/page.tsx'), false);
   assert.equal(excluded('scripts/verify-frontend-skills.py'), false);
+  for (const file of [
+    'scripts/openapi/tools/pnpm-lock.yaml',
+    'packages/contracts/openapi/rielia.openapi.json',
+    'packages/contracts/generated/openapi.d.ts',
+  ])
+    assert.equal(excluded(file), true);
+  for (const file of [
+    'scripts/openapi/generate.mjs',
+    'scripts/openapi/tools/package.json',
+    'packages/contracts/src/openapi/document.ts',
+    'packages/contracts/generated/maintained.ts',
+    'packages/contracts/openapi/maintained.json',
+  ])
+    assert.equal(excluded(file), false);
   await checkFiles(root, ['docs/handoff/missing.ts', 'apps/api/src/generated/missing.ts'], {
     staged: true,
   });

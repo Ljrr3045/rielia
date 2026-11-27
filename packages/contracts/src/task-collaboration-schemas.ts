@@ -95,6 +95,16 @@ export const closeWarningSchema = z
   .object({ open: versionSchema, archivedOpen: countSchema, childrenVersion: versionSchema })
   .refine((value) => value.archivedOpen <= value.open);
 
+/** Shared by the existing refinement and private generator view; no DTO copy. */
+export const activityChangeValueSchemas = {
+  status: taskStatusSchema,
+  type: taskTypeSchema,
+  priority: taskPrioritySchema,
+  dueDate: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/)
+    .nullable(),
+};
 const activityChangeObjectSchema = z
   .strictObject({
     field: z.enum(['status', 'type', 'priority', 'dueDate']),
@@ -102,17 +112,7 @@ const activityChangeObjectSchema = z
     after: z.string().nullable(),
   })
   .refine((value) => {
-    const choices =
-      value.field === 'status'
-        ? taskStatusSchema
-        : value.field === 'type'
-          ? taskTypeSchema
-          : value.field === 'priority'
-            ? taskPrioritySchema
-            : z
-                .string()
-                .regex(/^\d{4}-\d{2}-\d{2}$/)
-                .nullable();
+    const choices = activityChangeValueSchemas[value.field];
     return choices.safeParse(value.before).success && choices.safeParse(value.after).success;
   });
 // This boundary historically checks Object.keys, then reads the three fields

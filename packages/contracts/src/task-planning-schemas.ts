@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { denseArraySchema } from './dense-array-schema.js';
 import { taskStatusSchema, domainPersonSchema } from './project-task-schemas.js';
 import { projectTaskVersionSchema } from './project-task-input-schemas.js';
-import { sprintSchema } from './sprint-schemas.js';
+import { sprintSchema, activeSprintSchema, closedSprintSchema } from './sprint-schemas.js';
 import {
   collaborationProvenanceSchema,
   collaborationCursorSchema,
@@ -193,35 +193,60 @@ export const planningHistoryPageSchema = z
       ) &&
       new Set(value.items.map((item) => item.id)).size === value.items.length,
   );
-export const sprintTransitionResultSchema = z
-  .object({
-    operation: z.object({
-      activityId: identifier,
-      type: z.enum(['start-sprint', 'set-task-sprint']),
-      sprintId: identifier.nullable(),
-      enteredVisitId: identifier.nullable(),
-      exitedVisitId: identifier.nullable(),
-    }),
-    current: z.union([sprintSchema, taskPlanningSchema]),
-  })
-  .refine((value) => {
-    const operation = value.operation;
-    if (operation.type === 'start-sprint') {
-      const current = sprintSchema.safeParse(value.current);
-      return (
-        current.success &&
-        (current.data.state === 'active' || current.data.state === 'closed') &&
-        operation.sprintId === current.data.id &&
-        operation.enteredVisitId === null &&
-        operation.exitedVisitId === null
-      );
-    }
+const transitionOperationSchema = z.object({
+  activityId: identifier,
+  type: z.enum(['start-sprint', 'set-task-sprint']),
+  sprintId: identifier.nullable(),
+  enteredVisitId: identifier.nullable(),
+  exitedVisitId: identifier.nullable(),
+});
+const transitionBaseSchema = z.object({
+  operation: transitionOperationSchema,
+  current: z.union([sprintSchema, taskPlanningSchema]),
+});
+const startCurrentSchema = z.discriminatedUnion('state', [activeSprintSchema, closedSprintSchema]);
+const startOperationSchema = transitionOperationSchema.extend({
+  type: z.literal('start-sprint'),
+  sprintId: identifier,
+  enteredVisitId: z.null(),
+  exitedVisitId: z.null(),
+});
+const participationOperationSchema = z.union([
+  transitionOperationSchema.extend({
+    type: z.literal('set-task-sprint'),
+    sprintId: identifier,
+    enteredVisitId: identifier,
+  }),
+  transitionOperationSchema.extend({
+    type: z.literal('set-task-sprint'),
+    sprintId: identifier,
+    enteredVisitId: z.null(),
+    exitedVisitId: identifier,
+  }),
+]);
+/** Same field/schema objects drive refinement and export, without a second DTO. */
+export const sprintTransitionWireSchema = z.union([
+  transitionBaseSchema.extend({ operation: startOperationSchema, current: startCurrentSchema }),
+  transitionBaseSchema.extend({
+    operation: participationOperationSchema,
+    current: taskPlanningSchema,
+  }),
+]);
+export const sprintTransitionResultSchema = transitionBaseSchema.refine((value) => {
+  const operation = value.operation;
+  if (operation.type === 'start-sprint') {
+    const current = startCurrentSchema.safeParse(value.current);
     return (
-      taskPlanningSchema.safeParse(value.current).success &&
-      operation.sprintId !== null &&
-      (operation.enteredVisitId !== null || operation.exitedVisitId !== null)
+      current.success &&
+      operation.sprintId === current.data.id &&
+      startOperationSchema.safeParse(operation).success
     );
-  });
+  }
+  return (
+    taskPlanningSchema.safeParse(value.current).success &&
+    participationOperationSchema.safeParse(operation).success
+  );
+});
 
 export type PlanningSnapshot = KnownFields<z.output<typeof planningSnapshotSchema>>;
 export type TaskPlanning = KnownFields<z.output<typeof taskPlanningSchema>>;
