@@ -1,5 +1,23 @@
 # T38.3 contract-derived browser requests
 
+## T38.3c published in Draft PR70
+
+[Draft PR70](https://github.com/Ljrr3045/rielia/pull/70) targets `dev` at initial
+implementation head `776b4eafa2eb04f3df02c4b252ae786636995d01`, based on
+`6c58396a47070334489230cfdc3a7a49583aa4e5`. The coordinator pushed and immediately
+created the Draft on 2026-11-27 at 21:16:56Z; the worker's read-only check verifies
+OPEN/Draft at that implementation head before this reference batch. At publication,
+[initial CI46069268273](https://github.com/Ljrr3045/rielia/actions/runs/46069268273)
+was in progress (`validate` 140742021909, App 15368). The initial observation saw no
+Kilo check or comments; this is bounded evidence, not a permanent event-exclusion
+claim. Final-head CI/native review/coordinator acceptance remain pending.
+
+The accounting stays 66 = 6 accepted + 54 candidate + 4 bounded exclusions
+(H01/H04/H50/H55) + 2 pending H24/H54; no full T38.3/T38 acceptance. The local
+standard/normal/infra/artifact and cost evidence below retains its actual source/
+run binding. This documentation-only PR reference does not rebind those receipts
+to a later documentation commit or repeat application checks/builds.
+
 ## T38.3c exact local adoption and normal replay
 
 The coordinator released one batch of **54 additional operations**: H02–03,
@@ -110,9 +128,10 @@ Infrastructure 20/20 and bounded artifact validation pass; all 17 packaged files
 are complete and no upload runs. Current source/config and web-test fingerprints
 match; the sole generated Nest metadata test projection remains qualified.
 This is exact local numerical adoption/replay, not PR/full T38.3/T38 acceptance.
-Commit/publication/review/merge remain coordinator gates. No successful standard,
-native build, install, strict probe, loopback, audit, local PG or Docker is repeated
-for this baseline/documentation phase.
+Implementation is committed and published in Draft PR70; final-head CI/review/
+acceptance/merge remain coordinator gates. No successful standard, native build,
+install, strict probe, loopback, audit, local PG or Docker is repeated for this
+baseline/documentation phase.
 
 Single-build absolute artifacts: 30 browser JS files/1,671,075 raw bytes/477,745
 gzip9 bytes; 34 static files/1,818,582 bytes; 2,161 standalone regular files/

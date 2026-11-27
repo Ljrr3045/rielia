@@ -1,14 +1,25 @@
 # Delivery progress and decisions
 
-## 2026-11-27 T38.3c exact local adoption and final replay
+## 2026-11-27 T38.3c published in Draft PR70
+
+The coordinator published [Draft PR70](https://github.com/Ljrr3045/rielia/pull/70)
+targeting `dev` at initial implementation head
+`776b4eafa2eb04f3df02c4b252ae786636995d01`, based on
+`6c58396a47070334489230cfdc3a7a49583aa4e5`. It was created on 2026-11-27
+at 21:16:56Z; a read-only worker check verifies OPEN/Draft at that head before this
+reference batch. At publication, [CI46069268273](https://github.com/Ljrr3045/rielia/actions/runs/46069268273)
+(`validate` 140742021909/App 15368) was in progress. The initial snapshot saw no Kilo
+check/comments; this does not prove permanent external-event exclusion. Final-head
+CI/native review/coordinator acceptance remain pending. No Ready/paid review is
+requested by this reference update, which preserves earlier source/run identities.
 
 The coordinator released 54 additional contract-derived requests across five
 existing web owners, preserving six accepted Sprint calls. The [transport guide](t38-contract-transport.md)
 accounts for all 66: 6 accepted + 54 candidate + 4 browser JSON tranche exclusions
 (H01/H04/H50/H55) + 2 pending correlated-command writes (H24/H54). Deferred writes
 retain native sends; no schema/API/proxy/controller or domain policy changes.
-This remains one local batch, with no new PR, commit, paid review or full
-T38.3/T38 acceptance.
+The complete local implementation is committed and published in Draft; current-head
+CI/review/acceptance remain pending, without full T38.3/T38 acceptance.
 
 After independent raw-counter/source/test/config/provider review, root approves
 only exact web baseline 48,307 bytes/`9b370321b72984332c594e61f7d8f8a12e473d2c2924198636b3e7d1713cf438`;
@@ -23,7 +34,8 @@ Prior strict modes/application types, 59-error negative control, focused offline
 135/loopback HTTP 7, one complete standard/build and later affected 48/lint retain
 their actual source/run identities. Production bytes match that successful build;
 no full standard/native build/install/probe/loopback/audit/PG/Docker repeat follows
-adoption. Commit/publication/review/merge remain coordinator gates.
+adoption. Final-head CI/review/acceptance/merge remain coordinator gates; this
+documentation-only reference commit does not rebind previous build/check receipts.
 [PR68 acceptance](https://github.com/Ljrr3045/rielia/pull/68#issuecomment-7215920026)
 and [PR69 acceptance](https://github.com/Ljrr3045/rielia/pull/69#issuecomment-7226805575)
 supersede their frozen pending labels below without rebinding historical runs.

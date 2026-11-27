@@ -4,6 +4,15 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Publish T38.3c in [Draft PR70](https://github.com/Ljrr3045/rielia/pull/70), targeting
+  `dev` at initial implementation head `776b4eafa2eb04f3df02c4b252ae786636995d01`,
+  based on `6c58396a47070334489230cfdc3a7a49583aa4e5`. Publication-time
+  [CI46069268273](https://github.com/Ljrr3045/rielia/actions/runs/46069268273) was in
+  progress; final-head CI/native review/coordinator acceptance remain pending.
+  This reference-only update preserves local evidence and the 66-operation ledger:
+  six accepted + 54 candidate + 4 bounded exclusions + 2 pending H24/H54, without
+  full T38.3/T38 acceptance or rebinding prior checks to this documentation commit.
+
 - Expand generated request typing locally to 54 existing browser operations,
   preserving six accepted Sprint consumers and existing validation/error/recovery
   owners. [T38.3c](docs/development/t38-contract-transport.md) retains four browser
@@ -12,8 +21,9 @@ This records repository changes. No application version has been released.
   with infrastructure 20 and bounded artifacts 17 passed. Seven other baselines
   stay exact; no ratio/floor weakening or source omission. Prior standard/build,
   cost observations and source-qualified test corrections remain unchanged;
-  no broad check/build or PG/Docker repeats for adoption. Delivery/review remain
-  pending, without full T38.3/T38 acceptance. PR68/69 acceptance governs earlier
+  no broad check/build or PG/Docker repeats for adoption. PR70 is published Draft;
+  final-head CI/review/acceptance remain pending, without full T38.3/T38 acceptance.
+  PR68/69 acceptance governs earlier
   slices; historical snapshots below remain.
 
 - Publish T38.3b in [Draft PR69](https://github.com/Ljrr3045/rielia/pull/69), targeting
