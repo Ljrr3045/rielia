@@ -11,6 +11,8 @@ export default [
       '**/coverage/**',
       '**/next-env.d.ts',
       'apps/api/src/generated/**',
+      // Exact nonconsumed generated declarations; source generator logic remains checked.
+      'packages/contracts/generated/openapi.d.ts',
       'docs/handoff/**',
       // Preserve reviewed vendor bytes; first-party .agents metadata stays checked.
       'apps/web/.agents/skills/frontend-design/**',

@@ -1,5 +1,61 @@
 # Delivery progress and decisions
 
+## 2026-11-27 T38.3a local C01 corrected; exact numerical adoption
+
+[Canonical contract generation](t38-openapi-contracts.md) has corrected local
+coordinator C01: the source census preserves string/regexp/template/operator
+syntax while permitting formatting/comments, with real initial acceptance and
+corrected rejection witnesses. Final focused15/source128/drift/appTS6 checks pass;
+all approved unit source/test/config inputs stay exact. Only the exact approved
+contracts baseline is adopted; other seven are byte-identical and all contracts
+floors remain10000. Fresh normal911/911 reproduces all16 measured reports exactly;
+unchanged infra20/artifact checks pass. No new measure or unrelated successful
+PG/runtime/standard repeat for the C12 correction. Packaging cost is accepted for
+this bounded slice with distribution cleanup retained as T38.6 debt. Local commits
+require final integrity/staged/real hooks; remote Draft/publication,
+CI/native review and acceptance remain coordinator gates. Preserve the original
+frozen packet, native Next stop/one authorized continuation, all earlier failures,
+lower advisories and owned debts. No full T38 acceptance is claimed.
+
+## 2026-11-27 T38.3a local evidence; exact numerical decision pending
+
+[Canonical OpenAPI3.1.2](t38-openapi-contracts.md) now covers66 existing Nest
+operations/32write bodies/67 shared roots, with deterministic drift and nonconsumed
+isolated-generator declarations. App TS6.0.3, NodeAdapter, runtime guards,
+same-origin proxies and private/error exclusions remain. Source-qualified resumed
+standard/14focused/MCP20/HTTP smoke, final coherent911, selected realPG and Docker
+runtime/deployed closure/recovery pass with owned cleanup. High audits pass with
+retained lower findings and Next security recommendation; the one newly authorized
+native web continuation is separate from the original stop and earlier failures.
+Contracts709/779/250/534 all have100% coverage; seven other baseline candidates are
+byte-exact. All eight tracked baselines remain unchanged pending exact candidate
+approval, normal replay and infrastructure checks. The nested unit-path correction,
+failed partial measure and533/534 intermediate measure stay source-qualified.
+Measured packaging cost and static/runtime limitations are explicit. No commit,
+publication/review/merge or full T38 acceptance is claimed.
+
+## 2026-11-27 T38.2j ACCEPTED; T38.3a local implementation
+
+[T38.2j is ACCEPTED in PR67](https://github.com/Ljrr3045/rielia/pull/67#issuecomment-7210974600),
+reviewed `b87cd97a3030d8748a014d93eb440053c45fe86d`, merged
+`f4cba904d1a924eb4e7885de7f4867f4f505ea0a`, identical tree
+`2ee07b45a45b6db451e3b69030acc7ae2034d2f7`.
+Corrected-head CI45944049089/validate140324584828 and exact-merge
+CI45946132624/validate140331158310 each passed24 steps; final native
+Kilo140328692123 (App2193792) completed and W01 is resolved. Review is qualified
+incremental28-path evidence across rounds; earlier documentation skims and two
+generated baselines received separate coordinator inspection. This is neither a
+34-file Kilo line-review claim nor a new formal approval.
+[Issue53 closeout](https://github.com/Ljrr3045/rielia/issues/53#issuecomment-7210975355)
+and that final decision supersede the pending labels in the preserved snapshots
+below without changing any original source/run/failure identity.
+
+[T38.3a canonical contracts](t38-openapi-contracts.md) are coordinator-released
+for local implementation: OpenAPI3.1.2, drift checks and nonconsumed declarations
+from an isolated TS5 generator. Transport adoption and full T38.2/T38 acceptance
+remain separate gates. Local numerical adoption, commits and all remote delivery
+remain coordinator-owned.
+
 ## 2026-11-27 PR67 round1 W01 — local witness correction; new-head gates pending
 
 The completed first native Kilo round on `ae95a9c6` reported one warning;
@@ -599,7 +655,7 @@ provider/staging/user acceptance remains separate.
 | T38.2f planning/scope/start/history | [ACCEPTED and delivered in PR63](https://github.com/Ljrr3045/rielia/pull/63#issuecomment-7152173975): reviewed `e320bf7a`, merged `5536162d`; original [receipt](t38-planning-schemas.md) retained |
 | T38.2g closure | [Implemented](t38-closure-schemas.md) and [published in Draft PR64](https://github.com/Ljrr3045/rielia/pull/64): initial-head CI45550717155/check138990956650 passed all 20 steps; exact adoption, normal837/infra20/artifacts17 and real HTTP17 pass; runtime/deployed closure/recovery/high audits and owned cleanup pass; later docs-head CI, native review and acceptance pending |
 | T38.2 remaining families | T38.2g acceptance, encoded/private JSON and C01–12 remain separately owned/gated; no blanket exclusions |
-| T38.3 contract-driven transport | NOT STARTED; canonical OpenAPI and TS6/generator compatibility decision precede a generated client |
+| T38.3 contract-driven transport | T38.3a canonical OpenAPI3.1.2/drift/nonconsumed declarations locally complete with isolated generator7.13.0/TS5.9.3 and app TS6 retained; local C01/focused15, exact numerical adoption/normal911/infra20/artifacts pass. Publication/current-head review/acceptance pending; production transport remains separately gated |
 | T38.4 queries/forms | NOT STARTED in production; sole resource-cache ownership, identity/SSE/recovery and separate RHF parity gates |
 | T38.5 testing/diagnostics | NOT STARTED in maintained tooling/runtime; shortlist evaluation does not authorize bulk installs or adjacent observability tickets |
 | T38.6 consolidation | NOT STARTED; every inventory row migrated or explicitly accepted with an owner/exclusion, measured production costs and current-head review gates |
@@ -3602,7 +3658,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T35 | B1 foundations | Principal model, immutable authorship, autonomous memberships | T04; precedes T05/T06/T12 | T35.0 bounded storage/policy/context implemented; full authorship/domain/export/credential integration incomplete |
 | T36 | Quality prerequisite 1 | Engineering standards, compatible tool enforcement and behavior-preserving frontend/backend structure | Existing bounded foundations/contracts; approved NodeAdapter | ACCEPTED bounded T36.1–T36.6 in [PR #44](https://github.com/Ljrr3045/rielia/pull/44), merged `92d480d` from reviewed `37f2a8c`; retained owned debt and [stable contract](t36-stable-ui-contract.md) remain binding |
 | T37 | Quality prerequisite 2 | Coherent redesign of existing UI using stable contracts, brand/UX and reviewed frontend-local skills | Coordinator acceptance of T36 | ACCEPTED bounded T37.1–6 through [PR49](https://github.com/Ljrr3045/rielia/pull/49#issuecomment-6819605884), reviewed `5d3637b`, merged `20a257c`; retained evidence and limits in the [acceptance guide](t37-ui-acceptance.md); T11 authorized on 2026-11-19 |
-| T38 | Engineering tooling | Shared runtime schemas, contract transport, client queries and evaluated supporting tools | Accepted T36 → T37 → full original T11; user start authorization 2026-11-23 | IN PROGRESS under [issue53](https://github.com/Ljrr3045/rielia/issues/53). T38.1/2a–2i ACCEPTED through [PR66](https://github.com/Ljrr3045/rielia/pull/66#issuecomment-7208579762), reviewed `e9b9c4d0`, merged `a9fa0047`, reviewed/exact-merge CI and full35-file native Kilo passed. [T38.2j runtime/configuration](t38-runtime-schemas.md), published in [Draft PR67](https://github.com/Ljrr3045/rielia/pull/67) at initial implementation `19e7daf4`, has source-qualified local standard continuations/MCP20, coherent measure904, selected realPG48/runtime/audits and exact owned cleanup; exact API/web adoption and normal904/infra20/artifacts pass, with other six baselines unchanged; round1 W01 is valid and its isolated witness dependency is locally repaired/proved; reviewer scope23 full code/test plus10 partial artifacts is preserved with separate coordinator artifact review; corrected-head CI/native review, finding resolution and acceptance remain gates. T38.3–6 and full T38.2/T38 remain open |
+| T38 | Engineering tooling | Shared runtime schemas, contract transport, client queries and evaluated supporting tools | Accepted T36 → T37 → full original T11; user start authorization 2026-11-23 | IN PROGRESS under [issue53](https://github.com/Ljrr3045/rielia/issues/53). T38.1/2a–2j ACCEPTED through [PR67](https://github.com/Ljrr3045/rielia/pull/67#issuecomment-7210974600), reviewed `b87cd97a`, merged `f4cba904`, corrected-head/exact-merge CI passed; W01 resolved, qualified incremental28-path native review and separate coordinator artifact inspection retained. [T38.3a canonical contracts](t38-openapi-contracts.md) have local C01/focused15, exact numerical adoption/normal911/infra20/artifacts complete; publication/current-head review/acceptance remain pending. Transport/T38.4–6 and full T38.2/T38 remain open |
 
 Public release is one launch followed by continuous updates. Internal B1 readiness,
 private T15 deployment, and marketing T34 do not substitute for T24. B3 follows

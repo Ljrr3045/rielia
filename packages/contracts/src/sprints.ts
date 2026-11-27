@@ -14,7 +14,32 @@ import {
   type Sprint,
   type SprintPage,
 } from './sprint-schemas.js';
-export * from './sprint-schemas.js';
+export {
+  planningTimeZoneSchema,
+  planningSettingsSchema,
+  sprintDateSchema,
+  sprintFieldsSchema,
+  configurePlanningInputSchema,
+  createSprintInputSchema,
+  editSprintInputSchema,
+  projectPlanningSchema,
+  plannedSprintSchema,
+  activeSprintSchema,
+  closedSprintSchema,
+  sprintSchema,
+  sprintPageSchema,
+  type PlanningSettings,
+  type SprintFields,
+  type ProjectPlanning,
+  type PlannedSprint,
+  type ActiveSprint,
+  type ClosedSprint,
+  type Sprint,
+  type SprintPage,
+  type ConfigurePlanningInput,
+  type CreateSprintInput,
+  type EditSprintInput,
+} from './sprint-schemas.js';
 
 export const defaultPointScale = [0, 1, 2, 3, 5, 8, 13, 21] as const;
 export type SprintPlanningCommand =

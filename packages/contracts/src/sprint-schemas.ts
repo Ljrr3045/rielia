@@ -159,15 +159,19 @@ export const plannedSprintSchema = sprintRecordSchema
 export const activeSprintSchema = sprintRecordSchema
   .safeExtend({ state: z.literal('active'), startedAt: instantSchema })
   .refine((value) => !('closedAt' in value));
+/** Private generator view, also used at the original closed refinement stage. */
+export const closedSprintCapabilitiesSchema = sprintCapabilitiesSchema.extend({
+  canEdit: z.literal(false),
+  canStart: z.literal(false),
+  canChangeScope: z.literal(false),
+  canClose: z.literal(false),
+});
 export const closedSprintSchema = sprintRecordSchema
   .safeExtend({ state: z.literal('closed'), startedAt: instantSchema, closedAt: instantSchema })
   .refine(
     (value) =>
       value.startedAt <= value.closedAt &&
-      value.capabilities.canEdit === false &&
-      value.capabilities.canStart === false &&
-      value.capabilities.canChangeScope === false &&
-      value.capabilities.canClose === false,
+      closedSprintCapabilitiesSchema.safeParse(value.capabilities).success,
   );
 export const sprintSchema = z.discriminatedUnion('state', [
   plannedSprintSchema,

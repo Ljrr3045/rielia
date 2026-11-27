@@ -4,6 +4,32 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Correct local coordinator C01 in the [T38.3a source census](docs/development/t38-openapi-contracts.md):
+  compare emitted syntax while preserving literal/regexp/template whitespace and
+  operator tokens; retain real initial/corrected witnesses and15 focused checks.
+  Adopt only the exact coordinator-approved contracts baseline, preserving all
+  10000 floors and other seven bytes. Fresh normal911/infra20/artifacts pass and
+  reproduce all16 frozen reports; no new measure or unrelated expensive rerun.
+  Keep accepted packaging/distribution debt, original failed receipts, native
+  Next recommendation and all existing limits. Local commits require real hooks;
+  root-owned remote delivery/review/acceptance remain separate gates.
+
+- Record [T38.2j acceptance in PR67](https://github.com/Ljrr3045/rielia/pull/67#issuecomment-7210974600),
+  reviewed `b87cd97a`, merged `f4cba904`, with corrected-head/exact-merge CI and
+  final native review passed and W01 resolved. Preserve qualified incremental
+  review scope, separate coordinator artifact inspection and dated snapshots.
+  Implement released [T38.3a canonical contracts](docs/development/t38-openapi-contracts.md):
+  OpenAPI3.1.2 for66 existing Nest operations, deterministic byte drift checks,
+  fail-closed source/schema accounting and nonconsumed generated declarations.
+  Keep app TS6.0.3; isolate openapi-typescript7.13.0/TS5.9.3 with a frozen graph.
+  Source-qualified resumed standard, coherent911 (contracts all100%), selected
+  realPG/runtime/deployed closure/recovery and high audits pass, retaining failures,
+  the newly authorized native Next continuation, lower advisories and packaging
+  cost. Correct nested contract unit-emission paths without changing gates.
+  Exact numerical adoption/normal replay/infra and coordinator delivery remain
+  pending; all eight baselines are unchanged, with no generated transport or full
+  T38 acceptance claimed.
+
 - Repair [PR67 W01](https://github.com/Ljrr3045/rielia/pull/67#discussion_r4715751704) by adding the missing server helper to the
   isolated HTTP deadline witness copy list. Preserve all assertions/deadlines and
   archive the expected import failure plus real corrected baseline0/mutant1 proof.
