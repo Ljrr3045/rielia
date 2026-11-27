@@ -23,6 +23,17 @@ The planning documents remain the source of product/architecture requirements.
 It follows the merged [T00 onboarding PR #1](https://github.com/Ljrr3045/rielia/pull/1),
 merge `8dd7c31f454c1989d017dbf7b40e6646112d2d2a`; the immutable handoff is unchanged.
 
+## Current framework patch — 2026-11-27
+
+The current application pins Next and its official ESLint plugin to **16.4.6**.
+The separately coordinator-released [T38.3b security patch](t38-contract-transport.md#exact-framework-security-patch)
+changes only that family and its required peer snapshot references; Node/pnpm,
+React, TS6, strict peers and lifecycle policy remain unchanged. Native build and
+resumed standard/selected PostgreSQL checks and one runtime/deployed attempt pass
+with owned cleanup. Expanded local review is complete; publication/CI/review and
+acceptance remain coordinator gates. Original16.4.3 pins, recommendations and run receipts below are dated
+fixture history, not current upgrade guidance or a new retry authorization.
+
 ## Delivered scope and boundaries
 
 - `apps/web`: Next.js App Router and React, with a small Spanish/English

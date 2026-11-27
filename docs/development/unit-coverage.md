@@ -1,5 +1,41 @@
 # T36 first unit and coverage delivery
 
+## 2026-11-27 T38.3b exact web adoption and normal replay
+
+The coordinator reviewed the [transport](t38-contract-transport.md), all 197
+maintained inputs and frozen 16-report comparable evidence, then approved copying
+only web baseline 48,306 bytes/SHA256
+`ec0402f900da889f31a7e3febff87d254df4c8fa1900ad6ce8333101cd37b3f1`.
+Before: 47,723 bytes/`482fe5bf87242c344629c78420e0f69c77afc785d30c47668514c11b55fad407`.
+L/S/F/B floors become 7304/7083/6172/6709 from 7295/7074/6169/6709; seven other
+current/historical files remain byte-exact, with no waiver or PR65 exception.
+
+The new web helper 15/18/2/13 and changed Sprint client 41/44/8/47 remain 100%.
+Web totals become 3620/4956, 3989/5631, 837/1356, 4674/6966: net +16/+19/+1/+1
+covered/total, no retained exact-ratio regression or increased uncovered count.
+Normal all-scope replay passes 920/920 (API 384/web 438/contracts 79/prototype 19)
+and reproduces all 16 frozen summary/manifest/counter-map/LCOV bytes and digest
+`36731c18e6d206b3c6ea1ec3337d2c261c455ee720ad1b5a6e5ae02f8fe8c275`.
+Infrastructure 20/20 and 17 bounded artifact files pass, without upload. The existing
+finite generated Nest metadata test stays explicitly accounted for.
+
+The separately released Next16.4.6 security patch leaves all197 numerical inputs,
+test/config/provider fingerprints and all8 baselines unchanged. Its fresh normal
+920 reproduces all16 frozen reports byte for byte and the digest above; bounded
+artifact validation again passes17 files without upload. The post-build native
+Next HTTP fixture is outside the existing fixed unit suite selection; no new
+exclusion or maintenance measurement is added. Infrastructure20/20 is retained
+from unchanged sources without repeating it solely for this framework patch.
+
+This is numerical adoption/normal evidence, not transport/PR/full T38 acceptance.
+The two16.4.3 native security failures remain dated receipts. The separate exact
+patch has successful native/resumed standard and selectedPG evidence;
+one runtime/deployed attempt passes with owned cleanup. Expanded root review
+authorizes local delivery after the standalone C01 test correction; measured
+inputs/all8 baselines remain exact, without another numerical replay.
+Earlier entries below are historical snapshots superseded only for the exact
+bounded state recorded here and in the transport guide.
+
 ## T38.3a exact adoption and normal reproduction
 
 The coordinator approved only contracts16435bytes/SHA256

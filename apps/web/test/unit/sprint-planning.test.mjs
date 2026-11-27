@@ -316,3 +316,130 @@ test('proxy allows only implemented sprint paths/scalar cursors and preserves fi
     400,
   );
 });
+
+test('planning HTTP retains original guarded objects and applies runtime provenance admission after return', async (t) => {
+  let value = { ...sprint, future: { retained: true } };
+  t.mock.method(globalThis, 'fetch', async () => ({
+    ok: true,
+    status: 200,
+    headers: new globalThis.Headers(),
+    json: async () => value,
+  }));
+  const transport = createSprintPlanningTransport();
+  assert.strictEqual(await transport.sprint('w', 'p', 's', signal()), value);
+  value = { ...planning, future: true };
+  assert.strictEqual(await transport.planning('w', 'p', signal()), value);
+  value = { ...page, future: true };
+  assert.strictEqual(await transport.sprints('w', 'p', signal()), value);
+  value = {
+    ...sprint,
+    provenance: {
+      ...sprint.provenance,
+      executionMode: 'delegated',
+      source: 'web',
+      grantId: 'grant',
+    },
+  };
+  await assert.rejects(transport.sprint('w', 'p', 's', signal()), { status: 502, requestId: null });
+});
+
+test('planning HTTP keeps any2xx/content-type-independent JSON and error status/current/request-ID distinctions', async (t) => {
+  let response;
+  t.mock.method(globalThis, 'fetch', async () => response);
+  const transport = createSprintPlanningTransport();
+  const command = {
+    type: 'configure-planning',
+    workspaceId: 'w',
+    projectId: 'p',
+    expectedVersion: 2,
+    settings,
+  };
+  for (const status of [200, 201, 202]) {
+    response = new Response(JSON.stringify(planning), {
+      status,
+      headers: { 'content-type': 'text/plain' },
+    });
+    assert.deepEqual(await transport.mutate(command, 'original-key', signal()), planning);
+  }
+  for (const status of [400, 401, 403, 408, 409, 418, 503]) {
+    response = Response.json(
+      { code: 'arbitrary-code', current: { ...planning, future: true } },
+      { status, headers: { 'x-request-id': 'original-id' } },
+    );
+    await assert.rejects(
+      transport.mutate(command, 'original-key', signal()),
+      (error) =>
+        error instanceof SprintPlanningFailure &&
+        error.status === status &&
+        error.code === 'arbitrary-code' &&
+        error.current.future === true &&
+        error.requestId === 'original-id',
+    );
+  }
+  response = Response.json(
+    { code: { invalid: true }, current: { ...planning, projectId: 'foreign' } },
+    { status: 409 },
+  );
+  await assert.rejects(transport.mutate(command, 'original-key', signal()), {
+    status: 409,
+    code: null,
+    current: null,
+    requestId: null,
+  });
+  response = Response.json(
+    { ...planning, projectId: 'foreign' },
+    { headers: { 'x-request-id': 'not-retained-for-shape-error' } },
+  );
+  await assert.rejects(transport.planning('w', 'p', signal()), { status: 502, requestId: null });
+});
+
+test('planning HTTP malformed, empty, primitive and body-rejection failures retain status/header and remain single-send', async (t) => {
+  let response;
+  let calls = 0;
+  t.mock.method(globalThis, 'fetch', async () => {
+    calls++;
+    if (response instanceof Error) throw response;
+    return response;
+  });
+  const transport = createSprintPlanningTransport();
+  for (const [status, text] of [
+    [200, 'broken'],
+    [200, ''],
+    [204, null],
+    [205, null],
+    [409, 'broken'],
+    [503, ''],
+    [503, 'null'],
+  ]) {
+    response = new Response(text, { status, headers: { 'x-request-id': 'parse-id' } });
+    const before = calls;
+    await assert.rejects(transport.planning('w', 'p', signal()), {
+      status: status < 300 ? 502 : status,
+      code: null,
+      current: null,
+      requestId: 'parse-id',
+    });
+    assert.equal(calls, before + 1);
+  }
+  response = Response.json(null, { headers: { 'x-request-id': 'shape-id' } });
+  await assert.rejects(transport.planning('w', 'p', signal()), { status: 502, requestId: null });
+  response = new Response(JSON.stringify(planning), { headers: { 'content-length': '0' } });
+  assert.deepEqual(await transport.planning('w', 'p', signal()), planning);
+  for (const status of [200, 409]) {
+    response = {
+      ok: status === 200,
+      status,
+      headers: new globalThis.Headers({ 'x-request-id': 'body-id' }),
+      json: async () => {
+        throw new Error('Body failed');
+      },
+    };
+    await assert.rejects(transport.planning('w', 'p', signal()), {
+      status: status === 200 ? 502 : status,
+      requestId: 'body-id',
+    });
+  }
+  response = new Error('Before headers');
+  const original = response;
+  await assert.rejects(transport.planning('w', 'p', signal()), (error) => error === original);
+});

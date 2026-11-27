@@ -4,6 +4,20 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Implement [six-operation T38.3b contract-derived requests](docs/development/t38-contract-transport.md)
+  with existing guarded DTO/error/recovery behavior and no new transport package.
+  Adopt only the exact reviewed web baseline; patched normal920 reproduces all16
+  reports with all8 baselines unchanged. Separately patch Next/plugin/env/SWC to
+  exact16.4.6 for the reviewed security/compression issues, preserving unrelated
+  pins, strict peers and lifecycle policy. Native build, corrected production-Next
+  HTTP witness, resumed standard tail, selectedPG47 and one runtime/deployed
+  attempt pass with owned cleanup. Retain both historical16.4.3 security stops, initial
+  fixture failure, lower advisories, S01/packaging/deferred debt and all acceptance
+  gates. Expanded root review authorizes local delivery after C01: assemble the
+  first SSE frame across chunks with streaming decoding, byte/deadline bounds and
+  premature-EOF rejection. The affected test passes against the existing build;
+  no unrelated check, build or numerical rerun follows this fixture correction.
+
 - Correct [PR68 W01](https://github.com/Ljrr3045/rielia/pull/68#discussion_r4717593270)
   in CONTRIBUTING: require the isolated frozen generator install before every
   standard `pnpm check`, add it to the setup sequence and align the overview.

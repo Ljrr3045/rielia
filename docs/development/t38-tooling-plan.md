@@ -1,5 +1,14 @@
 # T38 tool decisions and compatibility pilot
 
+## Current local transport boundary — T38.3b
+
+The [bounded native-fetch choice](t38-contract-transport.md) consumes generated
+request types for H30–35 without a new transport dependency or shared API-client
+package. Exact web adoption and patched normal replay pass. A separately released
+Next16.4.6 security patch passes native build and resumed standard/selectedPG;
+one runtime/deployed attempt passes with owned cleanup; root delivery remains open. Earlier candidate/pilot/snapshot
+statements retain their dates.
+
 ## T38.3a Draft publication and distribution debt
 
 [Draft PR68](https://github.com/Ljrr3045/rielia/pull/68) targets `dev` at initial
@@ -222,7 +231,7 @@ T38 acceptance.
 ## Baseline and decision status
 
 Observed manifests retain Node **24.22.1**, pnpm **12.15.0**, TS **6.0.3**,
-Next **16.4.3**, React/DOM **19.3.1**, React types **19.3.0**, Nest
+Next **16.4.6** (separate T38.3b security patch), React/DOM **19.3.1**, React types **19.3.0**, Nest
 common/core/platform-node **12.3.2**, Better Auth **1.7.12**, Prisma/adapter
 **7.10.1**, pg **8.23.1**, pg-boss **12.38.0**, OTel API **1.10.0**. MCP already
 used Zod **4.6.7**; T38.2a adds that exact direct contracts runtime edge only.

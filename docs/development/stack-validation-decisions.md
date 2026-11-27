@@ -15,6 +15,15 @@ PR #10 recorded this decision without runtime changes. The subsequently authoriz
 [NodeAdapter migration](nest-http-adapter.md) implements its technical follow-up;
 no product behavior, staging environment or full-ticket acceptance is added.
 
+## Current bounded framework follow-up — 2026-11-27
+
+The coordinator separately released the exact **Next16.4.6** security patch and
+matching ESLint plugin/env/SWC family during [T38.3b](t38-contract-transport.md#exact-framework-security-patch).
+The prior16.4.3 security stops remain frozen history. Native build, corrected
+production-Next HTTP witness, resumed standard tail and selectedPG pass;
+one runtime/deployed attempt passes with owned cleanup. This does not authorize unrelated
+stack upgrades, peer/lifecycle suppression, deployment or original-ticket acceptance.
+
 ## Original 2026-10-27 decision and migration acceptance
 
 The user approves the current stack: Next.js/React, NestJS, PostgreSQL/Prisma,

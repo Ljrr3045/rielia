@@ -1,4 +1,4 @@
-import type { components, operations, paths } from '../../packages/contracts/generated/openapi.js';
+import type { components, operations, paths } from '@rielia/contracts/openapi';
 type Schemas = components['schemas'];
 const quickTask: Schemas['createTaskInputSchema'] = { title: 'Capture' };
 const zeroEstimate: Schemas['estimateTaskInputSchema'] = { expectedVersion: 1, estimatePoints: 0 };
