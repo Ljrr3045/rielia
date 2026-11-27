@@ -1,0 +1,29 @@
+docs/development/unit-coverage.md
+  s_5c87b39cdac16f::t_1187281ea3dc43 3-10
+docs/development/t38-boundary-inventory.md
+  s_5c87b39cdac16f::t_1187281ea3dc43 3-10
+docs/development/t38-runtime-schemas.md
+  s_5c87b39cdac16f::t_1187281ea3dc43 3-10
+CHANGELOG.md
+  s_5c87b39cdac16f::t_1187281ea3dc43 7-12
+docs/development/progress.md
+  s_5c87b39cdac16f::t_1187281ea3dc43 3-10,3585
+docs/development/t38-tooling-plan.md
+  s_5c87b39cdac16f::t_1187281ea3dc43 3-10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ae95a9c6db50a967960757126742e346129b7d29",
+  "prompts": {},
+  "sessions": {
+    "s_5c87b39cdac16f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21af2-609a-75a0-9e28-4969dd9afa62",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
