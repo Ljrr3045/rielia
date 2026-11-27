@@ -1,6 +1,19 @@
 # Delivery progress and decisions
 
-## 2026-11-25 T38.2g ACCEPTED; T38.2h private sprint receipts local gates passed
+## 2026-11-26 T38.2h published in Draft PR65; review/acceptance pending
+
+The coordinator published [Draft PR65](https://github.com/Ljrr3045/rielia/pull/65),
+targeting `dev`, at implementation head `7addcee895a232f702a882b8658f4870b99e98e4`,
+tree `c7817b3a255a1613ef09833bfb34691f69149f45`, from accepted PR64 base `541ac5de`.
+Initial exact-head validate45914066436/check140228977063 (App15368) was in progress
+at the reference-batch release; no completion or later-head CI is claimed.
+[T38.2h's receipt](t38-private-schemas.md) preserves source-qualified local gates,
+the user-approved exact structural exception, rejected candidates and original
+Next failure/retry. This batch adds only publication references, with no new
+application execution or receipt rebinding. Current-head CI, native review and
+coordinator acceptance remain pending; full T38 remains open.
+
+## Preserved 2026-11-25 T38.2h local delivery snapshot
 
 [PR64 acceptance](https://github.com/Ljrr3045/rielia/pull/64#issuecomment-7175578830)
 reviewed `9886fb2adf33f71dc8f3c5291d787c0d5fc86c69`, merged
@@ -3479,7 +3492,7 @@ foundational prerequisite within the B1 track, not the final ticket to execute.
 | T35 | B1 foundations | Principal model, immutable authorship, autonomous memberships | T04; precedes T05/T06/T12 | T35.0 bounded storage/policy/context implemented; full authorship/domain/export/credential integration incomplete |
 | T36 | Quality prerequisite 1 | Engineering standards, compatible tool enforcement and behavior-preserving frontend/backend structure | Existing bounded foundations/contracts; approved NodeAdapter | ACCEPTED bounded T36.1–T36.6 in [PR #44](https://github.com/Ljrr3045/rielia/pull/44), merged `92d480d` from reviewed `37f2a8c`; retained owned debt and [stable contract](t36-stable-ui-contract.md) remain binding |
 | T37 | Quality prerequisite 2 | Coherent redesign of existing UI using stable contracts, brand/UX and reviewed frontend-local skills | Coordinator acceptance of T36 | ACCEPTED bounded T37.1–6 through [PR49](https://github.com/Ljrr3045/rielia/pull/49#issuecomment-6819605884), reviewed `5d3637b`, merged `20a257c`; retained evidence and limits in the [acceptance guide](t37-ui-acceptance.md); T11 authorized on 2026-11-19 |
-| T38 | Engineering tooling | Shared runtime schemas, contract transport, client queries and evaluated supporting tools | Accepted T36 → T37 → full original T11; user start authorization 2026-11-23 | IN PROGRESS; [issue53](https://github.com/Ljrr3045/rielia/issues/53), [inventory](t38-boundary-inventory.md), [decisions](t38-tooling-plan.md). T38.1/2a–2g ACCEPTED through PR64, reviewed `9886fb2a`, merged `541ac5de`; reviewed/exact-merge CI and native Kilo passed. [T38.2h private sprint receipts](t38-private-schemas.md) has user-approved exact structural API rebase, fresh normal844/infra20/artifact validation, resumed standard/real PG47/runtime/high audits passed; publication/review/acceptance pending. Other private/encoded/configuration and T38.3–6 retain separate gates; full T38.2/T38 open |
+| T38 | Engineering tooling | Shared runtime schemas, contract transport, client queries and evaluated supporting tools | Accepted T36 → T37 → full original T11; user start authorization 2026-11-23 | IN PROGRESS; [issue53](https://github.com/Ljrr3045/rielia/issues/53), [inventory](t38-boundary-inventory.md), [decisions](t38-tooling-plan.md). T38.1/2a–2g ACCEPTED through PR64, reviewed `9886fb2a`, merged `541ac5de`; reviewed/exact-merge CI and native Kilo passed. [T38.2h private sprint receipts](t38-private-schemas.md) is published in [Draft PR65](https://github.com/Ljrr3045/rielia/pull/65), initial head `7addcee`, with user-approved exact structural API rebase, normal844/infra20/artifact validation and source-qualified standard/PG47/runtime/high audits passed; current-head CI/review/acceptance pending. Other private/encoded/configuration and T38.3–6 retain separate gates; full T38.2/T38 open |
 
 Public release is one launch followed by continuous updates. Internal B1 readiness,
 private T15 deployment, and marketing T34 do not substitute for T24. B3 follows

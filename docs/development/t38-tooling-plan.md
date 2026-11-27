@@ -2,10 +2,11 @@
 
 [T38.2g is ACCEPTED in PR64](https://github.com/Ljrr3045/rielia/pull/64#issuecomment-7175578830),
 reviewed `9886fb2a`, merged `541ac5de`, tree `bbff57ea`, with reviewed-head CI,
-native Kilo and exact-merge CI passed. [T38.2h](t38-private-schemas.md) is the
-released three-owner private sprint receipt slice, with explicit API Zod4.6.7
+native Kilo and exact-merge CI passed. [T38.2h](t38-private-schemas.md) is published
+in [Draft PR65](https://github.com/Ljrr3045/rielia/pull/65), initial head `7addcee`,
+as the three-owner private sprint receipt slice, with explicit API Zod4.6.7
 and an importer-only lock change. Exact user-approved structural API adoption and
-fresh normal844/infra20/artifact validation pass; publication/review/acceptance remain gates;
+fresh normal844/infra20/artifact validation pass; current-head CI/review/acceptance remain gates;
 other private/cursor/configuration owners retain separate releases. Historical
 publication/local receipts below retain their dated source/run identities.
 
@@ -493,7 +494,7 @@ Query production/RHF/other tools remain separately gated.
 | T38.2e | ACCEPTED in PR62: H36–48/G04/collaboration X03 and bounded HTTP/X09 | Reviewed `6cc1e4ac`, merged `f3195081`; current-head/exact-merge CI and native Kilo passed; [dated receipt](t38-collaboration-schemas.md) retained |
 | T38.2f | ACCEPTED and delivered in PR63: H27–29/H51–54/G06 and planning X05/HTTP/X09 | Reviewed `e320bf7a`, merged `5536162d`; reviewed/exact-merge CI and native Kilo passed; [dated receipt](t38-planning-schemas.md) preserves original source/run/failure identities |
 | T38.2g | ACCEPTED and delivered in PR64: H23–26/G07 and closure-only X05/HTTP/X09 | [Final decision](https://github.com/Ljrr3045/rielia/pull/64#issuecomment-7175578830), reviewed `9886fb2a`, merged `541ac5de`; reviewed/exact-merge CI and native Kilo passed; [dated receipt](t38-closure-schemas.md) retained |
-| T38.2h | Implemented backend-private sprint metadata/scope/close receipts | [Private receipt guide](t38-private-schemas.md); explicit API Zod4.6.7/importer-only lock, user-approved exact structural API rebase, fresh normal844/infra20/artifacts and source-qualified standard/PG47/runtime/high audits passed; publication/review/acceptance pending |
+| T38.2h | Implemented and published in Draft PR65: backend-private sprint metadata/scope/close receipts | [Private receipt guide](t38-private-schemas.md), [Draft PR65](https://github.com/Ljrr3045/rielia/pull/65), initial head `7addcee`; explicit API Zod4.6.7/importer-only lock, user-approved exact structural API rebase, normal844/infra20/artifacts and source-qualified standard/PG47/runtime/high audits passed; current-head CI/review/acceptance pending |
 | T38.2 remaining | Other persisted JSON, all six opaque decoders and configuration | Each owner needs a separate release or explicit accepted debt/exclusion before T38.6, including retained collaboration decoding; no universal policy rewrite |
 | T38.3 | Canonical OpenAPI generation/drift first; generated transport adoption only after TS6/generator decision | Reproducible schema/type generation, unsupported-refinement list, unknown-response and same-origin/cancellation/error parity; no second hand-maintained definition |
 | T38.4a | Two sprint resource caches and create mutation, then remaining enumerated server resources in bounded batches | Query becomes sole DTO owner; identity/render/abort/discard/SSE/version/recovery checks and production bundle/request costs |

@@ -18,7 +18,11 @@ This records repository changes. No application version has been released.
   owners fully covered; retained per-file safeguards remain, without a general
   waiver or aggregate nonregression claim. Adopt only exact approved API bytes;
   other seven baselines remain unchanged. Fresh coherent normal844/infra20 and
-  artifact validation pass. Publication/review/acceptance remain pending. Other private,
+  artifact validation pass. Published in [Draft PR65](https://github.com/Ljrr3045/rielia/pull/65)
+  at implementation head `7addcee895a232f702a882b8658f4870b99e98e4`, tree `c7817b3a`.
+  Initial exact-head validate45914066436/check140228977063 (App15368) was in progress
+  at reference-batch release; current-head CI/native review/acceptance remain pending.
+  Preserve original source/run identities without new application execution. Other private,
   cursor/configuration owners and full T38 stay open. Publication entries below
   retain their dated pre-acceptance state and original evidence identities.
 

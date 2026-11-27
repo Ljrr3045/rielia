@@ -1,11 +1,21 @@
 # T38.2h backend-private sprint receipts
 
-**IMPLEMENTED; PUBLICATION/REVIEW/ACCEPTANCE PENDING, 2026-11-25 America/Caracas.** The coordinator released the three
+**PUBLISHED IN [DRAFT PR65](https://github.com/Ljrr3045/rielia/pull/65);
+CURRENT-HEAD CI/NATIVE REVIEW/ACCEPTANCE PENDING, 2026-11-26 America/Caracas.** The coordinator released the three
 sprint receipt owners from accepted PR64 merge
 `541ac5de1625722fc2f1faf7ca56f103a267d4ef`. The exact user-approved numerical
-exception below is adopted; publication, current-head review and acceptance
+exception below is adopted; current-head CI, native review and acceptance
 remain coordinator gates. Full T38.2/T38 remains open under
 [issue53](https://github.com/Ljrr3045/rielia/issues/53).
+
+**Initial publication:** the coordinator opened [Draft PR65](https://github.com/Ljrr3045/rielia/pull/65)
+targeting `dev` at implementation head `7addcee895a232f702a882b8658f4870b99e98e4`,
+tree `c7817b3a255a1613ef09833bfb34691f69149f45`, from base `541ac5de`.
+Initial exact-head validate45914066436/check140228977063 (App15368) was in progress
+when this reference batch was released; completion is not claimed. This
+documentation-only reference batch does not assert CI for its later head or rebind
+the original local, rejected numerical or security receipts. Native review and
+coordinator acceptance remain pending.
 
 [T38.2g is ACCEPTED in PR64](https://github.com/Ljrr3045/rielia/pull/64#issuecomment-7175578830):
 reviewed `9886fb2adf33f71dc8f3c5291d787c0d5fc86c69`, merged `541ac5de`, tree

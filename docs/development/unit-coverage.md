@@ -3,8 +3,10 @@
 [T38.2g is ACCEPTED in PR64](https://github.com/Ljrr3045/rielia/pull/64#issuecomment-7175578830),
 reviewed `9886fb2a`, merged `541ac5de`, tree `bbff57ea`, with reviewed-head CI,
 native Kilo and exact-merge CI passed. Its normal837 and source-bound numerical
-receipts below retain their original identities. [T38.2h private receipts](t38-private-schemas.md)
-has initial focused owner79/79, the affected unit-only supplement69/69, resumed
+receipts below retain their original identities. [T38.2h private receipt slice](t38-private-schemas.md)
+is published in [Draft PR65](https://github.com/Ljrr3045/rielia/pull/65), initial
+head `7addcee`; current-head CI/native review/acceptance remain pending.
+Initial focused owner79/79, the affected unit-only supplement69/69, resumed
 standard, real PG47, runtime/closure and high audits passed. Fresh coherent normal
 **844/844** (API327/web426/contracts72/prototype19), infrastructure20 and artifact
 validation pass after the exact user-approved adoption below. Dated rejected
