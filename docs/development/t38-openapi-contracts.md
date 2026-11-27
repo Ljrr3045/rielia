@@ -1,5 +1,18 @@
 # T38.3a canonical OpenAPI contracts
 
+## Current local transport boundary — T38.3b
+
+Generated declarations now have a types-only public export consumed by six
+[contract-derived Sprint request calls](t38-contract-transport.md). Existing guarded
+DTO responses and the one-way type limit remain. [PR68 final acceptance](https://github.com/Ljrr3045/rielia/pull/68#issuecomment-7215920026)
+governs T38.3a; its original pending/nonconsumed paragraphs below are historical
+snapshots. The separate Next16.4.6 patch passes native/resumed standard and
+selectedPG; one transport runtime/deployed attempt passes with owned cleanup.
+Expanded local review precedes [Draft PR69](https://github.com/Ljrr3045/rielia/pull/69);
+final-head CI/native Kilo review/coordinator acceptance remain pending. The
+[transport guide](t38-contract-transport.md#draft-publication-and-remaining-gates)
+records the initial head/base and publication snapshot.
+
 Published in [Draft PR68](https://github.com/Ljrr3045/rielia/pull/68), targeting
 `dev` at initial implementation head `dcf942802a0d545b8372ebd3baa6c1cf254fc50c`,
 based on accepted PR67 merge `f4cba904`. Exact numerical adoption and local checks

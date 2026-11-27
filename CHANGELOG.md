@@ -4,6 +4,30 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Publish T38.3b in [Draft PR69](https://github.com/Ljrr3045/rielia/pull/69), targeting
+  `dev` at initial implementation head `835a9dbbd7880d4a51aa3d148967f3185e426c00`,
+  based on `8f4fb854b4b2ab058a2e3311009db971fc5c3e58`. Initial
+  [CI46001126144](https://github.com/Ljrr3045/rielia/actions/runs/46001126144) was in
+  progress at publication; final-head CI/native Kilo review/coordinator acceptance
+  remain pending. This reference-only batch preserves local check/numerical/C01,
+  Next patch, guarded DTO/provenance and selectedPG/runtime/cost limits, all60
+  remaining operations and T38.4–6/S01/packaging/deferred debt. No PR/full-T38
+  acceptance, new application change or repeated suite is implied.
+
+- Implement [six-operation T38.3b contract-derived requests](docs/development/t38-contract-transport.md)
+  with existing guarded DTO/error/recovery behavior and no new transport package.
+  Adopt only the exact reviewed web baseline; patched normal920 reproduces all16
+  reports with all8 baselines unchanged. Separately patch Next/plugin/env/SWC to
+  exact16.4.6 for the reviewed security/compression issues, preserving unrelated
+  pins, strict peers and lifecycle policy. Native build, corrected production-Next
+  HTTP witness, resumed standard tail, selectedPG47 and one runtime/deployed
+  attempt pass with owned cleanup. Retain both historical16.4.3 security stops, initial
+  fixture failure, lower advisories, S01/packaging/deferred debt and all acceptance
+  gates. Expanded root review authorizes local delivery after C01: assemble the
+  first SSE frame across chunks with streaming decoding, byte/deadline bounds and
+  premature-EOF rejection. The affected test passes against the existing build;
+  no unrelated check, build or numerical rerun follows this fixture correction.
+
 - Correct [PR68 W01](https://github.com/Ljrr3045/rielia/pull/68#discussion_r4717593270)
   in CONTRIBUTING: require the isolated frozen generator install before every
   standard `pnpm check`, add it to the setup sequence and align the overview.

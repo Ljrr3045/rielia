@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.probe.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true,
+    "skipLibCheck": false
+  },
+  "files": ["transport-type-probe.ts"]
+}

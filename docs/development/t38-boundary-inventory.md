@@ -1,5 +1,14 @@
 # T38 maintained-boundary inventory
 
+## Current local transport boundary — T38.3b
+
+X04/H30–35 alone use [contract-derived Sprint requests](t38-contract-transport.md)
+with existing guarded domain responses. Exact numerical adoption/normal replay
+is complete on the Next16.4.6 patch; native/resumed standard and selectedPG pass,
+with one runtime/deployed attempt and owned cleanup passed. The other60 transport
+operations and error/scalar/raw-auth/SSE/policy owners are not adopted by implication.
+The original family inventory/snapshots below retain their dated scope.
+
 ## Current decision — T38.2j accepted; T38.3a released locally
 
 [T38.2j is ACCEPTED in PR67](https://github.com/Ljrr3045/rielia/pull/67#issuecomment-7210974600),

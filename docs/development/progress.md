@@ -1,5 +1,75 @@
 # Delivery progress and decisions
 
+## 2026-11-27 T38.3b published in Draft PR69
+
+[Draft PR69](https://github.com/Ljrr3045/rielia/pull/69) targets `dev` from initial
+implementation head `835a9dbbd7880d4a51aa3d148967f3185e426c00`, based on
+`8f4fb854b4b2ab058a2e3311009db971fc5c3e58`. The coordinator published after expanded
+local review and C01 correction; the worker verified OPEN/Draft at that head before
+this reference batch. Initial [CI46001126144](https://github.com/Ljrr3045/rielia/actions/runs/46001126144)
+was in progress at publication. No Kilo check/job was observed in that snapshot;
+this does not prove every external event or paid configuration. Final-head CI,
+native Kilo review and coordinator acceptance remain pending. Root alone handles
+pushes, Draft/Ready, review and merge; this is no PR/full-T38 acceptance.
+
+The [transport guide](t38-contract-transport.md) retains exact numerical adoption,
+source-qualified resumed local checks/C01, Next patch and one-way guarded DTO
+limits, selectedPG/runtime/cleanup and absolute costs. All measured inputs,
+16 report bindings and8 baselines stay byte-exact; no check suite or numerical
+run follows this reference-only batch. The dated local checkpoint below remains
+historical evidence, superseded only for publication status. Remaining60
+operations, T38.4–6, S01/packaging and deferred debts remain open.
+
+## 2026-11-27 T38.3b exact adoption and bounded Next16.4.6 patch
+
+The coordinator reviewed the [six-operation transport](t38-contract-transport.md)
+and source-bound comparison without a blocking implementation finding. Only exact
+web baseline48,306 bytes/`ec0402f9` is adopted; the other7 files and all nonregression
+policies remain. The patched graph's normal920 (API384/web438/contracts79/prototype19)
+reproduces all16 frozen reports/count digest. All197 source inputs and numerical
+test/config/provider fingerprints remain exact; no fresh measure, exclusion or
+baseline change was needed. Prior infrastructure20 remains source-qualified;
+patched artifact validation passes17 files without upload. [Exact numerical evidence](unit-coverage.md)
+retains the new helper and Sprint client at100%.
+
+The original Next16.4.3 security stop and its one unchanged continuation remain
+failed historical receipts. Root subsequently released only the **16.4.6**
+Next/plugin/env/SWC security patch. Lock-only inspection proves no unrelated churn;
+React/TS6/Node/pnpm, strict peers and unit/generator locks remain unchanged.
+The new graph audit has1 low/7 moderate/0 high/critical; prior isolated unit2 moderate
+and generator0 receipts retain their unchanged-graph qualification.
+
+The fresh patched check passes through the complete native recursive build, then
+fails the new fixture's explicit SSE Origin admission assertion. Corrected
+production-Next HTTP1, unreached MCP20 and final HTTP smoke pass separately using
+the same build. No uninterrupted successful `pnpm check` is claimed. The actual
+route fixture verifies compressed201/409 JSON framing, request IDs, separate fake
+renewed cookies, immediate SSE and abort cleanup. Selected current-build realPG
+Sprint integration passes47, removing its disposable database. One runtime attempt
+passes frozen builds/migration failures/readiness recovery/durable diagnostics and
+owned cleanup; deployed images have Next16.4.6 and retain the accepted backend
+1,621,219-byte packaging debt. The web image is424,070,389 bytes; all image/app
+costs are absolute observations, not a before/after delta. Host browser JS is1,667,108 bytes and standalone48,554,084
+bytes, absolute only; marker/NFT/package inspection finds no canonical OAS JSON,
+generator or TS5 in those artifacts.
+
+The [guide](t38-contract-transport.md#exact-framework-security-patch) links primary
+advisories, registry metadata and16.4.6's compression correction. This patch is no
+universal security or original-ticket acceptance. Transport/runtime/helper/proxy/
+backend policy remains unchanged after review. Expanded root review accepted the
+local evidence and authorized local commit after **C01**: the native-Next test now
+assembles the first SSE frame across chunks with streaming decoding, a4KiB cap,
+premature-EOF rejection and the existing5s deadline. The mock splits its delimiter;
+focused HTTP1/1 passes against the existing build, retaining live abort/upstream
+cleanup. No broad check, native rebuild, PG/runtime or numerical replay follows
+this fixture-only correction; all8 baseline and measured input bindings remain.
+No publication, paid review, merge or T38.3b/full T38 acceptance occurs.
+[PR68 acceptance](https://github.com/Ljrr3045/rielia/pull/68#issuecomment-7215920026)
+supersedes its older pending labels. One-way output typing, unmodeled errors,
+runtime scalar/correlation authority, S01, accepted1,621,219-byte packaging debt,
+lower advisories/actions, UNVERIFIED Cancel/Leave, filters/device/a11y/provider/
+staging/product debts remain owned.
+
 ## 2026-11-27 PR68 round1 W01 — local setup documentation corrected
 
 The completed native round on `9dea35c` (check 140411394536, App 2193792) reported

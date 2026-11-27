@@ -10,6 +10,12 @@ import {
   type SprintPlanningResult,
 } from '@rielia/contracts';
 
+import { createContractRequest } from './api-contract-client.ts';
+
+const planningPath = '/api/v1/workspaces/{workspaceId}/projects/{projectId}/planning';
+const sprintsPath = '/api/v1/workspaces/{workspaceId}/projects/{projectId}/sprints';
+const sprintPath = '/api/v1/workspaces/{workspaceId}/projects/{projectId}/sprints/{sprintId}';
+
 export class SprintPlanningFailure extends Error {
   readonly status: number;
   readonly code: string | null;
@@ -31,35 +37,10 @@ export class SprintPlanningFailure extends Error {
 export function createSprintPlanningTransport(
   options: { baseURL?: string; timeout?: number } = {},
 ) {
-  const root = (w: string, p: string) =>
-    `workspaces/${encodeURIComponent(w)}/projects/${encodeURIComponent(p)}`;
+  const send = createContractRequest(options);
   const scoped = (v: SprintPlanningResult, w: string, p: string, s?: string) =>
     v.workspaceId === w && v.projectId === p && (s === undefined || ('id' in v && v.id === s));
-  async function request(
-    path: string,
-    w: string,
-    p: string,
-    signal: AbortSignal,
-    body?: unknown,
-    key?: string,
-    s?: string,
-  ): Promise<unknown> {
-    const response = await fetch(
-      options.baseURL ? new URL(`/api/v1/${path}`, options.baseURL) : `/api/v1/${path}`,
-      {
-        method: body === undefined ? 'GET' : 'POST',
-        credentials: 'same-origin',
-        cache: 'no-store',
-        redirect: 'error',
-        signal: AbortSignal.any([signal, AbortSignal.timeout(options.timeout ?? 15000)]),
-        ...(body === undefined
-          ? {}
-          : {
-              headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key! },
-              body: JSON.stringify(body),
-            }),
-      },
-    );
+  async function read(response: Response, w: string, p: string, s?: string): Promise<unknown> {
     const requestId = response.headers.get('x-request-id');
     let value: unknown;
     try {
@@ -85,29 +66,36 @@ export function createSprintPlanningTransport(
   }
   return {
     async planning(w: string, p: string, signal: AbortSignal): Promise<ProjectPlanning> {
-      const value = await request(`${root(w, p)}/planning`, w, p, signal);
+      const value = await read(
+        await send('get', planningPath, { path: { workspaceId: w, projectId: p }, signal }),
+        w,
+        p,
+      );
       if (!isProjectPlanning(value) || !scoped(value, w, p)) throw new SprintPlanningFailure(502);
       return value;
     },
     async sprint(w: string, p: string, s: string, signal: AbortSignal): Promise<Sprint> {
-      const value = await request(
-        `${root(w, p)}/sprints/${encodeURIComponent(s)}`,
+      const value = await read(
+        await send('get', sprintPath, {
+          path: { workspaceId: w, projectId: p, sprintId: s },
+          signal,
+        }),
         w,
         p,
-        signal,
-        undefined,
-        undefined,
         s,
       );
       if (!isSprint(value) || !scoped(value, w, p, s)) throw new SprintPlanningFailure(502);
       return value;
     },
     async sprints(w: string, p: string, signal: AbortSignal, cursor?: string): Promise<SprintPage> {
-      const value = await request(
-        `${root(w, p)}/sprints${cursor === undefined ? '' : `?cursor=${encodeURIComponent(cursor)}`}`,
+      const value = await read(
+        await send('get', sprintsPath, {
+          path: { workspaceId: w, projectId: p },
+          ...(cursor === undefined ? {} : { query: { cursor } }),
+          signal,
+        }),
         w,
         p,
-        signal,
       );
       if (!isSprintPage(value) || value.workspaceId !== w || value.projectId !== p)
         throw new SprintPlanningFailure(502);
@@ -119,18 +107,30 @@ export function createSprintPlanningTransport(
       signal: AbortSignal,
     ): Promise<SprintPlanningResult> {
       const { workspaceId: w, projectId: p } = command;
-      const path =
+      const path = { workspaceId: w, projectId: p };
+      const response =
         command.type === 'configure-planning'
-          ? `${root(w, p)}/planning`
-          : `${root(w, p)}/sprints${command.type === 'edit-sprint' ? `/${encodeURIComponent(command.sprintId)}` : ''}`;
-      const body =
-        command.type === 'configure-planning'
-          ? { expectedVersion: command.expectedVersion, ...command.settings }
+          ? await send('post', planningPath, {
+              path,
+              body: { expectedVersion: command.expectedVersion, ...command.settings },
+              key,
+              signal,
+            })
           : command.type === 'create-sprint'
-            ? { expectedProjectVersion: command.expectedProjectVersion, ...command.fields }
-            : { expectedVersion: command.expectedVersion, ...command.fields };
+            ? await send('post', sprintsPath, {
+                path,
+                body: { expectedProjectVersion: command.expectedProjectVersion, ...command.fields },
+                key,
+                signal,
+              })
+            : await send('post', sprintPath, {
+                path: { ...path, sprintId: command.sprintId },
+                body: { expectedVersion: command.expectedVersion, ...command.fields },
+                key,
+                signal,
+              });
       const s = command.type === 'edit-sprint' ? command.sprintId : undefined;
-      const value = await request(path, w, p, signal, body, key, s);
+      const value = await read(response, w, p, s);
       if (command.type === 'configure-planning') {
         if (!isProjectPlanning(value) || !scoped(value, w, p, s))
           throw new SprintPlanningFailure(502);

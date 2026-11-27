@@ -1116,6 +1116,24 @@
         "total": 20
       }
     },
+    "apps/web/src/lib/api-contract-client.ts": {
+      "branches": {
+        "covered": 13,
+        "total": 13
+      },
+      "functions": {
+        "covered": 2,
+        "total": 2
+      },
+      "lines": {
+        "covered": 15,
+        "total": 15
+      },
+      "statements": {
+        "covered": 18,
+        "total": 18
+      }
+    },
     "apps/web/src/lib/identity-client.ts": {
       "branches": {
         "covered": 4,
@@ -1298,20 +1316,20 @@
     },
     "apps/web/src/lib/sprint-client.ts": {
       "branches": {
-        "covered": 59,
-        "total": 59
+        "covered": 47,
+        "total": 47
       },
       "functions": {
-        "covered": 9,
-        "total": 9
+        "covered": 8,
+        "total": 8
       },
       "lines": {
-        "covered": 40,
-        "total": 40
+        "covered": 41,
+        "total": 41
       },
       "statements": {
-        "covered": 43,
-        "total": 43
+        "covered": 44,
+        "total": 44
       }
     },
     "apps/web/src/lib/sprint-commands.ts": {
@@ -1605,9 +1623,9 @@
   },
   "floors": {
     "branches": 6709,
-    "functions": 6169,
-    "lines": 7295,
-    "statements": 7074
+    "functions": 6172,
+    "lines": 7304,
+    "statements": 7083
   },
   "manifest": {
     "compiler": {
@@ -1690,6 +1708,7 @@
       "apps/web/src/app/workspaces/workspace-screen-model.ts": "9d07f6ab34b09a7452605bc12dd9b2d4034873cdb7c63d115cc82f944be959fb",
       "apps/web/src/app/workspaces/workspace-ui.tsx": "abde77c8163904955c076c99d7cff6575ada4a209ca1d0ca82a97906837692a2",
       "apps/web/src/app/workspaces/workspace-view.tsx": "cabc6066662684919b7d573d491ca8d82cb560e1386c0cfab5b155a38c063278",
+      "apps/web/src/lib/api-contract-client.ts": "0ee5dd5387ecc4e8cc3336f62bc2e360d203d43cc6df49a79cea21b2a0a95aed",
       "apps/web/src/lib/identity-client.ts": "7271ac3c35ee04af5d42791166dc52fcf3e2e227a0d8ebb1b9d174b342a26b56",
       "apps/web/src/lib/identity-controller.ts": "1a4aea81c25cbcc41c4baad8e29d57bd4d7a62486945992a75703da3bac35163",
       "apps/web/src/lib/identity-proxy.ts": "6007586e00094a33704729198b2aa077195a1c63c426b83244baeb4d8ece6fd4",
@@ -1700,7 +1719,7 @@
       "apps/web/src/lib/safe-markdown.ts": "ec1344cc57dade02d9e351aa78b7f8d85bd4fd2addd0540a552d407196dec244",
       "apps/web/src/lib/server/api-upstream.ts": "0258cb7244613def8464ddcadd936fcd009a71df42177330c3f5e10cbb05823f",
       "apps/web/src/lib/sprint-client-state.ts": "bb926105fd2c9fb2228d061caa51fd5ff23ae508b7b98a674f12fb884cf86b88",
-      "apps/web/src/lib/sprint-client.ts": "141b2fd1b71cdde544910677ede389bb669064be637533d54ae66e1cd0fccbcc",
+      "apps/web/src/lib/sprint-client.ts": "b0c54a16765cd4ab38c14b9ba2ee499f8cfc171e4d97057ba2522e4ab7d83e02",
       "apps/web/src/lib/sprint-commands.ts": "a01805a35d3bc3a6367d05237ebb98d909363c6e8626a7c6d7c20c3e7c70e3ca",
       "apps/web/src/lib/sprint-controller.ts": "565c3509f78d91e4b859e194e60a27f9fadffc9e224a514df18625b917b4f3c1",
       "apps/web/src/lib/sprint-form-state.ts": "4dec56640c76454ac446deb1320a78f2ebeec953947021879a8624b34282c0f9",
@@ -1727,6 +1746,7 @@
     },
     "runtime": "24.22.1",
     "tests": {
+      "apps/web/test/unit/api-contract-client.test.mjs": "a8af45243015604044c5d315ebe6c2f99b9fdc24d33c948ed148c417fea52e9e",
       "apps/web/test/unit/api-upstream.test.mjs": "952ea976917844b6273117c3a346e1cc327d4f271913f1dbf2934a1199884474",
       "apps/web/test/unit/dom-harness.mjs": "b2d1333d126484b0fd327298cf5a7d7539800ce6265cc9b03d863895fae219af",
       "apps/web/test/unit/identity-hook.test.mjs": "c9b0ae7bd603ab0e6cb375bb65106ff466bbfa46ebafa3803fdec0db6266ff2a",
@@ -1748,7 +1768,7 @@
       "apps/web/test/unit/sprint-hook.test.mjs": "ed51f29d537aba2c3f81fcc03ad0e80abbf8badeb13a2aaba189c874f993f7eb",
       "apps/web/test/unit/sprint-integration-harness.mjs": "1f5bfc485632fb503b8571c09905ccfefa8886c4bf15eb51edfe56d9ec9bef34",
       "apps/web/test/unit/sprint-integration.test.mjs": "1172f79e704a0c6cc35ef2e51456d7cf67bed5a11525a605a1af29df7dea806f",
-      "apps/web/test/unit/sprint-planning.test.mjs": "238f9d60fedc24dbe6270b3764ce5f736b9a1b588807279d74556467454eb87e",
+      "apps/web/test/unit/sprint-planning.test.mjs": "70222cc53d375914bce83bc97f5f82e82234409ca0221ec52ee9ac80d32e504d",
       "apps/web/test/unit/sprint-screen-model.test.mjs": "c88bb693a0b830257283ef4ab57746feec9ef5c5c7e5e5a22cc80d5775cd3325",
       "apps/web/test/unit/task-planning.test.mjs": "67d4e8c41b8df9cea22950ecf5dc2fca20b26be0a6ce0f2da666a006b8bba74f",
       "apps/web/test/unit/task-result-focus.test.mjs": "28c4019099eb4d5bea66b3fd430a87b027d31154a34c8af8383f9cf0766018e8",
@@ -1770,20 +1790,20 @@
   "scope": "web",
   "total": {
     "branches": {
-      "covered": 4673,
-      "total": 6965
+      "covered": 4674,
+      "total": 6966
     },
     "functions": {
-      "covered": 836,
-      "total": 1355
+      "covered": 837,
+      "total": 1356
     },
     "lines": {
-      "covered": 3604,
-      "total": 4940
+      "covered": 3620,
+      "total": 4956
     },
     "statements": {
-      "covered": 3970,
-      "total": 5612
+      "covered": 3989,
+      "total": 5631
     }
   }
 }
