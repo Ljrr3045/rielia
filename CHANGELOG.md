@@ -4,6 +4,18 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Expand generated request typing locally to 54 existing browser operations,
+  preserving six accepted Sprint consumers and existing validation/error/recovery
+  owners. [T38.3c](docs/development/t38-contract-transport.md) retains four browser
+  JSON tranche exclusions and pending H24/H54 correlated writes. Adopt only the
+  exact coordinator-approved web baseline; normal 931 reproduces all 16 reports,
+  with infrastructure 20 and bounded artifacts 17 passed. Seven other baselines
+  stay exact; no ratio/floor weakening or source omission. Prior standard/build,
+  cost observations and source-qualified test corrections remain unchanged;
+  no broad check/build or PG/Docker repeats for adoption. Delivery/review remain
+  pending, without full T38.3/T38 acceptance. PR68/69 acceptance governs earlier
+  slices; historical snapshots below remain.
+
 - Publish T38.3b in [Draft PR69](https://github.com/Ljrr3045/rielia/pull/69), targeting
   `dev` at initial implementation head `835a9dbbd7880d4a51aa3d148967f3185e426c00`,
   based on `8f4fb854b4b2ab058a2e3311009db971fc5c3e58`. Initial

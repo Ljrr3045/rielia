@@ -1,5 +1,35 @@
 # T36 first unit and coverage delivery
 
+## T38.3c exact web adoption and normal reproduction
+
+The coordinator reviewed the [54-operation transport](t38-contract-transport.md),
+raw counters, current source/test/config/provider bindings and exact-ratio/
+uncovered comparisons, then approved only web 48,307 bytes/SHA256
+`9b370321b72984332c594e61f7d8f8a12e473d2c2924198636b3e7d1713cf438`.
+Prior web is 48,306 bytes/`ec0402f900da889f31a7e3febff87d254df4c8fa1900ad6ce8333101cd37b3f1`.
+Adopted L/S/F/B is 3617/4943, 3982/5609, 838/1354, 4699/6977; floors become
+7317/7099/6189/6734 from 7304/7083/6172/6709. Every per-file exact ratio retains/
+improves and uncovered counts never increase. No PR65 exception or lowered floor.
+The other seven tracked baselines remain byte-identical; no regeneration runs.
+
+Fresh normal 931/931 (API 384/web 449/contracts 79/prototype 19) passes with 197
+maintained inputs (62/90/29/16) and reproduces all 16 final measurement reports
+byte for byte, including raw counters/maps/LCOV/manifests. Count digest remains
+`188e707f932b7752eaf66444020ecc4892488c26a8ef62b5daff02cce4eda717`.
+Infrastructure 20/20 and bounded artifact validation pass with all 17 complete
+files and no upload. The sole generated Nest metadata fixture retains its
+qualified projection; current source/config and web-test hashes match the replay.
+
+Initial 927 and its 16 reports stay separately preserved: covered-code-removal
+ratio changes and one secondary read-cycle counter loss led to meaningful
+malformed/denied/foreign-response, lazy raw-auth/explicit retry and controlled
+read-race witnesses. A disposable missing-fence mutation fails the duplicate-tail
+assertion. Final helper 19/22/3/29 is 100%; removed duplicate request/path/cursor
+construction explains changed denominators. No broad standard/build, install,
+probe, loopback, audit, local PG or Docker repeat follows numerical adoption.
+This is local adoption/normal evidence, not PR/full T38.3/T38 acceptance. H24/H54
+remain pending and the four tranche exclusions retain their owners.
+
 ## 2026-11-27 T38.3b exact web adoption and normal replay
 
 The coordinator reviewed the [transport](t38-contract-transport.md), all 197

@@ -6,6 +6,7 @@ import {
 } from '../../src/lib/task-planning-client.ts';
 import { createSprintPlanningTransport } from '../../src/lib/sprint-client.ts';
 import { proxyProjectTask } from '../../src/lib/project-task-proxy.ts';
+import { mountedSprint, deferred, sprintServer, closeResult } from './sprint-client-fixtures.mjs';
 const at = '2026-11-19T00:00:00.000Z';
 const sprint = {
   id: 's',
@@ -53,6 +54,44 @@ const input = {
   expectedTargetVersion: 2,
 };
 const signal = () => new AbortController().signal;
+
+test(
+  'a superseded secondary planning read cannot resume the obsolete closure/outcome tail',
+  { timeout: 5000 },
+  async (t) => {
+    const server = sprintServer();
+    server.sprint = closeResult().current;
+    server.list.items = [server.sprint];
+    server.task.currentParticipation = null;
+    const b = await mountedSprint(t, { server });
+    const started = deferred();
+    const held = deferred();
+    let first = true;
+    b.server.get = ({ path }) => {
+      if (path.endsWith('/scope') && first) {
+        first = false;
+        started.resolve();
+        return held.promise;
+      }
+    };
+    const tailCount = () =>
+      b.server.requests.filter(
+        ({ path }) => path.endsWith('/closure') || path.endsWith('/closure/outcomes'),
+      ).length;
+    const mountedTail = tailCount();
+    const obsolete = b.controller.refresh();
+    await started.promise;
+    await b.controller.refresh();
+    const before = tailCount();
+    assert.equal(before, mountedTail + 2);
+    held.resolve(Response.json({ ...b.server.scope, extra: 'obsolete' }));
+    await obsolete;
+    assert.equal(tailCount(), before);
+    assert.equal(b.state().resources.scope.data.extra, undefined);
+    assert.equal(b.state().resources.outcomes.status, 'ready');
+    assert.equal(b.posts().length, 0);
+  },
+);
 test('planning transport preserves exact explicit null/zero payload and original keys without automatic retry', async (t) => {
   const calls = [];
   let value = planning,

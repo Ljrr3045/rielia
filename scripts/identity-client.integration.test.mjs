@@ -73,3 +73,56 @@ test('real browser client aborts stalled mutations, sends no automatic retry, an
   hanging = false;
   assert.equal((await transport.configuration()).enabled, true);
 });
+
+test(
+  'identity projections retain native redirect following and a deadline through real body consumption',
+  { timeout: 8000 },
+  async (t) => {
+    const calls = [];
+    let headers;
+    let closed;
+    const headersSeen = new Promise((resolve) => {
+      headers = resolve;
+    });
+    const disconnected = new Promise((resolve) => {
+      closed = resolve;
+    });
+    const server = createServer((request, response) => {
+      calls.push(request.url);
+      request.resume();
+      if (request.url.endsWith('/config')) {
+        response.writeHead(302, { location: '/projection' });
+        response.end();
+      } else if (request.url === '/projection') {
+        response.writeHead(202, { 'content-type': 'text/plain' });
+        response.end('{"enabled":false,"providers":[]}');
+      } else {
+        response.once('close', closed);
+        response.writeHead(200, { 'content-type': 'application/json' });
+        response.flushHeaders();
+        response.write('{"user":');
+        headers();
+      }
+    });
+    t.after(async () => {
+      const stopped = new Promise((resolve) => server.close(resolve));
+      server.closeAllConnections();
+      await stopped;
+    });
+    server.listen(0, '127.0.0.1');
+    await once(server, 'listening');
+    const transport = createIdentityTransport({
+      baseURL: `http://127.0.0.1:${server.address().port}/discarded`,
+      timeout: 1000,
+    });
+    assert.deepEqual(await transport.configuration(), { enabled: false, providers: [] });
+    const pending = transport.session();
+    const rejected = assert.rejects(pending, (error) =>
+      ['AbortError', 'TimeoutError'].includes(error.name),
+    );
+    await headersSeen;
+    await rejected;
+    await disconnected;
+    assert.deepEqual(calls, ['/api/v1/identity/config', '/projection', '/api/v1/identity/session']);
+  },
+);

@@ -1,5 +1,20 @@
 # T38 maintained-boundary inventory
 
+## T38.3c consolidated candidate; exact local numerical adoption
+
+[Contract-derived requests](t38-contract-transport.md) cover H02–03/H05–23/
+H25–29/H36–49/H51–53/H56–66 as 54 new local consumers, alongside accepted H30–35.
+The coordinator accepts H01/H04/H50/H55 exclusions for this browser JSON tranche;
+their server/diagnostic/no-caller/SSE/infrastructure owners remain. H24/H54 retain
+native sends pending a separately owned correlated-command input follow-up.
+Thus 66 = 6 accepted + 54 candidate + 4 excluded + 2 pending, not full T38.3.
+X01/X02/X03/X05 runtime response/security/state owners remain. PR68/69 acceptance
+supersedes their frozen pending labels; the Sprint-only paragraph below remains
+the earlier snapshot. Root approves only the exact web numerical candidate;
+normal 931 reproduces all 16 reports at 197 inputs, with infrastructure 20 and
+bounded artifacts 17 passed. Only that web baseline changes; seven others remain
+exact. New-head delivery/review/acceptance remain open; no omission or waiver.
+
 ## Current local transport boundary — T38.3b
 
 X04/H30–35 alone use [contract-derived Sprint requests](t38-contract-transport.md)

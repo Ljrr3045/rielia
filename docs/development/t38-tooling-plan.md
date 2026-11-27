@@ -1,5 +1,22 @@
 # T38 tool decisions and compatibility pilot
 
+## T38.3c consolidated transport implementation
+
+The coordinator released [54 additional generated-request consumers](t38-contract-transport.md)
+across existing identity/workspace/project-task/task-planning clients in one batch.
+Six accepted Sprint calls remain. Four browser JSON tranche exclusions
+(H01/H04/H50/H55) retain their owners; H24/H54 need the next correlated-command
+typing follow-up. This does not finish T38.3 or accept a broader phase.
+Reuse native fetch, raw Response and current runtime guards; no dependency,
+compiler, schema, proxy, controller or Query/RHF ownership change. One complete
+standard/build and final coherent measure 931 pass; later test-only parity changes
+have affected 48/lint evidence without another build. Root adopts only the exact
+web numerical candidate; normal 931 reproduces all 16 reports, with infrastructure
+20 and bounded artifacts 17 passed. Seven other baselines remain byte-exact and
+no full standard check or native build is repeated for adoption.
+Delivery/review/acceptance remain gates.
+PR68/69 decisions govern earlier slices; pending labels below remain historical.
+
 ## Current local transport boundary — T38.3b
 
 The [bounded native-fetch choice](t38-contract-transport.md) consumes generated
