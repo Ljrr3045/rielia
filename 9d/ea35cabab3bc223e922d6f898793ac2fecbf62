@@ -1,0 +1,26 @@
+docs/development/t38-openapi-contracts.md
+  s_4bf47e12468fd2::t_f2b3c1b4acd812 3-9
+CHANGELOG.md
+  s_4bf47e12468fd2::t_f2b3c1b4acd812 7-15
+docs/development/progress.md
+  s_4bf47e12468fd2::t_f2b3c1b4acd812 3-14,670,3673
+docs/development/t38-tooling-plan.md
+  s_4bf47e12468fd2::t_f2b3c1b4acd812 3,5-7,9-11,14-15
+  s_4bf47e12468fd2::t_320af8ac1f7698 12-13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9dea35cabab3bc223e922d6f898793ac2fecbf62",
+  "prompts": {},
+  "sessions": {
+    "s_4bf47e12468fd2": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21b8f-d03e-7d02-9933-aef5f3d681fa",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
