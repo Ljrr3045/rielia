@@ -1,5 +1,10 @@
 # T38 backend-private boundaries
 
+[T38.2i is ACCEPTED in PR66](https://github.com/Ljrr3045/rielia/pull/66#issuecomment-7208579762),
+reviewed `e9b9c4d0`, merged `a9fa0047`, with reviewed-head CI, full35-file native
+Kilo (zero findings) and exact-merge CI passed. This final decision supersedes
+pending labels in the preserved dated receipts; it does not rebind their runs.
+
 [T38.2h is ACCEPTED in PR65](https://github.com/Ljrr3045/rielia/pull/65#issuecomment-7206762092),
 reviewed `7a13cba3`, merged `cdb39361` (tree `cbee2ec5`), with reviewed-head
 CI/native Kilo and exact-merge CI passed. Earlier pending/source/run receipts

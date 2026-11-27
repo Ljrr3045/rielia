@@ -264,6 +264,16 @@ test('configuration fails closed before protocol output and never prints values'
       'MCP startup failed: invalid configuration; see docs/development/local-mcp.md.\n',
     );
   }
+  const peer = wire(t, {
+    RIELIA_API_ORIGIN: 'https://example.test',
+    RIELIA_MCP_ALLOW_LOOPBACK_HTTP: 'fictional-private-invalid-flag',
+  });
+  assert.deepEqual(await peer.exited, [1, null]);
+  assert.equal(peer.lines.length, 0);
+  assert.equal(
+    peer.stderr(),
+    'MCP startup failed: invalid configuration; see docs/development/local-mcp.md.\n',
+  );
 });
 
 test('cancellation, EOF, SIGINT and SIGTERM abort active HTTP and leave no child/socket', async (t) => {

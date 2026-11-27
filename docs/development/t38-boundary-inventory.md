@@ -1,5 +1,21 @@
 # T38 maintained-boundary inventory
 
+[T38.2i is ACCEPTED in PR66](https://github.com/Ljrr3045/rielia/pull/66#issuecomment-7208579762),
+reviewed `e9b9c4d0`, merged `a9fa0047`, with reviewed-head CI, full35-file native
+Kilo (zero findings) and exact-merge CI passed. This final decision supersedes
+pending labels in the preserved dated receipts; it does not rebind their runs.
+
+[T38.2j](t38-runtime-schemas.md) now owns the released C01–12 assessment: C01–03,
+C05/C07–09 local schemas, C04 native server URL reuse, C06/C10–12 explicit
+exclusions with retained validation. MCP strict tool input/output and loose REST
+admission already share the canonical health schema; the older duplication note
+below is historical. Source-qualified measure904/realPG48/runtime/audits pass with preserved failures;
+exact API/web adoption and fresh normal904/infra20/artifacts reproduce all16
+reports, other six baselines unchanged. Root publication/current-head acceptance
+remain gates; no full T38 acceptance is implied.
+
+## Preserved T38.2i publication snapshot
+
 [Draft PR66](https://github.com/Ljrr3045/rielia/pull/66) targets `dev` at initial
 implementation head `844d6d6`; current-head CI/native review/acceptance remain
 pending. This reference-only update preserves prior source/run identities;
@@ -432,10 +448,13 @@ Cancel/Leave verification or T08/T10/US05 sprint-filter debt.
 | C11 | `compose.local.yml`, `docker/Dockerfile`, `.env.example`, `apps/api/.env.example` | Operator/container packaging: LOCAL_POSTGRES_PASSWORD, LOCAL_WEB_PORT, LOCAL_API_PORT, COMPOSE_PROJECT_NAME; upstream PostgreSQL/Next build/runtime variables and image digests. Templates consume the runtime settings above; excluded from Zod replacement, owned by T04/runtime delivery. Preserve default-disabled identity, safe ports, explicit one-shot and secret handling |
 | C12 | `scripts/quality`, `scripts/unit`, `.github/actions/unit-artifacts`, `.github/workflows/ci.yml`, `.husky`, `scripts/verify-handoff.py`, `scripts/verify-frontend-skills.py` | Maintained tooling input/output/config adapters: Git event/index/commit metadata, formatting/skill manifests, coverage/source maps/baselines, artifact allowlist/upload environment and portable link/hash inventory. Protected non-domain tooling, explicit proposed exclusion from runtime migration, owned by quality/repository delivery; retain existing validation/tests and fail-closed behavior |
 
-`packages/mcp-local/src/main.ts` already defines **two** strict Zod schemas
-(empty tool input and liveness output). `health.ts` separately guards bounded
-REST JSON with `isHealthResponse`. These are experimental public liveness only;
-reuse can remove this duplication later without claiming production MCP adoption.
+**T38.2j canonical-reuse assessment.** `packages/mcp-local/src/main.ts` retains
+strict empty tool input and `healthResponseSchema.strict()` output. `health.ts`
+uses `isHealthResponse`, already backed by the same canonical contracts schema,
+then projects only two public literals. Strict tool admission/output and loose
+bounded REST admission are intentional distinct roles. The earlier duplication
+characterization is superseded; no additional parser or production MCP adoption
+is needed or claimed.
 
 Explicit first-party exclusions from production domain migration: `/prototype`
 and `lib/task-prototype` fictional memory-only models (two form templates in

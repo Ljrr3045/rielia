@@ -1,5 +1,6 @@
 // Product API fallback for local same-origin Next hosting. Edge routing can send
 // these exact paths directly to Nest. No destination or actor comes from input.
+import { apiUpstream } from './server/api-upstream.ts';
 export async function proxyWorkspace(request: Request): Promise<Response> {
   const fail = (status: number) =>
     Response.json(
@@ -32,10 +33,7 @@ export async function proxyWorkspace(request: Request): Promise<Response> {
       )
     )
       return fail(400);
-    const target = new URL(
-      incoming.pathname + incoming.search,
-      process.env['API_BASE_URL'] ?? 'http://127.0.0.1:3001',
-    );
+    const target = apiUpstream(incoming.pathname + incoming.search);
     const headers = new Headers();
     for (const name of ['cookie', 'content-type', 'origin', 'sec-fetch-site', 'idempotency-key']) {
       const value = request.headers.get(name);

@@ -4,6 +4,32 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Approve exact [T38.2j API/web numerical adoption](docs/development/t38-runtime-schemas.md),
+  retaining other six baselines and explicit T04/runtime CLI unit debt. Fresh
+  normal904/infra20/artifacts pass and reproduce all16 frozen reports, without
+  floor/exclusion/comparator/provider changes or inherited exceptions. Preserve
+  original failed/partial checkpoints and the successful first authorized native
+  continuation; no unauthorized retry/receipt manipulation/suppression or upgrade.
+  Current-head CI/native review/publication/acceptance remain coordinator gates;
+  full T38 and existing security/native/provider/product debts remain open.
+
+- Record [T38.2i acceptance in PR66](https://github.com/Ljrr3045/rielia/pull/66#issuecomment-7208579762),
+  reviewed `e9b9c4d0`, merged `a9fa0047`, preserving dated receipts. Implement
+  coordinator-released [T38.2j](docs/development/t38-runtime-schemas.md): staged
+  private configuration/diagnostic schemas, shared native server upstream reuse,
+  bounded completed diagnostic output and explicit payload-key ownership.
+  Preserve parsing/failure/default/clock/resource order and assessed Prisma,
+  build, operator and protected-tooling exclusions. No dependency or presentation
+  change. Source-qualified standard continuations/MCP20/SSR, coherent measure904,
+  selected realPG48, runtime/deployed closure/recovery and high audits pass with
+  exact owned cleanup. Preserve the native Next stop and corrected Compose-stream
+  assertion failure as separate receipts; security/audit/other debts remain.
+  Proposed API/web floors improve without a per-file ratio decrease, retaining
+  the explicit CLI unit gap. Infrastructure is19/20 pending accepted manifests;
+  measured artifacts validate. All eight baselines remain unchanged; exact
+  numerical adoption/normal/infra/current-head review and acceptance remain gates.
+  Full T38 remains open.
+
 - Publish T38.2i in [Draft PR66](https://github.com/Ljrr3045/rielia/pull/66), targeting
   `dev` at initial implementation head `844d6d6`. Current-head CI/native review/
   acceptance remain pending. This reference-only batch preserves original local

@@ -1,5 +1,21 @@
 # T38 tool decisions and compatibility pilot
 
+[T38.2i is ACCEPTED in PR66](https://github.com/Ljrr3045/rielia/pull/66#issuecomment-7208579762),
+reviewed `e9b9c4d0`, merged `a9fa0047`, with reviewed-head CI, full35-file native
+Kilo (zero findings) and exact-merge CI passed. This final decision supersedes
+pending labels in the preserved dated receipts; it does not rebind their runs.
+
+[T38.2j runtime/configuration schemas](t38-runtime-schemas.md) are coordinator-released
+for one consolidated C01–12 batch: staged private schemas, native web URL reuse,
+two explicit diagnostic corrections and assessed tooling/operator exclusions.
+Source-qualified local gates and exact API/web numerical adoption are complete;
+fresh normal904/infra20/artifacts reproduce all16 approved reports, with other six
+baselines byte-exact. The specifically approved CLI unit gap stays owned runtime
+debt. Root publication/current-head review/acceptance remain gates; full T38 is
+open. Historical snapshots below retain their original status/evidence.
+
+## Preserved T38.2i publication snapshot
+
 [Draft PR66](https://github.com/Ljrr3045/rielia/pull/66) targets `dev` at initial
 implementation head `844d6d6`; current-head CI/native review/acceptance remain
 pending. This reference-only update preserves prior source/run identities;

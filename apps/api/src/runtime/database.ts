@@ -1,18 +1,13 @@
 import { createHash } from 'node:crypto';
 import { readdir, readFile } from 'node:fs/promises';
 import pg from 'pg';
+import { runtimeDatabaseUrl } from './config.js';
+export { runtimeDatabaseUrl } from './config.js';
 
 export const QUEUE_SCHEMA = 'rielia_diagnostics';
 // pg-boss 12.38.0's published pgboss.schema. Update with its dependency pin.
 export const QUEUE_SCHEMA_VERSION = 46;
 export const DIAGNOSTIC_QUEUE = 'runtime-probe';
-
-export function runtimeDatabaseUrl(): string {
-  if (process.env['LOCAL_RUNTIME_ENABLED'] !== 'true' || !process.env['DATABASE_URL']) {
-    throw new Error('Local diagnostic runtime requires explicit enablement and DATABASE_URL.');
-  }
-  return process.env['DATABASE_URL'];
-}
 
 export function databasePool(
   applicationName = 'rielia-runtime-api',

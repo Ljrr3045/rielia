@@ -1,4 +1,5 @@
 /** Fixed API destination and allowlist; selectors never select an upstream. */
+import { apiUpstream } from './server/api-upstream.ts';
 import {
   isTaskFilters,
   taskDiscoveryHttpQuerySchema,
@@ -158,10 +159,7 @@ export async function proxyProjectTask(request: Request): Promise<Response> {
         (last !== null && !/^[A-Za-z0-9_-]{1,128}$/.test(last)))
     )
       return fail(403);
-    const target = new URL(
-      incoming.pathname + incoming.search,
-      process.env['API_BASE_URL'] ?? 'http://127.0.0.1:3001',
-    );
+    const target = apiUpstream(incoming.pathname + incoming.search);
     const headers = new Headers();
     for (const name of [
       'cookie',

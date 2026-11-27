@@ -190,6 +190,12 @@ retain applicable checks. These requirements continue after T36 acceptance.
 
 ## Validate and record evidence
 
+The [T38.2j configuration/diagnostic receipt](docs/development/t38-runtime-schemas.md)
+records distinct identity/runtime/MCP/native upstream policies, completed-result
+redaction, heartbeat compatibility and assessed tooling/operator exclusions.
+Its standard/MCP, existing selected real-identity and Docker runtime checks retain
+all default CI coverage; exact numerical adoption remains separately reviewed.
+
 The [T10.0 discovery guide](docs/development/task-discovery.md) records search,
 strict-assignee My tasks, session SSE bounds and presentation integration. Focused
 client/proxy/recovery checks run in `pnpm test:projects:logic` and `pnpm check`;

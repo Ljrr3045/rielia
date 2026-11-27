@@ -6,6 +6,7 @@ import {
   databasePool,
 } from './runtime/database.js';
 import { diagnosticBoss, isDiagnosticPayload } from './runtime/queue.js';
+import { diagnosticResult } from './runtime/diagnostic-schemas.js';
 
 const heartbeatPath = '/tmp/rielia-worker-heartbeat.json';
 const pool = databasePool('rielia-runtime-worker');
@@ -73,7 +74,7 @@ async function bootstrap(): Promise<void> {
   await boss.work(DIAGNOSTIC_QUEUE, { pollingIntervalSeconds: 1, batchSize: 1 }, async ([job]) => {
     if (!job || !isDiagnosticPayload(job.data)) throw new Error('Invalid diagnostic payload.');
     // No product writes or external effects. Repeated delivery is harmless.
-    return { diagnostic: 'ok' };
+    return diagnosticResult;
   });
   await heartbeat();
   if (stopping) return;
