@@ -1,5 +1,25 @@
 # Delivery progress and decisions
 
+## 2026-11-27 T38.4a published in Draft PR72
+
+The coordinator published [Draft PR72](https://github.com/Ljrr3045/rielia/pull/72) toward `dev`
+at 2026-11-28T01:45:36Z from initial implementation head
+`b0e83a2f51a6cea62c9644cc2c9553350e04c44d`, based on
+`70e323b2c7139f3ed3dc5ca50bb8545e5571c5a7`. Before this reference-only batch,
+read-only verification confirmed OPEN/Draft at that head and target. The one
+[initial CI46094723772 / validate140823358143](https://github.com/Ljrr3045/rielia/actions/runs/46094723772/job/140823358143)
+snapshot associated with the implementation head was IN_PROGRESS; no result for the later
+reference head is inferred. The coordinator's immediate creation snapshot had
+zero checks/comments/Kilo checks; neither snapshot proves future event exclusion
+or billing. Final-head CI/native review and coordinator acceptance remain pending.
+
+The [focused guide](t38-sprint-query.md) retains exact root-only web adoption,
+normal 971/198/all 16 reports/status, infrastructure 20/artifacts 17 and all cost/
+coverage/runtime/product limits. This three-document reference batch runs no app,
+coverage, build, PG/Docker or dependency checks and does not rebind earlier runs.
+The local pre-publication checkpoint below remains a dated source record;
+publication is not acceptance of this initial slice or full T38.
+
 ## 2026-11-27 T38.3 accepted; initial Query local batch ready for coordinator delivery
 
 The [initial T38.4a planning/list/create slice](t38-sprint-query.md) has complete

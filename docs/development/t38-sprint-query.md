@@ -1,13 +1,30 @@
 # T38.4a initial sprint Query ownership
 
-Status: local implementation and numerical gates complete; publication, current-head
-CI/native review and coordinator acceptance remain pending. This is the initial
-planning/list/create slice, not acceptance of all T38.4a or full T38. Base is accepted
-T38.3 merge `70e323b2c7139f3ed3dc5ca50bb8545e5571c5a7`.
+Status: published in [Draft PR72](https://github.com/Ljrr3045/rielia/pull/72), targeting `dev`
+from initial implementation head `b0e83a2f51a6cea62c9644cc2c9553350e04c44d`, based on
+accepted T38.3 merge `70e323b2c7139f3ed3dc5ca50bb8545e5571c5a7`. Local implementation
+and numerical gates are complete; final reference-head CI/native review and
+coordinator acceptance remain pending. This is the initial planning/list/create
+slice, not acceptance of all T38.4a or full T38.
 
 This supports existing T11/B1c, P09/US06/US12, UXR01 and UX01/04/05/07/09 behavior.
 Presentation, editable form strings, public schemas, proxies and backend policy
 retain their owners. No new private SSR/hydration or product workflow is added.
+
+## Draft publication reference
+
+The coordinator created PR72 on 2026-11-28T01:45:36Z. Read-only verification before
+this three-document reference batch confirmed OPEN/Draft, initial implementation
+head `b0e83a2f51a6cea62c9644cc2c9553350e04c44d` and base target `dev`.
+The one [initial CI46094723772 / validate140823358143](https://github.com/Ljrr3045/rielia/actions/runs/46094723772/job/140823358143)
+metadata snapshot associated with that head was IN_PROGRESS. It is not final-reference-head
+success or native review evidence; no later result, event exclusion or billing is
+inferred. The coordinator owns the next Draft-state verification/push/body update,
+complete final-head CI and the later single Ready/native review transition.
+
+No application/coverage/build/PG/Docker/install check is rerun for these references.
+The adopted baseline, 971/198/all 16 report/status identity, earlier standard and
+cost receipts below retain their actual source/test/time bindings and limitations.
 
 ## Current local evidence
 
