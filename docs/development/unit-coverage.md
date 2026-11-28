@@ -1,5 +1,75 @@
 # T36 first unit and coverage delivery
 
+## Workspace local gates complete — delivery pending
+
+The [workspace receipt](t38-workspace-query.md) records root's web-only baseline
+adoption:49,956bytes/SHA`4a2f948bce4b26c1804fea2df16bf16cafe9bc2acdcc045adee0aab9b45b1022`,
+floors7544/7349/6550/6887; seven other baselines are exact. Normal replay passes
+1,151tests/200inputs in47.814s with all16reports/status identical to candidate2 and
+digest`a2df53af0318cbb63ddd7461163242352c892c944cc3911e36d9a1d67a234700`.
+Infrastructure20/20 and17bounded artifacts/3,168,770bytes pass, without upload.
+Actual uppercase1440/strict/verification-error settings apply; historical lowercase
+setup and source-qualified standard/build/native evidence retain their limits.
+Source/test/provider/generated/build identities stay frozen. No additional app/
+build/measure/PG/Docker checks, weaker gates or worker baseline write. Helper debt
+L3/S4/F0/B4 and workspaceS1/B1 remain explicit. Coordinator publication/current-head
+CI/native review and acceptance remain pending; fullT38.4a/T38 and all retained
+product/validation debts stay open. Earlier checkpoints remain historical.
+
+## Workspace package-policy correction — verified, root gate pending
+
+The [workspace receipt](t38-workspace-query.md) corrects the initial setup claim:
+lowercase strict-age variables were ignored by pinned pnpm12.15.0. One authorized
+frozen pass each for root/unit records actual1440/strict policy under uppercase
+`PNPM_CONFIG_` settings and native verification `error`; generator already matched.
+All three native validations now pass on pinned Node24.22.1. Only two installed
+workspace-state settings/timestamps changed; all dependency contents, source/tests,
+generated/build outputs, tracked policies/locks and eight baselines remain exact.
+Sealed candidate1/2 evidence keeps its historical invocation limits. No application
+checks were repeated; root baseline adoption/replay/infrastructure/artifacts and
+current-head acceptance remain pending. FullT38.4a/T38 stays open.
+
+## Workspace candidate2 — root baseline adoption pending
+
+The [current receipt](t38-workspace-query.md) records corrected confirmation/expiry
+and authority-completion fences:1,151 tests/200 inputs, all812 retained exact
+ratio/uncovered comparisons and16 floors pass. Twelve nonweb reports and all eight
+baselines remain exact; no waiver or omission. Helper debt isL3/S4/F0/B4, new
+workspace ownerS1/B1. Source-bound affected398, probes/types/lint, one new web build,
+native HTTP/Next HTTP/smoke and actual request/artifact evidence pass. Root baseline
+adoption and subsequent normal replay/infrastructure/artifacts remain pending;
+no publication, paid review or fullT38.4a/T38 acceptance. Candidate1 and its failed
+reproducer remain sealed history.
+
+
+## Workspace candidate1 — correction required
+
+The [workspace receipt](t38-workspace-query.md) records first-measure1,127/200 and
+all16 reports/status complete, with twelve nonweb reports exact to PR73. Numerical
+adoption is rejected: global uncoveredL/S/B +2/+8/+4, controller +2/+7/+7 and renamed
+helper branch-ratio miss; all floors pass without waiving those seven comparisons.
+A public reentrant-confirmation reproducer also exposes stale command readiness
+and lost draft-expiry metadata. Production/tests and all eight baselines are
+frozen pending root's correction release. Complete standard constituents/one build,
+actual request/artifact costs, failed TS5097/probe fix and all preserved limits are
+source-qualified; no normal replay/infrastructure/artifacts/publication/acceptance.
+FullT38.4a/T38 remains open. Earlier pending checkpoints below keep their chronology.
+
+## Workspace Query candidate — numerical gate pending
+
+The [four-resource workspace batch](t38-workspace-query.md) removes its controller
+DTO ledger and reuses the selected sprint helper/freeze responsibility through a
+neutral owner. Expected maintained inputs199→200; all original sources/tests and
+type-only N/A inputs remain. Root alone writes every baseline. Exact per-file/global
+ratios and uncovered comparisons, web floors7465/7267/6433/6818 and old helper
+L3/S5/F0/B5 debt remain protected through the rename. One stabilized standard and
+one all-scope built measure are planned; no current numerical acceptance yet.
+
+PR73's final [decision](https://github.com/Ljrr3045/rielia/pull/73) accepts reviewed
+`a508f54b`/merge`4813bb69` and its source-qualified1,066/199 evidence. Earlier pending
+labels below remain historical and do not imply acceptance of this new candidate,
+remaining project ownership, full T38.4a or T38.
+
 ## Current remaining-resource adoption and publication
 
 The [remaining-resource batch](t38-sprint-query.md) is published in [Draft PR73](https://github.com/Ljrr3045/rielia/pull/73),

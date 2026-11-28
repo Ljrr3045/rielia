@@ -212,9 +212,19 @@ for (const failure of ['offline', 'forbidden']) {
     });
     assert.equal(hook.state.screen.loadingMore, null);
     assert.equal(hook.state.status, failure === 'offline' ? 'error' : 'forbidden');
-    assert.equal(hook.state.members, null);
-    assert.equal(hook.state.invitations, null);
-    assert.equal(hook.state.workspace, null);
+    if (failure === 'offline') {
+      assert.deepEqual(
+        hook.state.members.items.map((row) => row.principalId),
+        ['member'],
+      );
+      assert.equal(hook.state.resources.members.stale, true);
+      assert.equal(hook.state.workspace.id, 'a');
+      assert.equal(hook.state.screen.commandsDisabled, true);
+    } else {
+      assert.equal(hook.state.members, null);
+      assert.equal(hook.state.invitations, null);
+      assert.equal(hook.state.workspace, null);
+    }
     assert.equal(posts(browser).length, 0);
   });
 }
@@ -270,3 +280,38 @@ test('screen dismiss keeps the invalid draft while discard clears it', async (t)
   assert.equal(hook.state.screen.draftMemory, false);
   assert.equal(posts(browser).length, 1);
 });
+
+test(
+  'remembered names and action subjects are hidden on every verification render and erased for a new session',
+  { timeout: 30_000 },
+  async (t) => {
+    const browser = browserFixture(t, 'https://app.example.test/workspaces');
+    const server = workspaceHttp(browser);
+    const hook = await mountHook(browser, useWorkspaceScreen);
+    server.mutate = () => {
+      throw new Error('Synthetic unknown outcome');
+    };
+    await act(async () => hook.state.screen.run(updateMember));
+    assert.equal(hook.state.screen.lastAction.subject.value, 'Ana Member');
+    const start = hook.renders.length;
+    server.session = {
+      ...identitySession(),
+      session: { ...identitySession().session, id: 'replacement-same-human' },
+    };
+    server.workspaces = page([workspace('replacement')]);
+    browser.window.sessionStorage.removeItem('rielia.workspace.human');
+    server.members = page([workspaceMember('new-member', { name: 'New person' })]);
+    await act(async () => hook.state.refresh());
+    for (const render of hook.renders.slice(start)) {
+      if (!render.verified) {
+        assert.equal(render.screen.lastAction, null);
+        assert.equal(render.screen.draftScopeName, null);
+        assert.equal(render.screen.workspace, null);
+      }
+    }
+    assert.equal(hook.state.screen.lastAction, null);
+    assert.equal(hook.state.screen.draftScopeName, null);
+    assert.equal(hook.state.draft, null);
+    assert.equal(hook.state.workspace.id, 'replacement');
+  },
+);

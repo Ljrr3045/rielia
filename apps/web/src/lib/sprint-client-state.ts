@@ -17,6 +17,7 @@ import type {
   TaskPlanning,
 } from '@rielia/contracts';
 import type { RequestInput } from './api-contract-client.ts';
+import type { ClientQueryResource, ClientQueryFailure } from './client-query-resource.ts';
 
 type ProjectPath = '/api/v1/workspaces/{workspaceId}/projects/{projectId}';
 type CloseSprintInput = RequestInput<'post', `${ProjectPath}/sprints/{sprintId}/close`>['body'];
@@ -32,18 +33,8 @@ export interface SprintClientContext {
   workspaceId: string;
   projectId: string;
 }
-export interface SprintResource<T> {
-  status: 'idle' | 'loading' | 'ready' | 'error' | 'changed';
-  data: T | null;
-  stale: boolean;
-  loadingMore: boolean;
-  failure: SprintClientFailure | null;
-}
-export interface SprintClientFailure {
-  status: number;
-  code: string | null;
-  requestId: string | null;
-}
+export type SprintResource<T> = ClientQueryResource<T>;
+export type SprintClientFailure = ClientQueryFailure;
 export interface SprintResources {
   planning: SprintResource<ProjectPlanning>;
   sprints: SprintResource<SprintPage>;

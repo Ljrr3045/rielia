@@ -4,6 +4,41 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Complete the released workspace local gates after coordinator-only web baseline
+  adoption: normal1,151tests/200inputs reproduces all16reports/status exactly,
+  infrastructure20/20 and17bounded artifacts pass without upload. Seven baselines,
+  source/test/provider/build identities and existing debts stay exact; corrected
+  strict-age policy and historical check limits remain explicit. Publication,
+  current-head CI/native review and fullT38.4a/T38 acceptance remain pending.
+
+- Correct the workspace setup evidence: lowercase pnpm strict-age variables were
+  ignored for root/unit. Authorized frozen reconciliation and native validation
+  now verify actual1440/strict policy; dependency/toolchain/source/build contents
+  and all baselines stay exact. Earlier evidence retains its invocation limits;
+  no application checks, publication or wider T38 acceptance were repeated.
+
+- Correct workspace confirmation ordering, original-expiry retention and reentrant
+  authority/scope completion fences; preserve independent invitation intent and
+  exact recovery. Candidate2 passes1,151/200 with all812 retained comparisons and16
+  floors, plus the scoped current-source web build/native checks. Root baseline
+  adoption/replay/current-head review remain pending; rejected candidate1 is sealed.
+
+- Record the workspace first candidate's1,127/200 execution and complete standard
+  constituents/sole build, without numerical acceptance: seven protected
+  comparisons miss and a public confirmation/expiry ordering reproducer fails.
+  Preserve frozen production/tests/baselines pending root correction; no normal
+  replay, publication or wider T38 acceptance follows this rejected candidate.
+
+- Implement the bounded [workspace Query owner](docs/development/t38-workspace-query.md)
+  for catalogue/detail/members/invitations, retaining explicit command/authority/
+  secret ownership and correcting same-human recovery to verified user+session and
+  original expiry. Reuse the accepted sprint resource/freeze helper with typed
+  owner failures. Local standard/numerical/current-head acceptance remains pending;
+  no presentation/dependency/project-owner or full T38 acceptance is implied.
+- Record PR73's final bounded nine-resource sprint acceptance at reviewed `a508f54b`,
+  merged `4813bb69`; all eleven sprint DTO owners are accepted with PR72. Older
+  pending publication/checkpoint entries below retain their historical scope.
+
 - Publish the remaining nine sprint Query resources in [Draft PR73](https://github.com/Ljrr3045/rielia/pull/73), targeting `dev`
   from implementation head [23d01e8](https://github.com/Ljrr3045/rielia/commit/23d01e88c11ffdc1c3cc590573f2b142a4ffd105). Local normal 1,066/199, sixteen exact reports
   plus status, infrastructure 20/20 and seventeen bounded artifacts pass; root

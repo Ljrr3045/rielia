@@ -38,22 +38,49 @@ export function useWorkspaces() {
       stopInvitations();
       window.removeEventListener('pageshow', refresh);
       document.removeEventListener('visibilitychange', refresh);
-      controller.cancelPending();
+      controller.dispose();
     };
   }, [controller]);
+  const expiresAt = state.memoryExpiresAt ?? state.session?.session.expiresAt;
   useEffect(() => {
-    if (!state.session) return;
+    if (!expiresAt) return;
     const timeout = window.setTimeout(
       () => {
         controller.cancelPending();
         void controller.refresh();
       },
-      Math.min(2147483647, Math.max(0, Date.parse(state.session.session.expiresAt) - Date.now())),
+      Math.min(2147483647, Math.max(0, Date.parse(expiresAt) - Date.now())),
     );
     return () => window.clearTimeout(timeout);
-  }, [controller, state.session]);
+  }, [controller, expiresAt]);
+  // Timers/effects can lag a render: never expose expired memory during that interval.
+  const expired = expiresAt !== undefined && Date.parse(expiresAt) <= Date.now();
+  const visible = expired
+    ? {
+        ...state,
+        status: 'signed-out' as const,
+        session: null,
+        verified: false,
+        commandReady: false,
+        workspaces: null,
+        workspace: null,
+        members: null,
+        invitations: null,
+        draft: null,
+        retryTarget: null,
+        invitationLink: null,
+        hasInvitation: false,
+        resources: {
+          workspaces: { ...state.resources.workspaces, data: null },
+          workspace: { ...state.resources.workspace, data: null },
+          members: { ...state.resources.members, data: null },
+          invitations: { ...state.resources.invitations, data: null },
+        },
+        capabilities: { canCreateWorkspace: false, canAdminister: false },
+      }
+    : state;
   return {
-    ...state,
+    ...visible,
     refresh: controller.refresh,
     selectWorkspace: controller.selectWorkspace,
     stage: controller.stage,

@@ -12,6 +12,9 @@ import {
 
 type WorkspaceScreenPort = Pick<
   WorkspaceState,
+  | 'epoch'
+  | 'verified'
+  | 'commandReady'
   | 'draft'
   | 'selectedWorkspaceId'
   | 'pending'
@@ -39,16 +42,28 @@ export function useWorkspaceScreenActions(ws: WorkspaceScreenPort) {
   const [lastAction, setLastAction] = useState<LastAction | null>(null);
   const [loadingMore, setLoadingMore] = useState<LoadMoreKind | null>(null);
   const knownWorkspaceNames = useRef<Record<string, string>>({});
+  const rememberedEpoch = useRef(ws.epoch);
+  const actionEpoch = useRef(ws.epoch);
+  if (rememberedEpoch.current !== ws.epoch) {
+    rememberedEpoch.current = ws.epoch;
+    knownWorkspaceNames.current = {};
+    if (lastAction !== null) setLastAction(null);
+  }
+  function rememberAction(value: LastAction | null) {
+    actionEpoch.current = ws.epoch;
+    setLastAction(value);
+  }
 
   useEffect(() => {
-    if (ws.workspaces === null) return;
+    if (ws.workspaces === null || !ws.verified || ws.epoch !== rememberedEpoch.current) return;
     for (const item of ws.workspaces.items) knownWorkspaceNames.current[item.id] = item.name;
-  }, [ws.workspaces]);
+  }, [ws.workspaces, ws.verified, ws.epoch]);
 
   const draftWorkspaceId =
     ws.draft !== null && 'workspaceId' in ws.draft ? ws.draft.workspaceId : null;
   const draftMismatch = draftWorkspaceId !== null && draftWorkspaceId !== ws.selectedWorkspaceId;
-  const commandsDisabled = ws.pending !== null || ws.retryTarget !== null || draftMismatch;
+  const commandsDisabled =
+    !ws.commandReady || ws.pending !== null || ws.retryTarget !== null || draftMismatch;
   const busy = ws.pending !== null;
   const sessionEmail = ws.session?.user.email ?? null;
   const session = ws.session;
@@ -67,26 +82,27 @@ export function useWorkspaceScreenActions(ws: WorkspaceScreenPort) {
     ) ?? [];
 
   function stageDraft(command: WorkspaceCommand) {
-    if (ws.pending !== null || ws.retryTarget !== null || draftMismatch) return;
+    if (commandsDisabled) return;
     ws.stage(command);
   }
 
   function run(command: WorkspaceCommand) {
-    if (ws.pending !== null || ws.retryTarget !== null || draftMismatch) return;
-    setLastAction({ type: command.type, subject: commandSubject(command, members, invitations) });
+    if (commandsDisabled) return;
+    rememberAction({ type: command.type, subject: commandSubject(command, members, invitations) });
     ws.stage(command);
     void ws.submit();
   }
 
   function acceptInvitation() {
-    if (ws.pending !== null || ws.retryTarget !== null || draftMismatch) return;
-    setLastAction({ type: 'accept-invitation', subject: null });
+    if (commandsDisabled) return;
+    rememberAction({ type: 'accept-invitation', subject: null });
     void ws.acceptInvitation();
   }
 
   function retry() {
     const target = ws.retryTarget;
-    if (target === null) return;
+    if (target === null || !ws.verified) return;
+    actionEpoch.current = ws.epoch;
     setLastAction(
       (current) =>
         current ?? {
@@ -114,7 +130,8 @@ export function useWorkspaceScreenActions(ws: WorkspaceScreenPort) {
   }
 
   async function loadMore(kind: LoadMoreKind) {
-    if (loadingMore !== null || ws.pending !== null || ws.retryTarget !== null) return;
+    if (loadingMore !== null || !ws.verified || ws.pending !== null || ws.retryTarget !== null)
+      return;
     setLoadingMore(kind);
     try {
       await ws.loadMore(kind);
@@ -133,7 +150,7 @@ export function useWorkspaceScreenActions(ws: WorkspaceScreenPort) {
     (draftScopeId === null ? null : (knownWorkspaceNames.current[draftScopeId] ?? null));
 
   return {
-    lastAction,
+    lastAction: ws.verified && actionEpoch.current === ws.epoch ? lastAction : null,
     loadingMore,
     draftMismatch,
     commandsDisabled,

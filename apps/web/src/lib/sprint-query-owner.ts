@@ -17,7 +17,7 @@ import type {
 } from '@rielia/contracts';
 import { SprintPlanningFailure, type createSprintPlanningTransport } from './sprint-client.ts';
 import { createTaskPlanningTransport, TaskPlanningFailure } from './task-planning-client.ts';
-import { createSprintQueryResource } from './sprint-query-resource.ts';
+import { createClientQueryResource } from './client-query-resource.ts';
 import {
   emptySprintResource,
   emptySprintState,
@@ -87,21 +87,27 @@ export function createSprintQueryOwner(options: {
   const tasks = options.tasks ?? createTaskPlanningTransport();
   const slotOptions = {
     client,
+    freeze: freezeSprintValue,
+    failure: (error: unknown): SprintClientFailure =>
+      error instanceof SprintPlanningFailure || error instanceof TaskPlanningFailure
+        ? { status: error.status, code: error.code, requestId: error.requestId }
+        : { status: 0, code: null, requestId: null },
+    pageChanged: () => new TaskPlanningFailure(409, 'page-changed'),
     changed: options.changed,
     authorized: options.authorized,
     denied: options.denied,
   };
   const slots = {
-    sprint: createSprintQueryResource<Sprint>(slotOptions),
-    target: createSprintQueryResource<Sprint>(slotOptions),
-    task: createSprintQueryResource<TaskPlanning>(slotOptions),
-    scope: createSprintQueryResource<SprintScopePage>(slotOptions),
-    sprintHistory: createSprintQueryResource<PlanningHistoryPage>(slotOptions),
-    taskHistory: createSprintQueryResource<PlanningHistoryPage>(slotOptions),
+    sprint: createClientQueryResource<Sprint>(slotOptions),
+    target: createClientQueryResource<Sprint>(slotOptions),
+    task: createClientQueryResource<TaskPlanning>(slotOptions),
+    scope: createClientQueryResource<SprintScopePage>(slotOptions),
+    sprintHistory: createClientQueryResource<PlanningHistoryPage>(slotOptions),
+    taskHistory: createClientQueryResource<PlanningHistoryPage>(slotOptions),
     preview:
-      createSprintQueryResource<NonNullable<SprintResources['preview']['data']>>(slotOptions),
-    closure: createSprintQueryResource<SprintClosure>(slotOptions),
-    outcomes: createSprintQueryResource<SprintClosingOutcomePage>(slotOptions),
+      createClientQueryResource<NonNullable<SprintResources['preview']['data']>>(slotOptions),
+    closure: createClientQueryResource<SprintClosure>(slotOptions),
+    outcomes: createClientQueryResource<SprintClosingOutcomePage>(slotOptions),
   };
   let selected = { sprintId: null as string | null, taskId: null as string | null };
 

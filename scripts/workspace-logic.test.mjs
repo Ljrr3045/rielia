@@ -189,7 +189,7 @@ test('switch/cancel during mutation ignores old completion and retry stays bound
   assert.equal(calls[0].key, calls[1].key);
 });
 
-test('expiry/logout preserves recoverable draft for same user, account switch clears private recovery', async () => {
+test('terminal401 erases recovery and same-user verification cannot resurrect the old intent', async () => {
   const f = fixture({
     transport: {
       mutate: async () => {
@@ -202,10 +202,11 @@ test('expiry/logout preserves recoverable draft for same user, account switch cl
   await f.controller.submit();
   assert.equal(f.controller.getState().status, 'signed-out');
   assert.equal(f.controller.getState().workspaces, null);
-  assert.equal(f.controller.getState().draft.name, 'Recover');
+  assert.equal(f.controller.getState().draft, null);
+  assert.equal(f.controller.getState().retryTarget, null);
   await f.controller.refresh();
-  assert.equal(f.controller.getState().draft.name, 'Recover');
-  assert.ok(f.controller.getState().retryTarget);
+  assert.equal(f.controller.getState().draft, null);
+  assert.equal(f.controller.getState().retryTarget, null);
   f.values.session = { ...active, user: { ...active.user, id: 'other' } };
   await f.controller.refresh();
   assert.equal(f.controller.getState().draft, null);
@@ -471,3 +472,346 @@ test('pagination completion from a previous workspace is discarded', async () =>
   await paging;
   assert.deepEqual(f.controller.getState().members.items, []);
 });
+
+for (const status of [401, 403, 503]) {
+  test(`a confirmed workspace write remains successful after follow-up${status} without private receipt seeding`, async () => {
+    const f = fixture();
+    await f.controller.refresh();
+    f.controller.stage({ type: 'create-workspace', name: 'Confirmed' });
+    f.transport.detail = async () => {
+      throw new WorkspaceFailure(status);
+    };
+    await f.controller.submit();
+    const value = f.controller.getState();
+    assert.equal(value.outcome, 'success');
+    assert.equal(value.retryTarget, null);
+    assert.equal(value.draft, null);
+    assert.equal(
+      value.status,
+      status === 401 ? 'signed-out' : status === 403 ? 'forbidden' : 'error',
+    );
+    if (status !== 503) {
+      assert.equal(value.workspaces, null);
+      assert.equal(value.workspace, null);
+      assert.ok(Object.values(value.resources).every((resource) => resource.data === null));
+    }
+    await f.controller.retrySave();
+    assert.equal(f.calls.length, 1);
+  });
+}
+
+test('late denial from a retired selection cannot erase a replacement verified session', async () => {
+  const f = fixture();
+  await f.controller.refresh();
+  const pending = deferred();
+  f.transport.detail = async (id) => (id === 'a' ? pending.promise : workspace(id));
+  const old = f.controller.selectWorkspace('a');
+  f.values.session = { ...active, session: { ...active.session, id: 'new-session' } };
+  f.transport.workspaces = async () => page([workspace('b')]);
+  await f.controller.refresh();
+  pending.reject(new WorkspaceFailure(403));
+  await old;
+  assert.equal(f.controller.getState().workspace.id, 'b');
+  assert.equal(f.controller.getState().status, 'ready');
+});
+
+test('confirmation blocks reentrant commands until canonical reload and the next intent keeps its original expiry', async () => {
+  const f = fixture();
+  await f.controller.refresh();
+  f.controller.stage({ type: 'create-workspace', name: 'First' });
+  let observed = false,
+    readyAtConfirmation;
+  const stop = f.controller.subscribe(() => {
+    const value = f.controller.getState();
+    if (!observed && value.outcome === 'success') {
+      observed = true;
+      readyAtConfirmation = value.commandReady;
+      f.controller.stage({ type: 'create-workspace', name: 'Premature' });
+    }
+  });
+  await f.controller.submit();
+  stop();
+  assert.equal(
+    readyAtConfirmation,
+    false,
+    'success cannot admit a new command against the old canonical snapshot',
+  );
+  assert.equal(f.controller.getState().draft, null);
+  assert.equal(f.controller.getState().commandReady, true);
+  f.controller.stage({ type: 'create-workspace', name: 'Next explicit intent' });
+  const expiry = f.controller.getState().memoryExpiresAt;
+  assert.equal(expiry, active.session.expiresAt);
+  f.values.session = {
+    ...active,
+    session: { ...active.session, expiresAt: '2036-01-01T00:00:00.000Z' },
+  };
+  await f.controller.refresh();
+  assert.equal(f.controller.getState().draft.name, 'Next explicit intent');
+  assert.equal(f.controller.getState().memoryExpiresAt, expiry);
+  assert.equal(f.calls.length, 1);
+});
+
+for (const phase of ['invalidation', 'success']) {
+  for (const change of ['scope', 'dispose', 'replacement']) {
+    test(`${phase} reentrancy to ${change} fences the completed write from replacement state and reads`, async () => {
+      const f = fixture();
+      await f.controller.refresh();
+      let catalogueReads = 0;
+      f.transport.workspaces = async () => {
+        catalogueReads++;
+        return page([workspace('replacement')]);
+      };
+      f.controller.stage({ type: 'create-workspace', name: 'Completed old intent' });
+      let acted = false,
+        continuation;
+      const stop = f.controller.subscribe(() => {
+        const value = f.controller.getState();
+        const boundary =
+          phase === 'invalidation'
+            ? value.pending === 'create-workspace' && value.resources.workspaces.stale
+            : value.outcome === 'success' && value.pending === null;
+        if (acted || !boundary) return;
+        acted = true;
+        if (change === 'dispose') f.controller.dispose();
+        else if (change === 'scope') continuation = f.controller.selectWorkspace('b');
+        else {
+          f.controller.cancelPending();
+          f.values.session = {
+            ...active,
+            user: { ...active.user, id: 'replacement-human' },
+            session: { ...active.session, id: 'replacement-session' },
+          };
+          continuation = f.controller.refresh();
+        }
+      });
+      await f.controller.submit();
+      await continuation;
+      stop();
+      assert.equal(acted, true, 'the actual public transition was observed');
+      const value = f.controller.getState();
+      if (change === 'dispose') {
+        assert.equal(value.epoch, null);
+        assert.equal(value.workspace, null);
+        assert.ok(
+          Object.values(value.resources).every(
+            (resource) => resource.data === null && !resource.stale,
+          ),
+        );
+        assert.equal(catalogueReads, 0);
+      } else if (change === 'scope') {
+        assert.equal(value.status, 'ready');
+        assert.equal(value.workspace.id, 'b');
+        assert.equal(value.outcome, null);
+        assert.equal(catalogueReads, 0);
+      } else {
+        assert.equal(value.status, 'ready');
+        assert.equal(value.workspace.id, 'replacement');
+        assert.equal(value.session.user.id, 'replacement-human');
+        assert.equal(value.outcome, null);
+        assert.equal(catalogueReads, 1);
+        f.controller.stage({ type: 'create-workspace', name: 'Replacement intent' });
+        assert.equal(f.controller.getState().draft.name, 'Replacement intent');
+        assert.equal(f.controller.getState().memoryExpiresAt, active.session.expiresAt);
+      }
+      assert.equal(value.retryTarget, null);
+      assert.equal(f.calls.length, 1);
+    });
+  }
+}
+
+test('withdrawing authority at pending publication prevents transport submission', async () => {
+  const f = fixture();
+  await f.controller.refresh();
+  f.controller.stage({ type: 'create-workspace', name: 'Withdrawn' });
+  let withdrawn = false;
+  const stop = f.controller.subscribe(() => {
+    if (!withdrawn && f.controller.getState().pending) {
+      withdrawn = true;
+      f.controller.dispose();
+    }
+  });
+  await f.controller.submit();
+  stop();
+  assert.equal(f.calls.length, 0);
+  assert.equal(f.controller.getState().epoch, null);
+  assert.equal(f.controller.getState().draft, null);
+});
+
+for (const completion of ['success', 'unknown']) {
+  test(`expiry during a pending write erases recovery before its late ${completion}`, async (t) => {
+    let now = Date.parse(active.session.expiresAt) - 1_000;
+    t.mock.method(Date, 'now', () => now);
+    const f = fixture();
+    await f.controller.refresh();
+    const held = deferred();
+    f.transport.mutate = () => held.promise;
+    f.controller.stage({ type: 'create-workspace', name: 'Expired original' });
+    if (completion === 'success') {
+      f.values.session = {
+        ...active,
+        session: { ...active.session, expiresAt: '2036-01-01T00:00:00.000Z' },
+      };
+      await f.controller.refresh();
+    }
+    const saving = f.controller.submit();
+    now += 1_000;
+    if (completion === 'success') held.resolve(workspace('new'));
+    else held.reject(new Error('Synthetic response loss after original expiry'));
+    await saving;
+    assert.equal(f.controller.getState().status, 'signed-out');
+    assert.equal(f.controller.getState().epoch, null);
+    assert.equal(f.controller.getState().draft, null);
+    assert.equal(f.controller.getState().retryTarget, null);
+    assert.equal(f.controller.getState().hasInvitation, false);
+  });
+}
+
+for (const phase of ['configuration', 'session']) {
+  for (const completion of ['denied', 'failed']) {
+    test(`stale ${phase} verification ${completion} cannot deny or restore memory into a replacement session`, async () => {
+      const held = deferred();
+      let waiting = false;
+      const f = fixture({
+        options: {
+          identity: {
+            configuration: async () =>
+              waiting && phase === 'configuration' ? held.promise : f.values.config,
+            session: async () => (waiting && phase === 'session' ? held.promise : f.values.session),
+          },
+        },
+      });
+      await f.controller.refresh();
+      f.controller.stage({ type: 'create-workspace', name: 'Old private draft' });
+      waiting = true;
+      const old = f.controller.refresh();
+      if (phase === 'session') await Promise.resolve();
+      waiting = false;
+      f.values.session = { ...active, session: { ...active.session, id: 'fresh-replacement' } };
+      await f.controller.refresh();
+      const epoch = f.controller.getState().epoch;
+      if (completion === 'failed') held.reject(new Error('Retired verification failed'));
+      else held.resolve(phase === 'configuration' ? { enabled: false, providers: [] } : null);
+      await old;
+      assert.equal(f.controller.getState().status, 'ready');
+      assert.equal(f.controller.getState().epoch, epoch);
+      assert.equal(f.controller.getState().draft, null);
+      assert.equal(f.controller.getState().session.session.id, 'fresh-replacement');
+    });
+  }
+}
+
+test('a role-loss notification cannot start replacement members before their selected detail is verified', async () => {
+  const f = fixture();
+  await f.controller.refresh();
+  const target = deferred();
+  const members = [];
+  f.transport.detail = async (id) => (id === 'b' ? target.promise : workspace(id, 'viewer'));
+  f.transport.members = async (id) => {
+    members.push(id);
+    return page([]);
+  };
+  f.transport.mutate = async () => ({
+    principalId: 'member',
+    kind: 'human',
+    name: 'Member',
+    role: 'viewer',
+    state: 'active',
+    principalState: 'active',
+    custodianPrincipalId: null,
+    version: 2,
+  });
+  f.controller.stage({
+    type: 'update-member',
+    workspaceId: 'a',
+    principalId: 'member',
+    version: 1,
+    role: 'viewer',
+  });
+  let switched = false,
+    navigating;
+  const stop = f.controller.subscribe(() => {
+    const value = f.controller.getState();
+    if (
+      !switched &&
+      value.workspace?.id === 'a' &&
+      value.workspace.role === 'viewer' &&
+      value.invitations === null
+    ) {
+      switched = true;
+      navigating = f.controller.selectWorkspace('b');
+    }
+  });
+  await f.controller.submit();
+  assert.equal(switched, true);
+  assert.equal(f.controller.getState().selectedWorkspaceId, 'b');
+  assert.equal(f.controller.getState().status, 'loading');
+  assert.deepEqual(
+    members,
+    [],
+    'the retired continuation cannot read into a scope awaiting detail authority',
+  );
+  target.resolve(workspace('b'));
+  await navigating;
+  stop();
+  assert.equal(f.controller.getState().workspace.id, 'b');
+  assert.equal(f.controller.getState().status, 'ready');
+  assert.deepEqual(members, ['b']);
+});
+
+for (const completed of ['create-workspace', 'accept-invitation', 'invite']) {
+  test(`${completed} confirmation preserves an independently captured invitation and generated-link erasure`, async () => {
+    const a = 'a'.repeat(43),
+      b = 'b'.repeat(43);
+    const f = fixture();
+    await f.controller.refresh();
+    const invitation = {
+      id: 'created',
+      workspaceId: 'a',
+      recipientEmail: 'recipient@example.test',
+      role: 'viewer',
+      issuerPrincipalId: 'human',
+      createdAt: '2026-01-01T00:00:00Z',
+      expiresAt: '2035-01-01T00:00:00Z',
+      state: 'pending',
+    };
+    const calls = [];
+    f.transport.mutate = async (command, key) => {
+      calls.push({ command, key });
+      return command.type === 'invite' ? { invitation, token: 'g'.repeat(43) } : workspace('new');
+    };
+    let captured = false;
+    const stop = f.controller.subscribe(() => {
+      const value = f.controller.getState();
+      if (!captured && value.pending === completed && value.resources.workspaces.stale) {
+        captured = true;
+        f.controller.captureInvitation(`#invitation=${b}`);
+        if (completed === 'invite') f.controller.clearGeneratedInvitationLink();
+      }
+    });
+    if (completed === 'accept-invitation') {
+      f.controller.captureInvitation(`#invitation=${a}`);
+      await f.controller.acceptInvitation();
+    } else {
+      f.controller.stage(
+        completed === 'invite'
+          ? {
+              type: 'invite',
+              workspaceId: 'a',
+              recipientEmail: 'recipient@example.test',
+              role: 'viewer',
+            }
+          : { type: 'create-workspace', name: 'First' },
+      );
+      await f.controller.submit();
+    }
+    stop();
+    assert.equal(captured, true);
+    assert.equal(f.controller.getState().hasInvitation, true);
+    assert.equal(f.controller.getState().invitationLink, null);
+    assert.equal(f.controller.getState().memoryExpiresAt, active.session.expiresAt);
+    await f.controller.acceptInvitation();
+    assert.equal(calls.length, 2);
+    assert.equal(calls[1].command.token, b);
+    assert.equal(f.controller.getState().hasInvitation, false);
+  });
+}

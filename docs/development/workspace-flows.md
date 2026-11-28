@@ -1,5 +1,21 @@
 # T05.0/B1 workspace and membership logic
 
+## Workspace local gates complete — delivery pending
+
+The [workspace receipt](t38-workspace-query.md) records root's web-only baseline
+adoption:49,956bytes/SHA`4a2f948bce4b26c1804fea2df16bf16cafe9bc2acdcc045adee0aab9b45b1022`,
+floors7544/7349/6550/6887; seven other baselines are exact. Normal replay passes
+1,151tests/200inputs in47.814s with all16reports/status identical to candidate2 and
+digest`a2df53af0318cbb63ddd7461163242352c892c944cc3911e36d9a1d67a234700`.
+Infrastructure20/20 and17bounded artifacts/3,168,770bytes pass, without upload.
+Actual uppercase1440/strict/verification-error settings apply; historical lowercase
+setup and source-qualified standard/build/native evidence retain their limits.
+Source/test/provider/generated/build identities stay frozen. No additional app/
+build/measure/PG/Docker checks, weaker gates or worker baseline write. Helper debt
+L3/S4/F0/B4 and workspaceS1/B1 remain explicit. Coordinator publication/current-head
+CI/native review and acceptance remain pending; fullT38.4a/T38 and all retained
+product/validation debts stay open. Earlier checkpoints remain historical.
+
 > Review policy update (2026-11-02): Kody triggers and Kody review requirements
 > below are obsolete. [Current review policy](kilo-review.md) governs new changes.
 > Historical review evidence and runtime guidance are preserved.
@@ -139,11 +155,25 @@ subsequent read fails; Refresh recovers data without resubmitting the write.
 Conflict preserves the editable draft and requires refresh/review, not blind
 overwrite. Explicit retry never expands a grant or changes an actor.
 
-Expiry/401 clears visible data and preserves an in-memory draft/retry for the
-same human. Visibility/pageshow and session expiry recheck identity. A different
-signed-in user clears private recovery. Only a selected workspace ID is stored
-in sessionStorage, keyed to user; it is reauthorized before display. Data,
-drafts, tokens, links and request keys are not persisted in browser storage.
+The [candidate2 correction](t38-workspace-query.md) now invalidates while pending
+before publishing confirmation, fences reentrant scope/authority changes and keeps
+subsequent explicit intent bounded by its original expiry. All1,151/200 and812
+retained comparisons pass; root baseline adoption/replay/current-head review are
+pending. This does not accept full T05/T38 or change server policy.
+
+The coordinator-released [T38.4a workspace Query candidate](t38-workspace-query.md)
+deliberately replaces the old same-human recovery rule: authenticated memory binds
+the verified user and session, bounded by its original captured expiry. Temporary
+verification failure hides private fields and labels; the same session may resume
+before that expiry without extending it. New session (even the same user), account
+replacement, actual expiry/logout/disabled identity or terminal401/403 erases old
+private DTOs, recovery and secrets. Selection cannot bypass denial; real identity
+and selected-scope verification are required. Newly captured pre-auth invitation
+intent stays distinct from old authenticated tokens. Focused legacy tests/guidance
+are corrected, while dated original evidence below retains its source identity.
+Only the untrusted selected workspace ID is stored by user in sessionStorage and
+reauthorized; DTOs, drafts, tokens, links and keys are never persisted. This local
+candidate is not accepted by implementation; candidate1 numerical/order-correction and current-head gates remain.
 
 The hook creates copyable links from the actual browser origin:
 `/workspaces#invitation=<token>`. It captures the fragment in memory and immediately
