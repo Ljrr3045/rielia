@@ -1,0 +1,23 @@
+CHANGELOG.md
+  s_a2a6d580245691::t_d823fa82d6d50e 7-14
+docs/development/progress.md
+  s_a2a6d580245691::t_2c7d1ce794993e 3-7,19-20
+docs/development/t38-workspace-query.md
+  s_a2a6d580245691::t_5578581db9c0e1 3-9,52-53
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4dd925ecd8a95c14d286b92f8ad5d82d1cd0fa5c",
+  "prompts": {},
+  "sessions": {
+    "s_a2a6d580245691": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a220a4-a563-7513-9518-177a44fdfe94",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
