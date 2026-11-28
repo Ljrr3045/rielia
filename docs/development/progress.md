@@ -1,5 +1,20 @@
 # Delivery progress and decisions
 
+## Project/task Query PR75 — Draft, remote gates pending
+
+[Draft PR75](https://github.com/Ljrr3045/rielia/pull/75) publishes the bounded sixteen-family project/task Query migration and
+the corrected expiry scheduler from implementation commit `23b56ef9`, targeting
+`dev` at base `6fee00f2`. This PR-reference update stays in the same Draft batch.
+The corrected-source local replay passes **1,293 tests / 202 inputs**; all824
+retained ratio/uncovered contexts and sixteen floors pass, with infrastructure
+20/20 and seventeen bounded artifacts. Source/tests and the adopted web baseline
+remain unchanged by this reference update.
+
+Final-head CI/native Kilo, coordinator acceptance and full T38.4a/T38 remain
+pending. The OPEN T38.4b terminal403 copy mismatch and all source-qualified
+native/provenance/tooling/product limitations remain explicit. Earlier local
+checkpoints below retain their historical scope.
+
 ## Project/task Query — expiry correction and final local validation
 
 The [project/task Query receipt](t38-project-query.md) records the bounded expiry-timer fix: callbacks recheck the original deadline, reschedule long/early deliveries and retire with their opaque epoch. A genuine prior public-hook failure and six regression cases preserve exact unknown intent until actual expiry, including clock rollback and replacement cleanup. Root adopted the exact web baseline: 51,174 bytes, SHA `32dd19ccf84796ade705811c27f864faee87d2c9c78fa4881d1e5fde8255c2b9`; seven other baselines and original floors are unchanged.

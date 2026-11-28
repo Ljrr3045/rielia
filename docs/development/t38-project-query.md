@@ -1,5 +1,20 @@
 # T38.4a project/task Query ownership
 
+## Project/task Query PR75 — Draft, remote gates pending
+
+[Draft PR75](https://github.com/Ljrr3045/rielia/pull/75) publishes the bounded sixteen-family project/task Query migration and
+the corrected expiry scheduler from implementation commit `23b56ef9`, targeting
+`dev` at base `6fee00f2`. This PR-reference update stays in the same Draft batch.
+The corrected-source local replay passes **1,293 tests / 202 inputs**; all824
+retained ratio/uncovered contexts and sixteen floors pass, with infrastructure
+20/20 and seventeen bounded artifacts. Source/tests and the adopted web baseline
+remain unchanged by this reference update.
+
+Final-head CI/native Kilo, coordinator acceptance and full T38.4a/T38 remain
+pending. The OPEN T38.4b terminal403 copy mismatch and all source-qualified
+native/provenance/tooling/product limitations remain explicit. Earlier local
+checkpoints below retain their historical scope.
+
 Status: **expiry correction adopted; corrected-source replay/infrastructure/artifacts complete; coordinator delivery gates pending**. Full T38.4a/T38 remains OPEN. This bounded migration follows accepted PR72/PR73 sprint resources and PR74's four workspace-route resources. PR74's coordinator BODY acceptance at reviewed `4dd925ec`, merge/base `6fee00f2`, supersedes the older pending workspace labels only; its optional epoch-condition clarity suggestion remains deferred to T38.6.
 
 ## Expiry scheduler correction — adopted and locally verified

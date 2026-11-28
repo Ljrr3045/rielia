@@ -4,6 +4,12 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Publish the project/task Query migration and corrected expiry scheduler in
+  [Draft PR75](https://github.com/Ljrr3045/rielia/pull/75), from implementation commit `23b56ef9` toward `dev`. Final-head
+  CI/native review and acceptance remain pending. This reference update preserves
+  the validated source, 1,293-test/202-input evidence and all recorded limitations;
+  full T38.4a/T38 remains open.
+
 - Correct project expiry timers so long-delay or early callbacks retain exact
   unexpired intent, reschedule against the original deadline and retire with their
   lifetime. Actual expiry still erases before verification. All 33 affected hook
