@@ -1,5 +1,49 @@
 # T11.4b sprint presentation checkpoint
 
+## Current publication and local evidence
+
+[Draft PR73](https://github.com/Ljrr3045/rielia/pull/73) targets `dev` from initial implementation head [23d01e8](https://github.com/Ljrr3045/rielia/commit/23d01e88c11ffdc1c3cc590573f2b142a4ffd105).
+Local gates are complete: normal **1,066 tests / 199 inputs**, sixteen exact
+reports plus status, infrastructure **20/20** and **17** bounded artifact payloads,
+without upload. Root adopted only web baseline `30fbe046`; seven other baselines
+remain exact. The [resource guide](t38-sprint-query.md) records detailed evidence,
+source-qualified costs, rejected/corrected chronology and retained limits.
+
+[PR72's final decision](https://github.com/Ljrr3045/rielia/pull/72) accepts only the
+initial planning/list/create slice. The remaining nine resources are published
+and locally verified, pending final reference-head CI, native review and coordinator
+acceptance. Full T38.4a/T38 remains open. Earlier checkpoints below preserve their
+original source identities and do not override this publication/local status.
+
+## Historical candidate1 numerical correction gate
+
+The [resource batch](t38-sprint-query.md) passes its one complete standard/sole
+candidate build and1060/199 all-scope measurement. The first numerical candidate
+is rejected: eight protected comparisons miss, including global uncoveredL/S/B
++5/+8/+9; better aggregate ratios do not waive them. All tracked baselines and
+production remain frozen. A bounded public-witness correction proposal awaits
+root; no normal replay, infrastructure/artifacts, additional measure or delivery
+is released. The earlier implementation checkpoint below retains its actual
+source/run chronology; fullT38.4a/T38 acceptance remains open.
+
+## Historical remaining-resource Query implementation checkpoint
+
+PR72's final **Coordinator acceptance — T38.4a initial slice ACCEPTED**
+[decision](https://github.com/Ljrr3045/rielia/pull/72) accepts planning/list/create only,
+reviewed `26ac8d7d5292500e169223518630ab3be5be2ef5`, merged
+`fe9e53c7be172e0da7bca34b4685054b36af8a14`. Its reviewed-head/exact-merge
+CI passed 26/26 and native Kilo found no issues across 21 paths. Earlier pending
+labels below are frozen source snapshots, superseded only for that bounded slice.
+
+The [next resource batch](t38-sprint-query.md) removes the remaining nine controller
+DTO caches/read executors. Query alone owns all11 resources through typed selected
+slots and cursor chains in the existing lifetime/client. The controller retains
+captured versions, exact retry/recovery, navigation and scheduling; forms, focus,
+transport/policy and parent verification/SSE retain their accepted owners. Explicit
+preview and canonical closure/outcome relations remain. Focused270/native HTTP4
+pass; standard/build/numerical and final coordinator gates remain open. Earlier
+current/pending paragraphs below are preserved snapshots, not new acceptance.
+
 Status: **bounded T11.4b ACCEPTED in merged [PR55](https://github.com/Ljrr3045/rielia/pull/55#issuecomment-7112015425)**,
 reviewed `91008442511f7e3cccc6d3c5dcbc6080fbf18ec3`, merged
 `214d00b3ec3a4128edf43348fc42df05dec49b78`. The accepted functional source is

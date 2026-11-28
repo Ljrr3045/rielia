@@ -12,6 +12,10 @@ import {
   plannedSprint,
   deferred,
   sprintServer,
+  remainingResources,
+  resourceRoutes,
+  resourcePage,
+  closeResult,
 } from './sprint-client-fixtures.mjs';
 
 function fixture(t, bind = true) {
@@ -385,4 +389,466 @@ test('retirement on actual Query cache success prevents projection continuation 
     'settlement and later stale intents cannot restart a retired epoch',
   );
   assert.equal(b.client.getQueryCache().getAll().length, 0);
+});
+
+function selectResources(b) {
+  b.owner.select('s', 't');
+  b.owner.selectTarget('target');
+  b.owner.preview('backlog');
+}
+for (const name of remainingResources) {
+  test(`${name} has one actual Query DTO owner with explicit selectors and no implicit fetch`, async (t) => {
+    const b = fixture(t);
+    selectResources(b);
+    assert.equal(b.server.requests.length, 0);
+    assert.equal(b.owner.resources()[name].data, null);
+    if (name === 'outcomes') await b.owner.read('closure');
+    await b.owner.read(name);
+    const query = b.client
+      .getQueryCache()
+      .getAll()
+      .find((q) => q.queryKey[4] === name);
+    assert.ok(query);
+    assert.equal(b.owner.resources()[name].status, 'ready');
+    assert.equal(b.owner.resources()[name].data, query.state.data);
+    assert.equal(Object.isFrozen(query.state.data), true);
+    assert.equal(query.options.enabled, false);
+    assert.equal(query.options.retry, false);
+    assert.equal(query.options.gcTime, 0);
+    assert.equal(query.options.staleTime, 0);
+    assert.equal(query.options.networkMode, 'always');
+    assert.equal(query.options.refetchOnWindowFocus, false);
+    assert.equal(query.options.refetchOnReconnect, false);
+    assert.equal(query.options.refetchOnMount, false);
+    assert.equal(query.options.refetchInterval, false);
+    assert.equal(query.options.structuralSharing, false);
+    assert.equal(JSON.stringify(query.queryKey).includes(context.sessionId), false);
+    assert.equal(JSON.stringify(query.queryKey).includes(context.userId), false);
+    assert.deepEqual(
+      query.queryKey[5],
+      name === 'target'
+        ? { targetId: 'target' }
+        : name === 'task' || name === 'taskHistory'
+          ? { taskId: 't' }
+          : name === 'preview'
+            ? { sprintId: 's', destination: 'backlog' }
+            : { sprintId: 's' },
+    );
+    b.owner.clear();
+    assert.equal(b.client.getQueryCache().getAll().length, 0);
+    for (const value of Object.values(b.owner.resources())) assert.equal(value.data, null);
+  });
+  for (const status of [401, 403]) {
+    test(`${name} terminal ${status} retires every real record without retry`, async (t) => {
+      const b = fixture(t);
+      selectResources(b);
+      await b.owner.read('closure');
+      await b.owner.read(name);
+      b.server.get = ({ path }) =>
+        path.endsWith(resourceRoutes[name])
+          ? Response.json({ code: 'denied' }, { status })
+          : undefined;
+      await b.owner.read(name);
+      assert.deepEqual(b.denied, [status === 401 ? 'signed-out' : 'forbidden']);
+      assert.equal(b.client.getQueryCache().getAll().length, 0);
+      assert.equal(b.client.getMutationCache().getAll().length, 0);
+      const calls = b.server.requests.length;
+      await b.owner.read(name);
+      assert.equal(b.server.requests.length, calls);
+    });
+  }
+  for (const completion of ['success', 'denied']) {
+    test(`${name} selection retirement rejects a late ${completion} and leaves independent target intact`, async (t) => {
+      const b = fixture(t);
+      selectResources(b);
+      await b.owner.read('target');
+      await b.owner.read('closure');
+      await b.owner.read(name);
+      const original = b.owner.resources()[name].data;
+      const held = deferred();
+      const started = deferred();
+      let signal;
+      b.server.get = ({ path, init }) => {
+        if (!path.endsWith(resourceRoutes[name])) return;
+        signal = init.signal;
+        started.resolve();
+        return held.promise;
+      };
+      const reading = b.owner.read(name);
+      await started.promise;
+      if (name === 'target') b.owner.selectTarget(null);
+      else if (name === 'preview') b.owner.preview('target');
+      else b.owner.select(null, null);
+      const index = b.renders.length;
+      assert.equal(signal.aborted, true);
+      assert.equal(b.owner.resources()[name].data, null);
+      if (name !== 'target') assert.equal(b.owner.resources().target.data.id, 'target');
+      held.resolve(
+        completion === 'denied' ? Response.json({}, { status: 403 }) : Response.json(original),
+      );
+      await reading;
+      assert.deepEqual(b.denied, []);
+      assert.equal(b.owner.resources()[name].data, null);
+      assert.ok(b.renders.slice(index).every((r) => r[name].data === null));
+      assert.equal(
+        b.client
+          .getQueryCache()
+          .getAll()
+          .some((q) => q.queryKey[4] === name),
+        false,
+      );
+    });
+  }
+}
+
+const paged = ['scope', 'sprintHistory', 'taskHistory', 'preview', 'outcomes'];
+function pagesFixture(t, name) {
+  const b = fixture(t);
+  selectResources(b);
+  b.server.closure.total = 3;
+  b.server.get = ({ path, query }) =>
+    path.endsWith(resourceRoutes[name])
+      ? Response.json(
+          resourcePage(name, query.get('cursor') === 'a' ? 1 : query.get('cursor') === 'b' ? 2 : 0),
+        )
+      : undefined;
+  return b;
+}
+for (const name of paged) {
+  test(`${name} keeps complete last-good rows on failure and atomically replaces root and old tails`, async (t) => {
+    const b = pagesFixture(t, name);
+    if (name === 'outcomes') await b.owner.read('closure');
+    await b.owner.read(name);
+    const held = deferred();
+    const started = deferred();
+    const normal = b.server.get;
+    b.server.get = (r) => {
+      if (r.path.endsWith(resourceRoutes[name]) && r.query.has('cursor')) {
+        started.resolve();
+        return held.promise;
+      }
+      return normal(r);
+    };
+    const more = b.owner.read(name, true);
+    await started.promise;
+    const count = b.server.requests.length;
+    await b.owner.read(name, true);
+    assert.equal(b.server.requests.length, count);
+    assert.equal(b.owner.resources()[name].loadingMore, true);
+    held.resolve(Response.json(resourcePage(name, 1)));
+    await more;
+    b.server.get = normal;
+    await b.owner.read(name, true);
+    assert.equal(b.owner.resources()[name].data.items.length, 3);
+    const all = b.owner.resources()[name].data;
+    const noMore = b.server.requests.length;
+    await b.owner.read(name, true);
+    assert.equal(b.server.requests.length, noMore);
+    b.server.get = () => Response.json({}, { status: 503 });
+    await b.owner.read(name);
+    assert.deepEqual(b.owner.resources()[name].data, all);
+    assert.equal(b.owner.resources()[name].status, 'error');
+    assert.equal(b.owner.resources()[name].stale, true);
+    b.server.get = ({ path }) =>
+      path.endsWith(resourceRoutes[name])
+        ? Response.json({ ...resourcePage(name, 2), nextCursor: null, total: 3 })
+        : undefined;
+    const start = b.renders.length;
+    await b.owner.read(name);
+    assert.equal(b.owner.resources()[name].status, 'ready');
+    assert.equal(b.owner.resources()[name].data.items.length, 1);
+    const ready = b.owner.resources()[name].data;
+    assert.ok(
+      b.renders
+        .slice(start)
+        .every(
+          (r) =>
+            JSON.stringify(r[name].data) === JSON.stringify(all) ||
+            JSON.stringify(r[name].data) === JSON.stringify(ready),
+        ),
+    );
+    assert.equal(
+      b.client
+        .getQueryCache()
+        .getAll()
+        .filter((q) => q.queryKey[4] === name).length,
+      1,
+    );
+  });
+  for (const mismatch of ['binding', 'duplicate', 'nonprogress', 'overflow']) {
+    test(`${name} rejects ${mismatch} before successful Query publication`, async (t) => {
+      const b = pagesFixture(t, name);
+      if (name === 'outcomes') await b.owner.read('closure');
+      await b.owner.read(name);
+      const before = b.owner.resources()[name].data;
+      const next = resourcePage(name, mismatch === 'duplicate' ? 0 : 1);
+      next.nextCursor = mismatch === 'nonprogress' ? 'a' : null;
+      if (mismatch === 'binding') {
+        if (name === 'preview') next.previewHash = 'b'.repeat(64);
+        else if (name === 'outcomes') {
+          next.closureId = 'other';
+          next.items = next.items.map((v) => ({ ...v, closureId: 'other' }));
+        } else next.taskRevision++;
+      }
+      if (mismatch === 'overflow')
+        next.items = [resourcePage(name, 1), resourcePage(name, 2), resourcePage(name, 3)].flatMap(
+          (v) => v.items,
+        );
+      b.server.get = () => Response.json(next);
+      const success = [];
+      const unsubscribe = b.client.getQueryCache().subscribe((event) => {
+        if (
+          event.type === 'updated' &&
+          event.action.type === 'success' &&
+          event.query.queryKey[4] === name
+        )
+          success.push(event.query.state.data);
+      });
+      t.after(unsubscribe);
+      await b.owner.read(name, true);
+      assert.deepEqual(success, []);
+      assert.equal(b.owner.resources()[name].status, 'changed');
+      assert.equal(b.owner.resources()[name].failure.code, 'page-changed');
+      assert.deepEqual(b.owner.resources()[name].data, before);
+      const count = b.server.requests.length;
+      await b.owner.read(name, true);
+      assert.equal(b.server.requests.length, count);
+    });
+  }
+  test(`${name} detects a longer cursor cycle before reusing an admitted record`, async (t) => {
+    const b = pagesFixture(t, name);
+    if (name === 'outcomes') await b.owner.read('closure');
+    await b.owner.read(name);
+    await b.owner.read(name, true);
+    const last = resourcePage(name, 2);
+    last.nextCursor = 'a';
+    b.server.get = () => Response.json(last);
+    await b.owner.read(name, true);
+    const count = b.server.requests.length;
+    await b.owner.read(name, true);
+    assert.equal(b.server.requests.length, count);
+    assert.equal(b.owner.resources()[name].status, 'changed');
+    assert.equal(b.owner.resources()[name].data.items.length, 2);
+  });
+}
+
+test('retiring a target inside real Query success cannot project or remove its replacement', async (t) => {
+  const b = fixture(t);
+  selectResources(b);
+  const unsubscribe = b.client.getQueryCache().subscribe((event) => {
+    if (
+      event.type !== 'updated' ||
+      event.action.type !== 'success' ||
+      event.query.queryKey[4] !== 'target'
+    )
+      return;
+    unsubscribe();
+    b.owner.selectTarget(null);
+    b.owner.selectTarget('target');
+  });
+  t.after(unsubscribe);
+  await b.owner.read('target');
+  assert.equal(b.owner.resources().target.data, null);
+  await b.owner.read('target');
+  assert.equal(b.owner.resources().target.data.id, 'target');
+  assert.equal(
+    b.client
+      .getQueryCache()
+      .getAll()
+      .filter((q) => q.queryKey[4] === 'target').length,
+    1,
+  );
+});
+
+test('concurrent canonical closure replacement hides old outcomes and rejects their pending continuation', async (t) => {
+  const b = pagesFixture(t, 'outcomes');
+  await b.owner.read('closure');
+  await b.owner.read('outcomes');
+  const held = deferred();
+  const started = deferred();
+  b.server.get = ({ path, query }) => {
+    if (path.endsWith('/outcomes') && query.has('cursor')) {
+      started.resolve();
+      return held.promise;
+    }
+  };
+  const more = b.owner.read('outcomes', true);
+  await started.promise;
+  b.server.closure = { ...closeResult().closure, id: 'replacement', total: 3 };
+  await b.owner.read('closure');
+  assert.equal(b.owner.resources().outcomes.data, null);
+  const success = [];
+  const unsubscribe = b.client.getQueryCache().subscribe((event) => {
+    if (
+      event.type === 'updated' &&
+      event.action.type === 'success' &&
+      event.query.queryKey[4] === 'outcomes'
+    )
+      success.push(event.query.state.data);
+  });
+  t.after(unsubscribe);
+  held.resolve(Response.json(resourcePage('outcomes', 1)));
+  await more;
+  assert.deepEqual(success, []);
+  assert.equal(b.owner.resources().outcomes.data, null);
+  assert.equal(b.owner.resources().outcomes.status, 'changed');
+  b.server.get = ({ path }) =>
+    path.endsWith('/outcomes')
+      ? Response.json({
+          ...resourcePage('outcomes'),
+          closureId: 'replacement',
+          items: resourcePage('outcomes').items.map((v) => ({ ...v, closureId: 'replacement' })),
+        })
+      : undefined;
+  await b.owner.read('outcomes');
+  assert.equal(b.owner.resources().outcomes.data.closureId, 'replacement');
+});
+
+test('an outcome cannot repeat a participation under a new outcome ID across pages', async (t) => {
+  const b = pagesFixture(t, 'outcomes');
+  await b.owner.read('closure');
+  await b.owner.read('outcomes');
+  const next = resourcePage('outcomes', 1);
+  next.items[0].participationId = 'visit-0';
+  b.server.get = () => Response.json(next);
+  await b.owner.read('outcomes', true);
+  assert.equal(b.owner.resources().outcomes.status, 'changed');
+  assert.equal(b.owner.resources().outcomes.data.items[0].id, 'outcome-0');
+});
+
+test('a root replacement cancels only its own continuation and preserves an unrelated selected request', async (t) => {
+  const b = pagesFixture(t, 'scope');
+  await b.owner.read('scope');
+  const continuation = deferred();
+  const target = deferred();
+  const scopeStarted = deferred();
+  const targetStarted = deferred();
+  let scopeSignal, targetSignal;
+  b.server.get = ({ path, query, init }) => {
+    if (path.endsWith('/scope') && query.has('cursor')) {
+      scopeSignal = init.signal;
+      scopeStarted.resolve();
+      return continuation.promise;
+    }
+    if (path.endsWith('/sprints/target')) {
+      targetSignal = init.signal;
+      targetStarted.resolve();
+      return target.promise;
+    }
+    if (path.endsWith('/scope')) return Response.json(resourcePage('scope', 2));
+  };
+  const more = b.owner.read('scope', true);
+  const readingTarget = b.owner.read('target');
+  await Promise.all([scopeStarted.promise, targetStarted.promise]);
+  await b.owner.read('scope');
+  assert.equal(scopeSignal.aborted, true);
+  assert.equal(targetSignal.aborted, false);
+  target.resolve(Response.json(plannedSprint()));
+  continuation.resolve(Response.json(resourcePage('scope', 1)));
+  await Promise.all([more, readingTarget]);
+  assert.equal(b.owner.resources().scope.data.items[0].id, 'visit-2');
+  assert.equal(b.owner.resources().scope.data.items.length, 1);
+  assert.equal(b.owner.resources().target.data.id, 'target');
+});
+
+test('a cache-added callback can retire a target before request admission without leaking a record', async (t) => {
+  const b = fixture(t);
+  selectResources(b);
+  const unsubscribe = b.client.getQueryCache().subscribe((event) => {
+    if (event.type !== 'added' || event.query.queryKey[4] !== 'target') return;
+    unsubscribe();
+    b.owner.selectTarget(null);
+  });
+  t.after(unsubscribe);
+  await b.owner.read('target');
+  assert.equal(b.server.requests.length, 0);
+  assert.equal(b.owner.resources().target.data, null);
+  assert.equal(
+    b.client
+      .getQueryCache()
+      .getAll()
+      .some((q) => q.queryKey[4] === 'target'),
+    false,
+  );
+});
+
+test('unbound selected-resource intents send nothing and cannot allocate private queries', async (t) => {
+  const b = fixture(t, false);
+  b.owner.select('s', 't');
+  b.owner.selectTarget('target');
+  b.owner.preview('backlog');
+  await b.owner.read('task');
+  assert.equal(b.server.requests.length, 0);
+  assert.equal(b.client.getQueryCache().getAll().length, 0);
+  b.owner.bind(context);
+  selectResources(b);
+  await b.owner.read('target');
+  const target = b.owner.resources().target.data;
+  b.owner.select('s', 't');
+  assert.equal(b.owner.resources().target.data, target);
+});
+
+test('resource correction: retired invalidation and an unselected read cannot restore private Query data', async (t) => {
+  const b = fixture(t);
+  selectResources(b);
+  await b.owner.read('planning');
+  await b.owner.read('sprints');
+  await b.owner.read('task');
+  const count = b.server.requests.length;
+  b.owner.clear();
+  const start = b.renders.length;
+  b.owner.invalidate();
+  await b.owner.read('task');
+  assert.equal(b.server.requests.length, count);
+  assert.equal(b.client.getQueryCache().getAll().length, 0);
+  assert.ok(b.renders.slice(start).every((r) => Object.values(r).every((v) => v.data === null)));
+  b.owner.bind(context);
+  await b.owner.read('scope');
+  assert.equal(b.server.requests.length, count, 'no selected sprint means no scope request');
+  assert.equal(b.owner.resources().scope.data, null);
+  assert.ok(
+    b.client
+      .getQueryCache()
+      .getAll()
+      .every((q) => q.state.data === undefined),
+  );
+  assert.deepEqual(b.denied, []);
+});
+
+test('resource correction: observerAdded retirement detaches the target before transport admission', async (t) => {
+  const b = fixture(t);
+  b.owner.selectTarget('target');
+  let retired;
+  const unsubscribe = b.client.getQueryCache().subscribe((event) => {
+    if (event.type !== 'observerAdded' || event.query.queryKey[4] !== 'target') return;
+    unsubscribe();
+    retired = event.query;
+    b.owner.selectTarget(null);
+  });
+  t.after(unsubscribe);
+  const start = b.renders.length;
+  await b.owner.read('target');
+  assert.ok(retired);
+  assert.equal(retired.getObserversCount(), 0);
+  assert.equal(b.server.requests.length, 0);
+  assert.equal(b.owner.resources().target.data, null);
+  assert.equal(
+    b.client
+      .getQueryCache()
+      .getAll()
+      .some((q) => q.queryKey[4] === 'target'),
+    false,
+  );
+  assert.ok(b.renders.slice(start).every((r) => r.target.data === null));
+  b.owner.selectTarget('target');
+  await b.owner.read('target');
+  assert.equal(b.server.requests.length, 1);
+  assert.equal(b.owner.resources().target.data.id, 'target');
+  assert.equal(
+    b.client
+      .getQueryCache()
+      .getAll()
+      .filter((q) => q.queryKey[4] === 'target').length,
+    1,
+  );
 });

@@ -1,5 +1,71 @@
 # T36 first unit and coverage delivery
 
+## Current remaining-resource adoption and publication
+
+The [remaining-resource batch](t38-sprint-query.md) is published in [Draft PR73](https://github.com/Ljrr3045/rielia/pull/73),
+from initial implementation head [23d01e8](https://github.com/Ljrr3045/rielia/commit/23d01e88c11ffdc1c3cc590573f2b142a4ffd105). Local numerical gates are complete;
+final reference-head CI/native review and coordinator acceptance remain pending.
+[PR72](https://github.com/Ljrr3045/rielia/pull/72) accepts the initial
+planning/list/create slice only, not this batch or full T38.4a/T38.
+
+Root adopted only web baseline **49,363 bytes**, SHA256
+`30fbe04656e8db312fd84300d62d99d62f30b80c4545cab24e3cc948f9c0ce0e`;
+seven other baselines remain exact. Normal built-input replay passes **1,066/1,066**
+(API 384 / web 584 / contracts 79 / prototype 19), **199 inputs**, in 47.258 s.
+All sixteen corrected reports plus complete status match byte for byte;
+infrastructure 20/20 and seventeen bounded artifacts pass without upload.
+Count digest:
+`47dc3a93a4ed4b61101ba3d57132bfc74707cac3e3ee0efa6c9e1d0b0cbc0e3e`.
+
+All 808 retained comparisons pass without lower floors, source/test/N/A omission
+or a PR65 exception. Web L/S/F/B are 3900/5224, 4316/5939, 927/1441, 4859/7126;
+floors are 7465/7267/6433/6818. Uncovered counts 1324/1623/514/2267 preserve lines
+and functions and improve statements/branches by one against PR72's baseline.
+New-helper debt remains **L3/S5/F0/B5**.
+
+Candidate 1 remains rejected with its eight misses and original raw reports.
+Exactly six public cases corrected the gaps without production changes. The same
+199 production/provider maps show zero covered S/F/B slot losses, 9 statement and
+10 branch-arm gains, plus five lines. Historical defensive Query evidence retains
+its source qualification; no universal lifecycle coverage is claimed.
+
+Standard 121.493 s/sole native build and native HTTP 4 belong to earlier tests;
+focused/corrected/normal runs verify the six later cases. This reference update
+reruns only documentation checks. Runtime/provenance/current-authority, packaging/S01,
+lower advisory/action, UNVERIFIED Cancel/Leave possible draft loss and deferred
+filter/provider/staging/device/a11y/product limits remain in the resource guide.
+Earlier checkpoints below preserve their original source/run identities.
+
+## Historical candidate1 numerical correction gate
+
+The [resource batch](t38-sprint-query.md) passes its one complete standard/sole
+candidate build and1060/199 all-scope measurement. The first numerical candidate
+is rejected: eight protected comparisons miss, including global uncoveredL/S/B
++5/+8/+9; better aggregate ratios do not waive them. All tracked baselines and
+production remain frozen. A bounded public-witness correction proposal awaits
+root; no normal replay, infrastructure/artifacts, additional measure or delivery
+is released. The earlier implementation checkpoint below retains its actual
+source/run chronology; fullT38.4a/T38 acceptance remains open.
+
+## Remaining T38.4a resources — numerical measurement pending
+
+PR72's final **Coordinator acceptance — T38.4a initial slice ACCEPTED**
+[decision](https://github.com/Ljrr3045/rielia/pull/72) accepts planning/list/create only,
+reviewed `26ac8d7d5292500e169223518630ab3be5be2ef5`, merged
+`fe9e53c7be172e0da7bca34b4685054b36af8a14`. Its reviewed-head/exact-merge
+CI passed 26/26 and native Kilo found no issues across 21 paths. Earlier pending
+labels below are frozen source snapshots, superseded only for that bounded slice.
+
+The [remaining-resource batch](t38-sprint-query.md) adds one maintained helper,
+expected198→199 inputs, and removes obsolete controller read ownership. Its
+focused270/native HTTP4 pass, with no numerical result inferred. Root alone owns
+exact baseline adoption; accepted web SHA256
+`2505df034cdb95c090ffcaf7e7a76bed6f7f169a9e3fbe9fd6369aea7e546eed`, seven
+other baselines, all protected floors/ratios/uncovered comparisons and N/A inputs
+remain unchanged. The one standard/build and all-scope measure are the next gate;
+normal replay/infrastructure/artifacts follow only root's exact approval. Existing
+defensive Query debt and unchanged-scope receipts remain source-qualified.
+
 ## T38.4a exact web adoption and final normal replay
 
 The [initial Query slice](t38-sprint-query.md) adds one maintained web runtime owner,

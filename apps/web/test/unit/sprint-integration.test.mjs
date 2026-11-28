@@ -3,7 +3,14 @@ import { registerHooks } from 'node:module';
 import { test } from 'node:test';
 import { act, getByRole, queryByRole, identitySession, fixedNow } from './dom-harness.mjs';
 import { sprintIntegrationBrowser } from './sprint-integration-harness.mjs';
-import { plannedSprint, deferred, closeResult, preview } from './sprint-client-fixtures.mjs';
+import {
+  plannedSprint,
+  deferred,
+  closeResult,
+  preview,
+  fields,
+  observeSprintReads,
+} from './sprint-client-fixtures.mjs';
 import { createDraft } from './project-hook-harness.mjs';
 
 const styles = registerHooks({
@@ -1893,4 +1900,226 @@ test('real parent verification failure after Query create hides private data and
   assert.equal(h.state.sprints.mutation.status, 'confirmed');
   assert.equal(pair(), count + 2);
   assert.equal(posts(b).length, 1);
+});
+
+for (const closed of [false, true]) {
+  test(`all Query resources share one real-parent confirmation drain for an ${closed ? 'closed' : 'active'} selection`, async (t) => {
+    let reads;
+    const b = await sprintIntegrationBrowser(t, {
+      search: '?workspace=a&project=p&projectView=sprints&sprint=s&task=t1',
+      configure(_browser, server) {
+        if (closed)
+          server.sprint = {
+            ...server.sprint,
+            state: 'closed',
+            version: 3,
+            closedAt: closeResult().closure.closedAt,
+            capabilities: {
+              canEdit: false,
+              canStart: false,
+              canChangeScope: false,
+              canClose: false,
+            },
+          };
+        reads = observeSprintReads(server);
+      },
+    });
+    const h = await b.owners();
+    await act(async () => h.state.sprints.selectTarget('target'));
+    if (!closed) await act(async () => h.state.sprints.preview('backlog'));
+    assert.equal(h.state.sprints.resources.task.status, 'ready');
+    assert.equal(h.state.sprints.resources.scope.status, 'ready');
+    if (closed) assert.equal(h.state.sprints.resources.outcomes.status, 'ready');
+    else assert.equal(h.state.sprints.resources.preview.status, 'ready');
+    const initial = reads.length;
+    await act(async () => {
+      b.server.streams.at(-1).emit({ type: 'heartbeat' });
+      b.server.streams
+        .at(-1)
+        .emit({ type: 'invalidate', entity: 'task', id: 'other', projectId: 'other', version: 9 });
+    });
+    await b.clock.advance(500);
+    assert.equal(reads.length, initial);
+    const held = deferred();
+    b.sprintServer.post = () => held.promise;
+    await act(async () => h.state.sprints.stage({ type: 'create-sprint', fields }));
+    let saving;
+    await act(async () => {
+      saving = h.state.sprints.submit();
+    });
+    const recovery = h.state.sprints.recovery;
+    await act(async () => {
+      for (let n = 0; n < 3; n++) b.server.streams.at(-1).emit({ type: 'reset' });
+    });
+    // Let the parent's independent hint verification settle before measuring confirmation.
+    await b.clock.advance(500);
+    assert.equal(reads.length, initial);
+    assert.equal(h.state.sprints.resources.scope.stale, true);
+    assert.equal(h.state.sprints.resources.preview.stale, true);
+    assert.equal(h.state.sprints.recovery, recovery);
+    const sessions = b.requests.filter((r) => r.url.endsWith('/identity/session')).length;
+    const configurations = b.requests.filter((r) => r.url.endsWith('/identity/config')).length;
+    await act(async () => {
+      held.resolve(Response.json({ ...b.sprintServer.target, id: 'created' }));
+      await saving;
+    });
+    await b.clock.advance(500);
+    assert.equal(h.state.sprints.mutation.status, 'confirmed');
+    assert.equal(posts(b).length, 1);
+    assert.equal(
+      b.requests.filter((r) => r.url.endsWith('/identity/config')).length,
+      configurations + 1,
+    );
+    const sessionReads =
+      b.requests.filter((r) => r.url.endsWith('/identity/session')).length - sessions;
+    assert.equal(
+      sessionReads,
+      2,
+      'one full parent refresh plus the reconnected stream reset verification',
+    );
+    const drain = reads.slice(initial);
+    const eligible = [
+      '/planning',
+      '/sprints',
+      '/sprints/s',
+      '/sprints/target',
+      '/tasks/t/planning',
+      '/sprints/s/scope',
+      '/sprints/s/history',
+      '/tasks/t/sprint-history',
+      ...(closed ? ['/sprints/s/closure', '/sprints/s/closure/outcomes'] : []),
+    ];
+    assert.equal(drain.length, eligible.length);
+    for (const suffix of eligible)
+      assert.equal(
+        drain.filter((r) => r.path === `/api/v1/workspaces/a/projects/p${suffix}`).length,
+        1,
+        suffix,
+      );
+    assert.ok(drain.every((r) => !r.aborted && r.body === 'completed'));
+    assert.equal(
+      drain.some((r) => r.path.endsWith('/close-preview')),
+      false,
+    );
+    assert.equal(b.server.streams.filter((s) => !s.request.options.signal.aborted).length, 1);
+    t.diagnostic(
+      JSON.stringify({
+        selection: closed ? 'closed' : 'active',
+        initial: {
+          starts: initial,
+          bodyCompletions: reads.slice(0, initial).filter((r) => r.body === 'completed').length,
+          abortedSignals: reads.slice(0, initial).filter((r) => r.aborted).length,
+        },
+        confirmation: {
+          starts: drain.length,
+          bodyCompletions: drain.filter((r) => r.body === 'completed').length,
+          abortedSignals: drain.filter((r) => r.aborted).length,
+          parentFullRefreshes: 1,
+          parentSessionReads: sessionReads,
+          posts: posts(b).length,
+        },
+      }),
+    );
+  });
+}
+
+test('resource correction: pending and unknown raw edits preserve actual fields and the original command until explicit retry', async (t) => {
+  const b = await sprintIntegrationBrowser(t);
+  const h = await b.owners();
+  await act(async () => h.state.begin('edit-sprint'));
+  await act(async () => h.state.changeField('goal', 'Retained raw edit'));
+  const held = deferred();
+  b.sprintServer.post = () => held.promise;
+  let saving;
+  await act(async () => {
+    saving = h.state.submitForm();
+  });
+  assert.equal(h.state.sprints.mutation.status, 'pending');
+  const recovery = h.state.sprints.recovery;
+  const command = JSON.stringify(recovery.command);
+  const first = posts(b)[0];
+  assert.equal(recovery.command.expectedVersion, 2);
+  assert.equal(recovery.command.fields.goal, 'Retained raw edit');
+  await act(async () => h.state.changeField('goal', 'Discarded pending input'));
+  assert.equal(h.state.editing.form.fields.goal, 'Retained raw edit');
+  assert.equal(h.state.sprints.recovery, recovery);
+  assert.equal(JSON.stringify(h.state.sprints.recovery.command), command);
+  await act(async () => {
+    held.reject(new Error('committed response lost'));
+    await saving;
+  });
+  assert.equal(h.state.sprints.mutation.status, 'unknown');
+  b.sprintServer.sprint.version = 3;
+  await act(async () => h.state.sprints.reload('sprint'));
+  await act(async () => h.state.changeField('goal', 'Discarded recovery input'));
+  assert.equal(h.state.sprints.resources.sprint.data.version, 3);
+  assert.equal(h.state.editing.form.fields.goal, 'Retained raw edit');
+  assert.equal(h.state.sprints.recovery, recovery);
+  assert.equal(JSON.stringify(h.state.sprints.recovery.command), command);
+  assert.equal(posts(b).length, 1, 'read recovery and later input cannot repeat the write');
+  b.sprintServer.post = () => Response.json(b.sprintServer.sprint);
+  await act(async () => h.state.sprints.retrySave());
+  assert.equal(h.state.sprints.mutation.status, 'confirmed');
+  assert.equal(posts(b).length, 2);
+  assert.equal(posts(b)[1].init.body, first.init.body);
+  assert.equal(posts(b)[1].init.headers['Idempotency-Key'], first.init.headers['Idempotency-Key']);
+  assert.equal(first.init.headers['Idempotency-Key'], recovery.key);
+});
+
+test('resource correction: pending and unknown raw close destinations retain exact versions body and key until explicit retry', async (t) => {
+  const b = await sprintIntegrationBrowser(t);
+  const h = await b.owners();
+  await act(async () => h.state.beginClose());
+  await act(async () => h.state.changeCloseDestination('target'));
+  await act(async () => h.state.previewClose());
+  const held = deferred();
+  b.sprintServer.post = () => held.promise;
+  let saving;
+  await act(async () => {
+    saving = h.state.confirmClose();
+  });
+  assert.equal(h.state.sprints.mutation.status, 'pending');
+  const recovery = h.state.sprints.recovery;
+  const command = JSON.stringify(recovery.command);
+  const first = posts(b)[0];
+  assert.equal(recovery.command.input.destination, 'target');
+  assert.equal(recovery.command.input.expectedVersion, 2);
+  assert.equal(recovery.command.input.expectedTargetVersion, 1);
+  await act(async () => h.state.changeCloseDestination('backlog'));
+  assert.equal(h.state.editing.close.destination, 'target');
+  assert.equal(h.state.sprints.recovery, recovery);
+  assert.equal(JSON.stringify(h.state.sprints.recovery.command), command);
+  await act(async () => {
+    held.reject(new Error('close response lost'));
+    await saving;
+  });
+  assert.equal(h.state.sprints.mutation.status, 'unknown');
+  await act(async () => h.state.sprints.reload('scope'));
+  await act(async () => h.state.changeCloseDestination('backlog'));
+  assert.equal(h.state.editing.close.destination, 'target');
+  assert.equal(h.state.sprints.resources.preview.stale, true);
+  assert.equal(h.state.sprints.recovery, recovery);
+  assert.equal(JSON.stringify(h.state.sprints.recovery.command), command);
+  assert.equal(posts(b).length, 1, 'stale preview and destination input cannot repeat closing');
+  b.sprintServer.post = () => {
+    const result = closeResult(preview('target'));
+    result.current.workspaceId = 'a';
+    result.closure.workspaceId = 'a';
+    b.sprintServer.sprint = result.current;
+    b.sprintServer.closure = result.closure;
+    b.sprintServer.outcomes.items = b.sprintServer.outcomes.items.map((item) => ({
+      ...item,
+      disposition: 'carried',
+      targetSprintId: 'target',
+      targetParticipationId: 'carried-visit',
+    }));
+    return Response.json(result);
+  };
+  await act(async () => h.state.sprints.retrySave());
+  assert.equal(h.state.sprints.mutation.status, 'confirmed');
+  assert.equal(h.state.sprints.mutation.result.closure.destination, 'target');
+  assert.equal(posts(b).length, 2);
+  assert.equal(posts(b)[1].init.body, first.init.body);
+  assert.equal(posts(b)[1].init.headers['Idempotency-Key'], first.init.headers['Idempotency-Key']);
+  assert.equal(first.init.headers['Idempotency-Key'], recovery.key);
 });

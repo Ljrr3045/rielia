@@ -8,6 +8,8 @@ import {
   SprintPlanningFailure,
 } from '../apps/web/src/lib/sprint-client.ts';
 import { settings } from '../apps/web/test/unit/sprint-client-fixtures.mjs';
+import { context } from '../apps/web/test/unit/sprint-client-fixtures.mjs';
+import { createSprintQueryOwner } from '../apps/web/src/lib/sprint-query-owner.ts';
 import {
   createTaskPlanningTransport,
   TaskPlanningFailure,
@@ -59,6 +61,56 @@ async function fixture(t, handler) {
     bodies,
     baseURL: `http://127.0.0.1:${server.address().port}`,
   };
+}
+
+for (const [name, path] of [
+  ['sprint', '/sprints/s'],
+  ['task', '/tasks/t/planning'],
+]) {
+  for (const outcome of ['retirement', 'body-deadline']) {
+    test(
+      `Query-owned ${name} real HTTP ${outcome} closes its read body without a late projection`,
+      { timeout: 8000 },
+      async (t) => {
+        const f = await fixture(t, (response) => {
+          response.writeHead(200, {
+            'content-type': 'application/json',
+            'x-request-id': 'query-read-body',
+          });
+          response.flushHeaders();
+          response.write('{');
+        });
+        const owner = createSprintQueryOwner({
+          transport: createSprintPlanningTransport({ baseURL: f.baseURL, timeout: 1000 }),
+          tasks: createTaskPlanningTransport({ baseURL: f.baseURL, timeout: 1000 }),
+          changed() {},
+          authorized: () => true,
+          denied() {
+            assert.fail('an aborted or timed-out body cannot establish terminal authority');
+          },
+        });
+        t.after(() => owner.clear());
+        owner.bind(context);
+        owner.select('s', 't');
+        const reading = owner.read(name);
+        await f.seen;
+        if (outcome === 'retirement') owner.select(null, null);
+        await reading;
+        await f.disconnected;
+        assert.equal(owner.resources()[name].data, null);
+        assert.equal(owner.resources()[name].status, outcome === 'retirement' ? 'idle' : 'error');
+        if (outcome === 'body-deadline')
+          assert.deepEqual(owner.resources()[name].failure, {
+            status: 502,
+            code: null,
+            requestId: 'query-read-body',
+          });
+        assert.deepEqual(f.calls, [
+          { path: `/api/v1/workspaces/w/projects/p${path}`, key: undefined },
+        ]);
+      },
+    );
+  }
 }
 
 test(

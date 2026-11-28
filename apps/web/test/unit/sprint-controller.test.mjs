@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { changeSprintCommand } from '../../src/lib/sprint-commands.ts';
+import { sprintPageBinding } from '../../src/lib/sprint-client-state.ts';
 import { createSprintController } from '../../src/lib/sprint-controller.ts';
 import { createSprintPlanningTransport } from '../../src/lib/sprint-client.ts';
 import {
@@ -23,6 +24,7 @@ import {
   deferred,
   mountedSprint,
   sprintServer,
+  resourcePage,
 } from './sprint-client-fixtures.mjs';
 
 test('planning, selected task/sprint, canonical scope and histories load without a write or preview', async (t) => {
@@ -1236,5 +1238,154 @@ test('duplicate held legacy scope paging sends once and leaves Query planning/li
   assert.equal(b.state().resources.scope.data.items.length, 2);
   assert.equal(b.state().resources.planning.data, planningBefore);
   assert.equal(b.state().resources.sprints.data, sprintsBefore);
+  assert.equal(b.posts().length, 0);
+});
+
+test('source/task selection retires their Query resources while preserving the explicit target selection', async (t) => {
+  const b = await mountedSprint(t);
+  await b.controller.selectTarget('target');
+  await b.controller.preview('backlog');
+  await b.controller.select(null, null);
+  assert.equal(b.state().selection.targetId, 'target');
+  assert.equal(b.state().resources.target.data.id, 'target');
+  for (const name of [
+    'sprint',
+    'task',
+    'scope',
+    'sprintHistory',
+    'taskHistory',
+    'preview',
+    'closure',
+    'outcomes',
+  ])
+    assert.equal(b.state().resources[name].data, null, name);
+  await b.controller.select('s', 't');
+  assert.equal(b.state().resources.sprint.data.id, 's');
+  assert.equal(b.state().resources.task.data.taskId, 't');
+  assert.equal(b.state().resources.target.data.id, 'target');
+  assert.equal(b.state().resources.preview.data, null, 'source selection never reuses a preview');
+});
+
+test('a confirmed close receipt never seeds canonical selected reads when refresh fails', async (t) => {
+  const b = await mountedSprint(t);
+  await b.controller.preview('backlog');
+  b.controller.stage({ type: 'close-sprint' });
+  b.server.post = () => {
+    b.server.get = () => Response.json({}, { status: 503 });
+    return Response.json(closeResult());
+  };
+  await b.controller.submit();
+  assert.equal(b.state().mutation.status, 'confirmed');
+  assert.equal(b.state().mutation.result.current.state, 'closed');
+  assert.equal(b.state().resources.sprint.data.state, 'active');
+  assert.equal(b.state().resources.sprint.status, 'error');
+  assert.equal(b.state().resources.sprint.stale, true);
+  assert.equal(b.state().resources.closure.data, null);
+  assert.equal(b.state().resources.outcomes.data, null);
+  assert.equal(b.posts().length, 1);
+  assert.equal(await b.controller.retrySave(), 'unavailable');
+});
+
+test('outcomes cannot substitute for a failed canonical closure read and recover by explicit canonical reload', async (t) => {
+  const server = sprintServer();
+  server.sprint = closeResult().current;
+  server.get = ({ path }) =>
+    path.endsWith('/closure') ? Response.json({}, { status: 503 }) : undefined;
+  const b = await mountedSprint(t, { server });
+  assert.equal(b.state().resources.closure.status, 'error');
+  assert.equal(b.state().resources.outcomes.data, null);
+  assert.equal(b.state().resources.outcomes.status, 'changed');
+  server.get = null;
+  await b.controller.reload('closure');
+  await b.controller.reload('outcomes');
+  assert.equal(b.state().resources.closure.data.id, b.state().resources.outcomes.data.closureId);
+  assert.equal(b.posts().length, 0);
+});
+
+test('same-session verification retains a captured close and independent target but requires another explicit preview review', async (t) => {
+  const b = await mountedSprint(t);
+  await b.controller.selectTarget('target');
+  await b.controller.preview('backlog');
+  assert.equal(b.controller.stage({ type: 'close-sprint' }), 'ready');
+  const draft = b.state().draft;
+  b.controller.suspend();
+  assert.equal(b.state().resources.preview.data, null);
+  await b.controller.setContext(context);
+  assert.equal(b.state().draft, draft);
+  assert.equal(b.state().needsReview, true);
+  assert.equal(b.state().resources.target.data.id, 'target');
+  assert.equal(b.state().resources.preview.data, null);
+  assert.equal(await b.controller.submit(), 'review-required');
+  assert.equal(b.controller.rebaseDraft(), 'preview-required');
+  b.controller.discardDraft();
+  await b.controller.preview('target');
+  assert.equal(b.controller.stage({ type: 'close-sprint' }), 'ready');
+  assert.equal(b.state().draft.input.destination, 'target');
+  assert.equal(b.posts().length, 0);
+});
+
+test('resource correction: a staged close requires review when its preview continuation fails', async (t) => {
+  const server = sprintServer();
+  server.get = ({ path, query }) =>
+    path.endsWith('/close-preview')
+      ? query.has('cursor')
+        ? Response.json({ code: 'unavailable' }, { status: 503 })
+        : Response.json(resourcePage('preview'))
+      : undefined;
+  const b = await mountedSprint(t, { server });
+  assert.equal(await b.controller.preview('backlog'), true);
+  assert.equal(b.controller.stage({ type: 'close-sprint' }), 'ready');
+  const draft = b.state().draft;
+  const command = JSON.stringify(draft);
+  const previewData = b.state().resources.preview.data;
+  await b.controller.loadMore('preview');
+  assert.equal(b.state().resources.preview.status, 'error');
+  assert.equal(b.state().resources.preview.stale, true);
+  assert.equal(b.state().resources.preview.data, previewData);
+  assert.equal(b.state().draft, draft);
+  assert.equal(JSON.stringify(b.state().draft), command);
+  assert.equal(b.state().needsReview, true);
+  assert.equal(await b.controller.submit(), 'review-required');
+  assert.equal(b.posts().length, 0);
+});
+
+test('resource correction: source replacement during closure refresh cannot schedule retired outcomes or retain its page binding', async (t) => {
+  const server = sprintServer();
+  server.sprint = closeResult().current;
+  const b = await mountedSprint(t, { server });
+  const formerBinding = sprintPageBinding(b.state().resources.scope.data);
+  const held = deferred();
+  const started = deferred();
+  let signal;
+  server.get = ({ path, init }) => {
+    if (!path.endsWith('/sprints/s/closure')) return;
+    signal = init.signal;
+    started.resolve();
+    return held.promise;
+  };
+  const refreshing = b.controller.refresh();
+  await started.promise;
+  const checkpoint = server.requests.length;
+  assert.equal(await b.controller.select(null, null), true);
+  assert.equal(signal.aborted, true);
+  const emptyScope = b.state().resources.scope.data;
+  assert.equal(emptyScope, null);
+  assert.notEqual(sprintPageBinding(emptyScope), formerBinding);
+  assert.equal(sprintPageBinding(emptyScope), '');
+  held.resolve(Response.json(server.closure));
+  await refreshing;
+  assert.equal(b.state().status, 'ready');
+  assert.equal(b.state().selection.sprintId, null);
+  assert.equal(b.state().resources.closure.data, null);
+  assert.equal(b.state().resources.outcomes.data, null);
+  assert.equal(
+    server.requests.slice(checkpoint).filter((r) => r.path.endsWith('/sprints/s/closure/outcomes'))
+      .length,
+    0,
+  );
+  assert.ok(
+    server.requests.slice(checkpoint).some((r) => r.path.endsWith('/planning')),
+    'legitimate new-selection planning reads remain allowed',
+  );
   assert.equal(b.posts().length, 0);
 });

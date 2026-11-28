@@ -204,6 +204,116 @@ export function deferred() {
   });
   return { promise, resolve, reject };
 }
+export const remainingResources = [
+  'sprint',
+  'target',
+  'task',
+  'scope',
+  'sprintHistory',
+  'taskHistory',
+  'preview',
+  'closure',
+  'outcomes',
+];
+export const resourceRoutes = {
+  sprint: '/sprints/s',
+  target: '/sprints/target',
+  task: '/tasks/t/planning',
+  scope: '/sprints/s/scope',
+  sprintHistory: '/sprints/s/history',
+  taskHistory: '/tasks/t/sprint-history',
+  preview: '/sprints/s/close-preview',
+  closure: '/sprints/s/closure',
+  outcomes: '/sprints/s/closure/outcomes',
+};
+/** Distinct canonical rows for each independently paged public resource. */
+export function resourcePage(name, index = 0) {
+  const paging = { total: 3, nextCursor: index === 0 ? 'a' : index === 1 ? 'b' : null };
+  if (name === 'scope')
+    return {
+      ...scope,
+      ...paging,
+      items: [{ ...visit, id: `visit-${index}`, taskId: `t-${index}` }],
+    };
+  if (name === 'sprintHistory' || name === 'taskHistory')
+    return {
+      ...history,
+      ...paging,
+      ...(name === 'taskHistory' ? { sprintId: null, taskId: 't' } : {}),
+      items: [
+        {
+          id: `fact-${index}`,
+          sprintId: 's',
+          taskId: 't',
+          participationId: `visit-${index}`,
+          ordinal: index + 1,
+          kind: 'entry',
+          action: 'set-task-sprint',
+          occurredAt: sprint.createdAt,
+          before: null,
+          after: snapshot,
+          actor: sprint.creator,
+          provenance: sprint.provenance,
+        },
+      ],
+    };
+  const value = preview('backlog');
+  const item = { ...value.items[0], participationId: `visit-${index}`, taskId: `t-${index}` };
+  if (name === 'preview') return { ...value, ...paging, items: [item] };
+  if (name === 'outcomes')
+    return {
+      workspaceId: 'w',
+      projectId: 'p',
+      sprintId: 's',
+      closureId: 'closure',
+      ...paging,
+      items: [
+        {
+          ...item,
+          id: `outcome-${index}`,
+          closureId: 'closure',
+          targetSprintId: null,
+          targetParticipationId: null,
+        },
+      ],
+    };
+  throw new Error(`Not a collection: ${name}`);
+}
+/** Starts at fetch entry; completion means successful response.json, not server policy acceptance. */
+export function observeSprintReads(server) {
+  const reads = [];
+  const fetch = server.fetch;
+  server.fetch = async (url, init) => {
+    if (init.method === 'POST') return fetch(url, init);
+    const record = {
+      path: new URL(String(url), 'https://app.example.test').pathname,
+      aborted: false,
+      body: 'pending',
+    };
+    reads.push(record);
+    init.signal.addEventListener(
+      'abort',
+      () => {
+        record.aborted = true;
+      },
+      { once: true },
+    );
+    const response = await fetch(url, init);
+    const json = response.json.bind(response);
+    response.json = async () => {
+      try {
+        const value = await json();
+        record.body = 'completed';
+        return value;
+      } catch (error) {
+        record.body = 'failed';
+        throw error;
+      }
+    };
+    return response;
+  };
+  return reads;
+}
 /** Finite HTTP boundary only; the real transports/controller remain in use. */
 export function sprintServer() {
   const server = {

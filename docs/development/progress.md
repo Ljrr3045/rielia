@@ -1,5 +1,65 @@
 # Delivery progress and decisions
 
+## T38.4a remaining resources — published in Draft PR73
+
+The coordinator published [Draft PR73](https://github.com/Ljrr3045/rielia/pull/73) toward `dev` on 2026-11-28 at 04:04:43 UTC,
+from initial implementation head [23d01e8](https://github.com/Ljrr3045/rielia/commit/23d01e88c11ffdc1c3cc590573f2b142a4ffd105). Readback confirmed OPEN/Draft, author
+`Ljrr3045` and base `fe9e53c7`. Local gates are complete; final reference-head CI,
+native review and coordinator acceptance remain pending. The initial snapshot's
+zero Kilo checks is bounded evidence, not general exclusion or billing proof.
+
+The [resource guide](t38-sprint-query.md) records sole Query ownership of all eleven
+sprint DTOs and the retained command/form/parent/transport/policy boundaries.
+[PR72's final decision](https://github.com/Ljrr3045/rielia/pull/72) accepts only the
+initial planning/list/create slice; this resource batch and full T38.4a/T38 are not
+accepted by publication.
+
+Root adopted only web baseline `30fbe046` (49,363 bytes); seven others remain exact.
+Normal **1,066 tests / 199 inputs** in 47.258 s reproduces all sixteen corrected
+reports/status, digest
+`47dc3a93a4ed4b61101ba3d57132bfc74707cac3e3ee0efa6c9e1d0b0cbc0e3e`.
+All 808 comparisons, infrastructure 20/20 and seventeen bounded artifacts pass
+without upload or weaker gates. Candidate 1 rejection and six public corrections
+remain distinct; frozen maps have zero covered S/F/B losses and nineteen gains.
+New-helper debt stays L3/S5/F0/B5.
+
+The standard/sole build and native HTTP retain their earlier source/test binding;
+this reference-only batch runs no app/coverage/build/PG/Docker/install/audit checks.
+Artifact/request limits, one full parent refresh versus two actual session HTTP
+checks, runtime/provenance/current-authority, packaging/S01, lower advisory/action,
+UNVERIFIED Cancel/Leave possible draft loss and deferred product/UX limits remain
+explicit in the guide. Earlier checkpoints remain historical evidence.
+
+## Historical candidate1 numerical correction gate
+
+The [resource batch](t38-sprint-query.md) passes its one complete standard/sole
+candidate build and1060/199 all-scope measurement. The first numerical candidate
+is rejected: eight protected comparisons miss, including global uncoveredL/S/B
++5/+8/+9; better aggregate ratios do not waive them. All tracked baselines and
+production remain frozen. A bounded public-witness correction proposal awaits
+root; no normal replay, infrastructure/artifacts, additional measure or delivery
+is released. The earlier implementation checkpoint below retains its actual
+source/run chronology; fullT38.4a/T38 acceptance remains open.
+
+## Remaining T38.4a sprint resources — local implementation checkpoint
+
+PR72's final **Coordinator acceptance — T38.4a initial slice ACCEPTED**
+[decision](https://github.com/Ljrr3045/rielia/pull/72) accepts planning/list/create only,
+reviewed `26ac8d7d5292500e169223518630ab3be5be2ef5`, merged
+`fe9e53c7be172e0da7bca34b4685054b36af8a14`. Its reviewed-head/exact-merge
+CI passed 26/26 and native Kilo found no issues across 21 paths. Earlier pending
+labels below are frozen source snapshots, superseded only for that bounded slice.
+
+The next [cohesive nine-resource batch](t38-sprint-query.md) is locally implemented:
+Query alone owns all11 sprint DTO resources; the controller retains only command,
+version/recovery/navigation/scheduling responsibilities. Target, source/task,
+preview destination and page-chain lifetimes stay independent. Focused270/native
+HTTP4 pass; frozen setup/audits and actual parent/request limits are recorded.
+Standard/build/all-scope numerical measurement/root adoption/replay, final CI/native
+review and coordinator acceptance remain open. No tracked baseline, dependency,
+backend/transport/proxy/schema/presentation/form/parent-resource change occurs.
+FullT38.4a/T38 and all retained packaging/runtime/UX/product debts remain open.
+
 ## 2026-11-27 T38.4a published in Draft PR72
 
 The coordinator published [Draft PR72](https://github.com/Ljrr3045/rielia/pull/72) toward `dev`
