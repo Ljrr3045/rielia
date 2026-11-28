@@ -4,12 +4,14 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
-- Complete the released workspace local gates after coordinator-only web baseline
-  adoption: normal1,151tests/200inputs reproduces all16reports/status exactly,
-  infrastructure20/20 and17bounded artifacts pass without upload. Seven baselines,
-  source/test/provider/build identities and existing debts stay exact; corrected
-  strict-age policy and historical check limits remain explicit. Publication,
-  current-head CI/native review and fullT38.4a/T38 acceptance remain pending.
+- Publish the bounded workspace Query change in [Draft PR74](https://github.com/Ljrr3045/rielia/pull/74),
+  targeting `dev` from implementation commit `8fa1d047`. After coordinator-only web
+  baseline adoption, normal 1,151 tests / 200 inputs reproduce all sixteen reports
+  plus status exactly; infrastructure 20/20 and seventeen bounded artifacts pass
+  without upload. Seven baselines and source/test/provider/build identities remain
+  exact. Corrected strict-age policy, historical limits and existing debts remain
+  explicit. Final reference-head CI/native review and full T38.4a/T38 acceptance
+  are pending.
 
 - Correct the workspace setup evidence: lowercase pnpm strict-age variables were
   ignored for root/unit. Authorized frozen reconciliation and native validation

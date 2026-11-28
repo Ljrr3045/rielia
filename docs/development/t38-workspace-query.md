@@ -1,6 +1,12 @@
 # T38.4a workspace Query ownership
 
-## Final local evidence — coordinator delivery pending
+## Draft PR74 — remote validation pending
+
+[Draft PR74](https://github.com/Ljrr3045/rielia/pull/74) targets `dev` from
+implementation commit `8fa1d047a173c8ef795d331912f6a72261d75235`.
+The reference update is completed while Draft; current-head CI, the final native
+Kilo round and coordinator acceptance remain pending. No paid review was present
+at initial Draft readback.
 
 The coordinator adopted **only** the measured web baseline:49,956bytes, SHA256
 `4a2f948bce4b26c1804fea2df16bf16cafe9bc2acdcc045adee0aab9b45b1022`,
@@ -43,8 +49,8 @@ adds6reads versus historical4, including2 authoritative identity reads. There is
 no request, speed, RSS, wire or deployed-image improvement claim. No presentation,
 dependency/backend/transport/schema/generated/configuration scope was added.
 
-Local gates are complete; coordinator commits/Draft publication/reference-head CI,
-final native review and acceptance remain pending. FullT38.4a/T38 stays OPEN;
+Local gates and initial Draft publication are complete. Final reference-head CI,
+native review and coordinator acceptance remain pending. FullT38.4a/T38 stays OPEN;
 project/task/discovery/private-access/collaboration and its three writable workspace
 occurrences remain next. Preserve packaging/S01/runtime scalar/refinement/
 provenance/current-authority/G06/dense/T04, lower advisories/action warnings,

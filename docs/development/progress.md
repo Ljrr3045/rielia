@@ -1,6 +1,10 @@
 # Delivery progress and decisions
 
-## Workspace local gates complete — delivery pending
+## Workspace Query PR74 — Draft, remote gates pending
+
+[Draft PR74](https://github.com/Ljrr3045/rielia/pull/74) publishes the bounded four-resource
+workspace Query change from implementation commit `8fa1d047`. This reference update
+remains in the same Draft batch; final-head CI/native review and acceptance are pending.
 
 The [workspace receipt](t38-workspace-query.md) records root's web-only baseline
 adoption:49,956bytes/SHA`4a2f948bce4b26c1804fea2df16bf16cafe9bc2acdcc045adee0aab9b45b1022`,
@@ -12,8 +16,8 @@ Actual uppercase1440/strict/verification-error settings apply; historical lowerc
 setup and source-qualified standard/build/native evidence retain their limits.
 Source/test/provider/generated/build identities stay frozen. No additional app/
 build/measure/PG/Docker checks, weaker gates or worker baseline write. Helper debt
-L3/S4/F0/B4 and workspaceS1/B1 remain explicit. Coordinator publication/current-head
-CI/native review and acceptance remain pending; fullT38.4a/T38 and all retained
+L3/S4/F0/B4 and workspaceS1/B1 remain explicit. Initial Draft publication is complete;
+current-head CI/native review and acceptance remain pending; fullT38.4a/T38 and all retained
 product/validation debts stay open. Earlier checkpoints remain historical.
 
 ## Workspace package-policy correction — verified, root gate pending
