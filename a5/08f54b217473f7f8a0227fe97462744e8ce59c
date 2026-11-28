@@ -1,0 +1,36 @@
+docs/development/unit-coverage.md
+  s_c16522fda31a5b::t_8180219aa3b362 3-17,20-37
+docs/development/sprint-client.md
+  s_c16522fda31a5b::t_8180219aa3b362 3,5-10,12-16
+docs/development/t38-boundary-inventory.md
+  s_c16522fda31a5b::t_8180219aa3b362 3,5-10,12-16
+docs/development/progress.md
+  s_c16522fda31a5b::t_8180219aa3b362 3,5-12,14-15,17-19,21-24,26-31
+docs/development/t38-sprint-query.md
+  s_c16522fda31a5b::t_8180219aa3b362 3,5-7,9-10,12-24,26-28,30-38,40-44,46-52,54-60,62-68
+  s_c16522fda31a5b::t_3ac0d90a0535ee 8
+docs/development/t38-tooling-plan.md
+  s_c16522fda31a5b::t_8180219aa3b362 3-16
+  s_c16522fda31a5b::t_3ac0d90a0535ee 706
+docs/development/sprint-presentation.md
+  s_c16522fda31a5b::t_8180219aa3b362 3,5-10,12-16
+CHANGELOG.md
+  s_c16522fda31a5b::t_3ac0d90a0535ee 10
+  s_c16522fda31a5b::t_8180219aa3b362 7-9,11-14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a508f54b217473f7f8a0227fe97462744e8ce59c",
+  "prompts": {},
+  "sessions": {
+    "s_c16522fda31a5b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a22014-7534-7361-abb7-f63aa8bbed54",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
