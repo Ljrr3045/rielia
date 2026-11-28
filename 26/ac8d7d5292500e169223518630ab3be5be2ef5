@@ -1,0 +1,26 @@
+docs/development/progress.md
+  s_5c1c61521dc17a::t_f0b744832a98ff 11
+  s_5c1c61521dc17a::t_4af8d1d0c520a9 3-10,12-22
+docs/development/t38-sprint-query.md
+  s_5c1c61521dc17a::t_f0b744832a98ff 20
+  s_5c1c61521dc17a::t_4af8d1d0c520a9 3-8,14-19,21-27
+  s_5c1c61521dc17a::t_e01621f066fda2 28
+CHANGELOG.md
+  s_5c1c61521dc17a::t_4af8d1d0c520a9 7-14,28
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "26ac8d7d5292500e169223518630ab3be5be2ef5",
+  "prompts": {},
+  "sessions": {
+    "s_5c1c61521dc17a": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a21f87-d73b-7ec2-9dd4-e6a046bb3330",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
