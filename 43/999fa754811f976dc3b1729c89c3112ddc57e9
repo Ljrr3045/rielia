@@ -1,0 +1,23 @@
+CHANGELOG.md
+  s_d89719a90eecbb::t_dcde1ade9f23c9 7-12
+docs/development/progress.md
+  s_d89719a90eecbb::t_fedd0e59d6e2e7 3-17
+docs/development/t38-project-query.md
+  s_d89719a90eecbb::t_b788696868e9e2 3-17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "43999fa754811f976dc3b1729c89c3112ddc57e9",
+  "prompts": {},
+  "sessions": {
+    "s_d89719a90eecbb": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a221b8-0cba-7600-b303-0bb2ed1b60a7",
+        "model": "unknown"
+      },
+      "human_author": "Ljrr3045 <ljrr3045@gmail.com>"
+    }
+  }
+}
