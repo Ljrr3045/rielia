@@ -1,5 +1,31 @@
 # T38 tool decisions and compatibility pilot
 
+## Current phase decision — T38.3 accepted; initial Query local gates complete
+
+The coordinator accepted bounded T38.3 on 2026-11-27 America/Caracas at
+`70e323b2c7139f3ed3dc5ca50bb8545e5571c5a7`, consolidating accepted
+[PR68](https://github.com/Ljrr3045/rielia/pull/68#issuecomment-7215920026),
+[PR69](https://github.com/Ljrr3045/rielia/pull/69#issuecomment-7226805575) and the
+final body decisions in [PR70](https://github.com/Ljrr3045/rielia/pull/70) and
+[PR71](https://github.com/Ljrr3045/rielia/pull/71). Canonical generation/drift,
+isolated generator TS5/application TS6 and **62 browser JSON operations plus four
+explicit exclusions** are accounted for. H01 server/MCP liveness, H04 no browser
+caller, H50 SSE and H55 readiness retain their owners; H24/H54 are accepted.
+Runtime parsing, error/current/operation correlation and backend authority remain.
+
+The [initial T38.4a slice](t38-sprint-query.md) gives Query sole ownership of
+`planning` and admitted `sprints` cursor pages; create-sprint alone uses Query
+mutation execution, with the other nine resources retained by the controller.
+Root adopted exact web baseline `2505df034cdb95c090ffcaf7e7a76bed6f7f169a9e3fbe9fd6369aea7e546eed`;
+normal 971/198 reproduces all 16 measured reports/status, with infrastructure 20
+and bounded artifacts 17 passed. Seven other baselines stay exact. The guide
+records both rejected candidates, source-qualified checks/costs and one unexecuted
+Query statement/branch. Current-head CI/native review and coordinator acceptance
+remain pending; this is not full T38.4a/T38 acceptance. Dated snapshots below
+retain their actual source/run identities and do not override this current summary.
+Packaging/S01/runtime/provenance and UNVERIFIED Cancel/Leave with possible draft
+loss, filters/provider/staging/device/a11y/real-product debts remain explicit.
+
 ## T38.3d final local correlated-command delivery
 
 [PR70's final PR-body acceptance](https://github.com/Ljrr3045/rielia/pull/70)

@@ -1,4 +1,5 @@
 import type { TaskInvalidation } from '@rielia/contracts';
+import { createSprintQueryOwner } from './sprint-query-owner.ts';
 import { SprintPlanningFailure, type createSprintPlanningTransport } from './sprint-client.ts';
 import { TaskPlanningFailure, type createTaskPlanningTransport } from './task-planning-client.ts';
 import {
@@ -11,6 +12,9 @@ import {
 import {
   emptySprintResource,
   emptySprintState,
+  emptySprintControllerState,
+  type SprintControllerState,
+  type SprintControllerResources,
   freezeSprintValue,
   sprintPageBinding,
   type SprintClientCommand,
@@ -25,7 +29,6 @@ import {
 } from './sprint-client-state.ts';
 
 const collections = new Set<SprintResourceName>([
-  'sprints',
   'scope',
   'sprintHistory',
   'taskHistory',
@@ -42,41 +45,70 @@ const sameContext = (a: SprintClientContext | null, b: SprintClientContext | nul
   a?.workspaceId === b?.workspaceId &&
   a?.projectId === b?.projectId;
 
-/** One memory-only owner for sprint reads, captured drafts and exact-command recovery. */
+/** Compose Query DTOs with nine legacy resources, captured intent and exact-command recovery. */
 export function createSprintController(options: {
   planning: ReturnType<typeof createSprintPlanningTransport>;
   tasks: ReturnType<typeof createTaskPlanningTransport>;
   key?: () => string;
   now?: () => number;
+  confirmed?: () => Promise<void>;
 }) {
-  let state = freezeSprintValue(emptySprintState());
+  let state = freezeSprintValue(emptySprintControllerState());
+  let snapshot: SprintClientState | null = null;
   const listeners = new Set<() => void>();
-  const reads = new Map<SprintResourceName, AbortController>();
+  const reads = new Map<keyof SprintControllerResources, AbortController>();
   let epoch = 0;
   let readCycle = 0;
   let previewWanted = false;
   let write: AbortController | null = null;
-  function publish(patch: Partial<SprintClientState>) {
-    state = freezeSprintValue({ ...state, ...patch });
+  let confirmingEpoch: number | null = null;
+  const queries = createSprintQueryOwner({
+    transport: options.planning,
+    changed: notify,
+    authorized,
+    denied: deny,
+  });
+  function getState(): SprintClientState {
+    return (snapshot ??= freezeSprintValue({
+      ...state,
+      resources: { ...state.resources, ...queries.resources() },
+    }));
+  }
+  function notify() {
+    snapshot = null;
     listeners.forEach((listener) => listener());
   }
-  function resource<K extends SprintResourceName>(name: K, value: SprintResources[K]) {
+  function publish(patch: Partial<SprintControllerState>) {
+    state = freezeSprintValue({ ...state, ...patch });
+    notify();
+  }
+  function resource<K extends keyof SprintControllerResources>(
+    name: K,
+    value: SprintControllerResources[K],
+  ) {
     publish({ resources: { ...state.resources, [name]: value } });
   }
   function abortReads() {
     readCycle++;
+    queries.cancel();
     reads.forEach((request) => request.abort());
     reads.clear();
   }
   function clear(status: SprintClientState['status'], keepContext = false) {
     epoch++;
+    confirmingEpoch = null;
+    const context = keepContext ? state.context : null;
+    // Retire the visible controller before Query cancellation can revert cached data.
+    state = freezeSprintValue({ ...emptySprintControllerState(), context, status });
+    snapshot = null;
+    queries.clear();
     abortReads();
     write?.abort();
     write = null;
     previewWanted = false;
-    const context = keepContext ? state.context : null;
-    publish({ ...emptySprintState(), context, status });
+    notify();
   }
+
   function deny(reason: 'signed-out' | 'forbidden') {
     clear(reason, reason === 'forbidden');
   }
@@ -90,8 +122,9 @@ export function createSprintController(options: {
   }
   function invalidate() {
     abortReads();
+    queries.invalidate();
     const resources = { ...state.resources };
-    for (const name of Object.keys(resources) as SprintResourceName[]) {
+    for (const name of Object.keys(resources) as (keyof SprintControllerResources)[]) {
       const value = resources[name];
       // Retained data is explicitly stale/read-only until a fresh authorized read.
       Object.assign(resources, {
@@ -105,14 +138,14 @@ export function createSprintController(options: {
     }
     publish({ resources, needsReview: !!state.draft });
   }
-  async function fetchResource(name: SprintResourceName, signal: AbortSignal, cursor?: string) {
+  async function fetchResource(
+    name: keyof SprintControllerResources,
+    signal: AbortSignal,
+    cursor?: string,
+  ) {
     const { workspaceId: w, projectId: p } = state.context!;
     const { sprintId: s, taskId: t, targetId } = state.selection;
     switch (name) {
-      case 'planning':
-        return options.planning.planning(w, p, signal);
-      case 'sprints':
-        return options.planning.sprints(w, p, signal, cursor);
       case 'sprint':
         return options.planning.sprint(w, p, s!, signal);
       case 'target':
@@ -144,7 +177,9 @@ export function createSprintController(options: {
     return state.selection.sprintId !== null;
   }
   async function read(name: SprintResourceName, more = false): Promise<void> {
-    if (!authorized() || !available(name) || (more && reads.has(name))) return;
+    if (!authorized() || !available(name)) return;
+    if (name === 'planning' || name === 'sprints') return queries.read(name, more);
+    if (more && reads.has(name)) return;
     const previous = state.resources[name];
     const page = previous.data;
     const cursor = more && page && 'nextCursor' in page ? page.nextCursor : null;
@@ -218,7 +253,7 @@ export function createSprintController(options: {
     }
   }
   async function refreshReads() {
-    if (!authorized()) return;
+    if (!authorized() || confirmingEpoch === epoch) return;
     const cycle = ++readCycle;
     await Promise.all([
       read('planning'),
@@ -249,12 +284,14 @@ export function createSprintController(options: {
       (state.status === 'ready' || state.status === 'verifying')
     ) {
       const resume = state.status === 'verifying';
+      if (context) queries.bind(context);
       publish({ context: context ? structuredClone(context) : null, status: 'ready' });
       if (resume) await refreshReads();
       return;
     }
     clear('inactive');
     if (!context) return;
+    queries.bind(context);
     publish({ context: structuredClone(context), status: 'ready' });
     await refreshReads();
   }
@@ -320,7 +357,7 @@ export function createSprintController(options: {
   function stage(intent: SprintIntent): SprintIntentResult {
     if (!authorized()) return 'unavailable';
     if (busy() || state.draft) return 'busy';
-    const command = prepareSprintCommand(state, intent);
+    const command = prepareSprintCommand(getState(), intent);
     if (typeof command === 'string') return command;
     publish({
       draft: structuredClone(command),
@@ -332,7 +369,7 @@ export function createSprintController(options: {
   function changeDraft(intent: SprintIntent): SprintIntentResult {
     if (!authorized() || !state.draft) return 'unavailable';
     if (busy()) return 'busy';
-    const command = changeSprintCommand(state.draft, intent, state);
+    const command = changeSprintCommand(state.draft, intent, getState());
     if (!command) return 'unavailable';
     publish({ draft: structuredClone(command) });
     return 'ready';
@@ -342,7 +379,7 @@ export function createSprintController(options: {
     if (busy()) return 'busy';
     // Closing always requires a newly reviewed preview and a new explicit stage action.
     if (state.draft.type === 'close-sprint') return 'preview-required';
-    const command = prepareSprintCommand(state, sprintCommandIntent(state.draft));
+    const command = prepareSprintCommand(getState(), sprintCommandIntent(state.draft));
     if (typeof command === 'string') return command;
     publish({
       draft: structuredClone(command),
@@ -358,8 +395,9 @@ export function createSprintController(options: {
   ): Promise<SprintClientResult> {
     const { workspaceId: w, projectId: p } = command;
     switch (command.type) {
-      case 'configure-planning':
       case 'create-sprint':
+        return queries.create(command, key, signal);
+      case 'configure-planning':
       case 'edit-sprint':
         return options.planning.mutate(command, key, signal);
       case 'estimate-task':
@@ -392,7 +430,6 @@ export function createSprintController(options: {
         mutation: { status: 'confirmed', result, current: null, failure: null },
       });
       invalidate();
-      await refreshReads();
     } catch (error) {
       if (!current()) return;
       write = null;
@@ -419,12 +456,22 @@ export function createSprintController(options: {
       });
       if (conflict) invalidate();
     }
+    if (epoch !== capturedEpoch || state.mutation.status !== 'confirmed') return;
+    confirmingEpoch = capturedEpoch;
+    try {
+      await options.confirmed?.();
+    } catch {
+      // Parent read/verification failure cannot turn an accepted write into ambiguity.
+    } finally {
+      if (confirmingEpoch === capturedEpoch) confirmingEpoch = null;
+    }
+    if (epoch === capturedEpoch) await refreshReads();
   }
   async function submit(): Promise<SprintIntentResult> {
     if (!authorized() || !state.draft) return 'unavailable';
     if (busy()) return 'busy';
     if (state.needsReview) return 'review-required';
-    const eligibility = prepareSprintCommand(state, sprintCommandIntent(state.draft));
+    const eligibility = prepareSprintCommand(getState(), sprintCommandIntent(state.draft));
     if (typeof eligibility === 'string') return eligibility;
     const command = normalizeSprintCommand(state.draft);
     if (!command) return 'invalid';
@@ -456,10 +503,10 @@ export function createSprintController(options: {
     cancelPending();
     invalidate();
     publish({ status: 'verifying' });
+    queries.clear();
   }
   async function refresh() {
-    if (!state.context || state.status === 'signed-out') return;
-    if (state.status === 'forbidden') publish({ status: 'ready' });
+    if (!state.context || state.status !== 'ready') return;
     invalidate();
     if (!write) await refreshReads();
   }
@@ -488,7 +535,7 @@ export function createSprintController(options: {
     await read(name);
   }
   return {
-    getState: () => state,
+    getState,
     subscribe(listener: () => void) {
       listeners.add(listener);
       return () => {

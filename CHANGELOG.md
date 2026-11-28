@@ -4,6 +4,30 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Publish the initial T38.4a Query slice in [Draft PR72](https://github.com/Ljrr3045/rielia/pull/72), targeting `dev`
+  from implementation head `b0e83a2f51a6cea62c9644cc2c9553350e04c44d`, based on
+  `70e323b2c7139f3ed3dc5ca50bb8545e5571c5a7`. Read-only verification confirmed OPEN/Draft
+  at that head before this reference batch; initial CI was in progress. Final
+  reference-head CI/native review and coordinator acceptance remain pending.
+  Adopted 971/198/16-report evidence keeps its original source identity; this
+  documentation-only update reruns no application checks and accepts no full T38.
+
+- Record bounded T38.3 acceptance through the coordinator's consolidation of
+  PR68–71: canonical contracts/drift, isolated TS5 generator/application TS6 and
+  62 browser JSON operations plus four explicit exclusions. Older pending entries
+  retain their dated sources and limits.
+- Move canonical planning/list DTOs to Query and create-sprint execution to an
+  explicit Query mutation in the [initial T38.4a slice](docs/development/t38-sprint-query.md).
+  Nine controller resources, immutable commands/recovery, form/presentation and
+  parent session/SSE owners remain. Terminal denial requires parent verification;
+  confirmed writes share one authorized parent/child refresh drain.
+- Adopt only root-approved exact web baseline `2505df03` (48,896 bytes). Candidate 3
+  and normal 971/198 reproduce all 16 reports/status; all 804 nonregression comparisons,
+  post-adoption infrastructure 20 and bounded artifacts 17 pass. Preserve rejected
+  candidates 1/2, one unexecuted Query statement/branch and source-qualified costs/
+  security/runtime/product debt. Current-head CI/native review and
+  coordinator acceptance remain pending; no full Query/T38 acceptance is implied.
+
 - Publish bounded [T38.3d H24/H54 transport](docs/development/t38-contract-transport.md)
   in [Draft PR71](https://github.com/Ljrr3045/rielia/pull/71), targeting `dev` from
   initial implementation head `c201ab2bc62e853c71d1cac9d791f96c0278c10d`, based on

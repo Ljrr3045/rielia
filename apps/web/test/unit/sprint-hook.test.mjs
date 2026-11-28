@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { onlineManager } from '@tanstack/react-query';
 import { test } from 'node:test';
 import {
   act,
@@ -147,6 +148,15 @@ test(
     );
     b.server.get = null;
     await act(async () => b.hook.state.refresh());
+    await b.emit({ type: 'reset' });
+    assert.equal(b.hook.state.status, 'forbidden');
+    assert.equal(
+      b.server.requests.length,
+      requests,
+      'stale props, hints and child refresh cannot reauthorize',
+    );
+    await b.render({ ...b.source(), status: 'loading', session: null });
+    await b.render({ ...b.source(), status: 'ready', session: identitySession() });
     assert.equal(b.hook.state.status, 'ready');
     assert.equal(b.hook.state.selection.sprintId, 's');
     assert.equal(b.hook.state.selection.taskId, null);
@@ -607,3 +617,85 @@ test(
     assert.equal(hook.state.resources.sprint.data, null);
   },
 );
+
+for (const status of [401, 403]) {
+  test(`Query create ${status} stays denied through stale props/hints/refresh until parent verification`, async (t) => {
+    const b = await hookFixture(t);
+    const parent = b.source();
+    b.server.post = () => Response.json({ code: 'denied' }, { status });
+    await act(async () => b.hook.state.stage({ type: 'create-sprint', fields }));
+    await act(async () => b.hook.state.submit());
+    const denied = status === 401 ? 'signed-out' : 'forbidden';
+    assert.equal(b.hook.state.status, denied);
+    const start = b.hook.renders.length;
+    const requests = b.server.requests.length;
+    await b.emit({ type: 'reset' });
+    await b.render(parent);
+    await act(async () => b.hook.state.refresh());
+    assert.equal(b.server.requests.length, requests);
+    assert.ok(
+      b.hook.renders
+        .slice(start)
+        .every((r) => Object.values(r.resources).every((v) => v.data === null)),
+    );
+    await b.render({ ...parent, status: 'loading', session: null });
+    await b.render(parent);
+    assert.equal(b.hook.state.status, 'ready');
+    assert.equal(b.hook.state.resources.planning.status, 'ready');
+    assert.equal(b.hook.state.resources.sprints.status, 'ready');
+    assert.equal(b.server.requests.filter((r) => r.init.method === 'POST').length, 1);
+  });
+}
+
+test('Query create offline/reconnect/read refresh keeps exact unknown command and only explicit Retry sends it', async (t) => {
+  const b = await hookFixture(t);
+  onlineManager.setOnline(false);
+  t.after(() => onlineManager.setOnline(true));
+  b.server.post = () => {
+    throw new Error('response lost');
+  };
+  await act(async () =>
+    b.hook.state.stage({ type: 'create-sprint', fields: { ...fields, name: '  Original  ' } }),
+  );
+  await act(async () => b.hook.state.submit());
+  const recovery = b.hook.state.recovery;
+  assert.equal(b.hook.state.mutation.status, 'unknown');
+  assert.equal(recovery.command.expectedProjectVersion, 2);
+  const original = b.server.requests.find((r) => r.init.method === 'POST');
+  onlineManager.setOnline(true);
+  b.server.planning.projectVersion = 7;
+  await b.emit({ type: 'reset' });
+  await act(async () => b.hook.state.reload('planning'));
+  assert.equal(b.hook.state.recovery, recovery);
+  assert.equal(b.hook.state.resources.planning.data.projectVersion, 7);
+  assert.equal(b.server.requests.filter((r) => r.init.method === 'POST').length, 1);
+  b.server.post = () => Response.json(sprint);
+  await act(async () => b.hook.state.retrySave());
+  const posts = b.server.requests.filter((r) => r.init.method === 'POST');
+  assert.equal(posts.length, 2);
+  assert.equal(posts[1].init.body, original.init.body);
+  assert.equal(posts[1].init.headers['Idempotency-Key'], original.init.headers['Idempotency-Key']);
+  assert.equal(b.hook.state.mutation.status, 'confirmed');
+  assert.equal(b.refreshed(), 1);
+});
+
+test('Query create confirmation survives parent refresh failure and never retries the accepted write', async (t) => {
+  const b = await hookFixture(t);
+  await b.render({
+    ...b.source(),
+    refresh: async () => {
+      throw new Error('verification unavailable');
+    },
+  });
+  b.server.post = () => {
+    b.server.get = () => Response.json({ code: 'unavailable' }, { status: 503 });
+    return Response.json(sprint);
+  };
+  await act(async () => b.hook.state.stage({ type: 'create-sprint', fields }));
+  await act(async () => b.hook.state.submit());
+  assert.equal(b.hook.state.mutation.status, 'confirmed');
+  assert.equal(b.hook.state.resources.planning.status, 'error');
+  assert.equal(b.hook.state.resources.sprints.status, 'error');
+  assert.equal(await b.hook.state.retrySave(), 'unavailable');
+  assert.equal(b.server.requests.filter((r) => r.init.method === 'POST').length, 1);
+});

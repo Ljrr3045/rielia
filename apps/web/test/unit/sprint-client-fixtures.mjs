@@ -266,7 +266,10 @@ export function sprintServer() {
   };
   return server;
 }
-export async function mountedSprint(t, { selected = true, server = sprintServer(), now } = {}) {
+export async function mountedSprint(
+  t,
+  { selected = true, server = sprintServer(), now, confirmed } = {},
+) {
   t.mock.method(globalThis, 'fetch', server.fetch);
   let key = 0;
   const controller = createSprintController({
@@ -274,6 +277,7 @@ export async function mountedSprint(t, { selected = true, server = sprintServer(
     tasks: createTaskPlanningTransport(),
     key: () => `00000000-0000-4000-8000-${String(++key).padStart(12, '0')}`,
     now,
+    confirmed,
   });
   t.after(() => controller.dispose());
   await controller.setContext(context);

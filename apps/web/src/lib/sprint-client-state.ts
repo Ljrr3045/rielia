@@ -115,6 +115,29 @@ export interface SprintClientState {
   };
   recovery: { command: SprintClientCommand; key: string } | null;
 }
+/** The two Query resources exist only in the composed public snapshot. */
+export type SprintControllerResources = Omit<SprintResources, 'planning' | 'sprints'>;
+export type SprintControllerState = Omit<SprintClientState, 'resources'> & {
+  resources: SprintControllerResources;
+};
+export function emptySprintControllerState(): SprintControllerState {
+  const value = emptySprintState();
+  const r = value.resources;
+  return {
+    ...value,
+    resources: {
+      sprint: r.sprint,
+      target: r.target,
+      task: r.task,
+      scope: r.scope,
+      sprintHistory: r.sprintHistory,
+      taskHistory: r.taskHistory,
+      preview: r.preview,
+      closure: r.closure,
+      outcomes: r.outcomes,
+    },
+  };
+}
 export function emptySprintResource<T>(): SprintResource<T> {
   return { status: 'idle', data: null, stale: false, loadingMore: false, failure: null };
 }
