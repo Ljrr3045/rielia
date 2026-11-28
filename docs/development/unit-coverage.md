@@ -1,5 +1,25 @@
 # T36 first unit and coverage delivery
 
+## T38.4a exact web adoption and final normal replay
+
+The [initial Query slice](t38-sprint-query.md) adds one maintained web runtime owner,
+keeping every prior test/source and zero-unit N/A input. Root adopted only exact
+web baseline 48,896 bytes/SHA256
+`2505df034cdb95c090ffcaf7e7a76bed6f7f169a9e3fbe9fd6369aea7e546eed`.
+Seven other baselines and separate tool manifests/locks remain byte-identical.
+Web L/S/F/B 3786/5110,4175/5799,862/1376,4821/7089; floors 7409/7199/6264/6800.
+All 804 retained ratio/uncovered comparisons preserve/improve, with no omission,
+lower floor or PR65 exception. New Query owner L146/146,S166/167,F24/24,B105/106
+retains one defensive success-return statement/branch as explicit unexecuted debt.
+
+Candidate 3 and normal 971(API 384/web 489/contracts 79/prototype 19)/198 reproduce all 16
+reports/status byte-for-byte, digest
+`d738085b046e6f7f691ec34d8cf7f722a3632d2dd49d89c4664fce8de4cd4b51`.
+Post-adoption infrastructure 20 and bounded artifacts 17 pass, without upload. The
+guide records rejected candidates 1/2, actual three-case corrections and distinct
+premature infrastructure 19/20 failure. Source-qualified standard/build/cost receipts
+are not rebound to later tests. Current-head CI/review and acceptance remain pending.
+
 ## T38.3d exact adoption and normal reproduction
 
 Root independently verified the [correlated-command implementation](t38-contract-transport.md),

@@ -429,6 +429,10 @@ for (const status of [401, 403]) {
       if (status === 403) {
         b.server.get = null;
         await b.controller.refresh();
+        await b.controller.handleEvent({ type: 'reset' });
+        assert.equal(b.state().status, 'forbidden');
+        // Only the trusted parent verification port may establish fresh authority.
+        await b.controller.setContext(context);
         assert.equal(b.state().status, 'ready');
       }
     });
@@ -1108,4 +1112,129 @@ test('a status-only planning transport conflict retains the participation draft 
   assert.equal(await controller.retrySave(), 'unavailable');
   assert.equal(send.mock.callCount(), 1);
   assert.equal(server.requests.filter(({ init }) => init.method === 'POST').length, 0);
+});
+
+test('a former confirmed parent refresh cannot block or read into a replacement authenticated lifetime', async (t) => {
+  const held = deferred();
+  const started = deferred();
+  const b = await mountedSprint(t, {
+    confirmed: () => {
+      started.resolve();
+      return held.promise;
+    },
+  });
+  b.server.post = () => Response.json(sprint);
+  b.controller.stage({ type: 'create-sprint', fields });
+  const saving = b.controller.submit();
+  await started.promise;
+  assert.equal(b.state().mutation.status, 'confirmed');
+  b.server.planning.projectVersion = 9;
+  await b.controller.setContext({ ...context, sessionId: 'new-session' });
+  assert.equal(b.state().resources.planning.status, 'ready');
+  assert.equal(b.state().resources.planning.data.projectVersion, 9);
+  assert.equal(b.state().draft, null);
+  assert.equal(b.state().recovery, null);
+  assert.equal(b.state().mutation.status, 'idle');
+  const requests = b.server.requests.length;
+  held.resolve();
+  await saving;
+  assert.equal(b.server.requests.length, requests);
+  assert.equal(b.state().resources.planning.data.projectVersion, 9);
+});
+
+test('a Query response completing after original expiry is discarded by the live controller authority fence', async (t) => {
+  let time = 0;
+  const b = await mountedSprint(t, { now: () => time });
+  const held = deferred();
+  const started = deferred();
+  b.server.get = ({ path }) => {
+    if (path.endsWith('/planning')) {
+      started.resolve();
+      return held.promise;
+    }
+  };
+  const reading = b.controller.reload('planning');
+  await started.promise;
+  time = Date.parse(context.expiresAt);
+  held.resolve(Response.json(planning));
+  await reading;
+  assert.equal(b.state().status, 'signed-out');
+  assert.equal(b.state().context, null);
+  for (const value of Object.values(b.state().resources)) assert.equal(value.data, null);
+});
+
+test('an expired Query create cannot expose its late receipt or request parent refresh', async (t) => {
+  let time = 0;
+  let refreshed = 0;
+  const b = await mountedSprint(t, {
+    now: () => time,
+    confirmed: async () => {
+      refreshed++;
+    },
+  });
+  const held = deferred();
+  const started = deferred();
+  b.server.post = () => {
+    started.resolve();
+    return held.promise;
+  };
+  b.controller.stage({ type: 'create-sprint', fields });
+  const saving = b.controller.submit();
+  await started.promise;
+  time = Date.parse(context.expiresAt);
+  held.resolve(Response.json(sprint));
+  await saving;
+  assert.equal(b.state().status, 'signed-out');
+  assert.equal(b.state().mutation.result, null);
+  assert.equal(b.state().recovery, null);
+  assert.equal(refreshed, 0);
+});
+
+test('duplicate held legacy scope paging sends once and leaves Query planning/list DTOs unchanged', async (t) => {
+  const server = sprintServer();
+  server.scope = { ...scope, total: 2, nextCursor: 'scope-next' };
+  const b = await mountedSprint(t, { server });
+  const planningBefore = b.state().resources.planning.data;
+  const sprintsBefore = b.state().resources.sprints.data;
+  const held = deferred();
+  const started = deferred();
+  server.get = ({ path, query }) => {
+    if (path.endsWith('/scope') && query.has('cursor')) {
+      started.resolve();
+      return held.promise;
+    }
+  };
+  const paging = b.controller.loadMore('scope');
+  await started.promise;
+  assert.equal(b.state().resources.scope.loadingMore, true);
+  await b.controller.loadMore('scope');
+  const pages = () =>
+    server.requests.filter((r) => r.path.endsWith('/scope') && r.query.has('cursor'));
+  assert.equal(pages().length, 1);
+  assert.equal(b.state().resources.planning.data, planningBefore);
+  assert.equal(b.state().resources.sprints.data, sprintsBefore);
+  held.resolve(
+    Response.json({
+      ...server.scope,
+      items: [{ ...scope.items[0], id: 'visit-2', taskId: 't2' }],
+      nextCursor: null,
+    }),
+  );
+  await paging;
+  assert.equal(pages().length, 1);
+  assert.equal(b.state().resources.scope.loadingMore, false);
+  assert.equal(b.state().resources.scope.status, 'ready');
+  assert.deepEqual(
+    b.state().resources.scope.data.items.map((item) => item.id),
+    ['visit', 'visit-2'],
+  );
+  assert.equal(b.state().resources.scope.data.total, 2);
+  const requestsAfterTail = server.requests.length;
+  await b.controller.loadMore('scope');
+  assert.equal(server.requests.length, requestsAfterTail, 'an exhausted legacy page sends nothing');
+  assert.equal(b.state().resources.scope.status, 'ready');
+  assert.equal(b.state().resources.scope.data.items.length, 2);
+  assert.equal(b.state().resources.planning.data, planningBefore);
+  assert.equal(b.state().resources.sprints.data, sprintsBefore);
+  assert.equal(b.posts().length, 0);
 });

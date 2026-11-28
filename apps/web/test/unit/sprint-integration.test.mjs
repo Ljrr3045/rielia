@@ -1794,3 +1794,103 @@ test('round-one: parent-only leave review is hidden during verification, restore
   assert.equal(departures, 0);
   assert.equal(posts(b).length + b.posts().length, 0);
 });
+
+test('Query ownership composes one SSE lifetime and one confirmed drain for a pending create hint burst', async (t) => {
+  const b = await sprintIntegrationBrowser(t);
+  const h = await b.owners();
+  const pair = () =>
+    b.sprintServer.requests.filter(
+      (r) =>
+        r.init.method !== 'POST' && (r.path.endsWith('/planning') || r.path.endsWith('/sprints')),
+    );
+  const initial = pair().length;
+  assert.equal(b.server.streams.filter((s) => !s.request.options.signal.aborted).length, 1);
+  await act(async () => {
+    b.server.streams.at(-1).emit({ type: 'heartbeat' });
+    b.server.streams
+      .at(-1)
+      .emit({ type: 'invalidate', entity: 'project', id: 'other', projectId: 'other', version: 9 });
+  });
+  await b.clock.advance(500);
+  assert.equal(pair().length, initial);
+  const held = deferred();
+  b.sprintServer.post = () => held.promise;
+  await act(async () => h.state.begin('create-sprint'));
+  for (const [key, value] of Object.entries({
+    name: 'Created',
+    goal: 'Goal',
+    startDate: '2026-11-19',
+    endDateExclusive: '2026-12-03',
+  }))
+    await act(async () => h.state.changeField(key, value));
+  let saving;
+  await act(async () => {
+    saving = h.state.submitForm();
+  });
+  const draft = h.state.sprints.recovery;
+  await act(async () => {
+    for (let n = 0; n < 3; n++) b.server.streams.at(-1).emit({ type: 'reset' });
+  });
+  assert.equal(pair().length, initial);
+  assert.equal(h.state.sprints.resources.planning.stale, true);
+  assert.equal(h.state.sprints.resources.preview.stale, true);
+  assert.equal(h.state.sprints.recovery, draft);
+  await act(async () => {
+    held.resolve(Response.json({ ...b.sprintServer.sprint, id: 'created' }));
+    await saving;
+  });
+  await b.clock.advance(500);
+  assert.equal(h.state.sprints.mutation.status, 'confirmed');
+  assert.equal(h.state.sprints.recovery, null);
+  assert.equal(posts(b).length, 1);
+  assert.equal(
+    pair().length,
+    initial + 2,
+    'parent verification/resume and write completion share one drain',
+  );
+  await act(async () => b.server.streams.at(-1).emit({ type: 'reset' }));
+  await b.clock.advance(500);
+  assert.equal(pair().length, initial + 4, 'a later event gets its own authorized refresh');
+});
+
+test('real parent verification failure after Query create hides private data and defers reads until verified recovery', async (t) => {
+  const b = await sprintIntegrationBrowser(t);
+  const h = await b.owners();
+  const pair = () =>
+    b.sprintServer.requests.filter(
+      (r) =>
+        r.init.method !== 'POST' && (r.path.endsWith('/planning') || r.path.endsWith('/sprints')),
+    ).length;
+  const verification = b.server.holdNext('/api/v1/identity/session');
+  b.sprintServer.post = () => Response.json({ ...b.sprintServer.sprint, id: 'created' });
+  await act(async () => h.state.begin('create-sprint'));
+  for (const [key, value] of Object.entries({
+    name: 'Created',
+    goal: 'Goal',
+    startDate: '2026-11-19',
+    endDateExclusive: '2026-12-03',
+  }))
+    await act(async () => h.state.changeField(key, value));
+  let saving;
+  await act(async () => {
+    saving = h.state.submitForm();
+  });
+  assert.ok(verification.request);
+  assert.equal(h.state.sprints.status, 'verifying');
+  for (const value of Object.values(h.state.sprints.resources)) assert.equal(value.data, null);
+  const count = pair();
+  await act(async () => {
+    verification.reject(new Error('verification unavailable'));
+    await saving;
+  });
+  await b.clock.advance(500);
+  assert.equal(pair(), count);
+  assert.equal(h.state.sprints.status, 'verifying');
+  assert.equal(posts(b).length, 1);
+  await act(async () => h.state.parent.refresh());
+  await b.clock.advance(500);
+  assert.equal(h.state.sprints.status, 'ready');
+  assert.equal(h.state.sprints.mutation.status, 'confirmed');
+  assert.equal(pair(), count + 2);
+  assert.equal(posts(b).length, 1);
+});

@@ -1,5 +1,31 @@
 # Delivery progress and decisions
 
+## 2026-11-27 T38.3 accepted; initial Query local batch ready for coordinator delivery
+
+The [initial T38.4a planning/list/create slice](t38-sprint-query.md) has complete
+local implementation and numerical gates, pending root publication, current-head
+CI/native review and coordinator acceptance. Query alone owns the two DTO resources;
+the controller keeps nine other resources and captured command/recovery/navigation.
+No presentation, form library, backend policy or private SSR migration is included.
+
+Root adopted only exact web baseline 48,896 bytes/SHA256
+`2505df034cdb95c090ffcaf7e7a76bed6f7f169a9e3fbe9fd6369aea7e546eed`;
+seven others remain exact. Candidate 3/normal 971(API 384/web 489/contracts 79/prototype 19)
+across 198 inputs reproduce all 16 reports/status, digest
+`d738085b046e6f7f691ec34d8cf7f722a3632d2dd49d89c4664fce8de4cd4b51`.
+All 804 comparisons preserve/improve; post-adoption infrastructure 20/artifacts 17
+pass without upload. Two rejected numerical candidates and premature19/20
+infrastructure retain distinct receipts. The new owner's one defensive statement/
+branch remains unexecuted; no exception, omission or lower floor applies.
+
+Bounded T38.3 separately stands accepted through the coordinator's consolidation
+of accepted PR68–71: canonical generation/drift, isolated TS5/application TS6 and
+62 browser JSON operations plus four exclusions. Historical pending labels below
+remain dated snapshots. The focused guide records frozen-source standard/one-build
+provenance, +38,908raw/+11,768gzip9 byte delta and qualified request observations.
+Full Query/T38, final CI/Kilo, packaging/S01/runtime/provenance, UNVERIFIED Cancel/
+Leave possible draft loss and filter/provider/staging/device/a11y/product debts stay open.
+
 ## 2026-11-27 T38.3d published in Draft PR71
 
 Root published [Draft PR71](https://github.com/Ljrr3045/rielia/pull/71) toward `dev`

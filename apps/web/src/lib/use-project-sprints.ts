@@ -20,10 +20,13 @@ export function useProjectSprints(
   project: SprintProjectPort,
   selection: { sprintId: string | null; taskId: string | null },
 ) {
+  const latestProject = useRef(project);
+  latestProject.current = project;
   const [controller] = useState(() =>
     createSprintController({
       planning: createSprintPlanningTransport(),
       tasks: createTaskPlanningTransport(),
+      confirmed: () => latestProject.current.refresh(),
     }),
   );
   const state = useSyncExternalStore(
@@ -31,8 +34,6 @@ export function useProjectSprints(
     controller.getState,
     controller.getState,
   );
-  const latestProject = useRef(project);
-  latestProject.current = project;
   const session = project.session;
   const { workspaceId, projectId } = project.selection;
   const allowed = !['disabled', 'signed-out', 'forbidden'].includes(project.status);
@@ -124,9 +125,6 @@ export function useProjectSprints(
     expire();
     return () => window.clearTimeout(timer);
   }, [controller, lifetimeExpiry]);
-  useEffect(() => {
-    if (state.mutation.status === 'confirmed') void latestProject.current.refresh();
-  }, [state.mutation]);
   // Effects run after render: never expose a former execution context during that interval.
   // A cleared controller contains no private state; preserve its denial status.
   const visible =

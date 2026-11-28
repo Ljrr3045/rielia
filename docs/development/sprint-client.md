@@ -1,5 +1,22 @@
 # T11.4a sprint client logic and presentation handoff
 
+## Current T38.4a local ownership and numerical state
+
+The [initial Query slice](t38-sprint-query.md) moves canonical `planning` and
+`sprints` pages to Query alone. The controller retains nine other resources,
+versions, draft/recovery/navigation and confirmation; its public snapshot derives
+the migrated DTOs. Only create-sprint executes through a Query mutation. The
+parent retains session/SSE and is refreshed once after confirmation, sharing one
+authorized child drain with verification/resume. Terminal 401/403 cannot reopen
+through stale props, hints or child Refresh; the existing parent verifies recovery.
+
+Exact root-only web adoption and normal 971/198/all 16 report bytes, infrastructure 20
+and bounded artifacts 17 pass. The guide preserves rejected candidates, residual
+unit debt and actual check/cost limits. Forms, presentation, backend and wire policy
+stay unchanged. Publication/current-head CI/native review/coordinator acceptance
+remain open; no full T38.4a/T38 acceptance. Historical T11 receipts below retain
+their accepted scope and original source identities.
+
 Status: ACCEPTED in merged [PR54](https://github.com/Ljrr3045/rielia/pull/54#issuecomment-7055439065).
 The acceptance receipt below governs the historical pre-acceptance records. This is the logic prerequisite for separately owned T11.4b
 presentation, addressing T11/B1c, P09/US06, affected P05/P08/P10 and US05/US12,
