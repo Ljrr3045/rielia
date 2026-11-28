@@ -4,17 +4,14 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
-- Complete local migration of the remaining nine sprint server resources to the
-  existing authenticated Query client, preserving captured commands/recovery,
-  independent selection/page/preview/closure lifetimes and parent authority.
-  Root adopts only exact web49,363bytes/SHA256 `30fbe046`; normal1066/199 reproduces
-  all sixteen reports/status, with infrastructure20/artifacts17 and all808 retained
-  comparisons passed. Candidate1 rejection, six public-witness corrections and
-  helperL3/S5/F0/B5 debt remain explicit. The one standard/native build keeps its
-  earlier test/source binding; no dependency/presentation/backend/form adoption or
-  full T38.4a/T38 acceptance is implied. Coordinator publication/CI/native review
-  remain pending; [current evidence](docs/development/t38-sprint-query.md) records
-  qualified artifact/request costs and all retained runtime/product/UX limits.
+- Publish the remaining nine sprint Query resources in [Draft PR73](https://github.com/Ljrr3045/rielia/pull/73), targeting `dev`
+  from implementation head [23d01e8](https://github.com/Ljrr3045/rielia/commit/23d01e88c11ffdc1c3cc590573f2b142a4ffd105). Local normal 1,066/199, sixteen exact reports
+  plus status, infrastructure 20/20 and seventeen bounded artifacts pass; root
+  adopted only web baseline `30fbe046`. Candidate 1 rejection, six public corrections,
+  helper L3/S5/F0/B5 debt and qualified source/cost/runtime/product limits remain
+  in the [current evidence](docs/development/t38-sprint-query.md). Final reference-head
+  CI/native review and coordinator acceptance remain pending; publication does not
+  accept this resource batch or full T38.4a/T38. Earlier check bindings are unchanged.
 
 - Record the first remaining-resource candidate: one full standard/sole build and
   1060/199 measurement execute successfully, but eight protected numerical

@@ -1,21 +1,19 @@
 # T11.4b sprint presentation checkpoint
 
-## Current local state — exact adoption and normal gates complete
+## Current publication and local evidence
 
-The remaining nine [sprint Query resources](t38-sprint-query.md) are implemented
-in the existing authenticated client; Query alone owns all eleven canonical DTO
-resources. The coordinator adopted only exact web baseline **49,363 bytes**, SHA256
-`30fbe04656e8db312fd84300d62d99d62f30b80c4545cab24e3cc948f9c0ce0e`;
-the other seven baselines remain byte-identical. Normal **1,066/199** reproduces
-all sixteen corrected reports and complete status; infrastructure **20/20** and
-bounded artifacts **17** pass, without upload. No lower floor or omission applies.
+[Draft PR73](https://github.com/Ljrr3045/rielia/pull/73) targets `dev` from initial implementation head [23d01e8](https://github.com/Ljrr3045/rielia/commit/23d01e88c11ffdc1c3cc590573f2b142a4ffd105).
+Local gates are complete: normal **1,066 tests / 199 inputs**, sixteen exact
+reports plus status, infrastructure **20/20** and **17** bounded artifact payloads,
+without upload. Root adopted only web baseline `30fbe046`; seven other baselines
+remain exact. The [resource guide](t38-sprint-query.md) records detailed evidence,
+source-qualified costs, rejected/corrected chronology and retained limits.
 
-[PR72's final initial-slice acceptance](https://github.com/Ljrr3045/rielia/pull/72)
-accepts planning/list/create only, reviewed `26ac8d7d`, merged `fe9e53c7`. The nine
-remaining resources have complete local evidence, pending coordinator publication,
-current-head CI/native review and acceptance. Full T38.4a/T38 stays open. Earlier
-implementation/rejected-candidate and source publication paragraphs below are
-historical checkpoints; their pending labels do not override this local status.
+[PR72's final decision](https://github.com/Ljrr3045/rielia/pull/72) accepts only the
+initial planning/list/create slice. The remaining nine resources are published
+and locally verified, pending final reference-head CI, native review and coordinator
+acceptance. Full T38.4a/T38 remains open. Earlier checkpoints below preserve their
+original source identities and do not override this publication/local status.
 
 ## Historical candidate1 numerical correction gate
 

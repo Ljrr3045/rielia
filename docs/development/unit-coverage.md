@@ -1,49 +1,40 @@
 # T36 first unit and coverage delivery
 
-## Current local state — exact adoption and normal gates complete
+## Current remaining-resource adoption and publication
 
-The coordinator adopted only exact web baseline **49,363 bytes**, SHA256
-`30fbe04656e8db312fd84300d62d99d62f30b80c4545cab24e3cc948f9c0ce0e`.
-Seven other baselines remain byte-identical. One normal built-input replay passes
-**1,066/1,066** (API384/web584/contracts79/prototype19), **199 maintained inputs**,
-in47.258s, reproducing all sixteen corrected reports and complete status byte for
-byte. Infrastructure20/20 and the seventeen bounded artifact payloads pass without
-upload. Count digest:
+The [remaining-resource batch](t38-sprint-query.md) is published in [Draft PR73](https://github.com/Ljrr3045/rielia/pull/73),
+from initial implementation head [23d01e8](https://github.com/Ljrr3045/rielia/commit/23d01e88c11ffdc1c3cc590573f2b142a4ffd105). Local numerical gates are complete;
+final reference-head CI/native review and coordinator acceptance remain pending.
+[PR72](https://github.com/Ljrr3045/rielia/pull/72) accepts the initial
+planning/list/create slice only, not this batch or full T38.4a/T38.
+
+Root adopted only web baseline **49,363 bytes**, SHA256
+`30fbe04656e8db312fd84300d62d99d62f30b80c4545cab24e3cc948f9c0ce0e`;
+seven other baselines remain exact. Normal built-input replay passes **1,066/1,066**
+(API 384 / web 584 / contracts 79 / prototype 19), **199 inputs**, in 47.258 s.
+All sixteen corrected reports plus complete status match byte for byte;
+infrastructure 20/20 and seventeen bounded artifacts pass without upload.
+Count digest:
 `47dc3a93a4ed4b61101ba3d57132bfc74707cac3e3ee0efa6c9e1d0b0cbc0e3e`.
 
-All808 retained exact ratio/uncovered comparisons pass; protected floors are not
-reduced and no source/test/N/A omission or PR65 exception applies. Web L/S/F/B:
-3900/5224,4316/5939,927/1441,4859/7126; adopted floors7465/7267/6433/6818.
-Uncovered L/S/F/B1324/1623/514/2267 preserves lines/functions and improves statements
-and branches by one against accepted PR72's1324/1624/514/2268. The new helper keeps
-explicit uncovered debt **L3/S5/F0/B5**; no universal branch/lifecycle claim follows.
+All 808 retained comparisons pass without lower floors, source/test/N/A omission
+or a PR65 exception. Web L/S/F/B are 3900/5224, 4316/5939, 927/1441, 4859/7126;
+floors are 7465/7267/6433/6818. Uncovered counts 1324/1623/514/2267 preserve lines
+and functions and improve statements/branches by one against PR72's baseline.
+New-helper debt remains **L3/S5/F0/B5**.
 
-The first1060/199 candidate remains rejected with its original eight comparison
-failures and raw reports. Production stayed frozen while exactly six public cases
-were added in the existing owner/controller/integration suites: retired/unselected
-reads, actual observerAdded retirement, failed staged-close continuation, the final
-closure scheduling/empty binding fence, pending raw edit and pending/unknown raw
-close protection with exact explicit retry. Focused6/6 and the corrected1066/199
-measure pass. The same199 production/provider maps show zero covered S/F/B slot
-losses versus candidate1, with gains9S/0F/10B and five lines. Current test credit is
-limited to those mapped public witnesses; historical defensive Query evidence
-retains its source qualification.
+Candidate 1 remains rejected with its eight misses and original raw reports.
+Exactly six public cases corrected the gaps without production changes. The same
+199 production/provider maps show zero covered S/F/B slot losses, 9 statement and
+10 branch-arm gains, plus five lines. Historical defensive Query evidence retains
+its source qualification; no universal lifecycle coverage is claimed.
 
-The single standard121.493s/sole native build and native HTTP4 checks belong to
-frozen production and their earlier tests. The six later tests are verified by
-focused/corrected/normal execution, not rebound to that standard. No second build,
-standard, HTTP, install/audit or local PG/Docker run follows the correction. The
-[resource guide](t38-sprint-query.md) records actual artifact/request observations,
-setup failures and retained limits. One confirmation callback/full parent refresh
-coexists with two actual session HTTP checks including the existing SSE reconnect
-reset; those counts are distinct.
-
-[PR72's bounded initial-slice acceptance](https://github.com/Ljrr3045/rielia/pull/72)
-accepts planning/list/create only, reviewed `26ac8d7d`, merged `fe9e53c7`. This next
-nine-resource batch is ready for coordinator delivery; current-head CI/native
-review and acceptance, full T38.4a/T38 and all packaging/S01/runtime/provenance/
-current-authority, lower advisory/action and deferred product/UX debts remain open.
-Earlier checkpoints below preserve their original status and evidence identities.
+Standard 121.493 s/sole native build and native HTTP 4 belong to earlier tests;
+focused/corrected/normal runs verify the six later cases. This reference update
+reruns only documentation checks. Runtime/provenance/current-authority, packaging/S01,
+lower advisory/action, UNVERIFIED Cancel/Leave possible draft loss and deferred
+filter/provider/staging/device/a11y/product limits remain in the resource guide.
+Earlier checkpoints below preserve their original source/run identities.
 
 ## Historical candidate1 numerical correction gate
 

@@ -1,62 +1,71 @@
 # T38.4a sprint Query ownership
 
-## Current local state — all eleven DTO owners; delivery gates open
+## Current publication and local evidence
 
-Query alone owns the nine newly migrated resources and accepted planning/list in
-one authenticated lifetime/client. The controller's separate DTO ledger and read
-execution are removed; captured commands/versions, pending/unknown/conflict
-recovery, scheduling/navigation and memory drafts retain their owners. Forms,
-presentation, parent session/SSE, validated transport and backend policy are unchanged.
+[Draft PR73](https://github.com/Ljrr3045/rielia/pull/73) targets `dev`. The coordinator published it on
+**2026-11-28 at 04:04:43 UTC**, from initial implementation head [23d01e8](https://github.com/Ljrr3045/rielia/commit/23d01e88c11ffdc1c3cc590573f2b142a4ffd105), based on
+accepted PR72 merge `fe9e53c7`. Publication readback confirmed OPEN/Draft and author
+`Ljrr3045`. That initial Draft snapshot had zero native Kilo App 2193792 check runs;
+it does not prove general event exclusion or billing. Final reference-head CI,
+native review and coordinator acceptance remain pending.
 
-The coordinator adopted only exact web baseline **49,363 bytes**, SHA256
-`30fbe04656e8db312fd84300d62d99d62f30b80c4545cab24e3cc948f9c0ce0e`;
-seven others stay exact. Corrected measurement and normal built-input replay pass
-**1,066** cases (384/584/79/19), **199** maintained inputs, reproducing all sixteen
-reports and complete status. Normal47.258s, infrastructure20/20 and bounded artifacts17
-pass without upload. Digest:
+Query alone owns all eleven canonical sprint DTO resources in one authenticated
+lifetime/client. The separate controller DTO ledger and read executor are removed;
+captured commands and versions, recovery, navigation, scheduling and memory drafts
+retain their owners. Forms, presentation, parent session/SSE, validated transport
+and backend policy are unchanged.
+
+Root adopted only exact web baseline **49,363 bytes**, SHA256
+`30fbe04656e8db312fd84300d62d99d62f30b80c4545cab24e3cc948f9c0ce0e`.
+Seven other baselines remain exact. Corrected measurement and normal built-input
+replay pass **1,066 tests** (API 384 / web 584 / contracts 79 / prototype 19),
+**199 maintained inputs**, reproducing all sixteen reports and complete status.
+Normal replay took 47.258 s; infrastructure 20/20 and seventeen bounded artifact
+payloads pass without upload. Count digest:
 `47dc3a93a4ed4b61101ba3d57132bfc74707cac3e3ee0efa6c9e1d0b0cbc0e3e`.
-All808 retained ratio/uncovered comparisons pass. Web L/S/F/B3900/5224,4316/5939,
-927/1441,4859/7126; floors7465/7267/6433/6818. New helper debt remainsL3/S5/F0/B5.
+All 808 retained ratio/uncovered comparisons pass. Web L/S/F/B are
+3900/5224, 4316/5939, 927/1441 and 4859/7126; floors are 7465/7267/6433/6818.
+New-helper uncovered debt remains **L3/S5/F0/B5**.
 
-Candidate1's eight numerical misses remain rejected history. Production stayed
-frozen for the six released public-witness additions: retired/unselected intent,
-real observerAdded retirement, stale staged-close continuation, final closure
-scheduling/empty binding and raw edit/close protection through pending/unknown
-outcomes and exact explicit retry. Focused6 and corrected47.009s measure pass;
-all199 production/provider maps match candidate1, with no covered S/F/B slot loss,
-9S/0F/10B gains and five newly covered lines. No internal Query patch or contrived
-cache seeding is used. The [unit ledger](unit-coverage.md) retains exact chronology.
+Candidate 1's eight numerical misses remain rejected history. Production stayed
+frozen for six public-witness additions: retired/unselected intent, actual
+observerAdded retirement, failed staged-close continuation, final closure
+scheduling/empty binding, and raw edit/close protection through pending/unknown
+outcomes with exact explicit retry. Focused 6/6 and the corrected 47.009 s measure
+pass. All 199 production/provider maps match candidate 1, with zero covered S/F/B
+slot losses, gains of 9 statements / 10 branch arms and five newly covered lines.
+No patched Query internals or contrived cache seeding is used; the
+[unit ledger](unit-coverage.md) preserves the numerical chronology.
 
-The one complete standard121.493s and sole candidate native build, earlier focused270
-and native HTTP4 retain their actual source/test bindings. They do not claim to run
-the six later tests. No repeated standard/build/HTTP/audit/install/PG/Docker suite
-follows their test-only correction and documentation. Current-head CI/native Kilo
-and coordinator acceptance remain required; no remote check or new PR is implied.
+The one complete standard (121.493 s), sole candidate native build, earlier focused
+270 and native HTTP 4 retain their earlier source/test bindings. They did not run
+the six later cases; focused/corrected/normal execution verifies those cases.
+No standard/build/HTTP/audit/install/PG/Docker run follows the test-only correction
+or this documentation reference update. Publication is not final acceptance.
 
-The same emitted build has31browser JS files,1,713,185raw/489,773gzip9 bytes:
-+3,354raw/+919gzip9 against PR72's archived emitted candidate. Literal projects
-references plus shared runtime are11files,1,040,911raw/287,786gzip9: +3,352/+906.
-Standalone2,161regularfiles/48,599,798bytes is absolute only. Identical gzip9/mtime0
-and deduplicated chunk rules preserve the artifact comparison; these are not
-initial/lazy wire requests, a controlled speed/RSS comparison or deployed image delta.
-No accepted-base build was repeated.
+The same build emits 31 browser JS files: 1,713,185 raw / 489,773 gzip9 bytes,
+**+3,354 raw / +919 gzip9** versus PR72's archived emitted candidate. Literal
+projects references plus shared runtime are 11 files: 1,040,911 raw / 287,786 gzip9,
+**+3,352 / +906**. Standalone is an absolute 2,161 regular files / 48,599,798 bytes.
+Identical gzip9/mtime0 and deduplicated chunk rules preserve the artifact comparison;
+these are not measured wire requests, a controlled speed/RSS comparison or a
+deployed image delta. No accepted-base build was repeated.
 
-Maintained real-parent active/closed fixtures observe initial starts20/23 and parsed
-bodies20/23 with checkpoint-aborted signals4/4. A confirmation adds8/10 eligible
-reads, all8/10 parsed bodies, zero aborted signals and one POST; preview stays
-explicit/lazy. One full parent refresh has two actual session HTTP checks, including
-the existing reconnected SSE reset verification; the separate real-hook witness
-counts one confirmation callback. Parsing is not server-policy acceptance, and
-these fixtures are not a real-user performance study.
+Real-parent active/closed fixtures observe initial starts and parsed bodies of
+20/23, with four checkpoint-aborted signals per scene. Confirmation adds 8/10
+eligible reads, all 8/10 parsed bodies, zero aborted signals and one POST; preview
+stays explicit/lazy. One full parent refresh includes two actual session HTTP
+checks, including the existing SSE reconnect-reset verification; the separate
+real-hook witness counts one confirmation callback. Parsed bodies are not server
+policy acceptance, and these fixtures are not a real-user performance study.
 
-[PR72's final decision](https://github.com/Ljrr3045/rielia/pull/72) accepts only the
-initial planning/list/create slice, reviewed `26ac8d7d`, merged `fe9e53c7`. This
-nine-resource batch has complete local implementation/numerical evidence and is
-ready for coordinator delivery. Full T38.4a/T38 remains open pending consolidation.
-Preserve packaging/S01, runtime scalar/refinement/provenance/current-authority,
-G06/dense/T04, lower advisory/action/runtime, user-omitted UNVERIFIED Cancel/Leave
-possible draft loss, filters/T08/T10/US05 and provider/staging/device/a11y/real-product
-debts. Earlier pending checkpoints below are intentionally preserved history.
+[PR72's final decision](https://github.com/Ljrr3045/rielia/pull/72) accepts only
+planning/list/create, reviewed `26ac8d7d`, merged `fe9e53c7`. This remaining-resource
+batch, full T38.4a and T38 await final coordinator acceptance. Preserve packaging/S01,
+runtime scalar/refinement/provenance/current-authority, G06/dense/T04, lower
+advisory/action/runtime, user-omitted UNVERIFIED Cancel/Leave with possible draft
+loss, filters/T08/T10/US05 and provider/staging/device/a11y/real-product debts.
+Historical checkpoints below retain their original evidence identities.
 
 ## Historical implementation checkpoint — before numerical measurement
 

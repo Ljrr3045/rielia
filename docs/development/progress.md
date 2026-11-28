@@ -1,32 +1,34 @@
 # Delivery progress and decisions
 
-## T38.4a remaining resources — final local gates complete; coordinator delivery open
+## T38.4a remaining resources — published in Draft PR73
 
-The [nine-resource batch](t38-sprint-query.md) completes local Query ownership of
-all eleven sprint DTO resources. Controller command/recovery/navigation, raw forms,
-parent authority, transport/backend policy and presentation retain their owners.
+The coordinator published [Draft PR73](https://github.com/Ljrr3045/rielia/pull/73) toward `dev` on 2026-11-28 at 04:04:43 UTC,
+from initial implementation head [23d01e8](https://github.com/Ljrr3045/rielia/commit/23d01e88c11ffdc1c3cc590573f2b142a4ffd105). Readback confirmed OPEN/Draft, author
+`Ljrr3045` and base `fe9e53c7`. Local gates are complete; final reference-head CI,
+native review and coordinator acceptance remain pending. The initial snapshot's
+zero Kilo checks is bounded evidence, not general exclusion or billing proof.
+
+The [resource guide](t38-sprint-query.md) records sole Query ownership of all eleven
+sprint DTOs and the retained command/form/parent/transport/policy boundaries.
 [PR72's final decision](https://github.com/Ljrr3045/rielia/pull/72) accepts only the
-initial planning/list/create slice (reviewed `26ac8d7d`, merged `fe9e53c7`); this
-new batch still needs coordinator publication, current-head CI/native review and
-acceptance. No full T38.4a/T38 acceptance is claimed.
+initial planning/list/create slice; this resource batch and full T38.4a/T38 are not
+accepted by publication.
 
-Root adopted only web49,363bytes/SHA256
-`30fbe04656e8db312fd84300d62d99d62f30b80c4545cab24e3cc948f9c0ce0e`;
-seven baselines remain exact. Normal1066(API384/web584/contracts79/prototype19)/199
-in47.258s reproduces all sixteen corrected reports/status, digest
+Root adopted only web baseline `30fbe046` (49,363 bytes); seven others remain exact.
+Normal **1,066 tests / 199 inputs** in 47.258 s reproduces all sixteen corrected
+reports/status, digest
 `47dc3a93a4ed4b61101ba3d57132bfc74707cac3e3ee0efa6c9e1d0b0cbc0e3e`.
-All808 comparisons, infrastructure20 and bounded artifacts17 pass without upload,
-omission or lower floor. Rejected candidate1 and six public-witness corrections
-remain distinct; frozen maps have zero covered S/F/B losses and19 gains. New-helper
-unit debtL3/S5/F0/B5 remains owned.
+All 808 comparisons, infrastructure 20/20 and seventeen bounded artifacts pass
+without upload or weaker gates. Candidate 1 rejection and six public corrections
+remain distinct; frozen maps have zero covered S/F/B losses and nineteen gains.
+New-helper debt stays L3/S5/F0/B5.
 
-Standard121.493s/sole native build and native HTTP4 retain their earlier test/source
-bindings; six later cases are covered by focused/corrected/normal runs. Graphs and
-production stay frozen, without another standard/build/HTTP/audit/install/PG/Docker
-run. Artifact deltas, one parent refresh versus two session HTTP checks, all failures,
-packaging/S01, runtime/provenance/current-authority, lower advisory/action and
-UNVERIFIED Cancel/Leave/filter/provider/staging/device/a11y/product limits remain
-in the linked guide. Historical checkpoints below do not override this local state.
+The standard/sole build and native HTTP retain their earlier source/test binding;
+this reference-only batch runs no app/coverage/build/PG/Docker/install/audit checks.
+Artifact/request limits, one full parent refresh versus two actual session HTTP
+checks, runtime/provenance/current-authority, packaging/S01, lower advisory/action,
+UNVERIFIED Cancel/Leave possible draft loss and deferred product/UX limits remain
+explicit in the guide. Earlier checkpoints remain historical evidence.
 
 ## Historical candidate1 numerical correction gate
 

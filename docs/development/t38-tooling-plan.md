@@ -1,21 +1,19 @@
 # T38 tool decisions and compatibility pilot
 
-## Current local state — exact adoption and normal gates complete
+## Current publication and local evidence
 
-The remaining nine [sprint Query resources](t38-sprint-query.md) are implemented
-in the existing authenticated client; Query alone owns all eleven canonical DTO
-resources. The coordinator adopted only exact web baseline **49,363 bytes**, SHA256
-`30fbe04656e8db312fd84300d62d99d62f30b80c4545cab24e3cc948f9c0ce0e`;
-the other seven baselines remain byte-identical. Normal **1,066/199** reproduces
-all sixteen corrected reports and complete status; infrastructure **20/20** and
-bounded artifacts **17** pass, without upload. No lower floor or omission applies.
+[Draft PR73](https://github.com/Ljrr3045/rielia/pull/73) targets `dev` from initial implementation head [23d01e8](https://github.com/Ljrr3045/rielia/commit/23d01e88c11ffdc1c3cc590573f2b142a4ffd105).
+Local gates are complete: normal **1,066 tests / 199 inputs**, sixteen exact
+reports plus status, infrastructure **20/20** and **17** bounded artifact payloads,
+without upload. Root adopted only web baseline `30fbe046`; seven other baselines
+remain exact. The [resource guide](t38-sprint-query.md) records detailed evidence,
+source-qualified costs, rejected/corrected chronology and retained limits.
 
-[PR72's final initial-slice acceptance](https://github.com/Ljrr3045/rielia/pull/72)
-accepts planning/list/create only, reviewed `26ac8d7d`, merged `fe9e53c7`. The nine
-remaining resources have complete local evidence, pending coordinator publication,
-current-head CI/native review and acceptance. Full T38.4a/T38 stays open. Earlier
-implementation/rejected-candidate and source publication paragraphs below are
-historical checkpoints; their pending labels do not override this local status.
+[PR72's final decision](https://github.com/Ljrr3045/rielia/pull/72) accepts only the
+initial planning/list/create slice. The remaining nine resources are published
+and locally verified, pending final reference-head CI, native review and coordinator
+acceptance. Full T38.4a/T38 remains open. Earlier checkpoints below preserve their
+original source identities and do not override this publication/local status.
 
 ## Historical candidate1 numerical correction gate
 
@@ -705,7 +703,7 @@ Query production/RHF/other tools remain separately gated.
 | T38.2h | Implemented and published in Draft PR65: backend-private sprint metadata/scope/close receipts | [Private receipt guide](t38-private-schemas.md), [Draft PR65](https://github.com/Ljrr3045/rielia/pull/65), initial head `7addcee`; explicit API Zod4.6.7/importer-only lock, user-approved exact structural API rebase, normal844/infra20/artifacts and source-qualified standard/PG47/runtime/high audits passed; current-head CI/review/acceptance pending |
 | T38.2 remaining | Other persisted JSON, all six opaque decoders and configuration | Each owner needs a separate release or explicit accepted debt/exclusion before T38.6, including retained collaboration decoding; no universal policy rewrite |
 | T38.3 | Canonical OpenAPI generation/drift first; generated transport adoption only after TS6/generator decision | Reproducible schema/type generation, unsupported-refinement list, unknown-response and same-origin/cancellation/error parity; no second hand-maintained definition |
-| T38.4a | Initial planning/list/create ACCEPTED in PR72; all nine remaining resources locally implemented, pending coordinator delivery/acceptance | Sole Query DTO ownership, exact root-only web adoption and normal1066/199/16reports+status, infrastructure20/artifacts17; source-qualified lifecycle, costs and retained debt in [the resource guide](t38-sprint-query.md) |
+| T38.4a | Initial planning/list/create ACCEPTED in PR72; nine remaining resources published in [Draft PR73](https://github.com/Ljrr3045/rielia/pull/73), pending final-head CI/native review/acceptance | Sole Query DTO ownership; exact root-only web adoption; normal 1,066 tests / 199 inputs, sixteen reports plus status, infrastructure 20/20 and seventeen artifacts; [the resource guide](t38-sprint-query.md) retains source-qualified lifecycle, costs and debt |
 | T38.4b | RHF trial then separately agreed F01–12 expansion or explicit exclusions | One field owner, draft/focus/navigation/validation parity, responsive/keyboard/nonideal/persistence evidence; no presentation redesign implied |
 | T38.5 | Only selected RTL/property/browser tooling and separately approved bounded diagnostics | Retained deterministic units/real PG/runtime, reproducible failure probes, redaction/cleanup/budget evidence; no automatic telemetry or observability-ticket completion |
 | T38.6 | Remove superseded validators/cache owners after parity; final inventory, examples, rules, measured costs and acceptance matrix | Every row accounted, retained debts explicit, current-head CI/native Kilo dispositions/ownership/base checks and coordinator acceptance |
