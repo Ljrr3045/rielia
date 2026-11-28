@@ -6,6 +6,8 @@ import {
   createWorkspaceTransport,
   WorkspaceFailure,
 } from '../apps/web/src/lib/workspace-client.ts';
+import { createWorkspaceQueryOwner } from '../apps/web/src/lib/workspace-query-owner.ts';
+import { createWorkspaceController } from '../apps/web/src/lib/workspace-controller.ts';
 import { proxyWorkspace } from '../apps/web/src/lib/workspace-proxy.ts';
 
 const summary = {
@@ -176,3 +178,132 @@ test('HTTP failures retain structured conflict code and mismatched/malformed pro
   data = { items: [{ ...summary, role: ['admin'] }], total: 1, nextCursor: null };
   await assert.rejects(transport.workspaces(signal), (error) => error.status === 502);
 });
+
+for (const phase of ['headers', 'body']) {
+  test(
+    `real Query retirement aborts a workspace read during ${phase} and removes its actual record`,
+    { timeout: 15_000 },
+    async (t) => {
+      let admit;
+      const admitted = new Promise((resolve) => {
+        admit = resolve;
+      });
+      let close;
+      const closed = new Promise((resolve) => {
+        close = resolve;
+      });
+      const baseURL = await server(t, (_req, res) => {
+        res.once('close', close);
+        if (phase === 'body') {
+          res.writeHead(200, { 'content-type': 'application/json' });
+          res.write('{"items":[');
+        }
+        admit();
+      });
+      const owner = createWorkspaceQueryOwner({
+        transport: createWorkspaceTransport({ baseURL }),
+        authorized: () => true,
+        changed() {},
+        denied() {
+          assert.fail('retired read cannot deny');
+        },
+      });
+      t.after(() => owner.clear());
+      owner.bind('native-epoch');
+      owner.select('workspace');
+      const pending = owner.read('members');
+      await admitted;
+      owner.clear();
+      await pending;
+      await closed;
+      assert.equal(owner.resources().members.data, null);
+      assert.equal(owner.resources().members.status, 'idle');
+    },
+  );
+}
+
+test(
+  'actual Query read retains the native response-body deadline and cannot later publish stalled JSON',
+  { timeout: 15_000 },
+  async (t) => {
+    let response;
+    let close;
+    const closed = new Promise((resolve) => {
+      close = resolve;
+    });
+    const baseURL = await server(t, (_req, res) => {
+      response = res;
+      res.once('close', close);
+      res.writeHead(200, { 'content-type': 'application/json' });
+      res.write('{"items":[');
+    });
+    const owner = createWorkspaceQueryOwner({
+      transport: createWorkspaceTransport({ baseURL, timeout: 500 }),
+      authorized: () => true,
+      changed() {},
+      denied() {
+        assert.fail('deadline is unavailable, not signed out');
+      },
+    });
+    t.after(() => owner.clear());
+    owner.bind('native-epoch');
+    owner.select('workspace');
+    await owner.read('members');
+    await closed;
+    assert.equal(owner.resources().members.status, 'error');
+    assert.equal(owner.resources().members.data, null);
+    response.end('],"total":0,"nextCursor":null}');
+    assert.equal(owner.resources().members.data, null);
+  },
+);
+
+test(
+  'actual workspace controller selection aborts the former body while its replacement remains ready',
+  { timeout: 15_000 },
+  async (t) => {
+    let admit;
+    const admitted = new Promise((resolve) => {
+      admit = resolve;
+    });
+    let close;
+    const closed = new Promise((resolve) => {
+      close = resolve;
+    });
+    const baseURL = await server(t, (req, res) => {
+      if (req.url === '/api/v1/workspaces/a/members') {
+        res.once('close', close);
+        res.writeHead(200, { 'content-type': 'application/json' });
+        res.write('{"items":[');
+        admit();
+        return;
+      }
+      const value =
+        req.url === '/api/v1/workspaces'
+          ? { items: [{ ...summary, id: 'a', role: 'viewer' }], total: 1, nextCursor: null }
+          : req.url.endsWith('/members')
+            ? { items: [], total: 0, nextCursor: null }
+            : { ...summary, id: req.url.split('/').at(-1), role: 'viewer' };
+      res.writeHead(200, { 'content-type': 'application/json' });
+      res.end(JSON.stringify(value));
+    });
+    const controller = createWorkspaceController({
+      identity: {
+        configuration: async () => ({ enabled: true, providers: [] }),
+        session: async () => ({
+          user: { id: 'human', name: 'Human', email: 'human@example.test', emailVerified: true },
+          session: { id: 'session', expiresAt: '2035-01-01T00:00:00Z' },
+        }),
+      },
+      transport: createWorkspaceTransport({ baseURL }),
+    });
+    t.after(() => controller.dispose());
+    const initial = controller.refresh();
+    await admitted;
+    await controller.selectWorkspace('b');
+    await initial;
+    await closed;
+    assert.equal(controller.getState().status, 'ready');
+    assert.equal(controller.getState().workspace.id, 'b');
+    assert.deepEqual(controller.getState().members.items, []);
+  },
+);

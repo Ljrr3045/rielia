@@ -852,3 +852,19 @@ test('resource correction: observerAdded retirement detaches the target before t
     1,
   );
 });
+
+test('a network failure through the shared selected-resource owner retains admitted sprint scope without false denial', async (t) => {
+  const b = fixture(t);
+  selectResources(b);
+  await b.owner.read('scope');
+  const admitted = b.owner.resources().scope.data;
+  b.server.get = () => {
+    throw new Error('Synthetic network failure before a response');
+  };
+  await b.owner.read('scope');
+  assert.equal(b.owner.resources().scope.status, 'error');
+  assert.equal(b.owner.resources().scope.failure.status, 0);
+  assert.equal(b.owner.resources().scope.data, admitted);
+  assert.equal(b.owner.resources().scope.stale, true);
+  assert.deepEqual(b.denied, []);
+});

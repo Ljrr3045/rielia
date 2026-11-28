@@ -63,7 +63,8 @@ async function mountFeedback(t, lang = 'en') {
           );
     }
     if (url.endsWith('/members')) return Response.json(page([workspaceMember()]));
-    if (url.endsWith('/invitations')) return Response.json(page([workspaceInvitation()]));
+    if (url.endsWith('/invitations'))
+      return Response.json(page([workspaceInvitation({ workspaceId: url.split('/')[4] })]));
     throw new Error(`Unexpected feedback request: ${url}`);
   });
   let latest;
@@ -130,22 +131,31 @@ for (const lang of ['en', 'es']) {
       const notice = getByRole(browser.container, 'status');
       assert.match(
         notice.textContent,
-        lang === 'en'
-          ? /Invitation created\. Its temporary link is not available in this tab/
-          : /Invitación creada\. Su enlace temporal no está disponible en esta pestaña/,
+        status === 403
+          ? lang === 'en'
+            ? /The server confirmed the change/
+            : /El servidor confirmó el cambio/
+          : lang === 'en'
+            ? /Invitation created\. Its temporary link is not available in this tab/
+            : /Invitación creada\. Su enlace temporal no está disponible en esta pestaña/,
       );
       assert.doesNotMatch(notice.textContent, /available below|disponible abajo/);
-      assert.match(
-        notice.textContent,
-        lang === 'en'
-          ? /If you did not copy the link and still have permission/
-          : /Si no copiaste el enlace y aún tienes permiso/,
-      );
-      assert.match(
-        notice.textContent,
-        lang === 'en' ? /Refresh does not restore the link/ : /Actualizar no recupera el enlace/,
-      );
-      assert.match(notice.textContent, /invitee@example\.test/);
+      if (status === 503) {
+        assert.match(
+          notice.textContent,
+          lang === 'en'
+            ? /If you did not copy the link and still have permission/
+            : /Si no copiaste el enlace y aún tienes permiso/,
+        );
+        assert.match(
+          notice.textContent,
+          lang === 'en' ? /Refresh does not restore the link/ : /Actualizar no recupera el enlace/,
+        );
+        assert.match(notice.textContent, /invitee@example\.test/);
+      } else {
+        assert.doesNotMatch(notice.textContent, /invitee@example\.test/);
+        assert.equal(browser.state.screen.lastAction, null);
+      }
       assert.equal(browser.document.activeElement, notice);
       assert.equal(queryByRole(browser.container, 'button', { name: /Retry|Reintentar/ }), null);
       assert.match(
@@ -167,21 +177,30 @@ for (const lang of ['en', 'es']) {
       );
       assert.equal(browser.state.status, 'ready');
       assert.equal(browser.state.invitationLink, null, 'read recovery cannot resurrect the secret');
-      assert.doesNotMatch(
-        getByRole(browser.container, 'status').textContent,
-        /available below|disponible abajo/,
-      );
-      await act(async () =>
-        getByRole(browser.container, 'button', {
-          name: lang === 'en' ? 'Dismiss notice' : 'Cerrar aviso',
-          exact: true,
-        }).click(),
-      );
-      assert.equal(queryByRole(browser.container, 'status'), null);
+      if (status === 403) {
+        assert.equal(
+          browser.state.outcome,
+          null,
+          'a newly verified lifetime has no former operation subject',
+        );
+        assert.equal(queryByRole(browser.container, 'status'), null);
+      } else {
+        assert.doesNotMatch(
+          getByRole(browser.container, 'status').textContent,
+          /available below|disponible abajo/,
+        );
+        await act(async () =>
+          getByRole(browser.container, 'button', {
+            name: lang === 'en' ? 'Dismiss notice' : 'Cerrar aviso',
+            exact: true,
+          }).click(),
+        );
+        assert.equal(queryByRole(browser.container, 'status'), null);
+      }
       assert.equal(
         browser.state.hasInvitation,
-        true,
-        'dismissing success preserves the inbound invitation',
+        status !== 403,
+        'terminal denial erases the authenticated token; unavailable reads preserve it',
       );
       assert.equal(posts(browser).length, 1, 'refresh and dismiss are not invite retries');
     });
@@ -304,4 +323,24 @@ test('unrelated success and uncertain invitation-link recovery keep their distin
   assert.match(warning.textContent, /server may have created the invitation/);
   assert.doesNotMatch(warning.textContent, /Invitation created\. Its temporary link/);
   assert.ok(getByRole(warning, 'button', { name: 'Refresh list', exact: true }));
+});
+
+test('follow-up401 keeps only nonprivate confirmation and a new verified lifetime cannot restore invitation secrets', async (t) => {
+  const browser = await mountFeedback(t);
+  browser.server.readStatus = 401;
+  await act(async () => browser.state.screen.run(invite));
+  assert.equal(browser.state.outcome, 'success');
+  assert.equal(browser.state.retryTarget, null);
+  assert.equal(browser.state.invitationLink, null);
+  assert.equal(browser.state.hasInvitation, false);
+  assert.equal(browser.state.screen.lastAction, null);
+  assert.doesNotMatch(browser.container.textContent, /invitee@example\.test/);
+  assert.equal(queryByRole(browser.container, 'textbox'), null);
+  browser.server.readStatus = 200;
+  await act(async () => browser.state.refresh());
+  assert.equal(browser.state.status, 'ready');
+  assert.equal(browser.state.outcome, null);
+  assert.equal(queryByRole(browser.container, 'status'), null);
+  assert.equal(browser.state.hasInvitation, false);
+  assert.equal(posts(browser).length, 1);
 });

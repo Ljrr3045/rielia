@@ -1,14 +1,17 @@
 import { CancelledError, type QueryClient, QueryObserver } from '@tanstack/react-query';
-import { SprintPlanningFailure } from './sprint-client.ts';
-import { TaskPlanningFailure } from './task-planning-client.ts';
-import {
-  emptySprintResource,
-  freezeSprintValue,
-  type SprintClientFailure,
-  type SprintResource,
-} from './sprint-client-state.ts';
-
-type Metadata = Omit<SprintResource<never>, 'data'>;
+export interface ClientQueryFailure {
+  status: number;
+  code: string | null;
+  requestId: string | null;
+}
+export interface ClientQueryResource<T> {
+  status: 'idle' | 'loading' | 'ready' | 'error' | 'changed';
+  data: T | null;
+  stale: boolean;
+  loadingMore: boolean;
+  failure: ClientQueryFailure | null;
+}
+type Metadata = Omit<ClientQueryResource<never>, 'data'>;
 type Page<T> = {
   cursor: (value: T) => string | null;
   binding: (value: T) => string;
@@ -28,21 +31,22 @@ type Entry<T> = {
   cursor: string | null;
   unsubscribe: () => void;
 };
-const emptyMetadata = (): Metadata => {
-  const { status, stale, loadingMore, failure } = emptySprintResource();
-  return { status, stale, loadingMore, failure };
-};
-const problem = (error: unknown): SprintClientFailure =>
-  error instanceof SprintPlanningFailure || error instanceof TaskPlanningFailure
-    ? { status: error.status, code: error.code, requestId: error.requestId }
-    : { status: 0, code: null, requestId: null };
+const emptyMetadata = (): Metadata => ({
+  status: 'idle',
+  stale: false,
+  loadingMore: false,
+  failure: null,
+});
 
 /** Selected DTOs and admitted page chains live only in this lifetime's Query cache. */
-export function createSprintQueryResource<T>(options: {
+export function createClientQueryResource<T>(options: {
   client: QueryClient;
   changed: () => void;
   authorized: () => boolean;
   denied: (reason: 'signed-out' | 'forbidden') => void;
+  freeze: <Value>(value: Value) => Value;
+  failure: (error: unknown) => ClientQueryFailure;
+  pageChanged: () => Error;
 }) {
   let binding: Binding<T> | null = null;
   let metadata = emptyMetadata();
@@ -60,7 +64,7 @@ export function createSprintQueryResource<T>(options: {
     if (!values.length) return null;
     return binding.page && values.length > 1 ? binding.page.compose(values) : values[0]!;
   }
-  function resource(): SprintResource<T> {
+  function resource(): ClientQueryResource<T> {
     return { ...metadata, data: data() };
   }
   function retire(entries: Entry<T>[]) {
@@ -151,6 +155,11 @@ export function createSprintQueryResource<T>(options: {
         const value = await captured.load(signal, cursor ?? undefined);
         if (!active() || signal.aborted || !options.authorized()) throw new CancelledError();
         captured.admit?.(value);
+        if (captured.page) {
+          const page = captured.page;
+          const identities = page.identities(value);
+          if (new Set(identities).size !== identities.length) throw options.pageChanged();
+        }
         if (more && before && captured.page) {
           const page = captured.page;
           const ids = new Set(page.identities(before));
@@ -162,9 +171,9 @@ export function createSprintQueryResource<T>(options: {
             page.identities(value).some((id) => ids.has(id)) ||
             page.size(before) + page.size(value) > page.total(value)
           )
-            throw new TaskPlanningFailure(409, 'page-changed');
+            throw options.pageChanged();
         }
-        return freezeSprintValue(value);
+        return options.freeze(value);
       },
     });
     const entry: Entry<T> = { observer, cursor, unsubscribe: () => {} };
@@ -181,6 +190,7 @@ export function createSprintQueryResource<T>(options: {
     try {
       await observer.refetch({ throwOnError: true, cancelRefetch: false });
       if (!active()) return;
+      if (!options.authorized()) throw new CancelledError();
       const value = observer.getCurrentResult().data!;
       // Another canonical resource can change reentrantly during Query success notification.
       captured.admit?.(value);
@@ -191,7 +201,7 @@ export function createSprintQueryResource<T>(options: {
       retire(obsolete);
     } catch (error) {
       if (!active()) return;
-      const failure = problem(error);
+      const failure = options.failure(error);
       if (failure.status === 401 || failure.status === 403) {
         options.denied(failure.status === 401 ? 'signed-out' : 'forbidden');
         return;

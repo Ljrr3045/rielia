@@ -1,5 +1,49 @@
 # T38.4a sprint Query ownership
 
+## Workspace local gates complete — delivery pending
+
+The [workspace receipt](t38-workspace-query.md) records root's web-only baseline
+adoption:49,956bytes/SHA`4a2f948bce4b26c1804fea2df16bf16cafe9bc2acdcc045adee0aab9b45b1022`,
+floors7544/7349/6550/6887; seven other baselines are exact. Normal replay passes
+1,151tests/200inputs in47.814s with all16reports/status identical to candidate2 and
+digest`a2df53af0318cbb63ddd7461163242352c892c944cc3911e36d9a1d67a234700`.
+Infrastructure20/20 and17bounded artifacts/3,168,770bytes pass, without upload.
+Actual uppercase1440/strict/verification-error settings apply; historical lowercase
+setup and source-qualified standard/build/native evidence retain their limits.
+Source/test/provider/generated/build identities stay frozen. No additional app/
+build/measure/PG/Docker checks, weaker gates or worker baseline write. Helper debt
+L3/S4/F0/B4 and workspaceS1/B1 remain explicit. Coordinator publication/current-head
+CI/native review and acceptance remain pending; fullT38.4a/T38 and all retained
+product/validation debts stay open. Earlier checkpoints remain historical.
+
+## Workspace correction — shared owner verification
+
+The [workspace candidate2](t38-workspace-query.md) adds a real authority check
+between Query success and projection admission in the neutral selected-resource
+helper. Its public consumer tests and existing sprint integration pass; all812
+retained comparisons/16 floors pass across1,151 tests/200 inputs. The same typed
+sprint consumers and original freezer remain; debtL3/S4/F0/B4 is explicit. Root
+baseline/current-head acceptance and fullT38.4a/T38 remain pending. Earlier source
+snapshots, including rejected candidate1, retain their historical bindings.
+
+
+## Accepted sprint batch and current shared-helper extraction
+
+PR73's final **Coordinator acceptance — T38.4a remaining sprint resources ACCEPTED**
+[BODY decision](https://github.com/Ljrr3045/rielia/pull/73) accepts reviewed `a508f54b`,
+merged `4813bb69`. Combined with accepted PR72, all eleven sprint DTO resources
+are accepted. Pending-delivery labels below remain frozen historical checkpoints.
+Full T38.4a/T38 remains open.
+
+The separately released [workspace candidate](t38-workspace-query.md) narrowly
+moves the selected-resource/page/freeze responsibility to `client-query-resource.ts`
+with typed owner-specific failures. The same nine sprint consumers and public
+aliases remain; planning/list/create and parent session/SSE/composition ownership
+are unchanged. Existing helper debt L3/S5/F0/B5 remains an obligation through the
+rename. The workspace candidate has complete standard constituents/one build and a rejected
+first numerical measure; correction/review evidence remains pending; historical
+PR73 results are not rebound to this extraction.
+
 ## Current publication and local evidence
 
 [Draft PR73](https://github.com/Ljrr3045/rielia/pull/73) targets `dev`. The coordinator published it on
