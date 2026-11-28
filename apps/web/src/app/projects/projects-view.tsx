@@ -279,7 +279,8 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
       collaborationDraft === null &&
       !taskColumnsChanged &&
       !taskPageChanged &&
-      taskColumnErrors[target.status] === undefined
+      taskColumnErrors[target.status] === undefined &&
+      projectTasks.moveEligibility(target.id, target.status, null) === 'ready'
     );
   }
 
@@ -1094,6 +1095,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
             feedbackNode,
             form,
             formAuthorized,
+            formAwaitingAuthority,
             lang,
             loadMore,
             mutationPending,

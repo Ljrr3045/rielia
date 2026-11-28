@@ -30,6 +30,29 @@ const css = registerHooks({
 const { ProjectsView } = await import('../../src/app/projects/projects-view.tsx');
 css.deregister();
 
+// A contractual HTTP400 reaches the real invalid-content feedback; dismissing it
+// keeps the task's typed intent and never resubmits a rejected command.
+test('R1 task400 feedback dismiss', async (t) => {
+  const b = await mount(t, '?workspace=a&project=p&task=t1');
+  await b.clock.advance(500);
+  await b.click('Edit');
+  const form = getByRole(b.container, 'dialog', { name: 'Edit task', exact: true });
+  const title = getByRole(form, 'textbox', { name: /^Title/ });
+  await b.input(title, 'Retained rejected task text');
+  b.server.mutate = () => Response.json({ code: 'INVALID_INPUT' }, { status: 400 });
+  await b.click('Save changes', form);
+  assert.equal(b.posts().length, 1);
+  assert.equal(JSON.parse(b.posts()[0].options.body).expectedVersion, 1);
+  assert.match(form.textContent, /Review the information/);
+  assert.equal(title.value, 'Retained rejected task text');
+  await b.click('Dismiss notice', form);
+  assert.doesNotMatch(form.textContent, /Review the information/);
+  assert.equal(title.value, 'Retained rejected task text');
+  assert.equal(b.posts().length, 1);
+  await b.clock.advance(500);
+  assert.equal(b.posts().length, 1, 'dismissal cannot queue a replacement save');
+});
+
 async function mount(t, search = '?workspace=a&project=p', lang = 'en', configure = () => {}) {
   const b = projectBrowser(t, search);
   b.server.rows = 2;
@@ -1231,3 +1254,246 @@ test('a discovered project selection moves focus into current quick capture with
   );
   assert.equal(b.posts().length, 0);
 });
+
+function r1Board(b, total) {
+  b.server.taskPage = (workspaceId = 'a', cursor = false) => {
+    const status =
+      new URL(b.requests.at(-1).url, b.window.location.origin).searchParams.get('status') ??
+      'backlog';
+    if (status === b.server.failedBoardStatus)
+      throw new Error('Finite native board-column failure');
+    const count = status === 'backlog' ? total : 0;
+    const offset = cursor ? 100 : 0;
+    return {
+      items: Array.from({ length: Math.max(0, Math.min(100, count - offset)) }, (_, i) => ({
+        ...task(offset + i + 1, workspaceId),
+        title: `Board task ${offset + i + 1}`,
+        status,
+      })),
+      total,
+      nextCursor: offset + 100 < count ? 'board-tail' : null,
+      capabilities: { canCreate: true },
+      orderVersion: 1,
+      columnCounts: { backlog: total, todo: 0, in_progress: 0, done: 0, canceled: 0 },
+      selectedAssignee: null,
+    };
+  };
+}
+
+for (const count of [1, 102])
+  // Original case description: R1 W3 rendered board Retry makes a root GET after a retained 1-row root failure
+  // Original case description: R1 W3 rendered board Retry makes a root GET after a retained 102-row root failure
+  test(`R1 W3 board root ${count}`, async (t) => {
+    const b = await mount(t, '?workspace=a&project=p&taskLayout=board', 'en', (browser) =>
+      r1Board(browser, count),
+    );
+    await b.clock.advance(500);
+    const column = () => getByRole(b.container, 'region', { name: /^Backlog/ });
+    if (count > 100) await b.click('Load more in this column', column());
+    assert.ok(getByRole(column(), 'link', { name: `Board task ${count}`, exact: true }));
+    const match = (request) => {
+      const url = new URL(request.url, b.window.location.origin);
+      return (
+        url.pathname === `${projectPath}/tasks` && url.searchParams.get('status') === 'backlog'
+      );
+    };
+    const failed = b.server.holdNext(match);
+    await act(async () =>
+      b.server.streams
+        .at(-1)
+        .emit({ type: 'invalidate', entity: 'task', projectId: 'p', id: 't1', version: 2 }),
+    );
+    assert.ok(failed.request);
+    await act(async () => failed.resolve(Response.json({ code: 'unavailable' }, { status: 503 })));
+    await b.flush();
+    assert.ok(
+      getByRole(column(), 'link', { name: `Board task ${count}`, exact: true }),
+      'last-good tail is retained as stale',
+    );
+    const retry = b.server.holdNext(match);
+    await b.click('Retry', column());
+    assert.ok(retry.request, 'visible Retry must start an actual HTTP root request');
+    assert.equal(
+      new URL(retry.request.url, b.window.location.origin).searchParams.has('cursor'),
+      false,
+    );
+    await act(async () => retry.resolve(Response.json(b.server.taskPage('a', false))));
+    await b.flush();
+    assert.equal(queryByRole(column(), 'button', { name: 'Retry', exact: true }), null);
+    if (count > 100) {
+      assert.equal(
+        queryByRole(column(), 'link', { name: `Board task ${count}`, exact: true }),
+        null,
+        'new root drops the obsolete admitted tail',
+      );
+      const append = b.server.holdNext(match);
+      await b.click('Load more in this column', column());
+      assert.equal(
+        new URL(append.request.url, b.window.location.origin).searchParams.get('cursor'),
+        'board-tail',
+      );
+      await act(async () =>
+        append.resolve(Response.json({ code: 'unavailable' }, { status: 503 })),
+      );
+      const retryAppend = b.server.holdNext(match);
+      await b.click('Retry', column());
+      assert.ok(retryAppend.request);
+      assert.equal(
+        new URL(retryAppend.request.url, b.window.location.origin).searchParams.get('cursor'),
+        'board-tail',
+        'eligible failed append keeps its actual continuation identity',
+      );
+      await act(async () => retryAppend.resolve(Response.json(b.server.taskPage('a', true))));
+      await b.flush();
+      assert.ok(getByRole(column(), 'link', { name: `Board task ${count}`, exact: true }));
+    }
+    assert.equal(b.posts().length, 0);
+  });
+
+// Original case description: R1 W4 rendered task Save stays disabled while held authority is stale without losing typed intent
+test('R1 W4 stale Save', async (t) => {
+  const b = await mount(t, '?workspace=a&project=p&task=t1');
+  await b.clock.advance(500);
+  await b.click('Edit');
+  const form = getByRole(b.container, 'dialog', { name: 'Edit task', exact: true });
+  await b.input(getByRole(form, 'textbox', { name: /^Title/ }), 'Preserved stale task form');
+  const held = b.server.holdNext(taskPath);
+  await act(async () =>
+    b.server.streams
+      .at(-1)
+      .emit({ type: 'invalidate', entity: 'task', projectId: 'p', id: 't1', version: 2 }),
+  );
+  assert.ok(held.request);
+  assert.equal(getByRole(b.container, 'dialog', { name: 'Edit task', exact: true }), form);
+  assert.equal(getByRole(form, 'textbox', { name: /^Title/ }).value, 'Preserved stale task form');
+  assert.equal(
+    getByRole(form, 'button', { name: 'Save changes', exact: true }).disabled,
+    true,
+    'stale capability must not enable Save',
+  );
+  await b.click('Save changes', form);
+  assert.equal(b.posts().length, 0);
+  await act(async () => held.resolve(Response.json(task(1))));
+  await b.flush();
+  assert.equal(getByRole(form, 'textbox', { name: /^Title/ }).value, 'Preserved stale task form');
+  assert.equal(getByRole(form, 'button', { name: 'Save changes', exact: true }).disabled, false);
+  await b.click('Save changes', form);
+  assert.equal(b.posts().length, 1);
+  assert.equal(JSON.parse(b.posts()[0].options.body).title, 'Preserved stale task form');
+});
+
+// Original case description: R1 W2 rendered move readiness follows the whole board and recovers after the unrelated failed column
+test('R1 W2 partial board UI', async (t) => {
+  const b = await mount(t, '?workspace=a&project=p&taskLayout=board', 'en', (browser) => {
+    browser.server.failedBoardStatus = 'canceled';
+    r1Board(browser, 1);
+  });
+  await b.clock.advance(500);
+  const move = () =>
+    getByRole(b.container, 'combobox', { name: 'Move QA-1 to status', exact: true });
+  assert.equal(move().disabled, true);
+  assert.equal(b.posts().length, 0);
+  b.server.failedBoardStatus = null;
+  await b.click('Retry', getByRole(b.container, 'region', { name: /^Canceled/ }));
+  assert.equal(move().disabled, false, 'a fully recovered board restores the real move control');
+  assert.equal(b.posts().length, 0, 'read recovery never performs a move');
+});
+
+for (const operation of ['edit', 'archive', 'restore'])
+  for (const result of ['503', 'capability-loss'])
+    // Original case description: R1 W4 rendered edit retains its modal through held authority and 503
+    // Original case description: R1 W4 rendered edit retains its modal through held authority and capability-loss
+    // Original case description: R1 W4 rendered archive retains its modal through held authority and 503
+    // Original case description: R1 W4 rendered archive retains its modal through held authority and capability-loss
+    // Original case description: R1 W4 rendered restore retains its modal through held authority and 503
+    // Original case description: R1 W4 rendered restore retains its modal through held authority and capability-loss
+    test(`R1 W4 ${operation} UI ${result === 'capability-loss' ? 'cap-loss' : result}`, async (t) => {
+      const record = task(1);
+      if (operation === 'restore') {
+        record.archivedAt = '2026-01-01T00:00:00.000Z';
+        record.capabilities.canRestore = true;
+        record.capabilities.canArchive = false;
+        record.capabilities.canEdit = false;
+      }
+      const b = await mount(t, '?workspace=a&project=p&task=t1', 'en', (browser) =>
+        browser.server.responses.set(taskPath, record),
+      );
+      await b.clock.advance(500);
+      await b.click(
+        operation === 'edit' ? 'Edit' : operation === 'archive' ? 'Archive task' : 'Restore task',
+      );
+      const form = getByRole(b.container, 'dialog', {
+        name:
+          operation === 'edit'
+            ? 'Edit task'
+            : operation === 'archive'
+              ? 'Archive task'
+              : 'Restore task',
+        exact: true,
+      });
+      const action =
+        operation === 'edit'
+          ? 'Save changes'
+          : operation === 'archive'
+            ? 'Archive task'
+            : 'Restore task';
+      if (operation === 'edit')
+        await b.input(getByRole(form, 'textbox', { name: /^Title/ }), 'Held form text survives');
+      const held = b.server.holdNext(taskPath);
+      await act(async () =>
+        b.server.streams
+          .at(-1)
+          .emit({ type: 'invalidate', entity: 'task', projectId: 'p', id: 't1', version: 2 }),
+      );
+      assert.ok(held.request);
+      assert.equal(getByRole(b.container, 'dialog'), form);
+      assert.equal(getByRole(form, 'button', { name: action, exact: true }).disabled, true);
+      await b.click(action, form);
+      assert.equal(b.posts().length, 0);
+      if (result === 'capability-loss') {
+        const denied = globalThis.structuredClone(record);
+        denied.capabilities[
+          operation === 'edit' ? 'canEdit' : operation === 'archive' ? 'canArchive' : 'canRestore'
+        ] = false;
+        await act(async () => held.resolve(Response.json(denied)));
+        await b.flush();
+        assert.equal(
+          queryByRole(b.container, 'dialog'),
+          null,
+          'fresh capability loss retires the form rather than retaining write permission',
+        );
+        assert.equal(b.posts().length, 0);
+        return;
+      }
+      await act(async () => held.resolve(Response.json({ code: 'unavailable' }, { status: 503 })));
+      await b.flush();
+      assert.equal(getByRole(b.container, 'dialog'), form);
+      const unavailable = queryByRole(form, 'button', { name: action, exact: true });
+      assert.ok(
+        unavailable === null || unavailable.disabled,
+        'failure exposes no enabled commit action',
+      );
+      assert.equal(b.posts().length, 0);
+      await b.click('Load again', form);
+      await b.flush();
+      assert.equal(getByRole(b.container, 'dialog'), form);
+      assert.equal(getByRole(form, 'button', { name: action, exact: true }).disabled, false);
+      if (operation === 'edit')
+        assert.equal(
+          getByRole(form, 'textbox', { name: /^Title/ }).value,
+          'Held form text survives',
+        );
+      b.server.mutate = () =>
+        Response.json({
+          ...record,
+          version: 2,
+          archivedAt: operation === 'archive' ? '2026-11-06T12:00:00.000Z' : null,
+        });
+      await b.click(action, form);
+      assert.equal(b.posts().length, 1);
+      assert.equal(
+        JSON.parse(b.posts()[0].options.body).expectedVersion,
+        1,
+        'the captured version is preserved through authority recovery',
+      );
+    });

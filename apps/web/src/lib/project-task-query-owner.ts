@@ -508,5 +508,9 @@ export function createProjectTaskQueryOwner(options: {
       return slots[name].read(more, revalidate);
     },
     readColumn: (status: TaskStatus, more = false) => columns[status].read(more),
+    readNext: (
+      name: 'workspaces' | 'members' | 'projects' | 'tasks' | 'projectAccess' | 'assignees',
+    ) => slots[name].readNext(),
+    readColumnNext: (status: TaskStatus) => columns[status].readNext(),
   };
 }

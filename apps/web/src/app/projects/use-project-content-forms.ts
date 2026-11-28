@@ -180,10 +180,18 @@ export function useProjectContentForms({
   }
 
   const formAuthorized = (() => {
-    if (form === null || form.workspaceId !== selection.workspaceId) return false;
+    if (
+      !memoryVisible ||
+      form === null ||
+      form.workspaceId !== selection.workspaceId ||
+      resources?.workspace.status !== 'ready' ||
+      resources.workspace.stale
+    )
+      return false;
     if (form.kind === 'project-create') return canCreateProject;
     if (project === null || project.id !== form.projectId || project.id !== selection.projectId)
       return false;
+    if (resources.project.status !== 'ready' || resources.project.stale) return false;
     switch (form.kind) {
       case 'project-edit':
         return canEditProject;
@@ -195,6 +203,7 @@ export function useProjectContentForms({
         return canRestoreProject;
       default:
         if (task === null || task.id !== form.taskId || task.id !== selection.taskId) return false;
+        if (resources?.task.status !== 'ready' || resources.task.stale) return false;
         return form.kind === 'task-edit'
           ? task.capabilities.canEdit && task.archivedAt === null && !projectArchived
           : form.kind === 'task-restore'
@@ -215,8 +224,10 @@ export function useProjectContentForms({
   const formAwaitingAuthority =
     sameMemory &&
     form !== null &&
-    (formResource?.status === 'loading' ||
-      (formResource?.stale === true && formResource.data !== null));
+    [resources?.workspace, resources?.project, formResource].some(
+      (resource) =>
+        resource?.status === 'loading' || (resource?.stale === true && resource.data !== null),
+    );
 
   function resumeDraft(command: ProjectTaskCommand) {
     // Only current authorized DTOs may rehydrate a memory-local draft.
@@ -488,9 +499,10 @@ export function useProjectContentForms({
   }
 
   function stageProject(fields: Partial<ProjectFormValue>) {
-    if (!form || blocked) return;
+    if (!form || blocked || !memoryVisible) return;
     const next = { ...projectValue, ...fields };
     setProjectValue(next);
+    if (!formAuthorized || formAwaitingAuthority) return;
     if (form.kind === 'project-create') {
       stage({
         type: 'create-project',
@@ -513,9 +525,10 @@ export function useProjectContentForms({
   }
 
   function stageTask(fields: Partial<TaskFields>) {
-    if (!form || form.kind !== 'task-edit' || blocked) return;
+    if (!form || form.kind !== 'task-edit' || blocked || !memoryVisible) return;
     const next = { ...taskValue, ...fields };
     setTaskValue(next);
+    if (!formAuthorized || formAwaitingAuthority) return;
     stage({
       type: 'edit-task',
       workspaceId: form.workspaceId,
@@ -568,7 +581,7 @@ export function useProjectContentForms({
   }
 
   function submitProjectForm() {
-    if (!form || blocked) return;
+    if (!form || blocked || !formAuthorized || formAwaitingAuthority) return;
     if (form.kind === 'project-create') {
       const command: ProjectTaskCommand = {
         type: 'create-project',
@@ -601,7 +614,8 @@ export function useProjectContentForms({
   }
 
   function submitTaskForm() {
-    if (!form || form.kind !== 'task-edit' || blocked) return;
+    if (!form || form.kind !== 'task-edit' || blocked || !formAuthorized || formAwaitingAuthority)
+      return;
     const command: ProjectTaskCommand = {
       type: 'edit-task',
       workspaceId: form.workspaceId,
@@ -633,7 +647,7 @@ export function useProjectContentForms({
   }
 
   function confirmLifecycle() {
-    if (!form || blocked) return;
+    if (!form || blocked || !formAuthorized || formAwaitingAuthority) return;
     let command: ProjectTaskCommand | null = null;
     if (form.kind === 'project-archive' || form.kind === 'project-restore') {
       command = {

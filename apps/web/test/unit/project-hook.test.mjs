@@ -49,6 +49,79 @@ const hint = (version) => ({
 });
 const emit = (browser, value) => act(async () => browser.server.streams.at(-1).emit(value));
 
+for (const phase of ['workspace', 'project', 'task'])
+  for (const failure of ['503', 'offline'])
+    // Original case description: R1 W1 unknown retry workspace probe 503 settles with feedback and preserves its exact native intent
+    // Original case description: R1 W1 unknown retry workspace probe offline settles with feedback and preserves its exact native intent
+    // Original case description: R1 W1 unknown retry project probe 503 settles with feedback and preserves its exact native intent
+    // Original case description: R1 W1 unknown retry project probe offline settles with feedback and preserves its exact native intent
+    // Original case description: R1 W1 unknown retry task probe 503 settles with feedback and preserves its exact native intent
+    // Original case description: R1 W1 unknown retry task probe offline settles with feedback and preserves its exact native intent
+    test(`R1 W1 ${phase} ${failure} retry`, async (t) => {
+      const browser = projectBrowser(t, '?workspace=a&project=p&task=t1');
+      const hook = await mountHook(browser, useProjectTasks);
+      await browser.clock.advance(500);
+      await act(async () =>
+        hook.state.stage({
+          type: 'edit-task',
+          workspaceId: 'a',
+          projectId: 'p',
+          taskId: 't1',
+          expectedVersion: 1,
+          fields: { title: 'Captured retry version' },
+        }),
+      );
+      browser.server.mutate = () => {
+        throw new Error('Unknown durable outcome');
+      };
+      await act(async () => hook.state.submit());
+      const captured = hook.state.retryTarget;
+      const original = browser.posts()[0];
+      const path =
+        phase === 'workspace'
+          ? '/api/v1/workspaces/a'
+          : phase === 'project'
+            ? '/api/v1/workspaces/a/projects/p'
+            : '/api/v1/workspaces/a/projects/p/tasks/t1';
+      const held = browser.server.holdNext(path);
+      let settled;
+      await act(async () => {
+        settled = hook.state.retrySave().then(
+          () => null,
+          (error) => error,
+        );
+      });
+      assert.ok(held.request);
+      let rejection;
+      await act(async () => {
+        if (failure === '503')
+          held.resolve(
+            Response.json(
+              { code: 'unavailable' },
+              { status: 503, headers: { 'x-request-id': 'retry-authority' } },
+            ),
+          );
+        else held.reject(new Error('Native offline authority GET'));
+        rejection = await settled;
+      });
+      assert.equal(
+        rejection,
+        null,
+        'a public explicit retry must settle rather than leak a rejected probe',
+      );
+      assert.equal(hook.state.outcome, 'error');
+      assert.deepEqual(hook.state.retryTarget, captured);
+      assert.equal(browser.posts().length, 1);
+      browser.server.mutate = () => Response.json(task(1, 'a', 'p', 2));
+      await act(async () => hook.state.retrySave());
+      assert.equal(browser.posts().length, 2);
+      assert.equal(browser.posts()[1].options.body, original.options.body);
+      assert.equal(
+        browser.posts()[1].options.headers['Idempotency-Key'],
+        original.options.headers['Idempotency-Key'],
+      );
+    });
+
 test(
   'standalone task navigation retains its page while a write is pending without queuing a later view',
   { timeout: 30000 },
@@ -477,7 +550,8 @@ test(
   },
 );
 
-test('a fresh long-lived project session retains exact unknown intent across timer clamps until its real expiry', async (t) => {
+// Original case description: a fresh long-lived project session retains exact unknown intent across timer clamps until its real expiry
+test('project expiry: long unknown retry', async (t) => {
   const browser = projectBrowser(t);
   const started = Date.now();
   const maximumDelay = 2147483647;
@@ -566,7 +640,8 @@ test('a fresh long-lived project session retains exact unknown intent across tim
   assert.equal(browser.posts()[0], original);
 });
 
-test('an early expiry callback after wall-clock rollback reschedules without losing a draft and unmount cancels that timer', async (t) => {
+// Original case description: an early expiry callback after wall-clock rollback reschedules without losing a draft and unmount cancels that timer
+test('project expiry: rollback and cleanup', async (t) => {
   const { browser, hook } = await mounted(t);
   await act(async () => hook.state.stage(createDraft()));
   const lifetime = hook.state.privateLifetime;
@@ -591,7 +666,9 @@ test('an early expiry callback after wall-clock rollback reschedules without los
 });
 
 for (const sameDeadline of [false, true])
-  test(`an obsolete queued expiry callback cannot erase or refresh a replacement project lifetime with ${sameDeadline ? 'the same' : 'a later'} deadline`, async (t) => {
+  // Original case description: an obsolete queued expiry callback cannot erase or refresh a replacement project lifetime with a later deadline
+  // Original case description: an obsolete queued expiry callback cannot erase or refresh a replacement project lifetime with the same deadline
+  test(`project expiry: replacement ${sameDeadline ? 'equal' : 'later'}`, async (t) => {
     const { browser, hook } = await mounted(t);
     await act(async () => hook.state.stage(createDraft()));
     const previous = hook.state.privateLifetime;
@@ -621,7 +698,150 @@ for (const sameDeadline of [false, true])
     assert.equal(browser.posts().length, 0);
   });
 
-test('a queued old timer delivered during replacement navigation cannot reenter verification before effect cleanup', async (t) => {
+// Failed same-session verification keeps captured hint debt and exact hidden intent;
+// a newer hint during the explicit read survives until explicit command confirmation.
+test('R1 captured debt verification', async (t) => {
+  const { browser, hook } = await r1UnknownTask(t);
+  const captured = hook.state.retryTarget;
+  const original = browser.posts()[0];
+  const lifetime = hook.state.privateLifetime;
+  await emit(browser, hint(2));
+  assert.equal(hook.state.refreshRequired, true);
+  assert.equal(hook.state.refreshDeferred, true);
+  const session = browser.server.holdNext('/api/v1/identity/session');
+  let verifying;
+  await act(async () => {
+    verifying = hook.state.refresh();
+  });
+  assert.ok(session.request);
+  assert.equal(hook.state.retryTarget, null);
+  assert.equal(hook.state.task, null);
+  await act(async () => {
+    session.resolve(Response.json({ code: 'unavailable' }, { status: 503 }));
+    await verifying;
+  });
+  assert.equal(hook.state.status, 'error');
+  assert.equal(hook.state.resources, null);
+  assert.equal(hook.state.retryTarget, null);
+  assert.equal(hook.state.privateLifetime.epoch, lifetime.epoch);
+  assert.equal(hook.state.privateLifetime.expiresAt, lifetime.expiresAt);
+  assert.equal(hook.state.privateLifetime.verified, false);
+  assert.equal(hook.state.refreshRequired, true);
+  assert.equal(browser.posts().length, 1);
+
+  const workspaceRead = browser.server.holdNext('/api/v1/workspaces/a');
+  let recovering;
+  await act(async () => {
+    recovering = hook.state.refresh();
+  });
+  assert.ok(workspaceRead.request);
+  await emit(browser, hint(3));
+  await act(async () => {
+    workspaceRead.resolve(Response.json(workspace('a')));
+    await recovering;
+  });
+  assert.equal(hook.state.status, 'ready');
+  assert.deepEqual(hook.state.retryTarget, captured);
+  assert.equal(
+    hook.state.refreshRequired,
+    true,
+    'the later hint was not acknowledged by the earlier read',
+  );
+  assert.equal(hook.state.refreshDeferred, true);
+  assert.equal(browser.posts().length, 1);
+  const taskReads = browser.reads(tasksPath).length;
+  browser.server.mutate = () => Response.json(task(1, 'a', 'p', 2));
+  await act(async () => hook.state.retrySave());
+  assert.equal(browser.posts().length, 2);
+  assert.equal(browser.posts()[1].options.body, original.options.body);
+  assert.equal(
+    browser.posts()[1].options.headers['Idempotency-Key'],
+    original.options.headers['Idempotency-Key'],
+  );
+  assert.ok(
+    browser.reads(tasksPath).length > taskReads,
+    'confirmed recovery performs the authorized current read',
+  );
+  assert.equal(hook.state.refreshRequired, false);
+  await browser.clock.advance(500);
+  assert.equal(browser.posts().length, 2, 'no queued mutation follows confirmation');
+});
+
+// A captured create-project command has workspace authority and no project target;
+// both explicit retry probes precede its one exact body/key resubmission.
+test('R1 workspace create retry', async (t) => {
+  const browser = projectBrowser(t, '?workspace=a');
+  const cataloguePath = '/api/v1/workspaces/a/projects';
+  browser.server.rows = 0;
+  browser.server.responses.set(cataloguePath, {
+    items: [],
+    total: 0,
+    nextCursor: null,
+    capabilities: { canCreate: true },
+  });
+  const hook = await mountHook(browser, useProjectTasks);
+  await browser.clock.advance(500);
+  await act(async () =>
+    hook.state.stage({
+      type: 'create-project',
+      workspaceId: 'a',
+      name: 'Captured project',
+      key: 'CP',
+      description: '',
+      visibility: 'workspace',
+    }),
+  );
+  browser.server.mutate = () => {
+    throw new Error('Unknown project creation');
+  };
+  await act(async () => hook.state.submit());
+  const captured = hook.state.retryTarget;
+  const original = browser.posts()[0];
+  assert.equal(captured.type, 'create-project');
+  assert.equal(hook.state.selection.projectId, null);
+  await browser.clock.advance(500);
+  assert.equal(browser.posts().length, 1);
+  const start = browser.requests.length;
+  const held = browser.server.holdNext('/api/v1/workspaces/a');
+  const created = { ...project(), name: captured.name, key: captured.key };
+  browser.server.mutate = () => {
+    browser.server.responses.set(cataloguePath, {
+      items: [created],
+      total: 1,
+      nextCursor: null,
+      capabilities: { canCreate: true },
+    });
+    browser.server.responses.set('/api/v1/workspaces/a/projects/p', created);
+    return Response.json(created, { status: 201 });
+  };
+  let retrying;
+  await act(async () => {
+    retrying = hook.state.retrySave();
+  });
+  assert.ok(held.request);
+  assert.deepEqual(hook.state.retryTarget, captured);
+  assert.equal(browser.posts().length, 1);
+  await act(async () => {
+    held.resolve(Response.json(workspace('a')));
+    await retrying;
+  });
+  assert.equal(browser.posts().length, 2);
+  const replay = browser.posts()[1];
+  const probes = browser.requests.slice(start, browser.requests.indexOf(replay));
+  assert.deepEqual(
+    probes.map((request) => request.url),
+    ['/api/v1/workspaces/a', '/api/v1/workspaces/a'],
+  );
+  assert.equal(replay.options.body, original.options.body);
+  assert.equal(
+    replay.options.headers['Idempotency-Key'],
+    original.options.headers['Idempotency-Key'],
+  );
+  assert.equal(hook.state.retryTarget, null);
+});
+
+// Original case description: a queued old timer delivered during replacement navigation cannot reenter verification before effect cleanup
+test('project expiry: navigation reentrancy', async (t) => {
   const { browser, hook } = await mounted(t);
   await act(async () => hook.state.stage(createDraft()));
   const previous = hook.state.privateLifetime;
@@ -673,7 +893,8 @@ test('a queued old timer delivered during replacement navigation cannot reenter 
   assert.equal(browser.timers.size, 1);
 });
 
-test('terminal stream cleanup cannot let an already queued expiry callback reopen a retired project lifetime', async (t) => {
+// Original case description: terminal stream cleanup cannot let an already queued expiry callback reopen a retired project lifetime
+test('project expiry: terminal reentrancy', async (t) => {
   const { browser, hook } = await mounted(t);
   await act(async () => hook.state.stage(createDraft()));
   const [, queued] = [...browser.timers][0];
@@ -937,3 +1158,140 @@ test('a failed task root hides old DTO authority and recovers only after another
   assert.equal(hook.state.pageError, null);
   assert.equal(browser.posts().length, 0);
 });
+
+async function r1UnknownTask(t) {
+  const browser = projectBrowser(t, '?workspace=a&project=p&task=t1');
+  const hook = await mountHook(browser, useProjectTasks);
+  await browser.clock.advance(500);
+  await act(async () =>
+    hook.state.stage({
+      type: 'edit-task',
+      workspaceId: 'a',
+      projectId: 'p',
+      taskId: 't1',
+      expectedVersion: 1,
+      fields: { title: 'Original unknown authority' },
+    }),
+  );
+  browser.server.mutate = () => {
+    throw new Error('Unknown original write');
+  };
+  await act(async () => hook.state.submit());
+  return { browser, hook };
+}
+
+for (const status of [401, 403])
+  // Original case description: R1 W1 terminal retry probe401 erases the old lifetime without a rejection or replay
+  // Original case description: R1 W1 terminal retry probe403 erases the old lifetime without a rejection or replay
+  test(`R1 W1 terminal ${status}`, async (t) => {
+    const { browser, hook } = await r1UnknownTask(t);
+    const held = browser.server.holdNext('/api/v1/workspaces/a/projects/p');
+    let retrying;
+    await act(async () => {
+      retrying = hook.state.retrySave();
+    });
+    await act(async () => {
+      held.resolve(Response.json({ code: 'denied' }, { status }));
+      await retrying;
+    });
+    assert.equal(hook.state.status, status === 401 ? 'signed-out' : 'forbidden');
+    assert.equal(hook.state.privateLifetime, null);
+    assert.equal(hook.state.retryTarget, null);
+    assert.equal(hook.state.draft, null);
+    assert.equal(browser.posts().length, 1);
+    await act(async () => hook.state.refresh());
+    assert.equal(hook.state.retryTarget, null);
+    assert.equal(hook.state.draft, null);
+    assert.equal(browser.posts().length, 1);
+  });
+
+// Original case description: R1 W1 an obsolete probe failure cannot overwrite a replacement captured command
+test('R1 W1 obsolete retry', async (t) => {
+  const { browser, hook } = await r1UnknownTask(t);
+  const held = browser.server.holdNext('/api/v1/workspaces/a');
+  let retrying;
+  await act(async () => {
+    retrying = hook.state.retrySave();
+  });
+  await act(async () => {
+    hook.state.discardDraft();
+    hook.state.stage({
+      type: 'edit-task',
+      workspaceId: 'a',
+      projectId: 'p',
+      taskId: 't1',
+      expectedVersion: 1,
+      fields: { title: 'New deliberate intent' },
+    });
+  });
+  const replacement = hook.state.draft;
+  assert.equal(replacement.fields.title, 'New deliberate intent');
+  await act(async () => {
+    held.resolve(Response.json({ code: 'unavailable' }, { status: 503 }));
+    await retrying;
+  });
+  assert.deepEqual(hook.state.draft, replacement);
+  assert.equal(hook.state.outcome, null);
+  assert.equal(hook.state.retryTarget, null);
+  assert.equal(browser.posts().length, 1);
+});
+
+for (const collection of ['assignees', 'projectAccess'])
+  // Original case description: R1 W3 assignees explicit retry re-reads a retained failed root and coalesces a duplicate click
+  // Original case description: R1 W3 projectAccess explicit retry re-reads a retained failed root and coalesces a duplicate click
+  test(`R1 W3 ${collection} root retry`, async (t) => {
+    const browser = projectBrowser(t);
+    const record = project();
+    record.capabilities.canManageAccess = true;
+    browser.server.responses.set('/api/v1/workspaces/a/projects/p', record);
+    const path = `/api/v1/workspaces/a/projects/p/${collection === 'projectAccess' ? 'access' : 'assignees'}`;
+    const value = {
+      items: [],
+      total: 0,
+      nextCursor: null,
+      workspaceId: 'a',
+      projectId: 'p',
+      ...(collection === 'projectAccess' ? { projectVersion: 1 } : {}),
+    };
+    browser.server.responses.set(path, value);
+    const hook = await mountHook(browser, useProjectTasks);
+    await browser.clock.advance(500);
+    assert.deepEqual(hook.state.resources[collection].data, value);
+    const failed = browser.server.holdNext(path);
+    let refreshing;
+    await act(async () => {
+      refreshing = hook.state.refresh();
+    });
+    assert.ok(failed.request);
+    await act(async () => {
+      failed.resolve(Response.json({ code: 'unavailable' }, { status: 503 }));
+      await refreshing;
+    });
+    assert.equal(hook.state.status, 'ready');
+    assert.equal(hook.state.resources[collection].stale, true);
+    assert.ok(hook.state.policyPageErrors[collection]);
+    const held = browser.server.holdNext(path);
+    let retrying;
+    await act(async () => {
+      retrying = hook.state.loadMore(collection);
+    });
+    assert.ok(held.request);
+    assert.equal(
+      new URL(held.request.url, browser.window.location.origin).searchParams.has('cursor'),
+      false,
+    );
+    const reads = browser.reads(path).length;
+    await act(async () => hook.state.loadMore(collection));
+    assert.equal(
+      browser.reads(path).length,
+      reads,
+      'a second actual Retry call cannot duplicate a pending root',
+    );
+    await act(async () => {
+      held.resolve(Response.json(value));
+      await retrying;
+    });
+    assert.equal(hook.state.resources[collection].stale, false);
+    assert.equal(hook.state.policyPageErrors[collection], undefined);
+    assert.equal(browser.posts().length, 0);
+  });

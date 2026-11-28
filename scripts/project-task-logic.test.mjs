@@ -124,6 +124,35 @@ function fixture(overrides = {}) {
   return { controller, values, transport, workspaces, calls };
 }
 
+// Original case description: R1 W2 partial board never advertises a move that conservative admission will refuse
+test('R1 W2 partial board', async (t) => {
+  let fail = true;
+  const f = fixture({
+    transport: {
+      tasks: async (w, p, _v, _s, _c, filters) => {
+        if (filters.status === 'canceled' && fail) throw new ProjectTaskFailure(503);
+        return page(filters.status === 'backlog' ? [task('source', p, w)] : []);
+      },
+    },
+  });
+  t.after(() => f.controller.dispose());
+  await f.controller.openLocation('?workspace=a&project=p&taskLayout=board');
+  assert.equal(f.controller.getState().taskSummary.status, 'partial');
+  assert.ok(f.controller.getState().taskColumns.backlog);
+  assert.ok(f.controller.getState().taskColumns.done);
+  assert.equal(f.controller.moveEligibility('source', 'done', null), 'unavailable');
+  assert.equal(f.controller.stageMove('source', 'done', null), 'unavailable');
+  assert.equal(f.controller.getState().draft, null);
+  await f.controller.submit();
+  assert.equal(f.calls.length, 0);
+  fail = false;
+  await f.controller.loadTaskColumn('canceled');
+  assert.equal(f.controller.getState().taskSummary.status, 'ready');
+  assert.equal(f.controller.stageMove('source', 'done', null), 'ready');
+  await f.controller.submit();
+  assert.equal(f.calls.length, 1);
+});
+
 test('T10 discovery context/detail/Back and current filters share draft lifecycle without synthetic rows', async () => {
   const queries = [];
   const f = fixture({
@@ -2328,4 +2357,89 @@ test('obsolete held verification denial cannot retire a more recent authorized s
   assert.equal(f.controller.getState().retryTarget.fields.title, original.command.fields.title);
   assert.equal(f.calls.length, 1);
   f.controller.dispose();
+});
+
+// Original case description: R1 W2 captured move survives authority loss and a complete manual read settles only its covered debt
+test('R1 W2 move debt rebase', async (t) => {
+  let fail = false;
+  const f = fixture({
+    transport: {
+      tasks: async (w, p, _v, _s, _c, filters) => {
+        if (fail && filters.status === 'canceled') throw new ProjectTaskFailure(503);
+        return page(filters.status === 'backlog' ? [task('source', p, w)] : []);
+      },
+    },
+  });
+  t.after(() => f.controller.dispose());
+  await f.controller.openLocation('?workspace=a&project=p&taskLayout=board');
+  assert.equal(f.controller.stageMove('source', 'done', null), 'ready');
+  const captured = f.controller.getState().draft;
+  fail = true;
+  await f.controller.refresh();
+  assert.deepEqual(f.controller.getState().draft, captured);
+  assert.equal(f.controller.getState().taskSummary.status, 'partial');
+  await f.controller.submit();
+  assert.equal(f.calls.length, 0);
+  fail = false;
+  await f.controller.loadTaskColumn('canceled');
+  await f.controller.handleInvalidation({
+    type: 'invalidate',
+    entity: 'task',
+    projectId: 'p',
+    id: 'source',
+    version: 2,
+  });
+  assert.equal(f.controller.getState().refreshDeferred, true);
+  // A queued confirmation still needs current global ordering, even after its detail probe.
+  await f.controller.submit();
+  assert.equal(f.calls.length, 0, 'deferred invalidation cannot authorize a move');
+  assert.deepEqual(f.controller.getState().draft, captured);
+  assert.equal(f.controller.getState().refreshRequired, true);
+  await f.controller.refresh();
+  assert.equal(f.controller.getState().refreshRequired, false);
+  assert.equal(f.controller.getState().taskSummary.status, 'ready');
+  assert.deepEqual(f.controller.getState().draft, captured);
+  await f.controller.submit();
+  assert.equal(f.calls.length, 1);
+  assert.deepEqual(f.calls[0].command, captured);
+});
+
+// Original case description: R1 W2 a hint during a complete manual read remains debt until a later authorized drain
+test('R1 W2 hint during read', async (t) => {
+  const f = fixture({
+    transport: {
+      tasks: async (w, p, _v, _s, _c, filters) =>
+        page(filters.status === 'backlog' ? [task('source', p, w)] : []),
+    },
+  });
+  t.after(() => f.controller.dispose());
+  await f.controller.openLocation('?workspace=a&project=p&taskLayout=board');
+  const held = deferred(),
+    started = deferred();
+  f.workspaces.detail = async () => {
+    started.resolve();
+    return held.promise;
+  };
+  const reading = f.controller.refresh();
+  await started.promise;
+  await f.controller.handleInvalidation({
+    type: 'invalidate',
+    entity: 'project',
+    projectId: 'p',
+    id: 'p',
+    version: 2,
+  });
+  held.resolve(workspace('a'));
+  await reading;
+  assert.equal(
+    f.controller.getState().refreshRequired,
+    true,
+    'the full read cannot acknowledge a later hint',
+  );
+  assert.equal(f.controller.moveEligibility('source', 'done', null), 'unavailable');
+  f.workspaces.detail = async (w) => workspace(w);
+  await f.controller.flushBackgroundRefresh();
+  assert.equal(f.controller.getState().refreshRequired, false);
+  assert.equal(f.controller.moveEligibility('source', 'done', null), 'ready');
+  assert.equal(f.calls.length, 0);
 });

@@ -37,6 +37,7 @@ export interface ProjectContentDialogPorts {
   feedbackNode: ReactNode;
   form: FormState | null;
   formAuthorized: boolean;
+  formAwaitingAuthority: boolean;
   lang: Lang;
   loadMore: (
     collection: 'workspaces' | 'members' | 'projects' | 'tasks' | 'projectAccess' | 'assignees',
@@ -89,6 +90,7 @@ export function renderProjectDialogs({
   feedbackNode,
   form,
   formAuthorized,
+  formAwaitingAuthority,
   lang,
   loadMore,
   mutationPending,
@@ -126,7 +128,7 @@ export function renderProjectDialogs({
     <>
       {form !== null &&
         (readUnverified ||
-          (formAuthorized &&
+          ((formAuthorized || (formAwaitingAuthority && 'taskId' in form)) &&
             (status === 'ready' || (status === 'empty' && form.kind === 'project-create')))) &&
         workspaceNavigation === null && (
           <ModalFrame
@@ -231,7 +233,7 @@ export function renderProjectDialogs({
                         onCancel={closeForm}
                         onSubmit={submitProjectForm}
                         pending={pending !== null}
-                        disabled={retryTarget !== null || policyBlocked}
+                        disabled={retryTarget !== null || policyBlocked || formAwaitingAuthority}
                         value={projectValue}
                       />
                     </>
@@ -252,7 +254,7 @@ export function renderProjectDialogs({
                     }}
                     onSubmit={submitTaskForm}
                     pending={pending !== null}
-                    disabled={retryTarget !== null || policyBlocked}
+                    disabled={retryTarget !== null || policyBlocked || formAwaitingAuthority}
                     projectKey={project.key}
                     projectName={project.name}
                     value={taskValue}
@@ -262,7 +264,7 @@ export function renderProjectDialogs({
                   (form.kind === 'project-archive' || form.kind === 'project-restore') && (
                     <ConfirmBox
                       busy={pending !== null}
-                      disabled={retryTarget !== null || policyBlocked}
+                      disabled={retryTarget !== null || policyBlocked || formAwaitingAuthority}
                       consequence={
                         form.kind === 'project-archive'
                           ? copy.project.archiveConsequence
@@ -291,7 +293,7 @@ export function renderProjectDialogs({
                   (form.kind === 'task-archive' || form.kind === 'task-restore') && (
                     <ConfirmBox
                       busy={pending !== null}
-                      disabled={retryTarget !== null}
+                      disabled={retryTarget !== null || formAwaitingAuthority}
                       consequence={
                         form.kind === 'task-archive'
                           ? copy.task.archiveConsequence

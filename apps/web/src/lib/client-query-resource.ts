@@ -56,6 +56,7 @@ export function createClientQueryResource<T>(options: {
   let pending: Entry<T> | null = null;
   let operation = 0;
   let chain = 0;
+  let failedRoot = false;
   let failedAppend: {
     binding: Binding<T>;
     chain: number;
@@ -84,6 +85,7 @@ export function createClientQueryResource<T>(options: {
     options.client.removeQueries({ predicate: (query) => queries.has(query) });
   }
   function cancel() {
+    failedRoot = false;
     failedAppend = null;
     operation++;
     const obsolete = pending;
@@ -96,6 +98,7 @@ export function createClientQueryResource<T>(options: {
     if (obsolete) retire([obsolete]);
   }
   function clear() {
+    failedRoot = false;
     failedAppend = null;
     operation++;
     const obsolete = [...admitted, ...(pending ? [pending] : [])];
@@ -235,6 +238,7 @@ export function createClientQueryResource<T>(options: {
         return;
       }
       pending = null;
+      failedRoot = !more;
       metadata = {
         ...previous,
         status: failure.status === 409 ? 'changed' : 'error',
@@ -249,5 +253,9 @@ export function createClientQueryResource<T>(options: {
     }
     options.changed();
   }
-  return { resource, bind, clear, cancel, invalidate, read };
+  async function readNext() {
+    if (pending || metadata.status === 'changed') return;
+    await read(data() !== null && !failedRoot);
+  }
+  return { resource, bind, clear, cancel, invalidate, read, readNext };
 }

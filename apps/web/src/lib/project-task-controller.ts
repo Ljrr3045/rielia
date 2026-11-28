@@ -855,9 +855,10 @@ export function createProjectTaskController(options: {
   async function fetchTaskColumn(
     status: TaskStatus,
     request: { generation: number; signal?: AbortSignal },
-    more = false,
+    mode: 'root' | 'next' = 'root',
   ) {
-    await query.readColumn(status, more);
+    if (mode === 'next') await query.readColumnNext(status);
+    else await query.readColumn(status);
     if (!current(request)) return;
     const resource = query.resources().columns[status];
     const errors = { ...state.taskColumnErrors };
@@ -872,8 +873,7 @@ export function createProjectTaskController(options: {
   async function loadTaskColumn(status: TaskStatus) {
     if (!taskStatuses.includes(status) || state.pending || !fresh() || state.taskColumnsChanged)
       return;
-    const resource = query.resources().columns[status];
-    await fetchTaskColumn(status, { generation }, resource.data !== null);
+    await fetchTaskColumn(status, { generation }, 'next');
   }
   async function fetchDiscovery(
     request: { generation: number; signal?: AbortSignal },
@@ -970,6 +970,15 @@ export function createProjectTaskController(options: {
   }
   async function refresh(): Promise<void> {
     if (control.pending) return;
+    // This full read covers the existing debt. Hints received after this
+    // boundary stay in their own pending set and must not be acknowledged here.
+    const capturedResources = new Set(pendingResources);
+    const capturedColumns = pendingColumns;
+    const capturedReset = resetWanted;
+    const capturedEpoch = epoch;
+    pendingResources.clear();
+    pendingColumns = false;
+    resetWanted = false;
     verified = false;
     scopeVerifying = true;
     publish({
@@ -1048,6 +1057,14 @@ export function createProjectTaskController(options: {
         );
       if (replacement) options.navigate?.(state.url, true);
       await load(request);
+      if (current(request) && fresh()) {
+        const remaining = pendingResources.size > 0 || pendingColumns || resetWanted;
+        publish({
+          ...control,
+          refreshRequired: remaining,
+          refreshDeferred: remaining && guarded(),
+        });
+      }
     } catch (error) {
       if (!current(request)) return;
       if (!verified) {
@@ -1055,6 +1072,17 @@ export function createProjectTaskController(options: {
         publish({ ...control, session: null, status: 'error' });
         query.invalidate();
       } else readFailure(error);
+      if (current(request) && epoch === capturedEpoch && originalExpiry > Date.now()) {
+        capturedResources.forEach((name) => pendingResources.add(name));
+        pendingColumns ||= capturedColumns;
+        resetWanted ||= capturedReset;
+        const remaining = pendingResources.size > 0 || pendingColumns || resetWanted;
+        publish({
+          ...control,
+          refreshRequired: remaining,
+          refreshDeferred: remaining && guarded(),
+        });
+      }
     }
   }
   async function changeSelection(
@@ -1339,7 +1367,15 @@ export function createProjectTaskController(options: {
   function actionReady(command: ProjectCommand, recovery = false) {
     if (!commandAtTarget(command)) return false;
     if (!fresh() || !['ready', 'empty'].includes(control.status)) return false;
-    if (!recovery && (pendingResources.size > 0 || pendingColumns)) return false;
+    const taskDetailWrite =
+      command.type === 'edit-task' ||
+      command.type === 'archive-task' ||
+      command.type === 'restore-task';
+    // These writes still require the fresh matching workspace/project/task below.
+    // Deferred independent chains cannot supply their authority; moves continue
+    // to require global ordering readiness and pending-debt clearance.
+    if (!recovery && !taskDetailWrite && (pendingResources.size > 0 || pendingColumns))
+      return false;
     const resources = query.resources();
     const ready = (name: ProjectTaskQueryName) =>
       resources[name].status === 'ready' && !resources[name].stale && resources[name].data !== null;
@@ -1465,6 +1501,8 @@ export function createProjectTaskController(options: {
       (state.pageError?.collection === 'tasks' && state.pageError.reason === 'changed')
     )
       return { eligibility: 'changed' };
+    if (pendingResources.size > 0 || pendingColumns || state.taskSummary.status !== 'ready')
+      return { eligibility: 'unavailable' };
     if (
       !taskStatuses.includes(status) ||
       (beforeTaskId !== null && (!id(beforeTaskId) || beforeTaskId === taskId))
@@ -1647,30 +1685,41 @@ export function createProjectTaskController(options: {
     const captured = retry;
     if (!captured || !fresh() || !commandAtTarget(captured.command)) return;
     const request = { generation };
-    if (!(await required('workspace', request)) || retry !== captured || !current(request)) return;
-    if (
-      'projectId' in captured.command &&
-      (!(await required('project', request)) || retry !== captured || !current(request))
-    )
-      return;
-    const probe =
-      'taskId' in captured.command && state.selection.taskId === captured.command.taskId
-        ? 'task'
-        : 'projectId' in captured.command
-          ? 'project'
-          : 'workspace';
-    if (!(await required(probe, request)) || retry !== captured || !current(request)) return;
-    await execute(structuredClone(captured.command), captured.key);
+    try {
+      if (!(await required('workspace', request)) || retry !== captured || !current(request))
+        return;
+      if (
+        'projectId' in captured.command &&
+        (!(await required('project', request)) || retry !== captured || !current(request))
+      )
+        return;
+      const probe =
+        'taskId' in captured.command && state.selection.taskId === captured.command.taskId
+          ? 'task'
+          : 'projectId' in captured.command
+            ? 'project'
+            : 'workspace';
+      if (!(await required(probe, request)) || retry !== captured || !current(request)) return;
+      await execute(structuredClone(captured.command), captured.key);
+    } catch (error) {
+      // Terminal reads retire the lifetime in the owner. Only the still-current
+      // captured recovery may report an ordinary failed authority probe.
+      if (!current(request) || retry !== captured || !fresh()) return;
+      publish({
+        ...control,
+        outcome: 'error',
+        requestId: error instanceof ProjectTaskFailure ? error.requestId : null,
+      });
+    }
   }
   async function loadMore(
     collection: 'workspaces' | 'members' | 'projects' | 'tasks' | 'projectAccess' | 'assignees',
   ) {
     if (state.pending || !fresh() || !['ready', 'empty'].includes(state.status)) return;
     const request = { generation };
-    const before = query.resources()[collection];
     if (collection === 'projectAccess' || collection === 'assignees')
       publish({ ...control, ...withoutPolicyFailure(collection) });
-    await query.read(collection, before.data !== null);
+    await query.readNext(collection);
     if (!current(request) || !fresh()) return;
     const resource = query.resources()[collection];
     if (collection === 'projectAccess' || collection === 'assignees') {

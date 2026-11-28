@@ -2147,9 +2147,26 @@ test('resource correction: pending and unknown raw close destinations retain exa
 
 test('sprint leave review labels workspace-wide and selected-project destinations without authorizing navigation or a write', async (t) => {
   const b = await openScreen(t);
+  const departures = [];
+  const push = b.window.history.pushState.bind(b.window.history);
+  const restore = b.replace(b.window.history, 'pushState', (...args) => {
+    const result = push(...args);
+    departures.push(b.window.location.href);
+    return result;
+  });
+  t.after(restore);
+  const originalURL = b.window.location.href;
+  b.window.history.pushState({}, '', `${originalURL}#navigation-observer-proof`);
+  assert.equal(
+    departures.length,
+    1,
+    'the observer records a real same-document URL/history change',
+  );
+  assert.equal(b.window.location.hash, '#navigation-observer-proof');
+  b.window.history.replaceState({}, '', originalURL);
+  departures.length = 0;
   await b.click('Edit sprint');
   await b.input(getByRole(dialog(b), 'textbox', { name: 'Goal' }), 'Retained destination review');
-  let departures = 0;
   for (const destination of [
     '/projects?workspace=a&taskScope=search',
     '/projects?workspace=a&project=p',
@@ -2158,7 +2175,13 @@ test('sprint leave review labels workspace-wide and selected-project destination
     link.href = destination;
     link.textContent = 'Requested destination';
     b.container.append(link);
-    await act(async () => link.click());
+    const click = new b.window.MouseEvent('click', { bubbles: true, cancelable: true, button: 0 });
+    await act(async () => link.dispatchEvent(click));
+    assert.equal(
+      click.defaultPrevented,
+      true,
+      'the real attached-link event must cancel native departure',
+    );
     assert.match(dialog(b).textContent, /Workspace a/);
     link.remove();
     const stay = [...dialog(b).querySelectorAll('button')].find((el) =>
@@ -2172,6 +2195,7 @@ test('sprint leave review labels workspace-wide and selected-project destination
       'Retained destination review',
     );
   }
-  assert.equal(departures, 0);
+  assert.equal(departures.length, 0);
+  assert.equal(b.window.location.href, originalURL);
   assert.equal(posts(b).length, 0);
 });

@@ -1,5 +1,42 @@
 # T06.0/B1a project and task logic
 
+## 2026-11-28 PR75 baseline adopted — final local gates complete
+
+The [project/task receipt](t38-project-query.md) records coordinator-only exact web adoption:51,180bytes/SHA`af2fa178afe339f820cee2b9ecef6a551505b913765313bdab74567d160ef91a`, seven other baselines/original floors unchanged. One normal built replay passes1,325/202, digest`42e0ccf07a64435e837df2406bdf8050bf998410bc05037cef8fd7b8846c7087`; all17outputs are byte-exact to the accepted measure, preserving824 ratio/uncovered contexts and16floors. Official infrastructure20/20 and local artifacts17files/3,328,658bytes pass, without upload. Production/tests/build evidence is frozen; final24path and six-finding/thread/witness bindings are retained. Earlier failed/rejected snapshots/errata stay intact. Draft publication/current-head CI/native review/coordinator acceptance and full T38.4a/T38 remain open, with every retained copy/TAP/tooling/provenance/product debt.
+
+
+## 2026-11-28 PR75 comparison passes — exact adoption pending
+
+The [project/task receipt](t38-project-query.md) records the final bounded pending-move witness1/1 and single built measure1,325/202, web843/95, digest`42e0ccf07a64435e837df2406bdf8050bf998410bc05037cef8fd7b8846c7087`. All824 protected ratio AND uncovered contexts and16floors pass. The exact51,180byte proposal/SHA`af2fa178afe339f820cee2b9ecef6a551505b913765313bdab74567d160ef91a` awaits root-only adoption; all eight tracked baselines remain intact. Production/build/maps are frozen and twelve nonweb reports remain exact. No normal replay/infrastructure/artifacts or publication/acceptance is claimed. Earlier dated1320 seven-miss/1325 one-miss and FAILED/partial snapshots, errata and all retained debts remain preserved; full T38.4a/T38 stays OPEN.
+
+
+## PR75 five-case canonical measure — one miss, not adoptable
+
+The [project/task receipt](t38-project-query.md) records1,325/202 complete, web843/95, digest`f2a713c0fc02bb283dccc37996d8a4398298490c6557e09a0de1b99a2509e1bd`. Six of seven protected misses are resolved;823/824 contexts pass and all16floors pass. ControllerL alone remains733/749 →755/772, uncovered16 →17. The exact51,180byte candidate/SHA`113ae939a4247f660efc72ff8cac60dd704b2fc1551586de2fd4601c49731e09` is **NOT ADOPTABLE**; eight baselines remain intact. Production/maps/build evidence stays frozen and twelve nonweb reports are exact. One existing pending-move witness extension is proposed, not applied. Root retains correction/adoption; no further measure/replay/infrastructure/artifacts or full T38 acceptance. Earlier failed/rejected evidence and all retained debts remain unchanged.
+
+
+## PR75 public gap witnesses — verified before measure
+
+The [project/task receipt](t38-project-query.md) records exactly five public gap witnesses with unchanged production/harness/provider/config/guard/baselines. The serial affected pass is120/121; one populated-catalogue auto-selection fixture was corrected to a genuinely empty workspace and only that failed case reran1/1. Existing callbacks/assertions/order remain AST-identical; no121-case replay or new build is claimed. One newly released built measure must establish202inputs/824ratio-and-uncovered contexts/16floors before root-only exact adoption. Earlier1320/202 seven-miss and FAILED/partial evidence remain intact; normal replay/infrastructure/artifacts and full T38 acceptance are separate gates.
+
+
+## PR75 canonical rerun — complete, not numerically adoptable
+
+The [project/task receipt](t38-project-query.md) records the single final-name measure:1,320/202 complete, web838/95, digest`dc77ade29fda9800798cb68b443040051f1e975a557a0123d3e3ab6574a4dbd4`. All824 protected contexts are compared and sixteen floors pass, but seven contexts fail: recoveryL/S ratios, formsS uncovered, controllerL/S/F/B. The exact51,180byte diagnostic candidate/SHA`8d16f7fbdddd4dd9d95d6e46bb9a96058b3769fd271d573d2f231ce56b45f564` is **NOT ADOPTABLE**. All eight tracked baselines stay exact. Seven released source maps change,195 remain exact and twelve nonweb reports are byte-identical to the adopted reference. Production/build evidence is reused; the display-name-only AST proof binds final tests. No further measure, normal replay/infrastructure/artifacts or acceptance; root decides the bounded follow-up. The earlier FAILED/partial run, erratum, review/provenance/tooling/product debts remain preserved.
+
+
+## PR75 bounded TAP correction — canonical measure gate
+
+The [project/task receipt](t38-project-query.md) records the one preserved-mirror diagnostic:838/838 pass with207,276 unfiltered bytes; ordinary TAP alone exceeds the unchanged204,800byte canonical bound. The earlier canonical measure remains FAILED/partial. Root approved only33 display-name changes with complete adjacent descriptions and static callback/assertion/fixture/order equivalence. Production/build evidence remains frozen, while new test-name hashes are recorded separately. One new built measure must still prove202 inputs/824 ratio-and-uncovered contexts/16floors before root-only adoption. T38.6 retains future log-growth risk without a runner/guard change; no normal replay/infrastructure/artifacts or full T38 acceptance is implied.
+
+
+## PR75 round-one corrections — measurement blocked
+
+The [project/task Query receipt](t38-project-query.md) records all six accepted native-review corrections, genuine pre-fix failures with an explicit one-case setup erratum,663 passing affected cases, frontend types and one replacement build/Next HTTP/smoke. The earlier head's26/26 CI and completed Kilo0critical/4warning/2suggestion remain source-qualified; PR75 is Draft after coordinator triage, with no worker thread/comment/publication changes.
+
+The single new canonical measure failed on the unchanged204,800byte process-log bound: API384/384 complete, web partial, later scopes unrun. No complete web TAP log survived the rejection, so the underlying cause remains UNVERIFIED. All eight baselines stay exact; no new numerical pass/proposal, normal replay, infrastructure or artifacts is claimed. Further diagnosis/retry requires the coordinator's next release. The linked receipt retains artifact costs, OPEN T38.4b/T38.6/native-provenance/product debts and full T38.4a/T38 OPEN status; earlier successful receipts remain historical.
+
+
 ## Project/task Query — expiry correction and final local validation
 
 The [project/task Query receipt](t38-project-query.md) records the bounded expiry-timer fix: callbacks recheck the original deadline, reschedule long/early deliveries and retire with their opaque epoch. A genuine prior public-hook failure and six regression cases preserve exact unknown intent until actual expiry, including clock rollback and replacement cleanup. Root adopted the exact web baseline: 51,174 bytes, SHA `32dd19ccf84796ade705811c27f864faee87d2c9c78fa4881d1e5fde8255c2b9`; seven other baselines and original floors are unchanged.
