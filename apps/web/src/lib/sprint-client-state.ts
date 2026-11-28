@@ -115,27 +115,18 @@ export interface SprintClientState {
   };
   recovery: { command: SprintClientCommand; key: string } | null;
 }
-/** The two Query resources exist only in the composed public snapshot. */
-export type SprintControllerResources = Omit<SprintResources, 'planning' | 'sprints'>;
-export type SprintControllerState = Omit<SprintClientState, 'resources'> & {
-  resources: SprintControllerResources;
-};
+/** Canonical server resources exist only in the composed Query projection. */
+export type SprintControllerState = Omit<SprintClientState, 'resources'>;
 export function emptySprintControllerState(): SprintControllerState {
-  const value = emptySprintState();
-  const r = value.resources;
   return {
-    ...value,
-    resources: {
-      sprint: r.sprint,
-      target: r.target,
-      task: r.task,
-      scope: r.scope,
-      sprintHistory: r.sprintHistory,
-      taskHistory: r.taskHistory,
-      preview: r.preview,
-      closure: r.closure,
-      outcomes: r.outcomes,
-    },
+    status: 'inactive',
+    context: null,
+    selection: { sprintId: null, taskId: null, targetId: null },
+    destination: null,
+    draft: null,
+    needsReview: false,
+    mutation: { status: 'idle', failure: null, current: null, result: null },
+    recovery: null,
   };
 }
 export function emptySprintResource<T>(): SprintResource<T> {
@@ -143,10 +134,7 @@ export function emptySprintResource<T>(): SprintResource<T> {
 }
 export function emptySprintState(): SprintClientState {
   return {
-    status: 'inactive',
-    context: null,
-    selection: { sprintId: null, taskId: null, targetId: null },
-    destination: null,
+    ...emptySprintControllerState(),
     resources: {
       planning: emptySprintResource(),
       sprints: emptySprintResource(),
@@ -160,10 +148,6 @@ export function emptySprintState(): SprintClientState {
       closure: emptySprintResource(),
       outcomes: emptySprintResource(),
     },
-    draft: null,
-    needsReview: false,
-    mutation: { status: 'idle', failure: null, current: null, result: null },
-    recovery: null,
   };
 }
 /** No page is spliced across revisions, preview bindings, or immutable closure identities. */

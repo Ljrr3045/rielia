@@ -581,9 +581,19 @@ test(
       if (/\/(planning|sprints)(?:\/|$)/.test(path)) return server.fetch(url, options);
       return originalFetch(url, options);
     };
+    let confirmations = 0;
     const hook = await mountHook(browser, () => {
       const project = useProjectTasks();
-      const sprints = useProjectSprints(project, { sprintId: 's', taskId: null });
+      const sprints = useProjectSprints(
+        {
+          ...project,
+          refresh: async () => {
+            confirmations++;
+            await project.refresh();
+          },
+        },
+        { sprintId: 's', taskId: null },
+      );
       return { ...sprints, project };
     });
     await browser.clock.advance(500);
@@ -610,6 +620,7 @@ test(
     );
     assert.equal(hook.state.resources.sprint.status, 'ready');
     assert.equal(server.requests.filter((r) => r.init.method === 'POST').length, 1);
+    assert.equal(confirmations, 1, 'a confirmed write requests exactly one parent refresh');
     await act(async () =>
       browser.server.streams.at(-1).emit({ type: 'denied', reason: 'forbidden' }),
     );
@@ -699,3 +710,35 @@ test('Query create confirmation survives parent refresh failure and never retrie
   assert.equal(await b.hook.state.retrySave(), 'unavailable');
   assert.equal(b.server.requests.filter((r) => r.init.method === 'POST').length, 1);
 });
+
+for (const [name, path, status] of [
+  ['task', '/tasks/t/planning', 401],
+  ['scope', '/sprints/s/scope', 403],
+]) {
+  test(`Query ${name} ${status} stays terminal through unchanged props and hints until parent verification`, async (t) => {
+    const b = await hookFixture(t);
+    const parent = b.source();
+    b.server.get = ({ path: url }) =>
+      url.endsWith(path) ? Response.json({}, { status }) : undefined;
+    await act(async () => b.hook.state.reload(name));
+    const denied = status === 401 ? 'signed-out' : 'forbidden';
+    assert.equal(b.hook.state.status, denied);
+    const start = b.hook.renders.length;
+    const calls = b.server.requests.length;
+    await b.render(parent);
+    await b.emit({ type: 'reset' });
+    await act(async () => b.hook.state.refresh());
+    assert.equal(b.server.requests.length, calls);
+    assert.ok(
+      b.hook.renders
+        .slice(start)
+        .every((r) => Object.values(r.resources).every((v) => v.data === null)),
+    );
+    b.server.get = null;
+    await b.render({ ...parent, status: 'loading', session: null });
+    await b.render(parent);
+    assert.equal(b.hook.state.status, 'ready');
+    assert.equal(b.hook.state.resources[name].status, 'ready');
+    assert.equal(b.server.requests.filter((r) => r.init.method === 'POST').length, 0);
+  });
+}

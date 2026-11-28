@@ -10,13 +10,10 @@ import {
   type SprintIntentResult,
 } from './sprint-commands.ts';
 import {
-  emptySprintResource,
   emptySprintState,
   emptySprintControllerState,
   type SprintControllerState,
-  type SprintControllerResources,
   freezeSprintValue,
-  sprintPageBinding,
   type SprintClientCommand,
   type SprintClientContext,
   type SprintClientFailure,
@@ -25,16 +22,8 @@ import {
   type SprintCollection,
   type SprintIntent,
   type SprintResourceName,
-  type SprintResources,
 } from './sprint-client-state.ts';
 
-const collections = new Set<SprintResourceName>([
-  'scope',
-  'sprintHistory',
-  'taskHistory',
-  'preview',
-  'outcomes',
-]);
 const failure = (error: unknown): SprintClientFailure =>
   error instanceof SprintPlanningFailure || error instanceof TaskPlanningFailure
     ? { status: error.status, code: error.code, requestId: error.requestId }
@@ -45,7 +34,7 @@ const sameContext = (a: SprintClientContext | null, b: SprintClientContext | nul
   a?.workspaceId === b?.workspaceId &&
   a?.projectId === b?.projectId;
 
-/** Compose Query DTOs with nine legacy resources, captured intent and exact-command recovery. */
+/** Compose canonical Query resources with captured intent and exact-command recovery. */
 export function createSprintController(options: {
   planning: ReturnType<typeof createSprintPlanningTransport>;
   tasks: ReturnType<typeof createTaskPlanningTransport>;
@@ -56,7 +45,6 @@ export function createSprintController(options: {
   let state = freezeSprintValue(emptySprintControllerState());
   let snapshot: SprintClientState | null = null;
   const listeners = new Set<() => void>();
-  const reads = new Map<keyof SprintControllerResources, AbortController>();
   let epoch = 0;
   let readCycle = 0;
   let previewWanted = false;
@@ -64,6 +52,7 @@ export function createSprintController(options: {
   let confirmingEpoch: number | null = null;
   const queries = createSprintQueryOwner({
     transport: options.planning,
+    tasks: options.tasks,
     changed: notify,
     authorized,
     denied: deny,
@@ -71,7 +60,7 @@ export function createSprintController(options: {
   function getState(): SprintClientState {
     return (snapshot ??= freezeSprintValue({
       ...state,
-      resources: { ...state.resources, ...queries.resources() },
+      resources: queries.resources(),
     }));
   }
   function notify() {
@@ -82,17 +71,15 @@ export function createSprintController(options: {
     state = freezeSprintValue({ ...state, ...patch });
     notify();
   }
-  function resource<K extends keyof SprintControllerResources>(
-    name: K,
-    value: SprintControllerResources[K],
-  ) {
-    publish({ resources: { ...state.resources, [name]: value } });
-  }
   function abortReads() {
     readCycle++;
     queries.cancel();
-    reads.forEach((request) => request.abort());
-    reads.clear();
+  }
+  function bindQueries(context: SprintClientContext) {
+    if (!queries.bind(context)) return;
+    queries.select(state.selection.sprintId, state.selection.taskId);
+    queries.selectTarget(state.selection.targetId);
+    if (previewWanted) queries.preview(state.destination);
   }
   function clear(status: SprintClientState['status'], keepContext = false) {
     epoch++;
@@ -123,134 +110,27 @@ export function createSprintController(options: {
   function invalidate() {
     abortReads();
     queries.invalidate();
-    const resources = { ...state.resources };
-    for (const name of Object.keys(resources) as (keyof SprintControllerResources)[]) {
-      const value = resources[name];
-      // Retained data is explicitly stale/read-only until a fresh authorized read.
-      Object.assign(resources, {
-        [name]: {
-          ...value,
-          status: value.data ? 'ready' : 'idle',
-          stale: true,
-          loadingMore: false,
-        },
-      });
-    }
-    publish({ resources, needsReview: !!state.draft });
-  }
-  async function fetchResource(
-    name: keyof SprintControllerResources,
-    signal: AbortSignal,
-    cursor?: string,
-  ) {
-    const { workspaceId: w, projectId: p } = state.context!;
-    const { sprintId: s, taskId: t, targetId } = state.selection;
-    switch (name) {
-      case 'sprint':
-        return options.planning.sprint(w, p, s!, signal);
-      case 'target':
-        return options.planning.sprint(w, p, targetId!, signal);
-      case 'task':
-        return options.tasks.planning(w, p, t!, signal);
-      case 'scope':
-        return options.tasks.scope(w, p, s!, signal, cursor);
-      case 'sprintHistory':
-        return options.tasks.sprintHistory(w, p, s!, signal, cursor);
-      case 'taskHistory':
-        return options.tasks.taskHistory(w, p, t!, signal, cursor);
-      case 'preview':
-        return options.tasks.closePreview(w, p, s!, state.destination, signal, cursor);
-      case 'closure':
-        return options.tasks.closure(w, p, s!, signal);
-      case 'outcomes':
-        return options.tasks.outcomes(w, p, s!, signal, cursor);
-    }
+    publish({ needsReview: !!state.draft });
   }
   function available(name: SprintResourceName) {
     if (name === 'planning' || name === 'sprints') return true;
     if (name === 'target') return state.selection.targetId !== null;
     if (name === 'preview')
-      return previewWanted && !!state.resources.sprint.data?.capabilities.canClose;
+      return previewWanted && !!getState().resources.sprint.data?.capabilities.canClose;
     if (name === 'task' || name === 'taskHistory') return state.selection.taskId !== null;
     if (name === 'closure' || name === 'outcomes')
-      return state.resources.sprint.data?.state === 'closed';
+      return getState().resources.sprint.data?.state === 'closed';
     return state.selection.sprintId !== null;
   }
   async function read(name: SprintResourceName, more = false): Promise<void> {
     if (!authorized() || !available(name)) return;
-    if (name === 'planning' || name === 'sprints') return queries.read(name, more);
-    if (more && reads.has(name)) return;
-    const previous = state.resources[name];
-    const page = previous.data;
-    const cursor = more && page && 'nextCursor' in page ? page.nextCursor : null;
+    await queries.read(name, more);
     if (
-      more &&
-      (!collections.has(name) || !cursor || previous.stale || previous.status !== 'ready')
+      name === 'preview' &&
+      state.draft?.type === 'close-sprint' &&
+      getState().resources.preview.stale
     )
-      return;
-    reads.get(name)?.abort();
-    const request = new AbortController();
-    const capturedEpoch = epoch;
-    reads.set(name, request);
-    resource(name, {
-      ...previous,
-      status: more ? 'ready' : 'loading',
-      stale: more ? false : !!page,
-      loadingMore: more,
-      failure: null,
-    });
-    const current = () =>
-      epoch === capturedEpoch && reads.get(name) === request && !request.signal.aborted;
-    try {
-      let data = await fetchResource(name, request.signal, cursor ?? undefined);
-      if (!current() || !authorized()) return;
-      if (more && page && 'items' in page && 'items' in data) {
-        const before = page as NonNullable<SprintResources[SprintCollection]['data']>;
-        const next = data as typeof before;
-        const identity = (item: (typeof before.items)[number]) =>
-          'id' in item ? item.id : item.participationId;
-        const ids = new Set(before.items.map(identity));
-        if (
-          sprintPageBinding(before) !== sprintPageBinding(next) ||
-          next.nextCursor === cursor ||
-          next.items.some((item) => ids.has(identity(item))) ||
-          before.items.length + next.items.length > next.total
-        )
-          throw new TaskPlanningFailure(409, 'page-changed');
-        data = { ...data, items: [...before.items, ...next.items] } as typeof data;
-      }
-      if (name === 'outcomes' && 'closureId' in data) {
-        const closure = state.resources.closure.data;
-        if (closure && (data.closureId !== closure.id || data.total !== closure.total))
-          throw new TaskPlanningFailure(409, 'page-changed');
-      }
-      resource(name, {
-        status: 'ready',
-        data,
-        stale: false,
-        loadingMore: false,
-        failure: null,
-      } as SprintResources[typeof name]);
-    } catch (error) {
-      if (!current()) return;
-      const problem = failure(error);
-      if (problem.status === 401 || problem.status === 403) {
-        deny(problem.status === 401 ? 'signed-out' : 'forbidden');
-        return;
-      }
-      const changed = problem.code === 'page-changed' || problem.status === 409;
-      resource(name, {
-        ...previous,
-        status: changed ? 'changed' : 'error',
-        stale: true,
-        loadingMore: false,
-        failure: problem,
-      });
-      if (name === 'preview' && state.draft?.type === 'close-sprint')
-        publish({ needsReview: true });
-    } finally {
-      if (reads.get(name) === request) reads.delete(name);
-    }
+      publish({ needsReview: true });
   }
   async function refreshReads() {
     if (!authorized() || confirmingEpoch === epoch) return;
@@ -284,14 +164,14 @@ export function createSprintController(options: {
       (state.status === 'ready' || state.status === 'verifying')
     ) {
       const resume = state.status === 'verifying';
-      if (context) queries.bind(context);
+      if (context) bindQueries(context);
       publish({ context: context ? structuredClone(context) : null, status: 'ready' });
       if (resume) await refreshReads();
       return;
     }
     clear('inactive');
     if (!context) return;
-    queries.bind(context);
+    bindQueries(context);
     publish({ context: structuredClone(context), status: 'ready' });
     await refreshReads();
   }
@@ -302,22 +182,10 @@ export function createSprintController(options: {
     epoch++;
     previewWanted = false;
     abortReads();
-    const resources = { ...state.resources };
-    for (const name of [
-      'sprint',
-      'task',
-      'scope',
-      'sprintHistory',
-      'taskHistory',
-      'preview',
-      'closure',
-      'outcomes',
-    ] as const)
-      Object.assign(resources, { [name]: emptySprintResource() });
+    queries.select(sprintId, taskId);
     publish({
       selection: { ...state.selection, sprintId, taskId },
       destination: null,
-      resources,
       mutation: emptySprintState().mutation,
     });
     await refreshReads();
@@ -325,11 +193,9 @@ export function createSprintController(options: {
   }
   async function selectTarget(targetId: string | null) {
     if (!authorized() || busy()) return false;
-    reads.get('target')?.abort();
-    reads.delete('target');
+    queries.selectTarget(targetId);
     publish({
       selection: { ...state.selection, targetId },
-      resources: { ...state.resources, target: emptySprintResource() },
     });
     if (targetId) await read('target');
     return true;
@@ -339,19 +205,18 @@ export function createSprintController(options: {
       !authorized() ||
       busy() ||
       state.draft ||
-      !state.resources.sprint.data?.capabilities.canClose
+      !getState().resources.sprint.data?.capabilities.canClose
     )
       return false;
-    reads.get('preview')?.abort();
-    reads.delete('preview');
+    queries.preview(destination);
     previewWanted = true;
-    publish({ destination, resources: { ...state.resources, preview: emptySprintResource() } });
+    publish({ destination });
     await read('preview');
     return (
       state.destination === destination &&
-      state.resources.preview.data?.destination === destination &&
-      state.resources.preview.status === 'ready' &&
-      !state.resources.preview.stale
+      getState().resources.preview.data?.destination === destination &&
+      getState().resources.preview.status === 'ready' &&
+      !getState().resources.preview.stale
     );
   }
   function stage(intent: SprintIntent): SprintIntentResult {
@@ -522,14 +387,7 @@ export function createSprintController(options: {
   async function reload(name: SprintResourceName) {
     if (name === 'preview' && (state.draft || busy())) return;
     if (name !== 'preview' && name !== 'closure' && name !== 'outcomes') {
-      reads.get('preview')?.abort();
-      reads.delete('preview');
-      resource('preview', {
-        ...state.resources.preview,
-        status: state.resources.preview.data ? 'ready' : 'idle',
-        stale: true,
-        loadingMore: false,
-      });
+      queries.invalidatePreview();
       if (state.draft) publish({ needsReview: true });
     }
     await read(name);

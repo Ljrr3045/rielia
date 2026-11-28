@@ -4,16 +4,31 @@ import {
   QueryClient,
   QueryObserver,
 } from '@tanstack/react-query';
-import type { ProjectPlanning, SprintPage, SprintPlanningResult } from '@rielia/contracts';
+import type {
+  ProjectPlanning,
+  Sprint,
+  SprintPage,
+  SprintPlanningResult,
+  TaskPlanning,
+  SprintScopePage,
+  PlanningHistoryPage,
+  SprintClosure,
+  SprintClosingOutcomePage,
+} from '@rielia/contracts';
 import { SprintPlanningFailure, type createSprintPlanningTransport } from './sprint-client.ts';
+import { createTaskPlanningTransport, TaskPlanningFailure } from './task-planning-client.ts';
+import { createSprintQueryResource } from './sprint-query-resource.ts';
 import {
   emptySprintResource,
+  emptySprintState,
   freezeSprintValue,
   sprintPageBinding,
   type SprintClientCommand,
   type SprintClientContext,
   type SprintClientFailure,
   type SprintResource,
+  type SprintResourceName,
+  type SprintResources,
 } from './sprint-client-state.ts';
 
 type Metadata = Omit<SprintResource<never>, 'data'>;
@@ -49,6 +64,7 @@ const problem = (error: unknown): SprintClientFailure =>
 /** Query owns admitted DTOs; the controller owns intent, scheduling and recovery. */
 export function createSprintQueryOwner(options: {
   transport: ReturnType<typeof createSprintPlanningTransport>;
+  tasks?: ReturnType<typeof createTaskPlanningTransport>;
   changed: () => void;
   authorized: () => boolean;
   denied: (reason: 'signed-out' | 'forbidden') => void;
@@ -68,6 +84,26 @@ export function createSprintQueryOwner(options: {
   let planningMeta = emptyMetadata();
   let sprintsMeta = emptyMetadata();
   let mutation: MutationObserver<SprintPlanningResult, unknown, Create> | null = null;
+  const tasks = options.tasks ?? createTaskPlanningTransport();
+  const slotOptions = {
+    client,
+    changed: options.changed,
+    authorized: options.authorized,
+    denied: options.denied,
+  };
+  const slots = {
+    sprint: createSprintQueryResource<Sprint>(slotOptions),
+    target: createSprintQueryResource<Sprint>(slotOptions),
+    task: createSprintQueryResource<TaskPlanning>(slotOptions),
+    scope: createSprintQueryResource<SprintScopePage>(slotOptions),
+    sprintHistory: createSprintQueryResource<PlanningHistoryPage>(slotOptions),
+    taskHistory: createSprintQueryResource<PlanningHistoryPage>(slotOptions),
+    preview:
+      createSprintQueryResource<NonNullable<SprintResources['preview']['data']>>(slotOptions),
+    closure: createSprintQueryResource<SprintClosure>(slotOptions),
+    outcomes: createSprintQueryResource<SprintClosingOutcomePage>(slotOptions),
+  };
+  let selected = { sprintId: null as string | null, taskId: null as string | null };
 
   function planningData() {
     return context ? (planning?.getCurrentResult().data ?? null) : null;
@@ -88,23 +124,49 @@ export function createSprintQueryOwner(options: {
           nextCursor: last.nextCursor,
         };
   }
-  function resources() {
+  function resources(): SprintResources {
+    if (!context) return emptySprintState().resources;
+    const closure = slots.closure.resource();
+    const outcomes = slots.outcomes.resource();
+    const matches =
+      !outcomes.data ||
+      (closure.data?.id === outcomes.data.closureId && closure.data.total === outcomes.data.total);
     return {
       planning: { ...planningMeta, data: planningData() },
       sprints: { ...sprintsMeta, data: sprintsData() },
+      sprint: slots.sprint.resource(),
+      target: slots.target.resource(),
+      task: slots.task.resource(),
+      scope: slots.scope.resource(),
+      sprintHistory: slots.sprintHistory.resource(),
+      taskHistory: slots.taskHistory.resource(),
+      preview: slots.preview.resource(),
+      closure,
+      outcomes: matches
+        ? outcomes
+        : {
+            ...outcomes,
+            data: null,
+            stale: true,
+            status: 'changed',
+            failure: { status: 409, code: 'page-changed', requestId: null },
+          },
     };
   }
   function cancel() {
     generation++;
+    Object.values(slots).forEach((slot) => slot.cancel());
     void client.cancelQueries();
   }
   function clear() {
     // Mask and retire first: Query cancellation may revert to an earlier DTO.
     context = null;
+    selected = { sprintId: null, taskId: null };
     lifetime++;
     planningMeta = emptyMetadata();
     sprintsMeta = emptyMetadata();
     cancel();
+    Object.values(slots).forEach((slot) => slot.clear());
     subscriptions.forEach((unsubscribe) => unsubscribe());
     subscriptions.clear();
     planning?.destroy();
@@ -118,7 +180,7 @@ export function createSprintQueryOwner(options: {
     options.changed();
   }
   function bind(value: SprintClientContext) {
-    if (context) return;
+    if (context) return false;
     context = value;
     identity = crypto.randomUUID();
     const { workspaceId, projectId } = value;
@@ -145,6 +207,140 @@ export function createSprintQueryOwner(options: {
         if (captured !== lifetime || signal.aborted || !context || !options.authorized())
           throw new CancelledError();
         return result;
+      },
+    });
+    return true;
+  }
+  function selectedKey(name: SprintResourceName, selector: object) {
+    return ['sprint', identity, context!.workspaceId, context!.projectId, name, selector];
+  }
+  function select(sprintId: string | null, taskId: string | null) {
+    if (!context || (selected.sprintId === sprintId && selected.taskId === taskId)) return;
+    selected = { sprintId, taskId };
+    for (const name of [
+      'sprint',
+      'task',
+      'scope',
+      'sprintHistory',
+      'taskHistory',
+      'preview',
+      'closure',
+      'outcomes',
+    ] as const)
+      slots[name].clear();
+    const { workspaceId: w, projectId: p } = context;
+    if (sprintId) {
+      const s = sprintId;
+      slots.sprint.bind({
+        key: selectedKey('sprint', { sprintId: s }),
+        load: (signal) => options.transport.sprint(w, p, s, signal),
+      });
+      slots.scope.bind({
+        key: selectedKey('scope', { sprintId: s }),
+        load: (signal, cursor) => tasks.scope(w, p, s, signal, cursor),
+        page: {
+          cursor: (v) => v.nextCursor,
+          binding: sprintPageBinding,
+          identities: (v) => v.items.map((item) => item.id),
+          size: (v) => v.items.length,
+          total: (v) => v.total,
+          compose: (pages) => ({
+            ...pages[0]!,
+            items: pages.flatMap((v) => v.items),
+            nextCursor: pages.at(-1)!.nextCursor,
+          }),
+        },
+      });
+      slots.sprintHistory.bind({
+        key: selectedKey('sprintHistory', { sprintId: s }),
+        load: (signal, cursor) => tasks.sprintHistory(w, p, s, signal, cursor),
+        page: historyPages(),
+      });
+      slots.closure.bind({
+        key: selectedKey('closure', { sprintId: s }),
+        load: (signal) => tasks.closure(w, p, s, signal),
+      });
+      slots.outcomes.bind({
+        key: selectedKey('outcomes', { sprintId: s }),
+        load: (signal, cursor) => tasks.outcomes(w, p, s, signal, cursor),
+        admit(value) {
+          const closure = slots.closure.resource().data;
+          if (!closure || value.closureId !== closure.id || value.total !== closure.total)
+            throw new TaskPlanningFailure(409, 'page-changed');
+        },
+        page: {
+          cursor: (v) => v.nextCursor,
+          binding: sprintPageBinding,
+          identities: (v) =>
+            v.items.flatMap((item) => [`id:${item.id}`, `visit:${item.participationId}`]),
+          size: (v) => v.items.length,
+          total: (v) => v.total,
+          compose: (pages) => ({
+            ...pages[0]!,
+            items: pages.flatMap((v) => v.items),
+            nextCursor: pages.at(-1)!.nextCursor,
+          }),
+        },
+      });
+    }
+    if (taskId) {
+      const t = taskId;
+      slots.task.bind({
+        key: selectedKey('task', { taskId: t }),
+        load: (signal) => tasks.planning(w, p, t, signal),
+      });
+      slots.taskHistory.bind({
+        key: selectedKey('taskHistory', { taskId: t }),
+        load: (signal, cursor) => tasks.taskHistory(w, p, t, signal, cursor),
+        page: historyPages(),
+      });
+    }
+  }
+  function historyPages() {
+    return {
+      cursor: (v: PlanningHistoryPage) => v.nextCursor,
+      binding: sprintPageBinding,
+      identities: (v: PlanningHistoryPage) => v.items.map((item) => item.id),
+      size: (v: PlanningHistoryPage) => v.items.length,
+      total: (v: PlanningHistoryPage) => v.total,
+      compose: (pages: PlanningHistoryPage[]): PlanningHistoryPage => ({
+        ...pages[0]!,
+        items: pages.flatMap((v) => v.items),
+        nextCursor: pages.at(-1)!.nextCursor,
+      }),
+    };
+  }
+  function selectTarget(targetId: string | null) {
+    if (!context) return;
+    const { workspaceId: w, projectId: p } = context;
+    slots.target.bind(
+      targetId === null
+        ? null
+        : {
+            key: selectedKey('target', { targetId }),
+            load: (signal) => options.transport.sprint(w, p, targetId, signal),
+          },
+    );
+  }
+  function preview(destination: string | null) {
+    slots.preview.clear();
+    if (!context || !selected.sprintId) return;
+    const { workspaceId: w, projectId: p } = context;
+    const s = selected.sprintId;
+    slots.preview.bind({
+      key: selectedKey('preview', { sprintId: s, destination }),
+      load: (signal, cursor) => tasks.closePreview(w, p, s, destination, signal, cursor),
+      page: {
+        cursor: (v) => v.nextCursor,
+        binding: sprintPageBinding,
+        identities: (v) => v.items.map((item) => item.participationId),
+        size: (v) => v.items.length,
+        total: (v) => v.total,
+        compose: (pages) => ({
+          ...pages[0]!,
+          items: pages.flatMap((v) => v.items),
+          nextCursor: pages.at(-1)!.nextCursor,
+        }),
       },
     });
   }
@@ -192,6 +388,7 @@ export function createSprintQueryOwner(options: {
   }
   function invalidate() {
     cancel();
+    Object.values(slots).forEach((slot) => slot.invalidate());
     planningMeta = {
       ...planningMeta,
       status: planningData() ? 'ready' : 'idle',
@@ -207,8 +404,9 @@ export function createSprintQueryOwner(options: {
     void client.invalidateQueries({ refetchType: 'none' });
     options.changed();
   }
-  async function read(name: 'planning' | 'sprints', more = false) {
+  async function read(name: SprintResourceName, more = false) {
     if (!context) return;
+    if (name !== 'planning' && name !== 'sprints') return slots[name].read(more);
     const previous = name === 'planning' ? planningMeta : sprintsMeta;
     const page = sprintsData();
     const cursor = more ? page?.nextCursor : null;
@@ -293,6 +491,13 @@ export function createSprintQueryOwner(options: {
     cancel,
     clear,
     invalidate,
+    select,
+    selectTarget,
+    preview,
+    invalidatePreview() {
+      slots.preview.invalidate();
+      options.changed();
+    },
     read,
     async create(command: Create['command'], key: string, signal: AbortSignal) {
       const observer = mutation;

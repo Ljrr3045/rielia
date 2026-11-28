@@ -1,5 +1,63 @@
 # Delivery progress and decisions
 
+## T38.4a remaining resources — final local gates complete; coordinator delivery open
+
+The [nine-resource batch](t38-sprint-query.md) completes local Query ownership of
+all eleven sprint DTO resources. Controller command/recovery/navigation, raw forms,
+parent authority, transport/backend policy and presentation retain their owners.
+[PR72's final decision](https://github.com/Ljrr3045/rielia/pull/72) accepts only the
+initial planning/list/create slice (reviewed `26ac8d7d`, merged `fe9e53c7`); this
+new batch still needs coordinator publication, current-head CI/native review and
+acceptance. No full T38.4a/T38 acceptance is claimed.
+
+Root adopted only web49,363bytes/SHA256
+`30fbe04656e8db312fd84300d62d99d62f30b80c4545cab24e3cc948f9c0ce0e`;
+seven baselines remain exact. Normal1066(API384/web584/contracts79/prototype19)/199
+in47.258s reproduces all sixteen corrected reports/status, digest
+`47dc3a93a4ed4b61101ba3d57132bfc74707cac3e3ee0efa6c9e1d0b0cbc0e3e`.
+All808 comparisons, infrastructure20 and bounded artifacts17 pass without upload,
+omission or lower floor. Rejected candidate1 and six public-witness corrections
+remain distinct; frozen maps have zero covered S/F/B losses and19 gains. New-helper
+unit debtL3/S5/F0/B5 remains owned.
+
+Standard121.493s/sole native build and native HTTP4 retain their earlier test/source
+bindings; six later cases are covered by focused/corrected/normal runs. Graphs and
+production stay frozen, without another standard/build/HTTP/audit/install/PG/Docker
+run. Artifact deltas, one parent refresh versus two session HTTP checks, all failures,
+packaging/S01, runtime/provenance/current-authority, lower advisory/action and
+UNVERIFIED Cancel/Leave/filter/provider/staging/device/a11y/product limits remain
+in the linked guide. Historical checkpoints below do not override this local state.
+
+## Historical candidate1 numerical correction gate
+
+The [resource batch](t38-sprint-query.md) passes its one complete standard/sole
+candidate build and1060/199 all-scope measurement. The first numerical candidate
+is rejected: eight protected comparisons miss, including global uncoveredL/S/B
++5/+8/+9; better aggregate ratios do not waive them. All tracked baselines and
+production remain frozen. A bounded public-witness correction proposal awaits
+root; no normal replay, infrastructure/artifacts, additional measure or delivery
+is released. The earlier implementation checkpoint below retains its actual
+source/run chronology; fullT38.4a/T38 acceptance remains open.
+
+## Remaining T38.4a sprint resources — local implementation checkpoint
+
+PR72's final **Coordinator acceptance — T38.4a initial slice ACCEPTED**
+[decision](https://github.com/Ljrr3045/rielia/pull/72) accepts planning/list/create only,
+reviewed `26ac8d7d5292500e169223518630ab3be5be2ef5`, merged
+`fe9e53c7be172e0da7bca34b4685054b36af8a14`. Its reviewed-head/exact-merge
+CI passed 26/26 and native Kilo found no issues across 21 paths. Earlier pending
+labels below are frozen source snapshots, superseded only for that bounded slice.
+
+The next [cohesive nine-resource batch](t38-sprint-query.md) is locally implemented:
+Query alone owns all11 sprint DTO resources; the controller retains only command,
+version/recovery/navigation/scheduling responsibilities. Target, source/task,
+preview destination and page-chain lifetimes stay independent. Focused270/native
+HTTP4 pass; frozen setup/audits and actual parent/request limits are recorded.
+Standard/build/all-scope numerical measurement/root adoption/replay, final CI/native
+review and coordinator acceptance remain open. No tracked baseline, dependency,
+backend/transport/proxy/schema/presentation/form/parent-resource change occurs.
+FullT38.4a/T38 and all retained packaging/runtime/UX/product debts remain open.
+
 ## 2026-11-27 T38.4a published in Draft PR72
 
 The coordinator published [Draft PR72](https://github.com/Ljrr3045/rielia/pull/72) toward `dev`

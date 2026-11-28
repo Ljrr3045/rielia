@@ -1,4 +1,165 @@
-# T38.4a initial sprint Query ownership
+# T38.4a sprint Query ownership
+
+## Current local state — all eleven DTO owners; delivery gates open
+
+Query alone owns the nine newly migrated resources and accepted planning/list in
+one authenticated lifetime/client. The controller's separate DTO ledger and read
+execution are removed; captured commands/versions, pending/unknown/conflict
+recovery, scheduling/navigation and memory drafts retain their owners. Forms,
+presentation, parent session/SSE, validated transport and backend policy are unchanged.
+
+The coordinator adopted only exact web baseline **49,363 bytes**, SHA256
+`30fbe04656e8db312fd84300d62d99d62f30b80c4545cab24e3cc948f9c0ce0e`;
+seven others stay exact. Corrected measurement and normal built-input replay pass
+**1,066** cases (384/584/79/19), **199** maintained inputs, reproducing all sixteen
+reports and complete status. Normal47.258s, infrastructure20/20 and bounded artifacts17
+pass without upload. Digest:
+`47dc3a93a4ed4b61101ba3d57132bfc74707cac3e3ee0efa6c9e1d0b0cbc0e3e`.
+All808 retained ratio/uncovered comparisons pass. Web L/S/F/B3900/5224,4316/5939,
+927/1441,4859/7126; floors7465/7267/6433/6818. New helper debt remainsL3/S5/F0/B5.
+
+Candidate1's eight numerical misses remain rejected history. Production stayed
+frozen for the six released public-witness additions: retired/unselected intent,
+real observerAdded retirement, stale staged-close continuation, final closure
+scheduling/empty binding and raw edit/close protection through pending/unknown
+outcomes and exact explicit retry. Focused6 and corrected47.009s measure pass;
+all199 production/provider maps match candidate1, with no covered S/F/B slot loss,
+9S/0F/10B gains and five newly covered lines. No internal Query patch or contrived
+cache seeding is used. The [unit ledger](unit-coverage.md) retains exact chronology.
+
+The one complete standard121.493s and sole candidate native build, earlier focused270
+and native HTTP4 retain their actual source/test bindings. They do not claim to run
+the six later tests. No repeated standard/build/HTTP/audit/install/PG/Docker suite
+follows their test-only correction and documentation. Current-head CI/native Kilo
+and coordinator acceptance remain required; no remote check or new PR is implied.
+
+The same emitted build has31browser JS files,1,713,185raw/489,773gzip9 bytes:
++3,354raw/+919gzip9 against PR72's archived emitted candidate. Literal projects
+references plus shared runtime are11files,1,040,911raw/287,786gzip9: +3,352/+906.
+Standalone2,161regularfiles/48,599,798bytes is absolute only. Identical gzip9/mtime0
+and deduplicated chunk rules preserve the artifact comparison; these are not
+initial/lazy wire requests, a controlled speed/RSS comparison or deployed image delta.
+No accepted-base build was repeated.
+
+Maintained real-parent active/closed fixtures observe initial starts20/23 and parsed
+bodies20/23 with checkpoint-aborted signals4/4. A confirmation adds8/10 eligible
+reads, all8/10 parsed bodies, zero aborted signals and one POST; preview stays
+explicit/lazy. One full parent refresh has two actual session HTTP checks, including
+the existing reconnected SSE reset verification; the separate real-hook witness
+counts one confirmation callback. Parsing is not server-policy acceptance, and
+these fixtures are not a real-user performance study.
+
+[PR72's final decision](https://github.com/Ljrr3045/rielia/pull/72) accepts only the
+initial planning/list/create slice, reviewed `26ac8d7d`, merged `fe9e53c7`. This
+nine-resource batch has complete local implementation/numerical evidence and is
+ready for coordinator delivery. Full T38.4a/T38 remains open pending consolidation.
+Preserve packaging/S01, runtime scalar/refinement/provenance/current-authority,
+G06/dense/T04, lower advisory/action/runtime, user-omitted UNVERIFIED Cancel/Leave
+possible draft loss, filters/T08/T10/US05 and provider/staging/device/a11y/real-product
+debts. Earlier pending checkpoints below are intentionally preserved history.
+
+## Historical implementation checkpoint — before numerical measurement
+
+PR72's final **Coordinator acceptance — T38.4a initial slice ACCEPTED**
+[decision](https://github.com/Ljrr3045/rielia/pull/72) accepts planning/list/create only,
+reviewed `26ac8d7d5292500e169223518630ab3be5be2ef5`, merged
+`fe9e53c7be172e0da7bca34b4685054b36af8a14`. Its reviewed-head/exact-merge
+CI passed 26/26 and native Kilo found no issues across 21 paths. Earlier pending
+labels below are frozen source snapshots, superseded only for that bounded slice.
+
+The coordinator released one cohesive next batch for all nine remaining resources.
+Query now alone owns `sprint`, `target`, `task`, `scope`, `sprintHistory`,
+`taskHistory`, `preview`, `closure`, and `outcomes`, beside accepted planning/list.
+The controller's independent DTO ledger, read execution and page merge are removed;
+it retains captured commands/versions, pending/unknown/conflict recovery, navigation
+and scheduling. Forms, presentation, transport/backend policy and parent session/SSE
+retain their owners. This supports T11/B1c, P09/US06/US12, UXR01 and UX01/04/05/07/09.
+
+A shared `sprint-query-resource.ts` owns selected observer lifetimes and admitted
+cursor chains in the existing authenticated QueryClient. It stores metadata and
+observer/cursor references, never an independently writable DTO copy. One root
+read generation in each selected resource's key keeps the last-good Query chain
+until successful replacement; no new-root/old-tail aggregate can appear. Loaders
+validate binding, duplicate identity, cursor cycle, overflow and closure agreement
+before Query success. Failed reloads retain the old admitted chain as stale.
+
+| Resource      | Canonical selector after epoch/workspace/project/resource | Derived public projection / binding                                                                           |
+| ------------- | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| sprint        | sprintId                                                  | Exact selected Sprint                                                                                         |
+| target        | targetId                                                  | Exact independent destination Sprint; source/task changes retain its selection                                |
+| task          | taskId                                                    | Exact TaskPlanning snapshot/capabilities/current participation                                                |
+| scope         | sprintId, chain generation, cursor                        | Admitted visits; task/sprint revisions, sprintVersion, server totals and removal/transfer fields              |
+| sprintHistory | sprintId, chain generation, cursor                        | Admitted facts; task/sprint revisions and total                                                               |
+| taskHistory   | taskId, chain generation, cursor                          | Independently admitted task facts and revision/total binding                                                  |
+| preview       | sprintId, destination, chain generation, cursor           | Full closeInput versions/schema/hash/destination plus total/pending/totals; null/backlog/ID stay distinct     |
+| closure       | sprintId                                                  | Independently read immutable closure; lazy after closed selection                                             |
+| outcomes      | sprintId, chain generation, cursor                        | ClosureId/total-bound frozen outcomes; match selected canonical closure, unique outcome and participation IDs |
+
+Single DTO resources also use an observer generation to fence replacements. All
+keys contain the existing opaque epoch, never a credential/raw session. No private
+SSR, placeholder, persisted cache or implicit focus/reconnect/mount/polling read is
+added. Accepted retry:false/gcTime:0/staleTime:0/networkMode:always and original
+transport AbortSignal/body deadline behavior remain. Retirement masks the selected
+slot first, detaches/cancels/removes actual retired records, and rejects late reads,
+denials and notifications. Source/task/destination changes cannot contaminate one
+another; target retains its independent selector. Context retirement still aborts
+the actual write transport and removes query/mutation records.
+
+The parent remains the sole authority for verification, SSE and visibility. A
+confirmation requests one parent refresh and one authorized child drain; the
+parent also performs its existing session check after stream reconnection. No
+second Query session/event listener is added. Hints stale scope/preview immediately
+and defer child reads during a pending write. Preview remains explicit, stale
+preview cannot authorize close, and original command/body/order/key/versions survive
+unknown retries and same-session verification up to original expiry. Confirmation
+stays confirmed when a later parent/read fails; receipts never seed canonical DTOs.
+
+### Current local validation and limits
+
+The focused owner/controller/real-hook/DOM batch passes **270/270**. Four new real
+HTTP cases pass for Query-owned Sprint and TaskPlanning read retirement and stalled
+body deadlines; they close actual local sockets and preserve sanitized request IDs.
+A public cache-event matrix covers all nine DTO owners and terminal denials, late
+success/denial retirement, independent target/request lifetime, five collection
+chains, atomic root replacement and concurrent closure replacement. Existing
+planning/list/create, close, raw-form, focus/navigation and exact retry cases remain.
+These controlled fixtures do not establish native device/a11y or real-product parity.
+
+The maintained real-parent active/closed witnesses observe initial reads20/23,
+body completions20/23 and checkpoint aborted signals4/4. A confirmation adds8/10
+eligible reads, all8/10 body completions, zero aborted signals and exactly one POST;
+preview stays lazy. Starts mean fetch entry and completion means successful
+response.json, not semantic/server-policy acceptance. The one full parent refresh
+also yields two session HTTP reads: its verification and the existing reconnected
+SSE reset check. The separate real-parent hook witness counts exactly one
+confirmation callback. No single-HTTP-session-read claim is made.
+
+All three checkout-local graphs installed frozen without dependency/lock/config
+changes. The ordinary sandbox attempts failed DNS and were stopped; supported
+auto-review escalations approved the same installs. Audits report root1low/7moderate,
+unit2moderate, generator0, with no high/critical. A focused prerequisite initially
+omitted the install's invocation-local strict-age settings and was rejected by
+verify-deps-before-run; using the same strict settings corrected the invocation,
+without reinstall/suppression. The first direct app typecheck lacked generated
+Next route declarations; normal type generation followed by the focused typecheck
+passes. Focused lint defects and initial witness expectation failures remain
+preserved separately. The sandbox native-HTTP attempt failed loopback EPERM;
+the supported reviewed escalation passed. No approval/security rejection was bypassed.
+
+Standard/one candidate build, all-scope numerical measurement, root-only exact
+adoption and normal replay remain pending at this checkpoint. No baseline has
+been written. The new helper remains in the maintained denominator; no source/test
+omission, weaker floor or PR65 exception is proposed. The existing defensive Query
+success-return statement/branch stays honest debt unless a real public witness
+covers it. Candidate bundle costs will use the one build and PR72's source-qualified
+emitted-artifact baseline, without rebuilding the accepted base or claiming controlled
+timing/RSS/wire improvement.
+
+Full T38.4a/T38, current-head CI/native review/acceptance and root delivery remain
+open. Preserve packaging/S01, runtime scalar/refinement/provenance/current-authority,
+G06/dense/T04, lower advisory/action/runtime, user-omitted UNVERIFIED external
+Cancel/Leave with possible draft loss, filters/T08/T10/US05 and provider/staging/
+device/a11y/real-product debts. Historical receipts below keep their source identity.
 
 Status: published in [Draft PR72](https://github.com/Ljrr3045/rielia/pull/72), targeting `dev`
 from initial implementation head `b0e83a2f51a6cea62c9644cc2c9553350e04c44d`, based on
@@ -10,6 +171,32 @@ slice, not acceptance of all T38.4a or full T38.
 This supports existing T11/B1c, P09/US06/US12, UXR01 and UX01/04/05/07/09 behavior.
 Presentation, editable form strings, public schemas, proxies and backend policy
 retain their owners. No new private SSR/hydration or product workflow is added.
+
+### Frozen first candidate — execution passed; numerical candidate rejected
+
+The single complete standard passes in121.493s with the sole native candidate
+build, typechecks/OpenAPI/HTTP/MCP/smoke. The one all-scope built-input measure
+passes1060 cases (API384/web578/contracts79/prototype19),199 maintained inputs,
+in47.322s; count digest `2a2e24fe90591dd000870f466415728a2fcee74ebc7de9430818bbd261794e03`.
+This execution is **not numerical acceptance**. Eight protected comparisons miss:
+web uncovered L/S/B increase5/8/9; changed state S, controller L/S/B and Query-owner
+B ratios also miss. Measured web L/S/F/B3895/5224,4307/5939,927/1441,4849/7126;
+all aggregate ratios/floors improve, which does not waive uncovered/per-file gates.
+
+The rejected web candidate is49,363bytes/SHA256
+`8749a232970a2d3ac89413285cafcc84522def3c868286b99528acf182d6fe57`.
+The other current-scope candidate bytes reproduce accepted files; all eight
+tracked baselines remain untouched. The new helper's measured debt isL5/S8/F0/B7.
+No new input/test omission, gate relaxation, production correction or second
+measurement follows this result. Root review of a small public-witness correction
+proposal is pending; normal replay/infrastructure/artifacts are not run prematurely.
+
+Against PR72's archived emitted candidate, this one build has31browser JS files,
+1,713,185raw/489,773gzip9 bytes (+3,354/+919); the11literal projects/shared files are
+1,040,911raw/287,786gzip9 (+3,352/+906). Standalone is2,161regular files/48,599,798bytes,
+absolute only. The identical gzip9/mtime0 method, source/build provenance and
+artifact/request versus wire/timing/RSS limits remain. No accepted-base build,
+local PG/Docker repetition, commit/publication/review or full T38 acceptance occurs.
 
 ## Draft publication reference
 

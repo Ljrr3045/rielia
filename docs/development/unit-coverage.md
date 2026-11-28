@@ -1,5 +1,80 @@
 # T36 first unit and coverage delivery
 
+## Current local state — exact adoption and normal gates complete
+
+The coordinator adopted only exact web baseline **49,363 bytes**, SHA256
+`30fbe04656e8db312fd84300d62d99d62f30b80c4545cab24e3cc948f9c0ce0e`.
+Seven other baselines remain byte-identical. One normal built-input replay passes
+**1,066/1,066** (API384/web584/contracts79/prototype19), **199 maintained inputs**,
+in47.258s, reproducing all sixteen corrected reports and complete status byte for
+byte. Infrastructure20/20 and the seventeen bounded artifact payloads pass without
+upload. Count digest:
+`47dc3a93a4ed4b61101ba3d57132bfc74707cac3e3ee0efa6c9e1d0b0cbc0e3e`.
+
+All808 retained exact ratio/uncovered comparisons pass; protected floors are not
+reduced and no source/test/N/A omission or PR65 exception applies. Web L/S/F/B:
+3900/5224,4316/5939,927/1441,4859/7126; adopted floors7465/7267/6433/6818.
+Uncovered L/S/F/B1324/1623/514/2267 preserves lines/functions and improves statements
+and branches by one against accepted PR72's1324/1624/514/2268. The new helper keeps
+explicit uncovered debt **L3/S5/F0/B5**; no universal branch/lifecycle claim follows.
+
+The first1060/199 candidate remains rejected with its original eight comparison
+failures and raw reports. Production stayed frozen while exactly six public cases
+were added in the existing owner/controller/integration suites: retired/unselected
+reads, actual observerAdded retirement, failed staged-close continuation, the final
+closure scheduling/empty binding fence, pending raw edit and pending/unknown raw
+close protection with exact explicit retry. Focused6/6 and the corrected1066/199
+measure pass. The same199 production/provider maps show zero covered S/F/B slot
+losses versus candidate1, with gains9S/0F/10B and five lines. Current test credit is
+limited to those mapped public witnesses; historical defensive Query evidence
+retains its source qualification.
+
+The single standard121.493s/sole native build and native HTTP4 checks belong to
+frozen production and their earlier tests. The six later tests are verified by
+focused/corrected/normal execution, not rebound to that standard. No second build,
+standard, HTTP, install/audit or local PG/Docker run follows the correction. The
+[resource guide](t38-sprint-query.md) records actual artifact/request observations,
+setup failures and retained limits. One confirmation callback/full parent refresh
+coexists with two actual session HTTP checks including the existing SSE reconnect
+reset; those counts are distinct.
+
+[PR72's bounded initial-slice acceptance](https://github.com/Ljrr3045/rielia/pull/72)
+accepts planning/list/create only, reviewed `26ac8d7d`, merged `fe9e53c7`. This next
+nine-resource batch is ready for coordinator delivery; current-head CI/native
+review and acceptance, full T38.4a/T38 and all packaging/S01/runtime/provenance/
+current-authority, lower advisory/action and deferred product/UX debts remain open.
+Earlier checkpoints below preserve their original status and evidence identities.
+
+## Historical candidate1 numerical correction gate
+
+The [resource batch](t38-sprint-query.md) passes its one complete standard/sole
+candidate build and1060/199 all-scope measurement. The first numerical candidate
+is rejected: eight protected comparisons miss, including global uncoveredL/S/B
++5/+8/+9; better aggregate ratios do not waive them. All tracked baselines and
+production remain frozen. A bounded public-witness correction proposal awaits
+root; no normal replay, infrastructure/artifacts, additional measure or delivery
+is released. The earlier implementation checkpoint below retains its actual
+source/run chronology; fullT38.4a/T38 acceptance remains open.
+
+## Remaining T38.4a resources — numerical measurement pending
+
+PR72's final **Coordinator acceptance — T38.4a initial slice ACCEPTED**
+[decision](https://github.com/Ljrr3045/rielia/pull/72) accepts planning/list/create only,
+reviewed `26ac8d7d5292500e169223518630ab3be5be2ef5`, merged
+`fe9e53c7be172e0da7bca34b4685054b36af8a14`. Its reviewed-head/exact-merge
+CI passed 26/26 and native Kilo found no issues across 21 paths. Earlier pending
+labels below are frozen source snapshots, superseded only for that bounded slice.
+
+The [remaining-resource batch](t38-sprint-query.md) adds one maintained helper,
+expected198→199 inputs, and removes obsolete controller read ownership. Its
+focused270/native HTTP4 pass, with no numerical result inferred. Root alone owns
+exact baseline adoption; accepted web SHA256
+`2505df034cdb95c090ffcaf7e7a76bed6f7f169a9e3fbe9fd6369aea7e546eed`, seven
+other baselines, all protected floors/ratios/uncovered comparisons and N/A inputs
+remain unchanged. The one standard/build and all-scope measure are the next gate;
+normal replay/infrastructure/artifacts follow only root's exact approval. Existing
+defensive Query debt and unchanged-scope receipts remain source-qualified.
+
 ## T38.4a exact web adoption and final normal replay
 
 The [initial Query slice](t38-sprint-query.md) adds one maintained web runtime owner,

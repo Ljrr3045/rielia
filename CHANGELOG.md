@@ -4,6 +4,32 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Complete local migration of the remaining nine sprint server resources to the
+  existing authenticated Query client, preserving captured commands/recovery,
+  independent selection/page/preview/closure lifetimes and parent authority.
+  Root adopts only exact web49,363bytes/SHA256 `30fbe046`; normal1066/199 reproduces
+  all sixteen reports/status, with infrastructure20/artifacts17 and all808 retained
+  comparisons passed. Candidate1 rejection, six public-witness corrections and
+  helperL3/S5/F0/B5 debt remain explicit. The one standard/native build keeps its
+  earlier test/source binding; no dependency/presentation/backend/form adoption or
+  full T38.4a/T38 acceptance is implied. Coordinator publication/CI/native review
+  remain pending; [current evidence](docs/development/t38-sprint-query.md) records
+  qualified artifact/request costs and all retained runtime/product/UX limits.
+
+- Record the first remaining-resource candidate: one full standard/sole build and
+  1060/199 measurement execute successfully, but eight protected numerical
+  comparisons reject adoption. Baselines stay untouched; a bounded witness
+  correction awaits root review, with no additional measure or final acceptance.
+
+- Record PR72's final bounded planning/list/create acceptance at reviewed `26ac8d7d`,
+  merged `fe9e53c7`; prior pending publication entries remain frozen evidence.
+- Implement the [remaining nine T38.4a Query resources](docs/development/t38-sprint-query.md)
+  in the existing authenticated client, removing the controller DTO ledger/read
+  execution while retaining exact captured command/recovery, independent selection,
+  preview/closure/paging and parent authority. Focused270/native HTTP4 pass;
+  standard/numerical/final acceptance gates remain pending, without dependency,
+  presentation, form-library, backend or full T38 acceptance.
+
 - Publish the initial T38.4a Query slice in [Draft PR72](https://github.com/Ljrr3045/rielia/pull/72), targeting `dev`
   from implementation head `b0e83a2f51a6cea62c9644cc2c9553350e04c44d`, based on
   `70e323b2c7139f3ed3dc5ca50bb8545e5571c5a7`. Read-only verification confirmed OPEN/Draft
