@@ -50,17 +50,58 @@ export function createSprintController(options: {
   let previewWanted = false;
   let write: AbortController | null = null;
   let confirmingEpoch: number | null = null;
+  let readDebt = false;
+  let originalExpiry = 0;
+  let executionGeneration = 0;
+  type Execution = {
+    epoch: number;
+    generation: number;
+    context: SprintClientContext;
+    command: SprintClientCommand;
+    key: string;
+    signal: AbortSignal;
+    expiresAt: number;
+  };
+  let execution: Execution | null = null;
+  let confirmationOwed: number | null = null;
+  const now = () => options.now?.() ?? Date.now();
+  function currentExecution(value: Execution) {
+    if (
+      execution !== value ||
+      value.epoch !== epoch ||
+      value.generation !== executionGeneration ||
+      !sameContext(value.context, state.context) ||
+      value.signal.aborted
+    )
+      return false;
+    if (value.expiresAt <= now()) {
+      deny('signed-out');
+      return false;
+    }
+    return state.status === 'ready' || state.status === 'verifying';
+  }
+
   const queries = createSprintQueryOwner({
     transport: options.planning,
     tasks: options.tasks,
     changed: notify,
     authorized,
+    completionCurrent: ({ context, command, key, signal }) =>
+      execution !== null &&
+      sameContext(execution.context, context) &&
+      execution.command === command &&
+      execution.key === key &&
+      execution.signal === signal &&
+      currentExecution(execution),
     denied: deny,
   });
   function getState(): SprintClientState {
     return (snapshot ??= freezeSprintValue({
       ...state,
-      resources: queries.resources(),
+      resources: state.status === 'verifying' ? emptySprintState().resources : queries.resources(),
+      ...(state.status === 'verifying'
+        ? { mutation: { ...state.mutation, current: null, result: null } }
+        : {}),
     }));
   }
   function notify() {
@@ -83,6 +124,11 @@ export function createSprintController(options: {
   }
   function clear(status: SprintClientState['status'], keepContext = false) {
     epoch++;
+    executionGeneration++;
+    execution = null;
+    originalExpiry = 0;
+    readDebt = false;
+    confirmationOwed = null;
     confirmingEpoch = null;
     const context = keepContext ? state.context : null;
     // Retire the visible controller before Query cancellation can revert cached data.
@@ -108,6 +154,7 @@ export function createSprintController(options: {
     return true;
   }
   function invalidate() {
+    readDebt = true;
     abortReads();
     queries.invalidate();
     publish({ needsReview: !!state.draft });
@@ -133,7 +180,11 @@ export function createSprintController(options: {
       publish({ needsReview: true });
   }
   async function refreshReads() {
-    if (!authorized() || confirmingEpoch === epoch) return;
+    if (!authorized() || confirmingEpoch === epoch || busy()) {
+      readDebt = true;
+      return;
+    }
+    readDebt = false;
     const cycle = ++readCycle;
     await Promise.all([
       read('planning'),
@@ -150,6 +201,23 @@ export function createSprintController(options: {
     if (cycle !== readCycle || !authorized()) return;
     await read('outcomes');
   }
+  async function reviewAuthority() {
+    const draft = state.draft;
+    if (!draft || !authorized() || busy()) return;
+    const names: SprintResourceName[] =
+      draft.type === 'configure-planning' || draft.type === 'create-sprint'
+        ? ['planning']
+        : draft.type === 'edit-sprint'
+          ? ['sprint']
+          : draft.type === 'estimate-task' || draft.type === 'set-task-sprint'
+            ? ['planning', 'task', 'target']
+            : draft.type === 'start-sprint'
+              ? ['planning', 'sprint', 'scope']
+              : ['sprint', 'target'];
+    // Only the captured review's authority is probed. The remaining invalidated
+    // graph stays stale until discard or a confirmed command releases its debt.
+    await Promise.all(names.map((name) => read(name)));
+  }
   async function setContext(context: SprintClientContext | null) {
     if (
       context &&
@@ -159,18 +227,39 @@ export function createSprintController(options: {
       deny('signed-out');
       return;
     }
+    if (state.context && originalExpiry <= now()) clear('signed-out');
     if (
       sameContext(state.context, context) &&
       (state.status === 'ready' || state.status === 'verifying')
     ) {
       const resume = state.status === 'verifying';
-      if (context) bindQueries(context);
-      publish({ context: context ? structuredClone(context) : null, status: 'ready' });
-      if (resume) await refreshReads();
+      const verifiedContext = context
+        ? {
+            ...context,
+            expiresAt: new Date(
+              Math.min(originalExpiry, Date.parse(context.expiresAt)),
+            ).toISOString(),
+          }
+        : null;
+      originalExpiry = verifiedContext ? Date.parse(verifiedContext.expiresAt) : 0;
+      if (verifiedContext) bindQueries(verifiedContext);
+      publish({ context: verifiedContext, status: 'ready' });
+      if (confirmationOwed !== null) {
+        await drainConfirmation();
+        return;
+      }
+      if (resume) {
+        if (busy()) readDebt = true;
+        else if (state.draft || state.needsReview) {
+          readDebt = true;
+          await reviewAuthority();
+        } else await refreshReads();
+      }
       return;
     }
     clear('inactive');
     if (!context) return;
+    originalExpiry = Date.parse(context.expiresAt);
     bindQueries(context);
     publish({ context: structuredClone(context), status: 'ready' });
     await refreshReads();
@@ -276,25 +365,39 @@ export function createSprintController(options: {
     }
   }
   async function save(retry: NonNullable<SprintClientState['recovery']>) {
+    if (!authorized() || !state.context) return;
     const request = new AbortController();
     const capturedEpoch = epoch;
+    const lease: Execution = {
+      epoch,
+      generation: ++executionGeneration,
+      context: state.context,
+      command: retry.command,
+      key: retry.key,
+      signal: request.signal,
+      expiresAt: Math.min(originalExpiry, Date.parse(state.context.expiresAt)),
+    };
+    execution = lease;
     write = request;
     publish({
       recovery: retry,
       mutation: { status: 'pending', failure: null, current: null, result: null },
     });
-    const current = () => epoch === capturedEpoch && write === request && !request.signal.aborted;
+    const current = () => epoch === capturedEpoch && write === request && currentExecution(lease);
+    if (!current()) return;
     try {
       const result = await mutate(retry.command, retry.key, request.signal);
       if (!current()) return;
+      invalidate();
+      if (!current()) return;
       write = null;
+      confirmationOwed = lease.generation;
       publish({
         draft: null,
         recovery: null,
         needsReview: false,
         mutation: { status: 'confirmed', result, current: null, failure: null },
       });
-      invalidate();
     } catch (error) {
       if (!current()) return;
       write = null;
@@ -321,16 +424,36 @@ export function createSprintController(options: {
       });
       if (conflict) invalidate();
     }
-    if (epoch !== capturedEpoch || state.mutation.status !== 'confirmed') return;
+    if (
+      epoch !== capturedEpoch ||
+      state.mutation.status !== 'confirmed' ||
+      !currentExecution(lease)
+    )
+      return;
+    await drainConfirmation();
+  }
+  async function drainConfirmation() {
+    const lease = execution;
+    if (
+      !lease ||
+      confirmationOwed !== lease.generation ||
+      !currentExecution(lease) ||
+      !authorized() ||
+      confirmingEpoch === epoch
+    )
+      return;
+    const capturedEpoch = epoch;
+    confirmationOwed = null;
     confirmingEpoch = capturedEpoch;
     try {
       await options.confirmed?.();
     } catch {
-      // Parent read/verification failure cannot turn an accepted write into ambiguity.
+      /* Confirmation remains a receipt even when parent verification fails. */
     } finally {
       if (confirmingEpoch === capturedEpoch) confirmingEpoch = null;
     }
-    if (epoch === capturedEpoch) await refreshReads();
+    if (currentExecution(lease) && authorized() && state.mutation.status === 'confirmed')
+      await refreshReads();
   }
   async function submit(): Promise<SprintIntentResult> {
     if (!authorized() || !state.draft) return 'unavailable';
@@ -365,10 +488,10 @@ export function createSprintController(options: {
   }
   function suspend() {
     if (!state.context || state.status !== 'ready') return;
-    cancelPending();
-    invalidate();
     publish({ status: 'verifying' });
-    queries.clear();
+    previewWanted = false;
+    queries.clearPreview();
+    invalidate();
   }
   async function refresh() {
     if (!state.context || state.status !== 'ready') return;
@@ -419,12 +542,16 @@ export function createSprintController(options: {
     discardDraft() {
       if (state.mutation.status === 'pending') return false;
       // Explicit discard can abandon local recovery, but cannot undo a possibly committed write.
+      executionGeneration++;
+      execution = null;
+      confirmationOwed = null;
       publish({
         draft: null,
         recovery: null,
         needsReview: false,
         mutation: emptySprintState().mutation,
       });
+      if (readDebt && authorized()) void refreshReads();
       return true;
     },
     dismissResult() {

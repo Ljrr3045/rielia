@@ -1,16 +1,20 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import type { Dispatch, SetStateAction, RefObject } from 'react';
 import {
   type TaskStatus,
   type ProjectTaskCommand,
   type ProjectPolicyCommand,
   type ProjectMoveCommand,
+  type ProjectAccessMember,
 } from '@rielia/contracts';
 import type { MoveEligibility, ProjectTaskState } from '../../lib/project-task-controller';
 import { useFocusTrap, useBodyScrollLock } from './project-dom-hooks';
 import { commandMatches, isTaskResult, type FormState } from './project-content-model';
 export interface ProjectInteractionEffectsPorts {
+  privateLifetime: ProjectTaskState['privateLifetime'];
+  lastPolicyCommandRef?: RefObject<ProjectPolicyCommand | null>;
+  lastPolicyMemberRef?: RefObject<ProjectAccessMember | null>;
   captureFocusProjectId: string | null;
   captureRef: RefObject<HTMLInputElement | null>;
   closeDrawer: () => void;
@@ -26,6 +30,7 @@ export interface ProjectInteractionEffectsPorts {
   focusViewBar: () => void;
   form: FormState | null;
   formAuthorized: boolean;
+  formAwaitingAuthority: boolean;
   hadDetailRef: RefObject<boolean>;
   lastCommandRef: RefObject<ProjectTaskCommand | null>;
   modalOpenerRef: RefObject<HTMLElement | null>;
@@ -79,6 +84,9 @@ export interface ProjectInteractionEffectsPorts {
 
 // Preserve the original screen effect registration order across responsibility moves.
 export function useProjectInteractionEffects({
+  privateLifetime,
+  lastPolicyCommandRef,
+  lastPolicyMemberRef,
   captureFocusProjectId,
   captureRef,
   closeDrawer,
@@ -94,6 +102,7 @@ export function useProjectInteractionEffects({
   focusViewBar,
   form,
   formAuthorized,
+  formAwaitingAuthority,
   hadDetailRef,
   lastCommandRef,
   modalOpenerRef,
@@ -143,6 +152,27 @@ export function useProjectInteractionEffects({
 
   useFocusTrap(sidebarRef, sidebarDrawer && drawerOpen, closeDrawer);
 
+  const feedbackEpoch = useRef<string | null>(null);
+  useEffect(() => {
+    const epoch = privateLifetime?.epoch ?? null;
+    if (!epoch || (feedbackEpoch.current !== null && feedbackEpoch.current !== epoch)) {
+      lastCommandRef.current = null;
+      if (lastPolicyCommandRef) lastPolicyCommandRef.current = null;
+      if (lastPolicyMemberRef) lastPolicyMemberRef.current = null;
+      setForm(null);
+      setCaptureTitle('');
+      setMoveNotice(null);
+    }
+    feedbackEpoch.current = epoch;
+  }, [
+    privateLifetime?.epoch,
+    lastCommandRef,
+    lastPolicyCommandRef,
+    lastPolicyMemberRef,
+    setForm,
+    setCaptureTitle,
+    setMoveNotice,
+  ]);
   useEffect(() => {
     if (!sidebarDrawer) setDrawerOpen(false);
   }, [sidebarDrawer]);
@@ -228,7 +258,8 @@ export function useProjectInteractionEffects({
   useEffect(() => {
     if (
       form !== null &&
-      (((status === 'ready' || status === 'empty') && !formAuthorized) || status === 'disabled')
+      (((status === 'ready' || status === 'empty') && !formAuthorized && !formAwaitingAuthority) ||
+        status === 'disabled')
     ) {
       dismissFocusPendingRef.current = true;
       setForm(null);
@@ -236,7 +267,14 @@ export function useProjectInteractionEffects({
     if (status !== 'signed-out' && status !== 'forbidden') return;
     if (form !== null) setForm(null);
     if (workspaceNavigation !== null) void resolveWorkspaceNavigation('stay');
-  }, [status, form, formAuthorized, workspaceNavigation, resolveWorkspaceNavigation]);
+  }, [
+    status,
+    form,
+    formAuthorized,
+    formAwaitingAuthority,
+    workspaceNavigation,
+    resolveWorkspaceNavigation,
+  ]);
 
   useEffect(() => {
     if (form === null) return;
@@ -451,8 +489,8 @@ export function useProjectInteractionEffects({
       selection.projectId !== captureFocusProjectId
     )
       return;
-    setCaptureFocusProjectId(null);
     const frame = requestAnimationFrame(() => {
+      setCaptureFocusProjectId(null);
       if (captureRef.current !== null) captureRef.current.focus();
       else projectHeadingRef.current?.focus();
     });

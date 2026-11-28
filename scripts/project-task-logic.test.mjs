@@ -4,6 +4,7 @@ import { setImmediate } from 'node:timers';
 import { createProjectTaskController } from '../apps/web/src/lib/project-task-controller.ts';
 import { ProjectTaskFailure } from '../apps/web/src/lib/project-task-client.ts';
 import { parseSafeMarkdown, safeMarkdownLink } from '../apps/web/src/lib/safe-markdown.ts';
+import { comment as canonicalComment } from '../apps/web/test/unit/project-task-fixtures.mjs';
 
 const session = {
   user: { id: 'human', name: 'Human', email: 'human@example.test', emailVerified: true },
@@ -416,7 +417,11 @@ test('T10 dirty invalidation epoch and reset intent survive delayed background r
   await new Promise((resolve) => setTimeout(resolve, 160));
   assert.equal(g.controller.getState().status, 'forbidden');
   assert.equal(g.controller.getState().task, null);
-  assert.equal(g.controller.getState().draft.fields.title, 'Unsent draft');
+  assert.equal(
+    g.controller.getState().draft,
+    null,
+    'terminal denial erases the formerly retained private draft',
+  );
   f.controller.dispose();
   g.controller.dispose();
 });
@@ -1102,7 +1107,32 @@ test('successful mutation remains successful with result after a failed refresh 
   assert.equal(f.controller.getState().retryTarget, null);
   assert.equal(f.controller.getState().draft, null);
 });
-test('session loss preserves same-human draft/key, another account clears private data and selection', async () => {
+for (const completion of ['success', 'denied']) {
+  test(`a command-review ${completion} cannot affect a newer edited intent or seed canonical task data`, async () => {
+    const f = fixture();
+    await f.controller.openLocation('?workspace=a&project=p&task=t');
+    f.controller.stage(draft());
+    const held = deferred();
+    let reads = 0;
+    f.transport.task = async () => (++reads === 1 ? task('t', 'p', 'a', 2) : held.promise);
+    const reviewing = f.controller.reloadConflict();
+    await new Promise(setImmediate);
+    assert.equal(reads, 2, 'canonical authority probe and command-review GET are distinct');
+    f.controller.stage({ ...draft(), fields: { title: 'New edited intent' } });
+    if (completion === 'denied') held.reject(new ProjectTaskFailure(403));
+    else held.resolve(task('t', 'p', 'a', 9));
+    await reviewing;
+    assert.equal(f.controller.getState().status, 'ready');
+    assert.equal(f.controller.getState().task.version, 2);
+    assert.equal(f.controller.getState().draft.fields.title, 'New edited intent');
+    assert.equal(f.controller.getState().conflict, null);
+    f.controller.rebaseDraft();
+    assert.equal(f.controller.getState().draft.expectedVersion, 1);
+    assert.equal(f.calls.length, 0);
+    f.controller.dispose();
+  });
+}
+test('terminal session loss erases old draft/key and same-human verification cannot restore it', async () => {
   const f = fixture({
     transport: {
       mutate: async () => {
@@ -1116,10 +1146,10 @@ test('session loss preserves same-human draft/key, another account clears privat
   await f.controller.submit();
   assert.equal(f.controller.getState().status, 'signed-out');
   assert.equal(f.controller.getState().task, null);
-  assert.ok(f.controller.getState().draft);
-  assert.ok(f.controller.getState().retryTarget);
+  assert.equal(f.controller.getState().draft, null);
+  assert.equal(f.controller.getState().retryTarget, null);
   await f.controller.refresh();
-  assert.equal(f.controller.getState().draft.fields.title, 'Unsent draft');
+  assert.equal(f.controller.getState().draft, null);
   f.values.session = { ...session, user: { ...session.user, id: 'other' } };
   await f.controller.refresh();
   for (const key of ['draft', 'retryTarget', 'conflict', 'result', 'outcome'])
@@ -1172,7 +1202,7 @@ test('transient next-page failure preserves list/detail/success and cursor for r
   assert.equal(after.result, before.result);
   assert.equal(after.projects.nextCursor, 'next');
   assert.deepEqual(after.pageError, { collection: 'projects', requestId: 'page-request' });
-  f.transport.projects = async () => page([project('p2')]);
+  f.transport.projects = async () => ({ ...page([project('p2')]), total: 2 });
   await f.controller.loadMore('projects');
   assert.equal(f.controller.getState().projects.items.length, 2);
   assert.equal(f.controller.getState().pageError, null);
@@ -1262,6 +1292,7 @@ test('policy draft version and principal target are captured; unknown outcomes s
         ...project(p, w, 8),
         capabilities: { ...project().capabilities, canManageAccess: true },
       }),
+      access: async (w, p) => ({ ...page([]), workspaceId: w, projectId: p, projectVersion: 8 }),
       mutate: async (command, key) => {
         f.calls.push({ command, key });
         if (fail) throw new Error('unknown outcome');
@@ -1376,6 +1407,10 @@ test('access conflict rebase requires actual target state and reload fetches tha
   const reviews = [];
   const f = fixture({
     transport: {
+      project: async (w, p) => ({
+        ...project(p, w),
+        capabilities: { ...project().capabilities, canManageAccess: true },
+      }),
       mutate: async () => {
         throw new ProjectTaskFailure(
           409,
@@ -1513,7 +1548,7 @@ test('dismissing feedback preserves missing-page recovery and a successful follo
   const f = fixture({
     transport: {
       project: async (w, p) => ({
-        ...project(p, w),
+        ...project(p, w, failing ? 1 : 2),
         capabilities: { ...project().capabilities, canManageAccess: true },
       }),
       access: async (w, p) => {
@@ -1574,7 +1609,12 @@ test('content and policy pager failures coexist through independent retry in eit
             if (cursor && failPolicy)
               throw new ProjectTaskFailure(503, null, null, 'policy-request');
             return {
-              ...page([policyEntry]),
+              ...page([
+                {
+                  ...policyEntry,
+                  principalId: cursor ? 'tail-principal' : policyEntry.principalId,
+                },
+              ]),
               workspaceId: w,
               projectId: p,
               projectVersion: 1,
@@ -1977,4 +2017,315 @@ test('T09 closing parent picker during pending save or task/session reload alway
   await refreshing;
   assert.equal(calls.filter((value) => value === 'parent-candidates').length, count);
   assert.equal(g.controller.getState().collaboration['parent-candidates'].status, 'idle');
+});
+
+for (const reason of ['signed-out', 'forbidden'])
+  test(`explicit stream denial ${reason} hard-retires private intent and cannot restart from an old hint`, async () => {
+    const f = fixture();
+    await f.controller.openLocation('?workspace=a&project=p&task=t');
+    f.controller.stage(draft());
+    f.controller.streamDenied(reason);
+    assert.equal(f.controller.getState().status, reason);
+    assert.equal(f.controller.getState().task, null);
+    assert.equal(f.controller.getState().draft, null);
+    assert.equal(f.controller.getState().result, null);
+    await f.controller.backgroundRefresh(true);
+    f.controller.stage(draft());
+    await f.controller.submit();
+    assert.equal(f.calls.length, 0);
+    f.controller.dispose();
+  });
+
+test('synchronous project render masking retires authority at the original deadline before a timer effect', async (t) => {
+  let current = Date.parse(session.session.expiresAt) - 1000;
+  t.mock.method(Date, 'now', () => current);
+  const f = fixture();
+  await f.controller.openLocation('?workspace=a&project=p&task=t');
+  f.controller.stage(draft());
+  current += 1001;
+  const rendered = f.controller.getVisibleState();
+  assert.equal(rendered.status, 'signed-out');
+  assert.equal(rendered.task, null);
+  assert.equal(rendered.resources, null);
+  assert.equal(rendered.draft, null);
+  assert.equal(rendered.selectedTaskAssignee, null);
+  assert.equal(rendered.taskSummary.canCreate, false);
+  await f.controller.backgroundRefresh();
+  assert.equal(f.controller.getState().draft, null);
+  assert.equal(f.controller.getState().privateLifetime, null);
+  await f.controller.submit();
+  assert.equal(f.calls.length, 0);
+  f.controller.dispose();
+});
+
+test('expired navigation re-verifies a fresh lifetime without reviving its original captured task intent', async (t) => {
+  let current = Date.parse(session.session.expiresAt) - 1000;
+  t.mock.method(Date, 'now', () => current);
+  const f = fixture();
+  await f.controller.openLocation('?workspace=a&project=p&task=t');
+  f.controller.stage(draft());
+  const epoch = f.controller.getState().privateLifetime.epoch;
+  current += 1001;
+  f.values.session = {
+    ...session,
+    session: { ...session.session, expiresAt: new Date(current + 60_000).toISOString() },
+  };
+  await f.controller.selectTask('other');
+  assert.equal(f.controller.getState().status, 'ready');
+  assert.notEqual(f.controller.getState().privateLifetime.epoch, epoch);
+  assert.equal(f.controller.getState().draft, null);
+  assert.equal(f.controller.getState().retryTarget, null);
+  assert.equal(f.controller.getState().task.id, 'other');
+  assert.equal(f.calls.length, 0);
+  f.controller.dispose();
+});
+
+for (const phase of ['workspace', 'project', 'task'])
+  test(`unknown retry cannot cross retirement during its ${phase} authority probe`, async () => {
+    const f = fixture();
+    await f.controller.openLocation('?workspace=a&project=p&task=t');
+    f.controller.stage(draft());
+    f.transport.mutate = async (command, key) => {
+      f.calls.push({ command, key });
+      throw new Error('unknown');
+    };
+    await f.controller.submit();
+    const held = deferred(),
+      started = deferred();
+    if (phase === 'workspace')
+      f.workspaces.detail = async () => {
+        started.resolve();
+        return held.promise;
+      };
+    else
+      f.transport[phase] = async () => {
+        started.resolve();
+        return held.promise;
+      };
+    const retrying = f.controller.retrySave();
+    await started.promise;
+    f.controller.dispose();
+    held.resolve(phase === 'workspace' ? workspace('a') : phase === 'project' ? project() : task());
+    await retrying;
+    assert.equal(f.calls.length, 1);
+    assert.equal(f.controller.getState().task, null);
+    assert.equal(f.controller.getVisibleState().retryTarget, null);
+  });
+
+test('editing an own-comment intent preserves both original versions through deliberate field changes', async () => {
+  const f = fixture({
+    transport: {
+      collaboration: async (_w, _p, t, name) => ({
+        ...collaborationPage(name, t),
+        ...(name === 'comments' ? { items: [canonicalComment], total: 1 } : {}),
+      }),
+    },
+  });
+  await f.controller.openLocation('?workspace=a&project=p&task=t');
+  const command = {
+    type: 'edit-comment',
+    workspaceId: 'a',
+    projectId: 'p',
+    taskId: 't',
+    commentId: 'comment',
+    expectedVersion: 1,
+    expectedCommentVersion: 1,
+    body: 'Original edit',
+  };
+  f.controller.stage(command);
+  f.controller.stage({
+    ...command,
+    expectedVersion: 99,
+    expectedCommentVersion: 99,
+    body: 'Changed editable text',
+  });
+  assert.equal(f.controller.getState().draft.expectedVersion, 1);
+  assert.equal(f.controller.getState().draft.expectedCommentVersion, 1);
+  assert.equal(f.controller.getState().draft.body, 'Changed editable text');
+  f.transport.mutate = async (command, key) => {
+    f.calls.push({ command, key });
+    return task();
+  };
+  await f.controller.submit();
+  assert.equal(f.calls.length, 1);
+  assert.equal(f.calls[0].command.expectedCommentVersion, 1);
+  assert.equal(f.calls[0].command.body, 'Changed editable text');
+  f.controller.dispose();
+});
+
+test('current order intent blocks duplicate movement while pending, unknown or locally captured and keeps original order preconditions', async () => {
+  const held = deferred(),
+    f = fixture();
+  await f.controller.openLocation('?workspace=a&project=p');
+  f.controller.stage({
+    type: 'create-task',
+    workspaceId: 'a',
+    projectId: 'p',
+    fields: { title: 'In flight' },
+  });
+  f.transport.mutate = async (command, key) => {
+    f.calls.push({ command, key });
+    return held.promise;
+  };
+  const saving = f.controller.submit();
+  await new Promise(setImmediate);
+  assert.equal(f.controller.stageMove('t', 'todo', null), 'pending');
+  assert.equal(f.calls.length, 1);
+  held.reject(new Error('Unknown operation'));
+  await saving;
+  assert.equal(f.controller.stageMove('t', 'todo', null), 'recovery');
+  assert.equal(f.calls.length, 1);
+  f.controller.discardDraft();
+  assert.equal(f.controller.stageMove('t', 'todo', null), 'ready');
+  const captured = f.controller.getState().draft;
+  f.controller.stage({
+    ...captured,
+    expectedVersion: 99,
+    expectedOrderVersion: 99,
+    status: 'done',
+  });
+  assert.equal(f.controller.getState().draft.expectedVersion, 1);
+  assert.equal(f.controller.getState().draft.expectedOrderVersion, 1);
+  assert.equal(f.controller.moveEligibility('t', 'todo', null), 'draft');
+  assert.equal(f.calls.length, 1);
+  f.controller.discardDraft();
+  assert.equal(f.controller.moveEligibility('t', 'todo', 'gone'), 'invalid-destination');
+  await f.controller.selectTask('other');
+  assert.equal(f.controller.moveEligibility('t', 'todo', null), 'different-detail');
+  assert.equal(f.calls.length, 1);
+  f.controller.dispose();
+});
+
+for (const denial of ['null', 401, 403])
+  test(`held reset verification ${denial} retires captured private intent before any late durable completion`, async () => {
+    const f = fixture();
+    await f.controller.openLocation('?workspace=a&project=p&task=t');
+    f.controller.stage(draft());
+    const mutation = deferred(),
+      verification = deferred();
+    f.transport.mutate = async (command, key) => {
+      f.calls.push({ command, key });
+      return mutation.promise;
+    };
+    const saving = f.controller.submit();
+    await new Promise(setImmediate);
+    f.values.session = verification.promise;
+    const resetting = f.controller.backgroundRefresh(true);
+    await new Promise(setImmediate);
+    assert.equal(f.controller.getState().session, null);
+    assert.equal(f.controller.getState().draft, null);
+    assert.equal(f.controller.getState().task, null);
+    if (denial === 'null') verification.resolve(null);
+    else verification.reject(new ProjectTaskFailure(denial));
+    await resetting;
+    assert.equal(f.controller.getState().status, denial === 403 ? 'forbidden' : 'signed-out');
+    mutation.resolve(task('t', 'p', 'a', 2));
+    await saving;
+    assert.equal(f.controller.getState().result, null);
+    assert.equal(f.controller.getState().draft, null);
+    assert.equal(f.controller.getState().retryTarget, null);
+    assert.equal(f.calls.length, 1);
+    f.controller.dispose();
+  });
+
+test('an ordinary held verification failure hides exact unknown intent until actual same-session recovery', async () => {
+  const f = fixture();
+  await f.controller.openLocation('?workspace=a&project=p&task=t');
+  f.controller.stage(draft());
+  f.transport.mutate = async (command, key) => {
+    f.calls.push({ command, key });
+    throw new Error('Lost result');
+  };
+  await f.controller.submit();
+  const original = f.calls[0];
+  const held = deferred();
+  f.values.session = held.promise;
+  const resetting = f.controller.backgroundRefresh(true);
+  await new Promise(setImmediate);
+  held.reject(new Error('Verification unavailable'));
+  await resetting;
+  assert.equal(f.controller.getState().status, 'error');
+  assert.equal(f.controller.getState().privateLifetime.verified, false);
+  assert.equal(f.controller.getState().retryTarget, null);
+  assert.equal(f.controller.getState().task, null);
+  await f.controller.retrySave();
+  assert.equal(f.calls.length, 1);
+  f.values.session = session;
+  await f.controller.refresh();
+  assert.equal(f.controller.getState().retryTarget.fields.title, original.command.fields.title);
+  f.transport.mutate = async (command, key) => {
+    f.calls.push({ command, key });
+    return task('t', 'p', 'a', 2);
+  };
+  await f.controller.retrySave();
+  assert.deepEqual(f.calls[1], original);
+  f.controller.dispose();
+});
+
+test('original deadline during a held reset retires memory before a renewed response and fresh verification cannot restore its old key', async (t) => {
+  let current = Date.parse(session.session.expiresAt) - 1000;
+  t.mock.method(Date, 'now', () => current);
+  const f = fixture();
+  await f.controller.openLocation('?workspace=a&project=p&task=t');
+  f.controller.stage(draft());
+  f.transport.mutate = async (command, key) => {
+    f.calls.push({ command, key });
+    throw new Error('Unknown result');
+  };
+  await f.controller.submit();
+  const original = f.calls[0];
+  const held = deferred();
+  f.values.session = held.promise;
+  const resetting = f.controller.backgroundRefresh(true);
+  await new Promise(setImmediate);
+  current += 1001;
+  assert.equal(f.controller.getVisibleState().draft, null);
+  f.controller.expire();
+  const renewed = {
+    ...session,
+    session: { ...session.session, expiresAt: new Date(current + 60_000).toISOString() },
+  };
+  held.resolve(renewed);
+  await resetting;
+  assert.equal(f.controller.getState().status, 'signed-out');
+  assert.equal(f.controller.getState().retryTarget, null);
+  f.values.session = renewed;
+  await f.controller.refresh();
+  assert.equal(f.controller.getState().draft, null);
+  f.controller.stage({ ...draft(), fields: { title: 'New verified edit' } });
+  f.transport.mutate = async (command, key) => {
+    f.calls.push({ command, key });
+    return task('t', 'p', 'a', 2);
+  };
+  await f.controller.submit();
+  assert.equal(f.calls.length, 2);
+  assert.notEqual(f.calls[1].key, original.key);
+  assert.equal(f.calls[1].command.fields.title, 'New verified edit');
+  f.controller.dispose();
+});
+
+test('obsolete held verification denial cannot retire a more recent authorized state or its exact unknown recovery', async () => {
+  const f = fixture();
+  await f.controller.openLocation('?workspace=a&project=p&task=t');
+  f.controller.stage(draft());
+  f.transport.mutate = async (command, key) => {
+    f.calls.push({ command, key });
+    throw new Error('Unknown result');
+  };
+  await f.controller.submit();
+  const original = f.calls[0];
+  const held = deferred();
+  f.values.session = held.promise;
+  const obsolete = f.controller.backgroundRefresh(true);
+  await new Promise(setImmediate);
+  f.values.session = session;
+  await f.controller.refresh();
+  const current = f.controller.getState();
+  held.reject(new ProjectTaskFailure(403));
+  await obsolete;
+  assert.equal(f.controller.getState().status, 'ready');
+  assert.equal(f.controller.getState().retryTarget, current.retryTarget);
+  assert.equal(f.controller.getState().retryTarget.fields.title, original.command.fields.title);
+  assert.equal(f.calls.length, 1);
+  f.controller.dispose();
 });

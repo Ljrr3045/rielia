@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
+import { setImmediate } from 'node:timers';
 import { changeSprintCommand } from '../../src/lib/sprint-commands.ts';
 import { sprintPageBinding } from '../../src/lib/sprint-client-state.ts';
 import { createSprintController } from '../../src/lib/sprint-controller.ts';
@@ -880,30 +881,225 @@ test('selection refuses dirty navigation, then clears entity data and obsolete r
   assert.equal(b.controller.stage({ type: 'create-sprint', fields }), 'unavailable');
 });
 
-test('suspending identity verification aborts pending work and preserves exact recovery only for the same session', async (t) => {
+for (const type of ['create-sprint', 'edit-sprint']) {
+  test(`temporary verification preserves the exact pending ${type} and hides its receipt until verified resume`, async (t) => {
+    let confirmations = 0;
+    const b = await mountedSprint(t, {
+      confirmed: async () => {
+        confirmations++;
+      },
+    });
+    const held = deferred();
+    b.server.post = () => held.promise;
+    b.controller.stage({ type, fields });
+    const saving = b.controller.submit();
+    await new Promise(setImmediate);
+    const post = b.posts()[0];
+    const reads = b.server.requests.filter((r) => r.init.method !== 'POST').length;
+    b.controller.suspend();
+    assert.equal(b.state().status, 'verifying');
+    assert.equal(b.state().mutation.status, 'pending');
+    assert.equal(post.init.signal.aborted, false);
+    assert.equal(await b.controller.retrySave(), 'unavailable');
+    assert.equal(b.controller.stage({ type: 'create-sprint', fields }), 'unavailable');
+    assert.ok(Object.values(b.state().resources).every((resource) => resource.data === null));
+    held.resolve(Response.json(type === 'create-sprint' ? plannedSprint('created') : sprint));
+    await saving;
+    assert.equal(confirmations, 0, 'hidden completion cannot reopen verification');
+    assert.equal(b.state().status, 'verifying');
+    assert.equal(b.state().mutation.status, 'confirmed');
+    assert.equal(b.state().mutation.result, null);
+    assert.equal(b.server.requests.filter((r) => r.init.method !== 'POST').length, reads);
+    await b.controller.setContext({ ...context, expiresAt: '9999-02-01T00:00:00.000Z' });
+    assert.equal(confirmations, 1);
+    assert.equal(b.state().mutation.status, 'confirmed');
+    assert.ok(b.state().mutation.result);
+    assert.equal(b.posts().length, 1);
+  });
+}
+
+test('same-session unknown verification recovery retries only by explicit original bytes/key intent', async (t) => {
   const b = await mountedSprint(t);
-  const held = deferred();
-  b.server.post = () => held.promise;
+  let fail = true;
+  b.server.post = () => (fail ? Promise.reject(new Error('unknown')) : Response.json(sprint));
   b.controller.stage({ type: 'edit-sprint', fields });
-  const saving = b.controller.submit();
+  await b.controller.submit();
   const recovery = b.state().recovery;
   b.controller.suspend();
-  assert.equal(b.state().status, 'verifying');
-  assert.equal(b.state().mutation.status, 'unknown');
   assert.equal(await b.controller.retrySave(), 'unavailable');
   await b.controller.setContext(context);
   assert.equal(b.state().recovery, recovery);
-  held.resolve(Response.json(sprint));
-  await saving;
-  assert.equal(b.state().mutation.status, 'unknown');
-  b.server.post = () => Response.json(sprint);
+  assert.equal(b.posts().length, 1);
+  fail = false;
   await b.controller.retrySave();
+  assert.equal(b.posts().length, 2);
   assert.equal(b.posts()[0].init.body, b.posts()[1].init.body);
   assert.equal(
     b.posts()[0].init.headers['Idempotency-Key'],
     b.posts()[1].init.headers['Idempotency-Key'],
   );
   assert.equal(b.state().mutation.status, 'confirmed');
+});
+
+for (const type of ['create-sprint', 'edit-sprint']) {
+  test(`${type} completion after verified resume drains once and preserves a later independent hint`, async (t) => {
+    let confirmations = 0;
+    const b = await mountedSprint(t, {
+      confirmed: async () => {
+        confirmations++;
+      },
+    });
+    const held = deferred();
+    b.server.post = () => held.promise;
+    b.controller.stage({ type, fields });
+    const saving = b.controller.submit();
+    await new Promise(setImmediate);
+    const before = b.server.requests.length;
+    b.controller.suspend();
+    await b.controller.setContext(context);
+    assert.equal(b.server.requests.length, before, 'pending resume cannot start domain reads');
+    assert.equal(b.posts()[0].init.signal.aborted, false);
+    held.resolve(Response.json(type === 'create-sprint' ? plannedSprint('created') : sprint));
+    await saving;
+    assert.equal(confirmations, 1);
+    assert.equal(b.state().mutation.status, 'confirmed');
+    const confirmedReads = b.server.requests.length;
+    await b.controller.handleEvent({ type: 'heartbeat' });
+    assert.equal(b.server.requests.length, confirmedReads);
+    await b.controller.handleEvent({ type: 'reset' });
+    assert.ok(b.server.requests.length > confirmedReads);
+    assert.equal(confirmations, 1);
+    assert.equal(b.posts().length, 1);
+  });
+
+  test(`${type} cannot settle after the original expiry even when verification renewed its session`, async (t) => {
+    let current = Date.parse(context.expiresAt) - 1000,
+      confirmations = 0;
+    const b = await mountedSprint(t, {
+      now: () => current,
+      confirmed: async () => {
+        confirmations++;
+      },
+    });
+    const held = deferred();
+    b.server.post = () => held.promise;
+    b.controller.stage({ type, fields });
+    const saving = b.controller.submit();
+    await new Promise(setImmediate);
+    const signal = b.posts()[0].init.signal;
+    b.controller.suspend();
+    await b.controller.setContext({ ...context, expiresAt: '9999-02-01T00:00:00.000Z' });
+    assert.equal(b.state().context.expiresAt, context.expiresAt);
+    b.controller.suspend();
+    current += 1001;
+    held.resolve(Response.json(type === 'create-sprint' ? plannedSprint('created') : sprint));
+    await saving;
+    assert.equal(signal.aborted, true);
+    assert.equal(b.state().status, 'signed-out');
+    assert.equal(b.state().mutation.result, null);
+    assert.equal(b.state().recovery, null);
+    assert.equal(confirmations, 0);
+  });
+
+  for (const retirement of [
+    'user',
+    'session',
+    'workspace',
+    'project',
+    'null',
+    '401',
+    '403',
+    'dispose',
+  ]) {
+    test(`${type} held native signal is retired before ${retirement} replacement; late receipt or denial has no effect`, async (t) => {
+      let confirmations = 0;
+      const b = await mountedSprint(t, {
+        confirmed: async () => {
+          confirmations++;
+        },
+      });
+      const held = deferred();
+      b.server.post = () => held.promise;
+      b.controller.stage({ type, fields });
+      const saving = b.controller.submit();
+      await new Promise(setImmediate);
+      const post = b.posts()[0];
+      b.controller.suspend();
+      if (retirement === 'dispose') b.controller.dispose();
+      else if (retirement === '401' || retirement === '403')
+        b.controller.deny(retirement === '401' ? 'signed-out' : 'forbidden');
+      else if (retirement === 'null') await b.controller.setContext(null);
+      else
+        await b.controller.setContext({
+          ...context,
+          [{ user: 'userId', session: 'sessionId', workspace: 'workspaceId', project: 'projectId' }[
+            retirement
+          ]]: 'replacement',
+        });
+      assert.equal(post.init.signal.aborted, true);
+      const after = b.state();
+      held.resolve(
+        retirement === '403'
+          ? Response.json({ code: 'FORBIDDEN' }, { status: 403 })
+          : Response.json(type === 'create-sprint' ? plannedSprint('created') : sprint),
+      );
+      await saving;
+      assert.deepEqual(b.state(), after);
+      assert.equal(confirmations, 0);
+      assert.equal(b.posts().length, 1);
+    });
+  }
+
+  for (const at of ['pending', 'confirmed', 'confirmation']) {
+    test(`${type} reentrant ${at} retirement prevents stale command settlement and follow-up`, async (t) => {
+      let confirmations = 0,
+        b;
+      b = await mountedSprint(t, {
+        confirmed: async () => {
+          confirmations++;
+          if (at === 'confirmation') b.controller.dispose();
+        },
+      });
+      let retired = false;
+      const unsubscribe = b.controller.subscribe(() => {
+        if (!retired && at !== 'confirmation' && b.state().mutation.status === at) {
+          retired = true;
+          b.controller.dispose();
+        }
+      });
+      t.after(unsubscribe);
+      b.server.post = () =>
+        Response.json(type === 'create-sprint' ? plannedSprint('created') : sprint);
+      b.controller.stage({ type, fields });
+      const before = b.server.requests.length;
+      await b.controller.submit();
+      assert.equal(b.state().status, 'inactive');
+      assert.equal(b.state().mutation.result, null);
+      assert.equal(b.posts().length, at === 'pending' ? 0 : 1);
+      assert.equal(b.server.requests.length, before + (at === 'pending' ? 0 : 1));
+      assert.equal(confirmations, at === 'confirmation' ? 1 : 0);
+    });
+  }
+}
+
+test('unknown verification keeps read debt dormant until explicit discard, then drains once', async (t) => {
+  const b = await mountedSprint(t);
+  b.server.post = () => Promise.reject(new Error('lost'));
+  b.controller.stage({ type: 'edit-sprint', fields });
+  await b.controller.submit();
+  const before = b.server.requests.length;
+  b.controller.suspend();
+  await b.controller.handleEvent({ type: 'reset' });
+  await b.controller.setContext(context);
+  assert.equal(b.server.requests.length, before);
+  assert.equal(b.state().resources.sprint.stale, true);
+  assert.equal(b.controller.discardDraft(), true);
+  await new Promise(setImmediate);
+  const after = b.server.requests.length;
+  assert.ok(after > before);
+  assert.equal(b.posts().length, 1);
+  await b.controller.setContext(context);
+  assert.equal(b.server.requests.length, after);
 });
 
 test('a relevant explicit reload invalidates a staged close without a stream hint', async (t) => {
@@ -1388,4 +1584,150 @@ test('resource correction: source replacement during closure refresh cannot sche
     'legitimate new-selection planning reads remain allowed',
   );
   assert.equal(b.posts().length, 0);
+});
+
+for (const type of ['create-sprint', 'edit-sprint'])
+  test(`${type} reentrant retirement during success invalidation rejects confirmation before it can publish`, async (t) => {
+    let confirms = 0;
+    const b = await mountedSprint(t, {
+      confirmed: async () => {
+        confirms++;
+      },
+    });
+    let armed = false,
+      retired = false;
+    const stop = b.controller.subscribe(() => {
+      const state = b.state();
+      if (
+        armed &&
+        !retired &&
+        state.mutation.status === 'pending' &&
+        state.resources.planning.stale
+      ) {
+        retired = true;
+        b.controller.dispose();
+      }
+    });
+    t.after(stop);
+    b.server.post = () =>
+      Response.json(type === 'create-sprint' ? plannedSprint('created') : sprint);
+    b.controller.stage({ type, fields });
+    armed = true;
+    await b.controller.submit();
+    assert.equal(retired, true);
+    assert.equal(b.state().status, 'inactive');
+    assert.equal(b.state().mutation.result, null);
+    assert.equal(confirms, 0);
+    assert.equal(b.posts().length, 1);
+  });
+
+test('changing explicit participation target cannot authorize a captured command against another target resource', async (t) => {
+  const b = await mountedSprint(t);
+  await b.controller.selectTarget('target');
+  assert.equal(b.controller.stage({ type: 'set-task-sprint', targetSprintId: 'target' }), 'ready');
+  const captured = b.state().draft;
+  await b.controller.selectTarget(null);
+  assert.equal(await b.controller.submit(), 'stale');
+  assert.equal(b.posts().length, 0);
+  assert.equal(b.state().draft, captured);
+});
+
+test('reentrant lifetime retirement during key creation prevents native direct command admission', async (t) => {
+  const server = sprintServer();
+  t.mock.method(globalThis, 'fetch', server.fetch);
+  let controller;
+  controller = createSprintController({
+    planning: createSprintPlanningTransport(),
+    tasks: createTaskPlanningTransport(),
+    key: () => {
+      controller.dispose();
+      return 'retired-key';
+    },
+  });
+  t.after(() => controller.dispose());
+  await controller.setContext(context);
+  await controller.select('s', 't');
+  assert.equal(controller.stage({ type: 'edit-sprint', fields }), 'ready');
+  await controller.submit();
+  assert.equal(server.requests.filter((r) => r.init.method === 'POST').length, 0);
+  assert.equal(controller.getState().status, 'inactive');
+});
+
+for (const kind of ['create-sprint', 'estimate-task'])
+  test(`same-session ${kind} review probes only captured authority and never refreshes an unrelated graph`, async (t) => {
+    const b = await mountedSprint(t);
+    if (kind === 'estimate-task') await b.controller.selectTarget('target');
+    const intent =
+      kind === 'create-sprint' ? { type: kind, fields } : { type: kind, estimatePoints: 5 };
+    assert.equal(b.controller.stage(intent), 'ready');
+    const captured = b.state().draft;
+    b.controller.suspend();
+    const before = b.server.requests.length;
+    if (kind === 'create-sprint') b.server.planning.projectVersion++;
+    else b.server.task.snapshot.version++;
+    await b.controller.setContext(context);
+    const paths = b.server.requests.slice(before).map((r) => r.path);
+    assert.deepEqual(
+      paths.sort(),
+      (kind === 'create-sprint'
+        ? ['/api/v1/workspaces/w/projects/p/planning']
+        : [
+            '/api/v1/workspaces/w/projects/p/planning',
+            '/api/v1/workspaces/w/projects/p/tasks/t/planning',
+            '/api/v1/workspaces/w/projects/p/sprints/target',
+          ]
+      ).sort(),
+    );
+    assert.equal(b.state().draft, captured);
+    assert.equal(b.state().needsReview, true);
+    assert.equal(await b.controller.submit(), 'review-required');
+    assert.equal(b.posts().length, 0);
+  });
+
+test('a captured review expires between verified publication and its authority probe without a new read or write', async (t) => {
+  let current = Date.parse(context.expiresAt) - 1000;
+  const b = await mountedSprint(t, { now: () => current });
+  b.controller.stage({ type: 'edit-sprint', fields });
+  b.controller.suspend();
+  let armed = true;
+  const stop = b.controller.subscribe(() => {
+    if (armed && b.state().status === 'ready') {
+      armed = false;
+      current += 1001;
+    }
+  });
+  t.after(stop);
+  const requests = b.server.requests.length;
+  await b.controller.setContext(context);
+  assert.equal(b.state().status, 'signed-out');
+  assert.equal(b.state().draft, null);
+  assert.equal(b.state().recovery, null);
+  assert.equal(b.state().mutation.result, null);
+  assert.equal(b.server.requests.length, requests);
+  assert.ok(Object.values(b.state().resources).every((r) => r.data === null));
+});
+
+test('explicit preview reload without a captured command is allowed, while pending and unknown close retain their exact review', async (t) => {
+  const b = await mountedSprint(t);
+  await b.controller.preview('backlog');
+  const previewReads = () =>
+    b.server.requests.filter((r) => r.path.endsWith('/close-preview')).length;
+  const before = previewReads();
+  await b.controller.reload('preview');
+  assert.equal(previewReads(), before + 1);
+  assert.equal(b.controller.stage({ type: 'close-sprint' }), 'ready');
+  const held = deferred();
+  b.server.post = () => held.promise;
+  const saving = b.controller.submit();
+  await new Promise(setImmediate);
+  const original = b.posts()[0];
+  await b.controller.reload('preview');
+  assert.equal(previewReads(), before + 1);
+  assert.equal(b.posts().length, 1);
+  held.reject(new Error('Unknown closure result'));
+  await saving;
+  await b.controller.reload('preview');
+  assert.equal(previewReads(), before + 1);
+  assert.equal(b.state().recovery.key, original.init.headers['Idempotency-Key']);
+  assert.equal(b.posts().length, 1);
 });

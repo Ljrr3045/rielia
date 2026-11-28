@@ -88,7 +88,7 @@ test(
 );
 
 test(
-  'real stream hints during a held page coalesce and retain the latest reset',
+  'real stream hints supersede an aborted page and preserve the latest authorized reset',
   { timeout: 30_000 },
   async (t) => {
     const { browser, hook } = await mounted(t);
@@ -106,9 +106,10 @@ test(
     await emit(browser, hint(3));
     assert.equal(
       browser.reads('/api/v1/identity/session').length,
-      sessions,
-      'new hints do not start parallel refresh work',
+      sessions + 1,
+      'the reset verifies once after cancelling the obsolete native-signal read',
     );
+    assert.equal(held.request.options.signal.aborted, true);
     await act(async () => held.resolve(Response.json(snapshot)));
     await browser.clock.advance(500);
     assert.equal(hook.state.tasks.items[0].title, 'Latest committed 1');
@@ -116,7 +117,7 @@ test(
     assert.equal(
       browser.reads(tasksPath).length,
       before + 2,
-      'one held read and one coalesced follow-up',
+      'one obsolete held request and one authorized coalesced follow-up',
     );
     assert.equal(hook.state.refreshRequired, false);
     const settled = browser.requests.length;
@@ -185,7 +186,12 @@ test(
     browser.server.version = 2;
     await emit(browser, { type: 'reset' });
     assert.equal(hook.state.refreshDeferred, true);
-    assert.equal(hook.state.tasks, oldPage);
+    assert.deepEqual(hook.state.tasks, oldPage);
+    assert.equal(
+      hook.state.tasks.items[0],
+      oldPage.items[0],
+      'derived aggregate keeps the original admitted row',
+    );
     assert.equal(hook.state.draft.fields.title, 'Retained intent');
     assert.ok(
       browser.reads('/api/v1/workspaces/a/projects/p').length > verification,
@@ -337,7 +343,14 @@ test(
     const held = browser.server.holdNext('/api/v1/workspaces/a/projects/p');
     await emit(browser, hint(2));
     await act(async () => held.resolve(Response.json({ code: 'unavailable' }, { status: 503 })));
-    assert.equal(hook.state.tasks, oldPage);
+    assert.equal(hook.state.tasks, null, 'error screen does not expose the stale flat projection');
+    assert.deepEqual(hook.state.resources.tasks.data, oldPage);
+    assert.equal(
+      hook.state.resources.tasks.data.items[0],
+      oldPage.items[0],
+      'Query retains the original admitted row as stale',
+    );
+    assert.equal(hook.state.resources.tasks.stale, true);
     assert.equal(hook.state.refreshRequired, true);
     const reads = browser.requests.length;
     await browser.clock.advance(1000);
@@ -366,7 +379,7 @@ test(
     assert.equal(hook.state.status, 'forbidden');
     assert.equal(hook.state.project, null);
     assert.equal(hook.state.tasks, null);
-    assert.equal(hook.state.draft.fields.title, 'Retained intent');
+    assert.equal(hook.state.draft, null, 'terminal denial erases private intent');
     assert.equal(browser.server.streams.at(-1).request.options.signal.aborted, true);
   },
 );
@@ -464,6 +477,234 @@ test(
   },
 );
 
+test('a fresh long-lived project session retains exact unknown intent across timer clamps until its real expiry', async (t) => {
+  const browser = projectBrowser(t);
+  const started = Date.now();
+  const maximumDelay = 2147483647;
+  const expires = started + maximumDelay * 2 + 5000;
+  browser.server.session = identitySession('human', expires);
+  const hook = await mountHook(browser, useProjectTasks);
+  await browser.clock.advance(500);
+  assert.equal(hook.state.status, 'ready');
+  await act(async () => hook.state.stage(createDraft()));
+  const held = browser.server.holdNext((request) => request.options.method === 'POST');
+  let saving;
+  await act(async () => {
+    saving = hook.state.submit();
+  });
+  await act(async () => {
+    held.reject(new Error('Lost long-lived command response'));
+    await saving;
+  });
+  assert.equal(hook.state.draftGuard.kind, 'recovery');
+  assert.equal(hook.state.retryTarget.type, 'create-task');
+  const intent = hook.state.retryTarget;
+  const epoch = hook.state.privateLifetime.epoch;
+  const original = browser.posts()[0];
+  const requests = browser.requests.length;
+  for (const now of [started + maximumDelay, started + maximumDelay * 2]) {
+    assert.equal(browser.timers.size, 1);
+    const [timer, scheduled] = [...browser.timers][0];
+    assert.equal(scheduled.delay, maximumDelay);
+    browser.setNow(now);
+    await browser.fireTimer(timer);
+    assert.equal(
+      hook.state.privateLifetime.epoch,
+      epoch,
+      'a clamp cannot retire an unexpired lifetime',
+    );
+    assert.equal(hook.state.privateLifetime.expiresAt, new Date(expires).toISOString());
+    assert.deepEqual(hook.state.retryTarget, intent);
+    assert.equal(hook.state.draftGuard.kind, 'recovery');
+    assert.equal(
+      browser.requests.length,
+      requests,
+      'rescheduling neither verifies nor starts a command',
+    );
+  }
+  assert.equal(browser.timers.size, 1);
+  const [finalTimer, finalSchedule] = [...browser.timers][0];
+  assert.equal(finalSchedule.delay, 5000);
+  const retryHold = browser.server.holdNext((request) => request.options.method === 'POST');
+  let retrying;
+  await act(async () => {
+    retrying = hook.state.retrySave();
+  });
+  await act(async () => {
+    retryHold.reject(new Error('Explicit retry response also lost'));
+    await retrying;
+  });
+  assert.equal(browser.posts().length, 2);
+  const retry = browser.posts()[1];
+  assert.equal(retry.options.body, original.options.body);
+  assert.equal(
+    new globalThis.Headers(retry.options.headers).get('idempotency-key'),
+    new globalThis.Headers(original.options.headers).get('idempotency-key'),
+  );
+  assert.deepEqual(hook.state.retryTarget, intent);
+  const verification = browser.server.holdNext('/api/v1/identity/session');
+  browser.setNow(expires);
+  await browser.fireTimer(finalTimer);
+  assert.ok(verification.request, 'actual expiry enters the explicit verification path');
+  assert.equal(hook.state.privateLifetime, null);
+  assert.equal(hook.state.retryTarget, null);
+  assert.equal(hook.state.draft, null);
+  assert.equal(hook.state.tasks, null);
+  assert.equal(browser.timers.size, 0);
+  browser.server.session = identitySession('human', expires + 60_000);
+  await act(async () => verification.resolve(Response.json(browser.server.session)));
+  assert.equal(hook.state.status, 'ready');
+  assert.notEqual(hook.state.privateLifetime.epoch, epoch);
+  assert.equal(
+    hook.state.retryTarget,
+    null,
+    'a fresh verified lifetime cannot revive the expired intent',
+  );
+  assert.equal(hook.state.draft, null);
+  assert.equal(hook.state.result, null);
+  assert.equal(browser.posts().length, 2);
+  assert.equal(browser.posts()[0], original);
+});
+
+test('an early expiry callback after wall-clock rollback reschedules without losing a draft and unmount cancels that timer', async (t) => {
+  const { browser, hook } = await mounted(t);
+  await act(async () => hook.state.stage(createDraft()));
+  const lifetime = hook.state.privateLifetime;
+  const draft = hook.state.draft;
+  const [timer] = browser.timers.keys();
+  browser.setNow(Date.now() - 20_000);
+  const requests = browser.requests.length;
+  await browser.fireTimer(timer);
+  assert.deepEqual(hook.state.privateLifetime, lifetime);
+  assert.deepEqual(hook.state.draft, draft);
+  assert.equal(browser.requests.length, requests);
+  assert.equal(browser.posts().length, 0);
+  assert.equal(browser.timers.size, 1);
+  const [rescheduled, pending] = [...browser.timers][0];
+  assert.notEqual(rescheduled, timer);
+  assert.equal(pending.delay, Date.parse(lifetime.expiresAt) - Date.now());
+  await browser.unmount();
+  assert.equal(browser.timers.size, 0, 'cleanup cancels the latest rescheduled timer');
+  await act(async () => pending.callback());
+  assert.equal(browser.timers.size, 0, 'a callback already queued before cleanup stays retired');
+  assert.equal(browser.requests.length, requests);
+});
+
+for (const sameDeadline of [false, true])
+  test(`an obsolete queued expiry callback cannot erase or refresh a replacement project lifetime with ${sameDeadline ? 'the same' : 'a later'} deadline`, async (t) => {
+    const { browser, hook } = await mounted(t);
+    await act(async () => hook.state.stage(createDraft()));
+    const previous = hook.state.privateLifetime;
+    const [oldTimer, queued] = [...browser.timers][0];
+    const oldExpiry = Date.parse(previous.expiresAt);
+    browser.server.session = identitySession(
+      'replacement',
+      oldExpiry + (sameDeadline ? 0 : 60_000),
+    );
+    await browser.event('focus');
+    await browser.clock.advance(500);
+    assert.equal(hook.state.status, 'ready');
+    assert.notEqual(hook.state.privateLifetime.epoch, previous.epoch);
+    assert.equal(browser.timers.has(oldTimer), false);
+    await act(async () => hook.state.stage(createDraft()));
+    const replacement = hook.state.privateLifetime;
+    const draft = hook.state.draft;
+    const [currentTimer] = browser.timers.keys();
+    const requests = browser.requests.length;
+    browser.setNow(oldExpiry - (sameDeadline ? 1000 : 0));
+    await act(async () => queued.callback());
+    assert.deepEqual(hook.state.privateLifetime, replacement);
+    assert.deepEqual(hook.state.draft, draft);
+    assert.equal(browser.timers.size, 1);
+    assert.equal(browser.timers.has(currentTimer), true);
+    assert.equal(browser.requests.length, requests);
+    assert.equal(browser.posts().length, 0);
+  });
+
+test('a queued old timer delivered during replacement navigation cannot reenter verification before effect cleanup', async (t) => {
+  const { browser, hook } = await mounted(t);
+  await act(async () => hook.state.stage(createDraft()));
+  const previous = hook.state.privateLifetime;
+  const [, queued] = [...browser.timers][0];
+  const verification = browser.server.holdNext('/api/v1/identity/session');
+  let refreshing;
+  await act(async () => {
+    refreshing = hook.state.refresh();
+  });
+  const sessions = browser.reads('/api/v1/identity/session').length;
+  const replace = browser.window.history.replaceState.bind(browser.window.history);
+  let delivered = false;
+  const restore = browser.replace(browser.window.history, 'replaceState', (...args) => {
+    replace(...args);
+    if (!delivered) {
+      delivered = true;
+      const requests = browser.requests.length;
+      queued.callback();
+      assert.equal(
+        browser.requests.length,
+        requests,
+        'the obsolete timer starts no verification or domain HTTP',
+      );
+    }
+  });
+  t.after(restore);
+  const oldExpiry = Date.parse(previous.expiresAt);
+  browser.setNow(oldExpiry);
+  browser.server.session = identitySession('replacement', oldExpiry + 60_000);
+  await act(async () => {
+    verification.resolve(Response.json(browser.server.session));
+    await refreshing;
+  });
+  assert.equal(
+    delivered,
+    true,
+    'native navigation delivers the queued callback before React cleanup',
+  );
+  assert.equal(hook.state.status, 'ready');
+  assert.notEqual(hook.state.privateLifetime.epoch, previous.epoch);
+  assert.equal(hook.state.session.user.id, 'replacement');
+  assert.equal(hook.state.draft, null);
+  assert.equal(
+    browser.reads('/api/v1/identity/session').length,
+    sessions + 1,
+    'the replacement workspace stream performs its one normal initial reset',
+  );
+  assert.equal(browser.posts().length, 0);
+  assert.equal(browser.timers.size, 1);
+});
+
+test('terminal stream cleanup cannot let an already queued expiry callback reopen a retired project lifetime', async (t) => {
+  const { browser, hook } = await mounted(t);
+  await act(async () => hook.state.stage(createDraft()));
+  const [, queued] = [...browser.timers][0];
+  let delivered = false;
+  browser.server.streams.at(-1).request.options.signal.addEventListener(
+    'abort',
+    () => {
+      delivered = true;
+      queued.callback();
+    },
+    { once: true },
+  );
+  const denial = browser.server.holdNext('/api/v1/workspaces/a/projects/p');
+  const sessions = browser.reads('/api/v1/identity/session').length;
+  let refreshing;
+  await act(async () => {
+    refreshing = hook.state.refresh();
+  });
+  await act(async () => {
+    denial.resolve(Response.json({ code: 'forbidden' }, { status: 403 }));
+    await refreshing;
+  });
+  assert.equal(delivered, true);
+  assert.equal(hook.state.status, 'forbidden');
+  assert.equal(hook.state.privateLifetime, null);
+  assert.equal(hook.state.draft, null);
+  assert.equal(browser.timers.size, 0);
+  assert.equal(browser.reads('/api/v1/identity/session').length, sessions + 1);
+  assert.equal(browser.posts().length, 0);
+});
+
 for (const queuedBeforeFailure of [false, true]) {
   test(
     `task-page refresh failure is disclosed and ${queuedBeforeFailure ? 'an already queued' : 'a later'} hint can recover`,
@@ -473,7 +714,27 @@ for (const queuedBeforeFailure of [false, true]) {
       const held = browser.server.holdNext(tasksPath);
       await emit(browser, hint(2));
       assert.ok(held.request);
-      if (queuedBeforeFailure) await emit(browser, hint(3));
+      if (queuedBeforeFailure) {
+        browser.server.title = 'Recovered task page';
+        browser.server.version = 3;
+        await emit(browser, hint(3));
+        assert.equal(held.request.options.signal.aborted, true);
+        await act(async () =>
+          held.resolve(Response.json({ code: 'unavailable' }, { status: 503 })),
+        );
+        await browser.clock.advance(500);
+        assert.equal(
+          hook.state.status,
+          'ready',
+          'an obsolete cancelled error cannot replace a newer authorized page',
+        );
+        assert.equal(hook.state.tasks.items[0].title, 'Recovered task page 1');
+        assert.equal(hook.state.refreshRequired, false);
+        const settled = browser.requests.length;
+        await browser.clock.advance(1000);
+        assert.equal(browser.requests.length, settled);
+        return;
+      }
       await act(async () => held.resolve(Response.json({ code: 'unavailable' }, { status: 503 })));
       assert.equal(
         hook.state.status,
@@ -608,4 +869,71 @@ test('confirmed result clears at expiry and cannot return after same-session rea
   assert.equal(hook.state.outcome, null);
   assert.equal(hook.state.result, null);
   assert.equal(browser.posts().length, 1);
+});
+
+for (const failure of ['503', 'changed'])
+  test(`public task append ${failure} retains last-good rows and exposes a content error until explicit recovery`, async (t) => {
+    const { browser, hook } = await mounted(t);
+    const before = hook.state.tasks.items.length;
+    const held = browser.server.holdNext(tasksPath);
+    let reading;
+    await act(async () => {
+      reading = hook.state.loadMore('tasks');
+    });
+    const tail = browser.server.taskPage('a', true);
+    if (failure === 'changed') {
+      tail.orderVersion = 2;
+      tail.items = tail.items.map((row) => ({ ...row, orderVersion: 2 }));
+    }
+    await act(async () => {
+      held.resolve(
+        failure === '503'
+          ? Response.json(
+              { code: 'unavailable' },
+              { status: 503, headers: { 'x-request-id': 'content-append' } },
+            )
+          : Response.json(tail),
+      );
+      await reading;
+    });
+    assert.equal(hook.state.status, 'ready');
+    assert.equal(hook.state.tasks.items.length, before);
+    assert.equal(hook.state.resources.tasks.stale, true);
+    assert.equal(hook.state.pageError?.collection, 'tasks');
+    assert.equal(hook.state.pageError.reason, failure === 'changed' ? 'changed' : undefined);
+    assert.equal(hook.state.taskSummary.canCreate, false);
+    await act(async () => {
+      hook.state.stage(createDraft());
+      await hook.state.submit();
+    });
+    assert.equal(browser.posts().length, 0, 'stale pages cannot authorize a new task');
+    await act(async () => hook.state.discardDraft());
+    if (failure === '503') await act(async () => hook.state.loadMore('tasks'));
+    else await act(async () => hook.state.refresh());
+    assert.equal(hook.state.pageError, null);
+    assert.equal(hook.state.resources.tasks.stale, false);
+    assert.equal(browser.posts().length, 0, 'read recovery does not replay a command');
+  });
+
+test('a failed task root hides old DTO authority and recovers only after another actual verification/read', async (t) => {
+  const { browser, hook } = await mounted(t);
+  const held = browser.server.holdNext(tasksPath);
+  let reading;
+  await act(async () => {
+    reading = hook.state.refresh();
+  });
+  await act(async () => {
+    held.resolve(Response.json({ code: 'unavailable' }, { status: 503 }));
+    await reading;
+  });
+  assert.equal(hook.state.status, 'error');
+  assert.equal(hook.state.tasks, null);
+  assert.equal(hook.state.privateLifetime.verified, false);
+  assert.equal(hook.state.taskSummary.canCreate, false);
+  assert.equal(browser.posts().length, 0);
+  await act(async () => hook.state.refresh());
+  assert.equal(hook.state.status, 'ready');
+  assert.ok(hook.state.tasks);
+  assert.equal(hook.state.pageError, null);
+  assert.equal(browser.posts().length, 0);
 });

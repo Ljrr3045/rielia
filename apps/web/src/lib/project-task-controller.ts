@@ -5,6 +5,7 @@ import {
   taskURL,
   type DomainPerson,
   type TaskStatus,
+  type TaskInvalidation,
   type TaskView,
   type TaskFilters,
   type TaskPage,
@@ -45,6 +46,13 @@ import {
   type TaskDiscoveryPage,
   type TaskDiscoveryQuery,
 } from '@rielia/contracts';
+import {
+  createProjectTaskQueryOwner,
+  type ProjectTaskQueryResources,
+  type ProjectTaskQueryName,
+  type ProjectTaskInvalidation,
+} from './project-task-query-owner.ts';
+import { freezeSprintValue } from './sprint-client-state.ts';
 import type { TaskStreamStatus } from './task-events-client.ts';
 import {
   readProjectSprintLocation,
@@ -84,6 +92,8 @@ export interface TaskSummary {
   canCreate: boolean;
 }
 export interface ProjectTaskState {
+  resources: ProjectTaskQueryResources | null;
+  privateLifetime: { epoch: string; expiresAt: string; verified: boolean } | null;
   sprintLocation: ProjectSprintLocation;
   integratedNavigation: { url: string } | null;
   workspaceNavigation: { workspaceId: string | null } | null;
@@ -156,25 +166,13 @@ const discoveryEmpty: ProjectTaskState['discovery'] = {
   requestId: null,
 };
 const cleared = {
-  discovery: discoveryEmpty,
   parentCandidatesWanted: false,
-  collaboration: emptyCollaboration(),
   closeWarning: null,
   commentConflict: null,
   checklistConflict: null,
-  taskColumns: {},
   taskColumnErrors: {},
-  taskColumnsChanged: false,
   policyPageErrors: {},
   accessConflict: null,
-  projectAccess: null,
-  assignees: null,
-  workspace: null,
-  members: null,
-  projects: null,
-  project: null,
-  tasks: null,
-  task: null,
   pageError: null,
 };
 const id = (value: unknown): value is string =>
@@ -230,11 +228,24 @@ export function createProjectTaskController(options: {
   navigate?: (url: string, replace?: boolean) => void;
 }) {
   let state: ProjectTaskState = {
+    resources: null,
+    privateLifetime: null,
     sprintLocation: { view: 'tasks', sprintId: null },
     integratedNavigation: null,
     status: 'loading',
     session: null,
     workspaces: null,
+    workspace: null,
+    members: null,
+    projects: null,
+    project: null,
+    tasks: null,
+    task: null,
+    projectAccess: null,
+    assignees: null,
+    taskColumns: {},
+    collaboration: emptyCollaboration(),
+    taskColumnsChanged: false,
     ...cleared,
     selection: { ...selectionEmpty },
     views: { projects: 'active', tasks: 'active' },
@@ -283,13 +294,212 @@ export function createProjectTaskController(options: {
   let navigationBlocker: ProjectNavigationBlocker | null = null;
   let deferredNavigation: { url: string; run: () => Promise<void> } | null = null;
   let navigationScheduled = false;
-  let discoveryContext: { key: string; page: TaskDiscoveryPage } | null = null;
+  let verified = false;
+  let scopeVerifying = false;
+  let epoch: string | null = null;
+  let originalExpiry = 0;
+  let memoryExpiry = 0;
+  type ReceiptLease = {
+    command: ProjectCommand;
+    epoch: string;
+    generation: number;
+    expiresAt: number;
+  };
+  let reviewLease: ReceiptLease | null = null;
+  let resultLease: ReceiptLease | null = null;
+  function receiptLease(
+    command: ProjectCommand,
+    request: { generation: number },
+  ): ReceiptLease | null {
+    return epoch
+      ? { command, epoch, generation: request.generation, expiresAt: originalExpiry }
+      : null;
+  }
+  function validLease(value: ReceiptLease | null) {
+    return value !== null && value.epoch === epoch && value.expiresAt > Date.now();
+  }
+  function validReview(command: ProjectCommand) {
+    return validLease(reviewLease) && reviewLease?.command === command;
+  }
+
+  const pendingResources = new Set<ProjectTaskQueryName>();
+  let pendingColumns = false;
+  const maskedResources = new Set<ProjectTaskQueryName>();
   let retry: { command: ProjectCommand; key: string } | null = null;
   const listeners = new Set<() => void>();
-  const publish = (next: ProjectTaskState) => {
+  type Control = Omit<
+    ProjectTaskState,
+    | 'resources'
+    | 'privateLifetime'
+    | 'workspaces'
+    | 'workspace'
+    | 'members'
+    | 'projects'
+    | 'project'
+    | 'tasks'
+    | 'task'
+    | 'taskColumns'
+    | 'collaboration'
+    | 'discovery'
+    | 'draftGuard'
+    | 'discoveryContextLimitReached'
+    | 'taskSummary'
+    | 'selectedTaskAssignee'
+    | 'taskFilterAssigneeStatus'
+    | 'taskColumnsChanged'
+    | 'projectAccess'
+    | 'assignees'
+  >;
+  const controlOf = (next: Control): Control => ({
+    sprintLocation: next.sprintLocation,
+    integratedNavigation: next.integratedNavigation,
+    workspaceNavigation: next.workspaceNavigation,
+    taskScope: next.taskScope,
+    searchQuery: next.searchQuery,
+    discoveryProjectId: next.discoveryProjectId,
+    streamStatus: next.streamStatus,
+    refreshRequired: next.refreshRequired,
+    refreshDeferred: next.refreshDeferred,
+    discoveryFocusTaskId: next.discoveryFocusTaskId,
+    parentCandidatesWanted: next.parentCandidatesWanted,
+    closeWarning: next.closeWarning,
+    commentConflict: next.commentConflict,
+    checklistConflict: next.checklistConflict,
+    status: next.status,
+    session: next.session,
+    taskView: next.taskView,
+    moveNeedsDestination: next.moveNeedsDestination,
+    accessConflict: next.accessConflict,
+    policyPageErrors: next.policyPageErrors,
+    selection: next.selection,
+    views: next.views,
+    url: next.url,
+    draft: next.draft,
+    pending: next.pending,
+    outcome: next.outcome,
+    retryTarget: next.retryTarget,
+    conflict: next.conflict,
+    result: next.result,
+    requestId: next.requestId,
+    pageError: next.pageError,
+    taskColumnErrors: next.taskColumnErrors,
+  });
+  let control = controlOf(state);
+  const query = createProjectTaskQueryOwner({
+    workspaces: options.workspaces,
+    transport: options.transport,
+    authorized: () => verified && !disposed && originalExpiry > Date.now(),
+    denied: (reason) => readFailure(new ProjectTaskFailure(reason === 'signed-out' ? 401 : 403)),
+    changed: () => publish(control),
+  });
+  function collaborationProjection<Value>(resource: {
+    status: 'idle' | 'loading' | 'ready' | 'error' | 'changed';
+    data: Value | null;
+    stale: boolean;
+    failure: { requestId: string | null } | null;
+  }) {
+    return {
+      status: resource.status,
+      data: resource.data,
+      stale: resource.stale,
+      requestId: resource.failure?.requestId ?? null,
+    };
+  }
+  const publish = (nextControl: Control) => {
+    control = controlOf(nextControl);
+    const resources = query.resources();
+    const privateVisible = verified && !scopeVerifying && originalExpiry > Date.now();
+    const reviewVisible = privateVisible && control.draft !== null && validReview(control.draft);
+    const visible = privateVisible && (control.status === 'ready' || control.status === 'empty');
+    const next: ProjectTaskState = {
+      ...control,
+      ...(!privateVisible
+        ? {
+            session: null,
+            draft: null,
+            retryTarget: null,
+            conflict: null,
+            accessConflict: null,
+            commentConflict: null,
+            checklistConflict: null,
+            closeWarning: null,
+            result: null,
+            integratedNavigation: null,
+            workspaceNavigation: null,
+          }
+        : {}),
+      ...(!reviewVisible
+        ? {
+            conflict: null,
+            accessConflict: null,
+            commentConflict: null,
+            checklistConflict: null,
+            closeWarning: null,
+          }
+        : {}),
+      result: privateVisible && validLease(resultLease) ? control.result : null,
+      resources: privateVisible ? resources : null,
+      privateLifetime: epoch
+        ? { epoch, expiresAt: new Date(originalExpiry).toISOString(), verified: privateVisible }
+        : null,
+      workspaces: visible ? resources.workspaces.data : null,
+      workspace: visible ? resources.workspace.data : null,
+      members: visible ? resources.members.data : null,
+      projects: visible && !maskedResources.has('projects') ? resources.projects.data : null,
+      project: visible ? resources.project.data : null,
+      tasks: visible ? resources.tasks.data : null,
+      task: visible ? resources.task.data : null,
+      projectAccess: visible ? resources.projectAccess.data : null,
+      assignees: visible ? resources.assignees.data : null,
+      taskColumns: visible
+        ? Object.fromEntries(
+            Object.entries(resources.columns).flatMap(([name, resource]) =>
+              resource.data ? [[name, resource.data]] : [],
+            ),
+          )
+        : {},
+      discovery: {
+        status:
+          resources.discovery.status === 'ready'
+            ? resources.discovery.data?.total
+              ? 'ready'
+              : 'empty'
+            : resources.discovery.status,
+        page: visible && !maskedResources.has('discovery') ? resources.discovery.data : null,
+        requestId: resources.discovery.failure?.requestId ?? null,
+      },
+      collaboration: visible
+        ? {
+            relations: collaborationProjection(resources.relations),
+            'parent-candidates': control.parentCandidatesWanted
+              ? collaborationProjection(resources['parent-candidates'])
+              : emptyCollaboration()['parent-candidates'],
+            checklist: collaborationProjection(resources.checklist),
+            comments: collaborationProjection(resources.comments),
+            history: collaborationProjection(resources.history),
+          }
+        : emptyCollaboration(),
+      taskColumnsChanged: false,
+      discoveryContextLimitReached: false,
+      taskSummary: { status: 'loading', total: null, orderVersion: null, canCreate: false },
+      selectedTaskAssignee: null,
+      taskFilterAssigneeStatus: 'none',
+      draftGuard: {
+        kind: 'none',
+        atTarget: true,
+        canReturn: false,
+        canDiscard: false,
+        canStageNew: false,
+      },
+    };
+
     const taskColumnsChanged =
       new Set(Object.values(next.taskColumns).map((page) => page.orderVersion)).size > 1 ||
-      Object.values(next.taskColumnErrors).some((error) => error.reason === 'changed');
+      Object.values(next.taskColumnErrors).some((error) => error.reason === 'changed') ||
+      (next.taskView.layout === 'board' &&
+        Object.values(resources.columns).some(
+          (resource) => resource.stale && resource.status !== 'error' && resource.data !== null,
+        ));
     const statuses = next.taskView.filters.status
       ? [next.taskView.filters.status]
       : [...taskStatuses];
@@ -304,7 +514,8 @@ export function createProjectTaskController(options: {
     const changed =
       next.taskView.layout === 'board'
         ? taskColumnsChanged
-        : next.pageError?.collection === 'tasks' && next.pageError.reason === 'changed';
+        : (resources.tasks.stale && resources.tasks.data !== null) ||
+          (next.pageError?.collection === 'tasks' && next.pageError.reason === 'changed');
     const summaryStatus: TaskSummary['status'] = changed
       ? 'changed'
       : failed
@@ -342,12 +553,15 @@ export function createProjectTaskController(options: {
       next.refreshRequired &&
       next.refreshDeferred &&
       kind === 'none' &&
+      !control.draft &&
+      !control.pending &&
+      !retry &&
       !next.conflict &&
       !next.closeWarning &&
       !next.commentConflict &&
       !next.checklistConflict &&
       !next.accessConflict;
-    state = {
+    state = freezeSprintValue({
       ...next,
       ...(releaseRefresh ? { refreshDeferred: false } : {}),
       discoveryContextLimitReached:
@@ -372,7 +586,7 @@ export function createProjectTaskController(options: {
               ? 'resolved'
               : 'unavailable',
       moveNeedsDestination: next.draft?.type === 'move-task' && next.outcome === 'conflict',
-    };
+    });
     for (const listener of listeners) listener();
     if (
       deferredNavigation &&
@@ -393,18 +607,26 @@ export function createProjectTaskController(options: {
       }, 100);
     }
   };
+  function cancelReads() {
+    query.cancel();
+  }
+  function retireReads() {
+    query.clear();
+  }
   const begin = () => {
-    abort.abort();
+    const obsolete = abort;
     abort = new AbortController();
-    return { generation: ++generation, signal: abort.signal };
+    const request = { generation: ++generation, signal: abort.signal };
+    query.cancel();
+    obsolete.abort();
+    return request;
   };
   const current = (request: { generation: number }) => generation === request.generation;
-  const fresh = () =>
-    state.session !== null && Date.parse(state.session.session.expiresAt) > Date.now();
+  const fresh = () => verified && control.session !== null && originalExpiry > Date.now();
   function navigationProtected() {
     return !!(
-      state.pending ||
-      state.draft ||
+      control.pending ||
+      control.draft ||
       retry ||
       (navigationBlocker && navigationBlocker.getGuard() !== 'none')
     );
@@ -413,7 +635,7 @@ export function createProjectTaskController(options: {
     deferredNavigation = null;
     workspaceNavigation = null;
     if (state.integratedNavigation || state.workspaceNavigation)
-      publish({ ...state, integratedNavigation: null, workspaceNavigation: null });
+      publish({ ...control, integratedNavigation: null, workspaceNavigation: null });
   }
   function guardNavigation(url: string, run: () => Promise<void>, restoreHistory = false) {
     if (!navigationBlocker || !navigationProtected()) return false;
@@ -444,7 +666,7 @@ export function createProjectTaskController(options: {
     }
     deferredNavigation = { url, run };
     workspaceNavigation = null;
-    publish({ ...state, workspaceNavigation: null, integratedNavigation: { url } });
+    publish({ ...control, workspaceNavigation: null, integratedNavigation: { url } });
     if (restoreHistory) options.navigate?.(state.url, true);
     return true;
   }
@@ -453,7 +675,7 @@ export function createProjectTaskController(options: {
       return;
     const next = deferredNavigation;
     deferredNavigation = null;
-    publish({ ...state, integratedNavigation: null });
+    publish({ ...control, integratedNavigation: null });
     await next.run();
   }
   type NavigationState = Pick<
@@ -482,7 +704,7 @@ export function createProjectTaskController(options: {
     const { selection, ...metadata } = next;
     if (reload) await changeSelection(selection, metadata);
     else {
-      publish({ ...state, ...metadata });
+      publish({ ...control, ...metadata });
       select(selection);
     }
   }
@@ -490,85 +712,79 @@ export function createProjectTaskController(options: {
     if (
       state.selection.workspaceId === null ||
       state.selection.workspaceId === workspaceId ||
-      !(state.draft || retry || state.pending)
+      !(control.draft || retry || control.pending)
     )
       return false;
     workspaceNavigation = navigate;
-    publish({ ...state, workspaceNavigation: { workspaceId } });
+    publish({ ...control, workspaceNavigation: { workspaceId } });
     return true;
   }
   function select(selection: ProjectTaskSelection, navigate = true) {
+    const selectedGeneration = generation;
+    const selectedEpoch = epoch;
     const sameScope =
       selection.workspaceId === state.selection.workspaceId &&
       selection.projectId === state.selection.projectId &&
       selection.taskId === state.selection.taskId;
     const url = urlFor(selection, state.views, state.taskView, state);
     publish({
-      ...state,
+      ...control,
       selection: { ...selection },
       ...(!sameScope && state.outcome === 'success' ? { outcome: null, result: null } : {}),
       url,
       parentCandidatesWanted: sameScope && state.parentCandidatesWanted,
+      ...(!sameScope ? { status: 'loading' as const } : {}),
     });
-    if (navigate) options.navigate?.(url);
+    if (navigate && generation === selectedGeneration && epoch === selectedEpoch)
+      options.navigate?.(url);
   }
-  function expire() {
+  function erase(status: 'signed-out' | 'disabled' | 'forbidden') {
+    verified = false;
+    scopeVerifying = false;
+    epoch = null;
+    originalExpiry = 0;
+    memoryExpiry = 0;
+    retry = null;
+    reviewLease = null;
+    resultLease = null;
     deferredNavigation = null;
-    discoveryContext = null;
-    begin();
+    workspaceNavigation = null;
+    pendingResources.clear();
+    pendingColumns = false;
     publish({
-      ...state,
-      integratedNavigation: null,
+      ...control,
       ...cleared,
-      discoveryFocusTaskId: null,
-      discovery: discoveryEmpty,
-      refreshRequired: false,
-      refreshDeferred: false,
-      streamStatus: 'signed-out',
-      status: 'signed-out',
-      outcome: state.outcome === 'success' ? null : state.outcome,
+      status,
       session: null,
-      workspaces: null,
+      draft: null,
+      retryTarget: null,
       pending: null,
-      retryTarget: retry ? structuredClone(retry.command) : null,
       result: null,
       conflict: null,
+      integratedNavigation: null,
+      workspaceNavigation: null,
+      discoveryFocusTaskId: null,
+      refreshRequired: false,
+      refreshDeferred: false,
+      outcome: status === 'forbidden' ? control.outcome : null,
+      streamStatus: status === 'forbidden' ? 'forbidden' : 'signed-out',
     });
+    query.clear();
+    begin();
+  }
+  function expire() {
+    erase('signed-out');
   }
   function readFailure(error: unknown) {
-    if (
-      (error instanceof ProjectTaskFailure || error instanceof WorkspaceFailure) &&
-      [401, 403].includes(error.status)
-    )
-      deferredNavigation = null;
-    discoveryContext = null;
-    if (
-      (error instanceof ProjectTaskFailure || error instanceof WorkspaceFailure) &&
-      error.status === 401
-    ) {
-      expire();
+    const status =
+      error instanceof ProjectTaskFailure || error instanceof WorkspaceFailure ? error.status : 0;
+    if (status === 401 || status === 403) {
+      erase(status === 401 ? 'signed-out' : 'forbidden');
       return;
     }
-    if (
-      (error instanceof ProjectTaskFailure || error instanceof WorkspaceFailure) &&
-      error.status === 403
-    )
-      begin();
     publish({
-      ...state,
-      ...cleared,
-      discovery: discoveryEmpty,
-      status:
-        (error instanceof ProjectTaskFailure || error instanceof WorkspaceFailure) &&
-        error.status === 403
-          ? 'forbidden'
-          : 'error',
-      conflict: null,
-      accessConflict: null,
-      ...((error instanceof ProjectTaskFailure || error instanceof WorkspaceFailure) &&
-      error.status === 403
-        ? { result: null, integratedNavigation: null }
-        : {}),
+      ...control,
+      status: 'error',
       requestId: error instanceof ProjectTaskFailure ? error.requestId : null,
     });
   }
@@ -581,7 +797,7 @@ export function createProjectTaskController(options: {
         ? { collection, ...failure }
         : incumbent;
     publish({
-      ...state,
+      ...control,
       policyPageErrors: { ...state.policyPageErrors, [collection]: failure },
       pageError,
     });
@@ -602,326 +818,150 @@ export function createProjectTaskController(options: {
           : state.pageError,
     };
   }
-  async function fetchTaskColumn(
-    status: TaskStatus,
-    request: { generation: number; signal: AbortSignal },
-    previous?: TaskPage,
-  ) {
-    const { workspaceId: w, projectId: p } = state.selection;
-    // Board status filtering selects visible columns; every column still has an
-    // independently authorized revision for an explicit cross-column move.
-    if (!w || !p) return;
-    const errors = { ...state.taskColumnErrors };
-    delete errors[status];
-    publish({ ...state, taskColumnErrors: errors });
-    try {
-      const next = await options.transport.tasks(
-        w,
-        p,
-        state.views.tasks,
-        request.signal,
-        previous?.nextCursor ?? undefined,
-        { ...state.taskView.filters, status },
-      );
-      if (!current(request) || state.taskColumns[status] !== previous) return;
-      if (previous && previous.orderVersion !== next.orderVersion) {
-        publish({
-          ...state,
-          taskColumnErrors: {
-            ...state.taskColumnErrors,
-            [status]: { requestId: null, reason: 'changed' },
-          },
-        });
-        return;
-      }
-      const latestErrors = { ...state.taskColumnErrors };
-      delete latestErrors[status];
-      publish({
-        ...state,
-        taskColumnErrors: latestErrors,
-        taskColumns: {
-          ...state.taskColumns,
-          [status]: { ...next, items: [...(previous?.items ?? []), ...next.items] },
-        },
-      });
-    } catch (error) {
-      if (!current(request) || state.taskColumns[status] !== previous) return;
-      if (
-        (error instanceof ProjectTaskFailure || error instanceof WorkspaceFailure) &&
-        [401, 403].includes(error.status)
-      )
-        readFailure(error);
-      else
-        publish({
-          ...state,
-          taskColumnErrors: {
-            ...state.taskColumnErrors,
-            [status]: {
-              requestId: error instanceof ProjectTaskFailure ? error.requestId : null,
-              ...(error instanceof ProjectTaskFailure && error.code === 'page-changed'
-                ? { reason: 'changed' as const }
-                : {}),
-            },
-          },
-        });
-    }
-  }
-  async function loadTaskColumn(status: TaskStatus) {
-    if (
-      !taskStatuses.includes(status) ||
-      state.pending ||
-      !fresh() ||
-      state.taskColumnErrors[status]?.reason === 'changed' ||
-      state.taskColumnsChanged
-    )
-      return;
-    const previous = state.taskColumns[status];
-    if (previous && !previous.nextCursor) return;
-    await fetchTaskColumn(status, { generation, signal: abort.signal }, previous);
+  function bindResources() {
+    if (!epoch) return;
+    query.bind(epoch);
+    query.select({
+      ...state.selection,
+      views: state.views,
+      taskView: state.taskView,
+      discovery: state.taskScope === 'project' ? null : discoveryQuery(),
+      parentCandidatesWanted: state.parentCandidatesWanted,
+    });
   }
   function discoveryQuery(): TaskDiscoveryQuery {
     return {
       scope: state.taskScope === 'mine' ? 'mine' : 'search',
-      q: state.searchQuery,
+      q: state.searchQuery.trim(),
       view: state.views.tasks,
       filters: { ...state.taskView.filters },
       ...(state.discoveryProjectId ? { projectId: state.discoveryProjectId } : {}),
     };
   }
+  async function required(name: ProjectTaskQueryName, request: { generation: number }) {
+    await query.read(name);
+    if (!current(request)) return false;
+    const resource = query.resources()[name];
+    if (resource.status !== 'ready')
+      throw new ProjectTaskFailure(
+        resource.failure?.status ?? 0,
+        resource.failure?.code ?? null,
+        null,
+        resource.failure?.requestId ?? null,
+      );
+    maskedResources.delete(name);
+    return true;
+  }
+  async function fetchTaskColumn(
+    status: TaskStatus,
+    request: { generation: number; signal?: AbortSignal },
+    more = false,
+  ) {
+    await query.readColumn(status, more);
+    if (!current(request)) return;
+    const resource = query.resources().columns[status];
+    const errors = { ...state.taskColumnErrors };
+    if (resource.failure)
+      errors[status] = {
+        requestId: resource.failure.requestId,
+        ...(resource.status === 'changed' ? { reason: 'changed' as const } : {}),
+      };
+    else delete errors[status];
+    publish({ ...control, taskColumnErrors: errors });
+  }
+  async function loadTaskColumn(status: TaskStatus) {
+    if (!taskStatuses.includes(status) || state.pending || !fresh() || state.taskColumnsChanged)
+      return;
+    const resource = query.resources().columns[status];
+    await fetchTaskColumn(status, { generation }, resource.data !== null);
+  }
   async function fetchDiscovery(
-    request: { generation: number; signal: AbortSignal },
+    request: { generation: number; signal?: AbortSignal },
     append = false,
   ) {
-    const w = state.selection.workspaceId;
-    if (!w || state.taskScope === 'project') return;
-    const previous = state.discovery;
-    if (
-      append &&
-      (previous.status === 'loading' ||
-        previous.status === 'changed' ||
-        (previous.page && (!previous.page.nextCursor || previous.page.items.length >= 1000)))
-    )
-      return;
-    const query = discoveryQuery();
-    const key = JSON.stringify([
-      owner,
-      sessionId,
-      w,
-      query.scope,
-      query.q,
-      query.view,
-      query.projectId,
-      Object.entries(query.filters).sort(),
-    ]);
-    const loading = { ...previous, status: 'loading' as const, requestId: null };
-    publish({ ...state, discovery: loading });
-    try {
-      const next = await options.transport.discover(
-        w,
-        query,
-        request.signal,
-        append ? (previous.page?.nextCursor ?? undefined) : undefined,
-      );
-      if (!current(request) || state.discovery !== loading) return;
-      if (append && previous.page && previous.page.revision !== next.revision) {
-        publish({ ...state, discovery: { ...previous, status: 'changed' } });
-        return;
-      }
-      const cached =
-        !append &&
-        discoveryContext?.key === key &&
-        discoveryContext.page.revision === next.revision &&
-        discoveryContext.page.total === next.total
-          ? discoveryContext.page
-          : null;
-      const page = cached ?? {
-        ...next,
-        items: [...(append ? (previous.page?.items ?? []) : []), ...next.items],
-      };
-      discoveryContext = { key, page };
-      publish({
-        ...state,
-        discoveryFocusTaskId: page.items.some((row) => row.id === state.discoveryFocusTaskId)
-          ? state.discoveryFocusTaskId
-          : null,
-        discovery: { status: page.total ? 'ready' : 'empty', page, requestId: null },
-      });
-    } catch (error) {
-      if (!current(request) || state.discovery !== loading) return;
-      if (error instanceof ProjectTaskFailure && [401, 403].includes(error.status))
-        readFailure(error);
-      else
-        publish({
-          ...state,
-          discovery: {
-            ...previous,
-            status:
-              error instanceof ProjectTaskFailure && error.code === 'page-changed'
-                ? 'changed'
-                : 'error',
-            requestId: error instanceof ProjectTaskFailure ? error.requestId : null,
-          },
-        });
-    }
+    if (!fresh() || state.taskScope === 'project') return;
+    bindResources();
+    await query.read('discovery', append && query.resources().discovery.data !== null, !append);
+    if (!current(request)) return;
+    const resource = query.resources().discovery;
+    if (resource.status === 'ready' && !resource.stale) maskedResources.delete('discovery');
+    const data = resource.data;
+    publish({
+      ...control,
+      discoveryFocusTaskId: data?.items.some((row) => row.id === state.discoveryFocusTaskId)
+        ? state.discoveryFocusTaskId
+        : null,
+    });
   }
   async function fetchCollaboration(
     collection: CollaborationCollection,
-    request: { generation: number; signal: AbortSignal },
+    request: { generation: number; signal?: AbortSignal },
     append = false,
   ) {
-    const { workspaceId: w, projectId: p, taskId: t } = state.selection;
-    if (!w || !p || !t || (collection === 'parent-candidates' && !state.parentCandidatesWanted))
-      return;
-    const previous = state.collaboration[collection];
-    if (
-      append &&
-      (previous.status === 'loading' ||
-        previous.status === 'changed' ||
-        (previous.data && !previous.data.nextCursor))
-    )
-      return;
-    const loading = { ...previous, status: 'loading' as const, requestId: null };
-    publish({ ...state, collaboration: { ...state.collaboration, [collection]: loading } });
-    try {
-      const next = await options.transport.collaboration(
-        w,
-        p,
-        t,
-        collection,
-        request.signal,
-        append ? (previous.data?.nextCursor ?? undefined) : undefined,
-      );
-      if (!current(request) || state.collaboration[collection] !== loading) return;
-      const changed = append && previous.data && previous.data.revision !== next.revision;
-      const detailChanged =
-        collection === 'relations' || collection === 'parent-candidates'
-          ? next.revision !== state.task?.orderVersion
-          : next.revision !== state.task?.version;
-      const data = changed
-        ? previous.data
-        : { ...next, items: [...(append ? (previous.data?.items ?? []) : []), ...next.items] };
-      publish({
-        ...state,
-        collaboration: {
-          ...state.collaboration,
-          [collection]: {
-            status: changed || detailChanged ? 'changed' : 'ready',
-            data,
-            requestId: null,
-          },
-        },
-      });
-    } catch (error) {
-      if (!current(request) || state.collaboration[collection] !== loading) return;
-      if (error instanceof ProjectTaskFailure && [401, 403].includes(error.status))
-        readFailure(error);
-      else
-        publish({
-          ...state,
-          collaboration: {
-            ...state.collaboration,
-            [collection]: {
-              ...previous,
-              status:
-                error instanceof ProjectTaskFailure && error.code === 'page-changed'
-                  ? 'changed'
-                  : 'error',
-              requestId: error instanceof ProjectTaskFailure ? error.requestId : null,
-            },
-          },
-        });
-    }
+    if (!fresh() || !state.selection.taskId) return;
+    bindResources();
+    await query.read(collection, append && query.resources()[collection].data !== null);
+    if (current(request)) publish(control);
   }
   async function load(request: { generation: number; signal: AbortSignal }) {
     const s = { ...state.selection };
-    const views = { ...state.views };
+    bindResources();
     if (!s.workspaceId) {
-      publish({ ...state, ...cleared, status: 'empty' });
+      scopeVerifying = false;
+      publish({ ...control, status: 'empty' });
       return;
     }
-    const w = s.workspaceId;
-    const [workspace, members, projects] = await Promise.all([
-      options.workspaces.detail(w, request.signal),
-      options.workspaces.members(w, request.signal),
-      options.transport.projects(w, views.projects, request.signal),
-    ]);
-    if (!current(request)) return;
+    if (!(await required('workspace', request))) return;
+    await Promise.all([required('members', request), required('projects', request)]);
+    if (!current(request) || !fresh()) return;
     if (state.taskScope !== 'project') await fetchDiscovery(request);
-    if (!current(request)) return;
+    if (!current(request) || !fresh()) return;
     const projectId =
-      s.projectId ?? (state.taskScope === 'project' ? projects.items[0]?.id : null) ?? null;
-    select({ workspaceId: w, projectId, taskId: s.taskId }, false);
-    publish({
-      ...state,
-      workspace,
-      members,
-      projects,
-      status: projectId ? 'loading' : state.taskScope === 'project' ? 'empty' : 'ready',
-    });
-    if (!projectId) return;
-    const [project, tasks, task] = await Promise.all([
-      options.transport.project(w, projectId, request.signal),
-      state.taskView.layout === 'list'
-        ? options.transport.tasks(
-            w,
-            projectId,
-            views.tasks,
-            request.signal,
-            undefined,
-            state.taskView.filters,
-          )
-        : Promise.resolve(null),
-      s.taskId
-        ? options.transport.task(w, projectId, s.taskId, request.signal)
-        : Promise.resolve(null),
+      s.projectId ??
+      (state.taskScope === 'project' ? query.resources().projects.data?.items[0]?.id : null) ??
+      null;
+    select({ ...s, projectId }, false);
+    bindResources();
+    if (!projectId) {
+      scopeVerifying = false;
+      publish({ ...control, status: state.taskScope === 'project' ? 'empty' : 'ready' });
+      return;
+    }
+    if (!(await required('project', request))) return;
+    await Promise.all([
+      state.taskView.layout === 'list' ? required('tasks', request) : Promise.resolve(),
+      s.taskId ? required('task', request) : Promise.resolve(),
     ]);
-    if (!current(request)) return;
+    if (!current(request) || !fresh()) return;
+    query.administer();
+    scopeVerifying = false;
     publish({
-      ...state,
-      project,
-      tasks,
-      task,
-      collaboration: emptyCollaboration(),
-      taskColumns: {},
+      ...control,
+      status: 'ready',
       taskColumnErrors: {},
-      projectAccess: null,
-      assignees: null,
       policyPageErrors: {},
       pageError: null,
-      status: 'ready',
     });
-    // Eligibility/management pages are independently recoverable. Auth denial
-    // still clears content and invalidates a late sibling's completion.
-    async function auxiliary(collection: 'projectAccess' | 'assignees') {
-      try {
-        const value =
-          collection === 'projectAccess'
-            ? await options.transport.access(w, projectId!, request.signal)
-            : await options.transport.assignees(w, projectId!, request.signal);
-        if (current(request))
-          publish({ ...state, ...withoutPolicyFailure(collection), [collection]: value });
-      } catch (error) {
-        if (!current(request)) return;
-        if (
-          (error instanceof ProjectTaskFailure || error instanceof WorkspaceFailure) &&
-          [401, 403].includes(error.status)
-        )
-          readFailure(error);
-        else
-          policyFailure(collection, {
-            requestId: error instanceof ProjectTaskFailure ? error.requestId : null,
-          });
-      }
+    async function auxiliary(name: 'projectAccess' | 'assignees') {
+      await query.read(name);
+      if (!current(request) || !fresh()) return;
+      const resource = query.resources()[name];
+      if (resource.failure)
+        policyFailure(name, {
+          requestId: resource.failure.requestId,
+          ...(resource.status === 'changed' ? { reason: 'changed' as const } : {}),
+        });
+      else publish({ ...control, ...withoutPolicyFailure(name) });
     }
     await Promise.all([
-      project.capabilities.canManageAccess ? auxiliary('projectAccess') : Promise.resolve(),
+      query.resources().project.data?.capabilities.canManageAccess
+        ? auxiliary('projectAccess')
+        : Promise.resolve(),
       auxiliary('assignees'),
-      ...(task
+      ...(s.taskId
         ? collaborationCollections
-            .filter(
-              (collection) => collection !== 'parent-candidates' || state.parentCandidatesWanted,
-            )
-            .map((collection) => fetchCollaboration(collection, request))
+            .filter((name) => name !== 'parent-candidates' || state.parentCandidatesWanted)
+            .map((name) => fetchCollaboration(name, request))
         : []),
       ...(state.taskView.layout === 'board'
         ? taskStatuses.map((status) => fetchTaskColumn(status, request))
@@ -929,19 +969,17 @@ export function createProjectTaskController(options: {
     ]);
   }
   async function refresh(): Promise<void> {
-    if (state.pending) return;
-    const request = begin();
+    if (control.pending) return;
+    verified = false;
+    scopeVerifying = true;
     publish({
-      ...state,
-      ...cleared,
-      discovery: discoveryEmpty,
-      refreshRequired: false,
-      refreshDeferred: false,
-      parentCandidatesWanted: state.parentCandidatesWanted,
+      ...control,
       status: 'loading',
       session: null,
-      workspaces: null,
+      refreshRequired: false,
+      refreshDeferred: false,
     });
+    const request = begin();
     try {
       const config = parseIdentityConfiguration(await options.identity.configuration());
       const session = config.enabled
@@ -949,61 +987,74 @@ export function createProjectTaskController(options: {
         : null;
       if (!current(request)) return;
       if (!config.enabled || !session || Date.parse(session.session.expiresAt) <= Date.now()) {
-        publish({
-          ...state,
-          parentCandidatesWanted: false,
-          status: config.enabled ? 'signed-out' : 'disabled',
-          outcome: state.outcome === 'success' ? null : state.outcome,
-          session: null,
-          result: null,
-          conflict: null,
-        });
+        erase(config.enabled ? 'signed-out' : 'disabled');
         return;
       }
-      const sessionChanged =
+      const replacement =
         owner !== null && (owner !== session.user.id || sessionId !== session.session.id);
-      if (sessionChanged) {
-        deferredNavigation = null;
-        discoveryContext = null;
-        workspaceNavigation = null;
+      const expired = originalExpiry !== 0 && originalExpiry <= Date.now();
+      if (
+        replacement ||
+        expired ||
+        (!epoch && owner !== null) ||
+        (memoryExpiry !== 0 && memoryExpiry <= Date.now())
+      ) {
         retry = null;
+        reviewLease = null;
+        resultLease = null;
+        memoryExpiry = 0;
+        deferredNavigation = null;
+        workspaceNavigation = null;
         publish({
-          ...state,
-          workspaceNavigation: null,
-          integratedNavigation: null,
-          sprintLocation: { view: 'tasks', sprintId: null },
-          discovery: discoveryEmpty,
-          searchQuery: '',
-          discoveryProjectId: null,
-          parentCandidatesWanted: false,
-          selection: { ...selectionEmpty },
-          taskView: { layout: 'list', filters: {}, column: 'backlog' },
-          url: '/projects',
+          ...control,
+          ...cleared,
           draft: null,
           retryTarget: null,
-          outcome: null,
           result: null,
           conflict: null,
-          accessConflict: null,
-          requestId: null,
+          outcome: null,
+          workspaceNavigation: null,
+          integratedNavigation: null,
+          ...(replacement
+            ? {
+                sprintLocation: { view: 'tasks' as const, sprintId: null },
+                selection: { ...selectionEmpty },
+                searchQuery: '',
+                discoveryProjectId: null,
+                taskView: { layout: 'list' as const, filters: {}, column: 'backlog' as const },
+                url: '/projects',
+              }
+            : {}),
         });
-        options.navigate?.(state.url, true);
       }
+      if (!epoch || replacement || expired) {
+        epoch = crypto.randomUUID();
+        originalExpiry = Date.parse(session.session.expiresAt);
+        query.clear();
+      }
+      if (replacement) options.navigate?.(control.url, true);
+      originalExpiry = Math.min(originalExpiry, Date.parse(session.session.expiresAt));
       owner = session.user.id;
       sessionId = session.session.id;
-      publish({ ...state, session });
-      const workspaces = await options.workspaces.workspaces(request.signal);
-      if (!current(request)) return;
-      publish({ ...state, workspaces });
+      verified = true;
+      publish({ ...control, session });
+      bindResources();
+      if (!(await required('workspaces', request))) return;
+      const workspaces = query.resources().workspaces.data!;
       if (!state.selection.workspaceId)
         select(
           { workspaceId: workspaces.items[0]?.id ?? null, projectId: null, taskId: null },
           false,
         );
-      if (sessionChanged) options.navigate?.(state.url, true);
+      if (replacement) options.navigate?.(state.url, true);
       await load(request);
     } catch (error) {
-      if (current(request)) readFailure(error);
+      if (!current(request)) return;
+      if (!verified) {
+        scopeVerifying = true;
+        publish({ ...control, session: null, status: 'error' });
+        query.invalidate();
+      } else readFailure(error);
     }
   }
   async function changeSelection(
@@ -1021,10 +1072,10 @@ export function createProjectTaskController(options: {
         discoveryProjectId: null,
         taskView: { ...(metadata.taskView ?? state.taskView), filters: {} },
       };
-      discoveryContext = null;
+
       retry = null;
       publish({
-        ...state,
+        ...control,
         draft: null,
         retryTarget: null,
         conflict: null,
@@ -1043,11 +1094,10 @@ export function createProjectTaskController(options: {
       selection.projectId === state.selection.projectId &&
       selection.taskId === state.selection.taskId;
     publish({
-      ...state,
+      ...control,
       ...metadata,
       ...cleared,
       selection: { ...selection },
-      discovery: discoveryEmpty,
       parentCandidatesWanted: sameTarget && state.parentCandidatesWanted,
       status: 'loading',
       pending: null,
@@ -1065,96 +1115,210 @@ export function createProjectTaskController(options: {
       if (current(request)) readFailure(error);
     }
   }
-  async function backgroundRefresh(reset = false): Promise<void> {
-    if (disposed) return;
+  const names: ProjectTaskQueryName[] = [
+    'workspaces',
+    'workspace',
+    'members',
+    'projects',
+    'project',
+    'tasks',
+    'task',
+    'projectAccess',
+    'assignees',
+    'discovery',
+    'relations',
+    'parent-candidates',
+    'checklist',
+    'comments',
+    'history',
+  ];
+  function guarded() {
+    return !!(
+      control.pending ||
+      control.draft ||
+      retry ||
+      control.conflict ||
+      control.closeWarning ||
+      control.commentConflict ||
+      control.checklistConflict ||
+      control.accessConflict
+    );
+  }
+  function recordInvalidation(affected: ProjectTaskInvalidation) {
+    affected.resources.forEach((name) => pendingResources.add(name));
+    pendingColumns ||= affected.columns;
+    if (control.status !== 'loading') query.invalidate(affected);
+  }
+  async function handleInvalidation(event: TaskInvalidation) {
+    if (disposed || event.type === 'heartbeat') return;
+    if (event.type === 'denied') {
+      readFailure(new ProjectTaskFailure(event.reason === 'signed-out' ? 401 : 403));
+      return;
+    }
+    if (event.type === 'reset') {
+      await backgroundRefresh(true);
+      return;
+    }
+    const affected = query.relevance(event);
+    if (!affected.resources.length && !affected.columns) return;
+    recordInvalidation(affected);
     backgroundEpoch++;
-    resetWanted ||= reset;
-    publish({ ...state, refreshRequired: true });
+    publish({ ...control, refreshRequired: true });
     await flushBackgroundRefresh();
   }
-  // React readiness and queued timers resume recorded work, not a new hint.
+  async function backgroundRefresh(reset = false): Promise<void> {
+    if (disposed || !verified || !epoch) return;
+    backgroundEpoch++;
+    resetWanted ||= reset;
+    recordInvalidation({ resources: names, columns: true });
+    publish({ ...control, refreshRequired: true });
+    await flushBackgroundRefresh();
+  }
   async function flushBackgroundRefresh(): Promise<void> {
-    if (disposed || !state.refreshRequired || backgroundPending || state.status === 'loading')
+    if (disposed || !control.refreshRequired || backgroundPending || control.status === 'loading')
       return;
-    const epoch = backgroundEpoch;
-    if (!fresh()) {
+    if (originalExpiry <= Date.now()) {
       expire();
       return;
     }
-    backgroundPending = true;
-    const shouldReset = resetWanted;
+    if (!verified) return;
+    const captured = backgroundEpoch;
+    const batch = new Set(pendingResources);
+    pendingResources.clear();
+    const columns = pendingColumns;
+    pendingColumns = false;
+    const reset = resetWanted;
     resetWanted = false;
-    let request = { generation, signal: abort.signal };
+    const request = { generation, signal: abort.signal };
+    backgroundPending = true;
     try {
-      const session = parseIdentitySession(await options.identity.session());
-      if (!current(request)) return;
-      if (!session || Date.parse(session.session.expiresAt) <= Date.now()) {
-        expire();
+      if (reset) {
+        maskedResources.add('projects');
+        maskedResources.add('discovery');
+        verified = false;
+        scopeVerifying = true;
+        publish({ ...control, session: null, status: 'loading' });
+        const session = parseIdentitySession(await options.identity.session());
+        if (!current(request)) return;
+        if (!session || Date.parse(session.session.expiresAt) <= Date.now()) {
+          expire();
+          return;
+        }
+        if (session.user.id !== owner || session.session.id !== sessionId) {
+          retry = null;
+          publish({ ...control, pending: null });
+          await refresh();
+          return;
+        }
+        originalExpiry = Math.min(originalExpiry, Date.parse(session.session.expiresAt));
+        verified = true;
+        publish({ ...control, session, status: 'loading' });
+      }
+      const selectedAffected =
+        reset ||
+        columns ||
+        [...batch].some(
+          (name) => !['discovery', 'projects', 'workspaces', 'members'].includes(name),
+        );
+      if (selectedAffected) {
+        const probe = state.selection.taskId
+          ? 'task'
+          : state.selection.projectId
+            ? 'project'
+            : state.selection.workspaceId
+              ? 'workspace'
+              : null;
+        if (probe) {
+          await required(probe, request);
+          batch.delete(probe);
+        }
+      }
+      if (!current(request) || !fresh()) return;
+      scopeVerifying = false;
+      publish({
+        ...control,
+        status: !state.selection.projectId && state.taskScope === 'project' ? 'empty' : 'ready',
+      });
+      if (guarded()) {
+        batch.forEach((name) => pendingResources.add(name));
+        pendingColumns ||= columns;
+        publish({ ...control, refreshRequired: true, refreshDeferred: true });
         return;
       }
-      if (session.user.id !== owner || session.session.id !== sessionId) {
-        begin();
-        retry = null;
+      if (state.selection.projectId && batch.has('project')) {
+        await required('project', request);
+        batch.delete('project');
+      }
+      query.administer();
+      if (state.selection.taskId && batch.has('task')) {
+        await required('task', request);
+        batch.delete('task');
+      }
+      await Promise.all(
+        [...batch].map(async (name) => {
+          if (name === 'discovery') await fetchDiscovery(request);
+          else {
+            await query.read(name);
+            const resource = query.resources()[name];
+            if (resource.status === 'ready' && !resource.stale) maskedResources.delete(name);
+            if (
+              resource.failure &&
+              [
+                'workspaces',
+                'workspace',
+                'members',
+                'projects',
+                'project',
+                'tasks',
+                'task',
+              ].includes(name)
+            )
+              throw new ProjectTaskFailure(
+                resource.failure.status,
+                resource.failure.code,
+                null,
+                resource.failure.requestId,
+              );
+            if (name === 'projectAccess' || name === 'assignees') {
+              if (resource.failure)
+                policyFailure(name, {
+                  requestId: resource.failure.requestId,
+                  ...(resource.status === 'changed' ? { reason: 'changed' as const } : {}),
+                });
+              else publish({ ...control, ...withoutPolicyFailure(name) });
+            }
+          }
+        }),
+      );
+      if (columns)
+        await Promise.all(taskStatuses.map((status) => fetchTaskColumn(status, request)));
+      if (current(request) && fresh())
         publish({
-          ...state,
-          pending: null,
-          draft: null,
-          retryTarget: null,
-          conflict: null,
-          result: null,
+          ...control,
+          status: !state.selection.projectId && state.taskScope === 'project' ? 'empty' : 'ready',
+          refreshRequired:
+            backgroundEpoch !== captured || pendingResources.size > 0 || pendingColumns,
+          refreshDeferred: false,
         });
-        await refresh();
-        return;
-      }
-      publish({ ...state, session });
-      // A reset can mean lost private access. Discard cached cross-project
-      // collections immediately and verify selected detail before deferring.
-      // The one bounded return context remains private until a fresh first page
-      // proves the same authorized revision; it is never rendered while reset.
-      if (shouldReset) publish({ ...state, projects: null, discovery: discoveryEmpty });
-      const { workspaceId: w, projectId: p, taskId: t } = state.selection;
-      if (w && p) {
-        if (t) await options.transport.task(w, p, t, request.signal);
-        else await options.transport.project(w, p, request.signal);
-      } else if (w) await options.workspaces.detail(w, request.signal);
-      if (!current(request)) return;
-      if (
-        state.pending ||
-        state.draft ||
-        retry ||
-        state.conflict ||
-        state.closeWarning ||
-        state.commentConflict ||
-        state.checklistConflict
-      ) {
-        publish({ ...state, refreshRequired: true, refreshDeferred: true });
-        return;
-      }
-      request = begin();
-      await load(request);
-      if (current(request))
-        publish({ ...state, refreshRequired: backgroundEpoch !== epoch, refreshDeferred: false });
     } catch (error) {
       if (!current(request)) return;
-      if (
-        (error instanceof ProjectTaskFailure || error instanceof WorkspaceFailure) &&
-        [401, 403].includes(error.status)
-      )
+      if (error instanceof ProjectTaskFailure && (error.status === 401 || error.status === 403))
         readFailure(error);
       else {
-        // A failed full load must leave loading so a later hint can retry it.
-        // load() can publish loading across the await despite the entry guard's narrowing.
-        if ((state as ProjectTaskState).status === 'loading') readFailure(error);
-        publish({ ...state, refreshRequired: true });
+        if (!verified) publish({ ...control, session: null, status: 'error' });
+        else readFailure(error);
+        batch.forEach((name) => pendingResources.add(name));
+        pendingColumns ||= columns;
+        publish({ ...control, refreshRequired: true });
       }
     } finally {
       backgroundPending = false;
       if (
         !disposed &&
-        backgroundEpoch !== epoch &&
+        current(request) &&
+        backgroundEpoch !== captured &&
         fresh() &&
-        !['forbidden', 'signed-out'].includes(state.status) &&
-        (state.status !== 'error' || state.refreshRequired)
+        (resetWanted || !control.refreshDeferred)
       ) {
         clearTimeout(backgroundTimer);
         backgroundTimer = setTimeout(() => {
@@ -1163,13 +1327,66 @@ export function createProjectTaskController(options: {
       }
     }
   }
+  function commandAtTarget(command: ProjectCommand) {
+    return (
+      command.workspaceId === state.selection.workspaceId &&
+      (!('projectId' in command) || command.projectId === state.selection.projectId) &&
+      (!('taskId' in command) ||
+        command.taskId === state.selection.taskId ||
+        (command.type === 'move-task' && state.selection.taskId === null))
+    );
+  }
+  function actionReady(command: ProjectCommand, recovery = false) {
+    if (!commandAtTarget(command)) return false;
+    if (!fresh() || !['ready', 'empty'].includes(control.status)) return false;
+    if (!recovery && (pendingResources.size > 0 || pendingColumns)) return false;
+    const resources = query.resources();
+    const ready = (name: ProjectTaskQueryName) =>
+      resources[name].status === 'ready' && !resources[name].stale && resources[name].data !== null;
+    if (!ready('workspace')) return false;
+    if (command.type === 'create-project')
+      return ready('projects') && resources.projects.data?.capabilities.canCreate === true;
+    if (!ready('project')) return false;
+    if (command.type === 'change-access' || command.type === 'change-visibility')
+      return (
+        resources.project.data?.capabilities.canManageAccess === true &&
+        (recovery || ready('projectAccess'))
+      );
+    if (
+      command.type === 'edit-project' ||
+      command.type === 'archive-project' ||
+      command.type === 'restore-project'
+    )
+      return true;
+    if (command.type === 'create-task') return recovery || state.taskSummary.canCreate;
+    if ('taskId' in command && state.selection.taskId === command.taskId && !ready('task'))
+      return false;
+    if (isCollaborationCommand(command)) {
+      const name =
+        command.type === 'set-task-parent'
+          ? 'relations'
+          : command.type.includes('checklist')
+            ? 'checklist'
+            : command.type.includes('comment')
+              ? 'comments'
+              : 'relations';
+      return recovery || ready(name);
+    }
+    if (command.type === 'move-task') return state.taskSummary.status === 'ready';
+    return (
+      state.selection.taskId !== null ||
+      (state.taskView.layout === 'list' ? ready('tasks') : state.taskSummary.status === 'ready')
+    );
+  }
   function stage(command: ProjectCommand) {
     if (navigationBlocker && navigationBlocker.getGuard() !== 'none') return;
     if (state.pending) return;
     if (retry) {
-      publish({ ...state, outcome: 'invalid' });
+      publish({ ...control, outcome: 'invalid' });
       return;
     }
+    if (!fresh() || !['ready', 'empty'].includes(state.status)) return;
+    if (!memoryExpiry) memoryExpiry = originalExpiry;
     const draft = structuredClone(command);
     if (
       state.draft &&
@@ -1180,7 +1397,7 @@ export function createProjectTaskController(options: {
         ('commentId' in state.draft ? state.draft.commentId : null) !==
           ('commentId' in draft ? draft.commentId : null))
     ) {
-      publish({ ...state, outcome: 'invalid' });
+      publish({ ...control, outcome: 'invalid' });
       return;
     }
     // Same form edits retain the version captured when it was opened, even if
@@ -1220,8 +1437,9 @@ export function createProjectTaskController(options: {
       sameTarget(state.draft, draft)
     )
       draft.expectedOrderVersion = state.draft.expectedOrderVersion;
+    reviewLease = null;
     publish({
-      ...state,
+      ...control,
       draft,
       closeWarning: null,
       commentConflict: null,
@@ -1309,8 +1527,10 @@ export function createProjectTaskController(options: {
     return 'ready';
   }
   async function execute(command: ProjectCommand, key: string): Promise<void> {
+    const commandEpoch = epoch;
+    if (!commandEpoch) return;
     if (state.pending) return;
-    if (!fresh()) {
+    if (!fresh() || (memoryExpiry !== 0 && memoryExpiry <= Date.now())) {
       expire();
       return;
     }
@@ -1321,13 +1541,16 @@ export function createProjectTaskController(options: {
         command.taskId !== state.selection.taskId &&
         !(command.type === 'move-task' && state.selection.taskId === null))
     ) {
-      publish({ ...state, outcome: 'invalid' });
+      publish({ ...control, outcome: 'invalid' });
       return;
     }
+    if (!actionReady(command, retry !== null)) return;
     const request = begin();
+    if (!current(request) || epoch !== commandEpoch || !fresh()) return;
+    reviewLease = null;
     retry = { command: structuredClone(command), key };
     publish({
-      ...state,
+      ...control,
       pending: command.type,
       retryTarget: structuredClone(command),
       outcome: null,
@@ -1338,16 +1561,20 @@ export function createProjectTaskController(options: {
     });
     try {
       const result = await options.transport.mutate(command, key, request.signal);
-      if (!current(request)) return;
+      if (!current(request) || epoch !== commandEpoch || !fresh()) return;
       retry = null;
+      memoryExpiry = 0;
+      const confirmedEpoch = epoch;
       if (command.type !== 'move-task')
         select({
           workspaceId: command.workspaceId,
           projectId: 'projectId' in result ? result.projectId : result.id,
           taskId: 'projectId' in result ? result.id : null,
         });
+      if (!current(request) || epoch !== commandEpoch || !fresh()) return;
+      resultLease = receiptLease(command, request);
       publish({
-        ...state,
+        ...control,
         pending: null,
         outcome: 'success',
         result,
@@ -1355,6 +1582,19 @@ export function createProjectTaskController(options: {
         retryTarget: null,
         conflict: null,
       });
+      if (
+        !current(request) ||
+        epoch !== confirmedEpoch ||
+        !fresh() ||
+        control.draft ||
+        control.pending
+      )
+        return;
+      pendingResources.clear();
+      pendingColumns = false;
+      resetWanted = false;
+      clearTimeout(backgroundTimer);
+      publish({ ...control, refreshRequired: false, refreshDeferred: false });
       // Success is retained independently of a failed follow-up read.
       try {
         await load(request);
@@ -1362,10 +1602,11 @@ export function createProjectTaskController(options: {
         if (current(request)) readFailure(error);
       }
     } catch (error) {
-      if (!current(request)) return;
+      if (!current(request) || epoch !== commandEpoch || !fresh()) return;
       const status = error instanceof ProjectTaskFailure ? error.status : 0;
       if (status >= 400 && status < 500 && status !== 401 && status !== 408 && status !== 429)
         retry = null;
+      reviewLease = status === 409 && control.draft ? receiptLease(control.draft, request) : null;
       const outcome =
         status === 409
           ? 'conflict'
@@ -1375,7 +1616,7 @@ export function createProjectTaskController(options: {
               ? 'invalid'
               : 'error';
       publish({
-        ...state,
+        ...control,
         pending: null,
         outcome,
         retryTarget: retry ? structuredClone(command) : null,
@@ -1403,131 +1644,65 @@ export function createProjectTaskController(options: {
       await execute(structuredClone(state.draft), (options.key ?? (() => crypto.randomUUID()))());
   }
   async function retrySave() {
-    if (retry) await execute(structuredClone(retry.command), retry.key);
+    const captured = retry;
+    if (!captured || !fresh() || !commandAtTarget(captured.command)) return;
+    const request = { generation };
+    if (!(await required('workspace', request)) || retry !== captured || !current(request)) return;
+    if (
+      'projectId' in captured.command &&
+      (!(await required('project', request)) || retry !== captured || !current(request))
+    )
+      return;
+    const probe =
+      'taskId' in captured.command && state.selection.taskId === captured.command.taskId
+        ? 'task'
+        : 'projectId' in captured.command
+          ? 'project'
+          : 'workspace';
+    if (!(await required(probe, request)) || retry !== captured || !current(request)) return;
+    await execute(structuredClone(captured.command), captured.key);
   }
   async function loadMore(
     collection: 'workspaces' | 'members' | 'projects' | 'tasks' | 'projectAccess' | 'assignees',
   ) {
-    if (
-      collection === 'tasks' &&
-      state.pageError?.collection === 'tasks' &&
-      state.pageError.reason === 'changed'
-    )
-      return;
-    const previous = state[collection];
-    const initialPolicy =
-      (collection === 'projectAccess' || collection === 'assignees') &&
-      previous === null &&
-      state.project !== null;
-    if (
-      (!initialPolicy && !previous?.nextCursor) ||
-      state.pending ||
-      !fresh() ||
-      (collection === 'projectAccess' && !state.project?.capabilities.canManageAccess)
-    )
-      return;
-    const request = { generation, signal: abort.signal };
-    const s = { ...state.selection };
+    if (state.pending || !fresh() || !['ready', 'empty'].includes(state.status)) return;
+    const request = { generation };
+    const before = query.resources()[collection];
     if (collection === 'projectAccess' || collection === 'assignees')
-      publish({ ...state, ...withoutPolicyFailure(collection) });
-    else if (state.pageError?.collection === collection) publish({ ...state, pageError: null });
-    try {
-      const cursor = previous?.nextCursor ?? undefined;
-      const next =
-        collection === 'workspaces'
-          ? await options.workspaces.workspaces(request.signal, cursor)
-          : collection === 'members' && s.workspaceId
-            ? await options.workspaces.members(s.workspaceId, request.signal, cursor)
-            : collection === 'projects' && s.workspaceId
-              ? await options.transport.projects(
-                  s.workspaceId,
-                  state.views.projects,
-                  request.signal,
-                  cursor,
-                )
-              : collection === 'tasks' && s.workspaceId && s.projectId
-                ? await options.transport.tasks(
-                    s.workspaceId,
-                    s.projectId,
-                    state.views.tasks,
-                    request.signal,
-                    cursor,
-                    state.taskView.filters,
-                  )
-                : collection === 'projectAccess' && s.workspaceId && s.projectId
-                  ? await options.transport.access(
-                      s.workspaceId,
-                      s.projectId,
-                      request.signal,
-                      cursor,
-                    )
-                  : collection === 'assignees' && s.workspaceId && s.projectId
-                    ? await options.transport.assignees(
-                        s.workspaceId,
-                        s.projectId,
-                        request.signal,
-                        cursor,
-                      )
-                    : null;
-      if (!current(request) || state[collection] !== previous || !next) return;
-      if (
-        collection === 'tasks' &&
-        previous &&
-        'orderVersion' in previous &&
-        'orderVersion' in next &&
-        previous.orderVersion !== next.orderVersion
-      ) {
-        publish({ ...state, pageError: { collection, requestId: null, reason: 'changed' } });
-        return;
-      }
-      if (
-        collection === 'projectAccess' &&
-        previous &&
-        'projectVersion' in previous &&
-        'projectVersion' in next &&
-        previous.projectVersion !== next.projectVersion
-      ) {
-        policyFailure(collection, { requestId: null, reason: 'changed' });
-        return;
-      }
-      const rows = [...(previous?.items ?? []), ...next.items];
-      const seen = new Set<string>();
-      const items = rows.filter((row) => {
-        const key = 'principalId' in row ? row.principalId : row.id;
-        if (seen.has(key)) return false;
-        seen.add(key);
-        return true;
-      });
-      publish({ ...state, [collection]: { ...next, items } });
-    } catch (error) {
-      if (!current(request) || state[collection] !== previous) return;
-      if (
-        (error instanceof ProjectTaskFailure || error instanceof WorkspaceFailure) &&
-        [401, 403].includes(error.status)
-      )
-        readFailure(error);
-      else if (collection === 'projectAccess' || collection === 'assignees')
+      publish({ ...control, ...withoutPolicyFailure(collection) });
+    await query.read(collection, before.data !== null);
+    if (!current(request) || !fresh()) return;
+    const resource = query.resources()[collection];
+    if (collection === 'projectAccess' || collection === 'assignees') {
+      if (resource.failure)
         policyFailure(collection, {
-          requestId: error instanceof ProjectTaskFailure ? error.requestId : null,
+          requestId: resource.failure.requestId,
+          ...(resource.status === 'changed' ? { reason: 'changed' as const } : {}),
         });
-      else
-        publish({
-          ...state,
-          pageError: {
-            collection,
-            requestId: error instanceof ProjectTaskFailure ? error.requestId : null,
-            ...(error instanceof ProjectTaskFailure && error.code === 'page-changed'
-              ? { reason: 'changed' as const }
-              : {}),
-          },
-        });
-    }
+      else publish({ ...control, ...withoutPolicyFailure(collection) });
+    } else
+      publish({
+        ...control,
+        pageError: resource.failure
+          ? {
+              collection,
+              requestId: resource.failure.requestId,
+              ...(resource.status === 'changed' ? { reason: 'changed' as const } : {}),
+            }
+          : null,
+      });
   }
   async function reloadConflict() {
     const draft = state.draft;
-    if (!draft || state.pending || !('projectId' in draft) || !fresh()) return;
+    if (!draft || state.pending || !('projectId' in draft) || !fresh() || !commandAtTarget(draft))
+      return;
     const request = begin();
+    const reviewEpoch = epoch;
+    const reviewCurrent = () =>
+      current(request) && fresh() && epoch === reviewEpoch && control.draft === draft;
     try {
+      const probe = 'taskId' in draft ? 'task' : 'project';
+      if (!(await required(probe, request)) || !reviewCurrent()) return;
       if (isCollaborationCommand(draft) && draft.type.includes('checklist')) {
         const [record, checklist] = await Promise.all([
           options.transport.task(draft.workspaceId, draft.projectId, draft.taskId, request.signal),
@@ -1539,13 +1714,15 @@ export function createProjectTaskController(options: {
             request.signal,
           ),
         ]);
-        if (current(request) && state.draft === draft)
+        if (reviewCurrent()) {
+          reviewLease = receiptLease(draft, request);
           publish({
             ...state,
             conflict: record,
             checklistConflict: checklist.revision === record.version ? checklist : null,
             outcome: 'conflict',
           });
+        }
         return;
       }
       if (draft.type === 'edit-comment') {
@@ -1556,13 +1733,15 @@ export function createProjectTaskController(options: {
           draft.commentId,
           request.signal,
         );
-        if (current(request) && state.draft === draft)
+        if (reviewCurrent()) {
+          reviewLease = receiptLease(draft, request);
           publish({
             ...state,
             conflict: review.task,
             commentConflict: review.comment,
             outcome: 'conflict',
           });
+        }
         return;
       }
       if (draft.type === 'change-access') {
@@ -1572,13 +1751,15 @@ export function createProjectTaskController(options: {
           draft.principalId,
           request.signal,
         );
-        if (current(request) && state.draft === draft)
+        if (reviewCurrent()) {
+          reviewLease = receiptLease(draft, request);
           publish({
             ...state,
             conflict: review.project,
             accessConflict: review.member,
             outcome: 'conflict',
           });
+        }
         return;
       }
       const record =
@@ -1590,14 +1771,17 @@ export function createProjectTaskController(options: {
               request.signal,
             )
           : await options.transport.project(draft.workspaceId, draft.projectId, request.signal);
-      if (current(request) && state.draft === draft)
-        publish({ ...state, conflict: record, outcome: 'conflict' });
+      if (reviewCurrent()) {
+        reviewLease = receiptLease(draft, request);
+        publish({ ...control, conflict: record, outcome: 'conflict' });
+      }
     } catch (error) {
-      if (current(request)) readFailure(error);
+      if (reviewCurrent()) readFailure(error);
     }
   }
   function rebaseDraft() {
     const { draft, conflict } = state;
+    if (!draft || !validReview(draft) || !actionReady(draft, true)) return;
     // A task/version alone cannot validate its former destination or anchor.
     // Moves require discard, refreshed columns and an explicit new destination.
     if (draft?.type === 'move-task') return;
@@ -1645,7 +1829,7 @@ export function createProjectTaskController(options: {
     )
       return;
     publish({
-      ...state,
+      ...control,
       draft: {
         ...draft,
         expectedVersion: conflict.version,
@@ -1662,6 +1846,55 @@ export function createProjectTaskController(options: {
   }
   return {
     getState: () => state,
+    expire,
+    getVisibleState() {
+      if (!state.privateLifetime || originalExpiry > Date.now()) return state;
+      return {
+        ...state,
+        resources: null,
+        privateLifetime: { ...state.privateLifetime, verified: false },
+        session: null,
+        workspaces: null,
+        workspace: null,
+        members: null,
+        projects: null,
+        project: null,
+        tasks: null,
+        task: null,
+        taskColumns: {},
+        projectAccess: null,
+        assignees: null,
+        collaboration: emptyCollaboration(),
+        discovery: discoveryEmpty,
+        draft: null,
+        retryTarget: null,
+        conflict: null,
+        result: null,
+        accessConflict: null,
+        commentConflict: null,
+        checklistConflict: null,
+        closeWarning: null,
+        integratedNavigation: null,
+        workspaceNavigation: null,
+        selectedTaskAssignee: null,
+        taskSummary: {
+          status: 'loading' as const,
+          total: null,
+          orderVersion: null,
+          canCreate: false,
+        },
+        taskFilterAssigneeStatus: 'none' as const,
+        discoveryFocusTaskId: null,
+        draftGuard: {
+          kind: 'none' as const,
+          atTarget: true,
+          canReturn: false,
+          canDiscard: false,
+          canStageNew: false,
+        },
+        status: 'signed-out' as const,
+      };
+    },
     subscribe(listener: () => void) {
       listeners.add(listener);
       return () => {
@@ -1671,6 +1904,9 @@ export function createProjectTaskController(options: {
     dispose() {
       disposed = true;
       clearTimeout(backgroundTimer);
+      verified = false;
+      epoch = null;
+      query.clear();
       begin();
     },
     registerNavigationBlocker(blocker: ProjectNavigationBlocker) {
@@ -1684,7 +1920,7 @@ export function createProjectTaskController(options: {
     async resolveIntegratedNavigation(choice: 'stay' | 'discard') {
       if (choice === 'stay') {
         deferredNavigation = null;
-        publish({ ...state, integratedNavigation: null });
+        publish({ ...control, integratedNavigation: null });
         return;
       }
       if (!deferredNavigation || state.pending || navigationBlocker?.getGuard() === 'pending')
@@ -1692,7 +1928,7 @@ export function createProjectTaskController(options: {
       if (navigationBlocker && !navigationBlocker.discard()) return;
       retry = null;
       publish({
-        ...state,
+        ...control,
         draft: null,
         retryTarget: null,
         conflict: null,
@@ -1717,7 +1953,7 @@ export function createProjectTaskController(options: {
     async resolveWorkspaceNavigation(choice: 'stay' | 'discard') {
       if (choice === 'stay') {
         workspaceNavigation = null;
-        publish({ ...state, workspaceNavigation: null });
+        publish({ ...control, workspaceNavigation: null });
         return;
       }
       if (choice !== 'discard' || state.pending || !workspaceNavigation) return;
@@ -1725,7 +1961,7 @@ export function createProjectTaskController(options: {
       workspaceNavigation = null;
       retry = null;
       publish({
-        ...state,
+        ...control,
         workspaceNavigation: null,
         draft: null,
         retryTarget: null,
@@ -1739,15 +1975,16 @@ export function createProjectTaskController(options: {
       await navigate?.();
     },
     backgroundRefresh,
+    handleInvalidation,
     flushBackgroundRefresh,
     setStreamStatus(streamStatus: TaskStreamStatus) {
-      publish({ ...state, streamStatus });
+      publish({ ...control, streamStatus });
     },
     streamDenied(reason: 'signed-out' | 'forbidden') {
       if (reason === 'signed-out') expire();
       else {
         readFailure(new ProjectTaskFailure(403));
-        publish({ ...state, streamStatus: 'forbidden' });
+        publish({ ...control, streamStatus: 'forbidden' });
       }
     },
     loadDiscoveryMore: () =>
@@ -1795,7 +2032,7 @@ export function createProjectTaskController(options: {
         )
       )
         return Promise.resolve();
-      publish({ ...state, discoveryFocusTaskId: item.id });
+      publish({ ...control, discoveryFocusTaskId: item.id });
       return go({
         selection: {
           workspaceId: item.workspaceId,
@@ -1826,18 +2063,13 @@ export function createProjectTaskController(options: {
         : Promise.resolve(),
     async setParentCandidatesWanted(wanted: boolean) {
       if (!wanted) {
-        publish({
-          ...state,
-          parentCandidatesWanted: false,
-          collaboration: {
-            ...state.collaboration,
-            'parent-candidates': emptyCollaboration()['parent-candidates'],
-          },
-        });
+        publish({ ...control, parentCandidatesWanted: false });
+        bindResources();
         return;
       }
       if (state.pending || !fresh() || !state.task) return;
-      publish({ ...state, parentCandidatesWanted: true });
+      publish({ ...control, parentCandidatesWanted: true });
+      bindResources();
       const slot = state.collaboration['parent-candidates'];
       if (slot.status !== 'loading' && slot.status !== 'ready' && slot.status !== 'changed')
         await fetchCollaboration('parent-candidates', { generation, signal: abort.signal });
@@ -1846,6 +2078,7 @@ export function createProjectTaskController(options: {
       const { draft, conflict, closeWarning } = state;
       if (
         !draft ||
+        !validReview(draft) ||
         !conflict ||
         !('projectId' in conflict) ||
         !closeWarning ||
@@ -1856,7 +2089,7 @@ export function createProjectTaskController(options: {
         return;
       if (draft.type === 'edit-task' || draft.type === 'move-task')
         publish({
-          ...state,
+          ...control,
           draft: {
             ...draft,
             expectedVersion: conflict.version,
@@ -1972,7 +2205,11 @@ export function createProjectTaskController(options: {
         ].some((key) => query.getAll(key).length > 1)
       ) {
         begin();
-        publish({ ...state, ...cleared, discovery: discoveryEmpty, status: 'error' });
+        verified = false;
+        epoch = null;
+        retireReads();
+        cancelReads();
+        publish({ ...control, ...cleared, status: 'error', session: null });
         return;
       }
       if (guardWorkspace(w, () => this.openLocation(search, true))) {
@@ -1980,10 +2217,10 @@ export function createProjectTaskController(options: {
         return;
       }
       if (state.selection.workspaceId !== null && state.selection.workspaceId !== w) {
-        discoveryContext = null;
         retry = null;
+        memoryExpiry = 0;
         publish({
-          ...state,
+          ...control,
           draft: null,
           retryTarget: null,
           conflict: null,
@@ -1993,7 +2230,7 @@ export function createProjectTaskController(options: {
       }
       begin();
       publish({
-        ...state,
+        ...control,
         ...cleared,
         status: 'loading',
         sprintLocation,
@@ -2008,7 +2245,7 @@ export function createProjectTaskController(options: {
       // the accepted target before reads, including a denied destination.
       if (restoreHistoryTarget) options.navigate?.(state.url, true);
       publish({
-        ...state,
+        ...control,
         pending: null,
         retryTarget: retry ? structuredClone(retry.command) : null,
       });
@@ -2026,8 +2263,9 @@ export function createProjectTaskController(options: {
     discardDraft() {
       if (!state.pending) {
         retry = null;
+        memoryExpiry = 0;
         publish({
-          ...state,
+          ...control,
           draft: null,
           retryTarget: null,
           conflict: null,
@@ -2042,17 +2280,17 @@ export function createProjectTaskController(options: {
     cancelPending() {
       begin();
       publish({
-        ...state,
+        ...control,
         pending: null,
         status: state.status === 'loading' ? 'error' : state.status,
         retryTarget: retry ? structuredClone(retry.command) : null,
       });
     },
     dismissOutcome() {
-      publish({ ...state, outcome: null });
+      publish({ ...control, outcome: null });
     },
     dismissPageError() {
-      publish({ ...state, pageError: null });
+      publish({ ...control, pageError: null });
     },
   };
 }

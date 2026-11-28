@@ -67,6 +67,7 @@ export function createSprintQueryOwner(options: {
   tasks?: ReturnType<typeof createTaskPlanningTransport>;
   changed: () => void;
   authorized: () => boolean;
+  completionCurrent?: (request: Create & { context: SprintClientContext }) => boolean;
   denied: (reason: 'signed-out' | 'forbidden') => void;
   client?: QueryClient;
 }) {
@@ -208,9 +209,18 @@ export function createSprintQueryOwner(options: {
       mutationKey: [...key, 'create-sprint'],
       mutationFn: async ({ command, key, signal }) => {
         const captured = lifetime;
+        const capturedContext = context;
         if (!context || signal.aborted || !options.authorized()) throw new CancelledError();
         const result = await options.transport.mutate(command, key, signal);
-        if (captured !== lifetime || signal.aborted || !context || !options.authorized())
+        if (
+          captured !== lifetime ||
+          signal.aborted ||
+          !context ||
+          context !== capturedContext ||
+          !(options.completionCurrent
+            ? options.completionCurrent({ command, key, signal, context })
+            : options.authorized())
+        )
           throw new CancelledError();
         return result;
       },
@@ -503,6 +513,9 @@ export function createSprintQueryOwner(options: {
     invalidatePreview() {
       slots.preview.invalidate();
       options.changed();
+    },
+    clearPreview() {
+      slots.preview.clear();
     },
     read,
     async create(command: Create['command'], key: string, signal: AbortSignal) {

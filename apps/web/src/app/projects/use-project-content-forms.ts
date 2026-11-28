@@ -1,5 +1,5 @@
 'use client';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import type { Dispatch, SetStateAction, RefObject } from 'react';
 import {
   type ArchiveView,
@@ -22,6 +22,8 @@ import {
   type ProjectFormValue,
 } from './project-content-model';
 export interface ProjectContentFormsPorts {
+  privateLifetime: ProjectTaskState['privateLifetime'];
+  resources: ProjectTaskState['resources'];
   blocked: boolean;
   mutationPending: ProjectCommand['type'] | null;
   canArchiveProject: boolean;
@@ -68,6 +70,8 @@ export interface ProjectContentFormsPorts {
 }
 
 export function useProjectContentForms({
+  privateLifetime,
+  resources,
   blocked,
   mutationPending,
   canArchiveProject,
@@ -127,6 +131,32 @@ export function useProjectContentForms({
 
   const dismissFocusPendingRef = useRef(false);
 
+  const [memory, setMemory] = useState<{ epoch: string; expiresAt: string } | null>(null);
+  const sameMemory =
+    memory !== null &&
+    privateLifetime !== null &&
+    memory.epoch === privateLifetime.epoch &&
+    Date.parse(memory.expiresAt) > Date.now() &&
+    Date.parse(privateLifetime.expiresAt) > Date.now();
+  const memoryVisible = sameMemory && privateLifetime?.verified === true;
+  useEffect(() => {
+    const valid = privateLifetime && Date.parse(privateLifetime.expiresAt) > Date.now();
+    if (valid && memory?.epoch === privateLifetime.epoch) return;
+    setForm(null);
+    setProjectValue(emptyProject);
+    setTaskValue(emptyTask);
+    setCaptureTitle('');
+    setColumnCaptureOpen(false);
+    setResumeDraftOnReady(false);
+    setResumeAccessOnReady(false);
+    lastCommandRef.current = null;
+    modalOpenerRef.current = null;
+    dismissFocusPendingRef.current = false;
+    setMemory(
+      valid ? { epoch: privateLifetime.epoch, expiresAt: privateLifetime.expiresAt } : null,
+    );
+  }, [privateLifetime?.epoch, privateLifetime?.expiresAt, memory?.epoch, lastCommandRef]);
+
   function canResume(command: ProjectTaskCommand): boolean {
     if (!commandMatches(command, selection) || mutationPending !== null) return false;
     if (command.type === 'create-project')
@@ -174,6 +204,19 @@ export function useProjectContentForms({
   })();
 
   const canResumeDraft = draft !== null && canResume(draft);
+  const formResource =
+    form?.kind === 'project-create'
+      ? resources?.projects
+      : form && 'taskId' in form
+        ? resources?.task
+        : resources?.project;
+  // A canonical probe suspends action authority, not the captured form lifetime.
+  // Fresh capability loss still closes the form; stale records never permit submission.
+  const formAwaitingAuthority =
+    sameMemory &&
+    form !== null &&
+    (formResource?.status === 'loading' ||
+      (formResource?.stale === true && formResource.data !== null));
 
   function resumeDraft(command: ProjectTaskCommand) {
     // Only current authorized DTOs may rehydrate a memory-local draft.
@@ -697,16 +740,17 @@ export function useProjectContentForms({
   }
   return {
     canResumeDraft,
-    formAuthorized,
-    form,
+    formAuthorized: memoryVisible && formAuthorized,
+    formAwaitingAuthority,
+    form: sameMemory ? form : null,
     setForm,
-    projectValue,
-    taskValue,
-    captureTitle,
+    projectValue: memoryVisible ? projectValue : emptyProject,
+    taskValue: memoryVisible ? taskValue : emptyTask,
+    captureTitle: memoryVisible ? captureTitle : '',
     setCaptureTitle,
     captureStatus,
     setCaptureStatus,
-    columnCaptureOpen,
+    columnCaptureOpen: memoryVisible && columnCaptureOpen,
     setColumnCaptureOpen,
     resumeDraftOnReady,
     setResumeDraftOnReady,

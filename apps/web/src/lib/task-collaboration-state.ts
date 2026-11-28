@@ -3,6 +3,7 @@ import type { CollaborationCollection, TaskCollaborationPages } from '@rielia/co
 export interface CollaborationSlot<T> {
   status: 'idle' | 'loading' | 'ready' | 'error' | 'changed';
   data: T | null;
+  stale: boolean;
   requestId: string | null;
 }
 export type CollaborationState = {
@@ -10,10 +11,10 @@ export type CollaborationState = {
 };
 export function emptyCollaboration(): CollaborationState {
   return {
-    relations: { status: 'idle', data: null, requestId: null },
-    'parent-candidates': { status: 'idle', data: null, requestId: null },
-    checklist: { status: 'idle', data: null, requestId: null },
-    comments: { status: 'idle', data: null, requestId: null },
-    history: { status: 'idle', data: null, requestId: null },
+    relations: { status: 'idle', data: null, stale: false, requestId: null },
+    'parent-candidates': { status: 'idle', data: null, stale: false, requestId: null },
+    checklist: { status: 'idle', data: null, stale: false, requestId: null },
+    comments: { status: 'idle', data: null, stale: false, requestId: null },
+    history: { status: 'idle', data: null, stale: false, requestId: null },
   };
 }

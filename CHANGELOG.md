@@ -4,6 +4,26 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Correct project expiry timers so long-delay or early callbacks retain exact
+  unexpired intent, reschedule against the original deadline and retire with their
+  lifetime. Actual expiry still erases before verification. All 33 affected hook
+  cases, including six regressions, pass with types/replacement build/Next HTTP/smoke.
+  Root adopts the exact web baseline; corrected-source normal replay passes
+  1,293 tests / 202 inputs, all 824 retained ratio/uncovered contexts and sixteen
+  floors. Infrastructure passes 20/20; 17 local artifacts / 3,312,179 bytes pass,
+  without upload. Preserve earlier source-qualified successful 1,287-test evidence,
+  native provenance limits and OPEN T38.4b terminal-memory copy reconciliation.
+  Coordinator delivery/acceptance and full T38.4a/T38 remain open.
+
+- Move the remaining project/task/discovery/access/collaboration canonical DTOs
+  into one private [Query owner](docs/development/t38-project-query.md), preserving
+  direct exact-command recovery, review snapshots and raw form ownership. Add
+  selector-aware invalidation, original-expiry masking/erasure and the narrow
+  sprint verification/completion correction. The linked receipt preserves failed
+  first-measure and candidate2 numerical checkpoints alongside candidate3 and
+  final replay evidence. Native request-cost provenance retains an explicit lost
+  BEFORE raw limitation. No dependencies, presentation redesign or full T38 acceptance.
+
 - Publish the bounded workspace Query change in [Draft PR74](https://github.com/Ljrr3045/rielia/pull/74),
   targeting `dev` from implementation commit `8fa1d047`. After coordinator-only web
   baseline adoption, normal 1,151 tests / 200 inputs reproduce all sixteen reports

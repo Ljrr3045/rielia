@@ -1,5 +1,21 @@
 # T38 maintained-boundary inventory
 
+## Project/task Query — expiry correction and final local validation
+
+The [project/task Query receipt](t38-project-query.md) records the bounded expiry-timer fix: callbacks recheck the original deadline, reschedule long/early deliveries and retire with their opaque epoch. A genuine prior public-hook failure and six regression cases preserve exact unknown intent until actual expiry, including clock rollback and replacement cleanup. Root adopted the exact web baseline: 51,174 bytes, SHA `32dd19ccf84796ade705811c27f864faee87d2c9c78fa4881d1e5fde8255c2b9`; seven other baselines and original floors are unchanged.
+
+The corrected-source normal replay passes **1,293 tests / 202 inputs**, digest `96f7d80a4dbcfb8f6ae4068e0a04a6efec0539341f57c97b93d72bb8c6576216`; all sixteen reports plus status are byte-exact to candidate4. All 824 retained ratio/absolute-uncovered contexts and sixteen floors pass. Infrastructure passes 20/20; local packaging passes with 17 files / 3,312,179 bytes, without upload. Build `-ALc04WWoZAnh3nHQn6lC` and its qualified costs replace the earlier build for this source. The successful 1,287-test candidate3 receipt remains valid for its frozen source. Coordinator delivery/review/CI/acceptance, OPEN T38.4b copy reconciliation and full T38.4a/T38 remain pending; all named provenance/tooling/product debts remain.
+
+## Earlier candidate3 baseline and local validation
+
+The [project/task Query receipt](t38-project-query.md) records root's exact web-only baseline adoption: 51,174 bytes, SHA `c279613acd3472e9ab4beff4ede36f9dcd99467c8710e723f1fff2e9cb51d8ec`, with original floors and seven other baselines unchanged. The authorized normal built replay passes **1,287 tests / 202 inputs**; all sixteen reports and status are byte-exact to candidate3, digest `a7862feff419fafc9fd0967f5c8c4a9a82b3e8016d872bdbeeacd8e4f796d748`. All 816 retained ratio/absolute-uncovered comparisons and sixteen floors pass. Infrastructure passes 20/20; local artifact packaging passes with 17 files / 3,310,691 bytes, without upload. Production/tests remain frozen and candidate2's source-qualified build/type/native evidence is reused. This is numerical adoption and completed local validation; coordinator publication/review/CI/acceptance and full T38.4a/T38 remain open. Native provenance limits, retained owner/helper debt and OPEN T38.4b terminal-memory copy reconciliation remain explicit.
+
+## Earlier implementation checkpoint — before candidate3
+
+The [project/task Query receipt](t38-project-query.md) records the bounded sixteen-family/twenty-slot migration, removal of the writable DTO ledger and discovery return-page copy, typed page/lifetime ownership, exact command-review receipt exclusions and selector-aware single-stream scheduling. Logic-only mixed seams preserve presentation. A narrow sprint verification correction preserves exact in-flight writes while hiding private projections; verified resume honors pending/unknown/review debt and the existing single confirmation bridge.
+
+PR74's four workspace resources and PR72/PR73's eleven sprint resources remain accepted under their final coordinator decisions. At this earlier checkpoint the initial standard had passed, the first measure had failed at web734/736 with38 diagnostic metric misses, and candidate2 had passed528 affected tests/types/replacement build/native checks plus1,268/202 all-scope execution while8 retained metric contexts still failed. No baseline had then changed. The latest section supersedes those pending numerical steps after candidate3 correction and root adoption; full T38.4a/T38 and coordinator delivery remain OPEN. Successful BEFORE native raw was lost; retained attempt2 and mislabeled AFTER raw remain separate absolute observations without a global paired-performance claim. Dependencies and later tooling/product debts are unchanged.
+
 ## Workspace local gates complete — delivery pending
 
 The [workspace receipt](t38-workspace-query.md) records root's web-only baseline

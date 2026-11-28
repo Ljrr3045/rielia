@@ -145,7 +145,7 @@ test(
   },
 );
 
-test('denied lifecycle intent resumes only after a fresh target read and keeps the captured version', async (t) => {
+test('terminal lifecycle denial erases old intent and a newly opened form captures current authority', async (t) => {
   const b = await mountProjectInteractions(t);
   b.server.mutate = () => Response.json({ code: 'FORBIDDEN' }, { status: 403 });
   await act(async () => b.state.content.requestProjectArchive(false));
@@ -157,12 +157,94 @@ test('denied lifecycle intent resumes only after a fresh target read and keeps t
   b.server.version = 2;
   await act(async () => b.state.canonical.refresh());
   await act(async () => b.state.content.resumeCurrentDraft());
+  assert.equal(b.state.content.form, null);
+  await act(async () => b.state.content.requestProjectArchive(false));
   assert.equal(b.state.content.form.kind, 'project-archive');
-  assert.equal(b.state.content.form.version, 1);
+  assert.equal(b.state.content.form.version, 2);
   b.server.mutate = () =>
     Response.json({ ...project('p', 'a', 3), archivedAt: '2026-11-06T12:00:00.000Z' });
   await act(async () => b.state.content.confirmLifecycle());
-  assert.equal(JSON.parse(b.posts()[1].options.body).expectedVersion, 1);
+  assert.equal(JSON.parse(b.posts()[1].options.body).expectedVersion, 2);
   assert.equal(b.posts().length, 2);
   await b.framesUntilIdle();
+});
+
+for (const operation of ['project', 'task'])
+  test(`captured ${operation} archive can resume under current authority and explicitly review a conflict before a new key`, async (t) => {
+    const b = await mountProjectInteractions(t, { search: '?workspace=a&project=p&task=t1' });
+    if (operation === 'project')
+      await act(async () => b.state.content.requestProjectArchive(false));
+    else await act(async () => b.state.content.requestTaskArchive(false));
+    const current = operation === 'project' ? project('p', 'a', 2) : task(1, 'a', 'p', 2);
+    b.server.mutate = () => Response.json({ code: 'version-conflict', current }, { status: 409 });
+    await act(async () => b.state.content.confirmLifecycle());
+    assert.equal(b.state.canonical.outcome, 'conflict');
+    const first = b.posts()[0];
+    await act(async () => b.state.content.closeForm());
+    await act(async () => b.state.content.resumeCurrentDraft());
+    assert.equal(
+      b.state.content.form.kind,
+      operation === 'project' ? 'project-archive' : 'task-archive',
+    );
+    assert.equal(b.state.content.form.version, 1);
+    b.server.version = 2;
+    await act(async () => b.state.canonical.reloadConflict());
+    assert.equal(
+      b.state.content.form?.kind,
+      operation === 'project' ? 'project-archive' : 'task-archive',
+      'a canonical review probe cannot close the captured form',
+    );
+    await act(async () => b.state.content.keepDraftAfterConflict());
+    await b.framesUntilIdle();
+    assert.equal(b.state.canonical.draft.expectedVersion, 2);
+    assert.equal(b.posts().length, 1, 'review does not resubmit');
+    b.server.mutate = () =>
+      Response.json({ ...current, version: 3, archivedAt: '2026-11-06T00:00:00.000Z' });
+    await act(async () => b.state.content.confirmLifecycle());
+    assert.equal(JSON.parse(b.posts()[1].options.body).expectedVersion, 2);
+    assert.notEqual(
+      b.posts()[1].options.headers['Idempotency-Key'],
+      first.options.headers['Idempotency-Key'],
+    );
+  });
+
+test('column capture cancellation discards only its local command and explicit submission uses the chosen column', async (t) => {
+  const b = await mountProjectInteractions(t);
+  b.server.rows = 0;
+  await act(async () => b.state.canonical.refresh());
+  await act(async () => b.state.canonical.setTaskLayout('board'));
+  await act(async () => b.state.content.beginColumnCapture('todo'));
+  await act(async () => b.state.content.stageCapture('Cancelled column title'));
+  await act(async () => b.state.content.cancelColumnCapture());
+  await b.framesUntilIdle();
+  assert.equal(b.state.canonical.draft, null);
+  assert.equal(b.state.content.captureTitle, '');
+  assert.equal(b.state.content.columnCaptureOpen, false);
+  assert.equal(b.posts().length, 0);
+  await act(async () => b.state.content.beginColumnCapture('todo'));
+  await act(async () => b.state.content.stageCapture('New column title'));
+  b.server.mutate = () => Response.json({ ...task(1), status: 'todo' });
+  await act(async () => b.state.content.submitColumnCapture());
+  await b.framesUntilIdle();
+  assert.equal(b.posts().length, 1);
+  assert.equal(JSON.parse(b.posts()[0].options.body).status, 'todo');
+});
+
+test('same-session capture return restores its current scope before editable memory and replacement clears private refs', async (t) => {
+  const b = await mountProjectInteractions(t);
+  await act(async () => b.state.content.stageCapture('Return to this capture'));
+  await act(async () => b.state.canonical.selectTask('t1'));
+  await act(async () => b.state.content.resumeCurrentDraft());
+  await b.framesUntilIdle();
+  assert.equal(b.state.canonical.selection.projectId, 'p');
+  assert.equal(b.state.content.captureTitle, 'Return to this capture');
+  b.server.session = {
+    ...b.server.session,
+    session: { ...b.server.session.session, id: 'new-verified-session' },
+  };
+  await act(async () => b.state.canonical.refresh());
+  await b.framesUntilIdle();
+  assert.equal(b.state.content.captureTitle, '');
+  assert.equal(b.state.lastCommandRef.current, null);
+  assert.equal(b.state.canonical.draft, null);
 });

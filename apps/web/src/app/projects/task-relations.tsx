@@ -75,7 +75,7 @@ export function TaskRelations({
     (hook.retryTarget?.type === 'create-task' &&
       hook.retryTarget.fields.parentTaskId !== undefined);
   const otherDraft = hook.draftGuard.kind !== 'none' && !childDraft && !ownDraft;
-  const stale = slot.status === 'changed';
+  const stale = slot.stale || slot.status !== 'ready';
   const disabled = archived || pending || retrying || stale || otherDraft;
   const draftLocked = ownDraft !== null || childDraft !== null;
   const readOnly =
