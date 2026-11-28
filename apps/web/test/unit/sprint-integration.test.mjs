@@ -821,7 +821,13 @@ for (const verification of ['loading', 'error'])
           held.resolve(Response.json(b.server.session));
           await refreshing;
         });
-      else await act(async () => h.state.parent.refresh());
+      if (verification === 'loading')
+        assert.equal(
+          h.state.model.visible,
+          false,
+          'the expired verification response cannot reopen a retired lifetime',
+        );
+      await act(async () => h.state.parent.refresh());
       assert.equal(h.state.model.visible, true);
       assert.equal(
         h.state.editing,
@@ -976,7 +982,12 @@ test(
         current: b.sprintServer.task,
       });
     };
-    await b.click('Retry the same operation', section());
+    assert.equal(
+      queryByRole(b.container, 'heading', { name: 'Task planning', exact: true }),
+      null,
+      'invalidated planning is hidden while exact unknown recovery remains reachable',
+    );
+    await b.click('Retry the same operation');
     await b.clock.advance(500);
     await b.flush();
     assert.equal(posts(b).length, 2);
@@ -1838,6 +1849,16 @@ test('Query ownership composes one SSE lifetime and one confirmed drain for a pe
   await act(async () => {
     for (let n = 0; n < 3; n++) b.server.streams.at(-1).emit({ type: 'reset' });
   });
+  assert.equal(
+    h.state.sprints.mutation.status,
+    'pending',
+    'same-session parent verification cannot cancel an in-flight sprint command',
+  );
+  assert.equal(
+    posts(b)[0].init.signal.aborted,
+    false,
+    'read verification must preserve the native write signal',
+  );
   assert.equal(pair().length, initial);
   assert.equal(h.state.sprints.resources.planning.stale, true);
   assert.equal(h.state.sprints.resources.preview.stale, true);
@@ -1974,8 +1995,8 @@ for (const closed of [false, true]) {
       b.requests.filter((r) => r.url.endsWith('/identity/session')).length - sessions;
     assert.equal(
       sessionReads,
-      2,
-      'one full parent refresh plus the reconnected stream reset verification',
+      1,
+      'one full parent verification while the same opaque SSE lifetime remains connected',
     );
     const drain = reads.slice(initial);
     const eligible = [
@@ -2122,4 +2143,59 @@ test('resource correction: pending and unknown raw close destinations retain exa
   assert.equal(posts(b)[1].init.body, first.init.body);
   assert.equal(posts(b)[1].init.headers['Idempotency-Key'], first.init.headers['Idempotency-Key']);
   assert.equal(first.init.headers['Idempotency-Key'], recovery.key);
+});
+
+test('sprint leave review labels workspace-wide and selected-project destinations without authorizing navigation or a write', async (t) => {
+  const b = await openScreen(t);
+  const departures = [];
+  const push = b.window.history.pushState.bind(b.window.history);
+  const restore = b.replace(b.window.history, 'pushState', (...args) => {
+    const result = push(...args);
+    departures.push(b.window.location.href);
+    return result;
+  });
+  t.after(restore);
+  const originalURL = b.window.location.href;
+  b.window.history.pushState({}, '', `${originalURL}#navigation-observer-proof`);
+  assert.equal(
+    departures.length,
+    1,
+    'the observer records a real same-document URL/history change',
+  );
+  assert.equal(b.window.location.hash, '#navigation-observer-proof');
+  b.window.history.replaceState({}, '', originalURL);
+  departures.length = 0;
+  await b.click('Edit sprint');
+  await b.input(getByRole(dialog(b), 'textbox', { name: 'Goal' }), 'Retained destination review');
+  for (const destination of [
+    '/projects?workspace=a&taskScope=search',
+    '/projects?workspace=a&project=p',
+  ]) {
+    const link = b.document.createElement('a');
+    link.href = destination;
+    link.textContent = 'Requested destination';
+    b.container.append(link);
+    const click = new b.window.MouseEvent('click', { bubbles: true, cancelable: true, button: 0 });
+    await act(async () => link.dispatchEvent(click));
+    assert.equal(
+      click.defaultPrevented,
+      true,
+      'the real attached-link event must cancel native departure',
+    );
+    assert.match(dialog(b).textContent, /Workspace a/);
+    link.remove();
+    const stay = [...dialog(b).querySelectorAll('button')].find((el) =>
+      /Stay|Keep working/.test(el.textContent),
+    );
+    assert.ok(stay);
+    await act(async () => stay.click());
+    await b.flush();
+    assert.equal(
+      getByRole(dialog(b), 'textbox', { name: 'Goal' }).value,
+      'Retained destination review',
+    );
+  }
+  assert.equal(departures.length, 0);
+  assert.equal(b.window.location.href, originalURL);
+  assert.equal(posts(b).length, 0);
 });

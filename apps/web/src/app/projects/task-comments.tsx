@@ -29,7 +29,7 @@ export function TaskComments({
   const data = slot.data;
   const pending = hook.mutationPending !== null;
   const archived = projectArchived || task.archivedAt !== null;
-  const stale = slot.status === 'changed';
+  const stale = slot.stale || slot.status !== 'ready';
   const retrying = hook.collaborationRetryTarget !== null;
   const collaborationDraft =
     hook.collaborationDraft?.taskId === task.id ? hook.collaborationDraft : null;

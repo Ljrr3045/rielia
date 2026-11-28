@@ -163,6 +163,11 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
 
   const narrow = useIsNarrow();
 
+  const privateVisible = projectTasks.privateLifetime?.verified === true;
+  const resourceReady = (name: 'project' | 'projects' | 'tasks' | 'projectAccess') => {
+    const resource = projectTasks.resources?.[name];
+    return privateVisible && resource?.status === 'ready' && !resource.stale;
+  };
   const contentBlocked = pending !== null || retryTarget !== null;
 
   const policyBlocked = policyPending !== null || policyRetryTarget !== null;
@@ -184,7 +189,10 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
 
   const projectArchived = project?.archivedAt != null;
 
-  const canCreateProject = projects?.capabilities.canCreate === true && views.projects === 'active';
+  const canCreateProject =
+    resourceReady('projects') &&
+    projects?.capabilities.canCreate === true &&
+    views.projects === 'active';
 
   const canCreatePrivate = projects?.capabilities.canCreatePrivate === true;
 
@@ -201,7 +209,10 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
     (draft === null || draft.type === 'create-task');
 
   const readOnlyTasks =
-    views.tasks === 'archived' || projectArchived || project?.capabilities.canEdit !== true;
+    !resourceReady('project') ||
+    views.tasks === 'archived' ||
+    projectArchived ||
+    project?.capabilities.canEdit !== true;
 
   const filtersActive = Object.keys(taskView.filters).length > 0;
 
@@ -249,7 +260,14 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   }
 
   function canMoveTask(target: Task): boolean {
+    const chain =
+      taskView.layout === 'list'
+        ? projectTasks.resources?.tasks
+        : projectTasks.resources?.columns[target.status];
     return (
+      resourceReady('project') &&
+      chain?.status === 'ready' &&
+      !chain.stale &&
       views.tasks === 'active' &&
       !projectArchived &&
       target.archivedAt === null &&
@@ -261,17 +279,22 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
       collaborationDraft === null &&
       !taskColumnsChanged &&
       !taskPageChanged &&
-      taskColumnErrors[target.status] === undefined
+      taskColumnErrors[target.status] === undefined &&
+      projectTasks.moveEligibility(target.id, target.status, null) === 'ready'
     );
   }
 
-  const canEditProject = project?.capabilities.canEdit === true && !projectArchived;
+  const canEditProject =
+    resourceReady('project') && project?.capabilities.canEdit === true && !projectArchived;
 
-  const canArchiveProject = project?.capabilities.canArchive === true && !projectArchived;
+  const canArchiveProject =
+    resourceReady('project') && project?.capabilities.canArchive === true && !projectArchived;
 
-  const canRestoreProject = project?.capabilities.canRestore === true && projectArchived;
+  const canRestoreProject =
+    resourceReady('project') && project?.capabilities.canRestore === true && projectArchived;
 
-  const canManageAccess = project?.capabilities.canManageAccess === true;
+  const canManageAccess =
+    resourceReady('project') && project?.capabilities.canManageAccess === true;
 
   const hasProjectActions =
     canManageAccess || canEditProject || canArchiveProject || canRestoreProject;
@@ -379,7 +402,10 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
     resumeCurrentDraft,
     canResumeDraft,
     formAuthorized,
+    formAwaitingAuthority,
   } = useProjectContentForms({
+    privateLifetime: projectTasks.privateLifetime,
+    resources: projectTasks.resources,
     blocked,
     mutationPending,
     canArchiveProject,
@@ -561,7 +587,15 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
   }
 
   function stageVisibilityChange(visibility: ProjectVisibility) {
-    if (!project || !canManageAccess || blocked || policyDraft !== null || moveDraft !== null)
+    if (
+      !project ||
+      !canManageAccess ||
+      !resourceReady('project') ||
+      !resourceReady('projectAccess') ||
+      blocked ||
+      policyDraft !== null ||
+      moveDraft !== null
+    )
       return;
     const command: ProjectPolicyCommand = {
       type: 'change-visibility',
@@ -571,12 +605,21 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
       visibility,
     };
     lastPolicyCommandRef.current = command;
+    lastPolicyMemberRef.current = null;
     lastOutcomeSourceRef.current = 'policy';
     stage(command);
   }
 
   function reviewAccess(member: ProjectAccessMember, state: 'active' | 'revoked') {
-    if (!project || !canManageAccess || blocked || policyDraft !== null || moveDraft !== null)
+    if (
+      !project ||
+      !canManageAccess ||
+      !resourceReady('project') ||
+      !resourceReady('projectAccess') ||
+      blocked ||
+      policyDraft !== null ||
+      moveDraft !== null
+    )
       return;
     const command: ProjectPolicyCommand = {
       type: 'change-access',
@@ -665,10 +708,10 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
     handleReturnToDraft,
     keepDraftAfterConflict,
     lang,
-    lastCommandRef,
+    lastCommandRef: { current: privateVisible ? lastCommandRef.current : null },
     lastOutcomeSourceRef,
-    lastPolicyCommandRef,
-    lastPolicyMemberRef,
+    lastPolicyCommandRef: { current: privateVisible ? lastPolicyCommandRef.current : null },
+    lastPolicyMemberRef: { current: privateVisible ? lastPolicyMemberRef.current : null },
     loadMore,
     moveCommand,
     moveCommandLabel,
@@ -833,6 +876,9 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
       : (discovery.page?.items.find((item) => item.projectId === discoveryProjectId)?.projectName ??
         null);
   useProjectInteractionEffects({
+    privateLifetime: projectTasks.privateLifetime,
+    lastPolicyCommandRef,
+    lastPolicyMemberRef,
     captureFocusProjectId,
     captureRef,
     closeDrawer,
@@ -848,6 +894,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
     focusViewBar,
     form,
     formAuthorized,
+    formAwaitingAuthority,
     hadDetailRef,
     lastCommandRef,
     modalOpenerRef,
@@ -1048,6 +1095,7 @@ function ProjectsScreen({ lang, onLanguage }: { lang: Lang; onLanguage: (lang: L
             feedbackNode,
             form,
             formAuthorized,
+            formAwaitingAuthority,
             lang,
             loadMore,
             mutationPending,

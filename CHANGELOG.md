@@ -4,6 +4,81 @@ This records repository changes. No application version has been released.
 
 ## Unreleased
 
+- Record coordinator-only adoption of the exact PR75 correction web baseline.
+  The normal1,325-test/202-input replay reproduces all17 accepted outputs, retaining
+  all824 ratio/uncovered contexts and16floors. Official infrastructure20/20 and
+  local17-file/3,328,658byte packaging pass, without upload. Preserve frozen build/
+  source/test identities, historical failures/errata and every retained debt;
+  corrected-head publication/review/CI and coordinator acceptance remain pending.
+
+- Verify the deferred-move confirmation guard through the existing public witness,
+  without adding cases or changing production. The2026-11-28 canonical1,325/202
+  comparison passes all824 ratio/uncovered contexts and16floors; the exact51,180byte
+  web proposal awaits root-only adoption. Eight baselines remain intact; no normal
+  replay/infrastructure/artifacts or acceptance. Preserve earlier rejected and
+  FAILED/partial snapshots, evidence errata and all retained debts.
+
+- Complete the five-witness canonical measure:1,325 tests/202inputs,823/824
+  protected contexts and16floors pass. One controller line ratio/uncovered miss
+  remains; the exact diagnostic candidate is NOT ADOPTABLE. Preserve all eight
+  baselines and earlier failed/rejected evidence. A public pending-move witness
+  extension awaits coordinator release; no further measure/adoption/acceptance.
+
+- Add five real public gap witnesses for captured invalidation debt, workspace-only
+  exact retry, stale project/task field staging and rendered HTTP400 recovery.
+  Preserve production and all previous assertions. The affected120/121 checkpoint
+  and sole failed-fixture1/1 rerun are retained honestly; a new canonical measure
+  and root-only numerical adoption remain gated, without new build or acceptance.
+
+- Complete the final-name PR75 canonical measure:1,320 tests/202inputs and sixteen
+  floors pass, but seven retained ratio/uncovered contexts fail across recovery,
+  forms and controller. The exact diagnostic baseline is NOT ADOPTABLE; all eight
+  tracked baselines remain intact. Preserve complete reports/maps/digest and the
+  original FAILED/partial run. Root owns further correction/adoption; no normal
+  replay/infrastructure/artifacts or full T38 acceptance is claimed.
+
+- Resolve the observed TAP-volume blocker with33 approved concise test display
+  names, preserving complete adjacent descriptions and static callback/assertion/
+  fixture/order equivalence. The one diagnostic passes838/838 and captures207,276
+  bytes without suppression; the earlier canonical measure stays FAILED/partial.
+  Production/build evidence is reused; new canonical numerical adoption remains
+  root-gated. Preserve the unchanged204,800byte bound and T38.6 log-growth risk.
+
+- Correct all six accepted PR75 native review findings: current exact retry failures,
+  whole-board move readiness, actual root/append retry selection, fresh form authority,
+  readonly masked recovery snapshots and a real navigation observer. All663 affected
+  serial cases, types and the one replacement build/Next HTTP/smoke pass. The sole
+  canonical measure fails at the unchanged process-log bound after API384/384;
+  web remains partial and later scopes unrun. Preserve the genuine pre-fix evidence
+  and one-case setup erratum. Baselines stay exact; diagnosis/numerical adoption and
+  further delivery remain coordinator gates. Full T38.4a/T38 remains open.
+
+- Publish the project/task Query migration and corrected expiry scheduler in
+  [Draft PR75](https://github.com/Ljrr3045/rielia/pull/75), from implementation commit `23b56ef9` toward `dev`. Final-head
+  CI/native review and acceptance remain pending. This reference update preserves
+  the validated source, 1,293-test/202-input evidence and all recorded limitations;
+  full T38.4a/T38 remains open.
+
+- Correct project expiry timers so long-delay or early callbacks retain exact
+  unexpired intent, reschedule against the original deadline and retire with their
+  lifetime. Actual expiry still erases before verification. All 33 affected hook
+  cases, including six regressions, pass with types/replacement build/Next HTTP/smoke.
+  Root adopts the exact web baseline; corrected-source normal replay passes
+  1,293 tests / 202 inputs, all 824 retained ratio/uncovered contexts and sixteen
+  floors. Infrastructure passes 20/20; 17 local artifacts / 3,312,179 bytes pass,
+  without upload. Preserve earlier source-qualified successful 1,287-test evidence,
+  native provenance limits and OPEN T38.4b terminal-memory copy reconciliation.
+  Coordinator delivery/acceptance and full T38.4a/T38 remain open.
+
+- Move the remaining project/task/discovery/access/collaboration canonical DTOs
+  into one private [Query owner](docs/development/t38-project-query.md), preserving
+  direct exact-command recovery, review snapshots and raw form ownership. Add
+  selector-aware invalidation, original-expiry masking/erasure and the narrow
+  sprint verification/completion correction. The linked receipt preserves failed
+  first-measure and candidate2 numerical checkpoints alongside candidate3 and
+  final replay evidence. Native request-cost provenance retains an explicit lost
+  BEFORE raw limitation. No dependencies, presentation redesign or full T38 acceptance.
+
 - Publish the bounded workspace Query change in [Draft PR74](https://github.com/Ljrr3045/rielia/pull/74),
   targeting `dev` from implementation commit `8fa1d047`. After coordinator-only web
   baseline adoption, normal 1,151 tests / 200 inputs reproduce all sixteen reports

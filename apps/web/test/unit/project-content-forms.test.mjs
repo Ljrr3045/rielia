@@ -145,7 +145,7 @@ test(
   },
 );
 
-test('denied lifecycle intent resumes only after a fresh target read and keeps the captured version', async (t) => {
+test('terminal lifecycle denial erases old intent and a newly opened form captures current authority', async (t) => {
   const b = await mountProjectInteractions(t);
   b.server.mutate = () => Response.json({ code: 'FORBIDDEN' }, { status: 403 });
   await act(async () => b.state.content.requestProjectArchive(false));
@@ -157,12 +157,223 @@ test('denied lifecycle intent resumes only after a fresh target read and keeps t
   b.server.version = 2;
   await act(async () => b.state.canonical.refresh());
   await act(async () => b.state.content.resumeCurrentDraft());
+  assert.equal(b.state.content.form, null);
+  await act(async () => b.state.content.requestProjectArchive(false));
   assert.equal(b.state.content.form.kind, 'project-archive');
-  assert.equal(b.state.content.form.version, 1);
+  assert.equal(b.state.content.form.version, 2);
   b.server.mutate = () =>
     Response.json({ ...project('p', 'a', 3), archivedAt: '2026-11-06T12:00:00.000Z' });
   await act(async () => b.state.content.confirmLifecycle());
-  assert.equal(JSON.parse(b.posts()[1].options.body).expectedVersion, 1);
+  assert.equal(JSON.parse(b.posts()[1].options.body).expectedVersion, 2);
   assert.equal(b.posts().length, 2);
   await b.framesUntilIdle();
 });
+
+for (const operation of ['project', 'task'])
+  test(`captured ${operation} archive can resume under current authority and explicitly review a conflict before a new key`, async (t) => {
+    const b = await mountProjectInteractions(t, { search: '?workspace=a&project=p&task=t1' });
+    if (operation === 'project')
+      await act(async () => b.state.content.requestProjectArchive(false));
+    else await act(async () => b.state.content.requestTaskArchive(false));
+    const current = operation === 'project' ? project('p', 'a', 2) : task(1, 'a', 'p', 2);
+    b.server.mutate = () => Response.json({ code: 'version-conflict', current }, { status: 409 });
+    await act(async () => b.state.content.confirmLifecycle());
+    assert.equal(b.state.canonical.outcome, 'conflict');
+    const first = b.posts()[0];
+    await act(async () => b.state.content.closeForm());
+    await act(async () => b.state.content.resumeCurrentDraft());
+    assert.equal(
+      b.state.content.form.kind,
+      operation === 'project' ? 'project-archive' : 'task-archive',
+    );
+    assert.equal(b.state.content.form.version, 1);
+    b.server.version = 2;
+    await act(async () => b.state.canonical.reloadConflict());
+    assert.equal(
+      b.state.content.form?.kind,
+      operation === 'project' ? 'project-archive' : 'task-archive',
+      'a canonical review probe cannot close the captured form',
+    );
+    await act(async () => b.state.content.keepDraftAfterConflict());
+    await b.framesUntilIdle();
+    assert.equal(b.state.canonical.draft.expectedVersion, 2);
+    assert.equal(b.posts().length, 1, 'review does not resubmit');
+    b.server.mutate = () =>
+      Response.json({ ...current, version: 3, archivedAt: '2026-11-06T00:00:00.000Z' });
+    await act(async () => b.state.content.confirmLifecycle());
+    assert.equal(JSON.parse(b.posts()[1].options.body).expectedVersion, 2);
+    assert.notEqual(
+      b.posts()[1].options.headers['Idempotency-Key'],
+      first.options.headers['Idempotency-Key'],
+    );
+  });
+
+for (const kind of ['project', 'task'])
+  // Public field handlers retain local text during an actual held authority GET,
+  // without replacing the already captured command/version or issuing a write.
+  test(`R1 ${kind} field authority`, async (t) => {
+    const b = await mountProjectInteractions(t, {
+      search: `?workspace=a&project=p${kind === 'task' ? '&task=t1' : ''}`,
+    });
+    await b.clock.advance(500);
+    const isTask = kind === 'task';
+    await act(async () =>
+      isTask ? b.state.content.openTaskEdit() : b.state.content.openProjectSettings(),
+    );
+    const stage = (value) =>
+      isTask
+        ? b.state.content.stageTask({ title: value })
+        : b.state.content.stageProject({ name: value });
+    await act(async () => stage('Captured before authority read'));
+    const captured = b.state.canonical.draft;
+    const path = `/api/v1/workspaces/a/projects/p${isTask ? '/tasks/t1' : ''}`;
+    const held = b.server.holdNext(path);
+    await act(async () =>
+      b.server.streams.at(-1).emit({
+        type: 'invalidate',
+        entity: kind,
+        projectId: 'p',
+        id: isTask ? 't1' : 'p',
+        version: 1,
+      }),
+    );
+    assert.ok(held.request);
+    assert.equal(b.state.content.formAwaitingAuthority, true);
+    assert.equal(b.state.content.formAuthorized, false);
+    await act(async () => stage('Typed while authority pending'));
+    assert.equal(
+      isTask ? b.state.content.taskValue.title : b.state.content.projectValue.name,
+      'Typed while authority pending',
+    );
+    assert.deepEqual(b.state.canonical.draft, captured);
+    assert.equal(b.posts().length, 0);
+    await act(async () => held.resolve(Response.json(isTask ? task(1) : project())));
+    await act(async () => b.state.canonical.refresh());
+    assert.equal(b.state.content.formAuthorized, true);
+    assert.equal(b.state.content.formAwaitingAuthority, false);
+    assert.equal(
+      isTask ? b.state.content.taskValue.title : b.state.content.projectValue.name,
+      'Typed while authority pending',
+    );
+    b.server.mutate = () => Response.json(isTask ? task(1, 'a', 'p', 2) : project('p', 'a', 2));
+    await act(async () =>
+      isTask ? b.state.content.submitTaskForm() : b.state.content.submitProjectForm(),
+    );
+    assert.equal(b.posts().length, 1);
+    const payload = JSON.parse(b.posts()[0].options.body);
+    assert.equal(payload.expectedVersion, captured.expectedVersion);
+    assert.equal(isTask ? payload.title : payload.name, 'Typed while authority pending');
+  });
+
+test('column capture cancellation discards only its local command and explicit submission uses the chosen column', async (t) => {
+  const b = await mountProjectInteractions(t);
+  b.server.rows = 0;
+  await act(async () => b.state.canonical.refresh());
+  await act(async () => b.state.canonical.setTaskLayout('board'));
+  await act(async () => b.state.content.beginColumnCapture('todo'));
+  await act(async () => b.state.content.stageCapture('Cancelled column title'));
+  await act(async () => b.state.content.cancelColumnCapture());
+  await b.framesUntilIdle();
+  assert.equal(b.state.canonical.draft, null);
+  assert.equal(b.state.content.captureTitle, '');
+  assert.equal(b.state.content.columnCaptureOpen, false);
+  assert.equal(b.posts().length, 0);
+  await act(async () => b.state.content.beginColumnCapture('todo'));
+  await act(async () => b.state.content.stageCapture('New column title'));
+  b.server.mutate = () => Response.json({ ...task(1), status: 'todo' });
+  await act(async () => b.state.content.submitColumnCapture());
+  await b.framesUntilIdle();
+  assert.equal(b.posts().length, 1);
+  assert.equal(JSON.parse(b.posts()[0].options.body).status, 'todo');
+});
+
+test('same-session capture return restores its current scope before editable memory and replacement clears private refs', async (t) => {
+  const b = await mountProjectInteractions(t);
+  await act(async () => b.state.content.stageCapture('Return to this capture'));
+  await act(async () => b.state.canonical.selectTask('t1'));
+  await act(async () => b.state.content.resumeCurrentDraft());
+  await b.framesUntilIdle();
+  assert.equal(b.state.canonical.selection.projectId, 'p');
+  assert.equal(b.state.content.captureTitle, 'Return to this capture');
+  b.server.session = {
+    ...b.server.session,
+    session: { ...b.server.session.session, id: 'new-verified-session' },
+  };
+  await act(async () => b.state.canonical.refresh());
+  await b.framesUntilIdle();
+  assert.equal(b.state.content.captureTitle, '');
+  assert.equal(b.state.lastCommandRef.current, null);
+  assert.equal(b.state.canonical.draft, null);
+});
+
+// Original case description: R1 W4 public task-form handler cannot stage a new command during a held canonical task probe
+test('R1 W4 Save probe guard', async (t) => {
+  const b = await mountProjectInteractions(t, { search: '?workspace=a&project=p&task=t1' });
+  await b.clock.advance(500);
+  await act(async () => b.state.content.openTaskEdit());
+  await act(async () => b.state.content.stageTask({ title: 'Typed public handler intent' }));
+  const captured = b.state.canonical.draft;
+  const held = b.server.holdNext('/api/v1/workspaces/a/projects/p/tasks/t1');
+  await act(async () =>
+    b.server.streams
+      .at(-1)
+      .emit({ type: 'invalidate', entity: 'task', projectId: 'p', id: 't1', version: 2 }),
+  );
+  assert.ok(held.request);
+  assert.equal(b.state.content.formAwaitingAuthority, true);
+  assert.equal(
+    b.state.content.formAuthorized,
+    false,
+    'fresh matching authority is required even with a retained capable DTO',
+  );
+  await act(async () => b.state.content.submitTaskForm());
+  assert.deepEqual(b.state.canonical.draft, captured);
+  assert.equal(b.posts().length, 0);
+  assert.equal(b.state.content.taskValue.title, 'Typed public handler intent');
+  await act(async () => held.resolve(Response.json(task(1))));
+  await act(async () => b.state.canonical.refresh());
+  assert.equal(b.state.content.formAuthorized, true);
+  await act(async () => b.state.content.submitTaskForm());
+  assert.equal(b.posts().length, 1);
+  assert.equal(JSON.parse(b.posts()[0].options.body).title, 'Typed public handler intent');
+});
+
+for (const restore of [false, true])
+  // Original case description: R1 W4 public lifecycle handler refuses stale authority and recovers explicitly,restore=false
+  // Original case description: R1 W4 public lifecycle handler refuses stale authority and recovers explicitly,restore=true
+  test(`R1 W4 ${restore ? 'restore' : 'archive'} guard`, async (t) => {
+    const b = await mountProjectInteractions(t, { search: '?workspace=a&project=p&task=t1' });
+    const record = task(1);
+    if (restore) {
+      record.archivedAt = '2026-01-01T00:00:00.000Z';
+      record.capabilities.canRestore = true;
+      record.capabilities.canArchive = false;
+    }
+    b.server.responses.set('/api/v1/workspaces/a/projects/p/tasks/t1', record);
+    await act(async () => b.state.canonical.refresh());
+    await b.clock.advance(500);
+    await act(async () => b.state.content.requestTaskArchive(restore));
+    const form = b.state.content.form;
+    const held = b.server.holdNext('/api/v1/workspaces/a/projects/p/tasks/t1');
+    await act(async () =>
+      b.server.streams
+        .at(-1)
+        .emit({ type: 'invalidate', entity: 'task', projectId: 'p', id: 't1', version: 2 }),
+    );
+    assert.ok(held.request);
+    assert.equal(b.state.content.formAuthorized, false);
+    await act(async () => b.state.content.confirmLifecycle());
+    assert.equal(b.state.canonical.draft, null);
+    assert.equal(b.posts().length, 0);
+    await act(async () => held.resolve(Response.json({ code: 'unavailable' }, { status: 503 })));
+    await act(async () => b.state.content.confirmLifecycle());
+    assert.equal(b.state.canonical.draft, null);
+    assert.equal(b.posts().length, 0);
+    assert.deepEqual(b.state.content.form, form);
+    await act(async () => b.state.canonical.refresh());
+    assert.equal(b.state.content.formAuthorized, true);
+    b.server.mutate = () => Response.json({ ...record, version: 2 });
+    await act(async () => b.state.content.confirmLifecycle());
+    assert.equal(b.posts().length, 1);
+    assert.equal(JSON.parse(b.posts()[0].options.body).expectedVersion, 1);
+  });

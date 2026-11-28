@@ -71,10 +71,11 @@ export interface ProjectRecoveryPorts {
   handleReturnToDraft: () => void;
   keepDraftAfterConflict: () => void;
   lang: Lang;
-  lastCommandRef: RefObject<ProjectTaskCommand | null>;
+  // Read-only masked snapshots; command/member ownership stays in the parent.
+  lastCommandRef: Readonly<RefObject<ProjectTaskCommand | null>>;
   lastOutcomeSourceRef: RefObject<'content' | 'policy' | 'move' | 'collaboration'>;
-  lastPolicyCommandRef: RefObject<ProjectPolicyCommand | null>;
-  lastPolicyMemberRef: RefObject<ProjectAccessMember | null>;
+  lastPolicyCommandRef: Readonly<RefObject<ProjectPolicyCommand | null>>;
+  lastPolicyMemberRef: Readonly<RefObject<ProjectAccessMember | null>>;
   loadMore: (
     collection: 'workspaces' | 'members' | 'projects' | 'tasks' | 'projectAccess' | 'assignees',
   ) => Promise<void>;
@@ -582,7 +583,6 @@ export function createProjectRecoveryView({
                   className={styles.primary}
                   disabled={pending !== null}
                   onClick={() => {
-                    lastCommandRef.current = retryTarget;
                     void retrySave();
                   }}
                   type="button"

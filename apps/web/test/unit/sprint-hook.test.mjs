@@ -13,7 +13,14 @@ import {
 import { projectBrowser } from './project-hook-harness.mjs';
 import { useProjectTasks } from '../../src/lib/use-project-tasks.ts';
 import { useProjectSprints } from '../../src/lib/use-project-sprints.ts';
-import { fields, sprint, planning, sprintServer, deferred } from './sprint-client-fixtures.mjs';
+import {
+  fields,
+  sprint,
+  planning,
+  plannedSprint,
+  sprintServer,
+  deferred,
+} from './sprint-client-fixtures.mjs';
 
 async function hookFixture(t, strict = false) {
   const browser = browserFixture(t);
@@ -446,19 +453,34 @@ test(
 );
 
 test(
-  'same-session renewal retains drafts and selection while replacing the owned expiry timer',
+  'same-session renewal retains intent only before the original deadline and cannot extend its owned timer',
   { timeout: 30_000 },
   async (t) => {
     const b = await hookFixture(t);
     await act(async () => b.hook.state.stage({ type: 'edit-sprint', fields }));
     const draft = b.hook.state.draft;
-    const oldTimer = [...b.browser.timers.keys()][0];
     const requests = b.server.requests.length;
     await b.render({ ...b.source(), session: identitySession('human', fixedNow + 120_000) });
     assert.equal(b.hook.state.draft, draft);
     assert.equal(b.server.requests.length, requests);
-    assert.equal(b.browser.timers.has(oldTimer), false);
     assert.equal(b.browser.timers.size, 1);
+    const [id, timer] = [...b.browser.timers.entries()][0];
+    assert.equal(timer.delay, 60_000);
+    b.browser.setNow(fixedNow + 60_001);
+    await b.browser.fireTimer(id);
+    assert.equal(b.hook.state.status, 'signed-out');
+    assert.equal(b.hook.state.draft, null);
+    assert.equal(b.hook.state.recovery, null);
+    assert.equal(b.hook.state.mutation.result, null);
+    const atExpiry = b.server.requests.length;
+    await act(async () => {
+      assert.equal(b.hook.state.stage({ type: 'edit-sprint', fields }), 'unavailable');
+      assert.equal(await b.hook.state.submit(), 'unavailable');
+    });
+    assert.equal(b.server.requests.length, atExpiry);
+    assert.ok(b.browser.timers.size <= 1);
+    await b.browser.unmount();
+    assert.equal(b.browser.timers.size, 0);
   },
 );
 
@@ -467,9 +489,11 @@ test(
   { timeout: 30_000 },
   async (t) => {
     const b = await hookFixture(t);
+    const fresh = identitySession('human', fixedNow + 2147483647 + 60_000);
+    fresh.session.id = 'fresh-long-lifetime';
     await b.render({
       ...b.source(),
-      session: identitySession('human', fixedNow + 2147483647 + 60_000),
+      session: fresh,
     });
     let [id, timer] = [...b.browser.timers.entries()][0];
     assert.equal(timer.delay, 2147483647);
@@ -740,5 +764,131 @@ for (const [name, path, status] of [
     assert.equal(b.hook.state.status, 'ready');
     assert.equal(b.hook.state.resources[name].status, 'ready');
     assert.equal(b.server.requests.filter((r) => r.init.method === 'POST').length, 0);
+  });
+}
+
+for (const type of ['create-sprint', 'edit-sprint']) {
+  test(`public ${type} completion stays hidden through failed verification and confirms once after actual resume`, async (t) => {
+    const b = await hookFixture(t);
+    const original = b.source(),
+      held = deferred();
+    b.server.post = () => held.promise;
+    await act(async () => {
+      assert.equal(b.hook.state.stage({ type, fields }), 'ready');
+    });
+    let saving;
+    await act(async () => {
+      saving = b.hook.state.submit();
+    });
+    const posts = () => b.server.requests.filter((r) => r.init.method === 'POST');
+    assert.equal(posts().length, 1);
+    const post = posts()[0],
+      body = post.init.body,
+      key = post.init.headers['Idempotency-Key'];
+    const before = b.server.requests.length;
+    const renders = b.hook.renders.length;
+    const oldListener = [...b.listeners][0];
+    await b.render({ ...original, status: 'loading', session: null });
+    await b.render({ ...original, status: 'error', session: null });
+    await act(async () => {
+      oldListener({ type: 'reset' });
+      assert.equal(await b.hook.state.retrySave(), 'unavailable');
+      assert.equal(b.hook.state.stage({ type, fields }), 'unavailable');
+      assert.equal(b.hook.state.rebaseDraft(), 'unavailable');
+    });
+    assert.equal(post.init.signal.aborted, false);
+    assert.equal(b.server.requests.length, before);
+    await act(async () => {
+      held.resolve(Response.json(type === 'create-sprint' ? plannedSprint('created') : sprint));
+      await saving;
+    });
+    assert.equal(b.refreshed(), 0);
+    assert.equal(b.hook.state.status, 'verifying');
+    assert.equal(b.listeners.size, 0);
+    for (const render of b.hook.renders.slice(renders)) {
+      assert.equal(render.draft, null);
+      assert.equal(render.recovery, null);
+      assert.equal(render.mutation.current, null);
+      assert.equal(render.mutation.result, null);
+      assert.ok(Object.values(render.resources).every((resource) => resource.data === null));
+    }
+    await b.render({ ...original, session: identitySession('human', fixedNow + 120_000) });
+    assert.equal(b.hook.state.context.expiresAt, original.session.session.expiresAt);
+    assert.equal(b.refreshed(), 1);
+    assert.equal(b.hook.state.mutation.status, 'confirmed');
+    assert.ok(b.hook.state.mutation.result);
+    const reads = b.server.requests.slice(before).filter((r) => r.init.method !== 'POST');
+    assert.equal(reads.length, 7);
+    assert.equal(new Set(reads.map((r) => r.path)).size, 7);
+    assert.equal(posts().length, 1);
+    assert.equal(posts()[0].init.body, body);
+    assert.equal(posts()[0].init.headers['Idempotency-Key'], key);
+    await b.emit({ type: 'reset' });
+    assert.equal(b.refreshed(), 1);
+    assert.equal(posts().length, 1);
+    await b.browser.unmount();
+    assert.equal(b.browser.timers.size, 0);
+    assert.equal(b.listeners.size, 0);
+  });
+  for (const retire of ['expiry', 'replacement', 'denial']) {
+    test(`public suspended ${type} hard ${retire} retires native write and cannot publish a late receipt`, async (t) => {
+      const b = await hookFixture(t),
+        original = b.source(),
+        held = deferred();
+      b.server.post = () => held.promise;
+      await act(async () => b.hook.state.stage({ type, fields }));
+      let saving;
+      await act(async () => {
+        saving = b.hook.state.submit();
+      });
+      const signal = b.server.requests.find((r) => r.init.method === 'POST').init.signal;
+      await b.render({ ...original, status: 'loading', session: null });
+      if (retire === 'expiry') {
+        b.browser.setNow(fixedNow + 60_001);
+        await b.browser.fireTimer([...b.browser.timers.keys()][0]);
+      } else if (retire === 'denial')
+        await b.render({ ...original, status: 'forbidden', session: null });
+      else {
+        const session = identitySession();
+        session.session.id = 'replacement';
+        await b.render({ ...original, session });
+      }
+      assert.equal(signal.aborted, true);
+      const since = b.hook.renders.length;
+      await act(async () => {
+        held.resolve(Response.json(type === 'create-sprint' ? plannedSprint('created') : sprint));
+        await saving;
+      });
+      for (const render of b.hook.renders.slice(since)) {
+        assert.equal(render.mutation.result, null);
+        assert.equal(render.draft, null);
+        assert.equal(render.recovery, null);
+      }
+      assert.equal(b.refreshed(), 0);
+      assert.equal(b.hook.state.mutation.result, null);
+      assert.equal(b.server.requests.filter((r) => r.init.method === 'POST').length, 1);
+    });
+  }
+  test(`public ${type} confirmation callback replacement rejects the old child drain`, async (t) => {
+    const b = await hookFixture(t),
+      source = b.source();
+    let callbacks = 0;
+    source.refresh = async () => {
+      callbacks++;
+      await b.render({ ...source, status: 'forbidden', session: null });
+    };
+    b.server.post = () =>
+      Response.json(type === 'create-sprint' ? plannedSprint('created') : sprint);
+    await act(async () => b.hook.state.stage({ type, fields }));
+    const before = b.server.requests.length;
+    await act(async () => b.hook.state.submit());
+    assert.equal(callbacks, 1);
+    assert.equal(b.hook.state.status, 'forbidden');
+    assert.equal(b.hook.state.mutation.result, null);
+    assert.equal(
+      b.server.requests.length,
+      before + 1,
+      'retired receipt cannot start canonical child reads',
+    );
   });
 }

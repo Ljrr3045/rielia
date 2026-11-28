@@ -1,5 +1,8 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
+import { createServer } from 'node:http';
+import { once } from 'node:events';
+import { createProjectTaskQueryOwner } from '../apps/web/src/lib/project-task-query-owner.ts';
 import {
   createProjectTaskTransport,
   ProjectTaskFailure,
@@ -1153,3 +1156,111 @@ test('migrated project reads retain malformed-body status/request ID and validat
     (error) => error.status === 502,
   );
 });
+
+async function projectHTTPFixture(t, handle) {
+  const server = createServer(handle);
+  const sockets = new Set();
+  server.on('connection', (socket) => {
+    sockets.add(socket);
+    socket.once('close', () => sockets.delete(socket));
+  });
+  t.after(async () => {
+    for (const socket of sockets) socket.destroy();
+    await new Promise((resolve) => server.close(resolve));
+  });
+  server.listen(0, '127.0.0.1');
+  await once(server, 'listening');
+  return `http://127.0.0.1:${server.address().port}`;
+}
+for (const phase of ['headers', 'body']) {
+  test(
+    `native project Query retirement aborts ${phase} and closes the actual HTTP response`,
+    { timeout: 15000 },
+    async (t) => {
+      let admit, close;
+      const admitted = new Promise((resolve) => {
+        admit = resolve;
+      });
+      const closed = new Promise((resolve) => {
+        close = resolve;
+      });
+      const baseURL = await projectHTTPFixture(t, (_req, res) => {
+        res.once('close', close);
+        if (phase === 'body') {
+          res.writeHead(200, { 'content-type': 'application/json' });
+          res.write('{"items":[');
+        }
+        admit();
+      });
+      const owner = createProjectTaskQueryOwner({
+        workspaces: {},
+        transport: createProjectTaskTransport({ baseURL }),
+        authorized: () => true,
+        changed() {},
+        denied() {
+          assert.fail('retired read cannot deny a replacement');
+        },
+      });
+      t.after(() => owner.clear());
+      owner.bind('native-epoch');
+      owner.select({
+        workspaceId: 'w',
+        projectId: 'p',
+        taskId: null,
+        views: { projects: 'active', tasks: 'active' },
+        taskView: { layout: 'list', filters: {}, column: 'todo' },
+        discovery: null,
+        parentCandidatesWanted: false,
+      });
+      const reading = owner.read('tasks');
+      await admitted;
+      owner.clear();
+      await reading;
+      await closed;
+      assert.equal(owner.resources().tasks.data, null);
+      assert.equal(owner.resources().tasks.status, 'idle');
+    },
+  );
+}
+test(
+  'native project Query body deadline cannot publish stalled JSON as a current task page',
+  { timeout: 15000 },
+  async (t) => {
+    let response, close;
+    const closed = new Promise((resolve) => {
+      close = resolve;
+    });
+    const baseURL = await projectHTTPFixture(t, (_req, res) => {
+      response = res;
+      res.once('close', close);
+      res.writeHead(200, { 'content-type': 'application/json' });
+      res.write('{"items":[');
+    });
+    const owner = createProjectTaskQueryOwner({
+      workspaces: {},
+      transport: createProjectTaskTransport({ baseURL, timeout: 500 }),
+      authorized: () => true,
+      changed() {},
+      denied() {
+        assert.fail('deadline is not terminal denial');
+      },
+    });
+    t.after(() => owner.clear());
+    owner.bind('native-epoch');
+    owner.select({
+      workspaceId: 'w',
+      projectId: 'p',
+      taskId: null,
+      views: { projects: 'active', tasks: 'active' },
+      taskView: { layout: 'list', filters: {}, column: 'todo' },
+      discovery: null,
+      parentCandidatesWanted: false,
+    });
+    await owner.read('tasks');
+    await closed;
+    assert.equal(owner.resources().tasks.status, 'error');
+    assert.equal(owner.resources().tasks.data, null);
+    response.end('],"total":0,"nextCursor":null}');
+    assert.equal(owner.resources().tasks.data, null);
+  },
+);

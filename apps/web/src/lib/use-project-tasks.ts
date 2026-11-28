@@ -103,86 +103,102 @@ export function useProjectTasks() {
       controller.dispose();
     };
   }, [controller, invalidationListeners]);
-  const workspaceId = state.selection.workspaceId;
-  const userId = state.session?.user.id;
-  const sessionId = state.session?.session.id;
+  const visible = controller.getVisibleState();
+  const workspaceId = visible.selection.workspaceId;
+  const privateEpoch = visible.privateLifetime?.epoch;
   const streamAllowed =
     !!workspaceId &&
-    !!sessionId &&
-    !['forbidden', 'signed-out', 'disabled'].includes(state.status) &&
-    (state.status !== 'error' || state.refreshRequired);
+    !!privateEpoch &&
+    Date.parse(visible.privateLifetime?.expiresAt ?? '') > Date.now() &&
+    !['forbidden', 'signed-out', 'disabled'].includes(visible.status) &&
+    (visible.status !== 'error' || visible.refreshRequired);
   useEffect(() => {
     if (!streamAllowed || !workspaceId) return;
     return connectTaskEvents({
       workspaceId,
-      onStatus: controller.setStreamStatus,
+      onStatus: (status) => {
+        if (controller.getState().privateLifetime?.epoch === privateEpoch)
+          controller.setStreamStatus(status);
+      },
       onEvent: (event) => {
+        const current = controller.getState();
+        if (
+          current.selection.workspaceId !== workspaceId ||
+          current.privateLifetime?.epoch !== privateEpoch
+        )
+          return;
         invalidationListeners.forEach((listener) => listener(event));
-        if (event.type === 'denied') controller.streamDenied(event.reason);
-        else if (event.type !== 'heartbeat')
-          void controller.backgroundRefresh(event.type === 'reset');
+        void controller.handleInvalidation(event);
       },
     });
-  }, [
-    controller,
-    workspaceId,
-    userId,
-    sessionId,
-    streamAllowed,
-    streamEpoch,
-    invalidationListeners,
-  ]);
+  }, [controller, workspaceId, streamAllowed, streamEpoch, privateEpoch, invalidationListeners]);
   useEffect(() => {
-    if (state.refreshRequired && !state.refreshDeferred && state.status === 'ready')
+    if (
+      state.refreshRequired &&
+      !state.refreshDeferred &&
+      (state.status === 'ready' || state.status === 'empty')
+    )
       void controller.flushBackgroundRefresh();
   }, [controller, state.refreshRequired, state.refreshDeferred, state.status]);
+  const expiresAt = state.privateLifetime?.expiresAt;
   useEffect(() => {
-    if (!state.session) return;
-    const timer = window.setTimeout(
-      () => {
-        controller.cancelPending();
+    if (!expiresAt) return;
+    let active = true;
+    let timer: number | undefined;
+    const expire = () => {
+      if (!active || controller.getState().privateLifetime?.epoch !== privateEpoch) return;
+      const remaining = Date.parse(expiresAt) - Date.now();
+      if (remaining > 0) timer = window.setTimeout(expire, Math.min(2147483647, remaining));
+      else {
+        controller.expire();
         void controller.refresh();
-      },
-      Math.min(2147483647, Math.max(0, Date.parse(state.session.session.expiresAt) - Date.now())),
-    );
-    return () => window.clearTimeout(timer);
-  }, [controller, state.session]);
+      }
+    };
+    expire();
+    return () => {
+      active = false;
+      window.clearTimeout(timer);
+    };
+  }, [controller, expiresAt, privateEpoch]);
   // Preserve the existing content-form contract; policy drafts use the same
   // controller/key lifecycle and are exposed separately for the privacy panel.
   return {
     subscribeInvalidation,
-    ...state,
-    mutationPending: state.pending,
+    ...visible,
+    mutationPending: visible.pending,
     draft:
-      policy(state.draft) ||
-      state.draft?.type === 'move-task' ||
-      isCollaborationCommand(state.draft)
+      policy(visible.draft) ||
+      visible.draft?.type === 'move-task' ||
+      isCollaborationCommand(visible.draft)
         ? null
-        : state.draft,
-    pending: contentPending(state.pending),
+        : visible.draft,
+    pending: contentPending(visible.pending),
     retryTarget:
-      policy(state.retryTarget) ||
-      state.retryTarget?.type === 'move-task' ||
-      isCollaborationCommand(state.retryTarget)
+      policy(visible.retryTarget) ||
+      visible.retryTarget?.type === 'move-task' ||
+      isCollaborationCommand(visible.retryTarget)
         ? null
-        : state.retryTarget,
-    collaborationDraft: isCollaborationCommand(state.draft) ? state.draft : null,
+        : visible.retryTarget,
+    collaborationDraft: isCollaborationCommand(visible.draft) ? visible.draft : null,
     collaborationPending:
-      state.pending && isCollaborationCommand({ type: state.pending }) ? state.pending : null,
-    collaborationRetryTarget: isCollaborationCommand(state.retryTarget) ? state.retryTarget : null,
-    moveDraft: state.draft?.type === 'move-task' ? state.draft : null,
-    movePending: state.pending === 'move-task' ? state.pending : null,
-    moveRetryTarget: state.retryTarget?.type === 'move-task' ? state.retryTarget : null,
-    policyDraft: policy(state.draft) ? state.draft : null,
+      visible.pending && isCollaborationCommand({ type: visible.pending }) ? visible.pending : null,
+    collaborationRetryTarget: isCollaborationCommand(visible.retryTarget)
+      ? visible.retryTarget
+      : null,
+    moveDraft: visible.draft?.type === 'move-task' ? visible.draft : null,
+    movePending: visible.pending === 'move-task' ? visible.pending : null,
+    moveRetryTarget: visible.retryTarget?.type === 'move-task' ? visible.retryTarget : null,
+    policyDraft: policy(visible.draft) ? visible.draft : null,
     policyPending:
-      state.pending === 'change-access' || state.pending === 'change-visibility'
-        ? state.pending
+      visible.pending === 'change-access' || visible.pending === 'change-visibility'
+        ? visible.pending
         : null,
-    policyRetryTarget: policy(state.retryTarget) ? state.retryTarget : null,
-    pageError: contentPageError(state.pageError),
+    policyRetryTarget: policy(visible.retryTarget) ? visible.retryTarget : null,
+    pageError: contentPageError(visible.pageError),
     policyPageError:
-      state.pageError?.collection === 'projectAccess' || state.pageError?.collection === 'assignees'
-        ? state.pageError
+      visible.pageError?.collection === 'projectAccess' ||
+      visible.pageError?.collection === 'assignees'
+        ? visible.pageError
         : null,
     refresh: controller.refresh,
     setSprintLocation: controller.setSprintLocation,

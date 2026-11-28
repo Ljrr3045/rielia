@@ -868,3 +868,78 @@ test('a network failure through the shared selected-resource owner retains admit
   assert.equal(b.owner.resources().scope.stale, true);
   assert.deepEqual(b.denied, []);
 });
+
+for (const withCapability of [false, true])
+  test(`validated Query create cannot become a receipt after ${withCapability ? 'exact-completion capability rejection' : 'live authorization loss'}`, async (t) => {
+    const server = sprintServer();
+    t.mock.method(globalThis, 'fetch', server.fetch);
+    const held = deferred();
+    server.post = () => held.promise;
+    let allowed = true;
+    const client = new QueryClient();
+    const owner = createSprintQueryOwner({
+      transport: createSprintPlanningTransport(),
+      client,
+      changed() {},
+      authorized: () => allowed,
+      denied: () => assert.fail(),
+      ...(withCapability
+        ? {
+            completionCurrent: (request) =>
+              request.key === 'current-execution-key' &&
+              request.command === command &&
+              request.context === context,
+          }
+        : {}),
+    });
+    t.after(() => owner.clear());
+    owner.bind(context);
+    const saving = owner.create(command, 'retired-execution-key', new AbortController().signal);
+    await new Promise((resolve) => globalThis.setTimeout(resolve, 0));
+    allowed = false;
+    held.resolve(Response.json(plannedSprint('created')));
+    await assert.rejects(saving, (error) => isCancelledError(error));
+    assert.equal(client.getMutationCache().getAll().length, 0);
+    assert.equal(owner.resources().sprints.data, null);
+    assert.equal(server.requests.filter((r) => r.init.method === 'POST').length, 1);
+  });
+
+test('a held canonical sprint catalogue response loses read authority before admission and cannot enter the live Query chain', async (t) => {
+  const server = sprintServer();
+  t.mock.method(globalThis, 'fetch', server.fetch);
+  const held = deferred(),
+    started = deferred();
+  let allowed = true;
+  server.get = ({ path }) => {
+    if (path.endsWith('/sprints')) {
+      started.resolve();
+      return held.promise;
+    }
+  };
+  const client = new QueryClient();
+  const owner = createSprintQueryOwner({
+    transport: createSprintPlanningTransport(),
+    client,
+    changed() {},
+    authorized: () => allowed,
+    denied: () => assert.fail('authority refusal is not a fabricated server denial'),
+  });
+  t.after(() => owner.clear());
+  owner.bind(context);
+  const reading = owner.read('sprints');
+  await started.promise;
+  allowed = false;
+  held.resolve(Response.json(list));
+  await reading;
+  assert.equal(owner.resources().sprints.data, null);
+  assert.equal(owner.resources().sprints.stale, true);
+  assert.notEqual(owner.resources().sprints.status, 'ready');
+  assert.equal(server.requests.length, 1);
+  assert.equal(
+    client
+      .getQueryCache()
+      .getAll()
+      .some((query) => query.state.data !== undefined),
+    false,
+  );
+});

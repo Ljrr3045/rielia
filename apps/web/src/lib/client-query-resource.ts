@@ -25,6 +25,7 @@ type Binding<T> = {
   load: (signal: AbortSignal, cursor?: string) => Promise<T>;
   page?: Page<T>;
   admit?: (value: T) => void;
+  retainRoot?: (previousRoot: T, nextRoot: T) => boolean;
 };
 type Entry<T> = {
   observer: QueryObserver<T, unknown>;
@@ -47,6 +48,7 @@ export function createClientQueryResource<T>(options: {
   freeze: <Value>(value: Value) => Value;
   failure: (error: unknown) => ClientQueryFailure;
   pageChanged: () => Error;
+  explicitAppendRetry?: (failure: ClientQueryFailure) => boolean;
 }) {
   let binding: Binding<T> | null = null;
   let metadata = emptyMetadata();
@@ -54,6 +56,13 @@ export function createClientQueryResource<T>(options: {
   let pending: Entry<T> | null = null;
   let operation = 0;
   let chain = 0;
+  let failedRoot = false;
+  let failedAppend: {
+    binding: Binding<T>;
+    chain: number;
+    cursor: string;
+    entries: Entry<T>[];
+  } | null = null;
 
   function data(): T | null {
     if (!binding) return null;
@@ -76,6 +85,8 @@ export function createClientQueryResource<T>(options: {
     options.client.removeQueries({ predicate: (query) => queries.has(query) });
   }
   function cancel() {
+    failedRoot = false;
+    failedAppend = null;
     operation++;
     const obsolete = pending;
     pending = null;
@@ -87,6 +98,8 @@ export function createClientQueryResource<T>(options: {
     if (obsolete) retire([obsolete]);
   }
   function clear() {
+    failedRoot = false;
+    failedAppend = null;
     operation++;
     const obsolete = [...admitted, ...(pending ? [pending] : [])];
     binding = null;
@@ -104,14 +117,24 @@ export function createClientQueryResource<T>(options: {
     cancel();
     metadata = { ...metadata, stale: true };
   }
-  async function read(more = false) {
+  async function read(more = false, revalidate = false) {
     const captured = binding;
     if (!captured) return;
     const before = data();
     const cursor = more && before && captured.page ? captured.page.cursor(before) : null;
+    const retryAppend =
+      failedAppend !== null &&
+      failedAppend.binding === captured &&
+      failedAppend.chain === chain &&
+      failedAppend.cursor === cursor &&
+      failedAppend.entries.length === admitted.length &&
+      failedAppend.entries.every((entry, index) => entry === admitted[index]);
     if (
       more &&
-      (!cursor || !captured.page || metadata.stale || metadata.status !== 'ready' || pending)
+      (!cursor ||
+        !captured.page ||
+        ((metadata.stale || metadata.status !== 'ready') && !retryAppend) ||
+        pending)
     )
       return;
     if (more && admitted.some((entry) => entry.cursor === cursor)) {
@@ -132,7 +155,7 @@ export function createClientQueryResource<T>(options: {
     metadata = {
       ...previous,
       status: more ? 'ready' : 'loading',
-      stale: more ? false : !!before,
+      stale: more ? previous.stale : !!before,
       loadingMore: more,
       failure: null,
     };
@@ -194,6 +217,14 @@ export function createClientQueryResource<T>(options: {
       const value = observer.getCurrentResult().data!;
       // Another canonical resource can change reentrantly during Query success notification.
       captured.admit?.(value);
+      const first = admitted[0]?.observer.getCurrentResult().data;
+      if (!more && revalidate && first !== undefined && captured.retainRoot?.(first, value)) {
+        pending = null;
+        metadata = { status: 'ready', stale: false, loadingMore: false, failure: null };
+        retire([entry]);
+        options.changed();
+        return;
+      }
       const obsolete = more ? [] : admitted;
       admitted = more ? [...admitted, entry] : [entry];
       pending = null;
@@ -207,6 +238,7 @@ export function createClientQueryResource<T>(options: {
         return;
       }
       pending = null;
+      failedRoot = !more;
       metadata = {
         ...previous,
         status: failure.status === 409 ? 'changed' : 'error',
@@ -214,9 +246,16 @@ export function createClientQueryResource<T>(options: {
         loadingMore: false,
         failure,
       };
+      if (more && cursor && options.authorized() && options.explicitAppendRetry?.(failure)) {
+        failedAppend = { binding: captured, chain, cursor, entries: [...admitted] };
+      }
       retire([entry]);
     }
     options.changed();
   }
-  return { resource, bind, clear, cancel, invalidate, read };
+  async function readNext() {
+    if (pending || metadata.status === 'changed') return;
+    await read(data() !== null && !failedRoot);
+  }
+  return { resource, bind, clear, cancel, invalidate, read, readNext };
 }

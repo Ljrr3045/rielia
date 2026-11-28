@@ -30,6 +30,29 @@ const css = registerHooks({
 const { ProjectsView } = await import('../../src/app/projects/projects-view.tsx');
 css.deregister();
 
+// A contractual HTTP400 reaches the real invalid-content feedback; dismissing it
+// keeps the task's typed intent and never resubmits a rejected command.
+test('R1 task400 feedback dismiss', async (t) => {
+  const b = await mount(t, '?workspace=a&project=p&task=t1');
+  await b.clock.advance(500);
+  await b.click('Edit');
+  const form = getByRole(b.container, 'dialog', { name: 'Edit task', exact: true });
+  const title = getByRole(form, 'textbox', { name: /^Title/ });
+  await b.input(title, 'Retained rejected task text');
+  b.server.mutate = () => Response.json({ code: 'INVALID_INPUT' }, { status: 400 });
+  await b.click('Save changes', form);
+  assert.equal(b.posts().length, 1);
+  assert.equal(JSON.parse(b.posts()[0].options.body).expectedVersion, 1);
+  assert.match(form.textContent, /Review the information/);
+  assert.equal(title.value, 'Retained rejected task text');
+  await b.click('Dismiss notice', form);
+  assert.doesNotMatch(form.textContent, /Review the information/);
+  assert.equal(title.value, 'Retained rejected task text');
+  assert.equal(b.posts().length, 1);
+  await b.clock.advance(500);
+  assert.equal(b.posts().length, 1, 'dismissal cannot queue a replacement save');
+});
+
 async function mount(t, search = '?workspace=a&project=p', lang = 'en', configure = () => {}) {
   const b = projectBrowser(t, search);
   b.server.rows = 2;
@@ -149,7 +172,7 @@ for (const lang of ['en', 'es'])
   });
 
 for (const allowed of [false, true])
-  test(`project denial hides private intent; fresh capability allows Return=${allowed}`, async (t) => {
+  test(`terminal project denial erases private intent; only a new authorized form can save, allowed=${allowed}`, async (t) => {
     const b = await mount(t);
     await b.click('Project settings');
     await b.input(
@@ -158,47 +181,32 @@ for (const allowed of [false, true])
     );
     b.server.mutate = () => Response.json({ code: 'FORBIDDEN' }, { status: 403 });
     await b.click('Save changes', getByRole(b.container, 'dialog'));
-    assert.equal(queryByRole(b.container, 'dialog') === null, true);
-    assert.match(b.container.textContent, /The action is not allowed/);
+    assert.equal(queryByRole(b.container, 'dialog'), null);
     assert.doesNotMatch(b.container.textContent, /Secret denied intent/);
-    assert.equal(queryByRole(b.container, 'button', { name: 'Return to draft' }) === null, true);
-    assert.match(b.document.activeElement.textContent, /The action is not allowed/);
-    const read = b.server.holdNext(
-      (request) =>
-        request.options.method !== 'POST' && request.url === '/api/v1/workspaces/a/projects/p',
-    );
+    const read = b.server.holdNext(projectPath);
     await b.click('Refresh');
     const current = project('p', 'a', 2);
     current.capabilities.canEdit = allowed;
+    b.server.responses.set(projectPath, current);
     await act(async () => read.resolve(Response.json(current)));
     await b.flush();
+    assert.equal(queryByRole(b.container, 'button', { name: 'Return to draft' }), null);
+    assert.equal(queryByRole(b.container, 'button', { name: 'Discard draft' }), null);
     assert.doesNotMatch(b.container.textContent, /Secret denied intent/);
-    assert.equal(queryByRole(b.container, 'button', { name: 'Return to draft' }) !== null, allowed);
     assert.equal(b.posts().length, 1);
     if (allowed) {
-      await b.click('Return to draft');
-      assert.equal(
-        getByRole(b.container, 'textbox', { name: /Project name/ }).value,
-        'Secret denied intent',
-      );
+      await b.click('Project settings');
+      const dialog = getByRole(b.container, 'dialog');
+      assert.equal(getByRole(dialog, 'textbox', { name: /Project name/ }).value, 'Project p');
+      await b.input(getByRole(dialog, 'textbox', { name: /Project name/ }), 'New verified intent');
       b.server.mutate = () => Response.json(project('p', 'a', 3));
-      await b.click('Save changes', getByRole(b.container, 'dialog'));
+      await b.click('Save changes', dialog);
       assert.equal(b.posts().length, 2);
-      assert.equal(
-        JSON.parse(b.posts()[1].options.body).expectedVersion,
-        1,
-        'captured version is not silently rebased',
-      );
+      assert.equal(JSON.parse(b.posts()[1].options.body).expectedVersion, 2);
       assert.notEqual(
         b.posts()[1].options.headers['Idempotency-Key'],
         b.posts()[0].options.headers['Idempotency-Key'],
-        'a definite denied operation is deliberately resubmitted, not an unknown retry',
       );
-    } else {
-      await b.click('Discard draft');
-      assert.equal(queryByRole(b.container, 'button', { name: 'Discard draft' }) === null, true);
-      assert.equal(b.document.activeElement.isConnected, true);
-      assert.equal(b.document.activeElement.matches('#projects-main, h1[tabindex="-1"]'), true);
     }
   });
 
@@ -409,7 +417,7 @@ for (const empty of [false, true])
   });
 
 for (const operation of ['project-restore', 'task-archive', 'task-restore'])
-  test(`${operation} denial resumes only with current capability and original captured version`, async (t) => {
+  test(`${operation} terminal denial needs a new current authorized intent`, async (t) => {
     const projectOperation = operation === 'project-restore';
     const restore = operation !== 'task-archive';
     const record = projectOperation ? project() : task();
@@ -444,9 +452,17 @@ for (const operation of ['project-restore', 'task-archive', 'task-restore'])
     assert.equal(queryByRole(b.container, 'button', { name: 'Return to draft' }) === null, true);
     assert.equal(b.posts().length, 1);
     record.capabilities[capability] = true;
-    await b.click('Refresh');
+    await b.event('focus');
+    await b.clock.advance(500);
+    await b.flush();
+    assert.equal(queryByRole(b.container, 'button', { name: 'Return to draft' }), null);
     assert.equal(queryByRole(b.container, 'dialog') === null, true);
-    await b.click('Return to draft');
+    const action = [...b.container.querySelectorAll('button')].find(
+      (button) => button.textContent === label && !button.disabled,
+    );
+    assert.ok(action);
+    await act(async () => action.click());
+    await b.flush();
     assert.equal(queryByRole(b.container, 'dialog') !== null, true);
     b.server.mutate = () => {
       record.version = 3;
@@ -457,8 +473,8 @@ for (const operation of ['project-restore', 'task-archive', 'task-restore'])
     assert.equal(b.posts().length, 2);
     assert.equal(
       JSON.parse(b.posts()[1].options.body).expectedVersion,
-      1,
-      'fresh read never silently rebases the captured version',
+      2,
+      'a new intent captures the new authorized version after terminal erasure',
     );
   });
 
@@ -607,7 +623,7 @@ test('an open versioned draft survives read503 in a reachable modal without stal
 });
 
 for (const access of ['authorized', 'forbidden', 'revoked', 'gone'])
-  test(`denied draft returns across same-workspace targets with fresh ${access} target authority`, async (t) => {
+  test(`a terminally denied draft cannot return across targets even after ${access} reads`, async (t) => {
     const b = await mount(t);
     await b.click('Project settings');
     await b.input(
@@ -616,7 +632,6 @@ for (const access of ['authorized', 'forbidden', 'revoked', 'gone'])
     );
     b.server.mutate = () => Response.json({ code: 'FORBIDDEN' }, { status: 403 });
     await b.click('Save changes', getByRole(b.container, 'dialog'));
-    const first = b.posts()[0];
     b.server.responses.set('/api/v1/workspaces/a/projects/q', project('q'));
     const page = b.server.taskPage();
     b.server.responses.set('/api/v1/workspaces/a/projects/q/tasks', {
@@ -626,12 +641,10 @@ for (const access of ['authorized', 'forbidden', 'revoked', 'gone'])
     b.window.history.pushState({}, '', '/projects?workspace=a&project=q');
     await b.event('popstate');
     await b.flush();
-    assert.match(b.window.location.search, /project=q/);
-    assert.doesNotMatch(b.container.textContent, /Secret original intent/);
+    assert.equal(queryByRole(b.container, 'button', { name: 'Return to draft' }), null);
     const target = b.server.holdNext(projectPath);
-    await b.click('Return to draft');
-    assert.equal(queryByRole(b.container, 'dialog') === null, true);
-    assert.doesNotMatch(b.container.textContent, /Secret original intent/);
+    b.window.history.pushState({}, '', '/projects?workspace=a&project=p');
+    await b.event('popstate');
     const current = project('p', 'a', 2);
     current.capabilities.canEdit = access !== 'revoked';
     await act(async () =>
@@ -642,31 +655,10 @@ for (const access of ['authorized', 'forbidden', 'revoked', 'gone'])
       ),
     );
     await b.flush();
-    assert.equal(b.posts().length, 1, 'context return never submits');
-    if (access !== 'authorized') {
-      assert.equal(queryByRole(b.container, 'dialog') === null, true);
-      assert.doesNotMatch(b.container.textContent, /Secret original intent/);
-      b.server.responses.set(projectPath, project('p', 'a', 3));
-      await b.click(access === 'gone' ? 'Load again' : 'Refresh');
-      assert.equal(
-        queryByRole(b.container, 'dialog') === null,
-        true,
-        'a failed/revoked return cannot remount later without a new explicit Return',
-      );
-      await b.click('Return to draft');
-    }
-    assert.equal(
-      getByRole(b.container, 'textbox', { name: /Project name/ }).value,
-      'Secret original intent',
-    );
-    b.server.mutate = () => Response.json(project('p', 'a', 4));
-    await b.click('Save changes', getByRole(b.container, 'dialog'));
-    assert.equal(b.posts().length, 2);
-    assert.equal(JSON.parse(b.posts()[1].options.body).expectedVersion, 1);
-    assert.notEqual(
-      b.posts()[1].options.headers['Idempotency-Key'],
-      first.options.headers['Idempotency-Key'],
-    );
+    assert.equal(queryByRole(b.container, 'dialog'), null);
+    assert.equal(queryByRole(b.container, 'button', { name: 'Return to draft' }), null);
+    assert.doesNotMatch(b.container.textContent, /Secret original intent/);
+    assert.equal(b.posts().length, 1);
   });
 
 function overlayAt(width) {
@@ -871,3 +863,637 @@ test('selected task navigation guard owns focus before an outstanding form-recov
   );
   assert.equal(b.posts().length, 0);
 });
+
+test('current access and assignee HTTP roots expose reachable loading and failure states without authorizing a write', async (t) => {
+  let access, assignees;
+  const record = project();
+  record.capabilities.canManageAccess = true;
+  const b = await mount(t, '?workspace=a&project=p&task=t1', 'en', (browser) => {
+    browser.server.responses.set(projectPath, record);
+    browser.server.responses.set(`${projectPath}/assignees`, {});
+  });
+  await b.click('Access');
+  const panel = getByRole(b.container, 'dialog');
+  access = b.server.holdNext(`${projectPath}/access`);
+  await b.click('Retry loading', panel);
+  assert.match(panel.textContent, /Loading people|Loading project access/);
+  await act(async () => access.resolve(Response.json({ code: 'unavailable' }, { status: 503 })));
+  await b.flush();
+  assert.match(panel.textContent, /could not|Could not|unable|Unable/);
+  assert.equal(b.posts().length, 0);
+  await b.click('Close', panel);
+  await b.click('Edit');
+  const form = getByRole(b.container, 'dialog', { name: 'Edit task', exact: true });
+  assignees = b.server.holdNext(`${projectPath}/assignees`);
+  await b.click('Retry loading', form);
+  assert.match(form.textContent, /Loading people/);
+  await act(async () =>
+    assignees.resolve(
+      Response.json({ workspaceId: 'a', projectId: 'p', items: [], total: 0, nextCursor: null }),
+    ),
+  );
+  await b.flush();
+  assert.doesNotMatch(form.textContent, /Loading people/);
+  await b.click('Cancel', form);
+  assert.equal(b.posts().length, 0);
+});
+
+test('live notices reflect actual offline and guarded invalidation without auto-saving', async (t) => {
+  const b = await mount(t, '?workspace=a&project=p&task=t1');
+  await b.event('offline');
+  await b.flush();
+  assert.match(b.container.textContent, /offline|Offline/);
+  await b.event('online');
+  await b.flush();
+  await b.click('Edit');
+  const form = getByRole(b.container, 'dialog', { name: 'Edit task', exact: true });
+  await b.input(getByRole(form, 'textbox', { name: /^Title/ }), 'Keep this exact unsent text');
+  await act(async () =>
+    b.server.streams
+      .at(-1)
+      .emit({ type: 'invalidate', entity: 'task', id: 't1', projectId: 'p', version: 2 }),
+  );
+  await b.clock.advance(500);
+  await b.flush();
+  assert.match(b.container.textContent, /finish|Finish|changes|Changes/);
+  assert.equal(b.posts().length, 0);
+  await b.click('Cancel', form);
+  await b.click('Discard draft');
+  assert.equal(b.posts().length, 0);
+});
+
+function discoveryPageForScreen(
+  items = [],
+  query = { scope: 'search', q: '', view: 'active', filters: {} },
+) {
+  return {
+    workspaceId: 'a',
+    principalId: 'domain-human',
+    query,
+    revision: 'a'.repeat(64),
+    items,
+    total: items.length,
+    nextCursor: null,
+  };
+}
+
+test('discovery root retry renders a real loading skeleton and creation follows the refreshed project catalogue', async (t) => {
+  let initial;
+  const path = '/api/v1/workspaces/a/task-discovery';
+  const b = await mount(t, '?workspace=a&taskScope=search', 'en', (browser) => {
+    initial = browser.server.holdNext(path);
+  });
+  await act(async () => initial.resolve(Response.json({ code: 'unavailable' }, { status: 503 })));
+  await b.flush();
+  const retry = b.server.holdNext(path);
+  const candidates = [...b.container.querySelectorAll('button')].filter((el) =>
+    /Try again|Retry|Reintentar/.test(el.textContent),
+  );
+  assert.ok(candidates.length);
+  await act(async () => candidates[0].click());
+  await b.flush();
+  assert.ok(b.container.querySelector('[aria-busy="true"][role="status"]'));
+  b.server.responses.set(path, discoveryPageForScreen());
+  await act(async () => retry.resolve(Response.json(discoveryPageForScreen())));
+  await b.flush();
+  const catalogue = '/api/v1/workspaces/a/projects';
+  b.server.responses.set(catalogue, {
+    items: [project('q')],
+    total: 1,
+    nextCursor: null,
+    capabilities: { canCreate: true },
+  });
+  await b.event('popstate');
+  await b.flush();
+  const creation = b.container.querySelector('details form select');
+  assert.ok(creation);
+  assert.equal(creation.value, 'q');
+  b.server.responses.set(catalogue, {
+    items: [],
+    total: 0,
+    nextCursor: null,
+    capabilities: { canCreate: true },
+  });
+  await b.event('popstate');
+  await b.flush();
+  assert.match(b.container.textContent, /No project|no project|Choose a project|create a project/);
+  assert.equal(b.posts().length, 0);
+});
+
+test('same-session off-target task draft returns explicitly and survives a failed selected read without resubmission', async (t) => {
+  const b = await mount(t, '?workspace=a&project=p&task=t1');
+  await b.click('Edit');
+  const dialog = getByRole(b.container, 'dialog', { name: 'Edit task', exact: true });
+  await b.input(getByRole(dialog, 'textbox', { name: /^Title/ }), 'Captured return decision');
+  await b.click('Cancel', dialog);
+  b.window.history.pushState({}, '', '/projects?workspace=a&project=p&task=t2');
+  await b.event('popstate');
+  await b.flush();
+  assert.equal(queryByRole(b.container, 'dialog', { name: 'Edit task', exact: true }), null);
+  assert.match(b.container.textContent, /Return to draft/);
+  await b.click('Return to draft');
+  const returned = getByRole(b.container, 'dialog', { name: 'Edit task', exact: true });
+  assert.equal(
+    getByRole(returned, 'textbox', { name: /^Title/ }).value,
+    'Captured return decision',
+  );
+  assert.equal(b.posts().length, 0);
+  await b.click('Cancel', returned);
+  const failed = b.server.holdNext(projectPath);
+  await b.event('popstate');
+  await act(async () => failed.resolve(Response.json({ code: 'unavailable' }, { status: 503 })));
+  await b.flush();
+  const recovery = [...b.container.querySelectorAll('button')].find(
+    (el) => el.textContent === 'Load again',
+  );
+  assert.ok(recovery);
+  await act(async () => recovery.click());
+  await b.flush();
+  assert.equal(b.posts().length, 0);
+  assert.match(b.container.textContent, /Return to draft/);
+});
+
+for (const missing of [false, true])
+  test(`discovery Back revalidates and restores ${missing ? 'heading fallback after row removal' : 'the current row focus'} without a copied page`, async (t) => {
+    const path = '/api/v1/workspaces/a/task-discovery';
+    const { description, ...row } = task(1);
+    assert.equal(typeof description, 'string');
+    const item = { ...row, projectName: 'Project p' };
+    const b = await mount(t, '?workspace=a&taskScope=search', 'en', (browser) =>
+      browser.server.responses.set(path, discoveryPageForScreen([item])),
+    );
+    const opener = b.container.querySelector('[data-discovery-open]');
+    assert.ok(opener);
+    await act(async () => opener.click());
+    await b.flush();
+    assert.match(b.window.location.search, /task=t1/);
+    if (missing)
+      b.server.responses.set(path, { ...discoveryPageForScreen(), revision: 'b'.repeat(64) });
+    await b.click('Back to the search results');
+    await b.flush();
+    assert.equal(new URL(b.window.location.href).searchParams.get('task'), null);
+    assert.equal(
+      b.document.activeElement ===
+        (missing
+          ? getByRole(b.container, 'heading', { name: 'Search tasks', exact: true })
+          : b.container.querySelector('[data-discovery-open]')),
+      true,
+    );
+    assert.equal(b.posts().length, 0);
+  });
+
+test('rendered move recovery preserves original order/key and a changed destination needs deliberate discard', async (t) => {
+  const b = await mount(t);
+  b.server.mutate = () => {
+    throw new Error('Lost move response');
+  };
+  const menu = b.container.querySelector('summary[aria-label^="Move QA-2"]')?.closest('details');
+  assert.ok(menu);
+  await act(async () => {
+    menu.open = true;
+  });
+  await b.click('Before QA-1 · Task 1', menu);
+  assert.equal(b.posts().length, 1);
+  const original = b.posts()[0];
+  assert.equal(JSON.parse(original.options.body).beforeTaskId, 't1');
+  assert.match(b.container.textContent, /The move could not be confirmed/i);
+  b.server.mutate = () => Response.json({ ...task(2), version: 2 });
+  await b.click('Retry');
+  assert.equal(b.posts().length, 2);
+  assert.equal(b.posts()[1].options.body, original.options.body);
+  assert.equal(
+    b.posts()[1].options.headers['Idempotency-Key'],
+    original.options.headers['Idempotency-Key'],
+  );
+  const control = getByRole(b.container, 'combobox', { name: 'Move QA-1 to status' });
+  b.server.mutate = () =>
+    Response.json(
+      { code: 'version-conflict', current: { ...task(1), status: 'todo', version: 3 } },
+      { status: 409 },
+    );
+  await act(async () => {
+    control.value = 'todo';
+    control.dispatchEvent(new b.window.Event('change', { bubbles: true }));
+  });
+  await b.flush();
+  assert.equal(b.posts().length, 3);
+  assert.match(b.container.textContent, /destination|Destination/);
+  await b.click('Discard move');
+  assert.equal(b.posts().length, 3);
+  assert.equal(queryByRole(b.container, 'button', { name: 'Discard move' }), null);
+});
+
+test('rendered policy unknown retry keeps its exact target then a new visibility review uses current version', async (t) => {
+  const record = project();
+  record.capabilities = {
+    ...record.capabilities,
+    canManageAccess: true,
+    canChangeVisibility: true,
+    canGrantAccess: true,
+    canRevokeAccess: true,
+  };
+  const access = {
+    ...accessPage(),
+    total: 1,
+    nextCursor: null,
+    items: [
+      {
+        ...accessPage().items[0],
+        explicitAccess: null,
+        effectiveAccess: false,
+        capabilities: { canGrant: true, canRevoke: false },
+      },
+    ],
+  };
+  const b = await mount(t, undefined, 'en', (browser) => {
+    browser.server.responses.set(projectPath, record);
+    browser.server.responses.set(`${projectPath}/access`, access);
+  });
+  await b.click('Access');
+  let panel = getByRole(b.container, 'dialog');
+  await b.click('Grant access to Private access member', panel);
+  b.server.mutate = () => {
+    throw new Error('Unknown access result');
+  };
+  await b.click('Grant access', panel);
+  assert.equal(b.posts().length, 1);
+  const original = b.posts()[0];
+  assert.match(original.url, /access\/person$/);
+  assert.equal(JSON.parse(original.options.body).expectedVersion, 1);
+  await b.click('Close', panel);
+  b.server.responses.set('/api/v1/workspaces/a/projects/q', project('q'));
+  const qpage = b.server.taskPage('a');
+  b.server.responses.set('/api/v1/workspaces/a/projects/q/tasks', {
+    ...qpage,
+    items: qpage.items.map((row) => ({ ...row, projectId: 'q' })),
+  });
+  b.window.history.pushState({}, '', '/projects?workspace=a&project=q');
+  await b.event('popstate');
+  await b.flush();
+  await b.click('Return to the pending change');
+  panel = getByRole(b.container, 'dialog');
+  b.server.mutate = () => {
+    record.version = 2;
+    access.projectVersion = 2;
+    b.server.responses.set(projectPath, record);
+    b.server.responses.set(`${projectPath}/access`, access);
+    return Response.json(record);
+  };
+  await b.click('Retry', panel);
+  assert.equal(b.posts().length, 2);
+  assert.equal(b.posts()[1].options.body, original.options.body);
+  assert.equal(
+    b.posts()[1].options.headers['Idempotency-Key'],
+    original.options.headers['Idempotency-Key'],
+  );
+  await act(async () => getByRole(panel, 'radio', { name: /Private/ }).click());
+  const review = [...panel.querySelectorAll('button')].find((el) =>
+    /Review visibility|Review change/.test(el.textContent),
+  );
+  assert.ok(review);
+  await act(async () => review.click());
+  await b.flush();
+  assert.equal(b.posts().length, 2);
+  await b.click('Cancel', panel);
+  assert.equal(b.posts().length, 2);
+});
+
+test('collaboration return banner keeps an unsent comment reachable in its exact task and supports deliberate discard', async (t) => {
+  const b = await mount(t, '?workspace=a&project=p&task=t1');
+  const editor = getByRole(b.container, 'textbox', { name: 'Write a comment…' });
+  await act(async () => {
+    editor.focus();
+    Object.getOwnPropertyDescriptor(b.window.HTMLTextAreaElement.prototype, 'value').set.call(
+      editor,
+      'Captured comment body',
+    );
+    editor.dispatchEvent(new b.window.KeyboardEvent('keyup', { key: 'a', bubbles: true }));
+  });
+  b.window.history.pushState({}, '', '/projects?workspace=a&project=p');
+  await b.event('popstate');
+  await b.flush();
+  assert.match(b.container.textContent, /Return to|Unsent|unsent/);
+  const back = [...b.container.querySelectorAll('button')].find((el) =>
+    /Return to draft|Return to.*change|Return to.*task/.test(el.textContent),
+  );
+  assert.ok(back);
+  await act(async () => back.click());
+  await b.flush();
+  assert.match(b.window.location.search, /task=t1/);
+  assert.equal(
+    getByRole(b.container, 'textbox', { name: 'Write a comment…' }).value,
+    'Captured comment body',
+  );
+  b.window.history.pushState({}, '', '/projects?workspace=a&project=p');
+  await b.event('popstate');
+  await b.flush();
+  const discard = [...b.container.querySelectorAll('button')].find((el) =>
+    /Discard.*change|Discard.*draft/.test(el.textContent),
+  );
+  assert.ok(discard);
+  await act(async () => discard.click());
+  await b.flush();
+  assert.equal(b.posts().length, 0);
+});
+
+test('an explicitly rejected comment remains editable under current authority and discard clears it without replay', async (t) => {
+  const b = await mount(t, '?workspace=a&project=p&task=t1');
+  const editor = getByRole(b.container, 'textbox', { name: 'Write a comment…' });
+  await act(async () => {
+    editor.focus();
+    Object.getOwnPropertyDescriptor(b.window.HTMLTextAreaElement.prototype, 'value').set.call(
+      editor,
+      'Review this rejected comment',
+    );
+    editor.dispatchEvent(new b.window.KeyboardEvent('keyup', { key: 'a', bubbles: true }));
+  });
+  b.server.mutate = () => Response.json({ code: 'INVALID_INPUT' }, { status: 400 });
+  await b.click('Comment');
+  assert.equal(b.posts().length, 1);
+  assert.match(b.container.textContent, /Review the|review the|invalid|Invalid/);
+  const section = editor.closest('section');
+  const cancel = [...section.querySelectorAll('button')].find((el) =>
+    /Discard draft|Cancel/.test(el.textContent),
+  );
+  assert.ok(cancel);
+  await act(async () => cancel.click());
+  await b.flush();
+  assert.equal(b.posts().length, 1);
+  assert.equal(editor.value, '');
+});
+
+test('compact project actions return focus and discovery quick capture waits for the actual selected project', async (t) => {
+  const b = await mount(t, undefined, 'en', overlayAt(390));
+  const summary = b.container.querySelector('summary[aria-label]');
+  assert.ok(summary);
+  await act(async () => summary.click());
+  await b.click('Project settings');
+  assert.equal(summary.closest('details').open, false);
+  await b.click('Cancel', getByRole(b.container, 'dialog'));
+  assert.equal(b.posts().length, 0);
+});
+
+test('a discovered project selection moves focus into current quick capture without copying discovery DTOs', async (t) => {
+  const path = '/api/v1/workspaces/a/task-discovery';
+  const b = await mount(t, '?workspace=a&taskScope=search', 'en', (browser) =>
+    browser.server.responses.set(path, discoveryPageForScreen()),
+  );
+  const selector = getByRole(b.container, 'combobox', {
+    name: 'Project for the new task',
+    hidden: true,
+  });
+  await act(async () => {
+    selector.closest('details').open = true;
+  });
+  await b.click('Open quick capture');
+  await b.flush();
+  assert.equal(new URL(b.window.location.href).searchParams.get('project'), 'p');
+  assert.equal(
+    b.document.activeElement === getByRole(b.container, 'textbox', { name: 'New task title' }),
+    true,
+  );
+  assert.equal(b.posts().length, 0);
+});
+
+function r1Board(b, total) {
+  b.server.taskPage = (workspaceId = 'a', cursor = false) => {
+    const status =
+      new URL(b.requests.at(-1).url, b.window.location.origin).searchParams.get('status') ??
+      'backlog';
+    if (status === b.server.failedBoardStatus)
+      throw new Error('Finite native board-column failure');
+    const count = status === 'backlog' ? total : 0;
+    const offset = cursor ? 100 : 0;
+    return {
+      items: Array.from({ length: Math.max(0, Math.min(100, count - offset)) }, (_, i) => ({
+        ...task(offset + i + 1, workspaceId),
+        title: `Board task ${offset + i + 1}`,
+        status,
+      })),
+      total,
+      nextCursor: offset + 100 < count ? 'board-tail' : null,
+      capabilities: { canCreate: true },
+      orderVersion: 1,
+      columnCounts: { backlog: total, todo: 0, in_progress: 0, done: 0, canceled: 0 },
+      selectedAssignee: null,
+    };
+  };
+}
+
+for (const count of [1, 102])
+  // Original case description: R1 W3 rendered board Retry makes a root GET after a retained 1-row root failure
+  // Original case description: R1 W3 rendered board Retry makes a root GET after a retained 102-row root failure
+  test(`R1 W3 board root ${count}`, async (t) => {
+    const b = await mount(t, '?workspace=a&project=p&taskLayout=board', 'en', (browser) =>
+      r1Board(browser, count),
+    );
+    await b.clock.advance(500);
+    const column = () => getByRole(b.container, 'region', { name: /^Backlog/ });
+    if (count > 100) await b.click('Load more in this column', column());
+    assert.ok(getByRole(column(), 'link', { name: `Board task ${count}`, exact: true }));
+    const match = (request) => {
+      const url = new URL(request.url, b.window.location.origin);
+      return (
+        url.pathname === `${projectPath}/tasks` && url.searchParams.get('status') === 'backlog'
+      );
+    };
+    const failed = b.server.holdNext(match);
+    await act(async () =>
+      b.server.streams
+        .at(-1)
+        .emit({ type: 'invalidate', entity: 'task', projectId: 'p', id: 't1', version: 2 }),
+    );
+    assert.ok(failed.request);
+    await act(async () => failed.resolve(Response.json({ code: 'unavailable' }, { status: 503 })));
+    await b.flush();
+    assert.ok(
+      getByRole(column(), 'link', { name: `Board task ${count}`, exact: true }),
+      'last-good tail is retained as stale',
+    );
+    const retry = b.server.holdNext(match);
+    await b.click('Retry', column());
+    assert.ok(retry.request, 'visible Retry must start an actual HTTP root request');
+    assert.equal(
+      new URL(retry.request.url, b.window.location.origin).searchParams.has('cursor'),
+      false,
+    );
+    await act(async () => retry.resolve(Response.json(b.server.taskPage('a', false))));
+    await b.flush();
+    assert.equal(queryByRole(column(), 'button', { name: 'Retry', exact: true }), null);
+    if (count > 100) {
+      assert.equal(
+        queryByRole(column(), 'link', { name: `Board task ${count}`, exact: true }),
+        null,
+        'new root drops the obsolete admitted tail',
+      );
+      const append = b.server.holdNext(match);
+      await b.click('Load more in this column', column());
+      assert.equal(
+        new URL(append.request.url, b.window.location.origin).searchParams.get('cursor'),
+        'board-tail',
+      );
+      await act(async () =>
+        append.resolve(Response.json({ code: 'unavailable' }, { status: 503 })),
+      );
+      const retryAppend = b.server.holdNext(match);
+      await b.click('Retry', column());
+      assert.ok(retryAppend.request);
+      assert.equal(
+        new URL(retryAppend.request.url, b.window.location.origin).searchParams.get('cursor'),
+        'board-tail',
+        'eligible failed append keeps its actual continuation identity',
+      );
+      await act(async () => retryAppend.resolve(Response.json(b.server.taskPage('a', true))));
+      await b.flush();
+      assert.ok(getByRole(column(), 'link', { name: `Board task ${count}`, exact: true }));
+    }
+    assert.equal(b.posts().length, 0);
+  });
+
+// Original case description: R1 W4 rendered task Save stays disabled while held authority is stale without losing typed intent
+test('R1 W4 stale Save', async (t) => {
+  const b = await mount(t, '?workspace=a&project=p&task=t1');
+  await b.clock.advance(500);
+  await b.click('Edit');
+  const form = getByRole(b.container, 'dialog', { name: 'Edit task', exact: true });
+  await b.input(getByRole(form, 'textbox', { name: /^Title/ }), 'Preserved stale task form');
+  const held = b.server.holdNext(taskPath);
+  await act(async () =>
+    b.server.streams
+      .at(-1)
+      .emit({ type: 'invalidate', entity: 'task', projectId: 'p', id: 't1', version: 2 }),
+  );
+  assert.ok(held.request);
+  assert.equal(getByRole(b.container, 'dialog', { name: 'Edit task', exact: true }), form);
+  assert.equal(getByRole(form, 'textbox', { name: /^Title/ }).value, 'Preserved stale task form');
+  assert.equal(
+    getByRole(form, 'button', { name: 'Save changes', exact: true }).disabled,
+    true,
+    'stale capability must not enable Save',
+  );
+  await b.click('Save changes', form);
+  assert.equal(b.posts().length, 0);
+  await act(async () => held.resolve(Response.json(task(1))));
+  await b.flush();
+  assert.equal(getByRole(form, 'textbox', { name: /^Title/ }).value, 'Preserved stale task form');
+  assert.equal(getByRole(form, 'button', { name: 'Save changes', exact: true }).disabled, false);
+  await b.click('Save changes', form);
+  assert.equal(b.posts().length, 1);
+  assert.equal(JSON.parse(b.posts()[0].options.body).title, 'Preserved stale task form');
+});
+
+// Original case description: R1 W2 rendered move readiness follows the whole board and recovers after the unrelated failed column
+test('R1 W2 partial board UI', async (t) => {
+  const b = await mount(t, '?workspace=a&project=p&taskLayout=board', 'en', (browser) => {
+    browser.server.failedBoardStatus = 'canceled';
+    r1Board(browser, 1);
+  });
+  await b.clock.advance(500);
+  const move = () =>
+    getByRole(b.container, 'combobox', { name: 'Move QA-1 to status', exact: true });
+  assert.equal(move().disabled, true);
+  assert.equal(b.posts().length, 0);
+  b.server.failedBoardStatus = null;
+  await b.click('Retry', getByRole(b.container, 'region', { name: /^Canceled/ }));
+  assert.equal(move().disabled, false, 'a fully recovered board restores the real move control');
+  assert.equal(b.posts().length, 0, 'read recovery never performs a move');
+});
+
+for (const operation of ['edit', 'archive', 'restore'])
+  for (const result of ['503', 'capability-loss'])
+    // Original case description: R1 W4 rendered edit retains its modal through held authority and 503
+    // Original case description: R1 W4 rendered edit retains its modal through held authority and capability-loss
+    // Original case description: R1 W4 rendered archive retains its modal through held authority and 503
+    // Original case description: R1 W4 rendered archive retains its modal through held authority and capability-loss
+    // Original case description: R1 W4 rendered restore retains its modal through held authority and 503
+    // Original case description: R1 W4 rendered restore retains its modal through held authority and capability-loss
+    test(`R1 W4 ${operation} UI ${result === 'capability-loss' ? 'cap-loss' : result}`, async (t) => {
+      const record = task(1);
+      if (operation === 'restore') {
+        record.archivedAt = '2026-01-01T00:00:00.000Z';
+        record.capabilities.canRestore = true;
+        record.capabilities.canArchive = false;
+        record.capabilities.canEdit = false;
+      }
+      const b = await mount(t, '?workspace=a&project=p&task=t1', 'en', (browser) =>
+        browser.server.responses.set(taskPath, record),
+      );
+      await b.clock.advance(500);
+      await b.click(
+        operation === 'edit' ? 'Edit' : operation === 'archive' ? 'Archive task' : 'Restore task',
+      );
+      const form = getByRole(b.container, 'dialog', {
+        name:
+          operation === 'edit'
+            ? 'Edit task'
+            : operation === 'archive'
+              ? 'Archive task'
+              : 'Restore task',
+        exact: true,
+      });
+      const action =
+        operation === 'edit'
+          ? 'Save changes'
+          : operation === 'archive'
+            ? 'Archive task'
+            : 'Restore task';
+      if (operation === 'edit')
+        await b.input(getByRole(form, 'textbox', { name: /^Title/ }), 'Held form text survives');
+      const held = b.server.holdNext(taskPath);
+      await act(async () =>
+        b.server.streams
+          .at(-1)
+          .emit({ type: 'invalidate', entity: 'task', projectId: 'p', id: 't1', version: 2 }),
+      );
+      assert.ok(held.request);
+      assert.equal(getByRole(b.container, 'dialog'), form);
+      assert.equal(getByRole(form, 'button', { name: action, exact: true }).disabled, true);
+      await b.click(action, form);
+      assert.equal(b.posts().length, 0);
+      if (result === 'capability-loss') {
+        const denied = globalThis.structuredClone(record);
+        denied.capabilities[
+          operation === 'edit' ? 'canEdit' : operation === 'archive' ? 'canArchive' : 'canRestore'
+        ] = false;
+        await act(async () => held.resolve(Response.json(denied)));
+        await b.flush();
+        assert.equal(
+          queryByRole(b.container, 'dialog'),
+          null,
+          'fresh capability loss retires the form rather than retaining write permission',
+        );
+        assert.equal(b.posts().length, 0);
+        return;
+      }
+      await act(async () => held.resolve(Response.json({ code: 'unavailable' }, { status: 503 })));
+      await b.flush();
+      assert.equal(getByRole(b.container, 'dialog'), form);
+      const unavailable = queryByRole(form, 'button', { name: action, exact: true });
+      assert.ok(
+        unavailable === null || unavailable.disabled,
+        'failure exposes no enabled commit action',
+      );
+      assert.equal(b.posts().length, 0);
+      await b.click('Load again', form);
+      await b.flush();
+      assert.equal(getByRole(b.container, 'dialog'), form);
+      assert.equal(getByRole(form, 'button', { name: action, exact: true }).disabled, false);
+      if (operation === 'edit')
+        assert.equal(
+          getByRole(form, 'textbox', { name: /^Title/ }).value,
+          'Held form text survives',
+        );
+      b.server.mutate = () =>
+        Response.json({
+          ...record,
+          version: 2,
+          archivedAt: operation === 'archive' ? '2026-11-06T12:00:00.000Z' : null,
+        });
+      await b.click(action, form);
+      assert.equal(b.posts().length, 1);
+      assert.equal(
+        JSON.parse(b.posts()[0].options.body).expectedVersion,
+        1,
+        'the captured version is preserved through authority recovery',
+      );
+    });

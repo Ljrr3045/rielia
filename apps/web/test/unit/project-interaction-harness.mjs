@@ -13,6 +13,18 @@ export async function mountProjectInteractions(
   { search, strict = false, sidebarDrawer = false } = {},
 ) {
   const browser = projectBrowser(t, search);
+  const restoreAttach = browser.replace(
+    browser.window.HTMLElement.prototype,
+    'attachEvent',
+    function () {
+      this.detachEvent = () => {};
+    },
+  );
+  const restoreDetach = browser.replace(
+    browser.window.HTMLElement.prototype,
+    'detachEvent',
+    () => {},
+  );
   const frames = new Map();
   let nextFrame = 0;
   const restoreRequest = browser.replace(globalThis, 'requestAnimationFrame', (callback) => {
@@ -41,17 +53,21 @@ export async function mountProjectInteractions(
       canonical.retryTarget !== null ||
       canonical.moveRetryTarget !== null ||
       canonical.policyRetryTarget !== null;
-    // Explicit affordance inputs for the fixture's editable active DTOs. No policy model.
+    // Actual canonical affordances supplied to the feature hook, without a second DTO owner.
+    const project = canonical.project;
+    const projectReady =
+      canonical.resources?.project.status === 'ready' && !canonical.resources.project.stale;
+    const archived = project?.archivedAt != null;
     const content = useProjectContentForms({
       ...canonical,
       blocked,
-      canCreateProject: true,
-      canEditProject: true,
-      canManageAccess: false,
-      canArchiveProject: true,
-      canRestoreProject: false,
-      canCapture: !blocked,
-      projectArchived: false,
+      canCreateProject: canonical.projects?.capabilities.canCreate === true,
+      canEditProject: projectReady && project?.capabilities.canEdit === true && !archived,
+      canManageAccess: projectReady && project?.capabilities.canManageAccess === true,
+      canArchiveProject: projectReady && project?.capabilities.canArchive === true && !archived,
+      canRestoreProject: projectReady && project?.capabilities.canRestore === true && archived,
+      canCapture: !blocked && canonical.taskSummary.canCreate && projectReady && !archived,
+      projectArchived: archived,
       captureRef,
       projectHeadingRef,
       lastCommandRef,
@@ -120,6 +136,8 @@ export async function mountProjectInteractions(
     } finally {
       restoreCancel();
       restoreRequest();
+      restoreDetach();
+      restoreAttach();
     }
   });
   await browser.render(
